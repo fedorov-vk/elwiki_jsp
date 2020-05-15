@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="elwiki" uid="elwiki.product" version="1.0.0" useFeatures="true" includeLaunchers="false">
+
+   <configIni use="default">
+      <linux>/elwiki.product/configurations/config.ini</linux>
+   </configIni>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
+   </launcherArgs>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="elwiki.feature" installMode="root"/>
+      <feature id="jsp.bridge.feature" installMode="root"/>
+   </features>
+
+   <configurations>
+      <plugin id="javax.el" autoStart="false" startLevel="0" />
+      <plugin id="javax.servlet.jsp" autoStart="true" startLevel="2" />
+      <plugin id="javax.servlet.jsp.jstl-api" autoStart="true" startLevel="2" />
+      <plugin id="javax.xml" autoStart="false" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="false" startLevel="0" />
+   </configurations>
+
+</product>

@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>elwiki.root</artifactId>
+  <packaging>pom</packaging>
+  <name>~~~ ElWiki root ~~~</name>
+  <description>Root project for buid</description>
+
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>global_configuration</artifactId>
+		<version>1.0.0</version>
+		<relativePath>releng/global_configuration</relativePath>
+	</parent>
+
+	<modules>
+		<module>bundles</module>
+		<module>features</module>
+		<module>products</module>
+	</modules>
+</project>
