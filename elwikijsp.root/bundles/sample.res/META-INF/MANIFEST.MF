@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Static Resources
+Bundle-SymbolicName: sample.res;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: sample.res
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: ./,
+ .
+Require-Bundle: org.eclipse.equinox.http.registry,
+ org.eclipse.equinox.jsp.jasper,
+ org.eclipse.equinox.http.helper
+Import-Package: javax.servlet;version="3.1.0",
+ org.osgi.framework;version="1.9.0",
+ org.osgi.service.http;version="1.2.1",
+ org.osgi.util.tracker;version="1.5.2"
+Bundle-Activator: sample.res.Activator
+Bundle-Vendor: FVK

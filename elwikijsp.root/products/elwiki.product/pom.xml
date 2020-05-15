@@ -1,0 +1,180 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>elwiki.product</artifactId>
+	<packaging>eclipse-repository</packaging>
+	<name>FVK Elwiki product</name>
+	<description>FVK Elwiki product creator</description>
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>products</artifactId>
+		<version>1.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<properties>
+		<war-filename>elwiki</war-filename>
+		<assembly.version>3.1.1</assembly.version>
+		<replacer.version>1.4.1</replacer.version>
+
+		<!--
+			<rap-incubator-repo.url>http://download.eclipse.org/rt/rap/incubator/nightly/</rap-incubator-repo.url>
+			<rap-incubator-repo.url>file:/repo/RAP/rap_incubator/</rap-incubator-repo.url>
+			<rap-incubator-repo.url>file:/repo/RAP/rap_incubator/</rap-incubator-repo.url>
+		-->
+	</properties>
+
+	<!--
+		<repositories>
+		<repository>
+		<id>com_opcoach-repo</id>
+		<layout>p2</layout>
+		<url>file:/repo/extra/com.opcoach.e4.preferences.repository-1.3.0/</url>
+		</repository>
+		<repository>
+		<id>rap-repo</id>
+		<layout>p2</layout>
+		<url>${rap-repo.url}</url>
+		</repository>
+		<repository>
+		<id>platform-repo</id>
+		<layout>p2</layout>
+		<url>${platform-repo.url}</url>
+		</repository>
+		<repository>
+		<id>jdbc-repo</id>
+		<layout>p2</layout>
+		<url>${jdbc-repo.url}</url>
+		</repository>
+		<repository>
+		<id>rap-incubator-repo</id>
+		<layout>p2</layout>
+		<url>${rap-incubator-repo.url}</url>
+		</repository>
+		</repositories>
+	-->
+
+	<build>
+		<plugins>
+			<!-- Configure qualifier replacement -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<format>yyyyMMdd-HHmm</format>
+				</configuration>
+			</plugin>
+
+			<!-- Configure the p2 director -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<executions>
+					<execution>
+						<id>create-distributions</id>
+						<goals>
+							<goal>materialize-products</goal>
+							<!-- :FVK: ветку закомментировать? - чтоб не паковать
+								<goal>archive-products</goal>
+							-->
+						</goals>
+					</execution>
+				</executions>
+				<!-- select product with ID product.id; the archives get the classifiers "<os>.<ws>.<arch>"
+					<configuration>
+					<products>
+					<product>
+					<id>fvk_bridge</id>
+					</product>
+					</products>
+					</configuration>
+				-->
+			</plugin>
+
+			<!-- Remove javax.servlet from the bundles.info -->
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>maven-replacer-plugin</artifactId>
+				<version>${replacer.version}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>target/products/${project.artifactId}/linux/gtk/x86_64/configuration/config.ini</file>
+					<replacements>
+						<replacement>
+							<token>osgi.bundles=</token>
+							<value>osgi.bundles=org.eclipse.equinox.servletbridge.extensionbundle,</value>
+						</replacement>
+						<replacement>
+							<token>reference\\:file\\:javax.servlet.*?jar@4,</token>
+							<value></value>
+						</replacement>
+					</replacements>
+					<regexFlags>
+						<regexFlag>CASE_INSENSITIVE</regexFlag>
+						<regexFlag>UNIX_LINES</regexFlag>
+					</regexFlags>
+				</configuration>
+			</plugin>
+
+			<!-- Модификация comfig.ini -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<executions>
+					<execution>
+						<id>config.ini</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<executable>${project.basedir}/hacking.sh</executable>
+							<arguments>
+								<argument>${project.basedir}</argument>
+								<argument>${project.build.directory}/${project.artifactId}.dependencies</argument>
+								<argument>project-in-question</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Configure the assembly plugin to zip the war file -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${assembly.version}</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+					<!-- Configure the war's filename -->
+					<finalName>${war-filename}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

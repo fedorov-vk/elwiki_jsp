@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Elwiki</display-name>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<servlet id="bridge">
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<servlet-class>org.eclipse.equinox.servletbridge.BridgeServlet</servlet-class>
+
+		<!-- Framework Controls could be useful for testing purpose, and it should disabled per default -->
+		<init-param>
+			<param-name>enableFrameworkControls</param-name>
+			<param-value>true</param-value>
+		</init-param>
+
+		<!--
+			When the framework is deployed, an extension bundle must be present to allow the Servlet API to
+			be exported by the container. Typically, this extension bundle is created at deploy time by the
+			FrameworkLauncher. If, however, an extension bundle (with id 'org.eclipse.equinox.servletbridge.extensionbundle')
+			is
+			already present in the 'plugins' area, then preference is given to the existing bundle.
+			If this param is set to 'true', then the existing extension bundle with be *overridden* and
+			the one created by the FrameworkLauncher will replace any existing one. The default is 'false'
+			(giving preference to the existing extension bundle if present).
+
+			default: false
+			<init-param>
+			<param-name>overrideAndReplaceExtensionBundle</param-name>
+			<param-value>false</param-value>
+			</init-param>
+		-->
+
+		<!-- Enable multi-language support for the extension registry -->
+		<!-- the OSGi console is useful for trouble shooting but will fill up your
+			appserver log quickly, so deactivate on production use. Uncomment
+			the -console parameter to enabled OSGi console access. -->
+		<init-param>
+			<param-name>commandline</param-name> <!-- -consoleLog -console -->
+			<param-value>-registryMultiLanguage -console 11003</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- :FVK: session timeout in minutes
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+	 -->
+
+</web-app>

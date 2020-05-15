@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="2020-03">
+	<locations>
+		<location path="/repo/eclipse/releases/2020-03" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository" type="Directory"/>
+	</locations>
+</target>

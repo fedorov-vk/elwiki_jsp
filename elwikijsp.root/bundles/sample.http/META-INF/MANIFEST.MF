@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sample HTTP
+Bundle-SymbolicName: sample.http;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: sample.http.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: sample.http
+Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: dir
+Require-Bundle: org.eclipse.osgi.services;bundle-version="3.8.0"
+Import-Package: java.io,
+ javax.servlet;version="3.1.0",
+ javax.servlet.http;version="3.1.0",
+ org.osgi.framework;version="1.9.0",
+ org.osgi.util.tracker;version="1.5.2"
+Bundle-Vendor: FVK
