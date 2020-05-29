@@ -27,7 +27,9 @@
 				<artifact><id>commons-beanutils:commons-beanutils:1.7.0</id><source>true</source></artifact>
 				<artifact><id>commons-fileupload:commons-fileupload:1.0</id><source>true</source></artifact>
 				<artifact><id>commons-validator:commons-validator:1.1.4</id><source>true</source></artifact>
-				<artifact><id>struts:struts:1.2.9</id><source>true</source></artifact>
+<!--
+				<artifact><id>org.apache.taglibs:taglibs-standard-impl:1.2.5</id><source>true</source></artifact>
+-->
 
 <!--
 				<artifact><id>jakarta-oro:jakarta-oro:2.0.5</id><source>true</source></artifact>

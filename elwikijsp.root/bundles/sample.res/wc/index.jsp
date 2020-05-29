@@ -12,7 +12,7 @@
 		</a>
 		
 		<h2>
-			<% out.println( "(wc) It works." ); %>
+			<% out.println( "(wc~t) It works." ); %>
 		</h2>
 	</div>
 </body>

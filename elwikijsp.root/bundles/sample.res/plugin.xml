@@ -10,13 +10,14 @@
          point="org.eclipse.equinox.http.registry.resources">
       <resource alias="/" base-name="/">
       </resource>
-   </extension><!--
+   </extension>
+
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-            alias="/ss"
-            class="index.jsp">
+            alias="/t/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/wc">
       </servlet>
    </extension>
--->
+
 </plugin>

@@ -49,11 +49,9 @@ public class HttpServiceTracker extends ServiceTracker {
 			///////////////////////////
 			
 			HttpContext httpContext = new BundleEntryHttpContext(context.getBundle(), "/");
-			httpService.registerServlet("/*.jsp", new JspServlet(context.getBundle(), "/"), null, httpContext);
+			httpService.registerServlet("/test/*.jsp", new JspServlet(context.getBundle(), "/"), null, httpContext);
 //			HttpContext httpContext = new BundleEntryHttpContext(context.getBundle(), "/wc");
 //			httpService.registerServlet("/*.jsp", new JspServlet(context.getBundle(), "/wc"), null, httpContext);
-
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

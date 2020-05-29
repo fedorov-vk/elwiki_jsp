@@ -14,8 +14,10 @@ public class Activator implements BundleActivator {
 
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		/* :FVK:
 		httpServiceTracker = new HttpServiceTracker(context);
 		httpServiceTracker.open();
+		*/
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

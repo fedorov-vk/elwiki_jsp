@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="elwiki" uid="elwiki.product" version="1.0.0" useFeatures="true" includeLaunchers="false">
+<product name="elwiki" uid="elwiki.product" version="1.0.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
       <linux>/elwiki.product/configurations/config.ini</linux>
@@ -11,6 +11,15 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
+
+   <launcher>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
    </plugins>
@@ -23,7 +32,6 @@
    <configurations>
       <plugin id="javax.el" autoStart="false" startLevel="0" />
       <plugin id="javax.servlet.jsp" autoStart="true" startLevel="2" />
-      <plugin id="javax.servlet.jsp.jstl-api" autoStart="true" startLevel="2" />
       <plugin id="javax.xml" autoStart="false" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="false" startLevel="0" />
    </configurations>
