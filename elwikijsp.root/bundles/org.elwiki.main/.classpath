@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="xmlrpc-2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="akismet-java-1.02.jar"/>
+	<classpathentry exported="true" kind="lib" path="ehcache-2.10.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="freshcookies-security-0.60.jar"/>
+	<classpathentry exported="true" kind="lib" path="jdom2-2.0.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-analyzers-common-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-core-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-highlighter-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-memory-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-queries-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-queryparser-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lucene-sandbox-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="org.suigeneris.jrcs.diff-0.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="sandler-0.5.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

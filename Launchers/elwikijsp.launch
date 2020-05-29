@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.EquinoxLauncher">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<booleanAttribute key="automaticValidate" value="true"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/elwikijsp"/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="default_auto_start" value="true"/>
+<intAttribute key="default_start_level" value="4"/>
+<setAttribute key="deselected_workspace_bundles"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.osgi.service.http.port=8081"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<setAttribute key="selected_target_bundles">
+<setEntry value="javax.annotation@default:default"/>
+<setEntry value="javax.el@default:default"/>
+<setEntry value="javax.servlet*3.1.0.v201410161800@default:default"/>
+<setEntry value="javax.servlet.jsp@default:default"/>
+<setEntry value="javax.xml@default:default"/>
+<setEntry value="org.apache.felix.gogo.command@default:default"/>
+<setEntry value="org.apache.felix.gogo.runtime@default:default"/>
+<setEntry value="org.apache.felix.gogo.shell@default:default"/>
+<setEntry value="org.apache.felix.scr@1:true"/>
+<setEntry value="org.apache.jasper.glassfish@default:default"/>
+<setEntry value="org.apache.xalan@default:default"/>
+<setEntry value="org.apache.xml.serializer@default:default"/>
+<setEntry value="org.eclipse.equinox.common@2:true"/>
+<setEntry value="org.eclipse.equinox.console@default:default"/>
+<setEntry value="org.eclipse.equinox.http.jetty@default:default"/>
+<setEntry value="org.eclipse.equinox.http.registry@default:default"/>
+<setEntry value="org.eclipse.equinox.http.servlet@default:default"/>
+<setEntry value="org.eclipse.equinox.jsp.jasper.registry@default:default"/>
+<setEntry value="org.eclipse.equinox.jsp.jasper@default:default"/>
+<setEntry value="org.eclipse.equinox.registry@default:default"/>
+<setEntry value="org.eclipse.jetty.continuation@default:default"/>
+<setEntry value="org.eclipse.jetty.http@default:default"/>
+<setEntry value="org.eclipse.jetty.io@default:default"/>
+<setEntry value="org.eclipse.jetty.security@default:default"/>
+<setEntry value="org.eclipse.jetty.server@default:default"/>
+<setEntry value="org.eclipse.jetty.servlet@default:default"/>
+<setEntry value="org.eclipse.jetty.util@default:default"/>
+<setEntry value="org.eclipse.jetty.webapp@default:default"/>
+<setEntry value="org.eclipse.jetty.xml@default:default"/>
+<setEntry value="org.eclipse.osgi.services@default:default"/>
+<setEntry value="org.eclipse.osgi.util@default:default"/>
+<setEntry value="org.eclipse.osgi@-1:true"/>
+</setAttribute>
+<setAttribute key="selected_workspace_bundles">
+<setEntry value="org.eclipse.equinox.http.helper@default:default"/>
+<setEntry value="org.elwiki.api@default:default"/>
+<setEntry value="org.elwiki.event@default:default"/>
+<setEntry value="org.elwiki.jsp@default:default"/>
+<setEntry value="org.elwiki.main@default:default"/>
+<setEntry value="org.elwiki.util@default:default"/>
+<setEntry value="sample.http@default:default"/>
+<setEntry value="sample.res@default:default"/>
+</setAttribute>
+<booleanAttribute key="show_selected_only" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="false"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+</launchConfiguration>

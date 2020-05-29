@@ -5,5 +5,6 @@
 		<location path="/repo/eclipse/releases/2020-03" type="Directory"/>
 		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository" type="Directory"/>
 		<location path="/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository" type="Directory"/>
 	</locations>
 </target>
