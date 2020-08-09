@@ -20,9 +20,9 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 
 import java.io.IOException;
 
@@ -39,15 +39,15 @@ public class PageSizeTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         try {
             if( page != null ) {
-                long size = page.getSize();
+                long size = 123; //:WORKAROUND. FVK: page.getSize();
 
                 if( size == -1 && engine.getManager( PageManager.class ).wikiPageExists( page ) ) { // should never happen with attachments
-                    size = engine.getManager( PageManager.class ).getPureText( page.getName(), page.getVersion() ).length();
-                    page.setSize( size );
+                	size = engine.getManager( PageManager.class ).getPureText( page.getName(), page.getVersion() ).length();
+                	//:FVK: page.setSize( size );
                 }
 
                 pageContext.getOut().write( Long.toString(size) );

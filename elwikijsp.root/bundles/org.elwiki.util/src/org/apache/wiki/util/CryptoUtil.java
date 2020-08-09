@@ -26,13 +26,13 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Random;
 
-
 /**
- * Hashes and verifies salted SHA-1 passwords, which are compliant with RFC
- * 2307.
+ * Hashes and verifies salted SHA-1 passwords, which are compliant with RFC 2307.
  */
-public final class CryptoUtil
-{
+public final class CryptoUtil {
+
+    private static String MD_ALGO = "SHA-1";
+
     private static final String SSHA = "{SSHA}";
 
     private static final Random RANDOM = new SecureRandom();
@@ -137,7 +137,7 @@ public final class CryptoUtil
      * @param password the password to be digested
      * @return the Base64-encoded password hash, prepended by
      *         <code>{SSHA}</code>.
-     * @throws NoSuchAlgorithmException If your JVM is completely b0rked and does not have SHA.
+     * @throws NoSuchAlgorithmException If your JVM is completely broked and does not have SHA.
      */
     public static String getSaltedPassword( byte[] password ) throws NoSuchAlgorithmException
     {
@@ -166,7 +166,7 @@ public final class CryptoUtil
      */
     protected static String getSaltedPassword( byte[] password, byte[] salt ) throws NoSuchAlgorithmException
     {
-        MessageDigest digest = MessageDigest.getInstance( "SHA" );
+        MessageDigest digest = MessageDigest.getInstance( MD_ALGO );
         digest.update( password );
         byte[] hash = digest.digest( salt );
 
@@ -207,7 +207,7 @@ public final class CryptoUtil
         byte[] salt = extractSalt( challenge );
 
         // Re-create the hash using the password and the extracted salt
-        MessageDigest digest = MessageDigest.getInstance( "SHA" );
+        MessageDigest digest = MessageDigest.getInstance( MD_ALGO );
         digest.update( password );
         byte[] hash = digest.digest( salt );
 

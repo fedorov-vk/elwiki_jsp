@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 
@@ -62,7 +62,7 @@ public class PageDateTag extends WikiTagBase {
     }
 
     public final int doWikiStartTag() throws IOException {
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         if( page != null ) {
             final Date d = page.getLastModified();
             //  Date may be null if the page does not exist.

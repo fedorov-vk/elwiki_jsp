@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.providers.WikiProvider;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class NextVersionTag extends WikiTagBase {
     private static final long serialVersionUID = 0L;
 
     public final int doWikiStartTag() throws IOException {
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         int version = page.getVersion();
         if( version != WikiProvider.LATEST_VERSION ) {
             version++;

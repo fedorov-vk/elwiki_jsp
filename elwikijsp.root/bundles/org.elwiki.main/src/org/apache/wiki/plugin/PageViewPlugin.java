@@ -31,17 +31,17 @@ import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEvent;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageRenameEvent;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.event.WikiEngineEvent;
-import org.apache.wiki.event.WikiEvent;
-import org.apache.wiki.event.WikiEventListener;
-import org.apache.wiki.event.WikiPageEvent;
-import org.apache.wiki.event.WikiPageRenameEvent;
-import org.apache.wiki.references.ReferenceManager;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.io.File;
@@ -288,7 +288,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          */
         public String execute( final Context context, final Map< String, String > params ) throws PluginException {
             final Engine engine = context.getEngine();
-            final Page page = context.getPage();
+            final WikiPage page = context.getPage();
             String result = STR_EMPTY;
 
             if( page != null ) {

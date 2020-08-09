@@ -20,9 +20,8 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.pages.PageManager;
-
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.pages0.PageManager;
 
 /**
  *  Does a version check on the page.  Mode is as follows:
@@ -30,7 +29,7 @@ import org.apache.wiki.pages.PageManager;
  *   <LI><b>latest</b> - Include body, if the page is the latest version.</li>
  *   <LI><b>notlatest</b> - Include body, if the page is NOT the latest version.</li>
  *   <li><b>first</b> - Include body, if page is the first version (version 1)</li>
- *   <li><b>notfirst</b> - Include bodt, if page is NOT the first version (version 1)</li> 
+ *   <li><b>notfirst</b> - Include body, if page is NOT the first version (version 1)</li> 
  *  </UL>
  *  If the page does not exist, body content is never included.
  *
@@ -78,12 +77,12 @@ public class CheckVersionTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page.getName() ) ) {
             final int version = page.getVersion();
             final boolean include;
-            final Page latest = engine.getManager( PageManager.class ).getPage( page.getName() );
+            final WikiPage latest = engine.getManager( PageManager.class ).getPage( page.getName() );
 
             switch( m_mode ) {
                 case LATEST    : include = ( version < 0 ) || ( latest.getVersion() == version ); break;

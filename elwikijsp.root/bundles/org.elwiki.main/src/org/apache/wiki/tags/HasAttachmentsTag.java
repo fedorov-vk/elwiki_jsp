@@ -19,11 +19,11 @@
 package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.attachment.AttachmentManager;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 
 
 /**
@@ -39,7 +39,7 @@ public class HasAttachmentsTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
 
         try {

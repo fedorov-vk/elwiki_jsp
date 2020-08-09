@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.ui.EditorManager;
+import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.TemplateManager;
 
 import javax.servlet.ServletException;

@@ -22,12 +22,12 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.auth.AuthenticationManager;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.authorize.Role;
-import org.apache.wiki.auth.user.UserProfile;
-import org.apache.wiki.i18n.InternationalizationManager;
+import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 
@@ -139,12 +139,12 @@ public class UserProfileTag extends WikiTagBase {
                 }
             }
         } else if( CHANGE_PASSWORD.equals( m_prop ) || CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final AuthenticationManager authMgr = m_wikiContext.getEngine().getManager( AuthenticationManager.class );
+            final IIAuthenticationManager authMgr = m_wikiContext.getEngine().getManager( IIAuthenticationManager.class );
             if( !authMgr.isContainerAuthenticated() ) {
                 return EVAL_BODY_INCLUDE;
             }
         } else if( NOT_CHANGE_PASSWORD.equals( m_prop ) || NOT_CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final AuthenticationManager authMgr = m_wikiContext.getEngine().getManager( AuthenticationManager.class );
+            final IIAuthenticationManager authMgr = m_wikiContext.getEngine().getManager( IIAuthenticationManager.class );
             if( authMgr.isContainerAuthenticated() ) {
                 return EVAL_BODY_INCLUDE;
             }

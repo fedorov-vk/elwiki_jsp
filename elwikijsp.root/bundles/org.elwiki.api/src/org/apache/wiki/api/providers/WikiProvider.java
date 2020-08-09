@@ -43,7 +43,7 @@ public interface WikiProvider {
      *  @throws NoRequiredPropertyException If the provider needs a property which is not found in the property set
      *  @throws IOException If there is an IO problem
      */
-    void initialize( Engine engine, Properties properties ) throws NoRequiredPropertyException, IOException;
+    void initialize( Engine engine ) throws NoRequiredPropertyException, IOException;
 
     /**
      *  Return a valid HTML string for information.  May be anything.

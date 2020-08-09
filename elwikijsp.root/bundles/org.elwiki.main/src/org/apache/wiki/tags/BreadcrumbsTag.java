@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 
 import javax.servlet.http.HttpSession;

@@ -20,6 +20,9 @@ package org.apache.wiki.api.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
+
+import org.elwiki_data.WikiPage;
+
 import java.security.Principal;
 
 
@@ -39,6 +42,27 @@ import java.security.Principal;
  */
 public interface Context extends Cloneable, Command {
 
+    /**
+     *  Is used to choose between the different date formats that JSPWiki supports.
+     *  <ul>
+     *   <li>TIME: A time format, without  date</li>
+     *   <li>DATE: A date format, without a time</li>
+     *   <li>DATETIME: A date format, with a time</li>
+     *  </ul>
+     *
+     *  @since 2.8
+     */
+    public enum TimeFormat {
+        /** A time format, no date. */
+        TIME,
+
+        /** A date format, no time. */
+        DATE,
+
+        /** A date+time format. */
+        DATETIME
+    }
+	
     String ATTR_CONTEXT = "jspwiki.context";
 
     /**
@@ -55,7 +79,7 @@ public interface Context extends Cloneable, Command {
      *
      *  @return the WikiPage which was fetched.
      */
-    Page getPage();
+    WikiPage getPage();
 
     /**
      *  Sets the WikiPage that is being handled.
@@ -63,7 +87,7 @@ public interface Context extends Cloneable, Command {
      *  @param wikiPage The wikipage
      *  @since 2.1.37.
      */
-    void setPage( Page wikiPage );
+    void setPage( WikiPage wikiPage );
 
     /**
      *  Gets a reference to the real WikiPage whose content is currently being rendered. If your plugin e.g. does some variable setting, be
@@ -78,7 +102,7 @@ public interface Context extends Cloneable, Command {
      *  @see org.apache.wiki.tags.InsertPageTag
      *  @see org.apache.wiki.parser.JSPWikiMarkupParser
      */
-    Page getRealPage();
+    WikiPage getRealPage();
 
     /**
      *  Sets a reference to the real WikiPage whose content is currently being rendered.
@@ -95,7 +119,7 @@ public interface Context extends Cloneable, Command {
      *  @since 2.3.14
      *  @see org.apache.wiki.tags.InsertPageTag
      */
-    Page setRealPage( Page wikiPage );
+    WikiPage setRealPage( WikiPage wikiPage );
 
     /**
      *  Returns the handling engine.

@@ -18,8 +18,7 @@
  */
 package org.apache.wiki.i18n;
 
-import org.apache.wiki.api.core.Engine;
-
+import org.apache.wiki.api.i18n.InternationalizationManager;
 
 /**
  *  Manages all internationalization in JSPWiki.
@@ -30,10 +29,8 @@ public class DefaultInternationalizationManager implements InternationalizationM
 
     /**
      *  Constructs a new InternationalizationManager.
-     *
-     *  @param engine To which engine this belongs to
      */
-    public DefaultInternationalizationManager( final Engine engine ) {
+    public DefaultInternationalizationManager( ) {
     }
 
 }

@@ -21,16 +21,20 @@ package org.apache.wiki.ui.admin;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.event.WikiEngineEvent;
-import org.apache.wiki.event.WikiEvent;
-import org.apache.wiki.event.WikiEventListener;
-import org.apache.wiki.modules.ModuleManager;
-import org.apache.wiki.modules.WikiModuleInfo;
+import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEvent;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.modules.ModuleManager;
+import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.ui.admin.beans.CoreBean;
 import org.apache.wiki.ui.admin.beans.FilterBean;
 import org.apache.wiki.ui.admin.beans.PluginBean;
 import org.apache.wiki.ui.admin.beans.SearchManagerBean;
 import org.apache.wiki.ui.admin.beans.UserBean;
+import org.apache.wiki.ui.admin0.AdminBean;
+import org.apache.wiki.ui.admin0.AdminBeanManager;
 
 import javax.management.DynamicMBean;
 import javax.management.InstanceAlreadyExistsException;
@@ -44,6 +48,7 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 
 /**
@@ -52,7 +57,7 @@ import java.util.List;
  *
  *  @since  2.5.52
  */
-public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanManager {
+public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanManager, Initializable {
 
     private Engine m_engine;
     private ArrayList< AdminBean > m_allBeans;
@@ -60,25 +65,15 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
 
     private static final Logger log = Logger.getLogger( DefaultAdminBeanManager.class );
 
-    public DefaultAdminBeanManager( final Engine engine ) {
+    public DefaultAdminBeanManager() {
         log.info("Using JDK 1.5 Platform MBeanServer");
         m_mbeanServer = MBeanServerFactory15.getServer();
-
-        m_engine = engine;
 
         if( m_mbeanServer != null ) {
             log.info( m_mbeanServer.getClass().getName() );
             log.info( m_mbeanServer.getDefaultDomain() );
         }
 
-        m_engine.addWikiEventListener( this );
-        initialize();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-	public void initialize() {
-        reload();
     }
 
     private String getJMXTitleString( final int title ) {
@@ -253,5 +248,13 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
             }
         }
     }
+
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+        m_engine = engine;
+        m_engine.addWikiEventListener( this );
+
+        reload();
+	}
 
 }

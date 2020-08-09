@@ -20,8 +20,8 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.Editor;
-import org.apache.wiki.ui.EditorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;

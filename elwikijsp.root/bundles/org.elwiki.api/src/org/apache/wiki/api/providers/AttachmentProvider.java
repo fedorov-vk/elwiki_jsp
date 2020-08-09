@@ -18,8 +18,8 @@
  */
 package org.apache.wiki.api.providers;
 
-import org.apache.wiki.api.core.Attachment;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 
@@ -50,7 +50,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @throws IOException If writing fails
      *  @throws ProviderException If there are other errors.
      */
-    void putAttachmentData( Attachment att, InputStream data ) throws ProviderException, IOException;
+    void putAttachmentData( PageAttachment att, InputStream data ) throws ProviderException, IOException;
 
     /**
      *  Get attachment data.
@@ -60,7 +60,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @throws ProviderException If the attachment cannot be found
      *  @throws IOException If the attachment cannot be opened
      */
-    InputStream getAttachmentData( Attachment att ) throws ProviderException, IOException;
+    InputStream getAttachmentData( PageAttachment att ) throws ProviderException, IOException;
 
     /**
      *  Lists all attachments attached to a page.
@@ -69,7 +69,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return A collection of Attachment objects.  May be empty, but never null.
      *  @throws ProviderException If something goes wrong when listing the attachments.
      */
-    List< Attachment > listAttachments( Page page ) throws ProviderException;
+    List< PageAttachment > listAttachments( WikiPage page ) throws ProviderException;
 
     /**
      * Finds attachments based on the query.
@@ -77,7 +77,7 @@ public interface AttachmentProvider extends WikiProvider {
      * @param query An array of QueryItem objects to search for
      * @return A Collection of Attachment objects.  May be empty, but never null.
      */
-    Collection< Attachment > findAttachments( QueryItem[] query );
+    Collection< PageAttachment > findAttachments( QueryItem[] query );
 
     /**
      *  Lists changed attachments since given date.  Can also be used to fetch a list of all pages.
@@ -92,7 +92,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return A List of Attachment objects, in most-recently-changed first order.
      *  @throws ProviderException If something goes wrong.
      */
-    List< Attachment > listAllChanged( Date timestamp ) throws ProviderException;
+    List< PageAttachment > listAllChanged( Date timestamp ) throws ProviderException;
 
     /**
      *  Returns info about an attachment.
@@ -103,7 +103,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return An attachment object
      *  @throws ProviderException If the attachment cannot be found or some other error occurs.
      */
-    Attachment getAttachmentInfo( Page page, String name, int version ) throws ProviderException;
+    PageAttachment getAttachmentInfo( WikiPage page, String name, int version ) throws ProviderException;
 
     /**
      *  Returns version history.  Each element should be an Attachment.
@@ -111,7 +111,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @param att The attachment for which to find the version history for.
      *  @return A List of Attachment objects.
      */
-    List< Attachment > getVersionHistory( Attachment att );
+    List< PageAttachment > getVersionHistory( PageAttachment att );
 
     /**
      *  Removes a specific version from the repository.  The implementations should really do no more security checks, since that is the
@@ -121,7 +121,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @param att Attachment to be removed.  The version field is checked, and thus only that version is removed.
      *  @throws ProviderException If the attachment cannot be removed for some reason.
      */
-    void deleteVersion( Attachment att ) throws ProviderException;
+    void deleteVersion( PageAttachment att ) throws ProviderException;
 
     /**
      *  Removes an entire page from the repository.  The implementations should really do no more security checks, since that is the domain
@@ -132,7 +132,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @param att Attachment to delete.
      *  @throws ProviderException If the page could not be removed for some reason.
      */
-    void deleteAttachment( Attachment att ) throws ProviderException;
+    void deleteAttachment( PageAttachment att ) throws ProviderException;
    
     /**
      * Move all the attachments for a given page so that they are attached to a new page.

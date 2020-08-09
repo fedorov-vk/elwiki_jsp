@@ -18,18 +18,19 @@
  */
 package org.apache.wiki.tags;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.util.TextUtil;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.jsp.tagext.TryCatchFinally;
-
-
 /**
- *  Base class for JSPWiki tags.  You do not necessarily have to derive from this class, since this does some initialization.
+ *  Base class for JSPWiki tags.
+ *  You do not necessarily have to derive from this class, since this does some initialization.
  *  <P>
  *  This tag is only useful if you're having an "empty" tag, with no body content.
  *
@@ -81,7 +82,7 @@ public abstract class WikiTagBase extends TagSupport implements TryCatchFinally 
     public abstract int doWikiStartTag() throws Exception;
 
     public int doEndTag() throws JspException {
-        return EVAL_PAGE;
+        return Tag.EVAL_PAGE;
     }
 
     public void doCatch( final Throwable th ) throws Throwable {

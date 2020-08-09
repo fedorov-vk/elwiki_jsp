@@ -24,15 +24,15 @@ import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.attachment.Attachment;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.pages.PageManager;
+import org.elwiki_data.PageAttachment;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
@@ -104,7 +104,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         log.debug("Calculating recent changes from "+sincedate.getTime());
 
         // FIXME: Should really have a since date on the getRecentChanges method.
-        Collection< Page > changes = engine.getManager( PageManager.class ).getRecentChanges();
+        Collection< WikiPage > changes = engine.getManager( PageManager.class ).getRecentChanges();
         super.initialize( context, params );
         changes = filterWikiPageCollection( changes );
         
@@ -118,7 +118,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
             rt.setAttribute( XHTML.ATTR_class, "recentchanges" );
             rt.setAttribute( XHTML.ATTR_cellpadding, spacing );
 
-            for( final Page pageref : changes ) {
+            for( final WikiPage pageref : changes ) {
                 final Date lastmod = pageref.getLastModified();
 
                 if( lastmod.before( sincedate.getTime() ) ) {
@@ -137,7 +137,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     olddate = lastmod;
                 }
 
-                final String href = context.getURL( pageref instanceof Attachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
+                final String href = context.getURL( pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
                                                                                   : ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getName() );
                 Element link = XhtmlUtil.link( href, engine.getManager( RenderingManager.class ).beautifyTitle( pageref.getName() ) );
                 final Element row = XhtmlUtil.element( XHTML.tr );
@@ -148,7 +148,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //
                 //  Add the direct link to the attachment info.
                 //
-                if( pageref instanceof Attachment ) {
+                if( pageref instanceof PageAttachment ) {
                     link = XhtmlUtil.link( context.getURL( WikiContext.INFO, pageref.getName() ), null );
                     link.setAttribute( XHTML.ATTR_class, "infolink" );
 
@@ -161,7 +161,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 row.addContent( col );
                 rt.addContent( row );
 
-                if( pageref instanceof Attachment ) {
+                if( pageref instanceof PageAttachment ) {
                     final Element td = XhtmlUtil.element( XHTML.td, tfmt.format( lastmod ) );
                     td.setAttribute( XHTML.ATTR_class, "lastchange" );
                     row.addContent( td );
@@ -198,7 +198,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
                 // Change note
                 if( showChangenote ) {
-                    final String changenote = pageref.getAttribute( Page.CHANGENOTE );
+                    final String changenote = ":FVK:"; //:FVK: pageref.getAttribute( WikiPage.CHANGENOTE );
                     final Element td_changenote = XhtmlUtil.element( XHTML.td, changenote );
                     td_changenote.setAttribute( XHTML.ATTR_class, "changenote" );
                     row.addContent( td_changenote );

@@ -29,16 +29,16 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.pages.PageSorter;
-import org.apache.wiki.parser.MarkupParser;
-import org.apache.wiki.parser.WikiDocument;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.pages0.PageSorter;
+import org.apache.wiki.parser0.MarkupParser;
+import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.comparators.CollatorComparator;
 import org.apache.wiki.util.comparators.HumanComparator;
@@ -252,7 +252,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
         initSorter( context, params );
     }
 
-    protected List< Page > filterWikiPageCollection( final Collection< Page > pages ) {
+    protected List< WikiPage > filterWikiPageCollection( final Collection< WikiPage > pages ) {
         final List< String > pageNames = filterCollection( pages.stream()
                                                           .map( page -> page.getName() )
                                                           .collect( Collectors.toList() ) );
@@ -304,7 +304,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 result.add( pageName );
                 //
                 //  if we want to show the last modified date of the most recently change page, we keep a "high watermark" here:
-                final Page page;
+                final WikiPage page;
                 if( m_lastModified ) {
                     page = m_engine.getManager( PageManager.class ).getPage( pageName );
                     if( page != null ) {

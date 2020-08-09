@@ -75,7 +75,7 @@ public class Note implements Plugin {
 
     private String imageUrl( final Context ctx ) {
         final Engine engine = ctx.getEngine();
-        String commentImage = engine.getWikiProperties().getProperty( PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE );
+        String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE );
         commentImage = "images/" + commentImage;
         
         String resource = engine.getManager( TemplateManager.class ).findResource( ctx, engine.getTemplateDir(), commentImage );

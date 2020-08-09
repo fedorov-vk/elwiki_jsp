@@ -19,19 +19,18 @@
 package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.attachment.AttachmentManager;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
 import java.util.List;
-
 
 /**
  *  Iterates through the list of attachments one has.
@@ -57,7 +56,7 @@ public class AttachmentsIteratorTag extends IteratorTag {
         m_wikiContext = (Context) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
         final Engine engine = m_wikiContext.getEngine();
         final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
-        final Page page;
+        final WikiPage page;
 
         page = m_wikiContext.getPage();
 
@@ -68,7 +67,7 @@ public class AttachmentsIteratorTag extends IteratorTag {
 
         try {
             if( page != null && engine.getManager( PageManager.class ).wikiPageExists(page) ) {
-                final List< Attachment > atts = mgr.listAttachments( page );
+                final List< PageAttachment > atts = mgr.listAttachments( page );
 
                 if( atts == null ) {
                     log.debug("No attachments to display.");
@@ -79,9 +78,9 @@ public class AttachmentsIteratorTag extends IteratorTag {
                 m_iterator = atts.iterator();
 
                 if( m_iterator.hasNext() ) {
-                    final Attachment  att = (Attachment) m_iterator.next();
+                    final PageAttachment  att = (PageAttachment) m_iterator.next();
                     final Context context = m_wikiContext.clone();
-                    context.setPage( att );
+                    //:FVK: context.setPage( att );
                     pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
                     pageContext.setAttribute( getId(), att );
                 } else {
@@ -117,9 +116,9 @@ public class AttachmentsIteratorTag extends IteratorTag {
         }
 
         if( m_iterator != null && m_iterator.hasNext() ) {
-            final Attachment att = ( Attachment )m_iterator.next();
+            final PageAttachment att = ( PageAttachment )m_iterator.next();
             final Context context = m_wikiContext.clone();
-            context.setPage( att );
+            //:FVK: context.setPage( att );
             pageContext.setAttribute( Context.ATTR_CONTEXT,  context, PageContext.REQUEST_SCOPE );
             pageContext.setAttribute( getId(), att );
 

@@ -18,14 +18,14 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.attachment.AttachmentManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.util.Map;
@@ -122,7 +122,7 @@ public class Image implements Plugin {
 
         try {
             final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
-            final Attachment att = mgr.getAttachmentInfo( context, src );
+            final PageAttachment att = mgr.getAttachmentInfo( context, src );
 
             if( att != null ) {
                 src = context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName() );

@@ -20,9 +20,9 @@ package org.apache.wiki;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.event.WikiEngineEvent;
-import org.apache.wiki.event.WikiEvent;
-import org.apache.wiki.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEvent;
 
 
 /**
@@ -58,7 +58,7 @@ public abstract class WikiBackgroundThread extends Thread implements WikiEventLi
      * Listens for {@link org.apache.wiki.event.WikiEngineEvent#SHUTDOWN} and, if detected, marks the thread for death.
      * 
      * @param event {@inheritDoc}
-     * @see org.apache.wiki.event.WikiEventListener#actionPerformed(org.apache.wiki.event.WikiEvent)
+     * @see org.apache.wiki.api.event.WikiEventListener#actionPerformed(org.apache.wiki.event.WikiEvent)
      */
     @Override public final void actionPerformed( final WikiEvent event ) {
         if ( event instanceof WikiEngineEvent ) {

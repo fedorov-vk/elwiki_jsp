@@ -21,7 +21,7 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
@@ -106,9 +106,9 @@ public class WeblogArchivePlugin implements Plugin {
 
         final WeblogPlugin pl = new WeblogPlugin();
 
-        final List< Page > blogEntries = pl.findBlogEntries( engine, page, new Date(0L), new Date() );
+        final List< WikiPage > blogEntries = pl.findBlogEntries( engine, page, new Date(0L), new Date() );
 
-        for( final Page p : blogEntries ) {
+        for( final WikiPage p : blogEntries ) {
             // FIXME: Not correct, should parse page creation time.
             final Date d = p.getLastModified();
             final Calendar cal = Calendar.getInstance();

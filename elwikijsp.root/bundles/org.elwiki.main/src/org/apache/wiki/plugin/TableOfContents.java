@@ -22,18 +22,18 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.filters.FilterManager;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.parser.Heading;
-import org.apache.wiki.parser.HeadingListener;
-import org.apache.wiki.parser.MarkupParser;
+import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.parser0.Heading;
+import org.apache.wiki.parser0.HeadingListener;
+import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.variables.VariableManager;
 
 import java.io.IOException;
 import java.util.Map;
@@ -149,7 +149,7 @@ public class TableOfContents implements Plugin, HeadingListener {
     @Override
     public String execute( final Context context, final Map<String, String> params ) throws PluginException {
         final Engine engine = context.getEngine();
-        final Page page = context.getPage();
+        final WikiPage page = context.getPage();
         final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
 
         if( context.getVariable( VAR_ALREADY_PROCESSING ) != null ) {

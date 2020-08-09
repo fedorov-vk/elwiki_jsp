@@ -23,8 +23,8 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.plugin.DefaultPluginManager;
-import org.apache.wiki.plugin.PluginManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FormUtil;
 

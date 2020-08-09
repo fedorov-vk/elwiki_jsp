@@ -20,7 +20,7 @@ package org.apache.wiki.plugin;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.references.ReferenceManager;
+import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.util.Collection;

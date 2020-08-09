@@ -29,7 +29,7 @@ public class EngineDSL {
 
     private final EngineSPI engineSPI;
 
-    EngineDSL( final EngineSPI engineSPI ) {
+    public EngineDSL( final EngineSPI engineSPI ) {
         this.engineSPI = engineSPI;
     }
 
@@ -40,18 +40,7 @@ public class EngineDSL {
      * @return a configured {@link Engine} instance.
      */
     public Engine find( final ServletConfig config ) {
-        return find( config.getServletContext(), null );
-    }
-
-    /**
-     * Locate, or build if necessary, a configured {@link Engine} instance.
-     *
-     * @param config servlet config holding the {@link Engine} instance.
-     * @param props Engine configuration properties.
-     * @return a configured {@link Engine} instance.
-     */
-    public Engine find( final ServletConfig config, final Properties props ) {
-        return find( config.getServletContext(), props );
+        return find( config.getServletContext());
     }
 
     /**
@@ -61,8 +50,8 @@ public class EngineDSL {
      * @param props Engine configuration properties.
      * @return a configured {@link Engine} instance.
      */
-    public Engine find( final ServletContext context, final Properties props ) {
-        return engineSPI.find( context, props );
+    public Engine find( final ServletContext context ) {
+        return engineSPI.find( context );
     }
 
 }

@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.rss;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 
 /**
@@ -29,7 +29,7 @@ public class Entry {
     private String m_content;
     private String m_url;
     private String m_title;
-    private Page m_page;
+    private WikiPage m_page;
     private String m_author;
 
     /**
@@ -51,11 +51,11 @@ public class Entry {
     }
 
     /**
-     * Returns the page set by {@link #setPage(Page)}.
+     * Returns the page set by {@link #setPage(WikiPage)}.
      *
      * @return The WikiPage to which this Entry refers to.
      */
-    public Page getPage() {
+    public WikiPage getPage() {
         return m_page;
     }
 
@@ -64,7 +64,7 @@ public class Entry {
      *
      * @param p A valid WikiPage.
      */
-    public void setPage( final Page p ) {
+    public void setPage( final WikiPage p ) {
         m_page = p;
     }
 

@@ -18,8 +18,8 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Attachment;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 
 import java.io.IOException;
 
@@ -39,11 +39,14 @@ public class LinkToParentTag extends LinkToTag {
     private static final long serialVersionUID = 0L;
     
     public int doWikiStartTag() throws IOException {
-        final Page p = m_wikiContext.getPage();
+        final WikiPage p = m_wikiContext.getPage();
 
         //  We just simply set the page to be our parent page and call the superclass.
-        if( p instanceof Attachment ) {
-            setPage( ((Attachment)p).getParentName() );
+        if( p instanceof PageAttachment ) {
+        	 // :FVK: было -- page = ((PageAttachment)p).getParentName()
+        	PageAttachment pa = (PageAttachment)p;
+        	WikiPage page = pa.getWikipage();
+            setPage( page.getName() );
         } else {
             final String name = p.getName();
             final int entrystart = name.indexOf( "_blogentry_" );

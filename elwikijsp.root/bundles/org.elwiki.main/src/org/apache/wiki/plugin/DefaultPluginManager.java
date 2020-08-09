@@ -34,11 +34,14 @@ import org.apache.wiki.ajax.WikiAjaxDispatcherServlet;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.modules.BaseModuleManager;
+import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.modules.BaseModuleManager;
-import org.apache.wiki.modules.WikiModuleInfo;
+import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
@@ -46,6 +49,7 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.apache.wiki.util.XmlUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.jdom2.Element;
 
 import javax.servlet.http.HttpServlet;
@@ -57,6 +61,7 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +161,7 @@ import java.util.StringTokenizer;
  *
  *  @since 1.6.1
  */
-public class DefaultPluginManager extends BaseModuleManager implements PluginManager {
+public class DefaultPluginManager extends BaseModuleManager implements PluginManager, Initializable {
 
     private static final String PLUGIN_INSERT_PATTERN = "\\{?(INSERT)?\\s*([\\w\\._]+)[ \\t]*(WHERE)?[ \\t]*";
     private static final Logger log = Logger.getLogger( DefaultPluginManager.class );
@@ -169,45 +174,13 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
     /** Keeps a list of all known plugin classes. */
     private Map< String, WikiPluginInfo > m_pluginClassMap = new HashMap<>();
-
-    /**
-     *  Create a new PluginManager.
-     *
-     *  @param engine Engine which owns this manager.
-     *  @param props Contents of a "jspwiki.properties" file.
-     */
-    public DefaultPluginManager( final Engine engine, final Properties props ) {
-        super( engine );
-        final String packageNames = props.getProperty( Engine.PROP_SEARCHPATH );
-        if ( packageNames != null ) {
-            final StringTokenizer tok = new StringTokenizer( packageNames, "," );
-            while( tok.hasMoreTokens() ) {
-                m_searchPath.add( tok.nextToken().trim() );
-            }
-        }
-
-        final String externalJars = props.getProperty( PROP_EXTERNALJARS );
-        if( externalJars != null ) {
-            final StringTokenizer tok = new StringTokenizer( externalJars, "," );
-            while( tok.hasMoreTokens() ) {
-                m_externalJars.add( tok.nextToken().trim() );
-            }
-        }
-
-        registerPlugins();
-
-        //  The default packages are always added.
-        m_searchPath.add( DEFAULT_PACKAGE );
-        m_searchPath.add( DEFAULT_FORMS_PACKAGE );
-
-        final PatternCompiler compiler = new Perl5Compiler();
-        try {
-            m_pluginPattern = compiler.compile( PLUGIN_INSERT_PATTERN );
-        } catch( final MalformedPatternException e ) {
-            log.fatal( "Internal error: someone messed with pluginmanager patterns.", e );
-            throw new InternalWikiException( "PluginManager patterns are broken" , e );
-        }
-    }
+    
+	/**
+	 * Create a new PluginManager.
+	 */
+    public DefaultPluginManager() {
+		super();
+	}
 
     /** {@inheritDoc} */
     @Override
@@ -240,6 +213,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
     /** Outputs a HTML-formatted version of a stack trace. */
     private String stackTrace( final Map<String,String> params, final Throwable t ) {
+    	assert false;
+    	/*:FVK:
         final Element div = XhtmlUtil.element( XHTML.div, "Plugin execution failed, stack trace follows:" );
         div.setAttribute( XHTML.ATTR_class, "debug" );
 
@@ -255,6 +230,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         }
         div.addContent( list );
         return XhtmlUtil.serialize( div );
+        */
+    	return ":FVK:";
     }
 
     /** {@inheritDoc} */
@@ -440,7 +417,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
     private void registerPlugins() {
         // Register all plugins which have created a resource containing its properties.
         log.info( "Registering plugins" );
-        final List< Element > plugins = XmlUtil.parse( PLUGIN_RESOURCE_LOCATION, "/modules/plugin" );
+        final List< Element > plugins = //:FVK: XmlUtil.parse( PLUGIN_RESOURCE_LOCATION, "/modules/plugin" );
+        		Collections.emptyList();
 
         // Get all resources of all plugins.
         for( final Element pluginEl : plugins ) {
@@ -713,5 +691,45 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         }
         return plugin;
     }
+
+	/**
+	 * @param engine Engine which owns this manager.
+	 * @param props  Contents of a "jspwiki.properties" file.
+	 */
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+		m_engine = engine;
+		IPreferenceStore props = engine.getWikiPreferences();
+		
+        final String packageNames = TextUtil.getStringProperty(props, Engine.PROP_SEARCHPATH, null );
+        if ( packageNames != null ) {
+            final StringTokenizer tok = new StringTokenizer( packageNames, "," );
+            while( tok.hasMoreTokens() ) {
+                m_searchPath.add( tok.nextToken().trim() );
+            }
+        }
+
+        final String externalJars = TextUtil.getStringProperty(props, PROP_EXTERNALJARS, null );
+        if( externalJars != null ) {
+            final StringTokenizer tok = new StringTokenizer( externalJars, "," );
+            while( tok.hasMoreTokens() ) {
+                m_externalJars.add( tok.nextToken().trim() );
+            }
+        }
+
+        registerPlugins();
+
+        //  The default packages are always added.
+        m_searchPath.add( DEFAULT_PACKAGE );
+        m_searchPath.add( DEFAULT_FORMS_PACKAGE );
+
+        final PatternCompiler compiler = new Perl5Compiler();
+        try {
+            m_pluginPattern = compiler.compile( PLUGIN_INSERT_PATTERN );
+        } catch( final MalformedPatternException e ) {
+            log.fatal( "Internal error: someone messed with pluginmanager patterns.", e );
+            throw new InternalWikiException( "PluginManager patterns are broken" , e );
+        }
+	}
 
 }

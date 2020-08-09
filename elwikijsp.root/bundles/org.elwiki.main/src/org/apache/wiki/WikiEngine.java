@@ -21,44 +21,50 @@ package org.apache.wiki;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiPageEvent;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.attachment.AttachmentManager;
-import org.apache.wiki.auth.AuthenticationManager;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.plugin.PluginManager;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.api.search.SearchManager;
+import org.apache.wiki.api.tasks.TasksManager;
+import org.apache.wiki.api.ui.CommandResolver;
+import org.apache.wiki.api.ui.EditorManager;
+import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.acl.AclManager;
-import org.apache.wiki.auth.authorize.GroupManager;
-import org.apache.wiki.content.PageRenamer;
-import org.apache.wiki.diff.DifferenceManager;
-import org.apache.wiki.event.WikiEngineEvent;
-import org.apache.wiki.event.WikiEventListener;
-import org.apache.wiki.event.WikiEventManager;
-import org.apache.wiki.event.WikiPageEvent;
-import org.apache.wiki.filters.FilterManager;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.plugin.PluginManager;
-import org.apache.wiki.references.ReferenceManager;
-import org.apache.wiki.render.RenderingManager;
+//import org.apache.wiki.auth.authorize.GroupManager;
+import org.apache.wiki.content0.PageRenamer;
+import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.internal.MainActivator;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.rss.RSSGenerator;
-import org.apache.wiki.search.SearchManager;
-import org.apache.wiki.tasks.TasksManager;
-import org.apache.wiki.ui.CommandResolver;
-import org.apache.wiki.ui.EditorManager;
 import org.apache.wiki.ui.TemplateManager;
-import org.apache.wiki.ui.admin.AdminBeanManager;
+import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.apache.wiki.ui.progress.ProgressManager;
-import org.apache.wiki.url.URLConstructor;
+import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.ClassUtil;
-import org.apache.wiki.util.PropertyReader;
+//:FVK:import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.variables.VariableManager;
-import org.apache.wiki.workflow.WorkflowManager;
-
+import org.apache.wiki.workflow0.WorkflowManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.IWikiConstants;
+import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.configuration.IWikiConfiguration;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -76,6 +82,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,8 +104,8 @@ public class WikiEngine implements Engine {
     private static final String ATTR_WIKIENGINE = "org.apache.wiki.WikiEngine";
     private static final Logger log = Logger.getLogger( WikiEngine.class );
 
-    /** Stores properties. */
-    private Properties m_properties;
+    /** Stores configuration. */
+	private IWikiConfiguration wikiConfiguration;
 
     /** Should the user info be saved with the page data as well? */
     private boolean m_saveUserInfo = true;
@@ -145,21 +152,7 @@ public class WikiEngine implements Engine {
      *  @throws InternalWikiException in case something fails. This is a RuntimeException, so be prepared for it.
      */
     public static synchronized WikiEngine getInstance( final ServletConfig config ) throws InternalWikiException {
-        return getInstance( config.getServletContext(), null );
-    }
-
-    /**
-     *  Gets a WikiEngine related to the servlet. Works like getInstance(ServletConfig), but does not force the Properties object.
-     *  This method is just an optional way of initializing a WikiEngine for embedded JSPWiki applications; normally, you
-     *  should use getInstance(ServletConfig).
-     *
-     *  @param config The ServletConfig of the webapp servlet/JSP calling this method.
-     *  @param props  A set of properties, or null, if we are to load JSPWiki's default jspwiki.properties (this is the usual case).
-     *
-     *  @return One well-behaving WikiEngine instance.
-     */
-    public static synchronized WikiEngine getInstance( final ServletConfig config, final Properties props ) {
-        return getInstance( config.getServletContext(), props );
+        return getInstance( config.getServletContext() );
     }
 
     /**
@@ -170,17 +163,13 @@ public class WikiEngine implements Engine {
      *  @return One fully functional, properly behaving WikiEngine.
      *  @throws InternalWikiException If the WikiEngine instantiation fails.
      */
-    public static synchronized WikiEngine getInstance( final ServletContext context, Properties props ) throws InternalWikiException {
+    public static synchronized WikiEngine getInstance( final ServletContext context ) throws InternalWikiException {
         WikiEngine engine = ( WikiEngine )context.getAttribute( ATTR_WIKIENGINE );
         if( engine == null ) {
             final String appid = Integer.toString( context.hashCode() );
             context.log(" Assigning new engine to "+appid);
             try {
-                if( props == null ) {
-                    props = PropertyReader.loadWebAppProps( context );
-                }
-
-                engine = new WikiEngine( context, appid, props );
+                engine = new WikiEngine( context, appid );
                 context.setAttribute( ATTR_WIKIENGINE, engine );
             } catch( final Exception e ) {
                 context.log( "ERROR: Failed to create a Wiki engine: " + e.getMessage() );
@@ -192,16 +181,6 @@ public class WikiEngine implements Engine {
     }
 
     /**
-     *  Instantiate the WikiEngine using a given set of properties. Use this constructor for testing purposes only.
-     *
-     *  @param properties A set of properties to use to initialize this WikiEngine.
-     *  @throws WikiException If the initialization fails.
-     */
-    public WikiEngine( final Properties properties ) throws WikiException {
-        initialize( properties );
-    }
-
-    /**
      *  Instantiate using this method when you're running as a servlet and WikiEngine will figure out where to look for the property file.
      *  Do not use this method - use WikiEngine.getInstance() instead.
      *
@@ -210,10 +189,16 @@ public class WikiEngine implements Engine {
      *  @param props   The WikiEngine configuration.
      *  @throws WikiException If the WikiEngine construction fails.
      */
-    protected WikiEngine( final ServletContext context, final String appid, final Properties props ) throws WikiException {
+    protected WikiEngine( final ServletContext context, final String appid ) throws WikiException {
         m_servletContext = context;
         m_appid          = appid;
 
+		BundleContext bc = MainActivator.getContext();
+		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
+		}
+        
         // Stash the WikiEngine in the servlet context
         if ( context != null ) {
             context.setAttribute( ATTR_WIKIENGINE,  this );
@@ -222,7 +207,7 @@ public class WikiEngine implements Engine {
 
         try {
             //  Note: May be null, if JSPWiki has been deployed in a WAR file.
-            initialize( props );
+            initialize();
             log.info( "Root path for this Wiki is: '" + m_rootPath + "'" );
         } catch( final Exception e ) {
             final String msg = Release.APPNAME+": Unable to load and setup properties from jspwiki.properties. "+e.getMessage();
@@ -236,9 +221,8 @@ public class WikiEngine implements Engine {
     /**
      *  Does all the real initialization.
      */
-    private void initialize( final Properties props ) throws WikiException {
+    private void initialize() throws WikiException {
         m_startTime  = new Date();
-        m_properties = props;
 
         log.info( "*******************************************" );
         log.info( Release.APPNAME + " " + Release.getVersionString() + " starting. Whee!" );
@@ -260,10 +244,12 @@ public class WikiEngine implements Engine {
 
         log.debug( "Configuring WikiEngine..." );
 
-        //  Create and find the default working directory.
-        m_workDir = TextUtil.getStringProperty( props, PROP_WORKDIR, null );
+        IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
 
-        if( m_workDir == null ) {
+        //  Create and find the default working directory.
+        m_workDir = TextUtil.getStringProperty(preferences, PROP_WORKDIR, null);
+
+		if (m_workDir == null || m_workDir.length() == 0) {
             m_workDir = System.getProperty( "java.io.tmpdir", "." );
             m_workDir += File.separator + Release.APPNAME + "-" + m_appid;
         }
@@ -294,46 +280,97 @@ public class WikiEngine implements Engine {
 
         log.info( "JSPWiki working directory is '" + m_workDir + "'" );
 
-        m_saveUserInfo   = TextUtil.getBooleanProperty( props, PROP_STOREUSERNAME, m_saveUserInfo );
-        m_useUTF8        = StandardCharsets.UTF_8.name().equals( TextUtil.getStringProperty( props, PROP_ENCODING, StandardCharsets.ISO_8859_1.name() ) );
-        m_templateDir    = TextUtil.getStringProperty( props, PROP_TEMPLATEDIR, "default" );
+        m_saveUserInfo   = TextUtil.getBooleanProperty( preferences, PROP_STOREUSERNAME, m_saveUserInfo );
+        m_useUTF8        = StandardCharsets.UTF_8.name().equals( TextUtil.getStringProperty( preferences, PROP_ENCODING, StandardCharsets.ISO_8859_1.name() ) );
+        m_templateDir    = TextUtil.getStringProperty( preferences, PROP_TEMPLATEDIR, "default" );
         enforceValidTemplateDirectory();
-        m_frontPage      = TextUtil.getStringProperty( props, PROP_FRONTPAGE,   "Main" );
+        m_frontPage      = TextUtil.getStringProperty( preferences, PROP_FRONTPAGE,   "Main" );
 
         //
         //  Initialize the important modules.  Any exception thrown by the managers means that we will not start up.
         //
         try {
-            final String aclClassName = m_properties.getProperty( PROP_ACL_MANAGER_IMPL, ClassUtil.getMappedClass( AclManager.class.getName() ).getName() );
-            final String urlConstructorClassName = TextUtil.getStringProperty( props, PROP_URLCONSTRUCTOR, "DefaultURLConstructor" );
-            final Class< ? > urlclass = ClassUtil.findClass( "org.apache.wiki.url", urlConstructorClassName );
+        	String def = "org.apache.wiki.auth.acl.AclManager"; //:FVK: ClassUtil.getMappedClass( AclManager.class.getName() ).getName();
+            final String aclClassName = TextUtil.getStringProperty( preferences, PROP_ACL_MANAGER_IMPL, def);
 
-            initComponent( CommandResolver.class, this, props );
-            initComponent( urlclass.getName(), URLConstructor.class );
-            initComponent( PageManager.class, this, props );
-            initComponent( PluginManager.class, this, props );
-            initComponent( DifferenceManager.class, this, props );
-            initComponent( AttachmentManager.class, this, props );
-            initComponent( VariableManager.class, props );
-            initComponent( SearchManager.class, this, props );
-            initComponent( AuthenticationManager.class );
-            initComponent( AuthorizationManager.class );
-            initComponent( UserManager.class );
-            initComponent( GroupManager.class );
-            initComponent( EditorManager.class, this );
-            initComponent( ProgressManager.class, this );
-            initComponent( aclClassName, AclManager.class );
-            initComponent( WorkflowManager.class );
-            initComponent( TasksManager.class );
-            initComponent( InternationalizationManager.class, this );
-            initComponent( TemplateManager.class, this, props );
-            initComponent( FilterManager.class, this, props );
-            initComponent( AdminBeanManager.class, this );
-            initComponent( PageRenamer.class, this, props );
+            initService(CommandResolver.class);
+            //initComponent( CommandResolver.class, this, props );
+
+            /*final String urlConstructorClassName = TextUtil.getStringProperty( props, PROP_URLCONSTRUCTOR, "DefaultURLConstructor" );
+            final Class< ? > urlclass; //:FVK: = ClassUtil.findClass( "org.apache.wiki.url", urlConstructorClassName );
+            urlclass = DefaultURLConstructor.class;*/
+
+            initService(URLConstructor.class); // org.apache.wiki.url.DefaultURLConstructor
+            //initComponent( urlclass.getName(), URLConstructor.class );
+
+            initService(PageManager.class);
+            //initComponent( PageManager.class, this, props );
+
+            initService(PluginManager.class);
+            //initComponent( PluginManager.class, this, props );
+
+            initService(DifferenceManager.class);
+            //initComponent( DifferenceManager.class, this, props );
+
+            initService(AttachmentManager.class);
+            //initComponent( AttachmentManager.class, this, props );
+
+            initService(VariableManager.class);
+            //initComponent( VariableManager.class, props );
+
+            initService(SearchManager.class);
+            //initComponent( SearchManager.class, this, props );
+
+            initService(IIAuthenticationManager.class);
+            //initComponent( AuthenticationManager.class );
+
+            initService(AuthorizationManager.class);
+            //initComponent( AuthorizationManager.class );
+
+            initService(UserManager.class);
+            //initComponent( UserManager.class );
+
+          /*:FVK: 
+            initService(GroupManager.class);
+            //initComponent( GroupManager.class );
+             */
+            initService(IAuthorizer.class);
+
+//:FVK: отладить:
+            initService(EditorManager.class);
+            //initComponent( EditorManager.class, this );
+
+            initService(ProgressManager.class);
+            //initComponent( ProgressManager.class, this );
+
+            initService(AclManager.class);
+            //initComponent( aclClassName, AclManager.class );
+
+            initService(WorkflowManager.class);
+            //initComponent( WorkflowManager.class );
+
+            initService(TasksManager.class);
+            //initComponent( TasksManager.class );
+
+            initService(InternationalizationManager.class);
+            //initComponent( InternationalizationManager.class, this );
+            
+            initService(TemplateManager.class);
+            //initComponent( TemplateManager.class, this, props );
+
+            initService(FilterManager.class);
+            //initComponent( FilterManager.class, this, props );
+
+            initService(AdminBeanManager.class);
+            //initComponent( AdminBeanManager.class, this );
+
+            initService(PageRenamer.class);
+            //initComponent( PageRenamer.class, this, props );
 
             // RenderingManager depends on FilterManager events.
-            initComponent( RenderingManager.class );
-
+            initService(RenderingManager.class);
+            //initComponent( RenderingManager.class );
+//TODO
             //  ReferenceManager has the side effect of loading all pages.  Therefore after this point, all page attributes are available.
             //  initReferenceManager is indirectly using m_filterManager, therefore it has to be called after it was initialized.
             initReferenceManager();
@@ -362,15 +399,17 @@ public class WikiEngine implements Engine {
 
         //  Initialize the good-to-have-but-not-fatal modules.
         try {
-            if( TextUtil.getBooleanProperty( props, RSSGenerator.PROP_GENERATE_RSS,false ) ) {
-                initComponent( RSSGenerator.class, this, props );
+            if( TextUtil.getBooleanProperty( preferences, RSSGenerator.PROP_GENERATE_RSS,false ) ) {
+                initComponent( RSSGenerator.class, this, preferences);
             }
         } catch( final Exception e ) {
             log.error( "Unable to start RSS generator - JSPWiki will still work, but there will be no RSS feed.", e );
         }
 
+        /*:FVK: WORKAROUND.
         final Map< String, String > extraComponents = ClassUtil.getExtraClassMappings();
         initExtraComponents( extraComponents );
+        */
 
         fireEvent( WikiEngineEvent.INITIALIZED ); // initialization complete
 
@@ -378,7 +417,16 @@ public class WikiEngine implements Engine {
         m_isConfigured = true;
     }
 
-    void initExtraComponents( final Map< String, String > extraComponents ) {
+    private <T> T initService(Class<T> clazz) throws Exception {
+        T service = MainActivator.getService(clazz);
+        managers.put( clazz, service );
+		if(service instanceof Initializable) {
+			((Initializable) service).initialize(this);
+		}
+		return service;
+	}
+
+	void initExtraComponents( final Map< String, String > extraComponents ) {
         for( final Map.Entry< String, String > extraComponent : extraComponents.entrySet() ) {
             try {
                 log.info( "Registering on WikiEngine " + extraComponent.getKey() + " as " + extraComponent.getValue() );
@@ -402,7 +450,7 @@ public class WikiEngine implements Engine {
         }
         managers.put( componentClass, component );
         if( Initializable.class.isAssignableFrom( componentClass ) ) {
-            ( ( Initializable )component ).initialize( this, m_properties );
+            ( ( Initializable )component ).initialize( this );
         }
     }
 
@@ -410,10 +458,11 @@ public class WikiEngine implements Engine {
     @Override
     @SuppressWarnings( "unchecked" )
     public < T > T getManager( final Class< T > manager ) {
-        return ( T )managers.entrySet().stream()
+    	T result = ( T )managers.entrySet().stream()
                                        .filter( e -> manager.isAssignableFrom( e.getKey() ) )
                                        .map( Map.Entry::getValue )
                                        .findFirst().orElse( null );
+    	return result;
     }
 
     /** {@inheritDoc} */
@@ -470,12 +519,14 @@ public class WikiEngine implements Engine {
         try {
             // Build a new manager with default key lists.
             if( getManager( ReferenceManager.class ) == null ) {
-                final ArrayList< Page > pages = new ArrayList<>();
+                final ArrayList< WikiPage > pages = new ArrayList<>();
                 pages.addAll( getManager( PageManager.class ).getAllPages() );
-                pages.addAll( getManager( AttachmentManager.class ).getAllAttachments() );
-                initComponent( ReferenceManager.class, this );
+                //:FVK: pages.addAll( getManager( AttachmentManager.class ).getAllAttachments() );
 
-                getManager( ReferenceManager.class ).initialize( pages );
+                ReferenceManager manager = initService(ReferenceManager.class);
+                manager.initialize( pages );
+                //initComponent( ReferenceManager.class, this );
+                //getManager( ReferenceManager.class ).initialize( pages );
             }
 
         } catch( final ProviderException e ) {
@@ -487,8 +538,8 @@ public class WikiEngine implements Engine {
 
     /** {@inheritDoc} */
     @Override
-    public Properties getWikiProperties() {
-        return m_properties;
+    public IPreferenceStore getWikiPreferences() {
+        return this.wikiConfiguration.getWikiPreferences();
     }
 
     /** {@inheritDoc} */
@@ -528,12 +579,6 @@ public class WikiEngine implements Engine {
 
     /** {@inheritDoc} */
     @Override
-    public String getInterWikiURL( final String wikiName ) {
-        return TextUtil.getStringProperty( m_properties,PROP_INTERWIKIREF + wikiName,null );
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String getURL( final String context, String pageName, final String params ) {
         if( pageName == null ) {
             pageName = getFrontPage();
@@ -556,47 +601,8 @@ public class WikiEngine implements Engine {
 
     /** {@inheritDoc} */
     @Override
-    public Collection< String > getAllInterWikiLinks() {
-        final ArrayList< String > list = new ArrayList<>();
-        for( final Enumeration< ? > i = m_properties.propertyNames(); i.hasMoreElements(); ) {
-            final String prop = ( String )i.nextElement();
-            if( prop.startsWith( PROP_INTERWIKIREF ) ) {
-                list.add( prop.substring( prop.lastIndexOf( "." ) + 1 ) );
-            }
-        }
-
-        return list;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Collection< String > getAllInlinedImagePatterns() {
-        final ArrayList< String > ptrnlist = new ArrayList<>();
-        for( final Enumeration< ? > e = m_properties.propertyNames(); e.hasMoreElements(); ) {
-            final String name = ( String )e.nextElement();
-            if( name.startsWith( PROP_INLINEIMAGEPTRN ) ) {
-                ptrnlist.add( TextUtil.getStringProperty( m_properties, name, null ) );
-            }
-        }
-
-        if( ptrnlist.isEmpty() ) {
-            ptrnlist.add( DEFAULT_INLINEPATTERN );
-        }
-
-        return ptrnlist;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String getSpecialPageReference( final String original ) {
         return getManager( CommandResolver.class ).getSpecialPageReference( original );
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getApplicationName() {
-        final String appName = TextUtil.getStringProperty( m_properties, PROP_APPNAME, Release.APPNAME );
-        return TextUtil.cleanString( appName, TextUtil.PUNCTUATION_CHARS_ALLOWED );
     }
 
     /** {@inheritDoc} */
@@ -657,7 +663,7 @@ public class WikiEngine implements Engine {
     }
 
     /**
-     * Returns the {@link org.apache.wiki.workflow.WorkflowManager} associated with this WikiEngine. If the WikiEngine has not been
+     * Returns the {@link org.apache.wiki.workflow0.WorkflowManager} associated with this WikiEngine. If the WikiEngine has not been
      * initialized, this method will return <code>null</code>.
      *
      * @return the task queue
@@ -767,8 +773,8 @@ public class WikiEngine implements Engine {
      * @deprecated use {@code getManager( AuthenticationManager.class )} instead.
      */
     @Deprecated
-    public AuthenticationManager getAuthenticationManager() {
-        return getManager( AuthenticationManager.class );
+    public IIAuthenticationManager getAuthenticationManager() {
+        return getManager( IIAuthenticationManager.class );
     }
 
     /**
@@ -878,10 +884,12 @@ public class WikiEngine implements Engine {
      *  @return The current GroupManager instance.
      * @deprecated use {@code getManager( GroupManager.class )} instead.
      */
+    /*:FVK:
     @Deprecated
     public GroupManager getGroupManager() {
         return getManager( GroupManager.class );
     }
+    */
 
     /**
      *  Returns the current {@link AdminBeanManager}.
@@ -997,4 +1005,8 @@ public class WikiEngine implements Engine {
         return ( T )m_attributes.remove( key );
     }
 
+    @Override
+    public IWikiConfiguration getWikiConfiguration() {
+    	return this.wikiConfiguration;
+    }
 }

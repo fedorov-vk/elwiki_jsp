@@ -20,14 +20,14 @@ package org.apache.wiki.xmlrpc;
 
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Attachment;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.auth.permissions.PermissionFactory;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.Calendar;
@@ -47,17 +47,17 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
 
     public String getApplicationName() {
         checkPermission( PagePermission.VIEW );
-        return m_engine.getApplicationName();
+        return getWikiConfiguration().getApplicationName();
     }
 
     public Vector< String > getAllPages() {
         checkPermission( PagePermission.VIEW );
 
-        final Set< Page > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
+        final Set< WikiPage > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
         final Vector< String > result = new Vector<>();
 
-        for( final Page p : pages ) {
-            if( !( p instanceof Attachment ) ) {
+        for( final WikiPage p : pages ) {
+            if( !( p instanceof PageAttachment ) ) {
                 result.add( p.getName() );
             }
         }
@@ -69,7 +69,7 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
      *  Encodes a single wiki page info into a Hashtable.
      */
     @Override
-    protected Hashtable<String, Object> encodeWikiPage( final Page page ) {
+    protected Hashtable<String, Object> encodeWikiPage( final WikiPage page ) {
         final Hashtable<String, Object> ht = new Hashtable<>();
         ht.put( "name", page.getName() );
 
@@ -86,7 +86,7 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
                     (cal.getTimeZone().inDaylightTime( d ) ? cal.get( Calendar.DST_OFFSET ) : 0 )) );
 
         ht.put( "lastModified", cal.getTime() );
-        ht.put( "version", page.getVersion() );
+      //:FVK: ht.put( "version", page.getVersion() );
 
         if( page.getAuthor() != null ) {
             ht.put( "author", page.getAuthor() );
@@ -99,7 +99,7 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
     public Vector< Hashtable< String, Object > > getRecentChanges( Date since ) {
         checkPermission( PagePermission.VIEW );
 
-        final Set< Page > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
+        final Set< WikiPage > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
         final Vector< Hashtable< String, Object > > result = new Vector<>();
 
         final Calendar cal = Calendar.getInstance();
@@ -113,8 +113,8 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
                   (cal.getTimeZone().inDaylightTime(since) ? cal.get( Calendar.DST_OFFSET ) : 0 ) ) );
         since = cal.getTime();
 
-        for( final Page page : pages ) {
-            if( page.getLastModified().after( since ) && !( page instanceof Attachment ) ) {
+        for( final WikiPage page : pages ) {
+            if( page.getLastModified().after( since ) && !( page instanceof PageAttachment ) ) {
                 result.add( encodeWikiPage( page ) );
             }
         }
@@ -135,7 +135,7 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
             throw new XmlRpcException( ERR_NOPAGE, "No such page '"+pagename+"' found, o master." );
         }
 
-        final Page p = m_engine.getManager( PageManager.class ).getPage( pagename );
+        final WikiPage p = m_engine.getManager( PageManager.class ).getPage( pagename );
 
         checkPermission( PermissionFactory.getPagePermission( p, PagePermission.VIEW_ACTION ) );
         return pagename;
@@ -170,7 +170,7 @@ public class RPCHandlerUTF8 extends AbstractRPCHandler {
     public Vector< Hashtable< String, String > > listLinks( String pagename ) throws XmlRpcException {
         pagename = parsePageCheckCondition( pagename );
 
-        final Page page = m_engine.getManager( PageManager.class ).getPage( pagename );
+        final WikiPage page = m_engine.getManager( PageManager.class ).getPage( pagename );
         final String pagedata = m_engine.getManager( PageManager.class ).getPureText( page );
 
         final LinkCollector localCollector = new LinkCollector();

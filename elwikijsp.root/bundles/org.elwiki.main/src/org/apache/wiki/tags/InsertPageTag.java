@@ -20,10 +20,10 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class InsertPageTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException, ProviderException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page insertedPage;
+        final WikiPage insertedPage;
 
         //
         //  NB: The page might not really exist if the user is currently
@@ -110,7 +110,7 @@ public class InsertPageTag extends WikiTagBase {
             log.debug("Inserting page "+insertedPage);
 
             final JspWriter out = pageContext.getOut();
-            final Page oldPage = m_wikiContext.setRealPage( insertedPage );
+            final WikiPage oldPage = m_wikiContext.setRealPage( insertedPage );
             
             switch( m_mode ) {
               case HTML: out.print( engine.getManager( RenderingManager.class ).getHTML( m_wikiContext, insertedPage ) ); break;

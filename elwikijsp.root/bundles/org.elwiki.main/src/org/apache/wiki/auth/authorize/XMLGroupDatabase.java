@@ -22,10 +22,10 @@ import org.apache.commons.lang3.StringEscapeUtils; //:FVK: org.apache.commons.te
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
-import org.apache.wiki.auth.NoSuchPrincipalException;
-import org.apache.wiki.auth.WikiPrincipal;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.data.authorize.WikiPrincipal;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -165,7 +165,7 @@ public class XMLGroupDatabase implements GroupDatabase {
      * @throws WikiSecurityException if the database could not be initialized successfully
      */
     @Override
-    public void initialize( final Engine engine, final Properties props ) throws NoRequiredPropertyException, WikiSecurityException
+    public void initialize( final Engine engine ) throws NoRequiredPropertyException, WikiSecurityException
     {
         m_engine = engine;
 
@@ -181,7 +181,7 @@ public class XMLGroupDatabase implements GroupDatabase {
         }
 
         // Get database file location
-        final String file = TextUtil.getStringProperty(props, PROP_DATABASE , defaultFile.getAbsolutePath());
+        final String file = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_DATABASE , defaultFile.getAbsolutePath());
         if ( file == null )
         {
             log.warn( "XML group database property " + PROP_DATABASE + " not found; trying " + defaultFile );
@@ -310,7 +310,7 @@ public class XMLGroupDatabase implements GroupDatabase {
         }
 
         // Construct a new group
-        final Group group = new Group( name, m_engine.getApplicationName() );
+        final Group group = new Group( name, m_engine.getWikiConfiguration().getApplicationName() );
 
         // Get the users for this group, and add them
         final NodeList members = groupNode.getElementsByTagName( MEMBER_TAG );

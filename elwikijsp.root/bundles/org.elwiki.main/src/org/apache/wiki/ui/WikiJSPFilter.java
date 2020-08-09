@@ -24,10 +24,11 @@ import org.apache.log4j.NDC;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.event.WikiEventManager;
-import org.apache.wiki.event.WikiPageEvent;
-import org.apache.wiki.url.URLConstructor;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -80,16 +81,16 @@ public class WikiJSPFilter extends WikiServletFilter {
     @Override
     public void init( final FilterConfig config ) throws ServletException {
         super.init( config );
-        m_wiki_encoding = m_engine.getWikiProperties().getProperty( Engine.PROP_ENCODING );
+        m_wiki_encoding = m_engine.getWikiPreferences().getString( Engine.PROP_ENCODING );
 
-        useEncoding = !Boolean.parseBoolean( m_engine.getWikiProperties().getProperty( Engine.PROP_NO_FILTER_ENCODING, "false" ).trim() );
+        useEncoding = !TextUtil.getBooleanProperty(getWikiConfiguration().getWikiPreferences(), Engine.PROP_NO_FILTER_ENCODING, false);
     }
 
     @Override
     public void doFilter( final ServletRequest  request, final ServletResponse response, final FilterChain chain ) throws ServletException, IOException {
         final WatchDog w = WatchDog.getCurrentWatchDog( m_engine );
         try {
-            NDC.push( m_engine.getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
+            NDC.push( getWikiConfiguration().getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
             w.enterState("Filtering for URL "+((HttpServletRequest)request).getRequestURI(), 90 );
             final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper( ( HttpServletResponse )response, m_wiki_encoding, useEncoding );
 
@@ -302,7 +303,7 @@ public class WikiJSPFilter extends WikiServletFilter {
      *  Fires a WikiPageEvent of the provided type and page name
      *  to all registered listeners of the current Engine.
      *
-     * @see org.apache.wiki.event.WikiPageEvent
+     * @see org.apache.wiki.api.event.WikiPageEvent
      * @param type       the event type to be fired
      * @param pagename   the wiki page name as a String
      */

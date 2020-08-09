@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.render0.RenderingManager;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;

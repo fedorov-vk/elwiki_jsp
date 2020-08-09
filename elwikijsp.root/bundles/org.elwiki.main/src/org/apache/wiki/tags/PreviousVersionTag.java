@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 import java.io.IOException;
 
@@ -37,7 +37,7 @@ public class PreviousVersionTag extends WikiTagBase {
      */
     @Override
     public final int doWikiStartTag() throws IOException {
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         int version = page.getVersion();
         version--;
         if( version > 0 ) {

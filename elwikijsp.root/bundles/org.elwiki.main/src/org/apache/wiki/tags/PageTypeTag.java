@@ -18,10 +18,12 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Attachment;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 
 import java.io.IOException;
+
+import javax.servlet.jsp.tagext.Tag;
 
 /**
  *  Includes the body, if the current page is of proper type.
@@ -50,16 +52,16 @@ public class PageTypeTag extends WikiTagBase {
     }
 
     public final int doWikiStartTag() throws IOException {
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         if( page != null ) {
-            if( m_type.equals( "attachment" ) && page instanceof Attachment ) {
-                return EVAL_BODY_INCLUDE;
+            if( m_type.equals( "attachment" ) && page instanceof PageAttachment ) {
+                return Tag.EVAL_BODY_INCLUDE;
             }
-            if( m_type.equals( "page" ) && !( page instanceof Attachment ) ) {
-                return EVAL_BODY_INCLUDE;
+            if( m_type.equals( "page" ) && !( page instanceof WikiPage ) ) {
+                return Tag.EVAL_BODY_INCLUDE;
             }
-            if( m_type.equals( "weblogentry" ) && !( page instanceof Attachment ) && page.getName().contains( "_blogentry_" ) ) {
-                return EVAL_BODY_INCLUDE;
+            if( m_type.equals( "weblogentry" ) && !( page instanceof PageAttachment ) && page.getName().contains( "_blogentry_" ) ) {
+                return Tag.EVAL_BODY_INCLUDE;
             }
         }
 

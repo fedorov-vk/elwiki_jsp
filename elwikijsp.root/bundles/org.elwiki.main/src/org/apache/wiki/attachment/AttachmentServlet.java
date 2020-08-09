@@ -26,24 +26,27 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.Elwiki_dataFactory;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PermissionFactory;
-import org.apache.wiki.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.progress.ProgressItem;
 import org.apache.wiki.ui.progress.ProgressManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -115,7 +118,7 @@ public class AttachmentServlet extends HttpServlet {
     @Override
     public void init( final ServletConfig config ) throws ServletException {
         m_engine = Wiki.engine().find( config );
-        final Properties props = m_engine.getWikiProperties();
+        final IPreferenceStore props = m_engine.getWikiPreferences();
         final String tmpDir = m_engine.getWorkDir() + File.separator + "attach-tmp";
         final String allowed = TextUtil.getStringProperty( props, AttachmentManager.PROP_ALLOWEDEXTENSIONS, null );
         m_maxSize = TextUtil.getIntegerProperty( props, AttachmentManager.PROP_MAXSIZE, Integer.MAX_VALUE );
@@ -205,13 +208,13 @@ public class AttachmentServlet extends HttpServlet {
                 ver = Integer.parseInt( version );
             }
 
-            final Attachment att = mgr.getAttachmentInfo( page, ver );
+            final PageAttachment att = mgr.getAttachmentInfo( page, ver );
             if( att != null ) {
                 //
                 //  Check if the user has permission for this attachment
                 //
 
-                final Permission permission = PermissionFactory.getPagePermission( att, "view" );
+                final Permission permission = null; //:FVK: PermissionFactory.getPagePermission( att, "view" );
                 if( !authmgr.checkPermission( context.getWikiSession(), permission ) ) {
                     log.debug("User does not have permission for this");
                     res.sendError( HttpServletResponse.SC_FORBIDDEN );
@@ -221,21 +224,23 @@ public class AttachmentServlet extends HttpServlet {
                 //
                 //  Check if the client already has a version of this attachment.
                 //
+              /*:FVK: 
                 if( HttpUtil.checkFor304( req, att.getName(), att.getLastModified() ) ) {
                     log.debug( "Client has latest version already, sending 304..." );
                     res.sendError( HttpServletResponse.SC_NOT_MODIFIED );
                     return;
-                }
+                }*/
 
+              /*:FVK: 
                 final String mimetype = getMimeType( context, att.getFileName() );
-                res.setContentType( mimetype );
+                res.setContentType( mimetype );*/
 
                 //
                 //  We use 'inline' instead of 'attachment' so that user agents
                 //  can try to automatically open the file.
                 //
-                res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getFileName() + "\";" );
-                res.addDateHeader("Last-Modified",att.getLastModified().getTime());
+                res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getName() + "\";" );
+                res.addDateHeader("Last-Modified",att.getLastModify().getTime());
 
                 if( !att.isCacheable() ) {
                     res.addHeader( "Pragma", "no-cache" );
@@ -258,7 +263,7 @@ public class AttachmentServlet extends HttpServlet {
                 }
 
                 if( log.isDebugEnabled() ) {
-                    log.debug( "Attachment "+att.getFileName()+" sent to "+req.getRemoteUser()+" on "+HttpUtil.getRemoteAddress(req) );
+                    log.debug( "Attachment "+att.getName()+" sent to "+req.getRemoteUser()+" on "+HttpUtil.getRemoteAddress(req) );
                 }
                 if( nextPage != null ) {
                     res.sendRedirect(
@@ -545,31 +550,34 @@ public class AttachmentServlet extends HttpServlet {
         //  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
         //  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
         //  same name than some other previous attachment, then that attachment gains a new version.
-        Attachment att = mgr.getAttachmentInfo( context.getPage().getName() );
+        PageAttachment att = mgr.getAttachmentInfo( context.getPage().getName() );
         if( att == null ) {
-            att = new org.apache.wiki.attachment.Attachment( m_engine, parentPage, filename );
+        	//:FVK: new Attachment( m_engine, parentPage, filename );
+            att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+            att.setName(filename);
             created = true;
         }
         att.setSize( contentLength );
 
         //  Check if we're allowed to do this?
-        final Permission permission = PermissionFactory.getPagePermission( att, "upload" );
+        final Permission permission = null; //:FVK: PermissionFactory.getPagePermission( att, "upload" );
         if( m_engine.getManager( AuthorizationManager.class ).checkPermission( context.getWikiSession(), permission ) ) {
             if( user != null ) {
                 att.setAuthor( user.getName() );
             }
 
             if( changenote != null && changenote.length() > 0 ) {
-                att.setAttribute( Page.CHANGENOTE, changenote );
+            	//:FVK: att.setAttribute( WikiPage.CHANGENOTE, changenote );
             }
 
+          /*:FVK: 
             try {
                 m_engine.getManager( AttachmentManager.class ).storeAttachment( att, data );
             } catch( final ProviderException pe ) {
                 // this is a kludge, the exception that is caught here contains the i18n key
                 // here we have the context available, so we can internationalize it properly :
                 throw new ProviderException( Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE ).getString( pe.getMessage() ) );
-            }
+            }*/
 
             log.info( "User " + user + " uploaded attachment to " + parentPage + " called "+filename+", size " + att.getSize() );
         } else {

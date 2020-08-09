@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Build-Jdk: 1.6.0_65
+Built-By: jeremy
+Bundle-Localization: plugin
+Bundle-ManifestVersion: 2
+Bundle-Name: org.apache.taglibs.standard-impl.source
+Bundle-SymbolicName: org.apache.taglibs.standard-impl.source
+Bundle-Version: 1.2.5
+Created-By: Apache Maven
+Eclipse-SourceBundle: org.apache.taglibs.standard-impl;version="1.2.5"
+ ;roots:="."
+Implementation-Title: org.apache.taglibs.standard-impl.source
+Specification-Title: org.apache.taglibs.standard-impl.source
+Tool: p2-maven-plugin (reficio.org)

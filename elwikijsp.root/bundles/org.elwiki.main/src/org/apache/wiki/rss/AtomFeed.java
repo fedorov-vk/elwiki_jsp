@@ -20,13 +20,13 @@ package org.apache.wiki.rss;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wiki.api.Release;
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.attachment.AttachmentManager;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.output.Format;
@@ -85,7 +85,7 @@ public class AtomFeed extends Feed {
         }
 
         for( final Entry e : m_entries ) {
-            final Page p = e.getPage();
+            final WikiPage p = e.getPage();
             final Element entryEl = getElement( "entry" );
 
             //  Mandatory elements
@@ -101,13 +101,13 @@ public class AtomFeed extends Feed {
             //  Check for enclosures
             if( engine.getManager( AttachmentManager.class ).hasAttachments( p ) && servletContext != null ) {
                 try {
-                    final List< Attachment > c = engine.getManager( AttachmentManager.class ).listAttachments( p );
-                    for( final Attachment att : c ) {
+                    final List< PageAttachment > c = engine.getManager( AttachmentManager.class ).listAttachments( p );
+                    for( final PageAttachment att : c ) {
                         final Element attEl = getElement( "link" );
                         attEl.setAttribute( "rel", "enclosure" );
                         attEl.setAttribute( "href", engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null ) );
                         attEl.setAttribute( "length", Long.toString( att.getSize() ) );
-                        attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
+                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
 
                         entryEl.addContent( attEl );
                     }

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.internal.MainActivator;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -97,6 +98,7 @@ public class WebContainerAuthorizer implements WebAuthorizer  {
         m_containerAuthorized = false;
 
         // FIXME: Error handling here is not very verbose
+        /*:FVK:
         try {
             m_webxml = getWebXml();
             if( m_webxml != null ) {
@@ -118,6 +120,7 @@ public class WebContainerAuthorizer implements WebAuthorizer  {
             log.error( "Malformed XML in web.xml", e );
             throw new InternalWikiException( e.getClass().getName() + ": " + e.getMessage(), e );
         }
+        */
 
         if( m_containerRoles.length > 0 ) {
             String roles = "";
@@ -358,7 +361,8 @@ public class WebContainerAuthorizer implements WebAuthorizer  {
         }
         else
         {
-            url = m_engine.getServletContext().getResource( "/WEB-INF/web.xml" );
+            //:FVK: url = m_engine.getServletContext().getResource( "/WEB-INF/web.xml" );
+        	url = MainActivator.getContext().getBundle().getResource("WEB-INF/web.xml");
             if( url != null )
                 log.info( "Examining " + url.toExternalForm() );
         }

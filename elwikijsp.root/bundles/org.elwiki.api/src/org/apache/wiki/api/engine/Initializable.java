@@ -37,6 +37,6 @@ public interface Initializable {
      * @param props Properties for setup.
      * @throws WikiException if an exception occurs while initializing the component.
      */
-    void initialize( Engine engine, Properties props ) throws WikiException;
+    void initialize( Engine engine ) throws WikiException;
 
 }

@@ -25,16 +25,18 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.authorize.Group;
 import org.apache.wiki.auth.authorize.GroupDatabase;
-import org.apache.wiki.auth.authorize.GroupManager;
+//import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.apache.wiki.auth.permissions.AllPermission;
 import org.apache.wiki.auth.permissions.GroupPermission;
 import org.apache.wiki.auth.permissions.PermissionFactory;
 import org.apache.wiki.auth.permissions.WikiPermission;
-import org.apache.wiki.auth.user.DummyUserDatabase;
-import org.apache.wiki.auth.user.UserDatabase;
-import org.apache.wiki.auth.user.UserProfile;
+/*:FVK:
+import org.apache.wiki.auth.user.DummyUserDatabase;*/
+import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.util.TextUtil;
 import org.freshcookies.security.policy.PolicyReader;
 
 import javax.security.auth.Subject;
@@ -187,7 +189,7 @@ public final class SecurityVerifier {
     public String policyRoleTable()
     {
         final Principal[] roles = m_policyPrincipals;
-        final String wiki = m_engine.getApplicationName();
+        final String wiki = m_engine.getWikiConfiguration().getApplicationName();
 
         final String[] pages = new String[]
         { "Main", "Index", "GroupTest", "GroupAdmin" };
@@ -339,7 +341,7 @@ public final class SecurityVerifier {
      */
     public String containerRoleTable() throws WikiException {
         final AuthorizationManager authorizationManager = m_engine.getManager( AuthorizationManager.class );
-        final Authorizer authorizer = authorizationManager.getAuthorizer();
+        final Authorizer authorizer = (Authorizer) authorizationManager.getAuthorizer();
 
         // If authorizer not WebContainerAuthorizer, print error message
         if ( !( authorizer instanceof WebContainerAuthorizer ) ) {
@@ -424,7 +426,7 @@ public final class SecurityVerifier {
      * @throws WikiException if the web authorizer cannot obtain the list of roles
      */
     public Principal[] webContainerRoles() throws WikiException {
-        final Authorizer authorizer = m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+        final Authorizer authorizer = (Authorizer) m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
         if ( authorizer instanceof WebContainerAuthorizer ) {
             return authorizer.getRoles();
         }
@@ -438,7 +440,7 @@ public final class SecurityVerifier {
      */
     protected void verifyPolicyAndContainerRoles() throws WikiException
     {
-        final Authorizer authorizer = m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+        final Authorizer authorizer = (Authorizer) m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
         final Principal[] containerRoles = authorizer.getRoles();
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
@@ -466,6 +468,8 @@ public final class SecurityVerifier {
      */
     protected void verifyGroupDatabase()
     {
+    	Object mgr = null, db = null; // :FVK:
+    	/*:FVK:
         final GroupManager mgr = m_engine.getManager( GroupManager.class );
         GroupDatabase db = null;
         try {
@@ -473,6 +477,7 @@ public final class SecurityVerifier {
         } catch ( final WikiSecurityException e ) {
             m_session.addMessage( ERROR_GROUPS, "Could not retrieve GroupManager: " + e.getMessage() );
         }
+        */
 
         // Check for obvious error conditions
         if ( mgr == null || db == null ) {
@@ -492,24 +497,27 @@ public final class SecurityVerifier {
 
         // Now, see how many groups we have.
         final int oldGroupCount;
+      /*:FVK: 
         try {
-            final Group[] groups = db.groups();
+            final Group[] groups = null; //:FVK: db.groups();
             oldGroupCount = groups.length;
             m_session.addMessage( INFO_GROUPS, "The group database contains " + oldGroupCount + " groups." );
         } catch( final WikiSecurityException e ) {
             m_session.addMessage( ERROR_GROUPS, "Could not obtain a list of current groups: " + e.getMessage() );
             return;
         }
+        */
 
         // Try adding a bogus group with random name
         final String name = "TestGroup" + System.currentTimeMillis();
         final Group group;
+      /*:FVK: 
         try {
             // Create dummy test group
-            group = mgr.parseGroup( name, "", true );
+            group = null; //:FVK: mgr.parseGroup( name, "", true );
             final Principal user = new WikiPrincipal( "TestUser" );
             group.add( user );
-            db.save( group, new WikiPrincipal( "SecurityVerifier" ) );
+			db.save( group, new WikiPrincipal( "SecurityVerifier" ) );
 
             // Make sure the group saved successfully
             if( db.groups().length == oldGroupCount ) {
@@ -521,8 +529,10 @@ public final class SecurityVerifier {
             m_session.addMessage( ERROR_GROUPS, "Could not add a group to the database: " + e.getMessage() );
             return;
         }
+        */
 
         // Now delete the group; should be back to old count
+      /*:FVK: 
         try {
             db.delete( group );
             if( db.groups().length != oldGroupCount ) {
@@ -534,6 +544,7 @@ public final class SecurityVerifier {
             m_session.addMessage( ERROR_GROUPS, "Could not delete a test group from the database: " + e.getMessage() );
             return;
         }
+        */
 
         m_session.addMessage( INFO_GROUPS, "The group database configuration looks fine." );
     }
@@ -541,14 +552,14 @@ public final class SecurityVerifier {
     /**
      * Verfies the JAAS configuration. The configuration is valid if value of the
      * <code>jspwiki.properties<code> property
-     * {@value org.apache.wiki.auth.AuthenticationManager#PROP_LOGIN_MODULE}
+     * {@value org.apache.wiki.auth.IIAuthenticationManager#PROP_LOGIN_MODULE}
      * resolves to a valid class on the classpath.
      */
     protected void verifyJaas() {
         // Verify that the specified JAAS moduie corresponds to a class we can load successfully.
-        final String jaasClass = m_engine.getWikiProperties().getProperty( AuthenticationManager.PROP_LOGIN_MODULE );
+        final String jaasClass = TextUtil.getStringProperty(m_engine.getWikiPreferences(), IIAuthenticationManager.PROP_LOGIN_MODULE, null );
         if( jaasClass == null || jaasClass.length() == 0 ) {
-            m_session.addMessage( ERROR_JAAS, "The value of the '" + AuthenticationManager.PROP_LOGIN_MODULE
+            m_session.addMessage( ERROR_JAAS, "The value of the '" + IIAuthenticationManager.PROP_LOGIN_MODULE
                     + "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
                     + "on the classpath." );
             return;
@@ -558,7 +569,7 @@ public final class SecurityVerifier {
         Class< ? > c = null;
         try {
             m_session.addMessage( INFO_JAAS,
-                    "The property '" + AuthenticationManager.PROP_LOGIN_MODULE + "' specified the class '" + jaasClass + ".'" );
+                    "The property '" + IIAuthenticationManager.PROP_LOGIN_MODULE + "' specified the class '" + jaasClass + ".'" );
             c = Class.forName( jaasClass );
         } catch( final ClassNotFoundException e ) {
             m_session.addMessage( ERROR_JAAS, "We could not find the the class '" + jaasClass + "' on the " + "classpath. This is fatal error." );
@@ -747,13 +758,14 @@ public final class SecurityVerifier {
             return;
         }
 
+        /*:FVK:
         if ( db instanceof DummyUserDatabase )
         {
             m_session.addMessage( ERROR_DB, "UserDatabase is DummyUserDatabase; JSPWiki " +
                     "may not have been able to initialize the database you supplied in " +
                     "jspwiki.properties, or you left the 'jspwiki.userdatabase' property " +
                     "blank. Check the error logs." );
-        }
+        }*/
 
         // Tell user what class of database this is.
         m_session.addMessage( INFO_DB, "UserDatabase is of type '" + db.getClass().getName() +

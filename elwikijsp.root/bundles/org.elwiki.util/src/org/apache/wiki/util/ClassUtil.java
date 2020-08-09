@@ -21,6 +21,7 @@ package org.apache.wiki.util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.wiki.util.internal.UtilActivator;
 import org.jdom2.Element;
 
 import java.io.File;
@@ -66,7 +67,7 @@ public final class ClassUtil {
 
     private static Map< String, String > populateClassMappingsFrom( final String fileLoc ) {
         final Map< String, String > map = new ConcurrentHashMap<>();
-        final List< Element > nodes = XmlUtil.parse( fileLoc, "/classmappings/mapping" );
+        final List< Element > nodes = XmlUtil.parse( UtilActivator.getContext().getBundle(), fileLoc, "/classmappings/mapping" );
 
         if( !nodes.isEmpty() ) {
             for( final Element f : nodes ) {
@@ -328,7 +329,11 @@ public final class ClassUtil {
             mappedClass = requestedClass;
         }
         
-        return Class.forName( mappedClass );
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Class<?> result = classLoader.loadClass(mappedClass);
+        //:FVK: return Class.forName( mappedClass );
+        result = Class.forName( mappedClass,true,classLoader );
+        return result;
     }
     
     /**

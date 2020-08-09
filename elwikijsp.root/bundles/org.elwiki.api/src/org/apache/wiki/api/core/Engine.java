@@ -19,9 +19,11 @@
 package org.apache.wiki.api.core;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.event.WikiEventListener;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -51,20 +53,11 @@ import java.util.Properties;
  */
 public interface Engine {
 
-    /** The default inlining pattern.  Currently "*.png" */
-    String DEFAULT_INLINEPATTERN = "*.png";
-
     /** The name used for the default template. The value is {@value}. */
     String DEFAULT_TEMPLATE_NAME = "default";
 
-    /** Property for application name */
-    String PROP_APPNAME = "jspwiki.applicationName";
-
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
-
-    /** Property start for any interwiki reference. */
-    String PROP_INTERWIKIREF = "jspwiki.interWikiRef.";
 
     /** The property name defining which packages will be searched for plugin classes. */
     String PROP_SEARCHPATH = "jspwiki.plugin.searchPath";
@@ -147,7 +140,7 @@ public interface Engine {
      *
      *  @return The wiki properties
      */
-    Properties getWikiProperties();
+    IPreferenceStore getWikiPreferences();
 
     /**
      *  Returns the JSPWiki working directory set with "jspwiki.workDir".
@@ -171,7 +164,7 @@ public interface Engine {
      * @return plugins' search path.
      */
     default String getPluginSearchPath() {
-        return TextUtil.getStringProperty( getWikiProperties(), PROP_SEARCHPATH, null );
+        return TextUtil.getStringProperty( getWikiPreferences(), PROP_SEARCHPATH, null );
     }
 
     /**
@@ -197,14 +190,6 @@ public interface Engine {
      *  @return The global RSS url
      */
     String getGlobalRSSURL();
-
-    /**
-     *  Returns an URL to some other Wiki that we know.
-     *
-     *  @param  wikiName The name of the other wiki.
-     *  @return null, if no such reference was found.
-     */
-    String getInterWikiURL( String wikiName );
 
     /**
      *  Returns an URL if a WikiContext is not available.
@@ -296,20 +281,6 @@ public interface Engine {
     }
 
     /**
-     *  Returns a collection of all supported InterWiki links.
-     *
-     *  @return A Collection of Strings.
-     */
-    Collection< String > getAllInterWikiLinks();
-
-    /**
-     *  Returns a collection of all image types that get inlined.
-     *
-     *  @return A Collection of Strings with a regexp pattern.
-     */
-    Collection< String > getAllInlinedImagePatterns();
-
-    /**
      *  <p>If the page is a special page, then returns a direct URL to that page. Otherwise returns <code>null</code>.
      *  This method delegates requests to {@link org.apache.wiki.ui.CommandResolver#getSpecialPageReference(String)}.</p>
      *  <p>Special pages are defined in jspwiki.properties using the jspwiki.specialPage setting. They're typically used to give Wiki page
@@ -319,13 +290,6 @@ public interface Engine {
      *  @return A reference to the page, or null, if there's no special page.
      */
     String getSpecialPageReference( String original );
-
-    /**
-     *  Returns the name of the application.
-     *
-     *  @return A string describing the name of this application.
-     */
-    String getApplicationName();
 
     /**
      *  Returns the root path.  The root path is where the Engine is located in the file system.
@@ -416,5 +380,7 @@ public interface Engine {
      * Signals that the Engine will be shut down by the servlet container.
      */
     void shutdown();
+
+	IWikiConfiguration getWikiConfiguration();
 
 }
