@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.elwiki.data/gen-src" modelPluginID="org.elwiki.data" modelName="Elwiki_data" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" reflectiveDelegation="true" importerID="org.eclipse.emf.importer.ecore" featureDelegation="Reflective" complianceLevel="8.0" copyrightFields="false" providerRootExtendsClass="org.eclipse.emf.cdo.edit.CDOItemProviderAdapter" operationReflection="true" runtimePlatform="RCP" importOrganizing="true">
+  <foreignModel>elwiki_data.ecore</foreignModel>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <editPluginVariables>CDO_EDIT=org.eclipse.emf.cdo.edit</editPluginVariables>
+  <genPackages prefix="Elwiki_data" basePackage="org" disposableProviderFactory="true">
+    <ecorePackage href="elwiki_data.ecore#/"/>
+    <genDataTypes>
+      <ecoreDataType href="elwiki_data.ecore#//ArrayString"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="elwiki_data.ecore#//AccessList"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="elwiki_data.ecore#//ArrayPrincipal"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="elwiki_data.ecore#//PermissionObject"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="elwiki_data.ecore#//PrincipalObject"/>
+    </genDataTypes>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//WikiPage"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/id"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/name"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/description"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/alias"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/redirect"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/viewCount"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/pagecontents"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/attachments"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/wiki"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/children"/>
+      </genFeatures>
+      <genFeatures property="None" notify="false" createChild="false">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/parent"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/oldParents"/>
+      </genFeatures>
+      <genFeatures children="true" createChild="true" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/pageReferences"/>
+      </genFeatures>
+      <genFeatures property="Readonly" createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//WikiPage/totalAttachment"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/acl"/>
+      </genFeatures>
+      <genOperations body="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/compareTo"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
+        </genParameters>
+      </genOperations>
+      <genOperations body="Object o = new Object(); // :FVK:&#xA;return o;&#xA;">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/clone"/>
+      </genOperations>
+      <genOperations body="EList&lt;PageContent> pageContent = this.getPagecontents();&#xA;int listSize = pageContent.size();&#xA;return (listSize>0)? pageContent.get(listSize-1).getLastModify() : new Date(1972,2,12);">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/getLastModified"/>
+      </genOperations>
+      <genOperations body="this.m_attributes.put( key, attribute );">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/setAttribute"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//WikiPage/setAttribute/key"/>
+        </genParameters>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//WikiPage/setAttribute/attribute"/>
+        </genParameters>
+      </genOperations>
+      <genOperations body="return this.m_attributes.get( key );">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/getAttribute"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//WikiPage/getAttribute/key"/>
+        </genParameters>
+      </genOperations>
+      <genOperations body="String author = null; // &quot;unknown&quot;;&#xA;EList&lt;PageContent> pageContents = getPagecontents();&#xA;if (!pageContents.isEmpty()) {&#xA;&#x9;PageContent content = pageContents.get(pageContents.size() - 1);&#xA;&#x9;author = content.getAuthor();&#xA;}&#xA;return author;">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/getAuthor"/>
+      </genOperations>
+      <genOperations body="PageContent result = null;&#xA;int currentVersion = -1;&#xA;for (PageContent pageContent : this.getPagecontents()) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (currentVersion &lt; contentVersion) {&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;&#x9;currentVersion = contentVersion;&#xA;&#x9;}&#xA;}&#xA;return result;">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/getLastContent"/>
+      </genOperations>
+      <genOperations body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;">
+        <ecoreOperation href="elwiki_data.ecore#//WikiPage/getVersion"/>
+      </genOperations>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//PagesStore"/>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//PagesStore/wikipages"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PagesStore/mainPageId"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PagesStore/nextPageId"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PagesStore/nextAttachId"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//PageContent"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageContent/content"/>
+      </genFeatures>
+      <genFeatures property="None" notify="false" createChild="false">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//PageContent/wikipage"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//PageAttachment"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAttachment/id"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAttachment/name"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAttachment/cacheable"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//PageAttachment/wikipage"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAttachment/place"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAttachment/size"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="elwiki_data.ecore#//Object"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="elwiki_data.ecore#//Comparable"/>
+      <genOperations body="Assert.isTrue(false, &quot;:FVK: Code of compareTo must be implemented.&quot;);&#xA;return 0;">
+        <ecoreOperation href="elwiki_data.ecore#//Comparable/compareTo"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//Comparable/compareTo/obj"/>
+        </genParameters>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="elwiki_data.ecore#//Cloneable"/>
+      <genOperations body="Assert.isTrue(false, &quot;:FVK: Code of clone must be implemented.&quot;);&#xA;Object o = new Object();&#xA;return o;&#xA;">
+        <ecoreOperation href="elwiki_data.ecore#//Cloneable/clone"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="elwiki_data.ecore#//IModifyInfo"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//IModifyInfo/version"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//IModifyInfo/lastModify"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//IModifyInfo/author"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//IModifyInfo/changeNote"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//PageReference"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageReference/pageId"/>
+      </genFeatures>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//PageReference/wikipage"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//AclEntry"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclEntry/principal"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclEntry/permission"/>
+      </genFeatures>
+      <genOperations body="return findPermission(permission) != null;">
+        <ecoreOperation href="elwiki_data.ecore#//AclEntry/checkPermission"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//AclEntry/checkPermission/permission"/>
+        </genParameters>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="elwiki_data.ecore#//Principal"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="elwiki_data.ecore#//Acl"/>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="elwiki_data.ecore#//Acl/aclEntries"/>
+      </genFeatures>
+      <genOperations body="for (AclEntry entry : getAclEntries()) {&#xA;&#x9;String entryPrincipalName = entry.getPrincipal().getName();&#xA;&#x9;if (entryPrincipalName.equals(principal.getName())) {&#xA;&#x9;&#x9;return entry;&#xA;&#x9;}&#xA;}&#xA;return null;">
+        <ecoreOperation href="elwiki_data.ecore#//Acl/getEntry"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//Acl/getEntry/principal"/>
+        </genParameters>
+      </genOperations>
+      <genOperations body="Vector&lt;Principal> principals = new Vector&lt;Principal>();&#xA;for (AclEntry entry : getAclEntries()) {&#xA;&#x9;for (Permission perm : entry.getPermission()) {&#xA;&#x9;&#x9;if (perm.implies(permission)) {&#xA;&#x9;&#x9;&#x9;principals.add(entry.getPrincipal());&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;}&#xA;return principals.toArray(new Principal[principals.size()]);">
+        <ecoreOperation href="elwiki_data.ecore#//Acl/findPrincipals"/>
+        <genParameters>
+          <ecoreParameter href="elwiki_data.ecore#//Acl/findPrincipals/permission"/>
+        </genParameters>
+      </genOperations>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

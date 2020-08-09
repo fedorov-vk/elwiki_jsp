@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>bundles_extra</artifactId>
+	<packaging>pom</packaging>
+	<name>~~~ Bundles ~~~</name>
+	<description>Extra Bundles specifications.</description>
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>elwiki.root</artifactId>
+		<version>1.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<modules>
+<!--
+		<module>com.opcoach.e4.preferences</module>
+		<module>com.opcoach.e4.preferences.mainmenu</module>
+-->
+		<module>org.elwiki.authorize</module>
+		<module>org.elwiki.authorize.check</module>
+		<module>org.elwiki.authorize.condition</module>
+		<module>org.elwiki.authorize.context.anonymous</module>
+		<module>org.elwiki.authorize.context.asserted</module>
+		<module>org.elwiki.authorize.context.authenticated</module>
+		<module>org.elwiki.provider.page.cdo</module>
+		<module>org.elwiki.storage.cdo</module>
+		<module>org.elwiki.log4.definition</module>
+	</modules>
+</project>
+

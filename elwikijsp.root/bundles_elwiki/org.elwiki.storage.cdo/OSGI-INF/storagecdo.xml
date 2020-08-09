@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"
+   name="org.elwiki.storage.cdo.service"
+   activate="startup" deactivate="shutdown">
+   <implementation class="org.elwiki.storage.cdo.internal.service.StorageCdo"/>
+   <service>
+      <provide interface="org.apache.wiki.api.IStorageCdo"/>
+   </service>
+   <reference bind="setConfiguration" cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
+</scr:component>

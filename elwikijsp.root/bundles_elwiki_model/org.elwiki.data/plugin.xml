@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated elwiki_data -->
+      <package
+            uri="http:///org/elwiki/data.ecore"
+            class="org.elwiki_data.Elwiki_dataPackage"
+            genModel="model/elwiki_data.genmodel"/>
+   </extension>
+
+</plugin>

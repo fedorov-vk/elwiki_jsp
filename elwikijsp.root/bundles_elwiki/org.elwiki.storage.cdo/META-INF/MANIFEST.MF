@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CDO DataStorage
+Bundle-SymbolicName: org.elwiki.storage.cdo;singleton:=true
+Automatic-Module-Name: org.elwiki.storage.cdo
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: FVK
+Require-Bundle: org.eclipse.emf.edit,
+ org.eclipse.emf.cdo.net4j,
+ org.eclipse.net4j.tcp,
+ org.eclipse.emf.databinding,
+ org.eclipse.core.jobs,
+ org.eclipse.net4j.util,
+ org.elwiki.data,
+ org.apache.log4j,
+ org.elwiki.api
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.jface.preference,
+ org.elwiki.api,
+ org.elwiki.configuration
+Service-Component: OSGI-INF/storagecdo.xml

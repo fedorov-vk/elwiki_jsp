@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="elwiki_data" nsURI="http:///org/elwiki/data.ecore" nsPrefix="elwiki.data">
+  <eClassifiers xsi:type="ecore:EClass" name="WikiPage" eSuperTypes="#//Comparable #//Cloneable">
+    <eOperations name="compareTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;"/>
+      </eAnnotations>
+      <eParameters name="obj" eType="#//Object"/>
+    </eOperations>
+    <eOperations name="clone" eType="#//Object">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="Object o = new Object(); // :FVK:&#xA;return o;&#xA;"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="getLastModified" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="EList&lt;PageContent> pageContent = this.getPagecontents();&#xA;int listSize = pageContent.size();&#xA;return (listSize>0)? pageContent.get(listSize-1).getLastModify() : new Date(1972,2,12);"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="setAttribute">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="this.m_attributes.put( key, attribute );"/>
+      </eAnnotations>
+      <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eParameters name="attribute" eType="#//Object"/>
+    </eOperations>
+    <eOperations name="getAttribute" eType="#//Object">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return this.m_attributes.get( key );"/>
+      </eAnnotations>
+      <eParameters name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eOperations name="getAuthor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="String author = null; // &quot;unknown&quot;;&#xA;EList&lt;PageContent> pageContents = getPagecontents();&#xA;if (!pageContents.isEmpty()) {&#xA;&#x9;PageContent content = pageContents.get(pageContents.size() - 1);&#xA;&#x9;author = content.getAuthor();&#xA;}&#xA;return author;"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="getLastContent" eType="#//PageContent">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="PageContent result = null;&#xA;int currentVersion = -1;&#xA;for (PageContent pageContent : this.getPagecontents()) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (currentVersion &lt; contentVersion) {&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;&#x9;currentVersion = contentVersion;&#xA;&#x9;}&#xA;}&#xA;return result;"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="getVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
+      </eAnnotations>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="redirect" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pagecontents" upperBound="-1"
+        eType="#//PageContent" containment="true" eOpposite="#//PageContent/wikipage"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attachments" upperBound="-1"
+        eType="#//PageAttachment" containment="true" eOpposite="#//PageAttachment/wikipage"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wiki" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//WikiPage" containment="true" eOpposite="#//WikiPage/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//WikiPage"
+        eOpposite="#//WikiPage/children"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="oldParents" eType="#//ArrayString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageReferences" upperBound="-1"
+        eType="#//PageReference" containment="true" eOpposite="#//PageReference/wikipage"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalAttachment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        changeable="false" transient="true" defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="acl" eType="#//Acl" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"
+        eType="#//WikiPage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mainPageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextPageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextAttachId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageContent" eSuperTypes="#//IModifyInfo">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/CDO/DBStore">
+        <details key="columnType" value="VARCHAR"/>
+        <details key="columnLength" value="10000000"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
+        eOpposite="#//WikiPage/pagecontents"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageAttachment" eSuperTypes="#//IModifyInfo">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cacheable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
+        eOpposite="#//WikiPage/attachments"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="place" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Object" instanceClassName="java.lang.Object"
+      abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Comparable" instanceClassName="java.lang.Comparable">
+    <eOperations name="compareTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="Assert.isTrue(false, &quot;:FVK: Code of compareTo must be implemented.&quot;);&#xA;return 0;"/>
+      </eAnnotations>
+      <eParameters name="obj" eType="#//Object"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Cloneable" instanceClassName="java.lang.Cloneable">
+    <eOperations name="clone" eType="#//Object">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="Assert.isTrue(false, &quot;:FVK: Code of clone must be implemented.&quot;);&#xA;Object o = new Object();&#xA;return o;&#xA;"/>
+      </eAnnotations>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IModifyInfo" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModify" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeNote" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArrayString" instanceClassName="java.lang.String[]"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PageReference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
+        eOpposite="#//WikiPage/pageReferences"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AclEntry">
+    <eOperations name="checkPermission" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return findPermission(permission) != null;"/>
+      </eAnnotations>
+      <eParameters name="permission" eType="#//PermissionObject"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="principal" eType="#//PrincipalObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="permission" upperBound="-1"
+        eType="#//PermissionObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="AccessList" instanceTypeName="newDataType3"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Principal" instanceClassName="java.security.Principal"
+      abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Acl">
+    <eOperations name="getEntry" eType="#//AclEntry">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="for (AclEntry entry : getAclEntries()) {&#xA;&#x9;String entryPrincipalName = entry.getPrincipal().getName();&#xA;&#x9;if (entryPrincipalName.equals(principal.getName())) {&#xA;&#x9;&#x9;return entry;&#xA;&#x9;}&#xA;}&#xA;return null;"/>
+      </eAnnotations>
+      <eParameters name="principal" eType="#//PrincipalObject"/>
+    </eOperations>
+    <eOperations name="findPrincipals" eType="#//ArrayPrincipal">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="Vector&lt;Principal> principals = new Vector&lt;Principal>();&#xA;for (AclEntry entry : getAclEntries()) {&#xA;&#x9;for (Permission perm : entry.getPermission()) {&#xA;&#x9;&#x9;if (perm.implies(permission)) {&#xA;&#x9;&#x9;&#x9;principals.add(entry.getPrincipal());&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;}&#xA;return principals.toArray(new Principal[principals.size()]);"/>
+      </eAnnotations>
+      <eParameters name="permission" eType="#//PermissionObject"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="aclEntries" upperBound="-1"
+        eType="#//AclEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArrayPrincipal" instanceClassName="java.security.Principal[]"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="PermissionObject" instanceClassName="java.security.Permission"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="PrincipalObject" instanceClassName="java.security.Principal"/>
+</ecore:EPackage>

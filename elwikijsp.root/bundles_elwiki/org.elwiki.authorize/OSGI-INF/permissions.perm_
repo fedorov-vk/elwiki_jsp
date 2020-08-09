@@ -1,0 +1,3 @@
+# Permissions file
+( org.osgi.framework.AdminPermission "*" "*" )
+( java.security.AllPermission "<all permissions>" "<all actions>" )
