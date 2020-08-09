@@ -29,7 +29,9 @@ import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
+import org.osgi.framework.Bundle;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -62,17 +64,18 @@ public final class XmlUtil  {
 	 * @param requestedNodes requested nodes on the xml file
 	 * @return the requested nodes of the XML file.
 	 */
-	public static List<Element> parse( final String xml, final String requestedNodes )
+	public static List<Element> parse( Bundle bundle, final String xml, final String requestedNodes )
 	{
 		if( StringUtils.isNotEmpty( xml ) && StringUtils.isNotEmpty( requestedNodes ) ) {
 			final Set<Element> readed = new HashSet<>();
 			final SAXBuilder builder = new SAXBuilder();
 			try {
-				final Enumeration< URL > resources = XmlUtil.class.getClassLoader().getResources( xml );
+				//final Enumeration< URL > resources = XmlUtil.class.getClassLoader().getResources( xml );
+				final Enumeration< URL > resources = bundle.getResources(xml); 
 				while( resources.hasMoreElements() ) {
 					final URL resource = resources.nextElement();
 					LOG.debug( "reading " + resource.toString() );
-					final Document doc = builder.build( resource );
+					final Document doc = builder.build( resource.openStream() );
 					final XPathFactory xpfac = XPathFactory.instance();
 					final XPathExpression<Element> xp = xpfac.compile( requestedNodes, Filters.element() );
 	                readed.addAll( xp.evaluate( doc ) ); // filter out repeated items

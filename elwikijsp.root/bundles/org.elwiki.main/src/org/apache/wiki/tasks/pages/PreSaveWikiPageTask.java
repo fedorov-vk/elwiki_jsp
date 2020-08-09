@@ -19,20 +19,20 @@
 package org.apache.wiki.tasks.pages;
 
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.filters.FilterManager;
-import org.apache.wiki.tasks.TasksManager;
-import org.apache.wiki.workflow.Outcome;
-import org.apache.wiki.workflow.Task;
-import org.apache.wiki.workflow.WorkflowManager;
+import org.apache.wiki.api.tasks.TasksManager;
+import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.workflow0.Outcome;
+import org.apache.wiki.workflow0.Task;
+import org.apache.wiki.workflow0.WorkflowManager;
 
 import java.security.Principal;
 
 
 /**
  * Handles the page pre-save actions. If the proposed page text is the same as the current version, 
- * the {@link #execute()} method returns {@link org.apache.wiki.workflow.Outcome#STEP_ABORT}. Any
+ * the {@link #execute()} method returns {@link org.apache.wiki.workflow0.Outcome#STEP_ABORT}. Any
  * WikiExceptions thrown by page filters will be re-thrown, and the workflow will abort.
  */
 public class PreSaveWikiPageTask extends Task {
@@ -59,13 +59,13 @@ public class PreSaveWikiPageTask extends Task {
     @Override
     public Outcome execute() throws WikiException {
         // Get the wiki page
-        final Page page = m_context.getPage();
+        final WikiPage page = m_context.getPage();
 
         // Figure out who the author was. Prefer the author set programmatically; otherwise get from the current logged in user
         if( page.getAuthor() == null ) {
             final Principal wup = m_context.getCurrentUser();
             if( wup != null ) {
-                page.setAuthor( wup.getName() );
+            	//:FVK: page.setAuthor( wup.getName() );
             }
         }
 

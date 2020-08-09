@@ -20,15 +20,15 @@ package org.apache.wiki.tasks.pages;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.filters.FilterManager;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.render.RenderingManager;
-import org.apache.wiki.tasks.TasksManager;
-import org.apache.wiki.workflow.Outcome;
-import org.apache.wiki.workflow.Task;
-import org.apache.wiki.workflow.WorkflowManager;
+import org.apache.wiki.api.tasks.TasksManager;
+import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
+import org.apache.wiki.workflow0.Outcome;
+import org.apache.wiki.workflow0.Task;
+import org.apache.wiki.workflow0.WorkflowManager;
 
 
 /**
@@ -57,7 +57,7 @@ public class SaveWikiPageTask extends Task {
         final String proposedText = ( String )getWorkflowContext().get( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT );
 
         final Engine engine = context.getEngine();
-        final Page page = context.getPage();
+        final WikiPage page = context.getPage();
 
         // Let the rest of the engine handle actual saving.
         engine.getManager( PageManager.class ).putPageText( page, proposedText );

@@ -15,6 +15,9 @@
 
 	<modules>
 		<module>bundles</module>
+		<module>bundles_managers</module>
+		<module>bundles_elwiki</module>
+		<module>bundles_elwiki_model</module>
 		<module>features</module>
 		<module>products</module>
 	</modules>

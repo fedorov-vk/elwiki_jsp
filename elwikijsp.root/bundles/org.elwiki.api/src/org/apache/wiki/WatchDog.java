@@ -328,7 +328,7 @@ public final class WatchDog {
 
         public WatchDogThread( final Engine engine ) {
             super( engine, CHECK_INTERVAL );
-            setName( "WatchDog for '" + engine.getApplicationName() + "'" );
+            setName( "WatchDog for '" + engine.getWikiConfiguration().getApplicationName() + "'" );
         }
 
         @Override

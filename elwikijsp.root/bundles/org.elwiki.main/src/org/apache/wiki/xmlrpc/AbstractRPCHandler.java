@@ -18,21 +18,25 @@
  */
 package org.apache.wiki.xmlrpc;
 
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.permissions.PagePermission;
-import org.apache.wiki.auth.permissions.WikiPermission;
-import org.apache.wiki.pages.PageManager;
-import org.apache.xmlrpc.AuthenticationFailed;
-
 import java.security.Permission;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.Vector;
+
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.permissions.PagePermission;
+import org.apache.wiki.auth.permissions.WikiPermission;
+import org.apache.wiki.internal.MainActivator;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.xmlrpc.AuthenticationFailed;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  *  Provides definitions for RPC handler routines.
@@ -58,20 +62,38 @@ public abstract class AbstractRPCHandler implements WikiRPCHandler {
     protected Engine m_engine;
     protected Context m_context;
 
+    private IWikiConfiguration wikiConfiguration;
+
     /** This is the currently implemented JSPWiki XML-RPC code revision. */
     public static final int RPC_VERSION = 1;
 
-    @Override
+    
+    public AbstractRPCHandler() {
+        super();
+        
+		BundleContext context = MainActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
+		}
+	}
+    
+	public IWikiConfiguration getWikiConfiguration() {
+		return wikiConfiguration;
+	}
+
+
+	@Override
     public void initialize( final Context context ) {
         m_context = context;
         m_engine  = context.getEngine();
     }
 
-    protected abstract Hashtable encodeWikiPage( Page p );
+    protected abstract Hashtable encodeWikiPage( WikiPage p );
 
     public Vector getRecentChanges( final Date since ) {
         checkPermission( PagePermission.VIEW );
-        final Set< Page > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
+        final Set< WikiPage > pages = m_engine.getManager( PageManager.class ).getRecentChanges();
         final Vector< Hashtable< ?, ? > > result = new Vector<>();
 
         // Transform UTC into local time.
@@ -80,7 +102,7 @@ public abstract class AbstractRPCHandler implements WikiRPCHandler {
         cal.add( Calendar.MILLISECOND, cal.get( Calendar.ZONE_OFFSET ) +
                   (cal.getTimeZone().inDaylightTime( since ) ? cal.get( Calendar.DST_OFFSET ) : 0 ) );
 
-        for( final Page page : pages ) {
+        for( final WikiPage page : pages ) {
             if( page.getLastModified().after( cal.getTime() ) ) {
                 result.add( encodeWikiPage( page ) );
             }

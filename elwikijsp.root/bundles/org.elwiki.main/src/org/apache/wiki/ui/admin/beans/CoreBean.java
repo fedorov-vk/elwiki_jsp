@@ -20,7 +20,7 @@ package org.apache.wiki.ui.admin.beans;
 
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 
 import javax.management.NotCompliantMBeanException;

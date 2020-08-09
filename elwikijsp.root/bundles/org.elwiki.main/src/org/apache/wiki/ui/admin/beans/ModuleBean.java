@@ -23,7 +23,7 @@ import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.modules.WikiModuleInfo;
+import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;

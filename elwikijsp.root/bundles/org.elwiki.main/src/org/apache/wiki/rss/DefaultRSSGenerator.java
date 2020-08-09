@@ -20,21 +20,22 @@ package org.apache.wiki.rss;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Attachment;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
-import org.apache.wiki.diff.DifferenceManager;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.pages.PageTimeComparator;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.pages0.PageTimeComparator;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.variables.VariableManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import java.io.File;
 import java.util.Iterator;
@@ -68,10 +69,11 @@ public class DefaultRSSGenerator implements RSSGenerator {
      *  @param engine The Engine.
      *  @param properties The properties.
      */
-    public DefaultRSSGenerator( final Engine engine, final Properties properties ) {
+    public DefaultRSSGenerator( final Engine engine ) {
         m_engine = engine;
-        m_channelDescription = properties.getProperty( PROP_CHANNEL_DESCRIPTION, m_channelDescription );
-        m_channelLanguage = properties.getProperty( PROP_CHANNEL_LANGUAGE, m_channelLanguage );
+        IPreferenceStore properties = engine.getWikiPreferences();
+        m_channelDescription = TextUtil.getStringProperty(properties, PROP_CHANNEL_DESCRIPTION, m_channelDescription );
+        m_channelLanguage = TextUtil.getStringProperty(properties, PROP_CHANNEL_LANGUAGE, m_channelLanguage );
         m_rssFile = TextUtil.getStringProperty( properties, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf" );
     }
 
@@ -81,19 +83,19 @@ public class DefaultRSSGenerator implements RSSGenerator {
      * Start the RSS generator & generator thread
      */
     @Override
-    public void initialize( final Engine engine, final Properties properties ) {
+    public void initialize( final Engine engine ) {
         final File rssFile;
         if( m_rssFile.startsWith( File.separator ) ) { // honor absolute pathnames
             rssFile = new File( m_rssFile );
         } else { // relative path names are anchored from the webapp root path
             rssFile = new File( engine.getRootPath(), m_rssFile );
         }
-        final int rssInterval = TextUtil.getIntegerProperty( properties, DefaultRSSGenerator.PROP_INTERVAL, 3600 );
+        final int rssInterval = TextUtil.getIntegerProperty( engine.getWikiPreferences(), DefaultRSSGenerator.PROP_INTERVAL, 3600 );
         final RSSThread rssThread = new RSSThread( engine, rssFile, rssInterval );
         rssThread.start();
     }
 
-    private String getAuthor( final Page page ) {
+    private String getAuthor( final WikiPage page ) {
         String author = page.getAuthor();
         if( author == null ) {
             author = "An unknown author";
@@ -102,20 +104,20 @@ public class DefaultRSSGenerator implements RSSGenerator {
         return author;
     }
 
-    private String getAttachmentDescription( final Attachment att ) {
-        final String author = getAuthor( att );
+    private String getAttachmentDescription( final PageAttachment att ) {
+        final String author = ":FVK:"; //:FVK: getAuthor( att );
         final StringBuilder sb = new StringBuilder();
 
         if( att.getVersion() != 1 ) {
-            sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModified() );
+        	//:FVK: sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModified() );
         } else {
-            sb.append( author ).append( " created this attachment on " ).append( att.getLastModified() );
+        	//:FVK: sb.append( author ).append( " created this attachment on " ).append( att.getLastModified() );
         }
 
         sb.append( "<br /><hr /><br />" )
           .append( "Parent page: <a href=\"" )
-          .append( m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), att.getParentName(), null ) )
-          .append( "\">" ).append( att.getParentName() ).append( "</a><br />" )
+        //:FVK: .append( m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), att.getParentName(), null ) )
+        //:FVK: .append( "\">" ).append( att.getParentName() ).append( "</a><br />" )
           .append( "Info page: <a href=\"" )
           .append( m_engine.getURL( ContextEnum.PAGE_INFO.getRequestContext(), att.getName(), null ) )
           .append( "\">" ).append( att.getName() ).append( "</a>" );
@@ -123,10 +125,11 @@ public class DefaultRSSGenerator implements RSSGenerator {
         return sb.toString();
     }
 
-    private String getPageDescription( final Page page ) {
+    private String getPageDescription( final WikiPage page ) {
         final StringBuilder buf = new StringBuilder();
         final String author = getAuthor( page );
         final Context ctx = Wiki.context().create( m_engine, page );
+      /*:FVK: 
         if( page.getVersion() > 1 ) {
             final String diff = m_engine.getManager( DifferenceManager.class ).getDiff( ctx,
                                                                 page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
@@ -134,7 +137,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
             buf.append( author ).append( " changed this page on " ).append( page.getLastModified() ).append( ":<br /><hr /><br />" );
             buf.append( diff );
-        } else {
+        } else*/ {
             buf.append( author ).append( " created this page on " ).append( page.getLastModified() ).append( ":<br /><hr /><br />" );
             buf.append( m_engine.getManager( RenderingManager.class ).getHTML( page.getName() ) );
         }
@@ -142,10 +145,10 @@ public class DefaultRSSGenerator implements RSSGenerator {
         return buf.toString();
     }
 
-    private String getEntryDescription( final Page page ) {
+    private String getEntryDescription( final WikiPage page ) {
         final String res;
-        if( page instanceof Attachment ) {
-            res = getAttachmentDescription( (Attachment)page );
+        if( page instanceof PageAttachment ) {
+            res = getAttachmentDescription( (PageAttachment)page );
         } else {
             res = getPageDescription( page );
         }
@@ -154,8 +157,8 @@ public class DefaultRSSGenerator implements RSSGenerator {
     }
 
     // FIXME: This should probably return something more intelligent
-    private String getEntryTitle( final Page page ) {
-        return page.getName() + ", version " + page.getVersion();
+    private String getEntryTitle( final WikiPage page ) {
+        return ":FVK:"; //:FVK: page.getName() + ", version " + page.getVersion();
     }
 
     /** {@inheritDoc} */
@@ -169,7 +172,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateFeed( final Context wikiContext, final List< Page > changed, final String mode, final String type ) throws IllegalArgumentException {
+    public String generateFeed( final Context wikiContext, final List< WikiPage > changed, final String mode, final String type ) throws IllegalArgumentException {
         final Feed feed;
         final String res;
 
@@ -217,17 +220,17 @@ public class DefaultRSSGenerator implements RSSGenerator {
     /** {@inheritDoc} */
     @Override
     public String generateFullWikiRSS( final Context wikiContext, final Feed feed ) {
-        feed.setChannelTitle( m_engine.getApplicationName() );
+        feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() );
         feed.setFeedURL( m_engine.getBaseURL() );
         feed.setChannelLanguage( m_channelLanguage );
         feed.setChannelDescription( m_channelDescription );
 
-        final Set< Page > changed = m_engine.getManager( PageManager.class ).getRecentChanges();
+        final Set< WikiPage > changed = m_engine.getManager( PageManager.class ).getRecentChanges();
 
         final Session session = Wiki.session().guest( m_engine );
         int items = 0;
-        for( final Iterator< Page > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final Page page = i.next();
+        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
+            final WikiPage page = i.next();
 
             //  Check if the anonymous user has view access to this page.
             if( !m_engine.getManager( AuthorizationManager.class ).checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
@@ -236,7 +239,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             }
 
             final String url;
-            if( page instanceof Attachment ) {
+            if( page instanceof PageAttachment ) {
                 url = m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(),null );
             } else {
                 url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), null );
@@ -257,8 +260,8 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateWikiPageRSS( final Context wikiContext, final List< Page > changed, final Feed feed ) {
-        feed.setChannelTitle( m_engine.getApplicationName()+": "+wikiContext.getPage().getName() );
+    public String generateWikiPageRSS( final Context wikiContext, final List< WikiPage > changed, final Feed feed ) {
+        feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName()+": "+wikiContext.getPage().getName() );
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
         final String language = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
 
@@ -276,16 +279,16 @@ public class DefaultRSSGenerator implements RSSGenerator {
         changed.sort( new PageTimeComparator() );
 
         int items = 0;
-        for( final Iterator< Page > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final Page page = i.next();
+        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
+            final WikiPage page = i.next();
             final Entry e = new Entry();
             e.setPage( page );
             String url;
 
-            if( page instanceof Attachment ) {
-                url = m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(), "version=" + page.getVersion() );
+            if( page instanceof PageAttachment ) {
+                url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(), "version=" + page.getVersion() );
             } else {
-                url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), "version=" + page.getVersion() );
+                url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), "version=" + page.getVersion() );
             }
 
             // Unfortunately, this is needed because the code will again go through replacement conversion
@@ -304,7 +307,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateBlogRSS( final Context wikiContext, final List< Page > changed, final Feed feed ) {
+    public String generateBlogRSS( final Context wikiContext, final List< WikiPage > changed, final Feed feed ) {
         if( log.isDebugEnabled() ) {
             log.debug( "Generating RSS for blog, size=" + changed.size() );
         }
@@ -313,7 +316,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
         if( ctitle != null ) {
             feed.setChannelTitle( ctitle );
         } else {
-            feed.setChannelTitle( m_engine.getApplicationName() + ":" + wikiContext.getPage().getName() );
+            feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() + ":" + wikiContext.getPage().getName() );
         }
 
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
@@ -333,13 +336,13 @@ public class DefaultRSSGenerator implements RSSGenerator {
         changed.sort( new PageTimeComparator() );
 
         int items = 0;
-        for( final Iterator< Page > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final Page page = i.next();
+        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
+            final WikiPage page = i.next();
             final Entry e = new Entry();
             e.setPage( page );
             final String url;
 
-            if( page instanceof Attachment ) {
+            if( page instanceof PageAttachment ) {
                 url = m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(),null );
             } else {
                 url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(),null );

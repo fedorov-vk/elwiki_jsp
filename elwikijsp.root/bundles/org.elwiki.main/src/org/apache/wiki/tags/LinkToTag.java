@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.attachment.AttachmentManager;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -77,12 +77,12 @@ public class LinkToTag extends WikiLinkTag {
         boolean isattachment = false;
 
         if( m_pageName == null ) {
-            final Page p = m_wikiContext.getPage();
+            final WikiPage p = m_wikiContext.getPage();
 
             if( p != null ) {
                 pageName = p.getName();
 
-                isattachment = p instanceof Attachment;
+                isattachment = p instanceof PageAttachment;
             } else {
                 return SKIP_BODY;
             }

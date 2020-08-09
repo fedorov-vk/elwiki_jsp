@@ -35,6 +35,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 
 /**
@@ -267,7 +268,7 @@ public final class MailUtil {
      * @throws AddressException If the address is invalid
      * @throws MessagingException If the message cannot be sent.
      */
-    public static void sendMessage( Properties props, String to, String subject, String content)
+    public static void sendMessage( IPreferenceStore props, String to, String subject, String content)
         throws AddressException, MessagingException
     {
         Session session = getMailSession( props );
@@ -307,7 +308,7 @@ public final class MailUtil {
      * @param pProperties <code>Properties</code>
      * @return <code>String</code>
      */
-    protected static String getSenderEmailAddress(Session pSession, Properties pProperties)
+    protected static String getSenderEmailAddress(Session pSession, IPreferenceStore pProperties)
     {
         if( c_fromAddress == null )
         {
@@ -321,7 +322,7 @@ public final class MailUtil {
             // default.
             if( c_fromAddress == null )
             {
-                c_fromAddress = pProperties.getProperty( PROP_MAIL_SENDER, DEFAULT_SENDER ).trim();
+                c_fromAddress = TextUtil.getStringProperty(pProperties, PROP_MAIL_SENDER, DEFAULT_SENDER );
                 if( log.isDebugEnabled() )
                     log.debug( "Attempt to get the sender's mail address from the JNDI mail session failed, will use \""
                                + c_fromAddress + "\" (configured via jspwiki.properties or the internal default)." );
@@ -341,10 +342,10 @@ public final class MailUtil {
      * @param props a the properties that contain mail session properties
      * @return <code>Session</code>
      */
-    private static Session getMailSession(Properties props)
+    private static Session getMailSession(IPreferenceStore props)
     {
         Session result = null;
-        String jndiName = props.getProperty(PROP_MAIL_JNDI_NAME, DEFAULT_MAIL_JNDI_NAME).trim();
+        String jndiName = TextUtil.getStringProperty(props, PROP_MAIL_JNDI_NAME, DEFAULT_MAIL_JNDI_NAME);
 
         if (c_useJndi)
         {
@@ -384,14 +385,14 @@ public final class MailUtil {
      * @param props the properties that contain mail session properties
      * @return the initialized JavaMail Session
      */
-    protected static Session getStandaloneMailSession( Properties props ) {
+    protected static Session getStandaloneMailSession( IPreferenceStore props ) {
         // Read the JSPWiki settings from the properties
-        String host     = props.getProperty( PROP_MAIL_HOST, DEFAULT_MAIL_HOST );
-        String port     = props.getProperty( PROP_MAIL_PORT, DEFAULT_MAIL_PORT );
-        String account  = props.getProperty( PROP_MAIL_ACCOUNT );
-        String password = props.getProperty( PROP_MAIL_PASSWORD );
-        String timeout  = props.getProperty( PROP_MAIL_TIMEOUT, DEFAULT_MAIL_TIMEOUT);
-        String conntimeout = props.getProperty( PROP_MAIL_CONNECTION_TIMEOUT, DEFAULT_MAIL_CONN_TIMEOUT );
+        String host     = TextUtil.getStringProperty(props, PROP_MAIL_HOST, DEFAULT_MAIL_HOST );
+        String port     = TextUtil.getStringProperty(props, PROP_MAIL_PORT, DEFAULT_MAIL_PORT );
+        String account  = TextUtil.getStringProperty(props, PROP_MAIL_ACCOUNT , null);
+        String password = TextUtil.getStringProperty(props, PROP_MAIL_PASSWORD , null);
+        String timeout  = TextUtil.getStringProperty(props, PROP_MAIL_TIMEOUT, DEFAULT_MAIL_TIMEOUT);
+        String conntimeout = TextUtil.getStringProperty(props, PROP_MAIL_CONNECTION_TIMEOUT, DEFAULT_MAIL_CONN_TIMEOUT );
         boolean starttls = TextUtil.getBooleanProperty( props, PROP_MAIL_STARTTLS, true);
         
         boolean useAuthentication = account != null && account.length() > 0;

@@ -19,9 +19,9 @@
 package org.apache.wiki.ui.admin.beans;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.modules.WikiModuleInfo;
+import org.apache.wiki.api.modules.WikiModuleInfo;
+import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.plugin.DefaultPluginManager.WikiPluginInfo;
-import org.apache.wiki.plugin.PluginManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.jdom2.Element;

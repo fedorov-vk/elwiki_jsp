@@ -20,13 +20,13 @@ package org.apache.wiki.tasks;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.tasks.auth.SaveUserProfileTask;
 import org.apache.wiki.tasks.pages.PreSaveWikiPageTask;
 import org.apache.wiki.tasks.pages.SaveWikiPageTask;
-import org.apache.wiki.workflow.Step;
+import org.apache.wiki.workflow0.Step;
 
 import java.util.Locale;
-
 
 /**
  * Default implementation for {@link TasksManager}.

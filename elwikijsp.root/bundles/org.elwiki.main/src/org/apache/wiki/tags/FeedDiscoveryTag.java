@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.plugin.WeblogPlugin;
 import org.apache.wiki.rss.Feed;
 import org.apache.wiki.util.TextUtil;
@@ -39,7 +39,7 @@ public class FeedDiscoveryTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         final String encodedName = engine.encodeName( page.getName() );
         final String rssURL      = engine.getGlobalRSSURL();

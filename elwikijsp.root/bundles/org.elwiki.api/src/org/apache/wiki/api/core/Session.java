@@ -18,13 +18,15 @@
  */
 package org.apache.wiki.api.core;
 
-import org.apache.wiki.event.WikiEventListener;
-
-import javax.security.auth.Subject;
 import java.security.AccessControlException;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Locale;
+
+import javax.security.auth.Subject;
+
+import org.apache.wiki.api.event.WikiEventListener;
+import org.osgi.service.useradmin.User;
 
 
 /**
@@ -44,8 +46,8 @@ import java.util.Locale;
  * </ul>
  * <p>To keep track of the Principals each user posseses, each Session stores a JAAS Subject. Various login processes add or
  * remove Principals when users authenticate or log out.</p>
- * <p>Session extends the {@link org.apache.wiki.event.WikiEventListener} interface and listens for group add/change/delete
- * events fired by event sources the Session is registered with: {@link org.apache.wiki.auth.AuthenticationManager},
+ * <p>Session extends the {@link org.apache.wiki.api.event.WikiEventListener} interface and listens for group add/change/delete
+ * events fired by event sources the Session is registered with: {@link org.apache.wiki.auth.IIAuthenticationManager},
  * {@link org.apache.wiki.auth.UserManager} and {@link org.apache.wiki.auth.authorize.GroupManager}, so it can catch group events. Thus,
  * when a user is added to a {@link org.apache.wiki.auth.authorize.Group}, a corresponding {@link org.apache.wiki.auth.GroupPrincipal} is
  * injected into the Subject's Principal set. Likewise, when the user is removed from the Group or the Group is deleted, the
@@ -185,7 +187,7 @@ public interface Session extends WikiEventListener {
      * aren't of type Role or of type GroupPrincipal. This is a defensive copy.
      *
      * @return Returns the user principal
-     * @see org.apache.wiki.auth.AuthenticationManager#isUserPrincipal(Principal)
+     * @see org.apache.wiki.auth.IIAuthenticationManager#isUserPrincipal(Principal)
      */
     Principal[] getPrincipals();
 
@@ -244,5 +246,7 @@ public interface Session extends WikiEventListener {
     static Object doPrivileged( final Session session, final PrivilegedAction<?> action ) throws AccessControlException {
         return Subject.doAsPrivileged( session.getSubject(), action, null );
     }
+
+	User getUser();
 
 }

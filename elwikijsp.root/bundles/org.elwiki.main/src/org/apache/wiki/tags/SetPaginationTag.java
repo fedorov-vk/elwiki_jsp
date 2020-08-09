@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
-//:FVK: import javax.servlet.jsp.jstl.fmt.LocaleSupport;
+import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 
 import org.apache.wiki.util.TextUtil;
 
@@ -137,8 +137,7 @@ public class SetPaginationTag
 
         pagination.append( "<div class='pagination'>");
 
-        //:FVK: workaround
-        //pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey )+ " " );
+        pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey )+ " " );
 
         int cursor = 0;
         int cursormax = m_total;
@@ -194,8 +193,7 @@ public class SetPaginationTag
         if( m_start == ALLITEMS )
         {
           pagination.append( "<span class='cursor'>" );
-          //:FVK: workaround
-          //pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey + ".all" ) );
+          pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey + ".all" ) );
           pagination.append( "</span>&nbsp;&nbsp;" );
         }
         else
@@ -204,9 +202,8 @@ public class SetPaginationTag
         }
 
         //(Total items: " + m_total + ")" );
-        //:FVK: workaround
-        //pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey + ".total",
-        //                   new Object[]{ m_total } ) );
+        pagination.append( LocaleSupport.getLocalizedMessage(pageContext, m_fmtkey + ".total",
+                           new Object[]{ m_total } ) );
 
         pagination.append( "</div>" );
 
@@ -236,8 +233,7 @@ public class SetPaginationTag
      **/
     private void appendLink( StringBuilder sb, int page, String fmttextkey )
     {
-    	//:FVK: workaround
-        //appendLink2( sb, page, LocaleSupport.getLocalizedMessage( pageContext, fmttextkey ) );
+        appendLink2( sb, page, LocaleSupport.getLocalizedMessage( pageContext, fmttextkey ) );
     }
     private void appendLink( StringBuilder sb, int page, int paginationblock )
     {
@@ -248,14 +244,12 @@ public class SetPaginationTag
         sb.append( "<a title=\"" );
         if( page == ALLITEMS )
         {
-        	//:FVK: workaround
-            //sb.append( LocaleSupport.getLocalizedMessage( pageContext, m_fmtkey + ".showall.title" ) );
+            sb.append( LocaleSupport.getLocalizedMessage( pageContext, m_fmtkey + ".showall.title" ) );
         }
         else
         {
-        	//:FVK: workaround
-            //sb.append( LocaleSupport.getLocalizedMessage( pageContext, m_fmtkey + ".show.title",
-            //           new Object[]{ page + 1, page + m_pagesize } ) );
+            sb.append( LocaleSupport.getLocalizedMessage( pageContext, m_fmtkey + ".show.title",
+                       new Object[]{ page + 1, page + m_pagesize } ) );
         }
         sb.append( "\" " );
 

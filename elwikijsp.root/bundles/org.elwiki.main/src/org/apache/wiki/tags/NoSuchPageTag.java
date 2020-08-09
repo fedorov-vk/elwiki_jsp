@@ -19,9 +19,9 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class NoSuchPageTag extends WikiTagBase {
     @Override
     public int doWikiStartTag() throws IOException, ProviderException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page;
+        final WikiPage page;
 
         if( m_pageName == null ) {
             page = m_wikiContext.getPage();

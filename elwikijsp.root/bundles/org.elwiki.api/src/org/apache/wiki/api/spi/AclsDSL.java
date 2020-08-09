@@ -18,15 +18,15 @@
  */
 package org.apache.wiki.api.spi;
 
-import org.apache.wiki.api.core.Acl;
-import org.apache.wiki.api.core.AclEntry;
+import org.elwiki_data.Acl;
+import org.elwiki_data.AclEntry;
 
 
 public class AclsDSL {
 
     private final AclsSPI aclsSPI;
 
-    AclsDSL( final AclsSPI aclsSPI ) {
+    public AclsDSL( final AclsSPI aclsSPI ) {
         this.aclsSPI = aclsSPI;
     }
 

@@ -34,7 +34,7 @@ import java.security.Permission;
  * <li><strong>Targeted commands</strong> "decorate" static commands by scoping a static Command at a specific target such as a WikiPage or
  * GroupPrincipal. Targeted commands are created by calling an existing Command's {@link #targetedCommand(Object)} and supplying the target
  * object. Implementing classes generally require a specific target type. For example, the {@link org.apache.wiki.ui.PageCommand} class requires that the
- * target object be of type {@link org.apache.wiki.api.core.Page}.</li>
+ * target object be of type {@link org.apache.wiki.api.core.WikiPage}.</li>
  * </ul>
  * <p> Concrete implementations of Command include: </p>
  * <ul>

@@ -20,8 +20,8 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.pages.PageManager;
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.pages0.PageManager;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class EditLinkTag extends WikiLinkTag {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine   = m_wikiContext.getEngine();
-        Page page = null;
+        WikiPage page = null;
         String versionString = "";
         final String pageName;
         

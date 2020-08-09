@@ -21,7 +21,7 @@ package org.apache.wiki.rss;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.util.XhtmlUtil;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -81,12 +81,14 @@ public class RSS10Feed extends Feed {
             content.addContent( entry.getContent() );
             item.addContent( content );
 
-            final Page p = entry.getPage();
-            if( p.getVersion() != -1 ) {
-                item.addContent( new Element( "version", NS_WIKI ).addContent( Integer.toString( p.getVersion() ) ) );
-            }
+            final WikiPage p = entry.getPage();
+          /*:FVK: if( p.getVersion() != -1 )
+            {
+            	item.addContent( new Element( "version", NS_WIKI ).addContent( Integer.toString( p.getVersion() ) ) );
+            }*/
 
-            if( p.getVersion() > 1 ) {
+          //:FVK: if( p.getVersion() > 1 )
+            {
                 item.addContent( new Element( "diff", NS_WIKI )
                                          .addContent( engine.getURL( ContextEnum.PAGE_DIFF.getRequestContext(), p.getName(), "r1=-1" ) ) );
             }

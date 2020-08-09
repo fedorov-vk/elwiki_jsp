@@ -21,19 +21,19 @@ package org.apache.wiki.ui;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.AttachmentProvider;
-import org.apache.wiki.auth.NoSuchPrincipalException;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.WikiPrincipal;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.authorize.Group;
-import org.apache.wiki.auth.authorize.GroupManager;
-import org.apache.wiki.auth.user.UserDatabase;
-import org.apache.wiki.auth.user.UserProfile;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.pages.PageManager;
+//import org.apache.wiki.auth.authorize.GroupManager;
+import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.providers.FileSystemProvider;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.authorization.IAuthorizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +59,6 @@ public class Installer {
     public static final String INSTALL_INFO = "Installer.Info";
     public static final String INSTALL_ERROR = "Installer.Error";
     public static final String INSTALL_WARNING = "Installer.Warning";
-    public static final String APP_NAME = Engine.PROP_APPNAME;
     public static final String STORAGE_DIR = AttachmentProvider.PROP_STORAGEDIR;
     public static final String PAGE_DIR = FileSystemProvider.PROP_PAGEDIR;
     public static final String WORK_DIR = Engine.PROP_WORKDIR;
@@ -136,8 +135,9 @@ public class Installer {
         }
         
         // Create a new admin group
-        final GroupManager groupMgr = m_engine.getManager( GroupManager.class );
+        final IAuthorizer groupMgr = m_engine.getManager( IAuthorizer.class );
         Group group;
+        /*:FVK:
         try {
             group = groupMgr.getGroup( ADMIN_GROUP );
             group.add( new WikiPrincipal( ADMIN_NAME ) );
@@ -145,6 +145,7 @@ public class Installer {
             group = groupMgr.parseGroup( ADMIN_GROUP, ADMIN_NAME, true );
         }
         groupMgr.setGroup( m_session, group );
+        */
         
         return password;
     }
@@ -180,8 +181,11 @@ public class Installer {
         m_validated = false;
 
         // Get application name
+        String nullValue = ":FVK:";
+        /*:FVK:
         String nullValue = m_props.getProperty( APP_NAME, rb.getString( "install.installer.default.appname" ) );
         parseProperty( APP_NAME, nullValue );
+        */
 
         // Get/sanitize page directory
         nullValue = m_props.getProperty( PAGE_DIR, rb.getString( "install.installer.default.pagedir" ) );
@@ -217,7 +221,7 @@ public class Installer {
         m_session.clearMessages( INSTALL_ERROR );
         parseProperties();
         validateNotNull( PAGE_DIR, rb.getString( "install.installer.validate.pagedir" ) );
-        validateNotNull( APP_NAME, rb.getString( "install.installer.validate.appname" ) );
+        //:FVK: validateNotNull( APP_NAME, rb.getString( "install.installer.validate.appname" ) );
         validateNotNull( WORK_DIR, rb.getString( "install.installer.validate.workdir" ) );
 
         if ( m_session.getMessages( INSTALL_ERROR ).length == 0 ) {

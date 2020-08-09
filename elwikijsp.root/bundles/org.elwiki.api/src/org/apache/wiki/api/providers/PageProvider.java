@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.providers;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
@@ -48,7 +48,7 @@ public interface PageProvider extends WikiProvider {
      *  @param text The text to save.
      *  @throws ProviderException If something goes wrong.
      */
-    void putPageText( Page page, String text ) throws ProviderException;
+    void putPageText( WikiPage page, String text ) throws ProviderException;
 
     /**
      *  Return true, if page exists.
@@ -86,7 +86,7 @@ public interface PageProvider extends WikiProvider {
      *  @param version The version number
      *  @throws ProviderException If something goes wrong.
      */
-    Page getPageInfo( String page, int version ) throws ProviderException;
+    WikiPage getPageInfo( String page, int version ) throws ProviderException;
 
     /**
      *  Returns all pages.  Each element in the returned Collection should be a WikiPage.
@@ -94,7 +94,7 @@ public interface PageProvider extends WikiProvider {
      *  @return A collection of WikiPages
      *  @throws ProviderException If something goes wrong.
      */
-    Collection< Page > getAllPages() throws ProviderException;
+    Collection< WikiPage > getAllPages() throws ProviderException;
 
     /**
      *  Gets a list of recent changes.
@@ -103,7 +103,7 @@ public interface PageProvider extends WikiProvider {
      *  @return A Collection of WikiPages
      *  @since 1.6.4
      */
-    Collection< Page > getAllChangedSince( Date date );
+    Collection< WikiPage > getAllChangedSince( Date date );
 
     /**
      *  Gets the number of pages.
@@ -121,7 +121,7 @@ public interface PageProvider extends WikiProvider {
      *  @return A collection of WikiPages.
      *  @throws ProviderException If something goes wrong.
      */
-    List< Page > getVersionHistory( String page ) throws ProviderException;
+    List< WikiPage > getVersionHistory( String page ) throws ProviderException;
 
     /**
      *  Gets a specific version out of the repository.

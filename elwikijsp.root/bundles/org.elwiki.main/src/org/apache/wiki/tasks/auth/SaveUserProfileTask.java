@@ -4,14 +4,14 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.user.UserProfile;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.tasks.TasksManager;
+import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.MailUtil;
-import org.apache.wiki.workflow.Outcome;
-import org.apache.wiki.workflow.Task;
-import org.apache.wiki.workflow.WorkflowManager;
+import org.apache.wiki.workflow0.Outcome;
+import org.apache.wiki.workflow0.Task;
+import org.apache.wiki.workflow0.WorkflowManager;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -42,7 +42,7 @@ public class SaveUserProfileTask extends Task {
     /**
      * Saves the user profile to the user database.
      *
-     * @return {@link org.apache.wiki.workflow.Outcome#STEP_COMPLETE} if the task completed successfully
+     * @return {@link org.apache.wiki.workflow0.Outcome#STEP_COMPLETE} if the task completed successfully
      * @throws WikiException if the save did not complete for some reason
      */
     @Override
@@ -57,7 +57,7 @@ public class SaveUserProfileTask extends Task {
         if ( profile != null && profile.getEmail() != null ) {
             try {
                 final InternationalizationManager i18n = m_engine.getManager( InternationalizationManager.class );
-                final String app = m_engine.getApplicationName();
+                final String app = m_engine.getWikiConfiguration().getApplicationName();
                 final String to = profile.getEmail();
                 final String subject = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
                                                  "notification.createUserProfile.accept.subject", app );
@@ -68,7 +68,7 @@ public class SaveUserProfileTask extends Task {
                                                  profile.getFullname(),
                                                  profile.getEmail(),
                                                  m_engine.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), null, null ) );
-                MailUtil.sendMessage( m_engine.getWikiProperties(), to, subject, content );
+                MailUtil.sendMessage( m_engine.getWikiPreferences(), to, subject, content );
             } catch ( final AddressException e) {
                 LOG.debug( e.getMessage(), e );
             } catch ( final MessagingException me ) {

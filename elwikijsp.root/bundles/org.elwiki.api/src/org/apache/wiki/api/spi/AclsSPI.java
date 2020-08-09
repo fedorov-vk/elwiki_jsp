@@ -18,8 +18,8 @@
  */
 package org.apache.wiki.api.spi;
 
-import org.apache.wiki.api.core.Acl;
-import org.apache.wiki.api.core.AclEntry;
+import org.elwiki_data.Acl;
+import org.elwiki_data.AclEntry;
 
 
 /**

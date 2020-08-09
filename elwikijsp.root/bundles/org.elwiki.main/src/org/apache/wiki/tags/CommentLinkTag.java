@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class CommentLinkTag
      */
     @Override
     public final int doWikiStartTag() throws IOException {
-        final Page page;
+        final WikiPage page;
         final String pageName;
         
         //  Determine the page and the link.

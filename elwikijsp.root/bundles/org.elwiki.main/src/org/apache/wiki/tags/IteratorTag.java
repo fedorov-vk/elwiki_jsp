@@ -20,7 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -108,8 +108,8 @@ public abstract class IteratorTag extends BodyTagSupport implements TryCatchFina
     private void buildContext() {
         final Context context = m_wikiContext.clone();
         final Object o = m_iterator.next();
-        if( o instanceof Page ) {
-            context.setPage( ( Page )o );
+        if( o instanceof WikiPage ) {
+            context.setPage( ( WikiPage )o );
         }
 
         pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );

@@ -21,7 +21,7 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.plugin.PluginManager;
+import org.apache.wiki.api.plugin.PluginManager;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;

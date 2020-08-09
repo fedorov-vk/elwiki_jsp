@@ -20,8 +20,8 @@ package org.apache.wiki.ui.admin.beans;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.management.SimpleMBean;
-import org.apache.wiki.ui.admin.AdminBean;
+import org.apache.wiki.management0.SimpleMBean;
+import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.util.TextUtil;
 
 import javax.management.NotCompliantMBeanException;

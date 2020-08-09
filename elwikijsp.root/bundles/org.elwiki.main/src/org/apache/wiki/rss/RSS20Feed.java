@@ -19,14 +19,14 @@
 package org.apache.wiki.rss;
 
 import org.apache.wiki.api.Release;
-import org.apache.wiki.api.core.Attachment;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.attachment.AttachmentManager;
-import org.apache.wiki.variables.VariableManager;
+import org.apache.wiki.api.variables.VariableManager;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -69,7 +69,7 @@ public class RSS20Feed extends Feed
             servletContext = m_wikiContext.getHttpRequest().getSession().getServletContext();
 
         for( final Entry e : m_entries ) {
-            final Page p = e.getPage();
+            final WikiPage p = e.getPage();
             final String url = e.getURL();
             final Element item = new Element( "item" );
             item.addContent( new Element( "link" ).setText( url ) );
@@ -81,12 +81,12 @@ public class RSS20Feed extends Feed
             //
             if( engine.getManager( AttachmentManager.class ).hasAttachments( p ) && servletContext != null ) {
                 try {
-                    final List< Attachment > c = engine.getManager( AttachmentManager.class ).listAttachments( p );
-                    for( final Attachment att : c ) {
+                    final List< PageAttachment > c = engine.getManager( AttachmentManager.class ).listAttachments( p );
+                    for( final PageAttachment att : c ) {
                         final Element attEl = new Element( "enclosure" );
                         attEl.setAttribute( "url", engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null ) );
                         attEl.setAttribute( "length", Long.toString( att.getSize() ) );
-                        attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
+                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
 
                         item.addContent( attEl );
                     }

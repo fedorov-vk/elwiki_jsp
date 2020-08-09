@@ -19,6 +19,7 @@
 package org.apache.wiki.ui;
 
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.ui.EditorManager;
 
 
 /**

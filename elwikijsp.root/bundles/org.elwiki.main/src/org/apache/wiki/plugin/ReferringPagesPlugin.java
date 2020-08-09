@@ -21,12 +21,12 @@ package org.apache.wiki.plugin;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.text.MessageFormat;
@@ -78,7 +78,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
             pageName = context.getPage().getName();
         }
 
-        final Page page = context.getEngine().getManager( PageManager.class ).getPage( pageName );
+        final WikiPage page = context.getEngine().getManager( PageManager.class ).getPage( pageName );
 
         if( page != null ) {
             Collection< String > links  = refmgr.findReferrers( page.getName() );

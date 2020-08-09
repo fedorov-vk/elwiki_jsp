@@ -15,7 +15,15 @@
 
 	<modules>
 		<module>org.eclipse.equinox.http.helper</module>
+<!--
 		<module>sample.http</module>
 		<module>sample.res</module>
+-->
+		<module>org.elwiki.configuration</module>
+		<module>org.elwiki.api</module>
+		<module>org.elwiki.event</module>
+		<module>org.elwiki.main</module>
+		<module>org.elwiki.resources</module>
+		<module>org.elwiki.util</module>
 	</modules>
 </project>

@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Attachment;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.render.RenderingManager;
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.io.IOException;
@@ -38,11 +38,12 @@ public class PageNameTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         if( page != null ) {
-            if( page instanceof Attachment ) {
-                pageContext.getOut().print( TextUtil.replaceEntities( ((Attachment)page).getFileName() ) );
+            if( page instanceof PageAttachment ) {
+            	//:FVK: было -- pageContext.getOut().print( TextUtil.replaceEntities( ((PageAttachment)page).getFileName() ) );
+            	// TODO: реализовать ...
             } else {
                 pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle( m_wikiContext.getName() ) );
             }

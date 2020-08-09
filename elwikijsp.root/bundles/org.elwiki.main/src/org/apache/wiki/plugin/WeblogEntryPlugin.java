@@ -23,12 +23,12 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.pages.PageLock;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageLock;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 
@@ -109,11 +109,11 @@ public class WeblogEntryPlugin implements Plugin {
     }
 
     private int findFreeEntry( final Engine engine, final String baseName, final String date ) throws ProviderException {
-        final Collection< Page > everyone = engine.getManager( PageManager.class ).getAllPages();
+        final Collection< WikiPage > everyone = engine.getManager( PageManager.class ).getAllPages();
         final String startString = WeblogPlugin.makeEntryPage(baseName, date, "");
         int max = 0;
 
-        for( final Page p : everyone ) {
+        for( final WikiPage p : everyone ) {
             if( p.getName().startsWith( startString ) ) {
                 try {
                     final String probableId = p.getName().substring( startString.length() );
@@ -130,7 +130,7 @@ public class WeblogEntryPlugin implements Plugin {
         //  Find the first page that has no page lock.
         int idx = max + 1;
         while( idx < MAX_BLOG_ENTRIES ) {
-            final Page page = Wiki.contents().page( engine, WeblogPlugin.makeEntryPage( baseName, date, Integer.toString( idx ) ) );
+            final WikiPage page = Wiki.contents().page( engine, WeblogPlugin.makeEntryPage( baseName, date, Integer.toString( idx ) ) );
             final PageLock lock = engine.getManager( PageManager.class ).getCurrentLock(page);
             if (lock == null) {
                 break;

@@ -21,7 +21,8 @@ package org.apache.wiki.ui.admin;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.management.SimpleMBean;
+import org.apache.wiki.management0.SimpleMBean;
+import org.apache.wiki.ui.admin0.AdminBean;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;

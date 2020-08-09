@@ -19,8 +19,9 @@
 package org.apache.wiki.ui.admin;
 
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.parser.WikiDocument;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.parser0.WikiDocument;
+import org.apache.wiki.render0.RenderingManager;
+import org.apache.wiki.ui.admin0.AdminBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

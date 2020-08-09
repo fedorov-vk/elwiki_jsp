@@ -28,11 +28,11 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.references.ReferenceManager;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class ReferredPagesPlugin implements Plugin {
     @Override
     public String execute( final Context context, final Map<String, String> params ) throws PluginException {
         m_engine = context.getEngine();
-        final Page page = context.getPage();
+        final WikiPage page = context.getPage();
         if( page == null ) {
             return "";
         }

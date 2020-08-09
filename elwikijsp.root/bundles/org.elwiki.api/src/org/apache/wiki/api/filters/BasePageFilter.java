@@ -19,7 +19,9 @@
 package org.apache.wiki.api.filters;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.FilterException;
+import org.apache.wiki.api.exceptions.WikiException;
 
 import java.lang.reflect.Method;
 import java.util.Properties;
@@ -37,15 +39,19 @@ public class BasePageFilter implements PageFilter {
     protected Engine m_engine;
 
     /**
+     * Is called whenever the a new PageFilter is instantiated and reset.
      * If you override this, you should call super.initialize() first.
-     *
      * {@inheritDoc}
+     *  
+     *  @param engine The Engine which owns this PageFilter
+     *  @param properties The properties ripped from filters.xml.
+     *  @throws WikiException If the filter could not be initialized. If this is thrown, the filter is not added to the internal queues.
      */
     @Override
-    public void initialize( final Engine engine, final Properties properties ) throws FilterException {
+    public void initialize( final Engine engine ) throws WikiException {
         m_engine = engine;
         final Method m = methodOfNonPublicAPI( this, "initialize", "org.apache.wiki.WikiEngine", "java.util.Properties" );
-        executePageFilterPhase( () -> null, m, this, engine, properties );
+        executePageFilterPhase( () -> null, m, this, engine );
     }
 
 }

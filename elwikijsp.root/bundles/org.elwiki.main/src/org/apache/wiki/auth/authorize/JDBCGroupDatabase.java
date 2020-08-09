@@ -21,9 +21,11 @@ package org.apache.wiki.auth.authorize;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
-import org.apache.wiki.auth.NoSuchPrincipalException;
-import org.apache.wiki.auth.WikiPrincipal;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.data.authorize.WikiPrincipal;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -314,7 +316,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
                 }
                 else
                 {
-                    final Group group = new Group( groupName, m_engine.getApplicationName() );
+                    final Group group = new Group( groupName, m_engine.getWikiConfiguration().getApplicationName() );
                     group.setCreated( rs.getTimestamp( m_created ) );
                     group.setCreator( rs.getString( m_creator ) );
                     group.setLastModified( rs.getTimestamp( m_modified ) );
@@ -445,14 +447,16 @@ public class JDBCGroupDatabase implements GroupDatabase {
      *             successfully
      * @throws NoRequiredPropertyException if a required property is not present
      */
-    @Override public void initialize( final Engine engine, final Properties props ) throws NoRequiredPropertyException, WikiSecurityException
+    @Override public void initialize( final Engine engine ) throws NoRequiredPropertyException, WikiSecurityException
     {
         final String table;
         final String memberTable;
 
         m_engine = engine;
+        IPreferenceStore props = engine.getWikiPreferences();
 
-        final String jndiName = props.getProperty( PROP_GROUPDB_DATASOURCE, DEFAULT_GROUPDB_DATASOURCE );
+        final String jndiName = TextUtil.getStringProperty(props, 
+        		 PROP_GROUPDB_DATASOURCE, DEFAULT_GROUPDB_DATASOURCE );
         try
         {
             final Context initCtx = new InitialContext();
@@ -460,14 +464,14 @@ public class JDBCGroupDatabase implements GroupDatabase {
             m_ds = (DataSource) ctx.lookup( jndiName );
 
             // Prepare the SQL selectors
-            table = props.getProperty( PROP_GROUPDB_TABLE, DEFAULT_GROUPDB_TABLE );
-            memberTable = props.getProperty( PROP_GROUPDB_MEMBER_TABLE, DEFAULT_GROUPDB_MEMBER_TABLE );
-            m_name = props.getProperty( PROP_GROUPDB_NAME, DEFAULT_GROUPDB_NAME );
-            m_created = props.getProperty( PROP_GROUPDB_CREATED, DEFAULT_GROUPDB_CREATED );
-            m_creator = props.getProperty( PROP_GROUPDB_CREATOR, DEFAULT_GROUPDB_CREATOR );
-            m_modifier = props.getProperty( PROP_GROUPDB_MODIFIER, DEFAULT_GROUPDB_MODIFIER );
-            m_modified = props.getProperty( PROP_GROUPDB_MODIFIED, DEFAULT_GROUPDB_MODIFIED );
-            m_member = props.getProperty( PROP_GROUPDB_MEMBER, DEFAULT_GROUPDB_MEMBER );
+            table = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_GROUPDB_TABLE, DEFAULT_GROUPDB_TABLE );
+            memberTable = TextUtil.getStringProperty(props, PROP_GROUPDB_MEMBER_TABLE, DEFAULT_GROUPDB_MEMBER_TABLE );
+            m_name = TextUtil.getStringProperty(props, PROP_GROUPDB_NAME, DEFAULT_GROUPDB_NAME );
+            m_created = TextUtil.getStringProperty(props, PROP_GROUPDB_CREATED, DEFAULT_GROUPDB_CREATED );
+            m_creator = TextUtil.getStringProperty(props, PROP_GROUPDB_CREATOR, DEFAULT_GROUPDB_CREATOR );
+            m_modifier = TextUtil.getStringProperty(props, PROP_GROUPDB_MODIFIER, DEFAULT_GROUPDB_MODIFIER );
+            m_modified = TextUtil.getStringProperty(props, PROP_GROUPDB_MODIFIED, DEFAULT_GROUPDB_MODIFIED );
+            m_member = TextUtil.getStringProperty(props, PROP_GROUPDB_MEMBER, DEFAULT_GROUPDB_MEMBER );
 
             m_findAll = "SELECT DISTINCT * FROM " + table;
             m_findGroup = "SELECT DISTINCT * FROM " + table + " WHERE " + m_name + "=?";
@@ -588,7 +592,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
                     unique = false;
                     break;
                 }
-                group = new Group( index, m_engine.getApplicationName() );
+                group = new Group( index, m_engine.getWikiConfiguration().getApplicationName() );
                 group.setCreated( rs.getTimestamp( m_created ) );
                 group.setCreator( rs.getString( m_creator ) );
                 group.setLastModified( rs.getTimestamp( m_modified ) );

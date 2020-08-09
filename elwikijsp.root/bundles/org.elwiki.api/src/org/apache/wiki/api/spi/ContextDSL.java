@@ -21,7 +21,7 @@ package org.apache.wiki.api.spi;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,7 +30,7 @@ public class ContextDSL {
 
     private final ContextSPI contextSPI;
 
-    ContextDSL( final ContextSPI contextSPI ) {
+    public ContextDSL( final ContextSPI contextSPI ) {
         this.contextSPI = contextSPI;
     }
 
@@ -40,7 +40,7 @@ public class ContextDSL {
      *  @param engine The Engine that is handling the request.
      *  @param page The Page. If you want to create a Context for an older version of a page, you must use this method.
      */
-    public Context create( final Engine engine, final Page page ) {
+    public Context create( final Engine engine, final WikiPage page ) {
         return contextSPI.create( engine, page );
     }
 
@@ -64,7 +64,7 @@ public class ContextDSL {
      * @param request The HttpServletRequest that should be associated with this context. This parameter may be <code>null</code>.
      * @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must supply this parameter
      */
-    public Context create( final Engine engine, final HttpServletRequest request, final Page page ) {
+    public Context create( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
         return contextSPI.create( engine, request, page );
     }
 

@@ -10,16 +10,21 @@
 <booleanAttribute key="default" value="true"/>
 <booleanAttribute key="default_auto_start" value="true"/>
 <intAttribute key="default_start_level" value="4"/>
-<setAttribute key="deselected_workspace_bundles"/>
+<setAttribute key="deselected_workspace_bundles">
+<setEntry value="sample.http"/>
+<setEntry value="sample.res"/>
+</setAttribute>
 <booleanAttribute key="includeOptional" value="true"/>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.osgi.service.http.port=8081"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp(+plugins)"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <setAttribute key="selected_target_bundles">
 <setEntry value="com.google.gson*2.8.2.v20180104-1110@default:default"/>
+<setEntry value="com.sun.el@default:default"/>
 <setEntry value="javax.activation@default:default"/>
 <setEntry value="javax.annotation@default:default"/>
 <setEntry value="javax.el@default:default"/>
@@ -27,6 +32,7 @@
 <setEntry value="javax.servlet*3.1.0.v201410161800@default:default"/>
 <setEntry value="javax.servlet.jsp@default:default"/>
 <setEntry value="javax.xml@default:default"/>
+<setEntry value="jaxen@default:default"/>
 <setEntry value="net.sf.ehcache@default:default"/>
 <setEntry value="net.sourceforge.akismet-java@default:default"/>
 <setEntry value="net.sourceforge.sandler@default:default"/>
@@ -42,12 +48,24 @@
 <setEntry value="org.apache.lucene.analyzers-common*8.5.1@default:default"/>
 <setEntry value="org.apache.lucene.core*8.5.1@default:default"/>
 <setEntry value="org.apache.lucene.highlighter@default:default"/>
+<setEntry value="org.apache.lucene.memory@default:default"/>
 <setEntry value="org.apache.lucene.queries@default:default"/>
 <setEntry value="org.apache.lucene.queryparser*8.5.1@default:default"/>
 <setEntry value="org.apache.lucene.sandbox@default:default"/>
 <setEntry value="org.apache.oro@default:default"/>
 <setEntry value="org.apache.xalan@default:default"/>
+<setEntry value="org.apache.xerces@default:default"/>
+<setEntry value="org.apache.xml.resolver@default:default"/>
 <setEntry value="org.apache.xml.serializer@default:default"/>
+<setEntry value="org.eclipse.core.commands@default:default"/>
+<setEntry value="org.eclipse.core.contenttype@default:default"/>
+<setEntry value="org.eclipse.core.expressions@default:default"/>
+<setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:false"/>
+<setEntry value="org.eclipse.core.filesystem@default:default"/>
+<setEntry value="org.eclipse.core.jobs@default:default"/>
+<setEntry value="org.eclipse.core.resources@default:default"/>
+<setEntry value="org.eclipse.core.runtime@default:true"/>
+<setEntry value="org.eclipse.equinox.app@default:default"/>
 <setEntry value="org.eclipse.equinox.common@2:true"/>
 <setEntry value="org.eclipse.equinox.console@default:default"/>
 <setEntry value="org.eclipse.equinox.http.jetty@default:default"/>
@@ -55,6 +73,7 @@
 <setEntry value="org.eclipse.equinox.http.servlet@default:default"/>
 <setEntry value="org.eclipse.equinox.jsp.jasper.registry@default:default"/>
 <setEntry value="org.eclipse.equinox.jsp.jasper@default:default"/>
+<setEntry value="org.eclipse.equinox.preferences@default:default"/>
 <setEntry value="org.eclipse.equinox.registry@default:default"/>
 <setEntry value="org.eclipse.jetty.continuation@default:default"/>
 <setEntry value="org.eclipse.jetty.http@default:default"/>
@@ -65,9 +84,11 @@
 <setEntry value="org.eclipse.jetty.util@default:default"/>
 <setEntry value="org.eclipse.jetty.webapp@default:default"/>
 <setEntry value="org.eclipse.jetty.xml@default:default"/>
+<setEntry value="org.eclipse.jface@default:default"/>
 <setEntry value="org.eclipse.osgi.services@default:default"/>
 <setEntry value="org.eclipse.osgi.util@default:default"/>
 <setEntry value="org.eclipse.osgi@-1:true"/>
+<setEntry value="org.eclipse.swt@default:default"/>
 <setEntry value="org.freshcookies.security@default:default"/>
 <setEntry value="org.jdom.2@default:default"/>
 <setEntry value="org.jvnet.hudson.org.suigeneris.jrcs.diff@default:default"/>
@@ -76,15 +97,23 @@
 <setAttribute key="selected_workspace_bundles">
 <setEntry value="org.eclipse.equinox.http.helper@default:default"/>
 <setEntry value="org.elwiki.api@default:default"/>
+<setEntry value="org.elwiki.commandresolver@default:default"/>
+<setEntry value="org.elwiki.configuration@default:default"/>
+<setEntry value="org.elwiki.data.edit@default:default"/>
+<setEntry value="org.elwiki.data@default:default"/>
 <setEntry value="org.elwiki.event@default:default"/>
 <setEntry value="org.elwiki.jsp@default:default"/>
 <setEntry value="org.elwiki.main@default:default"/>
+<setEntry value="org.elwiki.manager.difference@default:default"/>
+<setEntry value="org.elwiki.manager.editor@default:default"/>
+<setEntry value="org.elwiki.manager.search@default:default"/>
+<setEntry value="org.elwiki.manager.workflow@default:default"/>
+<setEntry value="org.elwiki.resources@default:default"/>
+<setEntry value="org.elwiki.urlconstructor@default:default"/>
 <setEntry value="org.elwiki.util@default:default"/>
-<setEntry value="sample.http@default:default"/>
-<setEntry value="sample.res@default:default"/>
 </setAttribute>
 <booleanAttribute key="show_selected_only" value="false"/>
-<stringAttribute key="timestamp" value="1590708053687"/>
+<stringAttribute key="timestamp" value="1592855673139"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>

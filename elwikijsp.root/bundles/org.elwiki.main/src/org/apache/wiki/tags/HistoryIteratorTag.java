@@ -21,9 +21,9 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages0.PageManager;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -51,11 +51,11 @@ public class HistoryIteratorTag extends IteratorTag  {
     public final int doStartTag() {
         m_wikiContext = (Context) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         try {
             if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page ) ) {
-                final List< Page > versions = engine.getManager( PageManager.class ).getVersionHistory( page.getName() );
+                final List< WikiPage > versions = engine.getManager( PageManager.class ).getVersionHistory( page.getName() );
 
                 if( versions == null ) {
                     // There is no history
@@ -66,7 +66,7 @@ public class HistoryIteratorTag extends IteratorTag  {
 
                 if( m_iterator.hasNext() ) {
                     final Context context = m_wikiContext.clone();
-                    context.setPage( ( Page )m_iterator.next() );
+                    context.setPage( ( WikiPage )m_iterator.next() );
                     pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
                     pageContext.setAttribute( getId(), context.getPage() );
                 } else {
@@ -99,7 +99,7 @@ public class HistoryIteratorTag extends IteratorTag  {
 
         if( m_iterator != null && m_iterator.hasNext() ) {
             final Context context = m_wikiContext.clone();
-            context.setPage( ( Page )m_iterator.next() );
+            context.setPage( ( WikiPage )m_iterator.next() );
             pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
             pageContext.setAttribute( getId(), context.getPage() );
             return EVAL_BODY_BUFFERED;

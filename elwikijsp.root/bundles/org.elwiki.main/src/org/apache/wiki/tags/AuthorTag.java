@@ -19,13 +19,13 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.parser.MarkupParser;
-import org.apache.wiki.parser.WikiDocument;
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.parser0.MarkupParser;
+import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.render.RenderingManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class AuthorTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
         String author = page.getAuthor();
 
         if( author != null && author.length() > 0 ) {

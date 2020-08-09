@@ -20,17 +20,17 @@ package org.apache.wiki.tags;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.permissions.AllPermission;
 import org.apache.wiki.auth.permissions.GroupPermission;
 import org.apache.wiki.auth.permissions.PermissionFactory;
 import org.apache.wiki.auth.permissions.WikiPermission;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.ui.GroupCommand;
+import org.apache.wiki.pages0.PageManager;
 
 import java.security.Permission;
 
@@ -104,7 +104,7 @@ public class PermissionTag extends WikiTagBase {
      */
     private boolean checkPermission( final String permission ) {
         final Session session          = m_wikiContext.getWikiSession();
-        final Page page                = m_wikiContext.getPage();
+        final WikiPage page                = m_wikiContext.getPage();
         final AuthorizationManager mgr = m_wikiContext.getEngine().getManager( AuthorizationManager.class );
         boolean gotPermission          = false;
         
@@ -125,13 +125,13 @@ public class PermissionTag extends WikiTagBase {
                 gotPermission = mgr.checkPermission( session, new GroupPermission( groupName, action ) );
             }
         } else if ( ALL_PERMISSION.equals( permission ) ) {
-            gotPermission = mgr.checkPermission( session, new AllPermission( m_wikiContext.getEngine().getApplicationName() ) );
+            gotPermission = mgr.checkPermission( session, new AllPermission( m_wikiContext.getEngine().getWikiConfiguration().getApplicationName() ) );
         } else if ( page != null ) {
             //
             //  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.
             //
             if( EDIT.equals(permission) ) {
-                final Page latest = m_wikiContext.getEngine().getManager( PageManager.class ).getPage( page.getName() );
+                final WikiPage latest = m_wikiContext.getEngine().getManager( PageManager.class ).getPage( page.getName() );
                 if( page.getVersion() != WikiProvider.LATEST_VERSION && latest.getVersion() != page.getVersion() ) {
                     return false;
                 }

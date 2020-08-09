@@ -21,7 +21,7 @@ package org.apache.wiki.api.spi;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,7 +37,7 @@ public interface ContextSPI {
      *  @param engine The Engine that is handling the request.
      *  @param page The Page. If you want to create a Context for an older version of a page, you must use this method.
      */
-    Context create( Engine engine, Page page );
+    Context create( Engine engine, WikiPage page );
 
     /**
      * <p>Creates a new Context for the given Engine, Command and HttpServletRequest.</p>
@@ -57,7 +57,7 @@ public interface ContextSPI {
      * @param request The HttpServletRequest that should be associated with this context. This parameter may be <code>null</code>.
      * @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must supply this parameter
      */
-    Context create( Engine engine, HttpServletRequest request, Page page );
+    Context create( Engine engine, HttpServletRequest request, WikiPage page );
 
     /**
      *  Creates a new Context from a supplied HTTP request, using a default wiki context.

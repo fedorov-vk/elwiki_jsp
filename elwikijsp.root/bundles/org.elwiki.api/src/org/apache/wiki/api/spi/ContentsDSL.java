@@ -18,39 +18,39 @@
  */
 package org.apache.wiki.api.spi;
 
-import org.apache.wiki.api.core.Attachment;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 
 public class ContentsDSL {
 
     final ContentsSPI contentsSPI;
 
-    ContentsDSL( final ContentsSPI contentsSPI ) {
+    public ContentsDSL( final ContentsSPI contentsSPI ) {
         this.contentsSPI = contentsSPI;
     }
 
     /**
-     * Creates a new {@link Attachment}. The final name of the attachment will be a synthesis of the parent page name and the file name.
+     * Creates a new {@link PageAttachment}. The final name of the attachment will be a synthesis of the parent page name and the file name.
      *
      * @param engine     The Engine which is hosting this attachment.
      * @param parentPage The page which will contain this attachment.
      * @param fileName   The file name for the attachment.
-     * @return new {@link Attachment} instance.
+     * @return new {@link PageAttachment} instance.
      */
-    public Attachment attachment( final Engine engine, final String parentPage, final String fileName ) {
+    public PageAttachment attachment( final Engine engine, final String parentPage, final String fileName ) {
         return contentsSPI.attachment( engine, parentPage, fileName );
     }
 
     /**
-     * Creates a {@link Page} instance.
+     * Creates a {@link WikiPage} instance.
      *
      * @param engine The Engine that owns this page.
      * @param name   The name of the page.
-     * @return new {@link Page} instance.
+     * @return new {@link WikiPage} instance.
      */
-    public Page page( final Engine engine, final String name ) {
+    public WikiPage page( final Engine engine, final String name ) {
         return contentsSPI.page( engine, name );
     }
 

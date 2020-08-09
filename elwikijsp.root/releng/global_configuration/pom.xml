@@ -36,7 +36,10 @@
 		-->
 		<platform-repo.url>file:/repo/eclipse/releases/2020-03</platform-repo.url>
 		<apachetools-repo.url>file:/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository</apachetools-repo.url>
-		<custom-repo.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository</custom-repo.url>
+		<custom-repo01.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository</custom-repo01.url>
+		<custom-repo02.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>
+
+
 <!--
 		<rap-repo.url>file:/repo/RAP/rap-e4-3.9.0-R-20190612-1720</rap-repo.url>
 		<license-repo.url>file:/repo/License/license_20181016/</license-repo.url>
@@ -70,9 +73,14 @@
 			<url>${apachetools-repo.url}</url>
 		</repository>
 		<repository>
-			<id>custom-p2-repo</id>
+			<id>custom-p2-repo01</id>
 			<layout>p2</layout>
-			<url>${custom-repo.url}</url>
+			<url>${custom-repo01.url}</url>
+		</repository>
+		<repository>
+			<id>custom-p2-repo02</id>
+			<layout>p2</layout>
+			<url>${custom-repo02.url}</url>
 		</repository>
 <!--
 		<repository>

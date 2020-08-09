@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.search;
 
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 
 
 /**
@@ -31,7 +31,7 @@ public interface SearchResult {
      *  
      *  @return the WikiPage object containing this result
      */
-    Page getPage();
+    WikiPage getPage();
 
     /**
      *  Returns the score.

@@ -19,6 +19,7 @@
 package org.apache.wiki.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -330,10 +331,10 @@ public final class TextUtil {
      *  @param defVal If the property is not found or is a non-integer, returns this value.
      *  @return The property value as an integer (or defVal).
      */
-    public static int getIntegerProperty( final Properties props, final String key, final int defVal ) {
+    public static int getIntegerProperty( IPreferenceStore props, final String key, final int defVal ) {
         String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
         if( val == null ) {
-            val = props.getProperty( key );
+            val = props.getString( key );
         }
         return parseIntParameter( val, defVal );
     }
@@ -355,12 +356,12 @@ public final class TextUtil {
      *
      *  @since 2.0.11
      */
-    public static boolean getBooleanProperty( final Properties props, final String key, final boolean defval ) {
+    public static boolean getBooleanProperty( IPreferenceStore props, String key, boolean defval ) {
         String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
         if( val == null ) {
-            val = props.getProperty( key );
+            val = props.getString( key );
         }
-        if( val == null ) {
+        if( val == null || val.length() == 0 ) {
             return defval;
         }
 
@@ -375,18 +376,18 @@ public final class TextUtil {
      *  we use that value, if not we check an environment variable with that (almost) same name, almost meaning we replace
      *  dots with underscores.
      *
-     *  @param props The Properties to search through
+     *  @param preferences The Properties to search through
      *  @param key   The property key
      *  @param defval A default value to return, if the property does not exist.
      *  @return The property value.
      *  @since 2.1.151
      */
-    public static String getStringProperty( final Properties props, final String key, final String defval ) {
+    public static String getStringProperty( final IPreferenceStore preferences, final String key, final String defval ) {
         String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
         if( val == null ) {
-            val = props.getProperty( key );
+            val = preferences.getString( key );
         }
-        if( val == null ) {
+        if( val == null || val.length() == 0 ) {
             return defval;
         }
         return val.trim();
@@ -402,7 +403,7 @@ public final class TextUtil {
      *  @throws NoSuchElementException If the search key is not in the property set.
      *  @since 2.0.26 (on TextUtils, moved To WikiEngine on 2.11.0-M1 and back to TextUtils on 2.11.0-M6)
      */
-    public static String getRequiredProperty( final Properties props, final String key ) throws NoSuchElementException {
+    public static String getRequiredProperty( IPreferenceStore props, String key ) throws NoSuchElementException {
         final String value = getStringProperty( props, key, null );
         if( value == null ) {
             throw new NoSuchElementException( "Required property not found: " + key );
@@ -424,13 +425,13 @@ public final class TextUtil {
      *  @return the canonical path of the file or directory being referenced
      *  @since 2.10.1
      */
-    public static String getCanonicalFilePathProperty( final Properties props, final String key, final String defval ) {
+    public static String getCanonicalFilePathProperty( IPreferenceStore props, final String key, final String defval ) {
         String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
         if( val == null ) {
-            val = props.getProperty( key );
+            val = props.getString( key );
         }
 
-        if( val == null ) {
+        if( val == null || val.length()==0 ) {
             val = defval;
         }
 

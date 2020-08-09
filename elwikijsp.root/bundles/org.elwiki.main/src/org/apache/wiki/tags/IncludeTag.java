@@ -20,12 +20,15 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.internal.MainActivator;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.FileLocator;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  *  Includes an another JSP page, making sure that we actually pass the WikiContext correctly.
@@ -64,13 +67,15 @@ public class IncludeTag extends WikiTagBase {
     @Override
     public final int doEndTag() throws JspException {
         try {
-            final String page = m_wikiContext.getEngine().getManager( TemplateManager.class ).findJSP( pageContext,
-                                                                                                 m_wikiContext.getTemplate(),
-                                                                                                 m_page );
+        	TemplateManager templateManager = m_wikiContext.getEngine().getManager( TemplateManager.class );
+			final String page = templateManager.findJSP(pageContext, m_wikiContext.getTemplate(), m_page);
 
             if( page == null ) {
                 pageContext.getOut().println( "No template file called '" + TextUtil.replaceEntities( m_page ) + "'" );
             } else {
+                URL url = MainActivator.getContext().getBundle().getEntry(page);
+                URL res = FileLocator.resolve(url);
+                String pagePath = res.getPath();
                 pageContext.include( page );
             }
         } catch( final ServletException e ) {

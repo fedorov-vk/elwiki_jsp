@@ -21,8 +21,8 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.diff.DifferenceManager;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.api.diff.DifferenceManager;
+import org.apache.wiki.pages0.PageManager;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;

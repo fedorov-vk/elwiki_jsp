@@ -18,33 +18,42 @@
  */
 package org.apache.wiki;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.ui.CommandResolver;
+import org.apache.wiki.api.ui.PageCommand;
+import org.apache.wiki.api.ui.WikiCommand;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.NoSuchPrincipalException;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.WikiPrincipal;
 import org.apache.wiki.auth.permissions.AllPermission;
-import org.apache.wiki.auth.user.UserDatabase;
-import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.ui.CommandResolver;
+import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.internal.MainActivator;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
-import org.apache.wiki.ui.PageCommand;
-import org.apache.wiki.ui.WikiCommand;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.data.authorize.WikiPrincipal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import java.security.Permission;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.PropertyPermission;
+import java.util.TimeZone;
 
 /**
  *  <p>Provides state information throughout the processing of a page.  A WikiContext is born when the JSP pages that are the main entry
@@ -73,6 +82,7 @@ public class WikiContext implements Context, Command {
     protected HttpServletRequest m_request;
 
     private Session m_session;
+	private IWikiConfiguration wikiConfiguration;
 
     /** User is doing administrative things. */
     public static final String ADMIN = ContextEnum.WIKI_ADMIN.getRequestContext();
@@ -160,13 +170,19 @@ public class WikiContext implements Context, Command {
     private static final Permission DUMMY_PERMISSION = new PropertyPermission( "os.name", "read" );
 
     /**
-     *  Create a new WikiContext for the given WikiPage. Delegates to {@link #WikiContext(Engine, HttpServletRequest, Page)}.
+     *  Create a new WikiContext for the given WikiPage. Delegates to {@link #WikiContext(Engine, HttpServletRequest, WikiPage)}.
      *
      *  @param engine The Engine that is handling the request.
      *  @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must use this constructor.
      */
-    public WikiContext( final Engine engine, final Page page ) {
+    public WikiContext( final Engine engine, final WikiPage page ) {
         this( engine, null, findCommand( engine, null, page ) );
+
+        BundleContext context = MainActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
+		}
     }
 
     /**
@@ -227,14 +243,14 @@ public class WikiContext implements Context, Command {
 
     /**
      * Creates a new WikiContext for the given Engine, WikiPage and HttpServletRequest. This method simply looks up the appropriate
-     * Command using {@link #findCommand(Engine, HttpServletRequest, Page)} and delegates to
+     * Command using {@link #findCommand(Engine, HttpServletRequest, WikiPage)} and delegates to
      * {@link #WikiContext(Engine, HttpServletRequest, Command)}.
      *
      * @param engine The Engine that is handling the request
      * @param request The HttpServletRequest that should be associated with this context. This parameter may be <code>null</code>.
      * @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must supply this parameter
      */
-    public WikiContext( final Engine engine, final HttpServletRequest request, final Page page ) {
+    public WikiContext( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
         this( engine, request, findCommand( engine, request, page ) );
     }
 
@@ -244,7 +260,7 @@ public class WikiContext implements Context, Command {
      *  @param engine The Engine that is handling the request
      *  @param request the HTTP request
      *  @param requestContext the default context to use
-     *  @see org.apache.wiki.ui.CommandResolver
+     *  @see org.apache.wiki.api.ui.CommandResolver
      *  @see org.apache.wiki.api.core.Command
      *  @since 2.1.15.
      */
@@ -291,7 +307,7 @@ public class WikiContext implements Context, Command {
      *  @see org.apache.wiki.tags.InsertPageTag
      */
     @Override
-    public WikiPage setRealPage( final Page page ) {
+    public WikiPage setRealPage( final WikiPage page ) {
         final WikiPage old = m_realPage;
         m_realPage = ( WikiPage )page;
         updateCommand( m_command.getRequestContext() );
@@ -319,7 +335,7 @@ public class WikiContext implements Context, Command {
 
     /**
      *  Figure out to which page we are really going to.  Considers special page names from the jspwiki.properties, and possible aliases.
-     *  This method forwards requests to {@link org.apache.wiki.ui.CommandResolver#getSpecialPageReference(String)}.
+     *  This method forwards requests to {@link org.apache.wiki.api.ui.CommandResolver#getSpecialPageReference(String)}.
      *  @return A complete URL to the new page to redirect to
      *  @since 2.2
      */
@@ -328,11 +344,11 @@ public class WikiContext implements Context, Command {
         final String pagename = m_page.getName();
         String redirURL = m_engine.getManager( CommandResolver.class ).getSpecialPageReference( pagename );
         if( redirURL == null ) {
-            final String alias = m_page.getAttribute( WikiPage.ALIAS );
+            final String alias = null; //:FVK: m_page.getAttribute( WikiPage.ALIAS );
             if( alias != null ) {
                 redirURL = getViewURL( alias );
             } else {
-                redirURL = m_page.getAttribute( WikiPage.REDIRECT );
+                redirURL = ":FVK:"; //:FVK: m_page.getAttribute( WikiPage.REDIRECT );
             }
         }
 
@@ -367,7 +383,7 @@ public class WikiContext implements Context, Command {
      *  @since 2.1.37.
      */
     @Override
-    public void setPage( final Page page ) {
+    public void setPage( final WikiPage page ) {
         m_page = (WikiPage)page;
         updateCommand( m_command.getRequestContext() );
     }
@@ -454,7 +470,7 @@ public class WikiContext implements Context, Command {
             return TextUtil.isPositive( bool );
         }
 
-        return TextUtil.getBooleanProperty( getEngine().getWikiProperties(), key, defValue );
+        return TextUtil.getBooleanProperty( getEngine().getWikiPreferences(), key, defValue );
     }
 
     /**
@@ -509,8 +525,8 @@ public class WikiContext implements Context, Command {
      * {@code getPage().getName()}.
      *
      * @return the name of the target of this wiki context
-     * @see org.apache.wiki.ui.PageCommand#getName()
-     * @see org.apache.wiki.ui.GroupCommand#getName()
+     * @see org.apache.wiki.api.ui.PageCommand#getName()
+     * @see org.apache.wiki.api.ui.GroupCommand#getName()
      */
     @Override
     public String getName() {
@@ -646,8 +662,10 @@ public class WikiContext implements Context, Command {
             copy.m_variableMap = (HashMap<String,Object>)m_variableMap.clone();
             copy.m_request     = m_request;
             copy.m_session     = m_session;
+            /*:FVK:
             copy.m_page        = m_page.clone();
             copy.m_realPage    = m_realPage.clone();
+            */
             return copy;
         }
         catch( final CloneNotSupportedException e ){} // Never happens
@@ -704,7 +722,7 @@ public class WikiContext implements Context, Command {
             } catch ( final NoSuchPrincipalException e ) {
                 return DUMMY_PERMISSION;
             }
-            return new AllPermission( m_engine.getApplicationName() );
+            return new AllPermission( wikiConfiguration.getApplicationName() );
         }
 
         // TODO: we should really break the contract so that this
@@ -740,7 +758,7 @@ public class WikiContext implements Context, Command {
      */
     @Override
     public boolean hasAdminPermissions() {
-        return m_engine.getManager( AuthorizationManager.class ).checkPermission( getWikiSession(), new AllPermission( m_engine.getApplicationName() ) );
+        return m_engine.getManager( AuthorizationManager.class ).checkPermission( getWikiSession(), new AllPermission( wikiConfiguration.getApplicationName() ) );
     }
 
     /**
@@ -765,7 +783,7 @@ public class WikiContext implements Context, Command {
         if( template == null ) {
             final WikiPage page = getPage();
             if ( page != null ) {
-                template = page.getAttribute( Engine.PROP_TEMPLATEDIR );
+                template = null; //:FVK: page.getAttribute( Engine.PROP_TEMPLATEDIR );
             }
 
         }
@@ -788,7 +806,7 @@ public class WikiContext implements Context, Command {
      * @param page the wiki page
      * @return the correct command
      */
-    protected static Command findCommand( final Engine engine, final HttpServletRequest request, final Page page ) {
+    protected static Command findCommand( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
         final String defaultContext = ContextEnum.PAGE_VIEW.getRequestContext();
         Command command = engine.getManager( CommandResolver.class ).findCommand( request, defaultContext );
         if ( command instanceof PageCommand && page != null ) {

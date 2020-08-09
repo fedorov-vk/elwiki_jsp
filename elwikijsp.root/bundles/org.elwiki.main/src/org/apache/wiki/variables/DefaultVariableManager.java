@@ -20,18 +20,23 @@ package org.apache.wiki.variables;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.filters.PageFilter;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.attachment.AttachmentManager;
-import org.apache.wiki.filters.FilterManager;
-import org.apache.wiki.i18n.InternationalizationManager;
-import org.apache.wiki.modules.InternalModule;
-import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.internal.MainActivator;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -59,11 +64,20 @@ public class DefaultVariableManager implements VariableManager {
         "jspwiki.auth.masterpassword"
     };
 
+	private IWikiConfiguration wikiConfiguration;
+
     /**
      *  Creates a VariableManager object using the property list given.
      *  @param props The properties.
      */
-    public DefaultVariableManager( final Properties props ) {
+    public DefaultVariableManager() {
+        super();
+        
+		BundleContext context = MainActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
+		}
     }
 
     /**
@@ -208,7 +222,7 @@ public class DefaultVariableManager implements VariableManager {
             //
             // And the final straw: see if the current page has named metadata.
             //
-            final Page pg = context.getPage();
+            final WikiPage pg = context.getPage();
             if( pg != null ) {
                 final Object metadata = pg.getAttribute( varName );
                 if( metadata != null ) {
@@ -220,7 +234,7 @@ public class DefaultVariableManager implements VariableManager {
             // And the final straw part 2: see if the "real" current page has named metadata. This allows
             // a parent page to control a inserted page through defining variables
             //
-            final Page rpg = context.getRealPage();
+            final WikiPage rpg = context.getRealPage();
             if( rpg != null ) {
                 final Object metadata = rpg.getAttribute( varName );
                 if( metadata != null ) {
@@ -234,9 +248,8 @@ public class DefaultVariableManager implements VariableManager {
             // in other people's code... :-)
             //
             if( varName.startsWith("jspwiki.") ) {
-                final Properties props = context.getEngine().getWikiProperties();
-                final String s = props.getProperty( varName );
-                if( s != null ) {
+                final String s = wikiConfiguration.getWikiPreferences().getString(varName);
+                if( s != null && s.length()>0) {
                     return s;
                 }
             }
@@ -271,7 +284,7 @@ public class DefaultVariableManager implements VariableManager {
      *  @since 2.7.0
      */
     @SuppressWarnings( "unused" )
-    private static class SystemVariables {
+	private /*:FVK:static*/ class SystemVariables {
 
         private final Context m_context;
 
@@ -287,7 +300,7 @@ public class DefaultVariableManager implements VariableManager {
 
         public String getApplicationname()
         {
-            return m_context.getEngine().getApplicationName();
+            return wikiConfiguration.getApplicationName();
         }
 
         public String getJspwikiversion()
@@ -324,20 +337,20 @@ public class DefaultVariableManager implements VariableManager {
         public String getInterwikilinks() {
             final StringBuilder res = new StringBuilder();
 
-            for( final String link : m_context.getEngine().getAllInterWikiLinks() ) {
+            for( final String link : wikiConfiguration.getAllInterWikiLinks() ) {
                 if( res.length() > 0 ) {
                     res.append( ", " );
                 }
                 res.append( link );
                 res.append( " --> " );
-                res.append( m_context.getEngine().getInterWikiURL( link ) );
+                res.append( wikiConfiguration.getInterWikiURL( link ) );
             }
             return res.toString();
         }
 
         public String getInlinedimages() {
             final StringBuilder res = new StringBuilder();
-            for( final String ptrn : m_context.getEngine().getAllInlinedImagePatterns() ) {
+            for( final String ptrn : wikiConfiguration.getAllInlinedImagePatterns() ) {
                 if( res.length() > 0 ) {
                     res.append( ", " );
                 }

@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Attachment;
+import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Page;
-import org.apache.wiki.render.RenderingManager;
+import org.elwiki_data.WikiPage;
+import org.apache.wiki.render0.RenderingManager;
 
 import java.io.IOException;
 
@@ -40,11 +40,12 @@ public class ParentPageNameTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Page page = m_wikiContext.getPage();
+        final WikiPage page = m_wikiContext.getPage();
 
         if( page != null ) {
-            if( page instanceof Attachment ) {
-                pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle( ((Attachment)page).getParentName()) );
+            if( page instanceof PageAttachment ) {
+            	//:FVK: pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle( ((PageAttachment)page).getParentName()) );
+            	// TODO: release ...
             } else {
                 String name = page.getName();
                 final int entrystart = name.indexOf("_blogentry_");

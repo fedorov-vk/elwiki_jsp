@@ -37,7 +37,7 @@ public class NoRequiredPropertyException extends WikiException {
      *  @param key The key of the property in question.
      */
     public NoRequiredPropertyException( final String msg, final String key ) {
-        super( msg + ": key=" + key );
+        super( msg + " For key '" + key + "'" );
     }
 
 }

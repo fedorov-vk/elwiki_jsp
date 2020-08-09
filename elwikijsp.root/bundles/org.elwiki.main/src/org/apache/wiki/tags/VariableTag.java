@@ -20,8 +20,8 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.variables.VariableManager;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

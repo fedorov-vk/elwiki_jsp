@@ -21,12 +21,12 @@ package org.apache.wiki.ui.admin.beans;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.auth.NoSuchPrincipalException;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user.UserProfile;
-import org.apache.wiki.ui.admin.AdminBean;
+import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
+import org.apache.wiki.ui.admin0.AdminBean;
 
 import javax.management.NotCompliantMBeanException;
 import javax.servlet.http.HttpServletRequest;

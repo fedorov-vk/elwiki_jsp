@@ -34,11 +34,11 @@ public interface GroupDatabase {
     /**
      * Looks up and deletes a {@link Group} from the group database. If the
      * group database does not contain the supplied Group. this method throws a
-     * {@link org.apache.wiki.auth.NoSuchPrincipalException}. The method commits the results
+     * {@link org.apache.wiki.api.exceptions.NoSuchPrincipalException}. The method commits the results
      * of the delete to persistent storage.
      * @param group the group to remove
      * @throws WikiSecurityException if the database does not contain the
-     * supplied group (thrown as {@link org.apache.wiki.auth.NoSuchPrincipalException}) or if
+     * supplied group (thrown as {@link org.apache.wiki.api.exceptions.NoSuchPrincipalException}) or if
      * the commit did not succeed
      */
     void delete( Group group ) throws WikiSecurityException;
@@ -50,7 +50,7 @@ public interface GroupDatabase {
      * @throws WikiSecurityException if the database could not be initialized successfully
      * @throws NoRequiredPropertyException if a required property is not present
      */
-    void initialize( Engine engine, Properties props ) throws NoRequiredPropertyException, WikiSecurityException;
+    void initialize( Engine engine ) throws NoRequiredPropertyException, WikiSecurityException;
 
     /**
      * Saves a Group to the group database. Note that this method <em>must</em>

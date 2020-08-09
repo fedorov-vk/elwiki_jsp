@@ -19,7 +19,7 @@
 package org.apache.wiki.rss;
 
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Page;
+import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.util.TextUtil;
 
@@ -120,7 +120,7 @@ public interface RSSGenerator extends Initializable {
      * @return Fully formed XML.
      * @throws IllegalArgumentException If an illegal mode is given.
      */
-    String generateFeed( final Context wikiContext, final List< Page > changed, final String mode, final String type ) throws IllegalArgumentException;
+    String generateFeed( final Context wikiContext, final List< WikiPage > changed, final String mode, final String type ) throws IllegalArgumentException;
 
     /**
      * Returns <code>true</code> if RSS generation is enabled.
@@ -161,7 +161,7 @@ public interface RSSGenerator extends Initializable {
      * @param feed A Feed object to fill.
      * @return the RSS representation of the wiki context
      */
-    String generateWikiPageRSS( Context wikiContext, List< Page > changed, Feed feed );
+    String generateWikiPageRSS( Context wikiContext, List< WikiPage > changed, Feed feed );
 
     /**
      *  Creates RSS from modifications as if this page was a blog (using the WeblogPlugin).
@@ -171,7 +171,7 @@ public interface RSSGenerator extends Initializable {
      *  @param feed A valid Feed object.  The feed will be used to create the RSS/Atom, depending on which kind of an object you want to put in it.
      *  @return A String of valid RSS or Atom.
      */
-    String generateBlogRSS( Context wikiContext, List< Page > changed, Feed feed );
+    String generateBlogRSS( Context wikiContext, List< WikiPage > changed, Feed feed );
 
     /**
      *  Does the required formatting and entity replacement for XML.
