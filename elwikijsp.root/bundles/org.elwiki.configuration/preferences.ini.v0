@@ -1,0 +1,165 @@
+eclipse.preferences.version=1
+
+#
+#
+org.elwiki.configuration/elwiki.workDir = /home/vfedorov/dev/dev_wiki/WikiRoot/ElWiki_WorkDir
+org.elwiki.configuration/elwiki.attachmentDir = /home/vfedorov/dev/dev_wiki/WikiRoot/pages_attachment
+
+## RenderingManager
+
+# default renderer -- XHTMLRenderer
+org.elwiki.configuration/jspwiki.renderingManager.renderer=
+
+#
+#  Set to true, if you want to cache page data into memory.  This is
+#  in general a good idea.
+#
+#  Default is false (no cache).
+#
+#  NB: This replaces the JSPWiki 1.x "CachingProvider" setting, since it
+#      probably was too confusing.
+#
+org.elwiki.configuration/jspwiki.usePageCache = false
+
+#
+#  Set this to the number of minutes a person can "lock" a page
+#  for while he is editing it.
+#
+org.elwiki.configuration/jspwiki.lockExpiryTime = 60
+
+#
+#  Which page provider class to use.  Possibilities are:
+#
+#    FileSystemProvider     - for simple pure file storage with no version information
+#    VersioningFileProvider - for simple pure file storage with    version information
+#
+#jspwiki.pageProvider = org.elwiki.pageprovider.FileSystemProvider
+#jspwiki.pageProvider = org.elwiki.pageprovider.ResourceXmiProvider
+org.elwiki.configuration/jspwiki.pageProvider = org.elwiki.pageprovider.CdoWikiPageProvider
+
+#
+#  Determines where wiki files are kept for FileSystemProvider i.e.:
+#
+#  jspwiki.fileSystemProvider.pageDir = /p/web/www-data/jspwiki/
+#
+#  If you're using Windows, then you must duplicate the backslashes.
+#  For example, use:
+#
+#  jspwiki.fileSystemProvider.pageDir = C:\\Data\\jspwiki
+#
+#  If not provided, will default to a "jspwiki-files" directory
+#  in the user's home folder.
+#
+
+#
+#  Determines which character encoding JSPWiki should use.  If you want
+#  to support all languages in your Wiki, you probably want to enable
+#  this.  From JSPWiki 2.2, it is strongly suggested that you use UTF-8.
+#
+#  Note that you can't switch these in the mean time, since the way the
+#  files are encoded on disk is incompatible between ISO-Latin1 and UTF-8.
+#  Don't try.  You'll get all sorts of interesting problems, if you do.
+#
+#  Possible values are 'ISO-8859-1' (default, if none has been specified)
+#  and 'UTF-8'.
+
+org.elwiki.configuration/jspwiki.encoding = UTF-8
+
+#
+# The following 3 properties apply sensible constraints around custom page
+# properties that can be saved into the AbstractFileProvider. These default
+# values were chosen with future JDBC providers in mind.
+# See: https://issues.apache.org/jira/browse/JSPWIKI-856
+#
+#custom.pageproperty.max.allowed=200
+#custom.pageproperty.key.length=255
+#custom.pageproperty.value.length=4096
+
+#  B) GROUPS
+#  As an additional source of authorization, users can belong to discretionary
+#  "wiki groups" that the users manage themselves. Wiki groups are stored in a
+#  GroupDatabase. The default group database uses an XML file for persistent
+#  storage. Override with your own GroupDatabase implementation with this property:
+# WORKAROUND?
+org.elwiki.configuration/jspwiki.groupdatabase = org.elwiki.authorize.XMLGroupDatabase
+
+## :FVK: deprecated.
+#  USER DATABASE
+#  User's wiki profiles are stored in a UserDatabase. The default user database
+#  uses an XML file for persistent storage.
+#  Override with your own UserDatabase implementation with this property:
+#org.elwiki.auth/node.userManager/userdatabase = XMLUserDatabase
+# :FVK: deprecated.
+#org.elwiki.configuration/jspwiki.userdatabase = XMLUserDatabase
+org.elwiki.authorize/node.userManager/userdatabase = UserAdminDatabase
+
+###############################################################################
+## Wiki run-time parameters.
+
+org.elwiki.configuration/jspwiki.fileSystemProvider.pageDir = /home/vfedorov/dev/dev_wiki/Temp/pages
+#jspwiki.encoding = UTF-8
+
+# Enabling page filter (before/after HTML conversion)
+org.elwiki.configuration/jspwiki.runFilters = false
+
+
+###############################################################################
+## Wiki CDO data storage parameters.
+org.elwiki.configuration/storage.cdo.host = localhost
+org.elwiki.configuration/storage.cdo.port = 2036
+org.elwiki.configuration/storage.cdo.repository = inventory
+
+#############################################################################
+#
+# InterWiki links
+#
+# The %s is replaced with the page reference (specify
+# multiple times to get multiple references).  Page references should
+# appear in format : [wiki:wikipage].
+#
+
+#  This is the original WikiWikiWeb
+org.elwiki.configuration/node.interWikiRefs/WikiWikiWeb = http://c2.com/cgi/wiki?%s
+
+#  TWiki, a very nice WikiClone.
+org.elwiki.configuration/node.interWikiRefs/TWiki = http://twiki.org/cgi-bin/view/TWiki/%s
+
+#  MeatballWiki, which seems to be quite popular.
+org.elwiki.configuration/node.interWikiRefs/MeatballWiki = http://usemod.com/cgi-bin/mb.pl?%s
+
+#  Wikipedia, a Wiki encyclopedia!
+org.elwiki.configuration/node.interWikiRefs/Wikipedia = http://www.wikipedia.com/wiki/%s
+
+#  Google, the ubiquitous search engine.
+org.elwiki.configuration/node.interWikiRefs/Google = http://www.google.com/search?q=%s
+
+#  This is JSPWiki site.
+org.elwiki.configuration/node.interWikiRefs/JSPWiki = http://jspwiki-wiki.apache.org/Wiki.jsp?page=%s
+
+org.elwiki.configuration/node.interWikiRefs/keys=WikiWikiWeb:TWiki:MeatballWiki:Wikipedia:Google:JSPWiki
+
+## Inlined Image Types
+############################################################################
+#
+# Define which image types are inlined.
+# These are your standard glob expressions (just like in your
+# Windows or UNIX shells).  Default pattern is to include all PNG
+# images.  If you specify something here, you will override the default.
+#
+# Don't forget to increase the number after the dot - duplicate entries
+# cause problems!
+#
+# For example:
+#   Inline all JPG files, PNG files and all files from images.com:
+#
+#      jspwiki.translatorReader.inlinePattern.1 = *.jpg
+#      jspwiki.translatorReader.inlinePattern.2 = *.png
+#      jspwiki.translatorReader.inlinePattern.3 = http://images.com/*
+#org.elwiki.configuration/jspwiki.translatorReader.inlinePattern.1 = *.jpg
+#org.elwiki.configuration/jspwiki.translatorReader.inlinePattern.2 = *.png
+#org.elwiki.configuration/jspwiki.translatorReader.inlinePattern.3 = *.gif
+
+org.elwiki.configuration/node.translatorReader.inlinePatterns/1 = *.jpg
+org.elwiki.configuration/node.translatorReader.inlinePatterns/2 = *.png
+org.elwiki.configuration/node.translatorReader.inlinePatterns/3 = *.gif
+org.elwiki.configuration/node.translatorReader.inlinePatterns/keys=1:2:3

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.render.DefaultRenderingManager">
+   <implementation class="org.apache.wiki.render.DefaultRenderingManager"/>
+   <service>
+      <provide interface="org.apache.wiki.render0.RenderingManager"/>
+   </service>
+</scr:component>

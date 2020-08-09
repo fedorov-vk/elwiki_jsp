@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0"
+   name="org.elwiki.authorize.groupManager"
+   activate="startup" deactivate="shutdown">
+   <implementation class="org.elwiki.authorize.internal.services.GroupManager"/>
+   <service>
+      <provide interface="org.elwiki.api.authorization.IAuthorizer"/>
+   </service>
+</scr:component>

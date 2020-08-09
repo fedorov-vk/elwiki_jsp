@@ -1,0 +1,4 @@
+:FVK: - это фиктивные ресурсы - их наличие проверяется в Java коде этого плагина (функционал тянется из JSPwiki)
+(original files:
+    bundle - org.elwiki.jsp (устарело)
+см. bundle - org.elwiki.resources

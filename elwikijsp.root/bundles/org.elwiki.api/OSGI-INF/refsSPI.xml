@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" deactivate="shutdown" name="org.apache.wiki.Wiki_ref">
+   <implementation class="org.apache.wiki.Wiki"/>
+   <reference bind="setAclsSPI" cardinality="1..1" interface="org.apache.wiki.api.spi.AclsSPI" name="AclsSPI" policy="static"/>
+   <reference bind="setContentsSPI" cardinality="1..1" interface="org.apache.wiki.api.spi.ContentsSPI" name="ContentsSPI" policy="static"/>
+   <reference bind="setContextSPI" cardinality="1..1" interface="org.apache.wiki.api.spi.ContextSPI" name="ContextSPI" policy="static"/>
+   <reference bind="setEngineSPI" cardinality="1..1" interface="org.apache.wiki.api.spi.EngineSPI" name="EngineSPI" policy="static"/>
+   <reference bind="setSessionSPI" cardinality="1..1" interface="org.apache.wiki.api.spi.SessionSPI" name="SessionSPI" policy="static"/>
+</scr:component>

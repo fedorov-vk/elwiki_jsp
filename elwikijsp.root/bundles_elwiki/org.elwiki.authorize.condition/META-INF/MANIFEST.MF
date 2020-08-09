@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Policy Condition
+Bundle-SymbolicName: org.elwiki.authorize.condition
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: FVK
+Fragment-Host: org.eclipse.osgi;bundle-version="3.14.0"
+Automatic-Module-Name: org.elwiki.authorize.condition
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.elwiki.authorize.condition

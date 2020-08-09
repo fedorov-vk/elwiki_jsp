@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CDO page provide
+Bundle-SymbolicName: org.elwiki.provider.page.cdo;singleton:=true
+Automatic-Module-Name: org.elwiki.provider.page.cdo
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.elwiki.pageprovider.cdo.internal.bundle.PageProviderCdoActivator
+Bundle-Vendor: FVK
+Require-Bundle: org.eclipse.core.runtime,
+ org.apache.log4j;bundle-version="1.2.15",
+ org.elwiki.data;bundle-version="0.0.1",
+ org.eclipse.ocl;bundle-version="3.15.0",
+ org.elwiki.util;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.wiki.api,
+ org.apache.wiki.api.core,
+ org.apache.wiki.api.exceptions,
+ org.apache.wiki.api.providers,
+ org.apache.wiki.api.search,
+ org.apache.wiki.auth,
+ org.apache.wiki.auth.acl,
+ org.eclipse.core.internal.utils,
+ org.elwiki.configuration
+Export-Package: org.elwiki.pageprovider.cdo

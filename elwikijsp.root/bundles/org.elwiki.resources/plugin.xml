@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/scripts/*"
+            base-name="/resources/scripts">
+      </resource>
+      <resource
+            alias="/favicons/*"
+            base-name="/resources/favicons">
+      </resource>
+      <resource
+            alias="/images/*"
+            base-name="/resources/images">
+      </resource>
+
+      <resource
+            alias="/scripts/*.xml"
+            base-name="/resources/scripts">
+      </resource>
+      <resource
+            alias="/templates/default/fonts/FontJspwiki.eot"
+            base-name="/main/webapp/templates/default/fonts/FontJspwiki.eot">
+      </resource>
+      <resource
+            alias="/templates/default/fonts/FontJspwiki.svg"
+            base-name="/main/webapp/templates/default/fonts/FontJspwiki.svg">
+      </resource>
+      <resource
+            alias="/templates/default/fonts/FontJspwiki.ttf"
+            base-name="/main/webapp/templates/default/fonts/FontJspwiki.ttf">
+      </resource>
+      <resource
+            alias="/templates/default/fonts/FontJspwiki.woff"
+            base-name="/main/webapp/templates/default/fonts/FontJspwiki.woff">
+      </resource>
+      <resource
+            alias="/templates/default/haddock-wysiwyg.css"
+            base-name="/resources/templates/default/haddock-wysiwyg.css">
+      </resource>
+      
+      <resource
+            alias="/template/haddock/haddock.css"
+            base-name="/resources/templates/default/haddock.css">
+      </resource>
+      <!-- :FVK: ~~ повтор haddock.css для иного URL -->
+      <resource
+            alias="/templates/default/haddock.css"
+            base-name="/resources/templates/default/haddock.css">
+      </resource>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/main/webapp">
+      </servlet>
+      <servlet
+            alias="/templates/default/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/templates/default">
+      </servlet>
+   </extension>
+
+</plugin>

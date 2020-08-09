@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>bundles_managers</artifactId>
+	<packaging>pom</packaging>
+	<name>~~~ Bundles Managers ~~~</name>
+	<description>Managers Bundles specifications.</description>
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>elwiki.root</artifactId>
+		<version>1.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<modules>
+		<module>org.elwiki.commandresolver</module>
+		<module>org.elwiki.manager.attachment</module>
+		<module>org.elwiki.manager.difference</module>
+		<module>org.elwiki.manager.editor</module>
+		<module>org.elwiki.manager.filters</module>
+		<module>org.elwiki.manager.page</module>
+		<module>org.elwiki.manager.pagerenamer</module>
+		<module>org.elwiki.manager.referencemanager</module>
+		<module>org.elwiki.manager.renderer</module>
+		<module>org.elwiki.manager.search</module>
+		<module>org.elwiki.manager.workflow</module>
+		<module>org.elwiki.urlconstructor</module>
+	</modules>
+</project>
