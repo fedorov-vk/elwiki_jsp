@@ -1,13 +1,7 @@
 package org.elwiki.configuration.internal;
 
-import java.text.SimpleDateFormat;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.AccessDeniedException;
-import java.nio.file.FileSystemException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,21 +13,16 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.core.internal.preferences.PreferencesService;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IExportedPreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.configuration.bundle.ConfigurationActivator;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
