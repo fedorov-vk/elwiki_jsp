@@ -20,7 +20,6 @@ package org.apache.wiki.tags;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
@@ -82,7 +81,7 @@ public abstract class WikiTagBase extends TagSupport implements TryCatchFinally 
     public abstract int doWikiStartTag() throws Exception;
 
     public int doEndTag() throws JspException {
-        return Tag.EVAL_PAGE;
+        return EVAL_PAGE;
     }
 
     public void doCatch( final Throwable th ) throws Throwable {

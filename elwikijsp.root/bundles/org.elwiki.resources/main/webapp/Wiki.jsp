@@ -40,7 +40,7 @@
     String pagereq = wikiContext.getName();
 
     // Redirect if request was for a special page
-    String redirect = wikiContext.getRedirectURL( );
+    String redirect = wikiContext.getRedirectURL();
   //:FVK:if( redirect != null )
     //{
     //    response.sendRedirect( redirect );
