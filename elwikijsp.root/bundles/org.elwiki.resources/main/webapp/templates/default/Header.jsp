@@ -27,9 +27,10 @@
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
 
 <div class="header">
+<%-- :FVK:
   <c:set var="titlebox"><wiki:InsertPage page="TitleBox" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
-
+--%>
   <div class="topline">
 
     <div class="cage pull-left" tabindex="0">
