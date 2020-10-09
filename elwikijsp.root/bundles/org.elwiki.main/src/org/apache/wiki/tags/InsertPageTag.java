@@ -26,6 +26,8 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 
 import javax.servlet.jsp.JspWriter;
+import javax.xml.crypto.dsig.keyinfo.PGPData;
+
 import java.io.IOException;
 
 /**
@@ -107,8 +109,8 @@ public class InsertPageTag extends WikiTagBase {
             // FIXME: Do version setting later.
             // page.setVersion( WikiProvider.LATEST_VERSION );
 
-            log.debug("Inserting page "+insertedPage);
-
+            log.debug("Inserting page " + insertedPage + ": \"" + insertedPage.getName() + "\" -- for " + this.pageContext.getPage());
+            
             final JspWriter out = pageContext.getOut();
             final WikiPage oldPage = m_wikiContext.setRealPage( insertedPage );
             
