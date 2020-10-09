@@ -400,12 +400,14 @@ public class DefaultPageManager implements PageManager, Initializable {
         try {
             WikiPage p = getPageInfo( pagereq, version );
             if( p == null ) {
-                p = null; //:FVK: m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, pagereq );
+                p = null;
+                //:FVK: попытка загрузки прикрепления 
+                // p = m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, pagereq );
             }
 
             return p;
         } catch( final ProviderException e ) {
-            LOG.error( "Unable to fetch page info for " + pagereq + " [version " + version + "]", e );
+            LOG.error( "Unable to fetch page info for \"" + pagereq + "\" [version: " + version + "]", e );
             return null;
         }
     }

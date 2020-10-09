@@ -169,7 +169,7 @@ public class CachingAttachmentProvider implements AttachmentProvider {
      */
     @Override
     public List< PageAttachment > listAttachments( final WikiPage page) throws ProviderException {
-        log.debug("Listing attachments for " + page);
+        log.debug("Listing attachments for " + page + ": \"" + page.getName() + "\"");
         final Element element = m_cache.get(page.getName());
 
         if (element != null) {
