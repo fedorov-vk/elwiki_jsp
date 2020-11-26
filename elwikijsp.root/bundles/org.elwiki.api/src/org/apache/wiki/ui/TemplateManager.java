@@ -26,6 +26,8 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.ClassUtil;
 
 import javax.servlet.jsp.PageContext;
+
+import java.net.URL;
 //:FVK: import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -394,5 +396,7 @@ public interface TemplateManager extends ModuleManager {
 
         return res;
     }
+
+	URL getResourceUrl(String page);
 
 }

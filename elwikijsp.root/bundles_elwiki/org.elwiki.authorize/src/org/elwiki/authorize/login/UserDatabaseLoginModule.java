@@ -77,7 +77,7 @@ public class UserDatabaseLoginModule extends AbstractLoginModule {
 				throw new FailedLoginException("No user database: check the callback handler code!");
 			}
 			UserProfile profile = db.findByLoginName(username);
-			@NonNull String storedPassword = profile.getPassword();
+			String storedPassword = profile.getPassword();
 			if (storedPassword.length() != 0 && db.validatePassword(profile, password)) {
 				if (log.isDebugEnabled()) {
 					log.debug("Logged in user database user " + username);

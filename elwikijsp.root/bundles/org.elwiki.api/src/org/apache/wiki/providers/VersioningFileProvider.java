@@ -28,6 +28,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.util.FileUtil;
+import org.eclipse.core.runtime.Assert;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -696,5 +697,12 @@ public class VersioningFileProvider extends AbstractFileProvider {
             this.m_lastModified = lastModified;
         }
     }
+
+	@Override
+	public WikiPage getPageById(String pageId) {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

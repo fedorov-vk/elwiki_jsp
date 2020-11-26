@@ -27,7 +27,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-    Context ctx = Context.findContext( pageContext );
+	Context ctx = Context.findContext( pageContext );
     IIAuthenticationManager mgr = ctx.getEngine().getManager( IIAuthenticationManager.class );
     String loginURL = "";
 
@@ -35,10 +35,9 @@
         loginURL = "j_security_check";
     } else {
         String redir = (String)ctx.getVariable("redirect");
-        if( redir == null ) redir = ctx.getEngine().getFrontPage();
+        if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
         loginURL = ctx.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), redir );
     }
-
 %>
 <c:set var="allowsCookieAuthentication" value="<%= mgr.allowsCookieAuthentication() %>" />
 <div class="page-content">

@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import net.sf.ehcache.search.expression.NotNull;
 import java.util.Properties;
 
 /**
@@ -131,7 +132,8 @@ public class CommentedProperties extends Properties
         {
             @SuppressWarnings("unchecked") 
             Entry< Object, Object > entry = ( Entry< Object, Object > )it.next();
-            writeProperty( entry.getKey(), entry.getValue() );
+			if (entry != null)
+				writeProperty(entry.getKey(), entry.getValue());
         }
 
         // Call the superclass method

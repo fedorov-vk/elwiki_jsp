@@ -167,4 +167,6 @@ public interface PageProvider extends WikiProvider {
      */
     void movePage( String from, String to ) throws ProviderException;
 
+	WikiPage getPageById(String pageId);
+
 }

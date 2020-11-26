@@ -27,6 +27,7 @@ import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
 
 import java.io.BufferedReader;
@@ -51,6 +52,7 @@ public abstract class MarkupParser {
     private int m_pos = -1; // current position in reader stream
 
     protected Engine m_engine;
+    protected IWikiConfiguration config;
     protected Context m_context;
 
     /** Optionally stores internal wikilinks */
@@ -121,6 +123,7 @@ public abstract class MarkupParser {
    /** The value for anchor element <tt>class</tt> attributes when used for attachments. The value is "attachment". */
    public static final String CLASS_ATTACHMENT = "attachment";
 
+   @Deprecated
    public static final String[] CLASS_TYPES = {
       CLASS_WIKIPAGE,
       CLASS_EDITPAGE,
@@ -143,6 +146,7 @@ public abstract class MarkupParser {
      */
     protected MarkupParser( final Context context, final Reader in ) {
         m_engine = context.getEngine();
+        this.config = context.getConfiguration();
         m_context = context;
         m_linkParsingOperations = new LinkParsingOperations( m_context );
         setInputReader( in );

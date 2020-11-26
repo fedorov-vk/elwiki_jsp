@@ -4,4 +4,9 @@
    <service>
       <provide interface="org.apache.wiki.render0.RenderingManager"/>
    </service>
+   <reference bind="setAttachmentManager" cardinality="0..1" interface="org.apache.wiki.api.attachment.AttachmentManager" name="AttachmentManager" policy="dynamic"/>
+   <reference bind="setFilterManager" cardinality="0..1" interface="org.apache.wiki.filters0.FilterManager" name="FilterManager" policy="dynamic"/>
+   <reference bind="setPageManager" cardinality="0..1" interface="org.apache.wiki.pages0.PageManager" name="PageManager" policy="dynamic"/>
+   <reference bind="setReferenceManager" cardinality="0..1" interface="org.apache.wiki.api.references.ReferenceManager" name="ReferenceManager" policy="dynamic"/>
+   <reference bind="setVariableManager" cardinality="0..1" interface="org.apache.wiki.api.variables.VariableManager" name="VariableManager" policy="dynamic"/>
 </scr:component>

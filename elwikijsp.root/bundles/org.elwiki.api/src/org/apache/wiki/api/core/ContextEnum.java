@@ -37,8 +37,10 @@ public enum ContextEnum {
     PAGE_RENAME( "rename", "%uRename.jsp?page=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss", "%urss.jsp", null ),
     PAGE_UPLOAD( "upload", "%uUpload.jsp?page=%n", null ),
-    PAGE_VIEW( "view", "%uWiki.jsp?page=%n", "PageContent.jsp" ),
+    PAGE_VIEW( "view", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
 
+    //:FVK: PAGE_VIEWID( "viewId", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
+    
     REDIRECT( "", "%u%n", null ),
 
     WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),

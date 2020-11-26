@@ -21,6 +21,7 @@ package org.apache.wiki.providers;
 import org.apache.log4j.Logger;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.eclipse.core.runtime.Assert;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -154,5 +155,12 @@ public class FileSystemProvider extends AbstractFileProvider {
         final File toPage = findPage( to );
         fromPage.renameTo( toPage );
     }
+
+	@Override
+	public WikiPage getPageById(String pageId) {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -24,9 +24,8 @@
 <%@ page import="org.apache.wiki.api.core.Context" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.authorize.Group" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.GroupPermission" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ page errorPage="/Error.jsp" %>
@@ -44,18 +43,20 @@
   //Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
 
   AuthorizationManager authMgr = c.getEngine().getManager( AuthorizationManager.class );
-  GroupManager groupMgr = c.getEngine().getManager( GroupManager.class );
+  IAuthorizer groupMgr = c.getEngine().getManager( IAuthorizer.class );
 
-  Principal[] groups = groupMgr.getRoles();
-  Arrays.sort( groups, new PrincipalComparator() );
+  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getRoles();
+  Principal[] groups;
+  //:FVK: Arrays.sort( groups, new PrincipalComparator() );
 
   String name = null;
   Group group = null;
+  org.osgi.service.useradmin.Group group1 = null;
   Principal[] members = null;
   StringBuffer membersAsString = null;
 
 %>
-<c:set var="groups" value="<%= groups %>" />
+<c:set var="groups" value="<%= groups1 %>" />
 
 <wiki:CheckRequestContext context="!createGroup"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
@@ -122,13 +123,16 @@
     </thead>
     <tbody>
     <%
-    for( int g = 0; g < groups.length; g++ )
+    /*for( int g = 0; g < groups.length; g++ )
     {
-      if ( groups[g] instanceof GroupPrincipal )
+      if ( groups[g] instanceof GroupPrincipal )*/
+    for(org.osgi.service.useradmin.Group group2 : groups1) {
+   	  if ( group2 instanceof org.osgi.service.useradmin.Group )
       {
-        name = groups[g].getName();
-        group = groupMgr.getGroup( name );
-        members = group.members();
+        name = group2.getName(); //:FVK: groups[g].getName();
+        group1 = groupMgr.getGroup( name );
+        //:FVK:..........
+        members = new Principal[0];  //:FVK: group1.members();
         Arrays.sort( members, new PrincipalComparator() );
         pageContext.setAttribute("members", members);
     %>

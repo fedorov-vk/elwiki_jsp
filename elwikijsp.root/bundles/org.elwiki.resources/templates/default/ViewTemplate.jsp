@@ -26,7 +26,6 @@
 <!doctype html>
 <html lang="<c:out value='${prefs.Language}' default='en'/>" name="top">
 <head>
-
 <title>
     <fmt:message key="view.title.view">
       <fmt:param><wiki:Variable var="ApplicationName" /></fmt:param>
@@ -48,7 +47,7 @@
 <body class="context-<wiki:Variable var='requestcontext' default='' />">
 
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
-
+<%--:FVK: --%>
   <wiki:Include page="Header.jsp" />
 
   <c:set var="sidebarState"><wiki:Variable var="sidebar" default="${prefs.Sidebar}" /></c:set>
@@ -67,7 +66,6 @@
     <wiki:Include page="Sidebar.jsp"/>
   </div>
   <wiki:Include page="Footer.jsp" />
-
 </div>
 
 </body>

@@ -32,6 +32,7 @@ import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.CryptoUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.service.useradmin.User;
 
@@ -232,6 +233,7 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 	 * 
 	 * @return A random, unique UID.
 	 */
+	@NonNull
 	protected String generateUid() {
 		// Keep generating UUIDs until we find one that doesn't collide
 		String uid = null;

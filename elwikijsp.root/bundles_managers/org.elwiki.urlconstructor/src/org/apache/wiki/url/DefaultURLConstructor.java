@@ -25,10 +25,12 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Properties;
 
 
 /**
@@ -44,6 +46,14 @@ public class DefaultURLConstructor implements URLConstructor {
     /** Contains the absolute path of the JSPWiki Web application without the actual servlet (which is the m_urlPrefix). */
     protected String m_pathPrefix = "";
 
+	private IWikiConfiguration wikiConfiguration;
+
+    // -- service handling ------------------------------------
+    
+    public void setConfiguration(IWikiConfiguration configuration) {
+    	this.wikiConfiguration = configuration;
+    }
+    
     /**
      *
      * {@inheritDoc}
@@ -51,7 +61,7 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public void initialize( final Engine engine ) {
         m_engine = engine;
-        m_pathPrefix = engine.getBaseURL() + "/";
+        m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
     }
 
     /**
@@ -69,10 +79,11 @@ public class DefaultURLConstructor implements URLConstructor {
      * @return A replacement.
      */
     protected final String doReplacement( String baseptrn, final String name ) {
-        final String baseurl = m_pathPrefix;
+    	final String baseurl = this.wikiConfiguration.getBaseURL();
+    	final String pathPrefix = baseurl + "/";
 
-        baseptrn = TextUtil.replaceString( baseptrn, "%u", baseurl );
-        baseptrn = TextUtil.replaceString( baseptrn, "%U", m_engine.getBaseURL() );
+        baseptrn = TextUtil.replaceString( baseptrn, "%u", pathPrefix );
+        baseptrn = TextUtil.replaceString( baseptrn, "%U", baseurl );
         baseptrn = TextUtil.replaceString( baseptrn, "%n", encodeURI(name) );
         baseptrn = TextUtil.replaceString( baseptrn, "%p", m_pathPrefix );
 
@@ -86,7 +97,12 @@ public class DefaultURLConstructor implements URLConstructor {
      *  We also convert any %2F's back to slashes to make nicer-looking URLs.
      */
     private String encodeURI( String uri ) {
-        uri = m_engine.encodeName(uri);
+        try {
+			uri = this.wikiConfiguration.encodeName(uri);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         uri = StringUtils.replace( uri, "+", "%20" );
         uri = StringUtils.replace( uri, "%2F", "/" );
 
@@ -156,6 +172,12 @@ public class DefaultURLConstructor implements URLConstructor {
         return pagereq;
     }
 
+	@Override
+	public String parsePageId(String requestContext, HttpServletRequest request, Charset contentEncodingCs) {
+        String pageId = request.getParameter( "pageId" );
+		return pageId;
+	}
+    
     /**
      *  This method is not needed for the DefaultURLConstructor.
      *

@@ -27,6 +27,7 @@ import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Defines an interface for loading, persisting and storing users.

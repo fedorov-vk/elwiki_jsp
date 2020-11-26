@@ -292,10 +292,10 @@ public final class MailUtil {
                          + (c_useJndi ? "JNDI" : "standalone") + " mail session.");
             }
         }
-        catch (MessagingException e)
+        catch (Exception e) //:FVK: было MessagingException
         {
             log.error(e);
-            throw e;
+            throw new MessagingException(e.getMessage(), e);
         }
     }
     

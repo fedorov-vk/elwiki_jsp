@@ -53,6 +53,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.tasks.TasksManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.WikiSecurityException;
@@ -353,7 +354,7 @@ public class DefaultUserManager implements UserManager {
 		// Verify user is allowed to save profile!
 		Permission p = new WikiPermission(this.m_engine.getWikiConfiguration().getApplicationName(),
 				WikiPermission.EDIT_PROFILE_ACTION);
-		if (!this.m_engine.getManager( DefAuthorizationManager.class ).checkPermission(session, p)) {
+		if (!this.m_engine.getManager( AuthorizationManager.class ).checkPermission(session, p)) {
 			throw new WikiSecurityException("You are not allowed to save wiki profiles.");
 		}
 
@@ -401,9 +402,9 @@ public class DefaultUserManager implements UserManager {
             fireEvent( WikiSecurityEvent.PROFILE_SAVE, session, profile );
         } else { // For existing accounts, just save the profile
             // If login name changed, rename it first
-            if( nameChanged && !oldProfile.getLoginName().equals( profile.getLoginName() ) ) {
-                getUserDatabase().rename( oldProfile.getLoginName(), profile.getLoginName() );
-            }
+			if (nameChanged && oldProfile != null && !oldProfile.getLoginName().equals(profile.getLoginName())) {
+				getUserDatabase().rename(oldProfile.getLoginName(), profile.getLoginName());
+			}
 
             // Now, save the profile (userdatabase will take care of timestamps for us)
             getUserDatabase().save( profile );
@@ -499,10 +500,14 @@ public class DefaultUserManager implements UserManager {
         }
 
         // Set the profile fields!
-        profile.setLoginName( loginName );
-        profile.setEmail( email );
-        profile.setFullname( fullname );
-        profile.setPassword( password );
+		if (loginName != null)
+			profile.setLoginName(loginName);
+		if (email != null)
+			profile.setEmail(email);
+		if (fullname != null)
+			profile.setFullname(fullname);
+		if (password != null)
+			profile.setPassword(password);
         return profile;
     }
 

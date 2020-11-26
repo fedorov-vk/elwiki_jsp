@@ -46,6 +46,7 @@ public final class PageCommand extends AbstractCommand {
     public static final Command RSS = new PageCommand( ContextEnum.PAGE_RSS, null, PagePermission.VIEW_ACTION );
     public static final Command UPLOAD = new PageCommand( ContextEnum.PAGE_UPLOAD, null, PagePermission.UPLOAD_ACTION );
     public static final Command VIEW = new PageCommand( ContextEnum.PAGE_VIEW, null, PagePermission.VIEW_ACTION );
+    //:FVK: public static final Command VIEWID = new PageCommand( ContextEnum.PAGE_VIEWID, null, PagePermission.VIEW_ACTION );
     public static final Command NONE = new PageCommand( ContextEnum.PAGE_NONE, null, null );
     public static final Command OTHER = NONE;
 

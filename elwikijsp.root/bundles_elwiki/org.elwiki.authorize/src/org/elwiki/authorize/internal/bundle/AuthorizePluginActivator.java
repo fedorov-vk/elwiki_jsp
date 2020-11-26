@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.annotation.Nullable;
 import org.elwiki.authorize.authenticated.AuthenticatedContextActivator;
 import org.elwiki.authorize.check.AuthorizeCheckActivator;
 //:FVK: import org.elwiki.authorize.condition.SessionTypeCondition;
@@ -107,6 +108,7 @@ public class AuthorizePluginActivator extends Plugin {
 
 	private void initContextPermissions() {
 		BundleContext context = getBundle().getBundleContext();
+		@Nullable
 		ConditionalPermissionAdmin cpa = context
 				.getService(context.getServiceReference(ConditionalPermissionAdmin.class));
 

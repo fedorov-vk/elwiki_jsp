@@ -539,7 +539,7 @@ public class XMLUserDatabase extends AbstractUserDatabase {
 		setAttribute(user, LOCK_EXPIRY, lockExpiry == null ? "" : c_format.format(lockExpiry));
 
 		// Hash and save the new password if it's different from old one
-		@NonNull String newPassword = profile.getPassword();
+		String newPassword = profile.getPassword();
 		if (newPassword.length() != 0) {
 			String oldPassword = user.getAttribute(PASSWORD);
 			if (!oldPassword.equals(newPassword)) {

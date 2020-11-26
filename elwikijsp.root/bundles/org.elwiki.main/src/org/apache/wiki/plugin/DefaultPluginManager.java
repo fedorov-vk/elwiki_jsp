@@ -208,7 +208,9 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
      *  @throws ClassNotFoundException if no such class exists.
      */
     private Class< ? > findPluginClass( final String classname ) throws ClassNotFoundException {
-        return ClassUtil.findClass( m_searchPath, m_externalJars, classname );
+        //:FVK: return ClassUtil.findClass( m_searchPath, m_externalJars, classname );
+		Class<? extends Plugin> wikiPlugin = PluginsManager.getInstance().getPluginClass(classname);
+		return wikiPlugin;
     }
 
     /** Outputs a HTML-formatted version of a stack trace. */
@@ -231,7 +233,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         div.addContent( list );
         return XhtmlUtil.serialize( div );
         */
-    	return ":FVK:";
+    	return ":FVK: ~~~~~~~~~~~~~~~~~~~~~~~~\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     }
 
     /** {@inheritDoc} */
@@ -558,10 +560,13 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
          *  @throws InstantiationException If the class cannot be instantiated-
          *  @throws IllegalAccessException If the class cannot be accessed.
          */
-
+        @Deprecated
         public Plugin newPluginInstance( final List< String > searchPath, final List< String > externalJars) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
             if( m_clazz == null ) {
+            	/* :FVK: -- код от JSPwiki. - он не требуется, так как плагины - обслуживаются через расширение.
                 m_clazz = ClassUtil.findClass( searchPath, externalJars ,m_className );
+            	 */
+            	m_clazz = PluginsManager.getInstance().getPluginClass(m_className);
             }
 
             return ( Plugin )m_clazz.newInstance();

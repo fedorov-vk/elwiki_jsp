@@ -1,6 +1,12 @@
 package org.elwiki.configuration.internal;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
@@ -34,10 +40,10 @@ import org.osgi.service.prefs.Preferences;
 public class WikiConfiguration implements IWikiConfiguration {
 
 	private static final Logger log = Logger.getLogger(WikiConfiguration.class);
-	
+
     /** Property for application name */
     String PROP_APPNAME = "jspwiki.applicationName";
-	
+
 	/** Store the file path to the page's attachment data. */
 	private IPath attachmentStorePath;
 
@@ -48,7 +54,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	private boolean m_saveUserInfo;
 
 	/** If true, uses UTF8 encoding for all data */
-	@Deprecated
+	@Deprecated // see this.isUseUtf8() 
 	private boolean m_useUTF8 = true;
 
 	/** Stores the base URL. */
@@ -95,6 +101,10 @@ public class WikiConfiguration implements IWikiConfiguration {
 				cfgBundleName + "/" + IWikiPreferences.NODE_INTERWIKI_REFERENCES);
 
 		this.pathWorkspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		
+		// :FVK: refactoring
+        m_useUTF8 = StandardCharsets.UTF_8.name().equals( TextUtil.getStringProperty( prefs, IWikiPreferences.PROP_ENCODING, StandardCharsets.ISO_8859_1.name() ) );
+		
 	}
 
 	@Override
@@ -131,6 +141,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return this.m_templateDir;
 	}
 
+    /** {@inheritDoc} */
 	@Override
 	public String getFrontPage() {
 		return this.m_frontPage;
@@ -141,6 +152,39 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return this.prefs;
 	}
 
+	// -- :FVK: refactoring (some global utility methods) ----------------------
+
+    /** {@inheritDoc} */
+    @Override
+    public String encodeName( final String pagename ) throws IOException {
+        try {
+            return URLEncoder.encode( pagename, m_useUTF8 ? "UTF-8" : "ISO-8859-1" );
+        } catch( final UnsupportedEncodingException e ) {
+            // :FVK: throw new InternalWikiException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked." , e);
+        	throw new IOException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String decodeName( final String pagerequest ) throws IOException {
+        try {
+            return URLDecoder.decode( pagerequest, m_useUTF8 ? "UTF-8" : "ISO-8859-1" );
+        } catch( final UnsupportedEncodingException e ) {
+            //:FVK: throw new InternalWikiException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.", e);
+        	throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Charset getContentEncodingCs() {
+        if( m_useUTF8 ) {
+            return StandardCharsets.UTF_8;
+        }
+        return StandardCharsets.ISO_8859_1;
+    }
+    
 	// -- service support ---------------------------------
 
 	public synchronized void startup(BundleContext bc) {
@@ -218,10 +262,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 			this.m_templateDir = "default";
 		}
 
-		this.m_frontPage = this.prefs.getString(IWikiPreferences.PROP_FRONTPAGE);
-		if (m_frontPage.length() == 0) {
-			this.m_frontPage = "Main";
-		}
+		this.m_frontPage = TextUtil.getStringProperty(this.prefs, IWikiPreferences.PROP_FRONTPAGE, "Main" );
 	}
 
 	/**
@@ -335,5 +376,19 @@ public class WikiConfiguration implements IWikiConfiguration {
         final String appName = TextUtil.getStringProperty( prefs, PROP_APPNAME, ":FVK: Release.APPNAME" );
         return TextUtil.cleanString( appName, TextUtil.PUNCTUATION_CHARS_ALLOWED );
     }
+
+    // -- :FVK: -- Далее - 'динамическая конфигурация'. То есть, данные относятся к сессии HTTP.
+
+    private String baseURL;
     
+    /** {@inheritDoc} */
+    @Override
+    public String getBaseURL() {
+        return this.baseURL;
+    }
+
+    public void setBaseURL(String baseURL) {
+        this.baseURL= baseURL; 
+    }
+
 }

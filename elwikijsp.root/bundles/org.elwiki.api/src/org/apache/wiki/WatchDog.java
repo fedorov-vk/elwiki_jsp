@@ -184,8 +184,8 @@ public final class WatchDog {
      */
     public void enterState( final String state, final int expectedCompletionTime ) {
         if( log.isDebugEnabled() ){
-        	log.debug( m_watchable.getName() + ": Entering state " + state +
-        			                           ", expected completion in " + expectedCompletionTime + " s");
+        	log.debug( m_watchable.getName() + ":\n Entering state '" + state +
+        			                           "', expected completion in " + expectedCompletionTime + " s");
         }
 
         synchronized( m_stateStack ) {

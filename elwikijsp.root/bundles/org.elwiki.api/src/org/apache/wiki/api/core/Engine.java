@@ -22,8 +22,10 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.WikiPage;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -65,9 +67,6 @@ public interface Engine {
     /** If true, then the user name will be stored with the page data.*/
     String PROP_STOREUSERNAME= "jspwiki.storeUserName";
 
-    /** Define the used encoding.  Currently supported are ISO-8859-1 and UTF-8 */
-    String PROP_ENCODING = "jspwiki.encoding";
-
     /** Do not use encoding in WikiJSPFilter, default is false for most servers.
      Double negative, cause for most servers you don't need the property */
     String PROP_NO_FILTER_ENCODING = "jspwiki.nofilterencoding";
@@ -84,9 +83,6 @@ public interface Engine {
 
     /** Property name for the template that is used. */
     String PROP_TEMPLATEDIR = "jspwiki.templateDir";
-
-    /** Property name for the default front page. */
-    String PROP_FRONTPAGE = "jspwiki.frontPage";
 
     /** Property name for setting the url generator instance */
     String PROP_URLCONSTRUCTOR = "jspwiki.urlConstructor";
@@ -116,6 +112,7 @@ public interface Engine {
      * @param <T> type of the requested object.
      * @return requested object instantiated by the Engine, {@code null} if not available.
      */
+    @NonNull
     < T > T getManager( Class< T > manager );
 
     /**
@@ -176,14 +173,6 @@ public interface Engine {
     Date getStartTime();
 
     /**
-     *  Returns the base URL, telling where this Wiki actually lives.
-     *
-     *  @since 1.6.1
-     *  @return The Base URL.
-     */
-    String getBaseURL();
-
-    /**
      *  Returns the URL of the global RSS file.  May be null, if the RSS file generation is not operational.
      *
      *  @since 1.7.10
@@ -200,13 +189,6 @@ public interface Engine {
      *  @return An URL (absolute or relative).
      */
     String getURL( String context, String pageName, String params );
-
-    /**
-     *  Returns the default front page, if no page is used.
-     *
-     *  @return The front page name.
-     */
-    String getFrontPage();
 
     /**
      *  Returns the ServletContext that this particular Engine was initialized with. <strong>It may return {@code null}</strong>,
@@ -311,33 +293,6 @@ public interface Engine {
     String getFinalPageName( String page ) throws ProviderException;
 
     /**
-     *  Turns a WikiName into something that can be called through using an URL.
-     *
-     *  @since 1.4.1
-     *  @param pagename A name. Can be actually any string.
-     *  @return A properly encoded name.
-     *  @see #decodeName(String)
-     */
-    String encodeName( String pagename );
-
-    /**
-     *  Decodes a URL-encoded request back to regular life.  This properly heeds the encoding as defined in the settings file.
-     *
-     *  @param pagerequest The URL-encoded string to decode
-     *  @return A decoded string.
-     *  @see #encodeName(String)
-     */
-    String decodeName( String pagerequest );
-
-    /**
-     *  Returns the IANA name of the character set encoding we're supposed to be using right now.
-     *
-     *  @since 1.5.3
-     *  @return The content encoding (either UTF-8 or ISO-8859-1).
-     */
-    Charset getContentEncoding();
-
-    /**
      * Registers a WikiEventListener with this instance.
      *
      * @param listener the event listener
@@ -382,5 +337,17 @@ public interface Engine {
     void shutdown();
 
 	IWikiConfiguration getWikiConfiguration();
+
+    /**
+     *  :FVK: WORKAROUND.
+     *
+     *  Returns the IANA name of the character set encoding we're supposed to be using right now.
+     *
+     *  @since 1.5.3
+     *  @return The content encoding (either UTF-8 or ISO-8859-1).
+     */
+    Charset getContentEncoding();
+
+	WikiPage getPageById(String pageId);
 
 }

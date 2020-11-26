@@ -442,7 +442,9 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
     @Override
     public PageAttachment getAttachmentInfo( final WikiPage page, final String name, int version ) throws ProviderException {
-        final PageAttachment att = null; //:FVK: new Attachment( m_engine, page.getName(), name );
+        final PageAttachment att = page.getAttachments().get(0);
+        //:FVK:  = new Attachment( m_engine, page.getName(), name );
+        
         final File dir = findAttachmentDir( att );
         if( !dir.exists() ) {
             // log.debug("Attachment dir not found - thus no attachment can exist.");

@@ -53,7 +53,7 @@
   <wiki:CheckRequestContext context='!login'>
     <wiki:Permission permission="login">
       <a href="<wiki:Link jsp='Login.jsp' format='url'><wiki:Param 
-         name='redirect' value='<%=c.getEngine().encodeName(c.getName())%>'/></wiki:Link>" 
+         name='redirect' value='<%=c.getConfiguration().encodeName(c.getName())%>'/></wiki:Link>" 
         class="action login"
         title="<fmt:message key='actions.login.title'/>"><fmt:message key="actions.login"/></a>
     </wiki:Permission>
@@ -70,7 +70,7 @@
   <wiki:CheckRequestContext context='!prefs'>
   <wiki:CheckRequestContext context='!preview'>
     <a href="<wiki:Link jsp='UserPreferences.jsp' format='url' ><wiki:Param name='redirect'
-      value='<%=c.getEngine().encodeName(c.getName())%>'/></wiki:Link>"
+      value='<%=c.getConfiguration().encodeName(c.getName())%>'/></wiki:Link>"
       class="action prefs" accesskey="p"
       title="<fmt:message key='actions.prefs.title'/>"><fmt:message key="actions.prefs" />
     </a>

@@ -36,6 +36,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.Assert;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -533,5 +534,12 @@ public class CachingProvider implements PageProvider {
     public PageProvider getRealProvider() {
         return m_provider;
     }
+
+	@Override
+	public WikiPage getPageById(String pageId) {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

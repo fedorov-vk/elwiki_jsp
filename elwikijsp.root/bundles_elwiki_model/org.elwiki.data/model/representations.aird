@@ -8,7 +8,7 @@
     <semanticResources>http://www.eclipse.org/emf/2002/GenModel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="6646c784-0a2f-41ef-b727-870fb46a3a59">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="9b37664c-032f-4ad3-a3b3-62e481726934">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -339,7 +339,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_58awQ692EeiJm8lxes2RAg"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_58aJMa92EeiJm8lxes2RAg" fontName="Ubuntu" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_58aJMq92EeiJm8lxes2RAg" x="815" y="450" width="140" height="50"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_58aJMq92EeiJm8lxes2RAg" x="828" y="465" width="140" height="50"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_-TNxYK92EeiJm8lxes2RAg" type="2003" element="_-S9SsK92EeiJm8lxes2RAg">
           <children xmi:type="notation:Node" xmi:id="_-TOYcK92EeiJm8lxes2RAg" type="5007"/>
@@ -352,7 +352,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_-TOYc692EeiJm8lxes2RAg"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_-TNxYa92EeiJm8lxes2RAg" fontName="Ubuntu" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-TNxYq92EeiJm8lxes2RAg" x="815" y="515" width="140" height="50"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-TNxYq92EeiJm8lxes2RAg" x="996" y="465" width="140" height="50"/>
         </children>
         <styles xmi:type="notation:DiagramStyle" xmi:id="_VQ-bIm-QEeid6OKUsQuIXA"/>
         <edges xmi:type="notation:Edge" xmi:id="_aU_uoG-QEeid6OKUsQuIXA" type="4001" element="_aTHfUG-QEeid6OKUsQuIXA" source="_aUEhkG-QEeid6OKUsQuIXA" target="_aTw_kG-QEeid6OKUsQuIXA">

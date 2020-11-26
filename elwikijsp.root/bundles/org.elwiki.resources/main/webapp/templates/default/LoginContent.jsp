@@ -35,7 +35,7 @@
         loginURL = "j_security_check";
     } else {
         String redir = (String)ctx.getVariable("redirect");
-        if( redir == null ) redir = ctx.getEngine().getFrontPage();
+        if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
         loginURL = ctx.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), redir );
     }
 %>

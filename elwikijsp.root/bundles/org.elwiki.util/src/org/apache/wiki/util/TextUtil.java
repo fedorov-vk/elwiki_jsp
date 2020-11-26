@@ -19,6 +19,7 @@
 package org.apache.wiki.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import java.io.File;
@@ -826,6 +827,7 @@ public final class TextUtil {
      * @return String suitable for use as a temporary password
      * @since 2.4
      */
+	@NonNull
     public static String generateRandomPassword() {
         String pw = "";
         for( int i = 0; i < PASSWORD_LENGTH; i++ ) {

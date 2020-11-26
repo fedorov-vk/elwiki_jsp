@@ -108,7 +108,7 @@ public class GroupManager implements IAuthorizer {
 
 	private static final Logger log = Logger.getLogger(GroupManager.class);
 
-	private static final String CREATED = "created";
+	private static final String CREATED = "created";	
 
 	private static final String CREATOR = "creator";
 
@@ -280,7 +280,7 @@ public class GroupManager implements IAuthorizer {
 		}
 
 		// If passed members not empty, overwrite
-		UserManager um = null; //:FVK: this.applicationSession.getUserManager();
+		UserManager um = this.m_engine.getManager(UserManager.class);
 		String[] members = extractMembers(memberLine);
 		for (String member : members) {
 			UserProfile userProfile = um.getUserDatabase().find(member);
@@ -512,7 +512,7 @@ public class GroupManager implements IAuthorizer {
 		String dbClassName = "<unknown>";
 		String dbInstantiationError = null;
 		Throwable cause = null;
-		IPreferenceStore properties = null; //:FVK: this.applicationSession.getWikiConfiguration().getWikiPreferences();
+		IPreferenceStore properties = this.m_engine.getWikiConfiguration().getWikiPreferences();
 		try {
 			dbClassName = properties.getString(PROP_GROUPDATABASE);
 			if (dbClassName == null) {

@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Class for representing wiki user information, such as the login name, full
@@ -137,13 +138,13 @@ public interface UserProfile extends IAdaptable, Serializable
      * Sets the user's e-mail address.
      * @param email the e-mail address
      */
-    void setEmail( String email );
+    void setEmail(String email );
 
     /**
      * Sets the user's full name. For example, "Janne Jalkanen."
      * @param arg the full name
      */
-    void setFullname( String arg );
+    void setFullname(String arg );
 
     /**
      * Sets the last-modified date
@@ -168,7 +169,7 @@ public interface UserProfile extends IAdaptable, Serializable
      * typically of type FirstnameLastName ("JanneJalkanen").
      * @param name the login name
      */
-    void setLoginName( String name );
+    void setLoginName(String name );
 
     /**
      * Sets the user's password for use with custom authentication. It is
@@ -180,14 +181,14 @@ public interface UserProfile extends IAdaptable, Serializable
      * elsewhere.
      * @param arg the password
      */
-    void setPassword( String arg );
+    void setPassword(String arg );
 
     /**
      * Sets the unique identifier for the user profile. Note that UserDatabase implementations
      * are required <em>not</em> to change the unique identifier after the initial save.
      * @param uid the unique identifier to set
      */
-    void setUid( String uid );
+    void setUid(String uid );
 
     /**
      * Returns a string representation of this user profile.

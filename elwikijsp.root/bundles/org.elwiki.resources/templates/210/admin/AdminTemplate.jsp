@@ -22,7 +22,6 @@
 <%@ page import="org.apache.wiki.api.spi.Wiki" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
-<%@ page import="org.apache.wiki.ui.admin0.*" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <!DOCTYPE html>
@@ -61,8 +60,8 @@ in your <code>jspwiki.properties</code> file.</div>
         <input type="hidden" name="tab-core" value="${ab.title}" />
         <input type="hidden" name="bean" value="${ab.id}" />
         <%
-        	out.write( ab.doGet(ctx) );
-        %>
+         out.write( ab.doGet(ctx) );
+         %>
        </form>
        </div>
       </wiki:Tab>

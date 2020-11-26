@@ -140,9 +140,9 @@
       </wiki:Permission>
       <td class="changenote">
       <%
-         String changeNote = (String)att.getAttribute(Page.CHANGENOTE);
-         if( changeNote != null ) {
-         %><%=changeNote%><%
+      	String changeNote = (String)att.getAttribute(WikiPage.CHANGENOTE);
+               if( changeNote != null ) {
+      %><%=changeNote%><%
          }
       %>
       </td>

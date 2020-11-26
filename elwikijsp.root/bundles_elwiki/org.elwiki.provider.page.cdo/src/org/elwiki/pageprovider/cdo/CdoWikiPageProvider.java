@@ -350,7 +350,9 @@ public class CdoWikiPageProvider implements PageProvider {
 			return "";
 		}
 
-		WikiPage page1 = getPageById(wikiPage.getId());
+		// :FVK: WORKAROUND !!! - это - извлечение страницы по идентификатору.
+		//WikiPage page1 = getPageById(wikiPage.getId());
+		WikiPage page1 = wikiPage;
 
 		String content = "";
 		if (version == WikiProvider.LATEST_VERSION) {
@@ -514,7 +516,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		return references;
 	}
 
-	//:FVK: @Override
+	@Override
 	public WikiPage getPageById(String pageId) {
 		if (pageId == null) {
 			return null;
@@ -662,10 +664,12 @@ public class CdoWikiPageProvider implements PageProvider {
 	 * Создается список ссылок с этой страницы на другие.
 	 */
 	//:FVK: @Override
+	boolean doneFlag = false;
 	public void convertRepositoryContent() {
+		if(doneFlag) return; doneFlag=true;
 		TextChanger textChanger = new TextChanger();
 
-		List<WikiPage> wikiPages = getWikiPages("WIKINAME");
+		List<WikiPage> wikiPages = getWikiPages(null);
 
 		// Открыть транзакцию. 
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
@@ -696,7 +700,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			String oldContent = pageContent.getContent();
 			try {
-				Set<String> setRefPagesId = new HashSet<>();
+				Set<String> setRefPagesId = new HashSet<>(); // набор ссылок на сраницы. 
 				String newContent = textChanger.changeText(oldContent, setRefPagesId, wikiPages);
 				if (!oldContent.equals(newContent)) { // если содержимое изменилось - записать его.
 					pageContent = transaction.getObject(pageContent);
@@ -831,8 +835,13 @@ public class CdoWikiPageProvider implements PageProvider {
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		CDOQuery query;
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
-		query = transaction.createQuery("ocl", "WikiPage.allInstances()->select(p:WikiPage|p.wiki='" + wikiName + "')",
-				eClassWikiPage, false);
+		if(wikiName==null || wikiName.isEmpty()) {
+			query = transaction.createQuery("ocl", "WikiPage.allInstances()", eClassWikiPage, false);
+		} else {
+			query = transaction.createQuery("ocl",
+					"WikiPage.allInstances()->select(p:WikiPage|p.wiki='" + wikiName + "')",
+					eClassWikiPage, false);
+		}
 		query.setParameter("cdoLazyExtents", new Boolean(false));
 
 		try {

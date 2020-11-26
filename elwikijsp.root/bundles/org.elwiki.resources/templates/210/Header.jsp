@@ -24,13 +24,12 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   Context c = Context.findContext(pageContext);
-  String frontpage = c.getEngine().getFrontPage(); 
+  String frontpage = c.getConfiguration().getFrontPage(); 
 %>
 
 <div id="header">
-
+<%-- :FVK: title часть страницы --%>
   <div class="titlebox"><wiki:InsertPage page="TitleBox"/></div>
-
   <div class="applicationlogo" > 
     <a href="<wiki:LinkTo page='<%=frontpage%>' format='url' />"
        title="<fmt:message key='actions.home.title' ><fmt:param><%=frontpage%></fmt:param></fmt:message> "><fmt:message key='actions.home' /></a>

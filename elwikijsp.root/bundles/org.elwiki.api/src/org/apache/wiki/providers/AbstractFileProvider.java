@@ -33,6 +33,7 @@ import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.api.search.SearchResultComparator;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiPreferences;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -135,7 +136,7 @@ public abstract class AbstractFileProvider implements PageProvider {
         }
 
         m_engine = engine;
-        m_encoding = TextUtil.getStringProperty(engine.getWikiPreferences(), Engine.PROP_ENCODING, DEFAULT_ENCODING );
+        m_encoding = TextUtil.getStringProperty(engine.getWikiPreferences(), IWikiPreferences.PROP_ENCODING, DEFAULT_ENCODING );
         final String os = System.getProperty( "os.name" ).toLowerCase();
         if( os.startsWith( "windows" ) || os.equals( "nt" ) ) {
             m_windowsHackNeeded = true;

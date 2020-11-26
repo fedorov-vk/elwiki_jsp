@@ -55,7 +55,7 @@
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/*.jsp"
-            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/main/webapp">
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/webapp">
       </servlet>
       <servlet
             alias="/templates/default/*.jsp"

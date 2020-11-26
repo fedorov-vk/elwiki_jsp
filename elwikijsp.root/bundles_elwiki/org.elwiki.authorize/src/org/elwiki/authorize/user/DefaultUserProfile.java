@@ -32,8 +32,8 @@ import org.eclipse.jdt.annotation.NonNull;
 //:FVK:import org.elwiki.core.common.WikiSession;
 
 /**
- * Default implementation for representing wiki user information, such as the login name, full
- * name, wiki name, and e-mail address.
+ * Default implementation for representing wiki user information, such as the login name,
+ * full name, wiki name, and e-mail address.
  * 
  * @since 2.3
  */
@@ -166,10 +166,11 @@ public final class DefaultUserProfile implements UserProfile {
 	}
 
 	/**
-	 * Returns the user password for use with custom authentication. Note that the password field is
-	 * not meaningful for container authentication; the user's private credentials are generally
-	 * stored elsewhere. While it depends on the {@link IUserDatabase}implementation, in most cases
-	 * the value returned by this method will be a password hash, not the password itself.
+	 * Returns the user password for use with custom authentication. Note that the password
+	 * field is not meaningful for container authentication; the user's private credentials are
+	 * generally stored elsewhere. While it depends on the {@link IUserDatabase}implementation,
+	 * in most cases the value returned by this method will be a password hash, not the password
+	 * itself.
 	 * 
 	 * @return the password
 	 */
@@ -216,8 +217,8 @@ public final class DefaultUserProfile implements UserProfile {
 	 * @param email the e-mail address
 	 */
 	@Override
-	public void setEmail(@NonNull String email) {
-		this.email = email;
+	public void setEmail(String email) {
+		this.email = (email != null) ? email : "";
 	}
 
 	/**
@@ -225,13 +226,13 @@ public final class DefaultUserProfile implements UserProfile {
 	 * 
 	 * @param arg the full name
 	 */
-	@SuppressWarnings("null")
 	@Override
-	public void setFullname(@NonNull String arg) {
-		this.fullname = arg;
+	public void setFullname(String arg) {
+		this.fullname = (arg != null) ? arg : "";
 
 		// Compute wiki name
-		this.wikiname = this.fullname.replaceAll(WHITESPACE, EMPTY_STRING);
+		String result = this.fullname.replaceAll(WHITESPACE, EMPTY_STRING);
+		this.wikiname = (result != null) ? result : "";
 	}
 
 	/**
@@ -246,31 +247,32 @@ public final class DefaultUserProfile implements UserProfile {
 	}
 
 	/**
-	 * Sets the name by which the user logs in. The login name is used as the username for custom
-	 * authentication (see
+	 * Sets the name by which the user logs in. The login name is used as the username for
+	 * custom authentication (see
 	 * {@link org.elwiki.authorize.internal.services.IIAuthenticationManager.auth.wiki.auth.AuthenticationManager#login(WikiSession,HttpServletRequest, String, String)}).
-	 * The login name is typically a short name ("jannej"). In contrast, the wiki name is typically
-	 * of type FirstnameLastName ("JanneJalkanen").
+	 * The login name is typically a short name ("jannej"). In contrast, the wiki name is
+	 * typically of type FirstnameLastName ("JanneJalkanen").
 	 * 
 	 * @param name the login name
 	 */
 	@Override
-	public void setLoginName(@NonNull String name) {
-		this.loginName = name;
+	public void setLoginName(String name) {
+		this.loginName = (name != null) ? name : "";
 	}
 
 	/**
 	 * Sets the user's password for use with custom authentication. It is <em>not</em> the
-	 * responsibility of implementing classes to hash the password; that responsibility is borne by
-	 * the UserDatabase implementation during save operations (see
-	 * {@link IUserDatabase#saveProfile(UserProfile)}). Note that the password field is not meaningful for
-	 * container authentication; the user's private credentials are generally stored elsewhere.
+	 * responsibility of implementing classes to hash the password; that responsibility is borne
+	 * by the UserDatabase implementation during save operations (see
+	 * {@link IUserDatabase#saveProfile(UserProfile)}). Note that the password field is not
+	 * meaningful for container authentication; the user's private credentials are generally
+	 * stored elsewhere.
 	 * 
 	 * @param arg the password
 	 */
 	@Override
-	public void setPassword(@NonNull String arg) {
-		this.password = arg;
+	public void setPassword(String arg) {
+		this.password = (arg != null) ? arg : "";
 	}
 
 	/**
@@ -284,8 +286,8 @@ public final class DefaultUserProfile implements UserProfile {
 	}
 
 	/**
-	 * Private method that compares two objects and determines whether they are equal. Two nulls are
-	 * considered equal.
+	 * Private method that compares two objects and determines whether they are equal. Two nulls
+	 * are considered equal.
 	 * 
 	 * @param arg1 the first object
 	 * @param arg2 the second object
@@ -353,13 +355,13 @@ public final class DefaultUserProfile implements UserProfile {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setUid(@NonNull String uid) {
-		this.uid = uid;
+	public void setUid(String uid) {
+		this.uid = (uid != null) ? uid : "";
 	}
 
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
-	
+
 }

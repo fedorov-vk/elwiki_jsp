@@ -22,7 +22,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
-import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.PageAttachment;
@@ -44,7 +43,6 @@ import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.tasks.TasksManager;
-import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.auth.user0.UserProfile;
@@ -129,6 +127,7 @@ public class DefaultPageManager implements PageManager, Initializable {
      * @throws WikiException If anything goes wrong, you get this.
      */
     public DefaultPageManager(final Engine engine) throws NoSuchElementException, WikiException {
+    	if(1==1)throw new WikiException("Код не должен выполняться (это сервис)."); // :FVK: - перенесено в метод initialize(Engine engine) 
         m_engine = engine;
         IPreferenceStore props = engine.getWikiPreferences();
         final String classname;
@@ -402,6 +401,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             if( p == null ) {
                 p = null;
                 //:FVK: попытка загрузки прикрепления 
+                //:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
                 // p = m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, pagereq );
             }
 
@@ -453,9 +453,10 @@ public class DefaultPageManager implements PageManager, Initializable {
                 c = ( List< T > )m_provider.getVersionHistory( pageName );
             }
 
+            /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
             if( c == null ) {
                 c = ( List< T > )m_engine.getManager( AttachmentManager.class ).getVersionHistory( pageName );
-            }
+            }*/
         } catch( final ProviderException e ) {
             LOG.error( "ProviderException requesting version history for " + pageName, e );
         }
@@ -550,6 +551,11 @@ public class DefaultPageManager implements PageManager, Initializable {
      */
     @Override
     public boolean wikiPageExists( final String page ) {
+    	return this.m_provider.pageExists(page);
+    	/*:FVK: оригинальный код - громоздок.
+    	 * Не будем проверять присоединения к странице, специальные страницы...
+    	 * Будем проверять наличие страницы по её имени.
+    	 * -- старый код - удалим. deprecated.
         if( m_engine.getManager( CommandResolver.class ).getSpecialPageReference( page ) != null ) {
             return true;
         }
@@ -566,6 +572,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         }
 
         return att != null;
+        */
     }
 
     /**
@@ -574,6 +581,11 @@ public class DefaultPageManager implements PageManager, Initializable {
      */
     @Override
     public boolean wikiPageExists( final String page, final int version ) throws ProviderException {
+    	return this.m_provider.pageExists(page, version);
+    	/*:FVK: оригинальный код - громоздок.
+    	 * Не будем проверять присоединения к странице, специальные страницы...
+    	 * Будем проверять наличие страницы по её имени.
+    	 * -- старый код - удалим. deprecated.
         if( m_engine.getManager( CommandResolver.class ).getSpecialPageReference( page ) != null ) {
             return true;
         }
@@ -594,6 +606,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         }
 
         return isThere;
+        */
     }
 
     /**
@@ -602,9 +615,11 @@ public class DefaultPageManager implements PageManager, Initializable {
      */
     @Override
     public void deleteVersion( final WikiPage page ) throws ProviderException {
+    	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы. 
         if( page instanceof PageAttachment ) {
             m_engine.getManager( AttachmentManager.class ).deleteVersion( ( PageAttachment )page );
-        } else {
+        } else */
+    	{
         	//:FVK: m_provider.deleteVersion( page.getName(), page.getVersion() );
             // FIXME: If this was the latest, reindex Lucene, update RefMgr
         }
@@ -618,12 +633,15 @@ public class DefaultPageManager implements PageManager, Initializable {
     public void deletePage( final String pageName ) throws ProviderException {
         final WikiPage p = getPage( pageName );
         if( p != null ) {
+        	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
             if( p instanceof PageAttachment ) {
                 m_engine.getManager( AttachmentManager.class ).deleteAttachment( ( PageAttachment )p );
-            } else {
+            } else*/ 
+            {
                 final Collection< String > refTo = m_engine.getManager( ReferenceManager.class ).findRefersTo( pageName );
                 // May return null, if the page does not exist or has not been indexed yet.
 
+                /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
                 if( m_engine.getManager( AttachmentManager.class ).hasAttachments( p ) ) {
                     final List< PageAttachment > attachments = m_engine.getManager( AttachmentManager.class ).listAttachments( p );
                     for( final PageAttachment attachment : attachments ) {
@@ -633,7 +651,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 
                         m_engine.getManager( AttachmentManager.class ).deleteAttachment( attachment );
                     }
-                }
+                }*/
                 deletePage( p );
                 fireEvent( WikiPageEvent.PAGE_DELETED, pageName );
             }
@@ -803,13 +821,13 @@ public class DefaultPageManager implements PageManager, Initializable {
 	public void initialize(Engine engine) throws WikiException {
         m_engine = engine;
         IPreferenceStore props = engine.getWikiPreferences();
-        final String classname;
         final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
 
         m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
 
+        /*:FVK: - подключить CachingProvider
+        final String classname;
         //  If user wants to use a cache, then we'll use the CachingProvider.
-        /*:FVK:
         if( useCache ) {
             classname = "org.apache.wiki.providers.CachingProvider";
         } else {
@@ -830,28 +848,15 @@ public class DefaultPageManager implements PageManager, Initializable {
             LOG.debug("Initializing page provider class " + m_provider);
             m_provider.initialize(m_engine, props);
         } catch (final ClassNotFoundException e) {
-            LOG.error("Unable to locate provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("No provider class. (" + e.getMessage() + ")", e);
-        } catch (final InstantiationException e) {
-            LOG.error("Unable to create provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("Faulty provider class. (" + e.getMessage() + ")", e);
-        } catch (final IllegalAccessException e) {
-            LOG.error("Illegal access to provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("Illegal provider class. (" + e.getMessage() + ")", e);
-        } catch (final NoRequiredPropertyException e) {
-            LOG.error("Provider did not found a property it was looking for: " + e.getMessage(), e);
-            throw e;  // Same exception works.
-        } catch (final IOException e) {
-            LOG.error("An I/O exception occurred while trying to create a new page provider: " + classname, e);
-            throw new WikiException("Unable to start page provider: " + e.getMessage(), e);
-        }
+        	...
         */
         
 
 		try {
 			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
 			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/);
-		} catch (WikiException e) {
+			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
+		} catch (WikiException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}        
@@ -860,7 +865,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 
 	private PageProvider getPageProvider(String requiredId) throws WikiException {
 		//
-		// Сканирование расширений провайдеров поиска.
+		// Сканирование расширений провайдеров страниц.
 		//
 		String namespace = PageManagerActivator.PLIGIN_ID;
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -910,9 +915,16 @@ public class DefaultPageManager implements PageManager, Initializable {
 			throw new WikiException("You are not allowed to access page provider class " + clazzPageProvider, e);
 		}
 
-		LOG.debug("Loaded page provider " + pageProvider);
+		LOG.debug("Loaded page provider from extension: " + pageProvider);
 
 		return pageProvider;
+	}
+
+	@Override
+	public WikiPage getPageById(String pageId) {
+		WikiPage page = null;
+		page = this.m_provider.getPageById(pageId);
+		return page;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.elwiki.configuration;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IPath;
@@ -12,7 +14,7 @@ public interface IWikiConfiguration {
 
 	@Deprecated
 	String PROP_URL_ATTACHMENT_HANDLER = "elwiki.url_attachment_handler";
-	
+
 	// == CODE ================================================================
 
 	IPreferenceStore getWikiPreferences();
@@ -60,9 +62,10 @@ public interface IWikiConfiguration {
 	String getTemplateDir();
 
 	/**
-	 * Returns the name of the wiki's Front Page.
+	 * Returns the name of default wiki's Front Page.
+	 * Used if no page is used.
 	 * 
-	 * @return
+	 * @return The front page name.
 	 */
 	String getFrontPage();
 
@@ -115,4 +118,41 @@ public interface IWikiConfiguration {
      */
     String getApplicationName();
 
+    /**
+     *  Turns a WikiName into something that can be called through using an URL.
+     *
+     *  @since 1.4.1
+     *  @param pagename A name. Can be actually any string.
+     *  @return A properly encoded name.
+     *  @throws Exception;
+     *  @see #decodeName(String)
+     */
+    String encodeName( String pagename ) throws IOException; 
+
+    /**
+     *  Decodes a URL-encoded request back to regular life.  This properly heeds the encoding as defined in the settings file.
+     *
+     *  @param pagerequest The URL-encoded string to decode
+     *  @return A decoded string.
+     *  @see #encodeName(String)
+     */
+    String decodeName( String pagerequest ) throws IOException;
+
+    /**
+     *  Returns the IANA name of the character set encoding we're supposed to be using right now.
+     *
+     *  @since 1.5.3
+     *  @return The content encoding (either UTF-8 or ISO-8859-1).
+     */
+    Charset getContentEncodingCs();
+
+    /**
+     *  Returns the base URL, telling where this Wiki actually lives.
+     *
+     *  @since 1.6.1
+     *  @return The Base URL.
+     */
+    String getBaseURL();
+    
+    void setBaseURL(String baseURL);
 }

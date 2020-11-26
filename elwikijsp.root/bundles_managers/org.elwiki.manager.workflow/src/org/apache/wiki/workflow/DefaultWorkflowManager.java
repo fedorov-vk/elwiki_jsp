@@ -141,6 +141,11 @@ public class DefaultWorkflowManager implements WorkflowManager {
     @SuppressWarnings( "unchecked" )
     synchronized long unserializeFromDisk( final File f ) {
         long saved = 0L;
+        
+        if(!f.exists()) {
+        	return saved; // :FVK: workaround. - чтоб не было назойливого StackTrace.
+        }
+        
         final StopWatch sw = new StopWatch();
         sw.start();
         try( final ObjectInputStream in = new ObjectInputStream( new BufferedInputStream( new FileInputStream( f ) ) ) ) {

@@ -27,7 +27,7 @@
 <%
   Context c = Context.findContext(pageContext);
 %>
-<c:set var="redirect"><%= c.getEngine().encodeName(c.getName()) %></c:set>
+<c:set var="redirect"><%= c.getConfiguration().encodeName(c.getName()) %></c:set>
 <c:set var="username"><wiki:UserName /></c:set>
 <c:set var="loginstatus"><wiki:Variable var='loginstatus'/></c:set>
 
