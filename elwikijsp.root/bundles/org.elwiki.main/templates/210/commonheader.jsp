@@ -86,7 +86,7 @@
     title="Help" />
 <%
   Context c = Context.findContext( pageContext );
-  String frontpage = c.getEngine().getFrontPage();
+  String frontpage = c.getConfiguration().getFrontPage();
  %>
  <link rel="start"  href="<wiki:LinkTo format='url' page='<%=frontpage%>' />"
     title="Front page" />

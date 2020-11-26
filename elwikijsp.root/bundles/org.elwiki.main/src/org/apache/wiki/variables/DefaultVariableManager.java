@@ -23,8 +23,6 @@ import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Context;
 import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.filters.PageFilter;
@@ -33,7 +31,6 @@ import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
-import org.apache.wiki.internal.MainActivator;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -44,9 +41,7 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.ResourceBundle;
-
 
 /**
  *  Manages variables.  Variables are case-insensitive.  A list of all available variables is on a Wiki page called "WikiVariables".
@@ -66,18 +61,25 @@ public class DefaultVariableManager implements VariableManager {
 
 	private IWikiConfiguration wikiConfiguration;
 
+    // -- service handling ------------------------------------
+
+    public void setConfiguration(IWikiConfiguration configuration) {
+    	this.wikiConfiguration = configuration;
+    	/* старый код (из любого места)
+		BundleContext context = MainActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
+		}
+    	 */
+    }
+	
     /**
      *  Creates a VariableManager object using the property list given.
      *  @param props The properties.
      */
     public DefaultVariableManager() {
         super();
-        
-		BundleContext context = MainActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
-		}
     }
 
     /**
@@ -309,7 +311,7 @@ public class DefaultVariableManager implements VariableManager {
         }
 
         public String getEncoding() {
-            return m_context.getEngine().getContentEncoding().displayName();
+            return m_context.getConfiguration().getContentEncodingCs().displayName();
         }
 
         public String getTotalpages() {
@@ -369,7 +371,7 @@ public class DefaultVariableManager implements VariableManager {
 
         public String getBaseurl()
         {
-            return m_context.getEngine().getBaseURL();
+            return m_context.getConfiguration().getBaseURL();
         }
 
         public String getUptime() {

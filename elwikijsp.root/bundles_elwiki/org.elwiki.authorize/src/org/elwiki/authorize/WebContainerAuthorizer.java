@@ -101,7 +101,6 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	protected boolean m_containerAuthorized = false;
 
 	private Document m_webxml = null;
-	//:FVK: private IApplicationSession applicationSession;
 
 	/**
 	 * Constructs a new instance of the WebContainerAuthorizer class.
@@ -119,9 +118,8 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 *            the wiki engine initialization properties
 	 */
 	@Override
-	public void initialize(Engine applicationSession1) {
-		//:FVK: this.applicationSession = applicationSession1;
-		m_engine = applicationSession1;
+	public void initialize(Engine engine) {
+		m_engine = engine;
 
 		this.m_containerAuthorized = false;
 		/*  :FVK: WORKAROUND... -- этот код JSPwiki только для описания авторизации в "web.xml"
@@ -382,15 +380,14 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		builder.setEntityResolver(new LocalEntityResolver());
 		Document doc = null;
 
-		Engine engine = null; //:FVK: this.applicationSession.getWikiEngine();
-		if (engine.getServletContext() == null) {
+		if (m_engine.getServletContext() == null) {
 			ClassLoader cl = WebContainerAuthorizer.class.getClassLoader();
 			url = cl.getResource("WEB-INF/web.xml");
 			if (url != null) {
 				log.info("Examining " + url.toExternalForm());
 			}
 		} else {
-			url = engine.getServletContext().getResource("/WEB-INF/web.xml");
+			url = m_engine.getServletContext().getResource("/WEB-INF/web.xml");
 			if (url != null) {
 				log.info("Examining " + url.toExternalForm());
 			}
@@ -440,13 +437,12 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			String file = systemId.substring(systemId.lastIndexOf('/') + 1);
 			URL url;
-			Engine engine = null; //:FVK: WebContainerAuthorizer.this.applicationSession.getWikiEngine();
 
-			if (engine.getServletContext() == null) {
+			if (m_engine.getServletContext() == null) {
 				ClassLoader cl = WebContainerAuthorizer.class.getClassLoader();
 				url = cl.getResource("WEB-INF/dtd/" + file);
 			} else {
-				url = engine.getServletContext().getResource("/WEB-INF/dtd/" + file);
+				url = m_engine.getServletContext().getResource("/WEB-INF/dtd/" + file);
 			}
 
 			if (url != null) {

@@ -35,7 +35,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext(pageContext);
+	Context c = Context.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
   int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -106,7 +106,7 @@
           <fmt:formatDate value="<%= firstPage.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </wiki:Link>
       </fmt:param>
-      <fmt:param><%= creationAuthor %></fmt:param>
+      <fmt:param><%=creationAuthor%></fmt:param>
     </fmt:message>
   </p>
   </wiki:CheckVersion>
@@ -159,8 +159,8 @@
                        fmtkey="info.pagination"
                          href='<%=c.getURL(ContextEnum.PAGE_INFO.getRequestContext(), wikiPage.getName(), "start=%s")%>' />
 
-    <c:set var="first" value="<%= startitem %>"/>
-    <c:set var="last" value="<%= startitem + pagesize %>"/>
+    <c:set var="first" value="<%=startitem%>"/>
+    <c:set var="last" value="<%=startitem + pagesize%>"/>
 
     <div class="table-filter-sort-condensed-striped">
     <table class="table" aria-describedby="history">
@@ -189,7 +189,7 @@
         <c:set var="pageSize"><wiki:PageSize /></c:set>
         <td class="nowrap" title="${pageSize} bytes">
           <%--<fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>--%>
-          <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( currentPage.getSize() ) %>
+          <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( currentPage.getSize() )%>
         </td>
         <td><wiki:Author /></td>
 
@@ -203,7 +203,7 @@
           </wiki:CheckVersion>
         </td>
 
-        <c:set var="changenote" value="<%= (String)currentPage.getAttribute( WikiPage.CHANGENOTE ) %>" />
+        <c:set var="changenote" value="<%=(String)currentPage.getAttribute( WikiPage.CHANGENOTE )%>" />
         <td class="changenote"><c:out value="${changenote}"/></td>
 
       </tr>
@@ -251,7 +251,7 @@
 <%
   int MAXATTACHNAMELENGTH = 30;
 %>
-<c:set var="progressId" value="<%= c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier() %>" />
+<c:set var="progressId" value="<%=c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier()%>" />
 <wiki:Permission permission="upload">
 
   <form action="<wiki:Link jsp='attach' format='url'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"
@@ -350,7 +350,7 @@
 	  </td>
 
       <td class="nowrap" title="${att.size} bytes" data-sortvalue="${att.size}">
-        <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getSize() ) %>
+        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getSize() )%>
       </td>
 
       <%-- see styles/fontjspwiki/icon.less : icon-file-<....>-o  --%>
@@ -370,7 +370,7 @@
       </wiki:Permission>
       --%>
 
-      <c:set var="changenote" value="<%= (String)att.getAttribute( WikiPage.CHANGENOTE ) %>" />
+      <c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
         <td class="changenote"><c:out value="${changenote}"/></td>
 
     </tr>

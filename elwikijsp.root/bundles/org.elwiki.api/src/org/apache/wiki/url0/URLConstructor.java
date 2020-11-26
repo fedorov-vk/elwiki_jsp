@@ -88,4 +88,6 @@ public interface URLConstructor extends Initializable {
         return name;
     }
 
+	String parsePageId(String requestContext, HttpServletRequest request, Charset contentEncodingCs);
+
 }

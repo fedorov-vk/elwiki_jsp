@@ -24,7 +24,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   Context c = Context.findContext(pageContext);
-  String frontpage = c.getEngine().getFrontPage(); 
+  String frontpage = c.getConfiguration().getFrontPage(); 
 %>
 
 <div id="header">

@@ -26,6 +26,7 @@ public class TextChanger {
 	/**
 	 * Изменение текста страницы.</br>
 	 * Замена формата ссылок JSPwiki на ElWiki.
+	 * [page name] -> [@2314]
 	 * 
 	 * @param pageText
 	 * @param setRefPagesId1
@@ -36,7 +37,7 @@ public class TextChanger {
 		this.setRefPagesId = setRefPagesId1;
 		this.wikiPages = wikiPages1;
 
-		String regexp = "\\[[^\\]]+\\]"; // регулярное выражение.
+		String regexp = "\\[[^\\]]+\\]"; // регулярное выражение - пара скобок "[..]".
 		Pattern pattern;
 		try { // Create a Pattern object
 			pattern = Pattern.compile(regexp);
@@ -56,7 +57,8 @@ public class TextChanger {
 				str = str.replaceAll("\\n", "");
 				//
 				if (!str.startsWith("[[") && !str.startsWith("[{")) { // не [[ ... ] или [{ ... ]
-					str = str.substring(1, str.length() - 1).trim(); // Удалить: скобки, ведущие/ведомые пробелы.
+					// Удалить: открывающую/закрывающую скобки, ведущие/конечные пробелы.
+					str = str.substring(1, str.length() - 1).trim(); 
 					String link;
 					try {
 						link = makeNewLink(str);
@@ -81,6 +83,13 @@ public class TextChanger {
 		return sb.toString();
 	}
 
+	/**
+	 * Из ссылки с именем страницы - к имени добавляется расширение-ссылка по @IdСтраницы. 
+	 * 
+	 * @param jspWikiLink
+	 * @return
+	 * @throws Exception - не найдена страница, по указанной ссылке.
+	 */
 	private String makeNewLink(String jspWikiLink) throws Exception {
 		String[] strings = jspWikiLink.split("\\|", 2);
 

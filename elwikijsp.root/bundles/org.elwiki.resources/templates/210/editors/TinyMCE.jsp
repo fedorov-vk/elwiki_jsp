@@ -38,7 +38,7 @@
     This provides the WYSIWYG TinyMCE for JSPWiki.
 --%>
 <%
-    Context context = Context.findContext( pageContext );
+	Context context = Context.findContext( pageContext );
     Engine engine = context.getEngine();
 
     /* local download of TinyMCE */
@@ -57,12 +57,11 @@
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
     String usertext = EditorManager.getEditedText(pageContext);
-
 %>
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-  String clone = request.getParameter( "clone" );
+	String clone = request.getParameter( "clone" );
   if( clone != null )
   {
     WikiPage p = engine.getManager( PageManager.class ).getPage( clone );

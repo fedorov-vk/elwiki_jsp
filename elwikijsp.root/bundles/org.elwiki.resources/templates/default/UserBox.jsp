@@ -1,4 +1,4 @@
-<%--
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -16,18 +16,18 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
-<%@ page import="org.apache.wiki.api.core.*" %>
+<!-- ~~ START ~~ UserBox.jsp  --><%@
+ page import="javax.servlet.jsp.jstl.fmt.*" %><%@
+ page import="org.apache.wiki.api.core.*" %><%@
+ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
+ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
+ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
   Context c = Context.findContext(pageContext);
 %>
-<c:set var="redirect"><%= c.getEngine().encodeName(c.getName()) %></c:set>
+<c:set var="redirect"><%= c.getConfiguration().encodeName(c.getName()) %></c:set>
 <c:set var="username"><wiki:UserName /></c:set>
 <c:set var="loginstatus"><wiki:Variable var='loginstatus'/></c:set>
 
@@ -104,12 +104,15 @@
            logout button
       --%>
       <wiki:UserCheck status="authenticated">
+        <div class="modal">
         <a href="<wiki:Link jsp='Logout.jsp' format='url' />"
           class="btn btn-default btn-block logout" data-modal=".modal">
             <span class="icon-signout"></span> <fmt:message key="actions.logout"/>
-          <div class="modal"><fmt:message key='actions.confirmlogout'/></div>
+          <fmt:message key='actions.confirmlogout'/>
         </a>
+        </div>
       </wiki:UserCheck>
     </li>
   </ul>
 </div>
+<!-- ~~ END ~~ UserBox.jsp  -->

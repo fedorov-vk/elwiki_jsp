@@ -20,7 +20,6 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.user.*" %>
-<%@ page import="org.apache.wiki.auth.user0.*" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -29,9 +28,9 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  /* dateformatting not yet supported by wiki:UserProfile tag - diy */
+	/* dateformatting not yet supported by wiki:UserProfile tag - diy */
   Context wikiContext = Context.findContext(pageContext);
-  UserManager manager = wikiContext.getEngine().getManager( UserManager.class );
+  DefaultUserManager manager = wikiContext.getEngine().getManager( DefaultUserManager.class );
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form method="post" accept-charset="UTF-8"

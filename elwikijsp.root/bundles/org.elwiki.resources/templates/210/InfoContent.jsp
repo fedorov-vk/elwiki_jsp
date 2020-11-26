@@ -34,7 +34,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext(pageContext);
+	Context c = Context.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
   int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -94,7 +94,7 @@
       <%--<wiki:Include page="PageTab.jsp"/> --%>
   </wiki:Tab>
 
-  <wiki:Tab id="attach" title="<%= attTitle %>" accesskey="a">
+  <wiki:Tab id="attach" title="<%=attTitle%>" accesskey="a">
     <wiki:Include page="AttachmentTab.jsp"/>
   </wiki:Tab>
 
@@ -123,7 +123,7 @@
           <fmt:formatDate value="<%= firstPage.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </wiki:Link>
       </fmt:param>
-      <fmt:param><%= creationAuthor %></fmt:param>
+      <fmt:param><%=creationAuthor%></fmt:param>
     </fmt:message>
     </p>
   </wiki:CheckVersion>
@@ -211,11 +211,12 @@
       </tr>
 
       <wiki:HistoryIterator id="currentPage">
-      <% if( ( startitem == -1 ) ||
-             (  ( currentPage.getVersion() > startitem )
-             && ( currentPage.getVersion() <= startitem + pagesize ) ) )
-         {
-       %>
+      <%
+      	if( ( startitem == -1 ) ||
+                   (  ( currentPage.getVersion() > startitem )
+                   && ( currentPage.getVersion() <= startitem + pagesize ) ) )
+               {
+      %>
       <tr>
         <td>
           <wiki:LinkTo version="<%=Integer.toString(currentPage.getVersion())%>">
@@ -223,7 +224,7 @@
           </wiki:LinkTo>
         </td>
 
-	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%= currentPage.getLastModified().getTime() %>">
+	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%=currentPage.getLastModified().getTime()%>">
         <fmt:formatDate value="<%= currentPage.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </td>
         <td style="white-space:nowrap;text-align:right;">
@@ -244,12 +245,16 @@
         </td>
 
          <td class="changenote">
-           <% String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );  %>
-		   <%= (changenote==null) ? "" : changenote  %>
+           <%
+           	String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
+           %>
+		   <%=(changenote==null) ? "" : changenote%>
          </td>
 
       </tr>
-      <% } %>
+      <%
+      	}
+      %>
       </wiki:HistoryIterator>
 
     </table>
@@ -266,7 +271,7 @@
 <%-- part 2 : attachments --%>
 <wiki:PageType type="attachment">
 <%
-  int MAXATTACHNAMELENGTH = 30;
+	int MAXATTACHNAMELENGTH = 30;
   String progressId = c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier();
 %>
 
@@ -274,7 +279,7 @@
   <wiki:Tab id="pagecontent"
          title='<%=LocaleSupport.getLocalizedMessage(pageContext, "info.parent")%>'
      accesskey="v"
-	       url="<%=c.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), ((PageAttachment)wikiPage).getParentName()) %>">
+	       url="<%=c.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), ((PageAttachment)wikiPage).getParentName())%>">
   </wiki:Tab>
 
   <wiki:Tab id="info" title='<%=LocaleSupport.getLocalizedMessage(pageContext, "info.attachment.tab")%>' accesskey="i" >
@@ -359,16 +364,16 @@
 
     <wiki:HistoryIterator id="att"><%-- <wiki:AttachmentsIterator id="att"> --%>
     <%
-      String name = att.getName(); //att.getFileName();
-      int dot = name.lastIndexOf(".");
-      String attachtype = ( dot != -1 ) ? name.substring(dot+1) : "&nbsp;";
+    	String name = att.getName(); //att.getFileName();
+          int dot = name.lastIndexOf(".");
+          String attachtype = ( dot != -1 ) ? name.substring(dot+1) : "&nbsp;";
 
-      String sname = name;
-      if( sname.length() > MAXATTACHNAMELENGTH ) sname = sname.substring(0,MAXATTACHNAMELENGTH) + "...";
+          String sname = name;
+          if( sname.length() > MAXATTACHNAMELENGTH ) sname = sname.substring(0,MAXATTACHNAMELENGTH) + "...";
     %>
 
     <tr>
-      <td><div id="attach-<%= attachtype %>" class="attachtype"><%= attachtype %></div></td>
+      <td><div id="attach-<%=attachtype%>" class="attachtype"><%=attachtype%></div></td>
       <%--<td><wiki:LinkTo title="<%= name %>" ><%= sname %></wiki:LinkTo></td>--%>
       <%--FIXME classs parameter throws java exception
       <td><wiki:Link version='<%=Integer.toString(att.getVersion())%>'
@@ -376,12 +381,12 @@
                        class="attachment" ><wiki:PageVersion /></wiki:Link></td>
       --%>
       <td><a href="<wiki:Link version='<%=Integer.toString(att.getVersion())%>' format='url' />"
-                       title="<%= name %>"
+                       title="<%=name%>"
                        class="attachment" ><wiki:PageVersion /></a></td>
       <td style="white-space:nowrap;text-align:right;">
-        <fmt:formatNumber value='<%=Double.toString(att.getSize()/1000.0) %>' groupingUsed='false' maxFractionDigits='1' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>
+        <fmt:formatNumber value='<%=Double.toString(att.getSize()/1000.0)%>' groupingUsed='false' maxFractionDigits='1' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>
       </td>
-	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%= att.getLastModified().getTime() %>">
+	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%=att.getLastModified().getTime()%>">
 	  <fmt:formatDate value="<%= att.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
 	  </td>
       <td><wiki:Author /></td>
@@ -396,7 +401,9 @@
       </wiki:Permission>
       --%>
       <td class='changenote'>
-        <% String changenote = (String) att.getAttribute( WikiPage.CHANGENOTE ); %>
+        <%
+        	String changenote = (String) att.getAttribute( WikiPage.CHANGENOTE );
+        %>
 		<%= (changenote==null) ? "" : changenote  %>
       </td>
     </tr>

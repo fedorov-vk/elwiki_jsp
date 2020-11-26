@@ -26,6 +26,7 @@ import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.util.TextUtil;
 import org.apache.xmlrpc.AsyncCallback;
 import org.apache.xmlrpc.XmlRpcClient;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,6 +67,7 @@ public class PingWeblogsComFilter extends BasePageFilter {
     public void postSave( final Context context, final String pagecontent ) {
         String blogName = context.getPage().getName();
         final Engine engine   = context.getEngine();
+        final IWikiConfiguration config = context.getConfiguration();
 
         final int blogentryTxt = blogName.indexOf("_blogentry_");
         if( blogentryTxt == -1 ) {
@@ -74,7 +76,7 @@ public class PingWeblogsComFilter extends BasePageFilter {
         
         blogName = blogName.substring( 0, blogentryTxt );
 
-        if( blogName.equals( engine.getFrontPage() ) ) {
+        if( blogName.equals( config.getFrontPage() ) ) {
             blogName = null;
         }
 

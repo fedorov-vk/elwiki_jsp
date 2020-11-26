@@ -16,24 +16,26 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ PageTab.jsp --><%@
- page import="org.apache.wiki.api.core.*" %><%@
- page import="org.apache.wiki.api.providers.WikiProvider" %><%@
- page import="org.apache.wiki.pages0.PageManager" %><%@
- page import="org.apache.wiki.util.TextUtil" %><%@
- taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<!-- ~~ START ~~ PageTab.jsp -->
+<%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.api.providers.WikiProvider" %>
+<%@ page import="org.elwiki_data.*" %>
+<%@ page import="org.apache.wiki.pages0.PageManager" %>
+<%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 
-
 <c:choose>
+
 <c:when test="${param.tab == 'attach'}">
-  <wiki:Include page="AttachmentTab.jsp"/>
+	<wiki:Include page="AttachmentTab.jsp" />
 </c:when>
+
 <c:otherwise>
 
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
@@ -45,7 +47,7 @@
   <c:set var="latestVersion" value="<%= c.getEngine().getManager( PageManager.class ).getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
 
   <form action="<wiki:Link format='url' jsp='Wiki.jsp'/>"
-        method="get"  accept-charset='UTF-8'>
+        method="get" accept-charset='UTF-8'>
 
     <input type="hidden" name="page" value="${param.page}" />
     <div class="error center">
@@ -53,9 +55,9 @@
       <fmt:message key="view.oldversion">
         <fmt:param>
           <%--<wiki:PageVersion/>--%>
-          <select id="version" name="version" onchange="this.form.submit();" >
+          <select id="version" name="version" onchange="this.form.submit();">
           <c:forEach begin="1" end="${latestVersion == -1 ? thisVersion : latestVersion }" var="version">
-            <option value="${version}" ${(thisVersion==version) ? 'selected="selected"':''} >${version}</option>
+            <option value="${version}" ${(thisVersion==version) ? 'selected="selected"':''}>${version}</option>
           </c:forEach>
           </select>
         </fmt:param>
@@ -63,10 +65,10 @@
       </label>
       <div>
       <wiki:Link cssClass="btn btn-primary">
-        <fmt:message key="view.backtocurrent"/>
+        <fmt:message key="view.backtocurrent" />
       </wiki:Link>
       <wiki:Link cssClass="btn btn-danger" context="edit" version="${thisVersion}">
-        <fmt:message key="view.restore"/>
+        <fmt:message key="view.restore" />
       </wiki:Link>
       </div>
     </div>
@@ -84,15 +86,17 @@ ISWEBLOG= <%= Context.findContext( pageContext ).getPage().getAttribute( /*ATTR_
   <p></p>
   <c:set var="blogentrypage" value="${fn:replace(param.page,'_comments_','_blogentry_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default"  page="${mainblogpage}" >
-         <fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
+      <wiki:Link cssClass="btn btn-xs btn-default" page="${mainblogpage}">
+         <fmt:message key="blog.backtomain">
+           <fmt:param>${mainblogpage}</fmt:param>
+         </fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-primary" page="${blogentrypage}" >
-        <fmt:message key="blog.permalink" />
+      <wiki:Link cssClass="btn btn-xs btn-primary" page="${blogentrypage}">
+         <fmt:message key="blog.permalink" />
       </wiki:Link>
   </div>
   <div class="weblogcommentstitle">
-    <fmt:message key="blog.commenttitle"/>
+    <fmt:message key="blog.commenttitle" />
   </div>
 </wiki:PageExists>
 </c:if>
@@ -107,30 +111,36 @@ ISWEBLOG= <%= Context.findContext( pageContext ).getPage().getAttribute( /*ATTR_
   <p></p>
   <c:set var="blogcommentpage" value="${fn:replace(param.page,'_blogentry_','_comments_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default"  page="${mainblogpage}" >
+      <wiki:Link cssClass="btn btn-xs btn-default" page="${mainblogpage}">
          <fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-default"  context="comment" page="${blogcommentpage}" >
-        <span class="icon-plus"></span> <fmt:message key="blog.addcomments"/>
+      <wiki:Link cssClass="btn btn-xs btn-default" context="comment" page="${blogcommentpage}">
+        <span class="icon-plus"></span> <fmt:message key="blog.addcomments" />
       </wiki:Link>
   </div>
   <c:if test="${not empty blogcommentpage}">
-  <wiki:PageExists page="${blogcommentpage}">
-    <div class="weblogcommentstitle">
-      <fmt:message key="blog.commenttitle"/>
-    </div>
-    <div class="weblogcomments"><wiki:InsertPage page="${blogcommentpage}" /></div>
-  </wiki:PageExists>
+    <wiki:PageExists page="${blogcommentpage}">
+      <div class="weblogcommentstitle">
+        <fmt:message key="blog.commenttitle" />
+      </div>
+      <div class="weblogcomments">
+        <wiki:InsertPage page="${blogcommentpage}" />
+      </div>
+    </wiki:PageExists>
   </c:if>
 </wiki:PageExists>
 </c:if>
 
 <wiki:NoSuchPage>
-  <%-- FIXME: Should also note when a wrong version has been fetched. --%>
-  <div class="error" >
-  <fmt:message key="common.nopage">
-    <fmt:param><wiki:Link cssClass="createpage" context="edit"><fmt:message key="common.createit"/></wiki:Link></fmt:param>
-  </fmt:message>
+<%-- FIXME: Should also note when a wrong version has been fetched. --%>
+  <div class="error">
+    <fmt:message key="common.nopage">
+      <fmt:param>
+        <wiki:Link cssClass="createpage" context="edit">
+          <fmt:message key="common.createit" />
+        </wiki:Link>
+      </fmt:param>
+    </fmt:message>
   </div>
 </wiki:NoSuchPage>
 

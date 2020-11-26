@@ -19,7 +19,7 @@
 		<param name="Encoding" value="UTF-8" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%d{ABSOLUTE} ‹%14.14t› %-5p [%50.50C:%4L] %x - %m%n" />
+				value="%d{ABSOLUTE} ‹%17.17t› %-5p [%50.50C:%4L] %x - %m%n" />
 		</layout>
 	</appender>
 

@@ -40,7 +40,7 @@
 <c:set var="timezones"   value="<%= t.listTimeZones(pageContext) %>" />
 <c:set var="timeformats" value="<%= t.listTimeFormats(pageContext) %>" />
 <c:set var="editors"     value="<%= c.getEngine().getManager( EditorManager.class ).getEditorList() %>" />
-<c:set var="redirect"><wiki:Variable var='redirect' default='<%=c.getEngine().getFrontPage() %>' /></c:set>
+<c:set var="redirect"><wiki:Variable var='redirect' default='<%=c.getConfiguration().getFrontPage() %>' /></c:set>
 
 <form action="<wiki:Link jsp='UserPreferences.jsp' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>

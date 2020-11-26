@@ -72,6 +72,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IApplicationSession;
 //import org.elwiki.api.IAuthenticationManager;
@@ -235,7 +236,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 			/* Anonymous Context
 			 */
 			Bundle bundle = AnonymousContextActivator.getDefault().getBundle();
-			AccessControlContext acc = bundle.adapt(AccessControlContext.class);
+			@Nullable AccessControlContext acc = bundle.adapt(AccessControlContext.class);
 
 			/*
 			if (!testPermission(acc, new FilePermission("test", "write"), false)) {
@@ -420,6 +421,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	AccessControlContext accAuthenticated = FrameworkUtil.getBundle(AuthenticatedContextActivator.class).adapt(AccessControlContext.class);
 	AccessControlContext accAsserted = FrameworkUtil.getBundle(AssertedContextActivator.class).adapt(AccessControlContext.class);
 	*/
+	@Nullable
 	AccessControlContext accAnonymous = FrameworkUtil.getBundle(AnonymousContextActivator.class)
 			.adapt(AccessControlContext.class);
 
@@ -698,7 +700,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 
 		/*:FVK:
 		// Check Groups
-		principal = this.m_engine.getGroupManager().findRole(name);
+		principal = this.m_engine.getManager(IAuthorizer.class).findRole(name);
 		if (principal != null) {
 			return principal;
 		}
@@ -807,7 +809,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		if (!isInfoExists) {
 			String bundleLocation = "*/org.elwiki.authorize.check.*"; 
 					// AuthorizeCheckActivator.getContext().getBundle().getLocation();
-			IAuthorizer groupManager = null; //:FVK: this.m_engine.getGroupManager();
+			IAuthorizer groupManager = this.m_engine.getManager(IAuthorizer.class);
 
 			if(!flag11) {
 			//-- Add info of DENY AllPermission for context --
@@ -861,7 +863,6 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	 * @throws WikiException
 	 *                       if the AuthorizationManager failed on startup.
 	 */
-	@SuppressWarnings("null")
 	public synchronized void startup(BundleContext bc) throws WikiException {
 		cpaService = bc.getService(bc.getServiceReference(ConditionalPermissionAdmin.class));
 

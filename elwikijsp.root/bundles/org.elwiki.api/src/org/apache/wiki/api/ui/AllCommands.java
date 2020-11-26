@@ -49,6 +49,7 @@ public interface AllCommands {
             PageCommand.RSS,
             PageCommand.UPLOAD,
             PageCommand.VIEW,
+            //:FVK: PageCommand.VIEWID,
             RedirectCommand.REDIRECT,
             WikiCommand.CREATE_GROUP,
             WikiCommand.ERROR,

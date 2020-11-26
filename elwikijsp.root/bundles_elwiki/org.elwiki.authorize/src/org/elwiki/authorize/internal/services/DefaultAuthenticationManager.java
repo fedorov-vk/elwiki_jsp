@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.authorize.WebContainerAuthorizer;
@@ -235,7 +236,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         final HttpSession httpSession = request.getSession();
         final Session session = SessionMonitor.getInstance( m_engine ).find( httpSession );
         final IIAuthenticationManager authenticationMgr = m_engine.getManager( IIAuthenticationManager.class );
-        final DefAuthorizationManager authorizationMgr = m_engine.getManager( DefAuthorizationManager.class );
+        final AuthorizationManager authorizationMgr = m_engine.getManager( AuthorizationManager.class );
         CallbackHandler handler = null;
         final Map< String, String > options = EMPTY_MAP;
 
@@ -396,6 +397,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
                                          final CallbackHandler handler,
                                          final Map< String, String > options ) throws WikiSecurityException {
         // Instantiate the login module
+    	@NonNull
         final LoginModule loginModule;
         try {
             loginModule = clazz.getDeclaredConstructor().newInstance();
@@ -486,7 +488,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * @param request the user's HTTP session, which may be <code>null</code>
      */
     private void injectAuthorizerRoles( final Session session, final IAuthorizer authorizer, final HttpServletRequest request ) {
-    	Authorizer authorizer1 = (Authorizer)authorizer; /*:FVK: cast*/
+    	/*:FVK:
+    	Authorizer authorizer1 = (Authorizer)authorizer; //:FVK: cast -- это неверно !!!
         // Test each role the authorizer knows about
         for( final Principal role : authorizer1.getRoles() ) {
             // Test the Authorizer
@@ -495,7 +498,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
                 if( log.isDebugEnabled() ) {
                     log.debug( "Added authorizer role " + role.getName() + "." );
                 }
-            }/*:FVK:
+            }
             // If web authorizer, test the request.isInRole() method also
             else if ( request != null && authorizer instanceof WebAuthorizer ) {
                 final WebAuthorizer wa = ( WebAuthorizer )authorizer;
@@ -505,8 +508,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
                         log.debug( "Added container role " + role.getName() + "." );
                     }
                 }
-            }*/
-        }
+            }
+        }*/
     }
 
 	// -- service support ---------------------------------

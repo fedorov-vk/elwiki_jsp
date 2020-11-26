@@ -27,11 +27,12 @@
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
 
 <div class="header">
+<%-- :FVK:
   <c:set var="titlebox"><wiki:InsertPage page="TitleBox" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
-
+--%>
   <div class="topline">
-
+<%-- :FVK: эмблема-ссылка в верхнем-левом углу.
     <div class="cage pull-left" tabindex="0">
 
         <a class="logo pull-left"
@@ -44,10 +45,11 @@
         </ul>
         </wiki:PageExists>
     </div>
-
+--%>
+<%-- :FVK:
     <wiki:Include page="UserBox.jsp" />
     <wiki:Include page="SearchBox.jsp" />
-
+--%>
     <div class="pagename" title="<wiki:PageName />">
       <wiki:CheckRequestContext context='viewGroup|createGroup|editGroup'><span class="icon-group"></span></wiki:CheckRequestContext>
       <wiki:PageType type="attachment"><span class="icon-paper-clip"></span></wiki:PageType>
@@ -65,7 +67,8 @@
     </div>
 
   </div>
+<%-- :FVK:  
   <wiki:Include page="Nav.jsp" />
-
+--%>
 </div>
 <!-- ~~ END ~~ Header.jsp  -->

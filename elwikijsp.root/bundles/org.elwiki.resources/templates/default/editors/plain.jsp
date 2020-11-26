@@ -46,7 +46,7 @@
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-  String clone = request.getParameter( "clone" );
+	String clone = request.getParameter( "clone" );
   if( clone != null )
   {
     WikiPage p = engine.getManager( PageManager.class ).getPage( clone );

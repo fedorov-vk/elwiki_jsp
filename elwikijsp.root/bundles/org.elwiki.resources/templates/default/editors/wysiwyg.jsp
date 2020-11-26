@@ -41,7 +41,7 @@
     This provides a wysiwy editor for JSPWiki. (based on mooeditable)
 --%>
 <%
-    Context context = Context.findContext( pageContext );
+	Context context = Context.findContext( pageContext );
     Engine engine = context.getEngine();
 
     context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
@@ -57,7 +57,7 @@
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-  String clone = request.getParameter( "clone" );
+	String clone = request.getParameter( "clone" );
   if( clone != null )
   {
     WikiPage p = engine.getManager( PageManager.class ).getPage( clone );

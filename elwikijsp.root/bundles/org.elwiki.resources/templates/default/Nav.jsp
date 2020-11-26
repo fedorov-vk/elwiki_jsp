@@ -15,10 +15,12 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
---%><!-- ~~ START ~~ Nav.jsp --><%@
+--%>
+<!-- ~~ START ~~ Nav.jsp --><%@
  page import="java.util.StringTokenizer" %><%@
  page import="org.apache.wiki.api.core.*" %><%@
  page import="org.apache.wiki.attachment.*" %><%@
+ page import="org.apache.wiki.api.attachment.*" %><%@
  page import="org.apache.wiki.pages0.PageManager" %><%@
  page import="javax.servlet.jsp.jstl.fmt.*" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
@@ -123,7 +125,6 @@
   --%>
 
   <%-- info --%>
-<%--
   <wiki:CheckRequestContext context='view|info|upload|rename|edit|comment|conflict'>
   <wiki:PageExists>
   <li id="info" tabindex="0" role="contentinfo">
@@ -146,7 +147,9 @@
         </span>
       </li>
       <li class="dropdown-header"><fmt:message key="info.author"/> :
+      <<%-- :FVK: -error this-
 		<wiki:Author format="plain"/>
+       --%>
       </li>
       <li class="dropdown-header">
         <wiki:RSSImageLink mode="wiki" title="<fmt:message key='info.feed'/>"/>
@@ -186,10 +189,8 @@
   </li>
   </wiki:PageExists>
   </wiki:CheckRequestContext>
---%>
 
   <%-- edit --%>
-<%--
   <wiki:PageType type="page">
   <wiki:CheckRequestContext context='view|info|diff|upload|rename'>
 	<li id="edit"
@@ -209,11 +210,9 @@
     </li>
   </wiki:CheckRequestContext>
   </wiki:PageType>
---%>
 
 
   <%-- help slimbox-link --%>
-<%--
   <wiki:CheckRequestContext context='find'>
   <li>
     <a class="slimbox-link" href="<wiki:Link format='url' page='SearchPageHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
@@ -228,7 +227,7 @@
       <span class="icon-help-menu"></span>
       <span><fmt:message key="edit.tab.help" /></span>
     </a>
-    < %--
+    <%--
       <wiki:NoSuchPage page="EditPageHelp">
         <div class="error">
         <fmt:message key="comment.edithelpmissing">
@@ -236,7 +235,7 @@
         </fmt:message>
         </div>
       </wiki:NoSuchPage>
-    --% >
+    --%>
   </li>
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='login'>
@@ -246,7 +245,7 @@
       <span><fmt:message key="login.tab.help" /></span>
     </a>
   </li>
-  < %--
+  <%--
   <wiki:NoSuchPage page="LoginHelp">
   <div class="error">
     <fmt:message key="login.loginhelpmissing">
@@ -254,14 +253,12 @@
     </fmt:message>
   </div>
   </wiki:NoSuchPage>
-  --% > 
+  --%>
   </wiki:CheckRequestContext>
---%>
 
 
 
   <%-- more menu --%>
-<%--
   <li id="more" tabindex="0">
     <a href="#">
         <span class="icon-ellipsis-v"></span>
@@ -272,7 +269,7 @@
       <wiki:PageExists>
       <wiki:CheckRequestContext context='view|info|diff|upload|preview' >
 
-        <%-- VIEW RAW PAGE SOURCE --% >
+        <%-- VIEW RAW PAGE SOURCE --%>
         <li>
           <wiki:CheckVersion mode="latest">
             <wiki:Link cssClass="slimbox-link">
@@ -288,7 +285,7 @@
           </wiki:CheckVersion>
         </li>
 
-        <%-- Show Reader View --% >
+        <%-- Show Reader View --%>
         <li>
           <wiki:CheckVersion mode="latest">
             <wiki:Link cssClass="interwiki">
@@ -308,7 +305,7 @@
       </wiki:PageExists>
 
 
-      <%-- ADD COMMENT --% >
+      <%-- ADD COMMENT --%>
       <wiki:CheckRequestContext context='view|info|diff|upload'>
       <wiki:PageExists>
       <wiki:Permission permission="comment">
@@ -325,7 +322,7 @@
             <wiki:Link page="<wiki:ParentPageName />" context="comment" title="<fmt:message key='actions.comment.title' />">
               <fmt:message key="actions.comment" />
             </wiki:Link>
-            --% >
+            --%>
             <wiki:LinkToParent><fmt:message key="actions.addcommenttoparent" /></wiki:LinkToParent>
 	      </li>
         </wiki:PageType>
@@ -333,7 +330,7 @@
       </wiki:PageExists>
       </wiki:CheckRequestContext>
 
-      <%-- WORKFLOW --% >
+      <%-- WORKFLOW --%>
       <wiki:CheckRequestContext context='!workflow'>
       <wiki:UserCheck status="authenticated">
         <li>
@@ -354,9 +351,9 @@
         </li>
       </wiki:Permission>
       </wiki:CheckRequestContext>
-      --% >
+      --%>
 
-      <%-- divider --% >
+      <%-- divider --%>
       <wiki:PageExists page="MoreMenu">
 
         <wiki:CheckRequestContext context='view|info|diff|upload|createGroup'>
@@ -377,7 +374,6 @@
 
     </ul>
   </li>
- --%>
 
 </ul>
 

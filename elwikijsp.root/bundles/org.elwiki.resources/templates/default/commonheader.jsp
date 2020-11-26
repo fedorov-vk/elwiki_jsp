@@ -35,15 +35,14 @@
    Any new functionality, scripts, etc, should be included using the TemplateManager resource
    include scheme (look below at the <wiki:IncludeResources> tags to see what kind of things
    can be included).
---%>
-<%-- CSS stylesheet --%>
-<%--
+--%><%-- CSS stylesheet --%><%--
 BOOTSTRAP, IE compatibility / http://getbootstrap.com/getting-started/#support-ie-compatibility-modes
 --%>
 <meta charset="<wiki:ContentEncoding />">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<%--
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<%--commonheader.jsp
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 --%>
 
@@ -93,7 +92,7 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiContext" content='<wiki:Variable var="requestcontext" />' />
 <wiki:Permission permission="edit"><meta name="wikiEditPermission" content="true"/></wiki:Permission>
 <meta name="wikiBaseUrl" content='<wiki:BaseURL />' />
-<meta name="wikiPageUrl" content='<wiki:Link format="url"  page="#$%"/>' />
+<meta name="wikiPageUrl" content='<wiki:Link format="url" page="#$%"/>' />
 <meta name="wikiEditUrl" content='<wiki:EditLink format="url" page="#$%"/>' />
 <meta name="wikiCloneUrl" content='<wiki:EditLink format="url" page="#$%"/>&clone=<wiki:Variable var="pagename" />' />
 <meta name="wikiJsonUrl" content='<%= Context.findContext(pageContext).getURL( ContextEnum.PAGE_NONE.getRequestContext(), "ajax" ) %>' /><%--unusual pagename--%>

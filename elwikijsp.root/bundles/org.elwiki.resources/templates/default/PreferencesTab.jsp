@@ -25,6 +25,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.preferences.*" %>
+<%@ page import="org.apache.wiki.api.ui.*" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -40,7 +41,7 @@
 <c:set var="timezones"   value="<%= t.listTimeZones(pageContext) %>" />
 <c:set var="timeformats" value="<%= t.listTimeFormats(pageContext) %>" />
 <c:set var="editors"     value="<%= c.getEngine().getManager( EditorManager.class ).getEditorList() %>" />
-<c:set var="redirect"><wiki:Variable var='redirect' default='<%=c.getEngine().getFrontPage() %>' /></c:set>
+<c:set var="redirect"><wiki:Variable var='redirect' default='<%=c.getConfiguration().getFrontPage() %>' /></c:set>
 
 <form action="<wiki:Link jsp='UserPreferences.jsp' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>

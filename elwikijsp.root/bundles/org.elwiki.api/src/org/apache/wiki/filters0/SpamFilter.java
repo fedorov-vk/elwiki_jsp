@@ -46,6 +46,7 @@ import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.suigeneris.jrcs.diff.Diff;
 import org.suigeneris.jrcs.diff.DifferentiationFailedException;
 import org.suigeneris.jrcs.diff.Revision;
@@ -530,7 +531,7 @@ public class SpamFilter extends BasePageFilter {
         if( m_akismetAPIKey != null ) {
             if( m_akismet == null ) {
                 log.info( "Initializing Akismet spam protection." );
-                m_akismet = new Akismet( m_akismetAPIKey, context.getEngine().getBaseURL() );
+                m_akismet = new Akismet( m_akismetAPIKey, context.getConfiguration().getBaseURL() );
 
                 if( !m_akismet.verifyAPIKey() ) {
                     log.error( "Akismet API key cannot be verified.  Please check your config." );
@@ -899,7 +900,13 @@ public class SpamFilter extends BasePageFilter {
      */
     private String getRedirectPage( final Context ctx ) {
         if( m_useCaptcha ) {
-            return ctx.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "Captcha.jsp", "page= " +ctx.getEngine().encodeName( ctx.getPage().getName() ) );
+            try {
+				return ctx.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "Captcha.jsp",
+						"page= " +ctx.getConfiguration().encodeName( ctx.getPage().getName() ) );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 
         return ctx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), m_errorPage );
@@ -1014,9 +1021,9 @@ public class SpamFilter extends BasePageFilter {
      */
     public static final String insertInputFields( final PageContext pageContext ) {
         final Context ctx = Context.findContext( pageContext );
-        final Engine engine = ctx.getEngine();
+        final IWikiConfiguration config = ctx.getConfiguration();
         final StringBuilder sb = new StringBuilder();
-        if( engine.getContentEncoding().equals( StandardCharsets.UTF_8 ) ) {
+        if( config.getContentEncodingCs().equals( StandardCharsets.UTF_8 ) ) {
             sb.append( "<input name='encodingcheck' type='hidden' value='\u3041' />\n" );
         }
 

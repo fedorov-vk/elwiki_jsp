@@ -335,7 +335,7 @@ public class XMLGroupDatabase implements GroupDatabase {
 		}
 
 		// Construct a new group
-		GroupWiki group = null; //:FVK: new GroupWiki(name, this.m_engine.getApplicationSession().getApplicationName());
+		GroupWiki group = new GroupWiki(name, this.m_engine.getWikiConfiguration().getApplicationName());
 
 		// Get the users for this group, and add them
 		NodeList members = groupNode.getElementsByTagName(MEMBER_TAG);
@@ -431,7 +431,8 @@ public class XMLGroupDatabase implements GroupDatabase {
 	}
 
 	@Override
-	public void initialize(Engine applicationSession) throws NoRequiredPropertyException, WikiSecurityException {
+	public void initialize(Engine engine) throws NoRequiredPropertyException, WikiSecurityException {
+		m_engine = engine;
 		// TODO Auto-generated method stub
 		
 	}

@@ -46,8 +46,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
 
 /**
  * <p>Default implementation for {@link CommandResolver}</p>
@@ -83,6 +81,27 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
     /** Stores special page names as keys, and Commands as values. */
     private final Map<String, Command> m_specialPages;
 
+    private IWikiConfiguration configuration;
+	private PageManager pageManager;
+	private URLConstructor urlConstructor;
+    
+    // -- service handling ------------------------------------
+    
+    public void setConfiguration(IWikiConfiguration configuration) {
+    	this.configuration = configuration;
+    }
+
+	public void setPageManager(PageManager pageManager) {
+		this.pageManager = pageManager;
+	}
+
+	public void setURLConstructor(URLConstructor urlConstructor) {
+		this.urlConstructor = urlConstructor;
+	}
+	
+    /**
+     * Default constructor.
+     */
     public DefaultCommandResolver() {
     	m_specialPages = new HashMap<>();
 	}
@@ -159,7 +178,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 
         // For PageCommand.VIEW, default to front page if a page wasn't supplied
         if( PageCommand.VIEW.equals( command ) && pageName == null ) {
-            pageName = m_engine.getFrontPage();
+            pageName = this.configuration.getFrontPage();
         }
 
         // These next blocks handle targeting requirements
@@ -171,9 +190,8 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
             return command.targetedCommand( page );
         }
 
-        IWikiConfiguration wikiConfiguration = m_engine.getWikiConfiguration();
         // If "create group" command, target this wiki
-        final String wiki = wikiConfiguration.getApplicationName();
+        final String wiki = this.configuration.getApplicationName();
         if ( WikiCommand.CREATE_GROUP.equals( command ) ) {
             return WikiCommand.CREATE_GROUP.targetedCommand( wiki );
         }
@@ -235,7 +253,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
     public String getSpecialPageReference( final String page ) {
         final Command command = m_specialPages.get( page );
         if ( command != null ) {
-            return m_engine.getManager( URLConstructor.class ).makeURL( command.getRequestContext(), command.getURLPattern(), null );
+            return this.urlConstructor.makeURL( command.getRequestContext(), command.getURLPattern(), null );
         }
 
         return null;
@@ -287,7 +305,8 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
     public String extractPageFromParameter( final String requestContext, final HttpServletRequest request ) {
         // Extract the page name from the URL directly
         try {
-            String page = m_engine.getManager( URLConstructor.class ).parsePage( requestContext, request, m_engine.getContentEncoding() );
+            String page = this.urlConstructor.parsePage(
+            		requestContext, request, this.configuration.getContentEncodingCs() );
             if ( page != null ) {
                 try {
                     // Look for singular/plural variants; if one not found, take the one the user supplied
@@ -299,6 +318,14 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
                     // FIXME: Should not ignore!
                 }
                 return page;
+            } else {
+                String pageId = this.urlConstructor.parsePageId(
+                		requestContext, request, this.configuration.getContentEncodingCs() );
+                PageManager pm = m_engine.getManager(PageManager.class);
+                WikiPage wikiPage = pm.getPageById(pageId);
+                if(wikiPage!=null) {
+                	return wikiPage.getName();
+                }
             }
         } catch( final IOException e ) {
             LOG.error( "Unable to create context", e );
@@ -326,7 +353,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
             }
         }
 
-        WikiPage wikipage = m_engine.getManager( PageManager.class ).getPage( page, version );
+        WikiPage wikipage = this.pageManager.getPage( page, version );
         if ( wikipage == null ) {
             page = MarkupParser.cleanLink( page );
             wikipage = Wiki.contents().page( m_engine, page );
@@ -346,7 +373,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
         if ( m_specialPages.containsKey( page ) ) {
             return true;
         }
-        return m_engine.getManager( PageManager.class ).pageExists( page );
+        return this.pageManager.pageExists( page );
     }
 
 

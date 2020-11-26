@@ -22,6 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.preferences.Preferences;
@@ -55,7 +58,7 @@ import java.util.TreeSet;
  *
  *  @since 2.1.62
  */
-public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager {
+public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager, Initializable {
 
     private static final Logger log = Logger.getLogger( DefaultTemplateManager.class );
 
@@ -71,6 +74,11 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
     }
     */
 
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+		m_engine = engine;
+	}
+	
     /** {@inheritDoc} */
     @Override
     // FIXME: Does not work yet
@@ -359,5 +367,10 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
     public WikiModuleInfo getModuleInfo( final String moduleName ) {
     	return null;
     }
+
+	@Override
+	public URL getResourceUrl(String resourceName) {
+		return ResourcesActivator.getContext().getBundle().getEntry(resourceName);
+	}
 
 }

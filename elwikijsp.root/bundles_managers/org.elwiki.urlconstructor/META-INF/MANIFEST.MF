@@ -14,4 +14,5 @@ Require-Bundle: org.eclipse.jface;bundle-version="3.19.0",
  org.elwiki.util;bundle-version="0.0.1",
  javax.servlet;bundle-version="3.1.0"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.jface.preference
+Import-Package: org.eclipse.jface.preference,
+ org.elwiki.configuration

@@ -16,9 +16,9 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!-- ~~ START ~~ SearchBox.jsp --><%@
+ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
+ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%-- Provides a simple searchbox --%>
@@ -56,3 +56,4 @@
     --%>
   </ul>
 </form>
+<!-- ~~ END ~~ SearchBox.jsp -->

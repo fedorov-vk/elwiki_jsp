@@ -7,6 +7,7 @@ import java.security.AllPermission;
 import java.security.Permission;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.Nullable;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.permissions.PagePermission;
 import org.osgi.framework.Bundle;
@@ -18,6 +19,7 @@ public class PolicyControl {
 	
 	public static boolean checkPermission() {
 		Bundle bundle = AuthorizePluginActivator.getDefault().getBundle();
+		@Nullable
 		AccessControlContext acc = bundle.adapt(AccessControlContext.class);
 
 		log.info("--TEST-------------------------------------");

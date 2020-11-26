@@ -21,7 +21,9 @@ package org.apache.wiki;
 import net.sf.ehcache.CacheManager;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.internal.MainActivator;
 import org.apache.wiki.url0.URLConstructor;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -41,9 +43,12 @@ import java.io.IOException;
 public class WikiServlet extends HttpServlet {
 
     private static final long serialVersionUID = 3258410651167633973L;
-    private Engine m_engine;
     private static final Logger log = Logger.getLogger( WikiServlet.class.getName() );
 
+    private Engine m_engine;
+
+    private IWikiConfiguration configuration;
+    
     /**
      * {@inheritDoc}
      */
@@ -52,6 +57,10 @@ public class WikiServlet extends HttpServlet {
         super.init( config );
         m_engine = Wiki.engine().find( config );
         log.info( "WikiServlet initialized." );
+
+        // :FVK: workaround (возможно далее код не нужен - так как этот WikiServlet - не используется.
+        // (перенос некоторых методов в configuration.)
+        configuration = MainActivator.getService(IWikiConfiguration.class);
     }
 
     /**
@@ -82,16 +91,16 @@ public class WikiServlet extends HttpServlet {
      */
     @Override
     public void doGet( final HttpServletRequest req, final HttpServletResponse res ) throws IOException, ServletException {
-        String pageName = URLConstructor.parsePageFromURL( req, m_engine.getContentEncoding() );
+        String pageName = URLConstructor.parsePageFromURL( req, configuration.getContentEncodingCs() );
 
         log.info( "Request for page: " + pageName );
         if( pageName == null ) {
-            pageName = m_engine.getFrontPage(); // FIXME: Add special pages as well
+            pageName = configuration.getFrontPage(); // FIXME: Add special pages as well
         }
 
         final String jspPage = m_engine.getManager( URLConstructor.class ).getForwardPage( req );
         final RequestDispatcher dispatcher = req.getRequestDispatcher( "/" + jspPage + "?page=" +
-                                                                       m_engine.encodeName( pageName ) + "&" + req.getQueryString() );
+        		configuration.encodeName( pageName ) + "&" + req.getQueryString() );
 
         dispatcher.forward( req, res );
     }

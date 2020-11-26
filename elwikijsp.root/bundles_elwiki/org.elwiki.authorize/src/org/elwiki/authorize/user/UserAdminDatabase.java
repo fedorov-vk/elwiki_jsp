@@ -390,7 +390,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		userProps.put(LOCK_EXPIRY, lockExpiry == null ? "" : c_format.format(lockExpiry));
 
 		// Hash and save the new password if it's different from old one. (:FVK: при повторном сохранении - пароль портится?)
-		@NonNull String newPassword = profile.getPassword();
+		String newPassword = profile.getPassword();
 		if (newPassword.length() != 0) {
 			newPassword = getHash(newPassword);
 			String oldPassword = (String) userProps.get(PASSWORD);

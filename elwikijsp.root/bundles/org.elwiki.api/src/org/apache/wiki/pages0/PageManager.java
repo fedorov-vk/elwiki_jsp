@@ -373,4 +373,6 @@ public interface PageManager extends WikiEventListener {
      */
     PageSorter getPageSorter();
 
+	WikiPage getPageById(String pageId);
+
 }

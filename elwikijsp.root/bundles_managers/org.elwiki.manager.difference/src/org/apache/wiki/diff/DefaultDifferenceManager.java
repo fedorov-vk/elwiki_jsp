@@ -51,6 +51,26 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
 
 	private IWikiConfiguration wikiConfiguration;
 
+	// -- service handling ------------------------------------
+
+    public void setConfiguration(IWikiConfiguration configuration) {
+    	this.wikiConfiguration = configuration;
+    }
+	
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 * 
+	 * @param bc
+	 * @throws WikiException
+	 */
+	public synchronized void startup(BundleContext bc) throws WikiException {
+		/*:FVK: old code - now used service declaration initialization.
+		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
+		}
+		*/
+	}
     
     public DefaultDifferenceManager() {
 		super();
@@ -69,19 +89,6 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
         log.info( "Using difference provider: " + m_provider.getProviderInfo() );
     }
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param bc
-	 * @throws WikiException
-	 */
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
-		}
-	}
-    
     private void loadProvider() {
         final String providerClassName = TextUtil.getStringProperty(
         		this.wikiConfiguration.getWikiPreferences(),
