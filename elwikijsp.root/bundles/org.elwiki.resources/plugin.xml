@@ -22,25 +22,25 @@
       </resource>
       <resource
             alias="/templates/default/fonts/FontJspwiki.eot"
-            base-name="/main/webapp/templates/default/fonts/FontJspwiki.eot">
+            base-name="/templates/default/fonts/FontJspwiki.eot">
       </resource>
       <resource
             alias="/templates/default/fonts/FontJspwiki.svg"
-            base-name="/main/webapp/templates/default/fonts/FontJspwiki.svg">
+            base-name="/templates/default/fonts/FontJspwiki.svg">
       </resource>
       <resource
             alias="/templates/default/fonts/FontJspwiki.ttf"
-            base-name="/main/webapp/templates/default/fonts/FontJspwiki.ttf">
+            base-name="/templates/default/fonts/FontJspwiki.ttf">
       </resource>
       <resource
             alias="/templates/default/fonts/FontJspwiki.woff"
-            base-name="/main/webapp/templates/default/fonts/FontJspwiki.woff">
+            base-name="/templates/default/fonts/FontJspwiki.woff">
       </resource>
       <resource
             alias="/templates/default/haddock-wysiwyg.css"
             base-name="/resources/templates/default/haddock-wysiwyg.css">
       </resource>
-      
+
       <resource
             alias="/template/haddock/haddock.css"
             base-name="/resources/templates/default/haddock.css">
