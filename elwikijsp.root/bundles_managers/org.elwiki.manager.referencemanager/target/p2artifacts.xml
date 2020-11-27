@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository version='1.1.0'?>
 <artifacts size='2'>
-  <artifact classifier='osgi.bundle' id='org.elwiki.manager.referencemanager' version='0.0.1.202011240905'>
+  <artifact classifier='osgi.bundle' id='org.elwiki.manager.referencemanager' version='0.0.1.202011272217'>
     <properties size='5'>
-      <property name='artifact.size' value='13193'/>
-      <property name='download.size' value='13193'/>
+      <property name='artifact.size' value='13192'/>
+      <property name='download.size' value='13192'/>
       <property name='maven-groupId' value='elwiki'/>
       <property name='maven-artifactId' value='org.elwiki.manager.referencemanager'/>
       <property name='maven-version' value='0.0.1-SNAPSHOT'/>
     </properties>
   </artifact>
-  <artifact classifier='osgi.bundle' id='org.elwiki.manager.referencemanager.source' version='0.0.1.202011240905'>
+  <artifact classifier='osgi.bundle' id='org.elwiki.manager.referencemanager.source' version='0.0.1.202011272217'>
     <properties size='6'>
-      <property name='artifact.size' value='12468'/>
-      <property name='download.size' value='12468'/>
+      <property name='artifact.size' value='12467'/>
+      <property name='download.size' value='12467'/>
       <property name='maven-groupId' value='elwiki'/>
       <property name='maven-artifactId' value='org.elwiki.manager.referencemanager'/>
       <property name='maven-version' value='0.0.1-SNAPSHOT'/>
