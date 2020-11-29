@@ -359,7 +359,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
         }
 
 		final String prefTimeZone = (Preferences.getPreference(context, "TimeZone") == null) ?
-				"UTC" : Preferences.getPreference(context, "TimeZone");
+				"UTC" : Preferences.getPreference(context, "TimeZone"); // :FVK: workaround.
         final TimeZone tz = TimeZone.getTimeZone( prefTimeZone );
 
         final Date d = new Date(); // current date
