@@ -32,7 +32,7 @@
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.elwiki.api.authorization.user.UserProfile"
+            adaptableType="org.apache.wiki.auth.user0.UserProfile"
             class="org.elwiki.authorize.user.Profile2UserAdapterFactory">
          <adapter
                type="org.osgi.service.useradmin.User">

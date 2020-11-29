@@ -287,6 +287,8 @@ public final class WikiSession implements Session {
                         m_loginPrincipal = ( Principal )e.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
+						setUser(this.m_userPrincipal);
+                        
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
                         principals.add( m_loginPrincipal );
@@ -304,6 +306,8 @@ public final class WikiSession implements Session {
                         m_loginPrincipal = ( Principal )e.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
+						setUser(this.m_userPrincipal);
+                        
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
                         principals.add( m_loginPrincipal );
@@ -321,6 +325,8 @@ public final class WikiSession implements Session {
                         m_loginPrincipal = ( Principal )e.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
+						setUser(this.m_userPrincipal);
+                        
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
                         principals.add( m_loginPrincipal );
@@ -588,17 +594,14 @@ public final class WikiSession implements Session {
 	}
 
 	private void setUser(Principal userPrincipal) {
-		Assert.isTrue(false, ":FVK: Код не реализован.");
-		/*
 		try {
 			String userName = userPrincipal.getName();
-			UserProfile profile = this.applicationSession.getUserManager().getUserDatabase().find(userName);
+			UserProfile profile = this.m_engine.getManager(UserManager.class).getUserDatabase().find(userName);
 			this.user = profile.getAdapter(User.class);
 		} catch (NoSuchPrincipalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
 	}
 
 }
