@@ -30,6 +30,7 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.ui.TemplateManager;
+import org.apache.wiki.util.ClassUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.resources.ResourcesActivator;
 
@@ -46,6 +47,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -272,6 +275,55 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
         return resultSet;
     }
 
+    /** {@inheritDoc} */
+    public Map< String, String > listLanguages( final PageContext pageContext ) {
+        final Map< String, String > resultMap = new LinkedHashMap<>();
+        final String clientLanguage = pageContext.getRequest().getLocale().toString();
+
+        Enumeration<String> paths = ResourcesActivator.getContext().getBundle().getEntryPaths("/templates/");
+		while(paths.hasMoreElements()) {
+			String name;
+        	name = paths.nextElement();
+        	log.debug(name);
+
+			if (name.equals(I18NRESOURCE_EN)
+			|| (name.startsWith(I18NRESOURCE_PREFIX) && name.endsWith(I18NRESOURCE_SUFFIX))) {
+                if( name.equals(I18NRESOURCE_EN) ) {
+                    name = I18NRESOURCE_EN_ID;
+                } else {
+                    name = name.substring( I18NRESOURCE_PREFIX.length(), name.lastIndexOf( I18NRESOURCE_SUFFIX ) );
+                }
+				final Locale locale = new Locale(name.substring(0, 2), !name.contains("_") ? "" : name.substring(3, 5));
+				String defaultLanguage = "";
+				if (clientLanguage.startsWith(name)) {
+					defaultLanguage = "ru"; //:FVK: workaround 
+					// = LocaleSupport.getLocalizedMessage( pageContext, I18NDEFAULT_LOCALE );
+				}
+				resultMap.put(name, locale.getDisplayName(locale) + " " + defaultLanguage);
+            }
+        }
+        
+        /* :FVK: старый код
+        final List< String > entries = ClassUtil.classpathEntriesUnder( DIRECTORY );
+        for( String name : entries ) {
+            if ( name.equals( I18NRESOURCE_EN ) || (name.startsWith( I18NRESOURCE_PREFIX ) && name.endsWith( I18NRESOURCE_SUFFIX ) ) ) {
+                if( name.equals( I18NRESOURCE_EN ) ) {
+                    name = I18NRESOURCE_EN_ID;
+                } else {
+                    name = name.substring( I18NRESOURCE_PREFIX.length(), name.lastIndexOf( I18NRESOURCE_SUFFIX ) );
+                }
+                final Locale locale = new Locale( name.substring( 0, 2 ), !name.contains( "_" ) ? "" : name.substring( 3, 5 ) );
+                String defaultLanguage = "";
+                if( clientLanguage.startsWith( name ) ) {
+                    defaultLanguage = "ru"; //:FVK: workaround 
+                    // = LocaleSupport.getLocalizedMessage( pageContext, I18NDEFAULT_LOCALE );
+                }
+                resultMap.put( name, locale.getDisplayName( locale ) + " " + defaultLanguage );
+            }
+        }*/
+
+        return resultMap;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -306,7 +358,8 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
             */
         }
 
-        final String prefTimeZone = Preferences.getPreference( context, "TimeZone" );
+		final String prefTimeZone = (Preferences.getPreference(context, "TimeZone") == null) ?
+				"UTC" : Preferences.getPreference(context, "TimeZone");
         final TimeZone tz = TimeZone.getTimeZone( prefTimeZone );
 
         final Date d = new Date(); // current date

@@ -160,30 +160,7 @@ public interface TemplateManager extends ModuleManager {
      * @return map of installed Languages
      * @since 2.7.x
      */
-    default Map< String, String > listLanguages( final PageContext pageContext ) {
-        final Map< String, String > resultMap = new LinkedHashMap<>();
-        final String clientLanguage = pageContext.getRequest().getLocale().toString();
-        final List< String > entries = ClassUtil.classpathEntriesUnder( DIRECTORY );
-        for( String name : entries ) {
-            if ( name.equals( I18NRESOURCE_EN ) || (name.startsWith( I18NRESOURCE_PREFIX ) && name.endsWith( I18NRESOURCE_SUFFIX ) ) ) {
-                if( name.equals( I18NRESOURCE_EN ) ) {
-                    name = I18NRESOURCE_EN_ID;
-                } else {
-                    name = name.substring( I18NRESOURCE_PREFIX.length(), name.lastIndexOf( I18NRESOURCE_SUFFIX ) );
-                }
-                final Locale locale = new Locale( name.substring( 0, 2 ), !name.contains( "_" ) ? "" : name.substring( 3, 5 ) );
-                String defaultLanguage = "";
-                if( clientLanguage.startsWith( name ) ) {
-                    defaultLanguage = "ru"; //:FVK: workwround 
-                    // = LocaleSupport.getLocalizedMessage( pageContext, I18NDEFAULT_LOCALE );
-                }
-                resultMap.put( name, locale.getDisplayName( locale ) + " " + defaultLanguage );
-            }
-        }
-
-        return resultMap;
-    }
-
+    Map< String, String > listLanguages( final PageContext pageContext );
 
     /**
      * List all available timeformats, read from the jspwiki.properties

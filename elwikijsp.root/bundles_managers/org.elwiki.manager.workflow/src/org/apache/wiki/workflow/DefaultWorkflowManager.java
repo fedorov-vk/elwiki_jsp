@@ -160,7 +160,9 @@ public class DefaultWorkflowManager implements WorkflowManager {
                 LOG.debug( "Read serialized data successfully in " + sw );
             }
         } catch( final IOException | ClassNotFoundException e ) {
-            LOG.error( "unable to recover from disk workflows and decision queue: " + e.getMessage(), e );
+        	LOG.error( "unable to recover from disk workflows and decision queue: " + e.getMessage());
+        	// :FVK: TODO:
+            // LOG.error( "unable to recover from disk workflows and decision queue: " + e.getMessage(), e );
         }
         sw.stop();
 
@@ -185,7 +187,9 @@ public class DefaultWorkflowManager implements WorkflowManager {
 
             LOG.debug( "serialization done - took " + sw );
         } catch( final IOException ioe ) {
-            LOG.error( "Unable to serialize!", ioe );
+        	LOG.error( "Unable to serialize!");
+        	// :FVK: TODO:
+            // LOG.error( "Unable to serialize!", ioe );
         }
     }
 

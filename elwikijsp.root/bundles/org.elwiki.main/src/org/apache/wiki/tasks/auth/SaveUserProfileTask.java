@@ -49,30 +49,31 @@ public class SaveUserProfileTask extends Task {
     public Outcome execute() throws WikiException {
         // Retrieve user profile
         final UserProfile profile = ( UserProfile )getWorkflowContext().get( WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE );
+        if ( profile != null) {
+        	// Save the profile (userdatabase will take care of timestamps for us)
+        	m_engine.getManager( UserManager.class ).getUserDatabase().save( profile );
+        	
+            // Send e-mail if user supplied an e-mail address
+        	final String to = profile.getEmail();
+            if ( to != null && to.length() > 0) { // :FVK: TODO: реализовать проверку правильности email address. возможно не здесь.
+                try {
+                    final InternationalizationManager i18n = m_engine.getManager( InternationalizationManager.class );
+                    final String app = m_engine.getWikiConfiguration().getApplicationName();
+                    final String subject = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
+                                                     "notification.createUserProfile.accept.subject", app );
 
-        // Save the profile (userdatabase will take care of timestamps for us)
-        m_engine.getManager( UserManager.class ).getUserDatabase().save( profile );
-
-        // Send e-mail if user supplied an e-mail address
-        if ( profile != null && profile.getEmail() != null ) {
-            try {
-                final InternationalizationManager i18n = m_engine.getManager( InternationalizationManager.class );
-                final String app = m_engine.getWikiConfiguration().getApplicationName();
-                final String to = profile.getEmail();
-                final String subject = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
-                                                 "notification.createUserProfile.accept.subject", app );
-
-                final String content = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
-                                                 "notification.createUserProfile.accept.content", app,
-                                                 profile.getLoginName(),
-                                                 profile.getFullname(),
-                                                 profile.getEmail(),
-                                                 m_engine.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), null, null ) );
-                MailUtil.sendMessage( m_engine.getWikiPreferences(), to, subject, content );
-            } catch ( final AddressException e) {
-                LOG.debug( e.getMessage(), e );
-            } catch ( final MessagingException me ) {
-                LOG.error( "Could not send registration confirmation e-mail. Is the e-mail server running?", me );
+                    final String content = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
+                                                     "notification.createUserProfile.accept.content", app,
+                                                     profile.getLoginName(),
+                                                     profile.getFullname(),
+                                                     profile.getEmail(),
+                                                     m_engine.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), null, null ) );
+                    MailUtil.sendMessage( m_engine.getWikiPreferences(), to, subject, content );
+                } catch ( final AddressException e) {
+                    LOG.debug( e.getMessage(), e );
+                } catch ( final MessagingException me ) {
+                    LOG.error( "Could not send registration confirmation e-mail. Is the e-mail server running?", me );
+                }
             }
         }
 
