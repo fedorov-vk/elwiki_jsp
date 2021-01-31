@@ -3,6 +3,7 @@
 package org.elwiki_data.util;
 
 import java.security.Principal;
+import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -148,6 +149,12 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.ACL: {
 				Acl acl = (Acl)theEObject;
 				T result = caseAcl(acl);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: {
+				@SuppressWarnings("unchecked") Map.Entry<String, Object> stringToObjectMap = (Map.Entry<String, Object>)theEObject;
+				T result = caseStringToObjectMap(stringToObjectMap);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -317,6 +324,21 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseAcl(Acl object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String To Object Map</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String To Object Map</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringToObjectMap(Map.Entry<String, Object> object) {
 		return null;
 	}
 

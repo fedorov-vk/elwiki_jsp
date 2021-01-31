@@ -31,7 +31,6 @@ import org.apache.wiki.auth.authorize.Group;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.providers.FileSystemProvider;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IAuthorizer;
 
@@ -60,7 +59,8 @@ public class Installer {
     public static final String INSTALL_ERROR = "Installer.Error";
     public static final String INSTALL_WARNING = "Installer.Warning";
     public static final String STORAGE_DIR = AttachmentProvider.PROP_STORAGEDIR;
-    public static final String PAGE_DIR = FileSystemProvider.PROP_PAGEDIR;
+    @Deprecated
+    public static final String PAGE_DIR = ""; //FileSystemProvider.PROP_PAGEDIR;
     public static final String WORK_DIR = Engine.PROP_WORKDIR;
     public static final String ADMIN_GROUP = "Admin";
     public static final String PROPFILENAME = "jspwiki-custom.properties" ;

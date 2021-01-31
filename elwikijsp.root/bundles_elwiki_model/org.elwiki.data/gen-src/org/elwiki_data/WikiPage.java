@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,6 +35,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.elwiki_data.WikiPage#getPageReferences <em>Page References</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getTotalAttachment <em>Total Attachment</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -396,6 +399,42 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	void setAcl(Acl value);
 
 	/**
+	 * Returns the value of the '<em><b>Web Log</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Web Log</em>' attribute.
+	 * @see #setWebLog(boolean)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_WebLog()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isWebLog();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Web Log</em>' attribute.
+	 * @see #isWebLog()
+	 * @generated
+	 */
+	void setWebLog(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Attributes</b></em>' map.
+	 * The key is of type {@link java.lang.String},
+	 * and the value is of type {@link java.lang.Object},
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attributes</em>' map.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Attributes()
+	 * @model mapType="org.elwiki_data.StringToObjectMap&lt;org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EJavaObject&gt;"
+	 * @generated
+	 */
+	EMap<String, Object> getAttributes();
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model objType="org.elwiki_data.Object"
@@ -414,6 +453,9 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns: modify date of last item of pagecontents reference, or 12.02.1972.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -422,22 +464,9 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @model attributeType="org.elwiki_data.Object"
-	 * @generated
-	 */
-	void setAttribute(String key, Object attribute);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model type="org.elwiki_data.Object"
-	 * @generated
-	 */
-	Object getAttribute(String key);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns: author of last item of pagecontents reference, or empty string.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -446,6 +475,10 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns last item of pagecontents reference.
+	 * </br>Can be NULL.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -454,6 +487,10 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns version of last item of pagecontents reference.
+	 * </br>Can be -1, if no content.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */

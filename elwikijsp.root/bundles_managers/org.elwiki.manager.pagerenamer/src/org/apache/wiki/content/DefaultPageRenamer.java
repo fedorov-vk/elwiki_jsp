@@ -21,6 +21,7 @@ package org.apache.wiki.content;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
+import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -113,10 +114,9 @@ public class DefaultPageRenamer implements PageRenamer {
         if( toPage == null ) {
             throw new ProviderException( "Rename seems to have failed for some strange reason - please check logs!" );
         }
-        /*:FVK:
-        toPage.setAttribute( WikiPage.CHANGENOTE, fromPage.getName() + " ==> " + toPage.getName() );
-        toPage.setAuthor( context.getCurrentUser().getName() );
-        */
+        PageContent content = toPage.getLastContent();
+        content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
+        content.setAuthor( context.getCurrentUser().getName() );
         engine.getManager( PageManager.class ).putPageText( toPage, engine.getManager( PageManager.class ).getPureText( toPage ) );
 
         //  Update the references
@@ -191,11 +191,9 @@ public class DefaultPageRenamer implements PageRenamer {
             }
             
             if( !sourceText.equals( newText ) ) {
-            	/*:FVK:
-                p.setAttribute( WikiPage.CHANGENOTE, fromPage.getName()+" ==> "+toPage.getName() );
-                p.setAuthor( context.getCurrentUser().getName() );
-                */
-         
+            	PageContent content = p.getLastContent();
+            	content.setChangeNote(fromPage.getName()+" ==> "+toPage.getName()); // :FVK: workaround - previous change note is removed.
+            	content.setAuthor(context.getCurrentUser().getName());
                 try {
                     engine.getManager( PageManager.class ).putPageText( p, newText );
                     engine.getManager( ReferenceManager.class ).updateReferences( p );

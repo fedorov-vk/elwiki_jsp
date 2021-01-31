@@ -65,6 +65,7 @@ import java.util.TreeSet;
  *
  *  @since 2.1.21.
  */
+@Deprecated
 public abstract class AbstractFileProvider implements PageProvider {
 
     private static final Logger log = Logger.getLogger(AbstractFileProvider.class);

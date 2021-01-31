@@ -81,6 +81,7 @@ public interface IModifyInfo extends CDOObject {
 
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Author</em>' attribute isn't clear,
@@ -90,7 +91,7 @@ public interface IModifyInfo extends CDOObject {
 	 * @return the value of the '<em>Author</em>' attribute.
 	 * @see #setAuthor(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_Author()
-	 * @model
+	 * @model default=""
 	 * @generated
 	 */
 	String getAuthor();

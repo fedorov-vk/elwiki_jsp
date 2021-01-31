@@ -567,7 +567,7 @@ public class AttachmentServlet extends HttpServlet {
             }
 
             if( changenote != null && changenote.length() > 0 ) {
-            	//:FVK: att.setAttribute( WikiPage.CHANGENOTE, changenote );
+            	att.setChangeNote(changenote );
             }
 
           /*:FVK: 

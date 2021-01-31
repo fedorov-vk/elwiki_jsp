@@ -471,7 +471,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
             att.setAuthor( props.getProperty( version+".author" ) );
             final String changeNote = props.getProperty( version+".changenote" );
             if( changeNote != null ) {
-                //:FVK: att.setAttribute( WikiPage.CHANGENOTE, changeNote );
+                att.setChangeNote(changeNote);
             }
 
             final File f = findFile( dir, att );

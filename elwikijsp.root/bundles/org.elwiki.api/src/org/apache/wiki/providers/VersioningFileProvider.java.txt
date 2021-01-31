@@ -70,6 +70,7 @@ import java.util.Properties;
  *  on the files contents based on its name.
  *
  */
+@Deprecated
 public class VersioningFileProvider extends AbstractFileProvider {
 
     private static final Logger     log = Logger.getLogger(VersioningFileProvider.class);
