@@ -154,7 +154,10 @@
         </wiki:Permission>
       </td>
 
-      <c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
+      <%-- :FVK: старое переписать, согласно функционалу
+		<c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
+      --%>	
+      <c:set var="changenote" value=":FOO:" />
       <td class="changenote"><c:out value="${changenote}"/></td>
 
     </tr>

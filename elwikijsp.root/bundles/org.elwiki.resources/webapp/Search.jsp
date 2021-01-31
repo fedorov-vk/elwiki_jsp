@@ -19,6 +19,7 @@
 --%>
 <!-- ~~ START ~~ Search.jsp --><%@
  page import="java.util.*" %><%@
+ page import="org.elwiki_data.*" %><%@
  page import="org.apache.log4j.*" %><%@
  page import="org.apache.wiki.api.core.*" %><%@
  page import="org.apache.wiki.api.search.*" %><%@

@@ -22,26 +22,26 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.elwiki_data.PageAttachment;
+
 /**
- *  Just provides the TEI data for AttachmentsIteratorTag.
+ * Just provides the TEI data for AttachmentsIteratorTag.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class AttachmentsIteratorInfo extends TagExtraInfo
-{
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public VariableInfo[] getVariableInfo( final TagData data)
-    {
-        final VariableInfo[] var = { new VariableInfo( data.getAttributeString("id"),
-                                                 "org.apache.wiki.api.core.Attachment",
-                                                 true,
-                                                 VariableInfo.NESTED )
-        };
-
-        return var;
-
-    }
+public class AttachmentsIteratorInfo extends TagExtraInfo {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public VariableInfo[] getVariableInfo(final TagData data) {
+		
+		final VariableInfo[] var = { //@formatter:off
+				new VariableInfo(data.getAttributeString("id"),
+				PageAttachment.class.getName(), //"org.apache.wiki.api.core.Attachment",
+				true,
+				VariableInfo.NESTED)
+		}; //@formatter:on
+		return var;
+	}
 }

@@ -16,6 +16,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.elwiki.configuration
 Import-Package: java.io,
+ java.net,
+ java.nio.charset,
  java.nio.file,
  java.util,
  org.eclipse.core.commands.common,

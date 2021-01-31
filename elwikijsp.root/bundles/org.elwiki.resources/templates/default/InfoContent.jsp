@@ -1,4 +1,4 @@
-<%--
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -15,27 +15,30 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
---%>
-
-<%@ page import="org.apache.wiki.api.core.*" %>
+--%><!-- ~~ START ~~ InfoContent.jsp -->
+<%@ page import="org.apache.wiki.api.core.*"%>
 <%@ page import="org.apache.wiki.auth.*" %>
+<%@ page import="org.apache.wiki.tags.HistoryIteratorTag" %>
+<%@ page import="org.elwiki.authorize.login.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.*" %>
 <%@ page import="org.apache.wiki.attachment.*" %>
 <%@ page import="org.apache.wiki.api.i18n.InternationalizationManager" %>
+<%@ page import="org.apache.wiki.api.attachment.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="java.security.Permission" %>
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	Context c = Context.findContext(pageContext);
+  Context c = Context.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
   int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -182,14 +185,17 @@
           </wiki:Link>
         </td>
 
-	    <td class="nowrap" data-sortvalue="${currentPage.lastModified.time}">
+        <td class="nowrap" data-sortvalue="${currentPage.lastModified.time}">
         <fmt:formatDate value="${currentPage.lastModified}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </td>
 
         <c:set var="pageSize"><wiki:PageSize /></c:set>
         <td class="nowrap" title="${pageSize} bytes">
           <%--<fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>--%>
-          <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( currentPage.getSize() )%>
+          <%-- :FVK: здесь ошибка какая-то JSP...
+          < %= org.apache.commons.io.FileUtils.byteCountToDisplaySize( currentPage.getLastContent().getContent().length() ) % >
+          --%>
+          :FVK: :FOO:
         </td>
         <td><wiki:Author /></td>
 
@@ -203,7 +209,7 @@
           </wiki:CheckVersion>
         </td>
 
-        <c:set var="changenote" value="<%=(String)currentPage.getAttribute( WikiPage.CHANGENOTE )%>" />
+        <c:set var="changenote" value="<%= (String)currentPage.getLastContent().getChangeNote() %>" />
         <td class="changenote"><c:out value="${changenote}"/></td>
 
       </tr>
@@ -338,6 +344,9 @@
       <th scope="col"><fmt:message key="info.changenote"/></th>
     </tr>
 
+<!--
+ :FVK: здесь должна быть история Attachment... - см. оригинал. 
+
     <wiki:HistoryIterator id="att"><%-- <wiki:AttachmentsIterator id="att"> --%>
     <tr>
 
@@ -376,6 +385,8 @@
     </tr>
     </wiki:HistoryIterator><%-- </wiki:AttachmentsIterator> --%>
 
+ -->
+
   </table>
   </div>
 
@@ -392,3 +403,4 @@
 </wiki:NoSuchPage>
 
 </div>
+<!-- ~~ END ~~ InfoContent.jsp -->

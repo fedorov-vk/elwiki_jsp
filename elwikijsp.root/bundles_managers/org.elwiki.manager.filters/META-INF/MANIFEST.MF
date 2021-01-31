@@ -8,18 +8,19 @@ Automatic-Module-Name: org.elwiki.manager.filters
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
  org.apache.log4j;bundle-version="1.2.15",
- org.elwiki.api;bundle-version="0.0.1",
  org.apache.oro;bundle-version="2.0.8",
- org.elwiki.util;bundle-version="0.0.1",
  org.jvnet.hudson.org.suigeneris.jrcs.diff;bundle-version="0.4.2",
  org.apache.commons.lang3;bundle-version="3.1.0",
  net.sourceforge.akismet-java;bundle-version="1.2.0",
  org.jdom.2;bundle-version="2.0.6",
- org.elwiki.data;bundle-version="0.0.1"
+ org.elwiki.data;bundle-version="0.0.1",
+ org.elwiki.api;bundle-version="0.0.1",
+ org.elwiki.util;bundle-version="0.0.1"
 Import-Package: javax.servlet;version="3.1.0",
  javax.servlet.http;version="3.1.0",
  javax.servlet.jsp;version="2.2.0",
- org.eclipse.jface.preference
+ org.eclipse.jface.preference,
+ org.elwiki.configuration
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/filterManager.xml
 Bundle-ClassPath: xmlrpc-2.0.1.jar,
