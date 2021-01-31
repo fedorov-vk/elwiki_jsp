@@ -39,6 +39,7 @@ import java.util.Properties;
  *  on the files contents based on its name.
  *
  */
+@Deprecated
 public class FileSystemProvider extends AbstractFileProvider {
 
     private static final Logger log = Logger.getLogger( FileSystemProvider.class );

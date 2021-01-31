@@ -20,15 +20,17 @@
 <%@ page import="java.util.Properties"%>
 <%@ page import="org.apache.commons.lang3.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.api.ui.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.*" %>
-<%@ page import="org.apache.wiki.filters.*" %>
+<%@ page import="org.apache.wiki.filters0.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.parser0.MarkupParser" %>
-<%@ page import="org.apache.wiki.render.*" %>
+<%@ page import="org.apache.wiki.render0.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
+<%@ page import="org.elwiki_data.WikiPage" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -54,8 +56,8 @@
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
-    String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
-    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
+    String originalCCLOption = (String)wikiPage.getAttributes().get(MarkupParser.PROP_CAMELCASELINKS );
+    wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, "false");
 
     String usertext = EditorManager.getEditedText(pageContext);
 %>
@@ -114,7 +116,7 @@
    // after the XHTML for CKeditor has been rendered.
    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
-   wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
+   wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, originalCCLOption);
 
    /*FFS not used
    String templateDir = (String)copyOfWikiProperties.get( Engine.PROP_TEMPLATEDIR );

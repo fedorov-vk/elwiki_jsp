@@ -226,7 +226,7 @@ public class DefaultVariableManager implements VariableManager {
             //
             final WikiPage pg = context.getPage();
             if( pg != null ) {
-                final Object metadata = pg.getAttribute( varName );
+                final Object metadata = pg.getAttributes().get(varName);
                 if( metadata != null ) {
                     return metadata.toString();
                 }
@@ -238,7 +238,7 @@ public class DefaultVariableManager implements VariableManager {
             //
             final WikiPage rpg = context.getRealPage();
             if( rpg != null ) {
-                final Object metadata = rpg.getAttribute( varName );
+                final Object metadata = rpg.getAttributes().get(varName);
                 if( metadata != null ) {
                     return metadata.toString();
                 }

@@ -5,6 +5,7 @@ package org.elwiki_data.impl;
 import java.security.Permission;
 import java.security.Principal;
 
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -78,6 +79,7 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.PAGE_REFERENCE: return (EObject)createPageReference();
 			case Elwiki_dataPackage.ACL_ENTRY: return (EObject)createAclEntry();
 			case Elwiki_dataPackage.ACL: return (EObject)createAcl();
+			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -215,6 +217,16 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	public Acl createAcl() {
 		AclImpl acl = new AclImpl();
 		return acl;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry<String, Object> createStringToObjectMap() {
+		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
+		return stringToObjectMap;
 	}
 
 	/**

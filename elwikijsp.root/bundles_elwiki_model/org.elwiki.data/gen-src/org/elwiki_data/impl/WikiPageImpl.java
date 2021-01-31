@@ -8,9 +8,10 @@ import java.lang.Object;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.GregorianCalendar;
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.elwiki_data.Acl;
 import org.elwiki_data.Elwiki_dataPackage;
@@ -42,16 +43,13 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageReferences <em>Page References</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTotalAttachment <em>Total Attachment</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAcl <em>Acl</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class WikiPageImpl extends ComparableImpl implements WikiPage {
-
-	/**
-	 * @generated NOT
-	 */
-	private final HashMap<String, Object> m_attributes = new HashMap<String, Object>();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -332,6 +330,37 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public boolean isWebLog() {
+		return (Boolean)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__WEB_LOG, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setWebLog(boolean newWebLog) {
+		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__WEB_LOG, newWebLog);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public EMap<String, Object> getAttributes() {
+		return (EMap<String, Object>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ATTRIBUTES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int compareTo(final Object obj) {
 		if (obj instanceof WikiPage) {
 			WikiPage page = (WikiPage) obj;
@@ -370,28 +399,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public Date getLastModified() {
 		EList<PageContent> pageContent = this.getPagecontents();
-		int listSize = pageContent.size();
-		return (listSize>0)? pageContent.get(listSize-1).getLastModify() : new Date(1972,2,12);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAttribute(final String key, final Object attribute) {
-		this.m_attributes.put( key, attribute );
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object getAttribute(final String key) {
-		return this.m_attributes.get( key );
+		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
+				pageContent.get(pageContent.size()-1).getLastModify();
 	}
 
 	/**
@@ -401,13 +410,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public String getAuthor() {
-		String author = null; // "unknown";
-		EList<PageContent> pageContents = getPagecontents();
-		if (!pageContents.isEmpty()) {
-			PageContent content = pageContents.get(pageContents.size() - 1);
-			author = content.getAuthor();
-		}
-		return author;
+		PageContent content = getLastContent();
+		return (content != null) ? content.getAuthor() : "";
 	}
 
 	/**
@@ -417,16 +421,9 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public PageContent getLastContent() {
-		PageContent result = null;
-		int currentVersion = -1;
-		for (PageContent pageContent : this.getPagecontents()) {
-			int contentVersion = pageContent.getVersion();
-			if (currentVersion < contentVersion) {
-				result = pageContent;
-				currentVersion = contentVersion;
-			}
-		}
-		return result;
+		EList<PageContent> pageContents = getPagecontents();
+		return (pageContents.isEmpty())? null :
+				pageContents.get(pageContents.size() - 1);
 	}
 
 	/**
@@ -476,11 +473,6 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return clone();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_MODIFIED:
 				return getLastModified();
-			case Elwiki_dataPackage.WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT:
-				setAttribute((String)arguments.get(0), (Object)arguments.get(1));
-				return null;
-			case Elwiki_dataPackage.WIKI_PAGE___GET_ATTRIBUTE__STRING:
-				return getAttribute((String)arguments.get(0));
 			case Elwiki_dataPackage.WIKI_PAGE___GET_AUTHOR:
 				return getAuthor();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_CONTENT:

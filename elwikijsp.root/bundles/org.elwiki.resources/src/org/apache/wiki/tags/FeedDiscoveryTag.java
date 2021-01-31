@@ -60,7 +60,7 @@ public class FeedDiscoveryTag extends WikiTagBase {
                                        siteName+"\" href=\""+atomPostURL+"\" />\n");
             */
             // FIXME: This does not work always, as plugins are not initialized until the first fetch
-            if( "true".equals( page.getAttribute( WeblogPlugin.ATTR_ISWEBLOG ) ) ) {
+            if( page.isWebLog() ) {
                 final String blogFeedURL = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(),"rss.jsp","page="+encodedName );
                 final String atomFeedURL = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(),"rss.jsp","page="+encodedName+"&amp;type=atom" );
         

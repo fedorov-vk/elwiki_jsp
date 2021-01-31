@@ -20,9 +20,10 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.api.ui.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.apache.wiki.filters.*" %>
+<%@ page import="org.apache.wiki.filters0.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />

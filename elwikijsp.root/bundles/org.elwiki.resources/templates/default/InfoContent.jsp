@@ -359,7 +359,7 @@
 	  </td>
 
       <td class="nowrap" title="${att.size} bytes" data-sortvalue="${att.size}">
-        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getSize() )%>
+        < %=org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getSize() )%>
       </td>
 
       <%-- see styles/fontjspwiki/icon.less : icon-file-<....>-o  --%>
@@ -379,7 +379,7 @@
       </wiki:Permission>
       --%>
 
-      <c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
+      <c:set var="changenote" value="< %=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
         <td class="changenote"><c:out value="${changenote}"/></td>
 
     </tr>

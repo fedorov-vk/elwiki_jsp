@@ -241,13 +241,31 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__ACL = COMPARABLE_FEATURE_COUNT + 14;
 
 	/**
+	 * The feature id for the '<em><b>Web Log</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__WEB_LOG = COMPARABLE_FEATURE_COUNT + 15;
+
+	/**
+	 * The feature id for the '<em><b>Attributes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 16;
+
+	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 15;
+	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Compare To</em>' operation.
@@ -277,31 +295,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___GET_LAST_MODIFIED = COMPARABLE_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Set Attribute</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = COMPARABLE_OPERATION_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Get Attribute</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WIKI_PAGE___GET_ATTRIBUTE__STRING = COMPARABLE_OPERATION_COUNT + 5;
-
-	/**
 	 * The operation id for the '<em>Get Author</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE___GET_AUTHOR = COMPARABLE_OPERATION_COUNT + 6;
+	int WIKI_PAGE___GET_AUTHOR = COMPARABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Last Content</em>' operation.
@@ -310,7 +310,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE___GET_LAST_CONTENT = COMPARABLE_OPERATION_COUNT + 7;
+	int WIKI_PAGE___GET_LAST_CONTENT = COMPARABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -319,7 +319,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE___GET_VERSION = COMPARABLE_OPERATION_COUNT + 8;
+	int WIKI_PAGE___GET_VERSION = COMPARABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
@@ -328,7 +328,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 9;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -908,6 +908,52 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ACL_OPERATION_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.StringToObjectMapImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
+	 * @generated
+	 */
+	int STRING_TO_OBJECT_MAP = 12;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>String To Object Map</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>String To Object Map</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Access List</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -915,7 +961,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAccessList()
 	 * @generated
 	 */
-	int ACCESS_LIST = 13;
+	int ACCESS_LIST = 14;
 
 	/**
 	 * The meta object id for the '<em>Array Principal</em>' data type.
@@ -924,7 +970,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
 	 * @generated
 	 */
-	int ARRAY_PRINCIPAL = 14;
+	int ARRAY_PRINCIPAL = 15;
 
 	/**
 	 * The meta object id for the '<em>Permission Object</em>' data type.
@@ -934,7 +980,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
 	 * @generated
 	 */
-	int PERMISSION_OBJECT = 15;
+	int PERMISSION_OBJECT = 16;
 
 	/**
 	 * The meta object id for the '<em>Principal Object</em>' data type.
@@ -944,7 +990,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
 	 * @generated
 	 */
-	int PRINCIPAL_OBJECT = 16;
+	int PRINCIPAL_OBJECT = 17;
 
 	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
@@ -953,7 +999,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
 	 * @generated
 	 */
-	int ARRAY_STRING = 12;
+	int ARRAY_STRING = 13;
 
 
 	/**
@@ -1132,6 +1178,28 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getWikiPage_Acl();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Web Log</em>'.
+	 * @see org.elwiki_data.WikiPage#isWebLog()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EAttribute getWikiPage_WebLog();
+
+	/**
+	 * Returns the meta object for the map '{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the map '<em>Attributes</em>'.
+	 * @see org.elwiki_data.WikiPage#getAttributes()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EReference getWikiPage_Attributes();
+
+	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1160,26 +1228,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getWikiPage__GetLastModified();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#setAttribute(java.lang.String, java.lang.Object) <em>Set Attribute</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Set Attribute</em>' operation.
-	 * @see org.elwiki_data.WikiPage#setAttribute(java.lang.String, java.lang.Object)
-	 * @generated
-	 */
-	EOperation getWikiPage__SetAttribute__String_Object();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getAttribute(java.lang.String) <em>Get Attribute</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Attribute</em>' operation.
-	 * @see org.elwiki_data.WikiPage#getAttribute(java.lang.String)
-	 * @generated
-	 */
-	EOperation getWikiPage__GetAttribute__String();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getAuthor() <em>Get Author</em>}' operation.
@@ -1596,6 +1644,40 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getAcl__FindPrincipals__Permission();
 
 	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To Object Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String To Object Map</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyDataType="org.eclipse.emf.ecore.EString"
+	 *        valueDataType="org.eclipse.emf.ecore.EJavaObject"
+	 * @generated
+	 */
+	EClass getStringToObjectMap();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToObjectMap()
+	 * @generated
+	 */
+	EAttribute getStringToObjectMap_Key();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToObjectMap()
+	 * @generated
+	 */
+	EAttribute getStringToObjectMap_Value();
+
+	/**
 	 * Returns the meta object for class '{@link java.security.Principal <em>Principal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1813,6 +1895,22 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference WIKI_PAGE__ACL = eINSTANCE.getWikiPage_Acl();
 
 		/**
+		 * The meta object literal for the '<em><b>Web Log</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WIKI_PAGE__WEB_LOG = eINSTANCE.getWikiPage_WebLog();
+
+		/**
+		 * The meta object literal for the '<em><b>Attributes</b></em>' map feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference WIKI_PAGE__ATTRIBUTES = eINSTANCE.getWikiPage_Attributes();
+
+		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1835,22 +1933,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation WIKI_PAGE___GET_LAST_MODIFIED = eINSTANCE.getWikiPage__GetLastModified();
-
-		/**
-		 * The meta object literal for the '<em><b>Set Attribute</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = eINSTANCE.getWikiPage__SetAttribute__String_Object();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Attribute</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation WIKI_PAGE___GET_ATTRIBUTE__STRING = eINSTANCE.getWikiPage__GetAttribute__String();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Author</b></em>' operation.
@@ -2183,6 +2265,32 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ACL___FIND_PRINCIPALS__PERMISSION = eINSTANCE.getAcl__FindPrincipals__Permission();
+
+		/**
+		 * The meta object literal for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.elwiki_data.impl.StringToObjectMapImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
+		 * @generated
+		 */
+		EClass STRING_TO_OBJECT_MAP = eINSTANCE.getStringToObjectMap();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_TO_OBJECT_MAP__KEY = eINSTANCE.getStringToObjectMap_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_TO_OBJECT_MAP__VALUE = eINSTANCE.getStringToObjectMap_Value();
 
 		/**
 		 * The meta object literal for the '{@link java.security.Principal <em>Principal</em>}' class.

@@ -52,7 +52,7 @@
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
-    String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
+    String originalCCLOption = (String)wikiPage.getAttributes( MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
     String usertext = EditorManager.getEditedText(pageContext);

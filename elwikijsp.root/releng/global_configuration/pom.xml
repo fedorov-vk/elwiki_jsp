@@ -33,6 +33,8 @@
 			<rap-repo.url>file:/repo/RAP/rap-3.1.2-SR2a-20170308-2159</rap-repo.url>
 			<rap-repo.url>file:/repo/RAP/rap-3.4.0-R-20171204-1637</rap-repo.url>
 			<license-repo.url>file:/repo/License/p2_archive</license-repo.url>
+		<platform-repo.url>file:/repo/eclipse/releases/2020-03</platform-repo.url>
+		<platform-repo.url>file:/repo/eclipse/releases/2020-12</platform-repo.url>
 		-->
 		<platform-repo.url>file:/repo/eclipse/releases/2020-03</platform-repo.url>
 		<apachetools-repo.url>file:/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository</apachetools-repo.url>
