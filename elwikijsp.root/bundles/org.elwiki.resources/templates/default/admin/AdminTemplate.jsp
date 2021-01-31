@@ -19,7 +19,7 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
+<%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
 <%@ page import="org.apache.wiki.ui.admin0.*" %>

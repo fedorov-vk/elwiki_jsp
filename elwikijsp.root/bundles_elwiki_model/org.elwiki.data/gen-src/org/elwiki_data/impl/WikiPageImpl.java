@@ -491,4 +491,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 		return super.eInvoke(operationID, arguments);
 	}
 
+	public String toString() {
+		return this.getName() + " / " + this.getId() + " : " + this.cdoID().toString();
+	}
 } //WikiPageImpl

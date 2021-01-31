@@ -19,9 +19,10 @@
 
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="java.util.*" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.exceptions.RedirectException" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
+<%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.util.HttpUtil" %>
 <%@ page import="org.apache.wiki.filters0.SpamFilter" %>
@@ -151,7 +152,7 @@
         //
         //  Set author information and other metadata
         //
-        modifiedPage.setAuthor( user );
+        // :FVK: modifiedPage.setAuthor( user );
 
         if( changenote == null ) {
             changenote = (String) session.getAttribute("changenote");
@@ -159,11 +160,13 @@
 
         session.removeAttribute("changenote");
 
+        /* :FVK:
         if( changenote != null && changenote.length() > 0 ) {
             modifiedPage.setAttribute( WikiPage.CHANGENOTE, changenote );
         } else {
             modifiedPage.removeAttribute( WikiPage.CHANGENOTE );
         }
+        */
 
         //
         //  Figure out the actual page text

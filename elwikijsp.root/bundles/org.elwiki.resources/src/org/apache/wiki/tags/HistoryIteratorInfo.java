@@ -22,8 +22,11 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.elwiki_data.WikiPage;
+
 /**
  *  Just provides the TEI data for HistoryIteratorTag.
+ *  :FVK: - зачем этот класс (он используется при компиляции JSP -- для тега-цикла?).
  *
  *  @since 2.0
  */
@@ -31,13 +34,12 @@ public class HistoryIteratorInfo extends TagExtraInfo
 {
     public VariableInfo[] getVariableInfo( final TagData data)
     {
-        final VariableInfo[] var = { new VariableInfo( data.getAttributeString("id"),
-                                                 "org.apache.wiki.api.core.Page",
-                                                 true,
-                                                 VariableInfo.NESTED )
-        };
-
+        final VariableInfo[] var = { //@formatter:off
+        		new VariableInfo( data.getAttributeString("id"),
+        		WikiPage.class.getName(), // "org.elwiki_data.WikiPage",
+        		true,
+        		VariableInfo.NESTED )
+        }; //@formatter:on
         return var;
-
     }
 }

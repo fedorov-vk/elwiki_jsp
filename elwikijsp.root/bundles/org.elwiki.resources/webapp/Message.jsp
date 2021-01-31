@@ -20,7 +20,7 @@
 <%@ page isErrorPage="true" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
+<%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! 

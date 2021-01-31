@@ -20,8 +20,8 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
-<%@ page import="org.apache.wiki.attachment0.Attachment" %>
+<%@ page import="org.apache.wiki.Wiki" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
@@ -62,7 +62,7 @@
     // If deleting an attachment, go to the parent page.
     String redirTo = pagereq;
     if( wikipage instanceof PageAttachment ) {
-        redirTo = ((PageAttachment)wikipage).getParentName();
+        redirTo = ":FVK:"; // ((PageAttachment)wikipage).getParentName();
     }
 
     if( deleteall != null ) {

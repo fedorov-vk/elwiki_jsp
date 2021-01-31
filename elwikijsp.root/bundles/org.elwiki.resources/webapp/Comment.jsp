@@ -20,13 +20,14 @@
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.util.HttpUtil" %>
 <%@ page import="org.apache.wiki.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
+<%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.api.exceptions.RedirectException" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
-<%@ page import="org.apache.wiki.auth.login.CookieAssertionLoginModule" %>
+<%@ page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
 <%@ page import="org.apache.wiki.filters0.SpamFilter" %>
 <%@ page import="org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator" %>
 <%@ page import="org.apache.wiki.pages0.PageLock" %>
@@ -166,13 +167,15 @@
         //
         //  Set author and changenote information
         //
-        modifiedPage.setAuthor( storedUser );
+        //:FVK: modifiedPage.setAuthor( storedUser );
 
+        /* :FVK:
         if( changenote != null ) {
             modifiedPage.setAttribute( WikiPage.CHANGENOTE, changenote );
         } else {
             modifiedPage.removeAttribute( WikiPage.CHANGENOTE );
         }
+        */
 
         //
         //  Build comment part

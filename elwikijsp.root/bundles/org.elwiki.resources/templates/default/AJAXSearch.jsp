@@ -24,9 +24,11 @@
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="org.apache.commons.lang3.*" %>
 <%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.api.spi.Wiki" %>
+<%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.api.search.SearchResult" %>
+<%@ page import="org.apache.wiki.tags.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.*" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
@@ -63,7 +65,7 @@
       //  Filter down to only those that we actually have a permission to view
       AuthorizationManager mgr = wiki.getManager( AuthorizationManager.class );
 
-      ArrayList< SearchResult > items = new ArrayList<>();
+      ArrayList< SearchResult > items = new ArrayList();
 
       for( Iterator< SearchResult > i = list.iterator(); i.hasNext(); )
       {

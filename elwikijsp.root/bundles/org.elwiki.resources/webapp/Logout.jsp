@@ -18,10 +18,10 @@
 --%>
 
 <%@page import="org.apache.wiki.api.core.Engine" %>
-<%@page import="org.apache.wiki.api.spi.Wiki" %>
+<%@page import="org.apache.wiki.Wiki" %>
 <%@page import="org.apache.wiki.auth.IIAuthenticationManager" %>
-<%@page import="org.apache.wiki.auth.login.CookieAssertionLoginModule" %>
-<%@page import="org.apache.wiki.auth.login.CookieAuthenticationLoginModule"%>
+<%@page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
+<%@page import="org.elwiki.authorize.login.CookieAuthenticationLoginModule"%>
 <%
 	Engine wiki = Wiki.engine().find( getServletConfig() );
   wiki.getManager( IIAuthenticationManager.class ).logout( request );

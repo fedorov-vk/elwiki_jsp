@@ -146,10 +146,12 @@
         </wiki:CheckVersion>
         </span>
       </li>
-      <li class="dropdown-header"><fmt:message key="info.author"/> :
-      <<%-- :FVK: -error this-
-		<wiki:Author format="plain"/>
-       --%>
+      <li class="dropdown-header">
+        <fmt:message key="info.author"/> :
+          <wiki:Author />
+        <%-- :FVK: -но, вызывает ошибку оригинальный код, а именно /format="plain"/ для wiki:Author-
+		  <wiki:Author format="plain"/>
+        --%>
       </li>
       <li class="dropdown-header">
         <wiki:RSSImageLink mode="wiki" title="<fmt:message key='info.feed'/>"/>

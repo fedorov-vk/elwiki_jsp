@@ -55,7 +55,7 @@ public class PageTypeTag extends WikiTagBase {
             if( m_type.equals( "attachment" ) && page instanceof PageAttachment ) {
                 return EVAL_BODY_INCLUDE;
             }
-            if( m_type.equals( "page" ) && !( page instanceof WikiPage ) ) {
+            if( m_type.equals( "page" ) && ( page instanceof WikiPage ) ) {
                 return EVAL_BODY_INCLUDE;
             }
             if( m_type.equals( "weblogentry" ) && !( page instanceof PageAttachment ) && page.getName().contains( "_blogentry_" ) ) {
@@ -65,4 +65,5 @@ public class PageTypeTag extends WikiTagBase {
 
         return SKIP_BODY;
     }
+
 }

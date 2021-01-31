@@ -26,7 +26,7 @@
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine"%>
 <%@ page import="org.apache.wiki.api.core.Session"%>
-<%@ page import="org.apache.wiki.api.spi.Wiki"%>
+<%@ page import="org.apache.wiki.Wiki"%>
 <%@ page import="org.apache.wiki.auth.*"%>
 <%@ page import="org.apache.wiki.auth.user.*"%>
 <%@ page import="org.apache.wiki.auth.user0.*" %>

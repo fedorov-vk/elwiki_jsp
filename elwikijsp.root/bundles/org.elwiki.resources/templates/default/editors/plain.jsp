@@ -25,6 +25,8 @@
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.tags.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
+<%@ page import="org.elwiki_data.*" %>
+<%@ page import="org.apache.wiki.api.ui.EditorManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
