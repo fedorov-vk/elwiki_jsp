@@ -1117,7 +1117,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
             if( name.length() > 0 && val.length() > 0 ) {
                 val = m_engine.getManager( VariableManager.class ).expandVariables( m_context, val );
-                m_context.getPage().setAttribute( name, val );
+                m_context.getPage().getAttributes().put( name, val );
             }
         } catch( final Exception e ) {
             final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );

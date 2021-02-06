@@ -218,9 +218,9 @@ public class AtomAPIServlet extends HttpServlet {
         for( final WikiPage p : pages ) {
             //  List only weblogs
             //  FIXME: Unfortunately, a weblog is not known until it has een executed once, because plugins are off during the initial startup phase.
-            log.debug( p.getName() + " = " + p.getAttribute( WeblogPlugin.ATTR_ISWEBLOG ) );
+            log.debug( p.getName() + " = " + p.getAttributes().get( WeblogPlugin.ATTR_ISWEBLOG ) );
 
-            if( !( "true".equals( p.getAttribute( WeblogPlugin.ATTR_ISWEBLOG ) ) ) ) {
+            if( !( "true".equals( p.getAttributes().get( WeblogPlugin.ATTR_ISWEBLOG ) ) ) ) {
                 continue;
             }
 

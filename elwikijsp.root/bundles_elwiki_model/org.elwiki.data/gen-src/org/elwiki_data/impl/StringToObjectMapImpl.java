@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
-
 import org.elwiki_data.Elwiki_dataPackage;
 
 /**
