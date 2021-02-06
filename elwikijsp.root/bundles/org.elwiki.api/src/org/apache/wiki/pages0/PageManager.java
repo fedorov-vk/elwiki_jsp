@@ -94,7 +94,7 @@ public interface PageManager extends WikiEventListener {
      *  @since 2.1.13, moved to PageManager on 2.11.0.
      */
     default String getPureText( final WikiPage page ) {
-        return ":FVK:"; //:FVK: getPureText( page.getName(), page.getVersion() );
+        return getPureText( page.getName(), page.getVersion() );
     }
 
     /**

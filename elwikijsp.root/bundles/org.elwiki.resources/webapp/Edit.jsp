@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ Edit.jsp -->
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.elwiki_data.*" %>
@@ -153,7 +153,7 @@
         //
         //  Set author information and other metadata
         //
-        // :FVK: modifiedPage.setAuthor( user );
+        //:FVK: modifiedPage.setAuthor( user );
 
         if( changenote == null ) {
             changenote = (String) session.getAttribute("changenote");
@@ -264,3 +264,4 @@
 
     String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
+<!-- ~~ END ~~ Edit.jsp -->

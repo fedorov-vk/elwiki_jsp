@@ -39,10 +39,10 @@
 BOOTSTRAP, IE compatibility / http://getbootstrap.com/getting-started/#support-ie-compatibility-modes
 --%>
 <meta charset="<wiki:ContentEncoding />">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- :FVK: <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />  -->
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<%--commonheader.jsp
+<%-- :FVK:? commonheader.jsp
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 --%>
 

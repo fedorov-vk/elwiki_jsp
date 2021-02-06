@@ -64,7 +64,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="webLog" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
-        eType="#//StringToObjectMap" containment="true"/>
+        eType="#//StringToObjectMap" containment="true" eKeys="#//StringToObjectMap/key"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"

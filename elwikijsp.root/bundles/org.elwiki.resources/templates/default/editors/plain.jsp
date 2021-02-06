@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ plain.jsp -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
@@ -358,3 +358,4 @@
   </div><%-- end of .snipe --%>
 
 </form>
+<!-- ~~ END ~~ plain.jsp -->

@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ EditContent.jsp -->
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki"  %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -54,3 +54,4 @@
   <wiki:Editor />
 
 </div>
+<!-- ~~ END ~~ EditContent.jsp -->

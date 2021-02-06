@@ -62,5 +62,53 @@
             class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/templates/default">
       </servlet>
    </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/attach/*"
+            class="org.apache.wiki.ui.WikiServletFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/atom/*"
+            class="org.apache.wiki.ui.WikiServletFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/RPCU/"
+            class="org.apache.wiki.ui.WikiServletFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/RPC2/"
+            class="org.apache.wiki.ui.WikiServletFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/wiki/*"
+            class="org.apache.wiki.ui.WikiJSPFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="*.jsp"
+            class="org.apache.wiki.ui.WikiJSPFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
 
 </plugin>

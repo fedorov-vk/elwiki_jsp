@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ EditTemplate.jsp -->
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
@@ -61,3 +61,4 @@
 
 </body>
 </html>
+<!-- ~~ END ~~ EditTemplate.jsp -->
