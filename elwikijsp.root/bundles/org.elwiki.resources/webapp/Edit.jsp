@@ -35,7 +35,7 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
-<%@ page errorPage="/Error.jsp" %>
+<@ @ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
 <%!
@@ -53,7 +53,7 @@
 %>
 
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_EDIT.getRequestContext() );
     if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) {
@@ -113,155 +113,142 @@
     log.debug("preview="+preview+", ok="+ok);
 
     if( ok != null || captcha != null ) {
-        log.info("Saving page "+pagereq+". User="+user+", host="+HttpUtil.getRemoteAddress(request) );
+    	log.info("Saving page "+pagereq+". User="+user+", host="+HttpUtil.getRemoteAddress(request) );
 
         //
         //  Check for session expiry
         //
-
-        if( !SpamFilter.checkHash(wikiContext,pageContext) ) {
+        if( !SpamFilter.checkHash(wikiContext, pageContext) ) {
             return;
         }
 
-        WikiPage modifiedPage = (WikiPage)wikiContext.getPage().clone();
-
-        //  FIXME: I am not entirely sure if the JSP page is the
-        //  best place to check for concurrent changes.  It certainly
-        //  is the best place to show errors, though.
-
-        String h = SpamFilter.getSpamHash( latestversion, request );
-
-        if( !h.equals(spamhash) ) {
-            //
-            // Someone changed the page while we were editing it!
-            //
-
-            log.info("Page changed, warning user.");
-
-            session.setAttribute( EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext) );
-            response.sendRedirect( wiki.getURL( ContextEnum.PAGE_CONFLICT.getRequestContext(), pagereq, null ) );
-            return;
-        }
-
-        //
-        //  We expire ALL locks at this moment, simply because someone has already broken it.
-        //
-        PageLock lock = wiki.getManager( PageManager.class ).getCurrentLock( wikipage );
-        wiki.getManager( PageManager.class ).unlockPage( lock );
-        session.removeAttribute( "lock-"+pagereq );
-
-        //
-        //  Set author information and other metadata
-        //
-        //:FVK: modifiedPage.setAuthor( user );
-
-        if( changenote == null ) {
-            changenote = (String) session.getAttribute("changenote");
-        }
-
-        session.removeAttribute("changenote");
-
-        /* :FVK:
-        if( changenote != null && changenote.length() > 0 ) {
-            modifiedPage.setAttribute( WikiPage.CHANGENOTE, changenote );
-        } else {
-            modifiedPage.removeAttribute( WikiPage.CHANGENOTE );
-        }
-        */
-
-        //
-        //  Figure out the actual page text
-        //
-        if( text == null ) {
-            throw new ServletException( "No parameter text set!" );
-        }
-
-        //
-        //  If this is an append, then we just append it to the page.
-        //  If it is a full edit, then we will replace the previous contents.
-        //
+        PageManager pageManager = wiki.getManager(PageManager.class);
         try {
-            wikiContext.setPage( modifiedPage );
+    		// FIXME: I am not entirely sure if the JSP page is the
+    		//  best place to check for concurrent changes.
+    		// It certainly is the best place to show errors, though.
 
-            if( captcha != null ) {
-                wikiContext.setVariable( "captcha", Boolean.TRUE );
-                session.removeAttribute( "captcha" );
-            }
+    		String h = SpamFilter.getSpamHash(latestversion, request);
 
-            if( append != null ) {
-                StringBuffer pageText = new StringBuffer(wiki.getManager( PageManager.class ).getText( pagereq ));
-                pageText.append( text );
-                wiki.getManager( PageManager.class ).saveText( wikiContext, pageText.toString() );
-            } else {
-                wiki.getManager( PageManager.class ).saveText( wikiContext, text );
-            }
-        } catch( DecisionRequiredException ex ) {
-        	String redirect = wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),"ApprovalRequiredForPageChanges");
-            response.sendRedirect( redirect );
-            return;
-        } catch( RedirectException ex ) {
-            // FIXME: Cut-n-paste code.
-            wikiContext.getWikiSession().addMessage( ex.getMessage() ); // FIXME: should work, but doesn't
-            session.setAttribute( "message", ex.getMessage() );
-            session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
-            session.setAttribute("author",user);
-            session.setAttribute("link",link != null ? link : "" );
-            if( htmlText != null ) session.setAttribute( EditorManager.REQ_EDITEDTEXT, text );
+    		if (!h.equals(spamhash)) {
+    	    	//
+    	    	// Someone changed the page while we were editing it!
+    	    	//
 
-            session.setAttribute("changenote", changenote != null ? changenote : "" );
-            session.setAttribute(SpamFilter.getHashFieldName(request), spamhash);
-            response.sendRedirect( ex.getRedirect() );
-            return;
+		    	log.info("Page changed, warning user.");
+
+		    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+		    	response.sendRedirect(wiki.getURL(ContextEnum.PAGE_CONFLICT.getRequestContext(), pagereq, null));
+		    	return;
+    		}
+
+    		//
+    		// We expire ALL locks at this moment, simply because someone has already broken it.
+    		//
+    		PageLock lock = pageManager.getCurrentLock(wikipage);
+    		pageManager.unlockPage(lock);
+    		session.removeAttribute("lock-" + pagereq);
+
+    		if (changenote == null) {
+    	    	changenote = (String) session.getAttribute("changenote"); // TODO: :FVK: replace string.
+    		}
+    		session.removeAttribute("changenote");
+
+    		//
+    		// Figure out the actual page text.
+    		//
+    		if (text == null) {
+    	    	throw new ServletException("No parameter text set!");
+    		}
+
+    		//
+    		// If this is an append, then we just append it to the page.
+    		// If it is a full edit, then we will replace the previous contents.
+    		//
+    		try {
+    	    	if (captcha != null) {
+    	    		wikiContext.setVariable("captcha", Boolean.TRUE); // TODO: :FVK: replace string.
+    	    		session.removeAttribute("captcha");
+    	    	}
+
+    	    	if (append != null) {
+    	    		StringBuffer pageText = new StringBuffer(pageManager.getText(pagereq));
+    	    		pageText.append(text);
+    	    		pageManager.saveText(wikiContext, pageText.toString(), user, changenote);
+    	    	} else {
+    	    		pageManager.saveText(wikiContext, text, user, changenote);
+    	    	}
+    		} catch (DecisionRequiredException ex) {
+    	    	String redirect = wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
+    	    			"ApprovalRequiredForPageChanges");
+    	    	response.sendRedirect(redirect);
+    	    	return;
+    		} catch (RedirectException ex) {
+    	    	// FIXME: Cut-n-paste code.
+    	    	wikiContext.getWikiSession().addMessage(ex.getMessage()); // FIXME: should work, but doesn't
+    	    	session.setAttribute("message", ex.getMessage());
+    	    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+    	    	session.setAttribute("author", user);
+    	    	session.setAttribute("link", link != null ? link : "");
+    	    	if (htmlText != null)
+    	    		session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
+
+    	    	session.setAttribute("changenote", changenote != null ? changenote : "");
+    	    	session.setAttribute(SpamFilter.getHashFieldName(request), spamhash);
+    	    	response.sendRedirect(ex.getRedirect());
+    	    	return;
+    		}
+
+    		response.sendRedirect(wikiContext.getViewURL(pagereq));
+    		return;
+        } finally {
         }
+	} else if (preview != null) {
+		log.debug("Previewing " + pagereq);
+		session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+		session.setAttribute("author", user);
+		session.setAttribute("link", link != null ? link : "");
 
-        response.sendRedirect(wikiContext.getViewURL(pagereq));
-        return;
-    } else if( preview != null ) {
-        log.debug("Previewing "+pagereq);
-        session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
-        session.setAttribute("author",user);
-        session.setAttribute("link",link != null ? link : "" );
+		if (htmlText != null) {
+			session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
+		}
 
-        if( htmlText != null ) {
-            session.setAttribute( EditorManager.REQ_EDITEDTEXT, text );
-        }
+		session.setAttribute("changenote", changenote != null ? changenote : "");
+		response.sendRedirect(wiki.getURL(ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, null));
+		return;
+	} else if (cancel != null) {
+		log.debug("Cancelled editing " + pagereq);
+		PageLock lock = (PageLock) session.getAttribute("lock-" + pagereq);
+		if (lock != null) {
+			wiki.getManager(PageManager.class).unlockPage(lock);
+			session.removeAttribute("lock-" + pagereq);
+		}
+		response.sendRedirect(wikiContext.getViewURL(pagereq));
+		return;
+	}
 
-        session.setAttribute("changenote", changenote != null ? changenote : "" );
-        response.sendRedirect( wiki.getURL( ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, null ) );
-        return;
-    } else if( cancel != null ) {
-        log.debug("Cancelled editing "+pagereq);
-        PageLock lock = (PageLock) session.getAttribute( "lock-"+pagereq );
-        if( lock != null ) {
-            wiki.getManager( PageManager.class ).unlockPage( lock );
-            session.removeAttribute( "lock-"+pagereq );
-        }
-        response.sendRedirect( wikiContext.getViewURL(pagereq) );
-        return;
-    }
+	session.removeAttribute(EditorManager.REQ_EDITEDTEXT);
 
-    session.removeAttribute( EditorManager.REQ_EDITEDTEXT );
+	log.info("Editing page " + pagereq + ". User=" + user + ", host=" + HttpUtil.getRemoteAddress(request));
 
-    log.info("Editing page "+pagereq+". User="+user+", host="+HttpUtil.getRemoteAddress(request) );
+	//
+	//  Determine and store the date the latest version was changed.  Since
+	//  the newest version is the one that is changed, we need to track
+	//  that instead of the edited version.
+	//
+	String lastchange = SpamFilter.getSpamHash(latestversion, request);
 
+	pageContext.setAttribute("lastchange", lastchange, PageContext.REQUEST_SCOPE);
 
-    //
-    //  Determine and store the date the latest version was changed.  Since
-    //  the newest version is the one that is changed, we need to track
-    //  that instead of the edited version.
-    //
-    String lastchange = SpamFilter.getSpamHash( latestversion, request );
+	//
+	//  Attempt to lock the page.
+	//
+	PageLock lock = wiki.getManager(PageManager.class).lockPage(wikipage, user);
+	if (lock != null) {
+		session.setAttribute("lock-" + pagereq, lock);
+	}
 
-    pageContext.setAttribute( "lastchange", lastchange, PageContext.REQUEST_SCOPE );
-
-    //
-    //  Attempt to lock the page.
-    //
-    PageLock lock = wiki.getManager( PageManager.class ).lockPage( wikipage, user );
-    if( lock != null ) {
-        session.setAttribute( "lock-"+pagereq, lock );
-    }
-
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "EditTemplate.jsp" );
+	String contentPage = wiki.getManager(TemplateManager.class).findJSP(pageContext, wikiContext.getTemplate(),
+	"EditTemplate.jsp");
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ Edit.jsp -->

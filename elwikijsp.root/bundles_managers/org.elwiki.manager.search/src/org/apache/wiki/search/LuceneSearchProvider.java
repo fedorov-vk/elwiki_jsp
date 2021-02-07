@@ -401,8 +401,8 @@ public class LuceneSearchProvider implements SearchProvider {
         }
 
         // also index page keywords, if available
-        if( page.getAttributes().get( "keywords" ) != null ) {
-            field = new Field( LUCENE_PAGE_KEYWORDS, page.getAttributes().get( "keywords" ).toString(), TextField.TYPE_STORED );
+        if( page.getAttribute("keywords") != null ) {
+            field = new Field( LUCENE_PAGE_KEYWORDS, page.getAttribute("keywords").toString(), TextField.TYPE_STORED );
             doc.add( field );
         }
         writer.addDocument(doc);

@@ -383,7 +383,7 @@ public class SpamFilter extends BasePageFilter {
                     compiledpatterns.add( m_compiler.compile( pattern ) );
                 } catch( final MalformedPatternException e ) {
                     log.debug( "Malformed spam filter pattern " + pattern );
-                    source.getAttributes().map().put("error", "Malformed spam filter pattern " + pattern); // :FVK: workaround - атрибут прямого наименования.
+                    source.setAttribute("error", "Malformed spam filter pattern " + pattern); // :FVK: workaround - атрибут прямого наименования.
                 }
             }
         }

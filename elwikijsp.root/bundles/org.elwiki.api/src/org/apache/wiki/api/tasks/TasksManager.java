@@ -50,13 +50,15 @@ public interface TasksManager {
      */
     Step buildPreSaveWikiPageTask( Context context, String proposedText );
     
-    /**
-     * Builds a save WikiPage task.
-     *
-     * @param context associated wiki context.
+	/**
+	 * Builds a save WikiPage task.
+	 * 
+	 * @param context    associated wiki context.
+	 * @param author     author of changing text.
+	 * @param changenote note of changing text.
      * @return a save WikiPage task.
-     */
-    Step buildSaveWikiPageTask( Context context );
+	 */
+	Step buildSaveWikiPageTask(Context context, String author, String changenote);
     
     /**
      * Builds a save user profile task.
@@ -66,5 +68,5 @@ public interface TasksManager {
      * @return a save user profile task.
      */
     Step buildSaveUserProfileTask( Engine engine, Locale loc );
-    
+
 }

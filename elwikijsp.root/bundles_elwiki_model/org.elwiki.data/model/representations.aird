@@ -8,7 +8,7 @@
     <semanticResources>http://www.eclipse.org/emf/2002/GenModel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="a373eb77-4389-4a78-93c3-dd593b0ba89f">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="40c4cf34-1b14-4b3d-b709-242ac86bfd80">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -108,6 +108,14 @@
             <children xmi:type="notation:Node" xmi:id="_no5dMM9DEeqsQYHZRk283A" type="3010" element="_nnnq0s9DEeqsQYHZRk283A">
               <styles xmi:type="notation:FontStyle" xmi:id="_no5dMc9DEeqsQYHZRk283A" fontName="Ubuntu" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_no5dMs9DEeqsQYHZRk283A"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_ufX34Gk1Eeu_v61mTuLrSw" type="3010" element="_ueREoGk1Eeu_v61mTuLrSw">
+              <styles xmi:type="notation:FontStyle" xmi:id="_ufX34Wk1Eeu_v61mTuLrSw" fontName="Ubuntu" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_ufX34mk1Eeu_v61mTuLrSw"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_uCVhIGk2Eeu_v61mTuLrSw" type="3010" element="_uBvrQGk2Eeu_v61mTuLrSw">
+              <styles xmi:type="notation:FontStyle" xmi:id="_uCVhIWk2Eeu_v61mTuLrSw" fontName="Ubuntu" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_uCVhImk2Eeu_v61mTuLrSw"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_aUDTcW-QEeid6OKUsQuIXA"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_aUDTcm-QEeid6OKUsQuIXA"/>
@@ -697,6 +705,25 @@
         <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getVersion"/>
         <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getVersion"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_nnquIM9DEeqsQYHZRk283A" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_ueREoGk1Eeu_v61mTuLrSw" name="getAttribute(name EString) : EJavaObject" tooltipText="getAttribute(name) : EJavaObject">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getAttribute"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getAttribute"/>
+        <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//WikiPage/getAttribute/name"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_ueTg4Gk1Eeu_v61mTuLrSw" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_uBvrQGk2Eeu_v61mTuLrSw" name="setAttribute(name EString, value EJavaObject)" tooltipText="setAttribute(name, value)">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/setAttribute"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/setAttribute"/>
+        <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//WikiPage/setAttribute/name"/>
+        <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//WikiPage/setAttribute/value"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_uBwSUGk2Eeu_v61mTuLrSw" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>

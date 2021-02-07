@@ -9,6 +9,8 @@ import java.lang.Object;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.common.util.EMap;
@@ -386,9 +388,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public Object clone() {
-		Object o = new Object(); // :FVK:
-		return o;
-		
+		Assert.isTrue(false, ":FVK: Missed code!"); //:FVK: - удалить метод.
+		return null;
 	}
 
 	/**
@@ -443,6 +444,26 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public Object getAttribute(final String name) {
+		return getAttributes().get(name);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAttribute(final String name, final Object value) {
+		getAttributes().put( name, value );
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Comparable.class) {
 			switch (baseOperationID) {
@@ -479,6 +500,11 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return getLastContent();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_VERSION:
 				return getVersion();
+			case Elwiki_dataPackage.WIKI_PAGE___GET_ATTRIBUTE__STRING:
+				return getAttribute((String)arguments.get(0));
+			case Elwiki_dataPackage.WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT:
+				setAttribute((String)arguments.get(0), arguments.get(1));
+				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -117,7 +117,7 @@ public class DefaultPageRenamer implements PageRenamer {
         PageContent content = toPage.getLastContent();
         content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
         content.setAuthor( context.getCurrentUser().getName() );
-        engine.getManager( PageManager.class ).putPageText( toPage, engine.getManager( PageManager.class ).getPureText( toPage ) );
+        engine.getManager( PageManager.class ).putPageText( toPage, engine.getManager( PageManager.class ).getPureText( toPage ), "author", "changenote" ); // FIXME: здесь надо не текст, а просто имя поменть.
 
         //  Update the references
         engine.getManager( ReferenceManager.class ).pageRemoved( fromPage );
@@ -195,7 +195,7 @@ public class DefaultPageRenamer implements PageRenamer {
             	content.setChangeNote(fromPage.getName()+" ==> "+toPage.getName()); // :FVK: workaround - previous change note is removed.
             	content.setAuthor(context.getCurrentUser().getName());
                 try {
-                    engine.getManager( PageManager.class ).putPageText( p, newText );
+                    engine.getManager( PageManager.class ).putPageText( p, newText, "author", "changenote" ); // FIXME: здесь надо не текст, а что-то задать.
                     engine.getManager( ReferenceManager.class ).updateReferences( p );
                 } catch( final ProviderException e ) {
                     //  We fail with an error, but we will try to continue to rename other referrers as well.

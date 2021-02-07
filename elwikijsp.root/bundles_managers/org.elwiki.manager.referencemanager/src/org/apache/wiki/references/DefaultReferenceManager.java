@@ -360,7 +360,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
                 for( int i = 0; i < entries; i++ ) {
                     final String key   = in.readUTF();
                     final Object value = in.readObject();
-                    p.getAttributes().put( key, value );
+                    p.setAttribute(key, value);
                     log.debug("   attr: "+key+"="+value);
                 }
 

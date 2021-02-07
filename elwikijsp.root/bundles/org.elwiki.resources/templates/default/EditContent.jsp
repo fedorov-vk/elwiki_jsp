@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -17,11 +18,11 @@
     under the License.
 --%>
 <!-- ~~ START ~~ EditContent.jsp -->
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki"  %>
 <%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki"  %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 

@@ -126,7 +126,6 @@ public class AtomAPIServlet extends HttpServlet {
             final String pageName = plugin.getNewEntryPage( m_engine, blogid );
             final String username = author.getName();
             final WikiPage entryPage = Wiki.contents().page( m_engine, pageName );
-          //:FVK: entryPage.setAuthor( username );
 
             final Context context = Wiki.context().create( m_engine, request, entryPage );
             final StringBuilder text = new StringBuilder();
@@ -135,7 +134,7 @@ public class AtomAPIServlet extends HttpServlet {
                 .append( "\n\n" )
                 .append( content.getBody() );
             log.debug( "Writing entry: " + text );
-            m_engine.getManager( PageManager.class ).saveText( context, text.toString() );
+            m_engine.getManager( PageManager.class ).saveText( context, text.toString(), username, "" );
         } catch( final FeedMarshallException e ) {
             log.error("Received faulty Atom entry",e);
             throw new ServletException("Faulty Atom entry",e);
@@ -218,9 +217,9 @@ public class AtomAPIServlet extends HttpServlet {
         for( final WikiPage p : pages ) {
             //  List only weblogs
             //  FIXME: Unfortunately, a weblog is not known until it has een executed once, because plugins are off during the initial startup phase.
-            log.debug( p.getName() + " = " + p.getAttributes().get( WeblogPlugin.ATTR_ISWEBLOG ) );
+            log.debug( p.getName() + " = " + p.getAttribute(WeblogPlugin.ATTR_ISWEBLOG) );
 
-            if( !( "true".equals( p.getAttributes().get( WeblogPlugin.ATTR_ISWEBLOG ) ) ) ) {
+            if( !( "true".equals( p.getAttribute(WeblogPlugin.ATTR_ISWEBLOG) ) ) ) {
                 continue;
             }
 

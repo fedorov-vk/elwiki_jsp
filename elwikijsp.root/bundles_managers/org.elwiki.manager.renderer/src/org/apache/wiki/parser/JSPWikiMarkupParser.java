@@ -56,7 +56,6 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -78,7 +77,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -1117,7 +1115,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
             if( name.length() > 0 && val.length() > 0 ) {
                 val = m_engine.getManager( VariableManager.class ).expandVariables( m_context, val );
-                m_context.getPage().getAttributes().put( name, val );
+                m_context.getPage().setAttribute(name, val );
             }
         } catch( final Exception e ) {
             final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );

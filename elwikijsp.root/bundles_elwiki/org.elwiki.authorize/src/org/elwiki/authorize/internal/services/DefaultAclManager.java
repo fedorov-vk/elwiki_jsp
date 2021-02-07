@@ -225,7 +225,7 @@ public class DefaultAclManager implements AclManager {
 		String cleansedText = matcher.replaceAll("");
 		String newText = DefaultAclManager.printAcl(null/*:FVK: page.getAcl()*/) + cleansedText;
 		try {
-			pageManager.putPageText(page, newText);
+			pageManager.putPageText(page, newText, "author", "changenote"); // FIXME: здесь надо не текст, а ACL задать.
 		} catch (ProviderException e) {
 			throw new WikiSecurityException("Could not set Acl. Reason: ProviderExcpetion " + e.getMessage(), e);
 		}

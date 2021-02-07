@@ -43,6 +43,13 @@
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastContent"
           body="EList&lt;PageContent> pageContents = getPagecontents();&#xA;return (pageContents.isEmpty())? null :&#xA;&#x9;&#x9;pageContents.get(pageContents.size() - 1);"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getVersion" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAttribute" body="return getAttributes().get(name);">
+        <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/getAttribute/name"/>
+      </genOperations>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/setAttribute" body="getAttributes().put( name, value );">
+        <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/name"/>
+        <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/value"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>

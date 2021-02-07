@@ -220,7 +220,7 @@ public class MetaWeblogHandler implements WikiRPCHandler {
 
             log.debug("Writing entry: "+text);
 
-            engine.getManager( PageManager.class ).saveText( context, text.toString() );
+            engine.getManager( PageManager.class ).saveText( context, text.toString(), username, "" );
         } catch( final Exception e ) {
             log.error("Failed to create weblog entry",e);
             throw new XmlRpcException( 0, "Failed to create weblog entry: "+e.getMessage() );

@@ -496,4 +496,26 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 */
 	int getVersion();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns required attribute by name.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	Object getAttribute(String name);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Save given attribute by name.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	void setAttribute(String name, Object value);
+
 } // WikiPage

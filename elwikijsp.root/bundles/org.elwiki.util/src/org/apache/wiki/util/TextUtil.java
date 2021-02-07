@@ -311,7 +311,9 @@ public final class TextUtil {
      *  @return The parsed value (or defvalue).
      */
     public static int parseIntParameter( final String value, final int defvalue ) {
-        try {
+		if (value == null)
+			return defvalue;
+    	try {
             return Integer.parseInt( value.trim() );
         } catch( final Exception e ) {}
 

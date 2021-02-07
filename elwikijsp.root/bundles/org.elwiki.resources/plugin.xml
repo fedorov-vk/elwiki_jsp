@@ -70,6 +70,8 @@
             load-on-startup="true">
       </filter>
    </extension>
+   <!-- filters ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
+<!--:FVK:
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -94,6 +96,7 @@
             load-on-startup="true">
       </filter>
    </extension>
+-->
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
