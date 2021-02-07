@@ -60,6 +60,7 @@
     <genClasses ecoreClass="elwiki_data.ecore#//PageContent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageContent/content"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageContent/wikipage"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//PageContent/getLength" body="return getContent().length();"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PageAttachment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/id"/>

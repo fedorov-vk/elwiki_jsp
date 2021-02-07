@@ -176,26 +176,25 @@
         <th scope="col"><fmt:message key="info.changenote"/></th>
       </tr>
 
-      <wiki:HistoryIterator id="currentPage">
-      <c:if test="${ first == -1 || ((currentPage.version > first ) && (currentPage.version <= last )) }">
+      <wiki:HistoryIterator id="pageContent">
+      <c:if test="${ first == -1 || ((pageContent.version > first ) && (pageContent.version <= last )) }">
       <tr>
         <td>
-          <wiki:Link version="${currentPage.version}">
-            <wiki:PageVersion/>
-          </wiki:Link>
+          <wiki:Link version="${pageContent.version}">${pageContent.version}</wiki:Link>
         </td>
 
-        <td class="nowrap" data-sortvalue="${currentPage.lastModified.time}">
-        <fmt:formatDate value="${currentPage.lastModified}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
+        <td class="nowrap" data-sortvalue="${pageContent.lastModify.time}">
+<%-- TODO: :FVK: - задать формат вывода. При быстром исследовании - возможно строки pattern, timeZone ==null.
+        <fmt:formatDate value="${pageContent.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
+ --%>
+        <fmt:formatDate value="${pageContent.lastModify}" />
         </td>
 
-        <c:set var="pageSize"><wiki:PageSize /></c:set>
+        <c:set var="pageSize">"${pageContent.length} bytes"</c:set>
         <td class="nowrap" title="${pageSize} bytes">
-          <%--<fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>--%>
-          <%-- :FVK: здесь ошибка какая-то JSP...
-          < %= org.apache.commons.io.FileUtils.byteCountToDisplaySize( currentPage.getLastContent().getContent().length() ) % >
-          --%>
-          :FVK: :FOO:
+          <%-- <fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/> --%>
+          <%-- org.apache.commons.io.FileUtils.byteCountToDisplaySize( pageContent.getLastContent().getContent().length() ) --%>
+          ${pageContent.length} bytes
         </td>
         <td><wiki:Author /></td>
 
@@ -209,8 +208,7 @@
           </wiki:CheckVersion>
         </td>
 
-        <c:set var="changenote" value="<%= (String)currentPage.getLastContent().getChangeNote() %>" />
-        <td class="changenote"><c:out value="${changenote}"/></td>
+        <td class="changenote">${pageContent.changeNote}</td>
 
       </tr>
       </c:if>

@@ -90,7 +90,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextAttachId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageContent" eSuperTypes="#//IModifyInfo">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+    <eOperations name="getLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="return getContent().length();"/>
+        <details key="documentation" value="Returns length of content."/>
+      </eAnnotations>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/CDO/DBStore">
         <details key="columnType" value="VARCHAR"/>
         <details key="columnLength" value="10000000"/>

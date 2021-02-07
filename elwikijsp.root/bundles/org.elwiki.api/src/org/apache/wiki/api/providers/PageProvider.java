@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.api.providers;
 
+import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
@@ -121,7 +122,7 @@ public interface PageProvider extends WikiProvider {
      *  @return A collection of WikiPages.
      *  @throws ProviderException If something goes wrong.
      */
-    List< WikiPage > getVersionHistory( String page ) throws ProviderException;
+	List<PageContent> getVersionHistory(WikiPage page) throws ProviderException;
 
     /**
      *  Gets a specific version out of the repository.

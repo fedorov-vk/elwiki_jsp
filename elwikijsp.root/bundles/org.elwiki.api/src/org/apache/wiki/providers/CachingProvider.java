@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -439,23 +440,26 @@ public class CachingProvider implements PageProvider {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List< WikiPage > getVersionHistory( final String pageName) throws ProviderException {
-        final List< WikiPage > history;
-        if( pageName == null ) {
-            return null;
-        }
-        final Element element = m_historyCache.get( pageName );
-        if( element != null ) {
-            m_historyCacheHits++;
-            history = ( List< WikiPage > )element.getObjectValue();
-        } else {
-            history = m_provider.getVersionHistory( pageName );
-            m_historyCache.put( new Element( pageName, history ) );
-            m_historyCacheMisses++;
-        }
+	public List<PageContent> getVersionHistory(WikiPage page) throws ProviderException {
+		/* TODO: ...
+		final List<PageContent> history;
+		if (pageName == null) {
+			return null;
+		}
+		final Element element = m_historyCache.get(pageName);
+		if (element != null) {
+			m_historyCacheHits++;
+			history = (List<WikiPage>) element.getObjectValue();
+		} else {
+			history = m_provider.getVersionHistory(pageName);
+			m_historyCache.put(new Element(pageName, history));
+			m_historyCacheMisses++;
+		}
 
-        return history;
-    }
+		return history;
+		 */
+		return null;
+	}
 
     /**
      * Gets the provider class name, and cache statistics (misscount and hitcount of page cache and history cache).

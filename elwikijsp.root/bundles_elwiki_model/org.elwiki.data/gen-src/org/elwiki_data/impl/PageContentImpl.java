@@ -2,7 +2,9 @@
  */
 package org.elwiki_data.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
@@ -176,6 +178,30 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	@Override
 	public void setWikipage(WikiPage newWikipage) {
 		eSet(Elwiki_dataPackage.Literals.PAGE_CONTENT__WIKIPAGE, newWikipage);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Integer getLength() {
+		return getContent().length();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case Elwiki_dataPackage.PAGE_CONTENT___GET_LENGTH:
+				return getLength();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //PageContentImpl

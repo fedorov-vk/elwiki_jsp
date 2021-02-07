@@ -568,6 +568,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EOperation getPageContent__GetLength() {
+		return pageContentEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPageAttachment() {
 		return pageAttachmentEClass;
 	}
@@ -997,6 +1007,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		pageContentEClass = createEClass(PAGE_CONTENT);
 		createEAttribute(pageContentEClass, PAGE_CONTENT__CONTENT);
 		createEReference(pageContentEClass, PAGE_CONTENT__WIKIPAGE);
+		createEOperation(pageContentEClass, PAGE_CONTENT___GET_LENGTH);
 
 		pageAttachmentEClass = createEClass(PAGE_ATTACHMENT);
 		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__ID);
@@ -1129,8 +1140,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEAttribute(getPagesStore_NextAttachId(), ecorePackage.getEString(), "nextAttachId", null, 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pageContentEClass, PageContent.class, "PageContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPageContent_Content(), ecorePackage.getEString(), "content", null, 0, 1, PageContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPageContent_Content(), ecorePackage.getEString(), "content", "", 0, 1, PageContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageContent_Wikipage(), this.getWikiPage(), this.getWikiPage_Pagecontents(), "wikipage", null, 0, 1, PageContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getPageContent__GetLength(), ecorePackage.getEIntegerObject(), "getLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(pageAttachmentEClass, PageAttachment.class, "PageAttachment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPageAttachment_Id(), ecorePackage.getEString(), "id", "", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

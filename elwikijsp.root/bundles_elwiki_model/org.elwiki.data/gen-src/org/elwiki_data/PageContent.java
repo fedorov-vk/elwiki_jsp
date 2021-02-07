@@ -23,6 +23,7 @@ package org.elwiki_data;
 public interface PageContent extends IModifyInfo {
 	/**
 	 * Returns the value of the '<em><b>Content</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Content</em>' attribute isn't clear,
@@ -32,7 +33,8 @@ public interface PageContent extends IModifyInfo {
 	 * @return the value of the '<em>Content</em>' attribute.
 	 * @see #setContent(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageContent_Content()
-	 * @model annotation="http://www.eclipse.org/CDO/DBStore columnType='VARCHAR' columnLength='10000000'"
+	 * @model default=""
+	 *        annotation="http://www.eclipse.org/CDO/DBStore columnType='VARCHAR' columnLength='10000000'"
 	 * @generated
 	 */
 	String getContent();
@@ -74,5 +76,16 @@ public interface PageContent extends IModifyInfo {
 	 * @generated
 	 */
 	void setWikipage(WikiPage value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns length of content.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	Integer getLength();
 
 } // PageContent
