@@ -240,8 +240,8 @@ public class DefaultPageManager implements PageManager, Initializable {
         return TextUtil.replaceEntities( result );
     }
 
-    @Override
-    public void saveText( final Context context, final String text ) throws WikiException {
+	@Override
+    public void saveText( final Context context, final String text, String author, String changenote ) throws WikiException {
         // Check if page data actually changed; bail if not
         final WikiPage page = context.getPage();
         final String oldText = getPureText( page );
@@ -264,7 +264,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         final WorkflowBuilder builder = WorkflowBuilder.getBuilder( m_engine );
         final Principal submitter = context.getCurrentUser();
         final Step prepTask = m_engine.getManager( TasksManager.class ).buildPreSaveWikiPageTask( context, proposedText );
-        final Step completionTask = m_engine.getManager( TasksManager.class ).buildSaveWikiPageTask( context );
+        final Step completionTask = m_engine.getManager( TasksManager.class ).buildSaveWikiPageTask( context, author, changenote );
         final String diffText = m_engine.getManager( DifferenceManager.class ).makeDiff( context, oldText, proposedText );
         final boolean isAuthenticated = context.getWikiSession().isAuthenticated();
         final Fact[] facts = new Fact[ 5 ];
@@ -300,10 +300,10 @@ public class DefaultPageManager implements PageManager, Initializable {
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.pages0.PageManager#putPageText(org.apache.wiki.api.core.WikiPage, java.lang.String)
+     * @see org.apache.wiki.pages0.PageManager#putPageText(org.apache.wiki.api.core.WikiPage, java.lang.String, String, String)
      */
     @Override
-    public void putPageText( final WikiPage page, final String content ) throws ProviderException {
+    public void putPageText( final WikiPage page, final String content, String author, String changenote ) throws ProviderException {
         if (page == null || page.getName() == null || page.getName().length() == 0) {
             throw new ProviderException("Illegal page name");
         }
@@ -922,5 +922,4 @@ public class DefaultPageManager implements PageManager, Initializable {
 		page = this.m_provider.getPageById(pageId);
 		return page;
 	}
-
 }

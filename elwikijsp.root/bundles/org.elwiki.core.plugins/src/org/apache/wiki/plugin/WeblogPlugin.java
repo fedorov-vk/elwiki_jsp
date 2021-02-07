@@ -229,7 +229,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         //
         //  Mark this to be a weblog
         //
-        context.getPage().getAttributes().put(ATTR_ISWEBLOG, "true");
+        context.getPage().setAttribute(ATTR_ISWEBLOG, "true");
 
         //
         //  We make a wild guess here that nobody can do millisecond accuracy here.
@@ -446,7 +446,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      */
     @Override
     public void executeParser( final PluginElement element, final Context context, final Map< String, String > params ) {
-        context.getPage().getAttributes().put( ATTR_ISWEBLOG, "true" );
+        context.getPage().setAttribute(ATTR_ISWEBLOG, "true");
     }
 
 }

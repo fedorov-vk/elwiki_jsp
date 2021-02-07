@@ -151,7 +151,7 @@ public interface PageManager extends WikiEventListener {
      *  Individual PageFilters, such as the {@link org.apache.wiki.filters.SpamFilter} may also throw a
      *  {@link org.apache.wiki.api.exceptions.RedirectException}.
      */
-    void saveText( Context context, String text ) throws WikiException;
+	void saveText(Context context, String text, String author, String changenote) throws WikiException;
 
     /**
      * Puts the page text into the repository.  Note that this method does NOT update
@@ -159,9 +159,11 @@ public interface PageManager extends WikiEventListener {
      *
      * @param page    Page to save
      * @param content Wikimarkup to save
+     * @param author TODO:
+     * @param changenote TODO:
      * @throws ProviderException If something goes wrong in the saving phase
      */
-    void putPageText( WikiPage page, String content ) throws ProviderException;
+    void putPageText( WikiPage page, String content, String author, String changenote ) throws ProviderException;
 
     /**
      * Locks page for editing.  Note, however, that the PageManager will in no way prevent you from actually editing this page;

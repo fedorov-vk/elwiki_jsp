@@ -468,6 +468,26 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EOperation getWikiPage__GetAttribute__String() {
+		return wikiPageEClass.getEOperations().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getWikiPage__SetAttribute__String_Object() {
+		return wikiPageEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPagesStore() {
 		return pagesStoreEClass;
 	}
@@ -965,6 +985,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_AUTHOR);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_LAST_CONTENT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_VERSION);
+		createEOperation(wikiPageEClass, WIKI_PAGE___GET_ATTRIBUTE__STRING);
+		createEOperation(wikiPageEClass, WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT);
 
 		pagesStoreEClass = createEClass(PAGES_STORE);
 		createEReference(pagesStoreEClass, PAGES_STORE__WIKIPAGES);
@@ -1092,6 +1114,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEOperation(getWikiPage__GetLastContent(), this.getPageContent(), "getLastContent", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getWikiPage__GetVersion(), ecorePackage.getEInt(), "getVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getWikiPage__GetAttribute__String(), ecorePackage.getEJavaObject(), "getAttribute", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getWikiPage__SetAttribute__String_Object(), null, "setAttribute", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEJavaObject(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(pagesStoreEClass, PagesStore.class, "PagesStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPagesStore_Wikipages(), this.getWikiPage(), null, "wikipages", null, 0, -1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

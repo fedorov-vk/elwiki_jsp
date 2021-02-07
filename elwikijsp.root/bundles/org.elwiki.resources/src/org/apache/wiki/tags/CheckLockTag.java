@@ -28,78 +28,83 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- *  Checks whether the page is locked for editing.  If the mode matches,
- *  the tag body is included.  The "mode" can be any of the following:
- *  
- *  <ul>
- *  <li><b>locked</b> - The page is currently locked, but the lock is owned by someone else.</li>
- *  <li><b>owned</b> - The page is currently locked and the current user is the owner of the lock.</li>
- *  <li><b>unlocked</b> - Nobody has locked the page.</li>
- *  </ul>
- *  
- *  @since 2.0
+ * Checks whether the page is locked for editing. If the mode matches, the tag body is included.
+ * The "mode" can be any of the following:
+ * 
+ * <ul>
+ * <li><b>locked</b> - The page is currently locked, but the lock is owned by someone else.</li>
+ * <li><b>owned</b> - The page is currently locked and the current user is the owner of the
+ * lock.</li>
+ * <li><b>unlocked</b> - Nobody has locked the page.</li>
+ * </ul>
+ * 
+ * @since 2.0
  */
 public class CheckLockTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 1L;
-    
-    private enum LockState {
-        LOCKED, NOTLOCKED, OWNED
-    }
+	private static final long serialVersionUID = 1L;
 
-    private LockState m_mode;
+	private enum LockState {
+		LOCKED, NOTLOCKED, OWNED
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_mode = LockState.NOTLOCKED;
-    }
+	private LockState m_mode = LockState.NOTLOCKED;
 
-    /**
-     *  Sets the mode to check for.
-     *  
-     *  @param arg A String for the mode.
-     */
-    public void setMode( final String arg ) {
-        if( "locked".equals( arg ) ) {
-            m_mode = LockState.LOCKED;
-        } else if( "owned".equals( arg ) ) {
-            m_mode = LockState.OWNED;
-        } else {
-            m_mode = LockState.NOTLOCKED;
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_mode = LockState.NOTLOCKED;
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() throws IOException, ProviderException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
+	/**
+	 * Sets the mode to check for.
+	 * 
+	 * @param arg A String for the mode.
+	 */
+	public void setMode(final String arg) {
+		switch (arg) {
+		case "locked":
+			m_mode = LockState.LOCKED;
+			break;
+		case "owned":
+			m_mode = LockState.OWNED;
+			break;
+		default:
+			m_mode = LockState.NOTLOCKED;
+			break;
+		}
+	}
 
-        if( page != null ) {
-            final PageManager mgr = engine.getManager( PageManager.class );
-            final PageLock lock = mgr.getCurrentLock( page );
-            final HttpSession session = pageContext.getSession();
-            final PageLock userLock = ( PageLock )session.getAttribute( "lock-" + page.getName() );
-            if( ( lock != null && m_mode == LockState.LOCKED && lock != userLock ) ||
-                ( lock != null && m_mode == LockState.OWNED && lock == userLock )  ||
-                ( lock == null && m_mode == LockState.NOTLOCKED ) ) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException, ProviderException {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
 
-                final String tid = getId();
-                if( tid != null && lock != null ) {
-                    pageContext.setAttribute( tid, lock );
-                }
+		if (page != null) {
+			final PageManager mgr = engine.getManager(PageManager.class);
+			final PageLock lock = mgr.getCurrentLock(page);
+			final HttpSession session = pageContext.getSession();
+			final PageLock userLock = (PageLock) session.getAttribute("lock-" + page.getName());
+			if ((lock != null && m_mode == LockState.LOCKED && lock != userLock)
+					|| (lock != null && m_mode == LockState.OWNED && lock == userLock)
+					|| (lock == null && m_mode == LockState.NOTLOCKED)) {
 
-                return EVAL_BODY_INCLUDE;
-            }
-        }
+				final String tid = getId();
+				if (tid != null && lock != null) {
+					pageContext.setAttribute(tid, lock);
+				}
 
-        return SKIP_BODY;
-    }
+				return EVAL_BODY_INCLUDE;
+			}
+		}
+
+		return SKIP_BODY;
+	}
 
 }

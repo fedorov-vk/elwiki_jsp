@@ -144,7 +144,7 @@ public class BugReportHandler implements Plugin {
             final WikiPage newPage = Wiki.contents().page( context.getEngine(), pageName );
             final Context newContext = context.clone();
             newContext.setPage( newPage );
-            context.getEngine().getManager( PageManager.class ).saveText( newContext, str.toString() );
+            context.getEngine().getManager( PageManager.class ).saveText( newContext, str.toString(), "bugreporthandler", "" ); // :FVK: workaround - надо задать автора?
 
             final MessageFormat formatter = new MessageFormat("");
             formatter.applyPattern( rb.getString("bugreporthandler.new") );

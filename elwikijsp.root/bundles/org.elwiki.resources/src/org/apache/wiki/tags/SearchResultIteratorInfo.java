@@ -22,22 +22,20 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.apache.wiki.api.search.SearchResult;
 
 /**
- *  Just provides the TEI data for IteratorTag.
+ * Just provides the TEI data for IteratorTag.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class SearchResultIteratorInfo extends TagExtraInfo {
-
-    public VariableInfo[] getVariableInfo( final TagData data ) {
-        final VariableInfo[] var = { new VariableInfo( data.getAttributeString( "id" ),
-                                                      "org.apache.wiki.api.search.SearchResult",
-                                                      true,
-                                                       VariableInfo.NESTED )
-        };
-
-        return var;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public VariableInfo[] getVariableInfo(final TagData data) {
+		return new VariableInfo[] { new VariableInfo( //
+				data.getAttributeString("id"), SearchResult.class.getName(), true, VariableInfo.NESTED) };
+	}
 
 }

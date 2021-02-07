@@ -53,5 +53,3 @@ public interface WikiProvider {
     String getProviderInfo();
 
 }
-
-

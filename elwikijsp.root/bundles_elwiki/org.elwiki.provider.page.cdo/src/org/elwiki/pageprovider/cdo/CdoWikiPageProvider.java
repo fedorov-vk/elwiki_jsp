@@ -110,7 +110,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	@Override
 	public void initialize(Engine engine) throws NoRequiredPropertyException, IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	// ------------------------------------------------------------------------
@@ -123,8 +123,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	/**
 	 * Поиск PageContent страницы с самой большой версией.
 	 * 
-	 * @param page
-	 *            Требуемая страница.
+	 * @param page Требуемая страница.
 	 * @return Возможен <code>null</code>.
 	 */
 	private PageContent getMaximalVersionContent(WikiPage page) {
@@ -310,9 +309,9 @@ public class CdoWikiPageProvider implements PageProvider {
 	public Collection<WikiPage> getAllPages() throws ProviderException {
 		// :FVK: workaround - возвращаются только 'корневые' страницы.
 		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
-		
+
 		//initializeRepositoryContentFromText(); //:FVK: WORKAROUND
-		
+
 		EList<WikiPage> pages = pagesStore.getWikipages();
 
 		return pages;
@@ -435,8 +434,8 @@ public class CdoWikiPageProvider implements PageProvider {
 		}
 	}
 
-	/*:FVK:*/static boolean flag =true;
-	
+	/*:FVK:*/static boolean flag = true;
+
 	//:FVK: @Override
 	public WikiPage getPageByName(String pageName) throws RepositoryModifiedException {
 		/*:FVK:*/
@@ -452,7 +451,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 			flag = false;
 		}*/
-		
+
 		// TODO: здесь версия не учитывается - переписать код, который вызывает этот метод.
 		if (pageName == null) {
 			return null;
@@ -665,8 +664,11 @@ public class CdoWikiPageProvider implements PageProvider {
 	 */
 	//:FVK: @Override
 	boolean doneFlag = false;
+
 	public void convertRepositoryContent() {
-		if(doneFlag) return; doneFlag=true;
+		if (doneFlag)
+			return;
+		doneFlag = true;
 		TextChanger textChanger = new TextChanger();
 
 		List<WikiPage> wikiPages = getWikiPages(null);
@@ -762,7 +764,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 
 			Assert.isNotNull(pageContent, "Internal error!"); //:FVK:
-			
+
 			Set<String> setRefs = textChanger.getReferences(pageContent.getContent());
 			// Записать данные (выполнить транзакцию).
 			CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
@@ -835,12 +837,11 @@ public class CdoWikiPageProvider implements PageProvider {
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		CDOQuery query;
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
-		if(wikiName==null || wikiName.isEmpty()) {
+		if (wikiName == null || wikiName.isEmpty()) {
 			query = transaction.createQuery("ocl", "WikiPage.allInstances()", eClassWikiPage, false);
 		} else {
 			query = transaction.createQuery("ocl",
-					"WikiPage.allInstances()->select(p:WikiPage|p.wiki='" + wikiName + "')",
-					eClassWikiPage, false);
+					"WikiPage.allInstances()->select(p:WikiPage|p.wiki='" + wikiName + "')", eClassWikiPage, false);
 		}
 		query.setParameter("cdoLazyExtents", new Boolean(false));
 
@@ -1109,7 +1110,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	private List<String> unhandledPages = new ArrayList<>();
 
 	private Engine m_engine;
-	
+
 	{
 		this.unhandledPages.add("ApprovalRequiredForPageChanges");
 		this.unhandledPages.add("ApprovalRequiredForUserProfiles");
@@ -1153,20 +1154,20 @@ public class CdoWikiPageProvider implements PageProvider {
 	@Override
 	public void initializeRepositoryContentFromSql() {
 		// see. "/home/vfedorov/dev/dev_jspwiki_orig/developing/dev_pageprovider/JdbcPageProvider"
-
+	
 		try {
 			JdbcPageProvider jdbcPageProvider = new JdbcPageProvider();
 			JdbcAttachmentProvider jdbcAttachmentProvider = new JdbcAttachmentProvider();
 			jdbcPageProvider.initialize(this.applicationSession);
 			jdbcAttachmentProvider.initialize(this.applicationSession);
-
+	
 			CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-
+	
 			PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
 			int pageId = Integer.parseInt(pagesStore.getNextPageId());
 			pageId++;
 			pagesStore = transaction.getObject(pagesStore);
-
+	
 			// -- WORKAROUND ----------------------------------------
 			String WikiName = "Arduino";
 			WikiPage rootPage;
@@ -1179,7 +1180,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				pageId++;
 				pagesStore.getWikipages().add(rootPage);
 			}
-
+	
 			Collection<org.elwiki.pageprovider.jspwiki.JSPwikiPage> pages = jdbcPageProvider.getAllPages();
 			for (org.elwiki.pageprovider.jspwiki.JSPwikiPage pageV : pages) {
 				String pageName = pageV.getName();
@@ -1187,21 +1188,21 @@ public class CdoWikiPageProvider implements PageProvider {
 					continue;
 				}
 				System.out.printf("pageName: \"%s\"\n", pageName);
-
+	
 				// create WikiPage.
 				WikiPage wikiPage = Elwiki_dataFactory.eINSTANCE.createWikiPage();
 				wikiPage.setName(pageName);
 				wikiPage.setWiki(WikiName);
 				wikiPage.setId(String.valueOf(pageId));
 				pageId++;
-
+	
 				// перебрать все версии страницы (от минимальной вверх)
 				int maxVersion = pageV.getVersion();
 				StringBuilder description = new StringBuilder();
 				for (int ver = 1; ver <= maxVersion; ver++) {
 					org.elwiki.pageprovider.jspwiki.JSPwikiPage page = jdbcPageProvider.getPageInfo(pageV.getName(),
 							ver);
-
+	
 					String changenote = (String) page
 							.getAttribute(org.elwiki.pageprovider.jspwiki.JSPwikiPage.CHANGENOTE);
 					String author = page.getAuthor();
@@ -1211,7 +1212,7 @@ public class CdoWikiPageProvider implements PageProvider {
 					if (descr != null && descr.trim().length() > 0) {
 						description.append(descr);
 					}
-
+	
 					// create PageContent.
 					PageContent pageContent = Elwiki_dataFactory.eINSTANCE.createPageContent();
 					pageContent.setVersion(ver);
@@ -1222,12 +1223,12 @@ public class CdoWikiPageProvider implements PageProvider {
 					wikiPage.getPagecontents().add(pageContent);
 				}
 				wikiPage.setDescription(description.toString());
-
+	
 				//
 				// Вложения в страницу.
 				//
 				//IAttachmentManager attMgr = this.applicationSession.getAttachmentManager();
-
+	
 				Collection<Attachment> attachments = jdbcAttachmentProvider.listAttachments(pageV);
 				for (Attachment att : attachments) {
 					// String attachmentFile = att.getFileName();
@@ -1237,19 +1238,19 @@ public class CdoWikiPageProvider implements PageProvider {
 					pageAttachment.setLastModify(att.getLastModified());
 					pageAttachment.setAuthor(att.getAuthor());
 					pageAttachment.setChangeNote("");
-
+	
 					// Копирование данных
 					// IWikiConfiguration wikiConfiguration = ServicesRefs.getConfiguration();
 					IPath dstPath = getWikiConfiguration().getAttachmentPath();
-
+	
 					File outputFile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, dstPath.toFile());
 					try (OutputStream outputStream = new FileOutputStream(outputFile);
 							InputStream inputStream = jdbcAttachmentProvider.getAttachmentData(att);) {
-
+	
 						FileUtil.copyContents(inputStream, outputStream);
 						outputStream.close();
 						inputStream.close();
-
+	
 						pageAttachment.setPlace(outputFile.getName());
 						pageAttachment.setSize(outputFile.length());
 						wikiPage.getAttachments().add(pageAttachment);
@@ -1258,13 +1259,13 @@ public class CdoWikiPageProvider implements PageProvider {
 						System.out.println("ERROR: " + e.getMessage());
 					}
 				} // ~~end~~for~~ - page`s attachment.
-
+	
 				rootPage.getChildren().add(wikiPage);
-
+	
 			} // ~~end~~for~~ - wiki page.
-
+	
 			pagesStore.setNextPageId(String.valueOf(pageId));
-
+	
 			try {
 				transaction.commit();
 			} catch (CommitException ex) {
@@ -1274,7 +1275,7 @@ public class CdoWikiPageProvider implements PageProvider {
 					transaction.close();
 				}
 			}
-
+	
 			// == сохранить указатель 'Main' страницы =========================
 			/ *
 			IWikiEngine engine = this.applicationSession.getWikiEngine();
@@ -1293,12 +1294,12 @@ public class CdoWikiPageProvider implements PageProvider {
 				transaction.close();
 			}
 			* /
-
+	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	
 		// createPageFromSql(pageName, file);
 	}
 	*/
@@ -1337,9 +1338,9 @@ public class CdoWikiPageProvider implements PageProvider {
 	@Deprecated
 	private org.elwiki_data.Acl parseAcl(WikiPage page, String ruleLine) {
 		Acl acl = page.getAcl();
-        if (acl == null) {
-            acl = Elwiki_dataFactory.eINSTANCE.createAcl();
-        }
+		if (acl == null) {
+			acl = Elwiki_dataFactory.eINSTANCE.createAcl();
+		}
 
 		try {
 			StringTokenizer fieldToks = new StringTokenizer(ruleLine);
@@ -1348,7 +1349,8 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			while (fieldToks.hasMoreTokens()) {
 				String principalName = fieldToks.nextToken(",").trim();
-				Principal principal = this.m_engine.getManager(AuthorizationManager.class).resolvePrincipal(principalName); //:FVK: Principal principal = this.m_auth.resolvePrincipal(principalName);
+				Principal principal = this.m_engine.getManager(AuthorizationManager.class)
+						.resolvePrincipal(principalName); //:FVK: Principal principal = this.m_auth.resolvePrincipal(principalName);
 				AclEntry oldEntry = acl.getEntry(principal);
 
 				if (oldEntry != null) {
@@ -1377,5 +1379,5 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		return acl;
 	}
-
+	
 }

@@ -38,14 +38,22 @@ public class SaveWikiPageTask extends Task {
 
     private static final long serialVersionUID = 3190559953484411420L;
 
-    final Context context;
+    private final Context context;
+
+	private final String author;
+
+	private final String changenote;
 
     /**
      * Creates the Task.
+     * @param author TODO
+     * @param changenote TODO
      */
-    public SaveWikiPageTask( final Context context ) {
+    public SaveWikiPageTask( final Context context, String author, String changenote ) {
         super( TasksManager.WIKIPAGE_SAVE_TASK_MESSAGE_KEY );
         this.context = context;
+        this.author = author;
+        this.changenote = changenote;
     }
 
     /**
@@ -60,7 +68,7 @@ public class SaveWikiPageTask extends Task {
         final WikiPage page = context.getPage();
 
         // Let the rest of the engine handle actual saving.
-        engine.getManager( PageManager.class ).putPageText( page, proposedText );
+        engine.getManager( PageManager.class ).putPageText( page, proposedText, this.author, this.changenote );
 
         // Refresh the context for post save filtering.
         engine.getManager( PageManager.class ).getPage( page.getName() );

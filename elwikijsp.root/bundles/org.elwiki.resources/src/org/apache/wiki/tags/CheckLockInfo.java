@@ -22,23 +22,19 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.apache.wiki.pages0.PageLock;
+
 /**
- *  A companion to CheckLogTag.
+ * A companion to CheckLogTag.
  */
 public class CheckLockInfo extends TagExtraInfo {
-
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public VariableInfo[] getVariableInfo(TagData data) {
-        VariableInfo[] var = { new VariableInfo( data.getAttributeString( "id" ),
-                                                 "org.apache.wiki.pages.PageLock",
-                                                 true,
-                                                 VariableInfo.NESTED )
-        };
-
-        return var;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public VariableInfo[] getVariableInfo(TagData data) {
+		return new VariableInfo[] { new VariableInfo( //
+				data.getAttributeString("id"), PageLock.class.getName(), true, VariableInfo.NESTED) };
+	}
 
 }

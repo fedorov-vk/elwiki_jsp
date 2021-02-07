@@ -322,13 +322,31 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___GET_VERSION = COMPARABLE_OPERATION_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Get Attribute</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___GET_ATTRIBUTE__STRING = COMPARABLE_OPERATION_COUNT + 7;
+
+	/**
+	 * The operation id for the '<em>Set Attribute</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = COMPARABLE_OPERATION_COUNT + 8;
+
+	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 7;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -1260,6 +1278,26 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getWikiPage__GetVersion();
 
 	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getAttribute(java.lang.String) <em>Get Attribute</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Attribute</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getAttribute(java.lang.String)
+	 * @generated
+	 */
+	EOperation getWikiPage__GetAttribute__String();
+
+	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#setAttribute(java.lang.String, java.lang.Object) <em>Set Attribute</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Set Attribute</em>' operation.
+	 * @see org.elwiki_data.WikiPage#setAttribute(java.lang.String, java.lang.Object)
+	 * @generated
+	 */
+	EOperation getWikiPage__SetAttribute__String_Object();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PagesStore <em>Pages Store</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1957,6 +1995,22 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation WIKI_PAGE___GET_VERSION = eINSTANCE.getWikiPage__GetVersion();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Attribute</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___GET_ATTRIBUTE__STRING = eINSTANCE.getWikiPage__GetAttribute__String();
+
+		/**
+		 * The meta object literal for the '<em><b>Set Attribute</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = eINSTANCE.getWikiPage__SetAttribute__String_Object();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.

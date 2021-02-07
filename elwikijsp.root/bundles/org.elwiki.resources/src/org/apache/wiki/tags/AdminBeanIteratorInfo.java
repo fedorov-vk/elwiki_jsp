@@ -22,27 +22,21 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.apache.wiki.ui.admin0.AdminBean;
+
 /**
- *  Just provides iteration support for AdminBeanIteratorTag
+ * Just provides iteration support for AdminBeanIteratorTag
  *
- *  @since 2.6.
+ * @since 2.6.
  */
-public class AdminBeanIteratorInfo extends TagExtraInfo
-{
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public VariableInfo[] getVariableInfo(TagData data)
-    {
-        VariableInfo[] var = { new VariableInfo( data.getAttributeString("id"),
-                                                 "org.apache.wiki.ui.admin.AdminBean",
-                                                 true,
-                                                 VariableInfo.NESTED )
-        };
+public class AdminBeanIteratorInfo extends TagExtraInfo {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public VariableInfo[] getVariableInfo(TagData data) {
+		return new VariableInfo[] { new VariableInfo( //
+				data.getAttributeString("id"), AdminBean.class.getName(), true, VariableInfo.NESTED) };
+	}
 
-        return var;
-
-    }
 }
-
