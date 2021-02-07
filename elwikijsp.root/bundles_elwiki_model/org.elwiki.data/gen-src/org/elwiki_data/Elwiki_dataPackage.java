@@ -550,13 +550,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGE_CONTENT_FEATURE_COUNT = IMODIFY_INFO_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get Length</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_CONTENT___GET_LENGTH = IMODIFY_INFO_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>Page Content</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT_OPERATION_COUNT = IMODIFY_INFO_OPERATION_COUNT + 0;
+	int PAGE_CONTENT_OPERATION_COUNT = IMODIFY_INFO_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PageAttachmentImpl <em>Page Attachment</em>}' class.
@@ -1384,6 +1393,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getPageContent_Wikipage();
 
 	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.PageContent#getLength() <em>Get Length</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Length</em>' operation.
+	 * @see org.elwiki_data.PageContent#getLength()
+	 * @generated
+	 */
+	EOperation getPageContent__GetLength();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PageAttachment <em>Page Attachment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2079,6 +2098,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PAGE_CONTENT__WIKIPAGE = eINSTANCE.getPageContent_Wikipage();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Length</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PAGE_CONTENT___GET_LENGTH = eINSTANCE.getPageContent__GetLength();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PageAttachmentImpl <em>Page Attachment</em>}' class.

@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.log4j.Logger;
+import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -330,7 +331,8 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public List<WikiPage> getVersionHistory(String page) throws ProviderException {
+	public List<PageContent> getVersionHistory(WikiPage page) throws ProviderException {
+		WikiPage wikiPage = getPageById(page.getId());
 		// TODO Auto-generated method stub
 		return null;
 	}

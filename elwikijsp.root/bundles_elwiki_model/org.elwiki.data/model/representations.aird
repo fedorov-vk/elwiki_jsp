@@ -8,7 +8,7 @@
     <semanticResources>http://www.eclipse.org/emf/2002/GenModel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="40c4cf34-1b14-4b3d-b709-242ac86bfd80">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="56a4c9ad-ca40-4896-aa7f-786a65de7eb4">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -150,6 +150,10 @@
             <children xmi:type="notation:Node" xmi:id="_aUQHwG-QEeid6OKUsQuIXA" type="3010" element="_aSsokG-QEeid6OKUsQuIXA">
               <styles xmi:type="notation:FontStyle" xmi:id="_aUQHwW-QEeid6OKUsQuIXA" fontName="Ubuntu" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_aUQHwm-QEeid6OKUsQuIXA"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_DsNIwGmIEeuZS8mC6X-fDA" type="3010" element="_DrFHYGmIEeuZS8mC6X-fDA">
+              <styles xmi:type="notation:FontStyle" xmi:id="_DsNIwWmIEeuZS8mC6X-fDA" fontName="Ubuntu" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_DsNIwmmIEeuZS8mC6X-fDA"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_aUFvsm-QEeid6OKUsQuIXA"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_aUFvs2-QEeid6OKUsQuIXA"/>
@@ -781,6 +785,14 @@
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_DrFHYGmIEeuZS8mC6X-fDA" name="getLength() : EIntegerObject" tooltipText="getLength() : EIntegerObject">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//PageContent/getLength"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//PageContent/getLength"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_DrGVgGmIEeuZS8mC6X-fDA" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
       </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_aRtxIG-QEeid6OKUsQuIXA" name="PageAttachment" tooltipText="" outgoingEdges="_aTVhw2-QEeid6OKUsQuIXA" incomingEdges="_aTYlEG-QEeid6OKUsQuIXA" width="12" height="10">

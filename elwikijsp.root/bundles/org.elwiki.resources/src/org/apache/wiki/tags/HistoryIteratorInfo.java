@@ -22,6 +22,7 @@ import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -36,7 +37,7 @@ public class HistoryIteratorInfo extends TagExtraInfo {
 	 */
 	public VariableInfo[] getVariableInfo(TagData data) {
 		return new VariableInfo[] { new VariableInfo( //
-				data.getAttributeString("id"), WikiPage.class.getName(), true, VariableInfo.NESTED) };
+				data.getAttributeString("id"), PageContent.class.getName(), true, VariableInfo.NESTED) };
 	}
 
 }

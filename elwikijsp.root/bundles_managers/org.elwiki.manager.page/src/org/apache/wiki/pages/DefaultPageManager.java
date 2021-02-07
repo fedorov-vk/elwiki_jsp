@@ -24,6 +24,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -440,25 +441,25 @@ public class DefaultPageManager implements PageManager, Initializable {
      * {@inheritDoc}
      * @see org.apache.wiki.pages0.PageManager#getVersionHistory(java.lang.String)
      */
-    @Override @SuppressWarnings( "unchecked" )
-    public < T extends WikiPage > List< T > getVersionHistory( final String pageName ) {
-        List< T > c = null;
+    @Override
+	public List<PageContent> getVersionHistory(WikiPage page) {
+		List<PageContent> c = null;
 
-        try {
-            if( pageExists( pageName ) ) {
-                c = ( List< T > )m_provider.getVersionHistory( pageName );
-            }
+		try {
+			if (pageExists(page)) {
+				c = m_provider.getVersionHistory(page);
+			}
 
-            /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-            if( c == null ) {
-                c = ( List< T > )m_engine.getManager( AttachmentManager.class ).getVersionHistory( pageName );
-            }*/
-        } catch( final ProviderException e ) {
-            LOG.error( "ProviderException requesting version history for " + pageName, e );
-        }
+			/*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
+			if( c == null ) {
+			    c = ( List< T > )m_engine.getManager( AttachmentManager.class ).getVersionHistory( pageName );
+			}*/
+		} catch (final ProviderException e) {
+			LOG.error("ProviderException requesting version history for " + page.getName(), e);
+		}
 
-        return c;
-    }
+		return c;
+	}
 
     /**
      * {@inheritDoc}

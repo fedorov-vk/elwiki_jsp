@@ -19,6 +19,7 @@
 package org.apache.wiki.pages0;
 
 import org.apache.wiki.api.core.Context;
+import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -239,7 +240,7 @@ public interface PageManager extends WikiEventListener {
      * @return If the page does not exist or there's some problem retrieving the version history, returns null,
      *         otherwise a List of WikiPages / Attachments, each corresponding to a different revision of the page / attachment.
      */
-    < T extends WikiPage > List< T > getVersionHistory( String pageName );
+	List<PageContent> getVersionHistory(WikiPage page);
 
     /**
      *  Returns the provider name.

@@ -21,13 +21,17 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
+import org.eclipse.emf.common.util.EList;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -41,7 +45,7 @@ import java.util.List;
  *  @since 2.0
  */
 // FIXME: Too much in common with IteratorTag - REFACTOR
-public class HistoryIteratorTag extends IteratorTag  {
+public class HistoryIteratorTag extends IteratorTag<PageContent>  {
 
     private static final long serialVersionUID = 0L;
     private static final Logger LOG = Logger.getLogger( HistoryIteratorTag.class );
@@ -55,20 +59,18 @@ public class HistoryIteratorTag extends IteratorTag  {
 
         try {
             if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page ) ) {
-                final List< WikiPage > versions = engine.getManager( PageManager.class ).getVersionHistory( page.getName() );
-
-                if( versions == null ) {
-                    // There is no history
-                    return SKIP_BODY;
-                }
-
-                m_iterator = versions.iterator();
-
+                //:FVK: историю - просто извлечь из страницы.  final List< WikiPage > versions = engine.getManager( PageManager.class ).getVersionHistory( page );
+            	List<PageContent> contents = new ArrayList<>(page.getPagecontents());
+				contents.sort((c1, c2) -> {
+					return c2.getVersion() - c1.getVersion();
+				});
+                m_iterator = contents.iterator();
                 if( m_iterator.hasNext() ) {
                     final Context context = m_wikiContext.clone();
-                    context.setPage( ( WikiPage )m_iterator.next() );
+// :FVK:              context.setPage( ( WikiPage )m_iterator.next() );
                     pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
-                    pageContext.setAttribute( getId(), context.getPage() );
+// :FVK:              pageContext.setAttribute( getId(), context.getPage() );
+                    pageContext.setAttribute( getId(), m_iterator.next() );
                 } else {
                     return SKIP_BODY;
                 }
@@ -99,9 +101,10 @@ public class HistoryIteratorTag extends IteratorTag  {
 
         if( m_iterator != null && m_iterator.hasNext() ) {
             final Context context = m_wikiContext.clone();
-            context.setPage( ( WikiPage )m_iterator.next() );
+// :FVK:      context.setPage( ( WikiPage )m_iterator.next() );
             pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
-            pageContext.setAttribute( getId(), context.getPage() );
+// :FVK:      pageContext.setAttribute( getId(), context.getPage() );
+            pageContext.setAttribute( getId(), m_iterator.next() );
             return EVAL_BODY_BUFFERED;
         }
 
