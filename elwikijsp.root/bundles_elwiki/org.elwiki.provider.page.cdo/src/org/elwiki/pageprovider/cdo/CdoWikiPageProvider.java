@@ -141,7 +141,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public void putPageText(WikiPage page, String text) throws ProviderException {
+	public void putPageText(WikiPage page, String text, String author, String changenote) throws ProviderException {
 		// PageContent[] ca = page.getCa();
 		// ca[0] = Elwiki_dataFactory.eINSTANCE.createPageContent();
 
@@ -150,9 +150,9 @@ public class CdoWikiPageProvider implements PageProvider {
 		int version = (pc != null) ? pc.getVersion() + 1 : 1;
 		pc = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pc.setVersion(version);
-		pc.setAuthor("Victor Fedorov"); // TODO: :FVK: установить автора изменения.
-		pc.setChangeNote("");
-		pc.setLastModify(new Date());
+		pc.setAuthor(author);
+		pc.setChangeNote(changenote);
+		pc.setLastModify(new Date()); // TODO: :FVK: установить дату, возможно надо корректнее.
 		pc.setContent(text);
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		WikiPage page1 = transaction.getObject(page);
