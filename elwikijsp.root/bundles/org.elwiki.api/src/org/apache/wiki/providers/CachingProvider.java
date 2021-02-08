@@ -310,9 +310,9 @@ public class CachingProvider implements PageProvider {
      *  {@inheritDoc}
      */
     @Override
-    public void putPageText( final WikiPage page, final String text ) throws ProviderException {
+    public void putPageText( final WikiPage page, final String text, String author, String changenote ) throws ProviderException {
         synchronized( this ) {
-            m_provider.putPageText( page, text );
+            m_provider.putPageText( page, text, author, changenote );
           //:FVK: page.setLastModified( new Date() );
 
             // Refresh caches properly

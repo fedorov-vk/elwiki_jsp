@@ -309,7 +309,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             throw new ProviderException("Illegal page name");
         }
 
-        m_provider.putPageText(page, content);
+        m_provider.putPageText(page, content, author, changenote);
     }
 
     /**

@@ -49,7 +49,7 @@ public interface PageProvider extends WikiProvider {
      *  @param text The text to save.
      *  @throws ProviderException If something goes wrong.
      */
-    void putPageText( WikiPage page, String text ) throws ProviderException;
+    void putPageText( WikiPage page, String text, String author, String changenote ) throws ProviderException;
 
     /**
      *  Return true, if page exists.
