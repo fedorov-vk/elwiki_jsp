@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ GroupTab.jsp -->
 <%@ page import="java.security.Principal" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.*" %>
@@ -180,3 +181,4 @@
     </tbody>
   </table>
 </div>
+<!-- ~~ END ~~ GroupTab.jsp -->
