@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ LoginContent.jsp -->
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page errorPage="/Error.jsp" %>
@@ -271,3 +272,4 @@
 </div>
 
 </div>
+<!-- ~~ END ~~ LoginContent.jsp -->

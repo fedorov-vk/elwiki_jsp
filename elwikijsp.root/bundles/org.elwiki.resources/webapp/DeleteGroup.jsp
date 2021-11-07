@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ DeleteGroup.jsp -->
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
@@ -76,4 +77,4 @@
     }
 
 %>
-
+<!-- ~~ END ~~ DeleteGroup.jsp -->

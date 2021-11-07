@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -16,12 +17,12 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ UserBox.jsp  --><%@
- page import="javax.servlet.jsp.jstl.fmt.*" %><%@
- page import="org.apache.wiki.api.core.*" %><%@
- taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!-- ~~ START ~~ UserBox.jsp  -->
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
@@ -71,14 +72,14 @@
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
           </wiki:Link>
-          <wiki:Permission permission="createGroups">
+        <wiki:Permission permission="createGroups">
           <wiki:Link cssClass="btn btn-default btn-block" jsp="UserPreferences.jsp">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='groups'/>
             <span class="icon-group"></span> <fmt:message key="actions.groups" />
           </wiki:Link>
-          </wiki:Permission>
-         </wiki:CheckRequestContext>
+        </wiki:Permission>
+        </wiki:CheckRequestContext>
       </wiki:CheckRequestContext>
       <%--
            login button
@@ -92,11 +93,11 @@
         </wiki:Link>
         </wiki:Permission>
         <wiki:Permission permission='editProfile'>
-        <wiki:Link cssClass="btn btn-link btn-block register" jsp="Login.jsp">
-          <wiki:Param name='redirect' value='${redirect}'/>
-          <wiki:Param name='tab' value='register'/>
-          <fmt:message key="actions.registernow" />
-        </wiki:Link>
+          <wiki:Link cssClass="btn btn-link btn-block register" jsp="Login.jsp">
+            <wiki:Param name='redirect' value='${redirect}'/>
+            <wiki:Param name='tab' value='register'/>
+            <fmt:message key="actions.registernow" />
+          </wiki:Link>
         </wiki:Permission>
         </wiki:CheckRequestContext>
       </wiki:UserCheck>

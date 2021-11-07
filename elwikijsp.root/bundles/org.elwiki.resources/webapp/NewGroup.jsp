@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -16,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.  
 --%>
-
+<!-- ~~ START ~~ NewGroup.jsp -->
 <%@ page import="java.text.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.log4j.*" %>
@@ -99,4 +100,4 @@
     String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 
 %><wiki:Include page="<%=contentPage%>" />
-
+<!-- ~~ END ~~ NewGroup.jsp -->
