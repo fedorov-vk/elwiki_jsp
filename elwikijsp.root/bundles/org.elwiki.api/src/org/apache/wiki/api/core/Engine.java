@@ -18,16 +18,6 @@
  */
 package org.apache.wiki.api.core;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki_data.WikiPage;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,16 +27,24 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
+import javax.servlet.ServletContext;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.WikiPage;
 
 /**
  *  Provides Wiki services to the JSP page.
  *
- *  <P>
+ *  <p>
  *  This is the main interface through which everything should go.
  *
  *  <p>

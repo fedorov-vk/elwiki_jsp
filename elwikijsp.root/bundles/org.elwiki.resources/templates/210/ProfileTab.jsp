@@ -28,10 +28,10 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	/* dateformatting not yet supported by wiki:UserProfile tag - diy */
+/* dateformatting not yet supported by wiki:UserProfile tag - diy */
   Context wikiContext = Context.findContext(pageContext);
   DefaultUserManager manager = wikiContext.getEngine().getManager( DefaultUserManager.class );
-  UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
+  JIUserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form action="<wiki:CheckRequestContext 
      context='login'><wiki:Link jsp='Login.jsp' format='url'><wiki:Param name='tab'
