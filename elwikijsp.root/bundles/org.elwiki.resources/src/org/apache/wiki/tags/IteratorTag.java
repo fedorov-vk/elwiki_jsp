@@ -42,11 +42,11 @@ import java.util.Iterator;
  *
  *  @since 2.0
  */
-public abstract class IteratorTag extends BodyTagSupport implements TryCatchFinally {
+public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchFinally {
 
 	private static final long serialVersionUID = 8945334759300595321L;
 	protected String m_pageName;
-    protected Iterator< ? > m_iterator;
+    protected Iterator<T> m_iterator;
     protected Context m_wikiContext;
 
     private static final Logger log = Logger.getLogger( IteratorTag.class );
@@ -56,9 +56,9 @@ public abstract class IteratorTag extends BodyTagSupport implements TryCatchFina
      *  
      *  @param arg A Collection which will be iterated.
      */
-    public void setList( final Collection< ? > arg ) {
+    public void setList( final Collection<T> arg ) {
         if( arg != null ) {
-            m_iterator = arg.iterator();
+            m_iterator = (Iterator<T>) arg.iterator();
         }
     }
 
@@ -69,7 +69,7 @@ public abstract class IteratorTag extends BodyTagSupport implements TryCatchFina
      */
     public void setList( final Object[] arg ) {
         if( arg != null ) {
-            m_iterator = Arrays.asList(arg).iterator();
+            m_iterator = (Iterator<T>) Arrays.asList(arg).iterator();
         }
     }
 

@@ -24,6 +24,7 @@ import org.eclipse.net4j.util.container.IPluginContainer;
 import org.eclipse.net4j.util.lifecycle.Lifecycle;
 import org.eclipse.net4j.util.lifecycle.LifecycleException;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.jaxb_rw.archive.JAXBdataIO;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PagesStore;
 
@@ -66,12 +67,15 @@ public class StorageCdo extends Lifecycle implements IStorageCdo {
 		return this.isActive();
 	}
 
+	JAXBdataIO jaxbDataIO = new JAXBdataIO();
+	
 	@Override
 	public void activateStorage() throws Exception {
 		try {
 			// makes this before invokes secureLogin(). Due to this is initialisation the CDO access.
 			this.activate();
 			System.out.println("-- StorageCdo activated.");
+			// jaxbDataIO.startWrite(getPagesStore());
 		} catch (LifecycleException e) {
 			//:FVK:			MessageDialog.openError(Display.getDefault().getActiveShell(), "Ошибка",
 			//					"Ошибка связи с сервером данных.\n\n" + e.getMessage());

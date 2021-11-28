@@ -72,8 +72,6 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 	private static final String SYSPROP_USERS_DATABASE = "elwiki.users.database";
 	private static final String SYSPROP_GROUPS_DATABASE = "elwiki.groups.database";
 
-	// == CODE ================================================================
-
 	@Override
 	public void initialize(Engine engine, Properties props) throws NoRequiredPropertyException, WikiSecurityException {
 		BundleContext context = AuthorizePluginActivator.getDefault().getBundle().getBundleContext();
@@ -229,6 +227,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			JsonReader reader = new JsonReader(isr);
 			data = gson.fromJson(reader, collectionType);
 		} catch (Exception e) {
+			// TODO: :FVK: workaround.
 			System.out.println("Could not read configuration file [" + filePath + "].");
 			System.out.println("Ignoring configuration file [" + filePath + "].");
 			return;
@@ -238,11 +237,17 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			String groupUid = groupData.uid;
 			Group group;
 			if ((group = (Group) this.userAdmin.getRole(groupUid)) == null) {
-				group = (Group) this.userAdmin.createRole(groupUid, Role.GROUP);
-				@SuppressWarnings("unchecked")
-				Dictionary<String, Object> groupProps = group.getProperties();
-				groupProps.put(GROUP_NAME, groupData.name);
-				groupProps.put("PERMISSIONS", groupData.permissions);
+				try {
+					group = (Group) this.userAdmin.createRole(groupUid, Role.GROUP);
+					@SuppressWarnings("unchecked")
+					Dictionary<String, Object> groupProps = group.getProperties();
+					groupProps.put(GROUP_NAME, groupData.name);
+					groupProps.put("PERMISSIONS", groupData.permissions);
+				} catch (Exception e) {
+					// TODO: :FVK: workaround.
+					System.out.println("Could not make group [" + groupData.name + "].\n" + e.getMessage());
+					return;
+				}
 			}
 		}
 	}

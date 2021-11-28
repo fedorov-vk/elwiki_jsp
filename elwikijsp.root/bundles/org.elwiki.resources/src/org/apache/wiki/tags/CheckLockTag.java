@@ -66,7 +66,7 @@ public class CheckLockTag extends WikiTagBase {
 	 */
 	public void setMode(final String arg) {
 		switch (arg) {
-		case "locked":
+		case "locked": // TODO: :FVK: - вынести константы в интерфейс.
 			m_mode = LockState.LOCKED;
 			break;
 		case "owned":

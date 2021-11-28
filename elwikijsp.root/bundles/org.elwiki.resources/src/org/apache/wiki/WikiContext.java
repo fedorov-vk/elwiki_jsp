@@ -40,6 +40,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 

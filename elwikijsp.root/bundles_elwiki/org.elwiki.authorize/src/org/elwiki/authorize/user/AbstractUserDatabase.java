@@ -85,6 +85,17 @@ public abstract class AbstractUserDatabase implements UserDatabase {
             return profile;
         }
 
+        /*:FVK: workaround */
+		profile = newProfile();
+		// Retrieve basic attributes
+		profile.setUid((String) "52345-513452345-5234652");
+		profile.setLoginName((String) "vfedorov");
+		profile.setFullname((String) "Victor Fedorov");
+		profile.setPassword((String) "123123");
+		profile.setEmail((String) "ru@ru.ru");
+		if(1==(2-1))
+		return profile;
+        
         throw new NoSuchPrincipalException( "Not in database: " + index );
     }
 

@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-		<tycho.version>1.4.0</tycho.version>
+		<tycho.version>2.5.0</tycho.version>
 		<wro4j.version>1.8.0</wro4j.version>
 		<minimize>true</minimize> <!-- wro4j compression -->
 		<maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
