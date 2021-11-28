@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
@@ -62,6 +62,8 @@ import java.security.Permission;
  */
 public class PermissionTag extends WikiTagBase {
 
+    private static final Logger log = Logger.getLogger( WikiTagBase.class );
+	
     private static final String ALL_PERMISSION   = "allPermission";
     private static final String CREATE_GROUPS    = "createGroups";
     private static final String CREATE_PAGES     = "createPages";
@@ -93,7 +95,7 @@ public class PermissionTag extends WikiTagBase {
      */
     public void setPermission( final String permission )
     {
-        m_permissionList = StringUtils.split(permission,'|');
+        m_permissionList = permission.split("\\|");
     }
 
     /**

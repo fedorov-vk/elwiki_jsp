@@ -36,7 +36,6 @@ import org.osgi.service.prefs.Preferences;
 /**
  * @author vfedorov
  */
-@SuppressWarnings("restriction")
 public class WikiConfiguration implements IWikiConfiguration {
 
 	private static final Logger log = Logger.getLogger(WikiConfiguration.class);

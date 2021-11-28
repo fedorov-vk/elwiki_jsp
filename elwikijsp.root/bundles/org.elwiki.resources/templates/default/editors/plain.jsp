@@ -38,10 +38,10 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   Context context = Context.findContext( pageContext );
+   Context context = ContextUtil.findContext( pageContext );
    Engine engine = context.getEngine();
 
-   String usertext = EditorManager.getEditedText( pageContext );
+   String usertext = ContextUtil.getEditedText( pageContext );
 %>
 <wiki:RequestResource type="script" resource="scripts/haddock-edit.js" />
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>

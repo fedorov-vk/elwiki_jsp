@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Urlconstructor
 Bundle-SymbolicName: org.elwiki.urlconstructor
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.urlconstructor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/urlConstructor.xml
 Require-Bundle: org.eclipse.jface;bundle-version="3.19.0",
  org.apache.log4j;bundle-version="1.2.15",

@@ -18,7 +18,6 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 import org.apache.wiki.WatchDog;
@@ -281,7 +280,7 @@ public class WikiJSPFilter extends WikiServletFilter {
 				flushBuffer();
 			} catch( final IOException e ) {
                 log.error( e );
-                return StringUtils.EMPTY;
+                return "";
 			}
 
             try {
@@ -292,7 +291,7 @@ public class WikiJSPFilter extends WikiServletFilter {
 				return m_output.toString();
 			} catch( final UnsupportedEncodingException e ) {
                 log.error( e );
-                return StringUtils.EMPTY;
+                return "";
              }
         }
 

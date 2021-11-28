@@ -46,26 +46,6 @@ import com.google.gson.stream.JsonReader;
 
 public class UserAdminDatabase extends AbstractUserDatabase {
 
-	private static final String UID = "uid";
-
-	private static final String LOGIN_NAME = "loginName";
-
-	private static final String FULL_NAME = "fullName";
-
-	private static final String PASSWORD = "password";
-
-	private static final String CREATED = "created";
-
-	private static final String EMAIL = "email";
-
-	private static final String LAST_MODIFIED = "lastModified";
-
-	private static final String LOCK_EXPIRY = "lockExpiry";
-
-	private static final String DATE_FORMAT = "yyyy.MM.dd 'at' HH:mm:ss:SSS z";
-
-	private static final String GROUP_NAME = "groupName";
-	
 	private UserAdmin userAdmin;
 
 	/** System property for define custom file with user profiles list. Current value - {@value} */
@@ -91,6 +71,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		}
 
 		// :FVK: WORKAROUND initialization of Groups.
+		/*
 		try {
 			User alice = this.userAdmin.getUser(LOGIN_NAME, "Alice");
 			User bob = this.userAdmin.getUser(LOGIN_NAME, "Bob");
@@ -182,6 +163,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			// TODO Auto-generated catch block -- e.printStackTrace();
 			log.error("Test Users List: " + e.getLocalizedMessage());
 		}
+		*/
 	}
 
 	//TODO: - организовать загрузку профилей пользователей из Json файла (для Wiki...).
@@ -216,15 +198,13 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 
 	//TODO: - организовать загрузку групп из Json файла (для Wiki...).
 	private void loadGroupsDataBase(String filePath) {
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-
 		Type collectionType = new TypeToken<List<GroupContent>>() {
 		}.getType();
 		List<GroupContent> data = null;
 
 		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath))) {
 			JsonReader reader = new JsonReader(isr);
+			Gson gson = new GsonBuilder().create();
 			data = gson.fromJson(reader, collectionType);
 		} catch (Exception e) {
 			// TODO: :FVK: workaround.
@@ -233,7 +213,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			return;
 		}
 
-		for(GroupContent groupData:data) {
+		for (GroupContent groupData : data) {
 			String groupUid = groupData.uid;
 			Group group;
 			if ((group = (Group) this.userAdmin.getRole(groupUid)) == null) {
@@ -243,10 +223,25 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 					Dictionary<String, Object> groupProps = group.getProperties();
 					groupProps.put(GROUP_NAME, groupData.name);
 					groupProps.put("PERMISSIONS", groupData.permissions);
+					groupProps.put(GROUP_CREATOR, groupData.creator);
+					groupProps.put(GROUP_MODIFIER, groupData.modifier);
+					
+					DateFormat c_format = new SimpleDateFormat(DATE_FORMAT);
+					Date modifyDate = new Date(System.currentTimeMillis());
+					groupProps.put(CREATED, c_format.format(modifyDate));
+					groupProps.put(LAST_MODIFIED, c_format.format(modifyDate));
 				} catch (Exception e) {
 					// TODO: :FVK: workaround.
 					System.out.println("Could not make group [" + groupData.name + "].\n" + e.getMessage());
 					return;
+				}
+			}
+			if (groupData.users != null) {
+				for (String userGUID : groupData.users) {
+					User user = this.userAdmin.getUser(UID, userGUID);
+					if (user != null) {
+						group.addMember(user);
+					}
 				}
 			}
 		}
@@ -381,7 +376,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			properties.put(CREATED, c_format.format(modDate));
 			properties.put(UID, uid);
 		} else {
-			// Update existing user...
+			// Update existing user's object...
 		}
 
 		profile.setLastModified(modDate);

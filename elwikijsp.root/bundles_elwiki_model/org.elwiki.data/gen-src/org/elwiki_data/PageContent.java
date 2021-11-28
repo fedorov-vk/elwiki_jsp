@@ -25,11 +25,13 @@ public interface PageContent extends IModifyInfo {
 	 * Returns the value of the '<em><b>Content</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Content</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Content</em>' attribute.
 	 * @see #setContent(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageContent_Content()
@@ -53,11 +55,13 @@ public interface PageContent extends IModifyInfo {
 	 * Returns the value of the '<em><b>Wikipage</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getPagecontents <em>Pagecontents</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Wikipage</em>' container reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Wikipage</em>' container reference.
 	 * @see #setWikipage(WikiPage)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageContent_Wikipage()

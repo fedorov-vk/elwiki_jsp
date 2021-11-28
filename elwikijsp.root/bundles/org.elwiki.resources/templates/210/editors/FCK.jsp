@@ -39,7 +39,7 @@
     This provides the FCK editor for JSPWiki.
 --%>
 <%
-	Context context = Context.findContext( pageContext );
+	Context context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
     context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
@@ -48,7 +48,7 @@
     String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
-    String usertext = EditorManager.getEditedText(pageContext);
+    String usertext = ContextUtil.getEditedText(pageContext);
     TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT,
    		context.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "scripts/fckeditor/fckeditor.js" ) );
 %>

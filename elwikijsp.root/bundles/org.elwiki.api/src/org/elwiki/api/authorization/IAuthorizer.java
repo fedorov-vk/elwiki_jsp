@@ -19,10 +19,14 @@
 package org.elwiki.api.authorization;
 
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.WikiSecurityException;
 //import org.elwiki.api.IAuthenticationManager;
 //import org.elwiki.api.IElWikiSession;
@@ -32,8 +36,11 @@ import org.elwiki.api.authorization.authorize.GroupDatabase;
 //import org.elwiki.api.event.WikiEventProvider;
 //import org.elwiki.api.exceptions.WikiSecurityException;
 import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.service.useradmin.Group;
 
 /**
+ * Интерфейс частично обслуживает группы. (утилитарно, например, WrapGroup) 
+ * <p>
  * Интерфейс для поставщиков услуг авторизации информации.<br/>
  * После успешного входа пользователя {@link IAuthenticationManager} консультируется с
  * настроенным авторизатором, чтобы определить, какие дополнительные принципалы
@@ -63,8 +70,32 @@ import org.osgi.service.permissionadmin.PermissionInfo;
  */
 public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener, WikiEventProvider*/ {
 
+	String CREATED = "created";	
+
+	String CREATOR = "creator";
+
+	String GROUP_TAG = "group";
+
+	//:FVK: - определение не отсюда... String GROUP_NAME = "name";
+
+	String LAST_MODIFIED = "lastModified";
+
+	String MODIFIER = "modifier";
+
+	String MEMBER_TAG = "member";
+
+	String PRINCIPAL = "principal";
+
+	String DATE_FORMAT = "yyyy.MM.dd 'at' HH:mm:ss:SSS z";
+	DateFormat m_format = new SimpleDateFormat(DATE_FORMAT);
+
+	/** Key used for adding UI messages to a user's WikiSession. */
+	String MESSAGES_KEY = "group";
+
+	String PROP_GROUPDATABASE = "jspwiki.groupdatabase";
+	
 	//@formatter:off
-	public static final String[] RESTRICTED_GROUPNAMES = new String[] {
+	public static String[] RESTRICTED_GROUPNAMES = new String[] {
 			"Anonymous",
 			"All",
 			"Asserted",
@@ -123,6 +154,8 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 */
 	//:FVK:org.osgi.service.useradmin.Group getGroup(String name) throws NoSuchPrincipalException;
 
+	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException;
+	
 	/**
 	 * Extracts group name and members from passed parameters and populates an existing Group with
 	 * them. The Group will either be a copy of an existing Group (if one can be found), or a new,
@@ -211,7 +244,7 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 * @throws WikiSecurityException
 	 *                               if the Group cannot be saved by the back-end.
 	 */
-	void setGroup(/*IElWikiSession session,*/ org.osgi.service.useradmin.Group group) throws WikiSecurityException;
+	void setGroup(Session session, WrapGroup group) throws WikiSecurityException;
 
 	org.osgi.service.useradmin.Group getGroup(String groupName);
 
@@ -225,4 +258,5 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 */
 	PermissionInfo[] getRolePermissionInfo(String roleName);
 
+	void validateGroup(Context context, WrapGroup group);
 }

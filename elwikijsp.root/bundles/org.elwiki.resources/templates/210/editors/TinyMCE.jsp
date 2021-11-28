@@ -38,7 +38,7 @@
     This provides the WYSIWYG TinyMCE for JSPWiki.
 --%>
 <%
-	Context context = Context.findContext( pageContext );
+	Context context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
     /* local download of TinyMCE */
@@ -56,7 +56,7 @@
     String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
-    String usertext = EditorManager.getEditedText(pageContext);
+    String usertext = ContextUtil.getEditedText(pageContext);
 %>
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>

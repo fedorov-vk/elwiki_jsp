@@ -36,6 +36,32 @@ import org.eclipse.jdt.annotation.NonNull;
  */
 public interface UserDatabase {
 
+	String UID = "uid";
+
+	String LOGIN_NAME = "loginName";
+
+	String FULL_NAME = "fullName";
+
+	String PASSWORD = "password";
+
+	String CREATED = "created";
+
+	String EMAIL = "email";
+
+	String LAST_MODIFIED = "lastModified";
+
+	String LOCK_EXPIRY = "lockExpiry";
+
+	String DATE_FORMAT = "yyyy.MM.dd 'at' HH:mm:ss:SSS z";
+
+	String GROUP_NAME = "groupName";
+	
+	//TODO: :FVK: внести в свойства группы этот атрибут. Он будет означать зарезервированную, специальную не удаляемую группу.
+	String SPECIAL_GROUP = "specialGroup";
+
+	String GROUP_CREATOR = "groupCreator";
+	String GROUP_MODIFIER = "groupModofier";
+
     /**
      * Looks up and deletes the first {@link UserProfile} in the user database that matches a profile having a given login name. If the
      * user database does not contain a user with a matching attribute, throws a {@link NoSuchPrincipalException}. This method is intended

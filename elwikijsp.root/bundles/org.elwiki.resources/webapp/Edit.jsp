@@ -75,7 +75,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     String edit    = request.getParameter("edit");
     String author  = TextUtil.replaceEntities( findParam( pageContext, "author" ) );
     String changenote = findParam( pageContext, "changenote" );
-    String text    = EditorManager.getEditedText( pageContext );
+    String text    = ContextUtil.getEditedText( pageContext );
     String link    = TextUtil.replaceEntities( findParam( pageContext, "link") );
     String spamhash = findParam( pageContext, SpamFilter.getHashFieldName(request) );
     String captcha = (String)session.getAttribute("captcha");
@@ -137,7 +137,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
 		    	log.info("Page changed, warning user.");
 
-		    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+		    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
 		    	response.sendRedirect(wiki.getURL(ContextEnum.PAGE_CONFLICT.getRequestContext(), pagereq, null));
 		    	return;
     		}
@@ -187,7 +187,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     	    	// FIXME: Cut-n-paste code.
     	    	wikiContext.getWikiSession().addMessage(ex.getMessage()); // FIXME: should work, but doesn't
     	    	session.setAttribute("message", ex.getMessage());
-    	    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+    	    	session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
     	    	session.setAttribute("author", user);
     	    	session.setAttribute("link", link != null ? link : "");
     	    	if (htmlText != null)
@@ -205,7 +205,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
         }
 	} else if (preview != null) {
 		log.debug("Previewing " + pagereq);
-		session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+		session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
 		session.setAttribute("author", user);
 		session.setAttribute("link", link != null ? link : "");
 

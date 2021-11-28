@@ -16,12 +16,12 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ EditGroupContent.jsp -->
 <%@ page import="java.security.Principal" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
@@ -32,26 +32,26 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext( pageContext );
+Context c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );
-  Group group = (Group)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
-  Principal[] members = null;
+  //TODO: :FVK: разобраться с -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
+  WrapGroup group = (WrapGroup)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
+  String[] members = {};
 
   if ( group != null )
   {
     name = group.getName();
     members = group.members();
-    Arrays.sort( members, new PrincipalComparator() );
+    Arrays.sort(members);
   }
 
   StringBuffer membersAsString = new StringBuffer();
   for ( int i = 0; i < members.length; i++ )
   {
-    membersAsString.append( members[i].getName().trim() ).append( '\n' );
+    membersAsString.append( members[i].trim() ).append( '\n' );
   }
-
 %>
 <c:set var="name" value="<%= name%>" />
 <c:set var="members" value="<%= membersAsString%>" />
@@ -89,3 +89,4 @@
   </form>
 
 </div>
+<!-- ~~ END ~~ EditGroupContent.jsp -->

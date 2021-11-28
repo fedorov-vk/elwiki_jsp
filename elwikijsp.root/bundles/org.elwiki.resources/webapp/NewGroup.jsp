@@ -26,18 +26,15 @@
 <%@ page import="org.apache.wiki.api.exceptions.NoSuchPrincipalException" %>
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%!
-    Logger log = Logger.getLogger("JSPWiki"); 
-%>
+<%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_CREATE_GROUP.getRequestContext() );
     if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
@@ -45,7 +42,7 @@
     // Extract the current user, group name, members and action attributes
     Session wikiSession = wikiContext.getWikiSession();
     GroupManager groupMgr = wiki.getManager( GroupManager.class );
-    Group group = null;
+    WrapGroup group = null;
     try 
     {
         group = groupMgr.parseGroup( wikiContext, true );
@@ -98,6 +95,5 @@
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
     String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
-
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ NewGroup.jsp -->

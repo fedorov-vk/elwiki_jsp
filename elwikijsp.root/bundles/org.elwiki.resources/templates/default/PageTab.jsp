@@ -41,7 +41,7 @@
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
 <wiki:CheckVersion mode="notlatest">
   <%
-    Context c = Context.findContext( pageContext );
+    Context c = ContextUtil.findContext( pageContext );
   %>
   <c:set var="thisVersion" value="<%= c.getPage().getVersion() %>" />
   <c:set var="latestVersion" value="<%= c.getEngine().getManager( PageManager.class ).getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
@@ -77,7 +77,7 @@
 
 
 <%--
-ISWEBLOG= <%= Context.findContext( pageContext ).getPage().getAttribute( /*ATTR_ISWEBLOG*/ "weblogplugin.isweblog" ) %>
+ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*ATTR_ISWEBLOG*/ "weblogplugin.isweblog" ) %>
 --%>
 <%--  IF BLOCOMMENT PAGE:  insert back buttons to mainblog and blogentry permalink --%>
 <c:set var="mainblogpage" value="${fn:substringBefore(param.page,'_comments_')}" />

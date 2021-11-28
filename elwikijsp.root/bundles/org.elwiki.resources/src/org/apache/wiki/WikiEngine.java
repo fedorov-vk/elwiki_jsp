@@ -18,7 +18,6 @@
  */
 package org.apache.wiki;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
@@ -155,7 +154,6 @@ public class WikiEngine implements Engine {
      *  Gets a WikiEngine related to the servlet. Works just like getInstance( ServletConfig )
      *
      *  @param context The ServletContext of the webapp servlet/JSP calling this method.
-     *  @param props  A set of properties, or null, if we are to load JSPWiki's default jspwiki.properties (this is the usual case).
      *  @return One fully functional, properly behaving WikiEngine.
      *  @throws InternalWikiException If the WikiEngine instantiation fails.
      */
@@ -496,7 +494,7 @@ public class WikiEngine implements Engine {
             if( !exists ) {
                 try {
                     final URL url = m_servletContext.getResource( viewTemplate );
-                    exists = url != null && StringUtils.isNotEmpty( url.getFile() );
+                    exists = url != null && !url.getFile().isEmpty();
                 } catch( final MalformedURLException e ) {
                     log.warn( "template not found with viewTemplate " + viewTemplate );
                 }

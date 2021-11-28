@@ -33,6 +33,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -1000,7 +1001,7 @@ public class SpamFilter extends BasePageFilter {
         final String hashName = getHashFieldName( (HttpServletRequest)pageContext.getRequest() );
         if( pageContext.getRequest().getParameter(hashName) == null ) {
             if( pageContext.getAttribute( hashName ) == null ) {
-                final Change change = getChange( context, EditorManager.getEditedText( pageContext ) );
+                final Change change = getChange( context, ContextUtil.getEditedText( pageContext ) );
                 log( context, REJECT, "MissingHash", change.m_change );
 
                 final String redirect = context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(),"SessionExpired" );
@@ -1020,7 +1021,7 @@ public class SpamFilter extends BasePageFilter {
      * @return A HTML string which contains input fields for the SpamFilter.
      */
     public static final String insertInputFields( final PageContext pageContext ) {
-        final Context ctx = Context.findContext( pageContext );
+        final Context ctx = ContextUtil.findContext( pageContext );
         final IWikiConfiguration config = ctx.getConfiguration();
         final StringBuilder sb = new StringBuilder();
         if( config.getContentEncodingCs().equals( StandardCharsets.UTF_8 ) ) {

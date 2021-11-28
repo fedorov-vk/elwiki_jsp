@@ -22,8 +22,8 @@
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ page errorPage="/Error.jsp" %>
@@ -32,10 +32,10 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  // Extract the group name and members
+// Extract the group name and members
   String name = request.getParameter( "group" );
 
-  Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
+  WrapGroup group = (WrapGroup)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
   Principal[] members = null;
 
   if ( group != null )

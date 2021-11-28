@@ -33,7 +33,7 @@
   </div>
 
   <div class="preview-body">
-    <wiki:Translate><%=EditorManager.getEditedText(pageContext)%></wiki:Translate>
+    <wiki:Translate><%=ContextUtil.getEditedText(pageContext)%></wiki:Translate>
   </div>
 
   <div class="information">

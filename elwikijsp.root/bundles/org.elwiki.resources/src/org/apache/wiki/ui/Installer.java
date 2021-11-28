@@ -26,13 +26,13 @@ import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.authorize.Group;
 //import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.WrapGroup;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -136,7 +136,7 @@ public class Installer {
         
         // Create a new admin group
         final IAuthorizer groupMgr = m_engine.getManager( IAuthorizer.class );
-        Group group;
+        WrapGroup group;
         /*:FVK:
         try {
             group = groupMgr.getGroup( ADMIN_GROUP );

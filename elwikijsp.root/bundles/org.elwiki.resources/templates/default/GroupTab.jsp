@@ -1,3 +1,4 @@
+<%@page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
@@ -22,9 +23,9 @@
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.log4j.*" %>
-<%@ page import="org.apache.wiki.api.core.Context" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.GroupPermission" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
@@ -37,7 +38,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   //String name = request.getParameter( "group" );
@@ -51,11 +52,10 @@
   //:FVK: Arrays.sort( groups, new PrincipalComparator() );
 
   String name = null;
-  Group group = null;
+  WrapGroup group = null;
   org.osgi.service.useradmin.Group group1 = null;
-  Principal[] members = null;
+  String[] members = null;
   StringBuffer membersAsString = null;
-
 %>
 <c:set var="groups" value="<%= groups1 %>" />
 
@@ -124,19 +124,24 @@
     </thead>
     <tbody>
     <%
-    /*for( int g = 0; g < groups.length; g++ )
-    {
-      if ( groups[g] instanceof GroupPrincipal )*/
-    for(org.osgi.service.useradmin.Group group2 : groups1) {
-   	  if ( group2 instanceof org.osgi.service.useradmin.Group )
-      {
-        name = group2.getName(); //:FVK: groups[g].getName();
-        group1 = groupMgr.getGroup( name );
-        //:FVK:..........
-        members = new Principal[0];  //:FVK: group1.members();
-        Arrays.sort( members, new PrincipalComparator() );
-        pageContext.setAttribute("members", members);
+        /*for( int g = 0; g < groups.length; g++ )
+        {
+          if ( groups[g] instanceof GroupPrincipal )*/
+        for(org.osgi.service.useradmin.Group group2 : groups1) {
+       	  if ( group2 instanceof org.osgi.service.useradmin.Group )
+          {
+       		Dictionary<String, Object> groupProps = group2.getProperties();
+       		name = (String)groupProps.get(UserDatabase.GROUP_NAME);
+       		group = new WrapGroup(group2);
+
+            //name = group2.getName(); //:FVK: groups[g].getName();
+            //? group1 = groupMgr.getGroup( name );
+            //:FVK:..........
+            members = group.members();
+            //Arrays.sort( members, Comparator.naturalOrder() );
+            pageContext.setAttribute("members", members);
     %>
+    
     <c:set var="group" value="<%= group %>" />
     <tr class="${param.group == group.name ? 'highlight' : ''}">
       <%--<td><wiki:Link jsp='Group.jsp'><wiki:Param name='group' value='${group.name}'/>${group.name}</wiki:Link></td>--%>
@@ -144,12 +149,18 @@
       <td>
         <c:forEach items="${members}" var="member" varStatus="iterator">
           <c:if test="${iterator.index > 0}">, </c:if>
-          ${member.name}
+          ${member}
         </c:forEach>
       </td>
+      <!-- :FVK: ~ это оригинальный код Wiki 
       <td><fmt:formatDate value="${group.created}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" /></td>
+      -->
+      <td><fmt:formatDate value="${group.created}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
       <td>${group.creator}</td>
+      <!-- :FVK: ~ это оригинальный код Wiki 
       <td><fmt:formatDate value="${group.lastModified}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" /></td>
+      -->
+      <td><fmt:formatDate value="${group.lastModified}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
       <td>${group.modifier}</td>
 
       <td class="nowrap">
@@ -175,8 +186,10 @@
       </td>
     </tr>
     <%
+    int nn=23;
         } /* end of if-GroupPrincipal */
     } /* end of for loop */
+        int n=33;
     %>
     </tbody>
   </table>

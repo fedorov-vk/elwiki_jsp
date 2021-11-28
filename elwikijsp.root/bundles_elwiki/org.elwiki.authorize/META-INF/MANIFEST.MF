@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ElWiki Authorization
 Bundle-SymbolicName: org.elwiki.authorize;singleton:=true
 Automatic-Module-Name: org.elwiki.authorize
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.authorize.internal.bundle.AuthorizePluginActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.io;bundle-version="2.6.0",
@@ -29,12 +29,13 @@ Import-Package: javax.mail;version="1.4.0",
  org.apache.wiki.api.core,
  org.apache.wiki.api.exceptions,
  org.apache.wiki.auth,
+ org.apache.wiki.auth.authorize,
  org.apache.wiki.auth.user0,
  org.apache.wiki.ui,
  org.apache.wiki.util,
  org.eclipse.jface.preference,
- org.elwiki.configuration,
- org.elwiki.authorize.condition
+ org.elwiki.authorize.condition,
+ org.elwiki.configuration
 Export-Package: org.elwiki.authorize;
   uses:="org.elwiki.api.authorization,
    javax.servlet.http,

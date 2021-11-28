@@ -30,11 +30,13 @@ public interface IModifyInfo extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Version</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Version</em>' attribute.
 	 * @see #setVersion(int)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_Version()
@@ -56,11 +58,13 @@ public interface IModifyInfo extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Last Modify</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Last Modify</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Last Modify</em>' attribute.
 	 * @see #setLastModify(Date)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_LastModify()
@@ -83,11 +87,13 @@ public interface IModifyInfo extends CDOObject {
 	 * Returns the value of the '<em><b>Author</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Author</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Author</em>' attribute.
 	 * @see #setAuthor(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_Author()
@@ -109,11 +115,13 @@ public interface IModifyInfo extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Change Note</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Change Note</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Change Note</em>' attribute.
 	 * @see #setChangeNote(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_ChangeNote()

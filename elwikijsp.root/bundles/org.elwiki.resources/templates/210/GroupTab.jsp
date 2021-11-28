@@ -22,10 +22,10 @@
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
-<%@ page import="org.apache.wiki.api.core.Context" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ page import="org.apache.log4j.*" %>
@@ -33,8 +33,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
-<%!
-  String printWikiGroupPutGroup( Group group, String name, boolean cursor, PageContext pageContext)
+<%!String printWikiGroupPutGroup( WrapGroup group, String name, boolean cursor, PageContext pageContext)
   {
     Principal[] m = group.members();
     Arrays.sort( m, new PrincipalComparator() );
@@ -54,11 +53,11 @@
 
       ss.append( delim );
       mf = new MessageFormat(LocaleSupport.getLocalizedMessage(pageContext, "grp.createdon") );
-      args = new Object[]{(group.getCreated()==null) ? "" : Preferences.renderDate(Context.findContext( pageContext ), group.getCreated(),Preferences.TimeFormat.DATETIME), group.getCreator()};
+      args = new Object[]{(group.getCreated()==null) ? "" : Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getCreated(),Preferences.TimeFormat.DATETIME), group.getCreator()};
       ss.append( mf.format( args ) );
 
       mf = new MessageFormat(LocaleSupport.getLocalizedMessage(pageContext, "grp.lastmodified") );
-      args = new Object[]{(group.getLastModified()==null) ? "" : Preferences.renderDate(Context.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME), group.getModifier()};
+      args = new Object[]{(group.getLastModified()==null) ? "" : Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME), group.getModifier()};
       ss.append( mf.format( args ) );
 
       ss.append( "\", " );
@@ -68,8 +67,7 @@
 
 
     return ss.toString();
-  }
-%>
+  }%>
 
 <wiki:Messages div="error" topic="<%=GroupManager.MESSAGES_KEY%>" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"group.errorprefix")%>'/>
 
@@ -158,7 +156,7 @@
 
 <script type="text/javascript">//<![CDATA[
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
   Principal[] roles = c.getWikiSession().getRoles();
 
   for( int i = 0; i < roles.length; i++ )

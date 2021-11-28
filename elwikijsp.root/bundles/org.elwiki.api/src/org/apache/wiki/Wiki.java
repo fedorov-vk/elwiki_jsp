@@ -28,51 +28,18 @@ import org.apache.wiki.api.spi.EngineDSL;
 import org.apache.wiki.api.spi.EngineSPI;
 import org.apache.wiki.api.spi.SessionDSL;
 import org.apache.wiki.api.spi.SessionSPI;
-//import org.apache.wiki.util.PropertyReader;
-import org.apache.wiki.util.TextUtil;
-
-import javax.servlet.ServletContext;
-import java.nio.file.ProviderNotFoundException;
-import java.util.Properties;
-import java.util.ServiceLoader;
+//:FVK:import org.apache.wiki.util.PropertyReader;
 
 public class Wiki {
 
-	private static final String PROP_PROVIDER_IMPL_ACLS = "jspwiki.provider.impl.acls";
-	private static final String PROP_PROVIDER_IMPL_CONTENTS = "jspwiki.provider.impl.contents";
-	private static final String PROP_PROVIDER_IMPL_CONTEXT = "jspwiki.provider.impl.context";
-	private static final String PROP_PROVIDER_IMPL_ENGINE = "jspwiki.provider.impl.engine";
-	private static final String PROP_PROVIDER_IMPL_SESSION = "jspwiki.provider.impl.session";
-	private static final String DEFAULT_PROVIDER_IMPL_ACLS = "org.apache.wiki.spi.AclsSPIDefaultImpl";
-	private static final String DEFAULT_PROVIDER_IMPL_CONTENTS = "org.apache.wiki.spi.ContentsSPIDefaultImpl";
-	private static final String DEFAULT_PROVIDER_IMPL_CONTEXT = "org.apache.wiki.spi.ContextSPIDefaultImpl";
-	private static final String DEFAULT_PROVIDER_IMPL_ENGINE = "org.apache.wiki.spi.EngineSPIDefaultImpl";
-	private static final String DEFAULT_PROVIDER_IMPL_SESSION = "org.apache.wiki.spi.SessionSPIDefaultImpl";
-
 	// default values
-	//private static Properties properties = PropertyReader.getDefaultProperties();
-	private static AclsSPI aclsSPI; // = new org.apache.wiki.spi.AclsSPIDefaultImpl();  
-	//getSPI( AclsSPI.class, properties, PROP_PROVIDER_IMPL_ACLS, DEFAULT_PROVIDER_IMPL_ACLS );
-	private static ContentsSPI contentsSPI; // = new org.apache.wiki.spi.ContentsSPIDefaultImpl();
-	//getSPI( ContentsSPI.class, properties, PROP_PROVIDER_IMPL_CONTENTS, DEFAULT_PROVIDER_IMPL_CONTENTS );
-	private static ContextSPI contextSPI; // = new org.apache.wiki.spi.ContextSPIDefaultImpl();
-	//getSPI( ContextSPI.class, properties, PROP_PROVIDER_IMPL_CONTEXT, DEFAULT_PROVIDER_IMPL_CONTEXT );
-	private static EngineSPI engineSPI; // = new org.apache.wiki.spi.EngineSPIDefaultImpl();
-	//getSPI( EngineSPI.class, properties, PROP_PROVIDER_IMPL_ENGINE, DEFAULT_PROVIDER_IMPL_ENGINE );
-	private static SessionSPI sessionSPI; // = new org.apache.wiki.spi.SessionSPIDefaultImpl();
-	//getSPI( SessionSPI.class, properties, PROP_PROVIDER_IMPL_SESSION, DEFAULT_PROVIDER_IMPL_SESSION );
+	// :FVK:private static Properties properties = PropertyReader.getDefaultProperties();
 
-	/*:FVK:
-	public static Properties init(final ServletContext context) {
-		properties = PropertyReader.loadWebAppProps(context);
-		aclsSPI = getSPI( AclsSPI.class, properties, PROP_PROVIDER_IMPL_ACLS, DEFAULT_PROVIDER_IMPL_ACLS );
-		contentsSPI = getSPI( ContentsSPI.class, properties, PROP_PROVIDER_IMPL_CONTENTS, DEFAULT_PROVIDER_IMPL_CONTENTS );
-		contextSPI = getSPI( ContextSPI.class, properties, PROP_PROVIDER_IMPL_CONTEXT, DEFAULT_PROVIDER_IMPL_CONTEXT );
-		engineSPI = getSPI( EngineSPI.class, properties, PROP_PROVIDER_IMPL_ENGINE, DEFAULT_PROVIDER_IMPL_ENGINE );
-		sessionSPI = getSPI( SessionSPI.class, properties, PROP_PROVIDER_IMPL_SESSION, DEFAULT_PROVIDER_IMPL_SESSION );
-		return properties;
-	}
-	 */
+	private static AclsSPI aclsSPI;
+	private static ContentsSPI contentsSPI;
+	private static ContextSPI contextSPI;
+	private static EngineSPI engineSPI;
+	private static SessionSPI sessionSPI;
 
 	/**
 	 * Access to {@link AclsSPI} operations.
@@ -117,22 +84,6 @@ public class Wiki {
 	 */
 	public static SessionDSL session() {
 		return new SessionDSL(sessionSPI);
-	}
-
-	static <SPI> SPI getSPI(final Class<SPI> spi, final Properties props, final String prop, final String defValue) {
-		assert (false); // workaround.
-
-		/* :FVK: ниже - загружается реализация сервиса 
-		final String providerImpl = TextUtil.getStringProperty(props, prop, defValue);
-		final ServiceLoader<SPI> loader = ServiceLoader.load(spi);
-		for (final SPI provider : loader) {
-			if (providerImpl.equals(provider.getClass().getName())) {
-				return provider;
-			}
-		}
-		*/
-
-		throw new ProviderNotFoundException(spi.getName() + " provider not found");
 	}
 
 	// ----------------------------------------------------

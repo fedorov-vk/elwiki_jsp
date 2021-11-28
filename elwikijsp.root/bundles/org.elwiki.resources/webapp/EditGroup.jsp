@@ -16,53 +16,51 @@
     specific language governing permissions and limitations
     under the License.  
 --%>
-
+<!-- ~~ START ~~ EditGroup.jsp -->
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.elwiki.api.authorization.IAuthorizer" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%! 
-    Logger log = Logger.getLogger("JSPWiki"); 
-%>
+<%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_EDIT.getRequestContext() );
     if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
-    
+
     // Extract the current user, group name, members and action attributes
     Session wikiSession = wikiContext.getWikiSession();
     IAuthorizer groupMgr = wiki.getManager( IAuthorizer.class );
-    Group group = null;
-    /*:FVK: TODO:...
-    try 
+    WrapGroup group = null;
+    /*:FVK: TODO:... передача редактируемой группы. */
+    try
     {
         group = groupMgr.parseGroup( wikiContext, false );
-        pageContext.setAttribute ( "Group", group, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( "Group", group, PageContext.REQUEST_SCOPE );
     }
     catch ( WikiSecurityException e )
     {
         wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
         response.sendRedirect( "Group.jsp" );
-    }*/
-    
+    }
+
     // Are we saving the group?
-    /*:FVK: TODO:...
+    //:FVK: TODO:... проверить, рефакторизовать (выделить функционал групп).
     if( "save".equals(request.getParameter("action")) )
     {
         // Validate the group
         groupMgr.validateGroup( wikiContext, group );
 
         // If no errors, save the group now
-        if ( wikiSession.getMessages( GroupManager.MESSAGES_KEY ).length == 0 )
+        if ( wikiSession.getMessages( IAuthorizer.MESSAGES_KEY ).length == 0 )
         {
             try
             {
@@ -71,19 +69,19 @@
             catch( WikiSecurityException e )
             {
                 // Something went horribly wrong! Maybe it's an I/O error...
-                wikiSession.addMessage( GroupManager.MESSAGES_KEY, e.getMessage() );
+                wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
             }
         }
-        if ( wikiSession.getMessages( GroupManager.MESSAGES_KEY ).length == 0 )
+        if ( wikiSession.getMessages( IAuthorizer.MESSAGES_KEY ).length == 0 )
         {
             response.sendRedirect( "Group.jsp?group=" + group.getName() );
             return;
         }
-    }*/
-        
+    }
+
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "EditTemplate.jsp" );
-
+    String contentPage = wiki.getManager( TemplateManager.class )
+    		.findJSP( pageContext, wikiContext.getTemplate(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
-
+<!-- ~~ END ~~ EditGroup.jsp -->

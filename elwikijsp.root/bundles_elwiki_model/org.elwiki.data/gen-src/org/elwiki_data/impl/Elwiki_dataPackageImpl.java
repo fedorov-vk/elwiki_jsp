@@ -8,7 +8,9 @@ import java.lang.Object;
 
 import java.security.Permission;
 import java.security.Principal;
+
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -17,6 +19,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataFactory;
@@ -110,6 +113,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass principalEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass aclEClass = null;
 
 	/**
@@ -118,13 +128,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EClass stringToObjectMapEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass principalEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -588,6 +591,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getPageAttachment_Id() {
+		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getPageAttachment_Name() {
 		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(1);
 	}
@@ -630,16 +643,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EAttribute getPageAttachment_Size() {
 		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getPageAttachment_Id() {
-		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -788,6 +791,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getAclEntry_Principal() {
+		return (EAttribute)aclEntryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getAclEntry_Permission() {
 		return (EAttribute)aclEntryEClass.getEStructuralFeatures().get(1);
 	}
@@ -808,8 +821,18 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAclEntry_Principal() {
-		return (EAttribute)aclEntryEClass.getEStructuralFeatures().get(0);
+	public EOperation getAclEntry__FindPermission__Permission() {
+		return aclEntryEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getPrincipal() {
+		return principalEClass;
 	}
 
 	/**
@@ -888,8 +911,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EClass getPrincipal() {
-		return principalEClass;
+	public EDataType getArrayString() {
+		return arrayStringEDataType;
 	}
 
 	/**
@@ -930,16 +953,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EDataType getPrincipalObject() {
 		return principalObjectEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getArrayString() {
-		return arrayStringEDataType;
 	}
 
 	/**
@@ -1039,6 +1052,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEAttribute(aclEntryEClass, ACL_ENTRY__PRINCIPAL);
 		createEAttribute(aclEntryEClass, ACL_ENTRY__PERMISSION);
 		createEOperation(aclEntryEClass, ACL_ENTRY___CHECK_PERMISSION__PERMISSION);
+		createEOperation(aclEntryEClass, ACL_ENTRY___FIND_PERMISSION__PERMISSION);
 
 		principalEClass = createEClass(PRINCIPAL);
 
@@ -1180,6 +1194,9 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		op = initEOperation(getAclEntry__CheckPermission__Permission(), ecorePackage.getEBooleanObject(), "checkPermission", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getPermissionObject(), "permission", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getAclEntry__FindPermission__Permission(), this.getPermissionObject(), "findPermission", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getPermissionObject(), "p", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(principalEClass, Principal.class, "Principal", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 

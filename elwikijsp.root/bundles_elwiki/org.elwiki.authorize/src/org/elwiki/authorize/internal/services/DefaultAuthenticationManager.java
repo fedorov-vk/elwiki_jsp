@@ -67,6 +67,8 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.Collections;
@@ -315,6 +317,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
             return true;
         }
+
         return false;
     }
 
@@ -392,18 +395,21 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     /**
      * {@inheritDoc}
      */
-    @Override
+	@Override
     public Set< Principal > doJAASLogin( final Class< ? extends LoginModule > clazz,
                                          final CallbackHandler handler,
                                          final Map< String, String > options ) throws WikiSecurityException {
         // Instantiate the login module
-    	@NonNull
+    	//@NonNull //:FVK: workaround - commented.
         final LoginModule loginModule;
         try {
-            loginModule = clazz.getDeclaredConstructor().newInstance();
+       		loginModule = clazz.getDeclaredConstructor().newInstance();
         } catch( final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e ) {
             throw new WikiSecurityException( e.getMessage(), e );
         }
+        
+		if (loginModule == null) //:FVK: workaround - вместо @NonNull 
+			return Collections.emptySet();
 
         // Initialize the LoginModule
         final Subject subject = new Subject();

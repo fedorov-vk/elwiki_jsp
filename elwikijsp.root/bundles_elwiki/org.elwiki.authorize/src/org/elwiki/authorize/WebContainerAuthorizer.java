@@ -36,6 +36,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
@@ -47,6 +48,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
+import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.api.authorization.authorize.IWebAuthorizer;
 //import org.elwiki.api.IApplicationSession;
 //import org.elwiki.api.IElWikiSession;
@@ -507,8 +509,8 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 //		Assert.isTrue(false, ":FVK: Код не реализован.");
 //	}
 
-	//:FVK: @Override
-	public void setGroup(Session session, org.osgi.service.useradmin.Group group) throws WikiSecurityException {
+	@Override
+	public void setGroup(Session session, WrapGroup group) throws WikiSecurityException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -558,7 +560,13 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	}
 
 	@Override
-	public void setGroup(Group group) throws WikiSecurityException {
+	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void validateGroup(Context context, WrapGroup group) {
 		// TODO Auto-generated method stub
 		
 	}

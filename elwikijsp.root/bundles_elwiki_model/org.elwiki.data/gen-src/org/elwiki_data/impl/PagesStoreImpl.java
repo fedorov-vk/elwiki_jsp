@@ -5,6 +5,7 @@ package org.elwiki_data.impl;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 import org.elwiki_data.Elwiki_dataPackage;

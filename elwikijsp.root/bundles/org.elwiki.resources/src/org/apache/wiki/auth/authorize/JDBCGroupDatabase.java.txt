@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  * <p>
- * Implementation of GroupDatabase that persists {@link Group} objects to a JDBC
+ * Implementation of GroupDatabase that persists {@link WrapGroup} objects to a JDBC
  * DataSource, as might typically be provided by a web container. This
  * implementation looks up the JDBC DataSource using JNDI. The JNDI name of the
  * datasource, backing table and mapped columns used by this class can be
@@ -130,7 +130,7 @@ import java.util.Set;
  * <p>
  * JDBCGroupDatabase commits changes as transactions if the back-end database
  * supports them. Changes are made
- * immediately (during the {@link #save(Group, Principal)} method).
+ * immediately (during the {@link #save(WrapGroup, Principal)} method).
  * </p>
  * 
  * @since 2.3
@@ -228,7 +228,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
     private Engine m_engine = null;
 
     /**
-     * Looks up and deletes a {@link Group} from the group database. If the
+     * Looks up and deletes a {@link WrapGroup} from the group database. If the
      * group database does not contain the supplied Group. this method throws a
      * {@link NoSuchPrincipalException}. The method commits the results of the
      * delete to persistent storage.
@@ -238,7 +238,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
      *             supplied group (thrown as {@link NoSuchPrincipalException})
      *             or if the commit did not succeed
      */
-    @Override public void delete( final Group group ) throws WikiSecurityException
+    @Override public void delete( final WrapGroup group ) throws WikiSecurityException
     {
         if( !exists( group ) )
         {
@@ -294,9 +294,9 @@ public class JDBCGroupDatabase implements GroupDatabase {
      * @throws WikiSecurityException if the groups cannot be returned by the
      *             back-end
      */
-    @Override public Group[] groups() throws WikiSecurityException
+    @Override public WrapGroup[] groups() throws WikiSecurityException
     {
-        final Set<Group> groups = new HashSet<>();
+        final Set<WrapGroup> groups = new HashSet<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -316,7 +316,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
                 }
                 else
                 {
-                    final Group group = new Group( groupName, m_engine.getWikiConfiguration().getApplicationName() );
+                    final WrapGroup group = new WrapGroup( groupName, m_engine.getWikiConfiguration().getApplicationName() );
                     group.setCreated( rs.getTimestamp( m_created ) );
                     group.setCreator( rs.getString( m_creator ) );
                     group.setLastModified( rs.getTimestamp( m_modified ) );
@@ -336,7 +336,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
             closeQuietly( conn, ps, rs );
         }
 
-        return groups.toArray( new Group[groups.size()] );
+        return groups.toArray( new WrapGroup[groups.size()] );
     }
 
     /**
@@ -351,7 +351,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
      * @param modifier the user who saved the Group
      * @throws WikiSecurityException if the Group could not be saved successfully
      */
-    @Override public void save( final Group group, final Principal modifier ) throws WikiSecurityException
+    @Override public void save( final WrapGroup group, final Principal modifier ) throws WikiSecurityException
     {
         if( group == null || modifier == null )
         {
@@ -546,7 +546,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
      * @param group the Group to look for
      * @return the result of the search
      */
-    private boolean exists( final Group group )
+    private boolean exists( final WrapGroup group )
     {
         final String index = group.getName();
         try
@@ -569,9 +569,9 @@ public class JDBCGroupDatabase implements GroupDatabase {
      * @throws NoSuchPrincipalException if the Group cannot be found
      * @throws SQLException if the database query returns an error
      */
-    private Group findGroup( final String index ) throws NoSuchPrincipalException
+    private WrapGroup findGroup( final String index ) throws NoSuchPrincipalException
     {
-        Group group = null;
+        WrapGroup group = null;
         boolean found = false;
         boolean unique = true;
         ResultSet rs = null;
@@ -592,7 +592,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
                     unique = false;
                     break;
                 }
-                group = new Group( index, m_engine.getWikiConfiguration().getApplicationName() );
+                group = new WrapGroup( index, m_engine.getWikiConfiguration().getApplicationName() );
                 group.setCreated( rs.getTimestamp( m_created ) );
                 group.setCreator( rs.getString( m_creator ) );
                 group.setLastModified( rs.getTimestamp( m_modified ) );
@@ -628,7 +628,7 @@ public class JDBCGroupDatabase implements GroupDatabase {
      * @param group the group to populate
      * @return the populated Group
      */
-    private Group populateGroup( final Group group )
+    private WrapGroup populateGroup( final WrapGroup group )
     {
     	ResultSet rs = null;
     	PreparedStatement ps = null;

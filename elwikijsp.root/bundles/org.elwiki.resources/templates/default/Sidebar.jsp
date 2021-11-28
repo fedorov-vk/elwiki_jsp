@@ -27,7 +27,7 @@
 <div class="sidebar">
 
 <%-- :FVK: workaround - это вызывало ошибку компиляции JSP -- заменил на ="False".
-  <c:set var="isweblog">< %= ( String )Context.findContext( pageContext ).getPage().getAttribute( /*ATTR_ISWEBLOG*/ "weblogplugin.isweblog" ) %></c:set>
+  <c:set var="isweblog">< %= ( String )ContextUtil.findContext( pageContext ).getPage().getAttribute( /*ATTR_ISWEBLOG*/ "weblogplugin.isweblog" ) %></c:set>
  --%>
   <c:set var="isweblog">< %= "False" %></c:set>
 

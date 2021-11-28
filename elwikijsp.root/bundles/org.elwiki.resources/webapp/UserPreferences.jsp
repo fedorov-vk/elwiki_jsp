@@ -19,7 +19,7 @@
 --%>
 <!-- ~~ START ~~ UserPreferences.jsp -->
 <%@ page import="org.apache.log4j.*" %>
-<%@ page import="org.apache.wiki.api.core.Context" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine" %>
 <%@ page import="org.apache.wiki.api.core.Session" %>
@@ -39,11 +39,9 @@
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-
 <%! 
     Logger log = Logger.getLogger("JSPWiki"); 
 %>
-
 <%
 	Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
@@ -139,5 +137,6 @@
     }
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
     String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
-%><wiki:Include page="<%=contentPage%>" />
+%>
+<wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ UserPreferences.jsp -->

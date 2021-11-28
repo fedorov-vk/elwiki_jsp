@@ -31,11 +31,13 @@ public interface PagesStore extends CDOObject {
 	 * Returns the value of the '<em><b>Wikipages</b></em>' containment reference list.
 	 * The list contents are of type {@link org.elwiki_data.WikiPage}.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Wikipages</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Wikipages</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_Wikipages()
 	 * @model containment="true"
@@ -46,11 +48,13 @@ public interface PagesStore extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Main Page Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Main Page Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Main Page Id</em>' attribute.
 	 * @see #setMainPageId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_MainPageId()
@@ -73,11 +77,13 @@ public interface PagesStore extends CDOObject {
 	 * Returns the value of the '<em><b>Next Page Id</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Next Page Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Next Page Id</em>' attribute.
 	 * @see #setNextPageId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_NextPageId()
@@ -99,11 +105,13 @@ public interface PagesStore extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Next Attach Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Next Attach Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Next Attach Id</em>' attribute.
 	 * @see #setNextAttachId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_NextAttachId()

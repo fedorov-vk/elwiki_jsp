@@ -191,7 +191,7 @@
             pageText.append( "\n\n----\n\n" );
         }
 
-        String commentText = EditorManager.getEditedText(pageContext);
+        String commentText = ContextUtil.getEditedText(pageContext);
         //log.info("comment text"+commentText);
 
         //
@@ -249,7 +249,7 @@
         return;
     } else if( preview != null ) {
         log.debug("Previewing "+pagereq);
-        session.setAttribute(EditorManager.REQ_EDITEDTEXT, EditorManager.getEditedText(pageContext));
+        session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
         response.sendRedirect( TextUtil.replaceString( wiki.getURL( ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, "action=comment"),"&amp;","&") );
         return;
     } else if( cancel != null ) {

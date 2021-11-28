@@ -18,12 +18,11 @@
  */
 package org.apache.wiki.spi;
 
+import javax.servlet.ServletContext;
+
 import org.apache.wiki.WikiEngine;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.spi.EngineSPI;
-
-import javax.servlet.ServletContext;
-import java.util.Properties;
 
 
 /**

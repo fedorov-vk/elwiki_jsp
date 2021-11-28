@@ -51,6 +51,7 @@ import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.InputValidator;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -66,6 +67,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IWikiEngine;
 
 import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.api.authorization.authorize.GroupDatabase;
 //import org.elwiki.api.authorization.user.UserProfile;
 //import org.elwiki.api.event.WikiEvent;
@@ -107,30 +109,6 @@ import org.osgi.service.useradmin.UserAdmin;
 public class GroupManager implements IAuthorizer {
 
 	private static final Logger log = Logger.getLogger(GroupManager.class);
-
-	private static final String CREATED = "created";	
-
-	private static final String CREATOR = "creator";
-
-	private static final String GROUP_TAG = "group";
-
-	private static final String GROUP_NAME = "name";
-
-	private static final String LAST_MODIFIED = "lastModified";
-
-	private static final String MODIFIER = "modifier";
-
-	private static final String MEMBER_TAG = "member";
-
-	private static final String PRINCIPAL = "principal";
-
-	private static final String DATE_FORMAT = "yyyy.MM.dd 'at' HH:mm:ss:SSS z";
-	private DateFormat m_format = new SimpleDateFormat(DATE_FORMAT);
-
-	/** Key used for adding UI messages to a user's WikiSession. */
-	public static final String MESSAGES_KEY = "group";
-
-	private static final String PROP_GROUPDATABASE = "jspwiki.groupdatabase";
 
 	protected Engine m_engine;
 
@@ -238,7 +216,7 @@ public class GroupManager implements IAuthorizer {
 
 	@SuppressWarnings("unchecked")
 	//:FVK: @Override
-	public Group parseGroup(Session session, String groupName, String memberLine_, boolean create)
+	public WrapGroup parseGroup(Session session, String groupName, String memberLine_, boolean create)
 			throws WikiSecurityException {
 		String name = groupName;
 		String memberLine = memberLine_;
@@ -260,9 +238,11 @@ public class GroupManager implements IAuthorizer {
 			memberLine = "";
 		}
 		memberLine = memberLine.trim();
-
+		
+		WrapGroup group = null;
+		/*TODO: :FVK: - рассмотреть...
 		// Create or retrieve the group (may have been previously cached).
-		Group group = (Group) this.userAdminService.createRole(name, Role.GROUP);
+		group = (Group) this.userAdminService.createRole(name, Role.GROUP);
 		if (group != null) {
 			// Creats new group
 			String creator = (session.getUserPrincipal() == null) ? "foo" : session.getUserPrincipal().getName(); // :FVK: workaround 'foo'
@@ -274,8 +254,11 @@ public class GroupManager implements IAuthorizer {
 			String modifier = (session.getUserPrincipal() == null) ? "foo" : session.getUserPrincipal().getName(); // :FVK: workaround 'foo'
 			group.getProperties().put(MODIFIER, modifier);
 			group.getProperties().put(LAST_MODIFIED, this.m_format.format(new Date(System.currentTimeMillis())));
-			for (Role role : group.getMembers()) { // :FVK: workaround - possibly needed group.getRequiredMembers()
-				group.removeMember(role);
+			Role[] members = group.getMembers();
+			if (members != null) {
+				for (Role role : members) { // :FVK: workaround - possibly needed group.getRequiredMembers()
+					group.removeMember(role);
+				}
 			}
 		}
 
@@ -294,6 +277,7 @@ public class GroupManager implements IAuthorizer {
 				throw new WikiSecurityException("Illegal member name: " + member);
 			}
 		}
+		*/
 		return group;
 	}
 
@@ -322,25 +306,31 @@ public class GroupManager implements IAuthorizer {
 	 *                               <code>false</code> and the Group does not exist
 	 */
 	// :FVK: этот метод используется только в JSP файлах.
-	public Group parseGroup(Context context, boolean create) throws WikiSecurityException {
-		/*
+	@Override
+	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException {
 		// Extract parameters
 		HttpServletRequest request = context.getHttpRequest();
 		String name = request.getParameter("group");
 		String memberLine = request.getParameter("members");
-		
+
 		// Create the named group; we pass on any NoSuchPrincipalExceptions
 		// that may be thrown if create == false, or WikiSecurityExceptions
-		Group group = parseGroup(null, name, memberLine, create);
-		
-		// If no members, add the current user by default
+		WrapGroup wrapGroup = null;
+		/*:FVK:
+		WrapGroup group = parseGroup(null, name, memberLine, create);
+		*/
+		Object role = this.userAdminService.getUser(UserDatabase.GROUP_NAME, name);
+		if (role instanceof Group) {
+			wrapGroup = new WrapGroup((Group) role);
+		} else {
+			// TODO: обработать отсутствие группы.
+		}
+		/*:FVK: // If no members, add the current user by default
 		if (group.members().length == 0) {
 			group.add(context.getWikiSession().getUserPrincipal());
-		}
-		
-		return group;
-		*/
-		return null;
+		}*/
+
+		return wrapGroup;
 	}
 
 	@Override
@@ -364,54 +354,55 @@ public class GroupManager implements IAuthorizer {
 		//		fireEvent(WikiSecurityEvent.GROUP_REMOVE, group);
 	}
 
-	//:FVK: 	@Override
-	public void setGroup(Session session, Group group) throws WikiSecurityException {
+	@Override
+	public void setGroup(Session session, WrapGroup group) throws WikiSecurityException {
 		// TODO: check for appropriate permissions
 
 		// If group already exists, delete it; fire GROUP_REMOVE event
-		//:FVK:		Group oldGroup = this.m_groups.get(group.getPrincipal());
-		//		if (oldGroup != null) {
-		//			fireEvent(WikiSecurityEvent.GROUP_REMOVE, oldGroup);
-		//			synchronized (this.m_groups) {
-		//				this.m_groups.remove(oldGroup.getPrincipal());
-		//			}
-		//		}
+		/*Group oldGroup = this.m_groups.get(group.getPrincipal());
+		if (oldGroup != null) {
+			fireEvent(WikiSecurityEvent.GROUP_REMOVE, oldGroup);
+			synchronized (this.m_groups) {
+				this.m_groups.remove(oldGroup.getPrincipal());
+			}
+		}*/
 
 		// Copy existing modifier info & timestamps
-		//:FVK:		if (oldGroup != null) {
-		//			group.setCreator(oldGroup.getCreator());
-		//			group.setCreated(oldGroup.getCreated());
-		//			group.setModifier(oldGroup.getModifier());
-		//			group.setLastModified(oldGroup.getLastModified());
-		//		}
+		/*if (oldGroup != null) {
+			group.setCreator(oldGroup.getCreator());
+			group.setCreated(oldGroup.getCreated());
+			group.setModifier(oldGroup.getModifier());
+			group.setLastModified(oldGroup.getLastModified());
+		}*/
 
 		// Add new group to cache; announce GROUP_ADD event
-		//:FVK:		synchronized (this.m_groups) {
-		//			this.m_groups.put(group.getPrincipal(), group);
-		//		}
+		/*synchronized (this.m_groups) {
+			this.m_groups.put(group.getPrincipal(), group);
+		}*/
 		fireEvent(WikiSecurityEvent.GROUP_ADD, group);
 
 		// Save the group to back-end database; if it fails,
 		// roll back to previous state. Note that the back-end
 		// MUST timestamp the create/modify fields in the Group.
-		//		try {
-		//:FVK:			this.m_groupDatabase.save(group, session.getUserPrincipal());
-		//		}
-
+		/*
+		try {
+			this.m_groupDatabase.save(group, session.getUserPrincipal());
+		}
 		// We got an exception! Roll back...
-		//:FVK:		catch (WikiSecurityException e) {
-		//			if (oldGroup != null) {
-		//				// Restore previous version, re-throw...
-		//				fireEvent(WikiSecurityEvent.GROUP_REMOVE, group);
-		//				fireEvent(WikiSecurityEvent.GROUP_ADD, oldGroup);
-		//				synchronized (this.m_groups) {
-		//					this.m_groups.put(oldGroup.getPrincipal(), oldGroup);
-		//				}
-		//				throw new WikiSecurityException(e.getMessage() + " (rolled back to previous version).", e);
-		//			}
-		// Re-throw security exception
-		//			throw new WikiSecurityException(e.getMessage(), e);
-		//		}
+		catch (WikiSecurityException e) {
+			if (oldGroup != null) {
+				// Restore previous version, re-throw...
+				fireEvent(WikiSecurityEvent.GROUP_REMOVE, group);
+				fireEvent(WikiSecurityEvent.GROUP_ADD, oldGroup);
+				synchronized (this.m_groups) {
+					this.m_groups.put(oldGroup.getPrincipal(), oldGroup);
+				}
+				throw new WikiSecurityException(e.getMessage() + " (rolled back to previous version).", e);
+			}
+			// Re-throw security exception
+			throw new WikiSecurityException(e.getMessage(), e);
+		}
+		*/
 	}
 
 	/**
@@ -423,22 +414,24 @@ public class GroupManager implements IAuthorizer {
 	 * @param group
 	 *                the supplied Group.
 	 */
-	// :FVK: этот метод нигде не используется -- см. JSP файлы.
-	public void validateGroup(Context context, Group group) {
+	// :FVK: этот метод нигде используется -- в JSP файле.
+	@Override
+	public void validateGroup(Context context, WrapGroup group) {
 		InputValidator validator = new InputValidator(MESSAGES_KEY, context);
 
 		// Name cannot be null or one of the restricted names
 		try {
 			checkGroupName(context, group.getName());
 		} catch (WikiSecurityException e) {
-
+			//TODO: ...
 		}
 
 		// Member names must be "safe" strings
-		//:FVK:		Principal[] members = group.members();
-		//		for (int i = 0; i < members.length; i++) {
-		//			validator.validateNotNull(members[i].getName(), "Full name", InputValidator.ID);
-		//		}
+		//:FVK: заменил Principal на String.
+		String[] members = group.members();
+		for (String member : members) {
+			validator.validateNotNull(member, "Full name", InputValidator.ID);
+		}
 	}
 
 	/**
@@ -730,12 +723,6 @@ public class GroupManager implements IAuthorizer {
 	public Group parseGroup(String name, String memberLine, boolean create) throws WikiSecurityException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setGroup(Group group) throws WikiSecurityException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

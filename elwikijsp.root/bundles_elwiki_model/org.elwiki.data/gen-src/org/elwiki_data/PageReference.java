@@ -27,11 +27,13 @@ public interface PageReference extends CDOObject {
 	 * Returns the value of the '<em><b>Page Id</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Page Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Page Id</em>' attribute.
 	 * @see #setPageId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageReference_PageId()
@@ -54,11 +56,13 @@ public interface PageReference extends CDOObject {
 	 * Returns the value of the '<em><b>Wikipage</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getPageReferences <em>Page References</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Wikipage</em>' container reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Wikipage</em>' container reference.
 	 * @see #setWikipage(WikiPage)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageReference_Wikipage()

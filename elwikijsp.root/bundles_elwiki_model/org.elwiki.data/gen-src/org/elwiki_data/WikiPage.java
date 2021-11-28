@@ -5,9 +5,11 @@ package org.elwiki_data;
 import java.lang.Cloneable;
 import java.lang.Comparable;
 import java.lang.Object;
+
 import java.util.Date;
 
 import org.eclipse.emf.cdo.CDOObject;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 
@@ -49,11 +51,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Id()
@@ -76,11 +80,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Name()
@@ -102,11 +108,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Description</em>' attribute.
 	 * @see #setDescription(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Description()
@@ -128,11 +136,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Alias</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Alias</em>' attribute.
 	 * @see #setAlias(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Alias()
@@ -154,11 +164,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>Redirect</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Redirect</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Redirect</em>' attribute.
 	 * @see #setRedirect(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Redirect()
@@ -180,11 +192,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>View Count</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>View Count</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>View Count</em>' attribute.
 	 * @see #setViewCount(int)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_ViewCount()
@@ -208,11 +222,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * The list contents are of type {@link org.elwiki_data.PageContent}.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.PageContent#getWikipage <em>Wikipage</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Pagecontents</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Pagecontents</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Pagecontents()
 	 * @see org.elwiki_data.PageContent#getWikipage
@@ -226,11 +242,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * The list contents are of type {@link org.elwiki_data.PageAttachment}.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.PageAttachment#getWikipage <em>Wikipage</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Attachments</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Attachments</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Attachments()
 	 * @see org.elwiki_data.PageAttachment#getWikipage
@@ -243,11 +261,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * Returns the value of the '<em><b>Wiki</b></em>' attribute.
 	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Wiki</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Wiki</em>' attribute.
 	 * @see #setWiki(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Wiki()
@@ -271,11 +291,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * The list contents are of type {@link org.elwiki_data.WikiPage}.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getParent <em>Parent</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Children</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Children</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Children()
 	 * @see org.elwiki_data.WikiPage#getParent
@@ -288,11 +310,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * Returns the value of the '<em><b>Parent</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parent</em>' container reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Parent</em>' container reference.
 	 * @see #setParent(WikiPage)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Parent()
@@ -315,11 +339,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>Old Parents</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Old Parents</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Old Parents</em>' attribute.
 	 * @see #setOldParents(String[])
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_OldParents()
@@ -343,11 +369,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * The list contents are of type {@link org.elwiki_data.PageReference}.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.PageReference#getWikipage <em>Wikipage</em>}'.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Page References</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Page References</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_PageReferences()
 	 * @see org.elwiki_data.PageReference#getWikipage
@@ -360,11 +388,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * Returns the value of the '<em><b>Total Attachment</b></em>' attribute.
 	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Total Attachment</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Total Attachment</em>' attribute.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_TotalAttachment()
 	 * @model default="0" transient="true" changeable="false"
@@ -375,11 +405,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	/**
 	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Acl</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Acl</em>' containment reference.
 	 * @see #setAcl(Acl)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Acl()

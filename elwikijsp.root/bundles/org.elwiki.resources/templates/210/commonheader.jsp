@@ -67,7 +67,7 @@
 <meta name="wikiBaseUrl" content='<wiki:BaseURL />' />
 <meta name="wikiPageUrl" content='<wiki:Link format="url"  page="#$%"/>' />
 <meta name="wikiEditUrl" content='<wiki:EditLink format="url" />' />
-<meta name="wikiJsonUrl" content='<%=  Context.findContext(pageContext).getURL( ContextEnum.PAGE_NONE.getRequestContext(), "ajax" ) %>' /><%--unusual pagename--%>
+<meta name="wikiJsonUrl" content='<%=  ContextUtil.findContext(pageContext).getURL( ContextEnum.PAGE_NONE.getRequestContext(), "ajax" ) %>' /><%--unusual pagename--%>
 <meta name="wikiPageName" content='<wiki:Variable var="pagename" />' /><%--pagename without blanks--%>
 <meta name="wikiUserName" content='<wiki:UserName />' />
 <meta name="wikiTemplateUrl" content='<wiki:Link format="url" templatefile="" />' />
@@ -85,7 +85,7 @@
 <link rel="help"   href="<wiki:LinkTo format='url' page='TextFormattingRules'/>"
     title="Help" />
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
   String frontpage = c.getConfiguration().getFrontPage();
  %>
  <link rel="start"  href="<wiki:LinkTo format='url' page='<%=frontpage%>' />"

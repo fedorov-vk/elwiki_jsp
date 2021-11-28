@@ -28,7 +28,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
 	String postURL = "";
-    Context ctx = Context.findContext( pageContext );
+    Context ctx = ContextUtil.findContext( pageContext );
     IIAuthenticationManager mgr = ctx.getEngine().getManager( IIAuthenticationManager.class );
 
     if( mgr.isContainerAuthenticated() )

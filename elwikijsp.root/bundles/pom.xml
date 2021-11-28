@@ -14,8 +14,8 @@
 	</parent>
 
 	<modules>
-		<module>org.eclipse.equinox.http.helper</module>
 <!--
+		<module>org.eclipse.equinox.http.helper</module>
 		<module>sample.http</module>
 		<module>sample.res</module>
 -->

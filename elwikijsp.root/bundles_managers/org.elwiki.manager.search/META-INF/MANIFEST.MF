@@ -1,17 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Searchmanager
+Bundle-Name: Search Manager
 Bundle-SymbolicName: org.elwiki.manager.search
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.search
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/searchManager.xml
-Import-Package: java.io,
- java.lang.reflect,
- java.util,
- java.util.concurrent,
- org.elwiki.configuration,
+Import-Package: org.elwiki.configuration,
  org.elwiki_data,
  org.osgi.framework;version="1.9.0"
 Require-Bundle: org.eclipse.jface;bundle-version="3.19.0",

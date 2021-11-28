@@ -46,11 +46,9 @@
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
 
     // Set the redirect-page variable if one was passed as a parameter
-    if( request.getParameter( "redirect" ) != null ) {
-        wikiContext.setVariable( "redirect", request.getParameter( "redirect" ) );
-    } else {
-        wikiContext.setVariable( "redirect", wikiContext.getConfiguration().getFrontPage() );
-    }
+    String requestRedirect = (request.getParameter("redirect") != null)?
+    		request.getParameter("redirect") : wikiContext.getConfiguration().getFrontPage();
+    wikiContext.setVariable( "redirect", requestRedirect);
 
     // Are we saving the profile?
     if( "saveProfile".equals(request.getParameter("action")) ) {

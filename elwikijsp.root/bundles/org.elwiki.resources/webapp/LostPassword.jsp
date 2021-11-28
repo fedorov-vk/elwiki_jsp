@@ -22,7 +22,7 @@
 <%@ page import="javax.mail.*"%>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*"%>
 <%@ page import="org.apache.log4j.*"%>
-<%@ page import="org.apache.wiki.api.core.Context" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine"%>
 <%@ page import="org.apache.wiki.api.core.Session"%>

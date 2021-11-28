@@ -20,6 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.elwiki_data.WikiPage;
 
 import javax.servlet.jsp.JspWriter;
@@ -90,7 +91,7 @@ public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchF
     /** {@inheritDoc} */
     @Override
     public int doStartTag() {
-        m_wikiContext = Context.findContext(pageContext);
+        m_wikiContext = ContextUtil.findContext(pageContext);
         resetIterator();
         if( m_iterator == null ) {
             return SKIP_BODY;

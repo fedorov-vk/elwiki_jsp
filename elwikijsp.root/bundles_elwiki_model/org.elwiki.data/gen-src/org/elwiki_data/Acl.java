@@ -4,6 +4,7 @@ package org.elwiki_data;
 
 import java.security.Permission;
 import java.security.Principal;
+
 import org.eclipse.emf.cdo.CDOObject;
 
 import org.eclipse.emf.common.util.EList;
@@ -30,11 +31,13 @@ public interface Acl extends CDOObject {
 	 * Returns the value of the '<em><b>Acl Entries</b></em>' containment reference list.
 	 * The list contents are of type {@link org.elwiki_data.AclEntry}.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Acl Entries</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Acl Entries</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getAcl_AclEntries()
 	 * @model containment="true"
@@ -50,6 +53,12 @@ public interface Acl extends CDOObject {
 	 */
 	AclEntry getEntry(Principal principal);
 
-	Principal[] findPrincipals(Permission view);
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model dataType="org.elwiki_data.ArrayPrincipal" permissionDataType="org.elwiki_data.PermissionObject"
+	 * @generated
+	 */
+	Principal[] findPrincipals(Permission permission);
 
 } // Acl

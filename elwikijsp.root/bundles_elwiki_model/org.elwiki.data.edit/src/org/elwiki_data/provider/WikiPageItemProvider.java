@@ -59,6 +59,7 @@ public class WikiPageItemProvider extends ComparableItemProvider {
 			addOldParentsPropertyDescriptor(object);
 			addPageReferencesPropertyDescriptor(object);
 			addTotalAttachmentPropertyDescriptor(object);
+			addWebLogPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -306,6 +307,28 @@ public class WikiPageItemProvider extends ComparableItemProvider {
 	}
 
 	/**
+	 * This adds a property descriptor for the Web Log feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addWebLogPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_WikiPage_webLog_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_WikiPage_webLog_feature", "_UI_WikiPage_type"),
+				 Elwiki_dataPackage.Literals.WIKI_PAGE__WEB_LOG,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
 	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -321,6 +344,7 @@ public class WikiPageItemProvider extends ComparableItemProvider {
 			childrenFeatures.add(Elwiki_dataPackage.Literals.WIKI_PAGE__CHILDREN);
 			childrenFeatures.add(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGE_REFERENCES);
 			childrenFeatures.add(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL);
+			childrenFeatures.add(Elwiki_dataPackage.Literals.WIKI_PAGE__ATTRIBUTES);
 		}
 		return childrenFeatures;
 	}
@@ -385,12 +409,14 @@ public class WikiPageItemProvider extends ComparableItemProvider {
 			case Elwiki_dataPackage.WIKI_PAGE__WIKI:
 			case Elwiki_dataPackage.WIKI_PAGE__OLD_PARENTS:
 			case Elwiki_dataPackage.WIKI_PAGE__TOTAL_ATTACHMENT:
+			case Elwiki_dataPackage.WIKI_PAGE__WEB_LOG:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case Elwiki_dataPackage.WIKI_PAGE__PAGECONTENTS:
 			case Elwiki_dataPackage.WIKI_PAGE__CHILDREN:
 			case Elwiki_dataPackage.WIKI_PAGE__PAGE_REFERENCES:
 			case Elwiki_dataPackage.WIKI_PAGE__ACL:
+			case Elwiki_dataPackage.WIKI_PAGE__ATTRIBUTES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
@@ -427,6 +453,11 @@ public class WikiPageItemProvider extends ComparableItemProvider {
 			(createChildParameter
 				(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL,
 				 Elwiki_dataFactory.eINSTANCE.createAcl()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(Elwiki_dataPackage.Literals.WIKI_PAGE__ATTRIBUTES,
+				 Elwiki_dataFactory.eINSTANCE.create(Elwiki_dataPackage.Literals.STRING_TO_OBJECT_MAP)));
 	}
 
 }

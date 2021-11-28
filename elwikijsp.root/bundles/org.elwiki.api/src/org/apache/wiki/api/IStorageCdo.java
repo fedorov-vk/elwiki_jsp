@@ -14,10 +14,13 @@ public interface IStorageCdo {
 
 	boolean isStorageActive();
 
+	@Deprecated
 	void activateStorage() throws Exception;
 
+	@Deprecated
 	Exception deactivateStorage();
 
+	@Deprecated
 	AdapterFactory getAdapterFactory();
 
 	<T extends CDOObject> Object modify(T object, ITransactionalOperation<T> operation);

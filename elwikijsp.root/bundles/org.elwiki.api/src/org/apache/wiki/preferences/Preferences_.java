@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
 //:FVK: import org.apache.wiki.util.PropertyReader;
@@ -92,7 +93,7 @@ public class Preferences_ extends HashMap< String,String > {
         
         //:FVK: final Properties props = PropertyReader.loadWebAppProps( pageContext.getServletContext() );
         
-        final Context ctx = Context.findContext( pageContext );
+        final Context ctx = ContextUtil.findContext( pageContext );
         InternationalizationManager i18lManager = ctx.getEngine().getManager( InternationalizationManager.class );
         final String dateFormat = i18lManager.get( InternationalizationManager.CORE_BUNDLE, getLocale( ctx ), "common.datetimeformat" );
 
