@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="jetty_osgi.JcgServlet">
-   <property name="osgi.http.whiteboard.servlet.pattern" value="/test"/>
-   <service scope="prototype">
-      <provide interface="javax.servlet.Servlet"/>
-   </service>
-   <implementation class="jetty_osgi.JcgServlet"/>
-</scr:component>
