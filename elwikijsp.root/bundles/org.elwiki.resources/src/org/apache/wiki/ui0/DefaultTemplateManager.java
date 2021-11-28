@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.ui0;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -261,7 +261,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
         if( skinSet != null ) {
             final String[] skins = skinSet.toArray( new String[]{} );
             for( final String skin : skins ) {
-                final String[] s = StringUtils.split( skin, "/" );
+                final String[] s = skin.split("/");
                 if( s.length > 2 && skin.endsWith( "/" ) ) {
                     final String skinName = s[ s.length - 1 ];
                     resultSet.add( skinName );
@@ -328,7 +328,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
     /** {@inheritDoc} */
     @Override
     public Map< String, String > listTimeFormats( final PageContext pageContext ) {
-        final Context context = Context.findContext( pageContext );
+        final Context context = ContextUtil.findContext( pageContext );
         IPreferenceStore props = m_engine.getWikiPreferences();
         final ArrayList< String > tfArr = new ArrayList<>(40);
         final LinkedHashMap< String, String > resultMap = new LinkedHashMap<>();

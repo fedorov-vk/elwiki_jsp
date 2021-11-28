@@ -4,7 +4,9 @@ package org.elwiki_data;
 
 import java.security.Permission;
 import java.security.Principal;
+
 import org.eclipse.emf.cdo.CDOObject;
+
 import org.eclipse.emf.common.util.EList;
 
 /**
@@ -26,39 +28,16 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface AclEntry extends CDOObject {
-
-	/**
-	 * Returns the value of the '<em><b>Permission</b></em>' attribute list.
-	 * The list contents are of type {@link java.security.Permission}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Permission</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Permission</em>' attribute list.
-	 * @see org.elwiki_data.Elwiki_dataPackage#getAclEntry_Permission()
-	 * @model dataType="org.elwiki_data.PermissionObject"
-	 * @generated
-	 */
-	EList<Permission> getPermission();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model permissionDataType="org.elwiki_data.PermissionObject"
-	 * @generated
-	 */
-	Boolean checkPermission(Permission permission);
-
 	/**
 	 * Returns the value of the '<em><b>Principal</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Principal</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Principal</em>' attribute.
 	 * @see #setPrincipal(Principal)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getAclEntry_Principal()
@@ -76,4 +55,34 @@ public interface AclEntry extends CDOObject {
 	 * @generated
 	 */
 	void setPrincipal(Principal value);
+
+	/**
+	 * Returns the value of the '<em><b>Permission</b></em>' attribute list.
+	 * The list contents are of type {@link java.security.Permission}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Permission</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Permission</em>' attribute list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getAclEntry_Permission()
+	 * @model dataType="org.elwiki_data.PermissionObject"
+	 * @generated
+	 */
+	EList<Permission> getPermission();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * 
+	 * <!-- end-model-doc -->
+	 * @model permissionDataType="org.elwiki_data.PermissionObject"
+	 * @generated
+	 */
+	Boolean checkPermission(Permission permission);
+
 } // AclEntry

@@ -23,11 +23,10 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.authorize.Group;
 import org.apache.wiki.auth.authorize.GroupDatabase;
 //import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.authorize.Role;
-import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
+//:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.apache.wiki.auth.permissions.AllPermission;
 import org.apache.wiki.auth.permissions.GroupPermission;
 import org.apache.wiki.auth.permissions.PermissionFactory;
@@ -37,6 +36,7 @@ import org.apache.wiki.auth.user.DummyUserDatabase;*/
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.authorization.WrapGroup;
 import org.freshcookies.security.policy.PolicyReader;
 
 import javax.security.auth.Subject;
@@ -344,9 +344,11 @@ public final class SecurityVerifier {
         final Authorizer authorizer = (Authorizer) authorizationManager.getAuthorizer();
 
         // If authorizer not WebContainerAuthorizer, print error message
+/*:FVK:
         if ( !( authorizer instanceof WebContainerAuthorizer ) ) {
             throw new IllegalStateException( "Authorizer should be WebContainerAuthorizer" );
         }
+*/
 
         // Now, print a table with JSP pages listed on the left, and
         // an evaluation of each pages' constraints for each role
@@ -369,6 +371,7 @@ public final class SecurityVerifier {
         s.append( "</thead>\n" );
         s.append( "<tbody>\n" );
 
+/*:FVK:
         final WebContainerAuthorizer wca = (WebContainerAuthorizer) authorizer;
         for( int i = 0; i < CONTAINER_ACTIONS.length; i++ ) {
             final String action = CONTAINER_ACTIONS[i];
@@ -403,7 +406,7 @@ public final class SecurityVerifier {
             }
             s.append( "  </tr>\n" );
         }
-
+*/
         s.append( "</tbody>\n" );
         s.append( "</table>\n" );
         return s.toString();
@@ -427,9 +430,11 @@ public final class SecurityVerifier {
      */
     public Principal[] webContainerRoles() throws WikiException {
         final Authorizer authorizer = (Authorizer) m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+/*:FVK:
         if ( authorizer instanceof WebContainerAuthorizer ) {
             return authorizer.getRoles();
         }
+*/
         return new Principal[0];
     }
 
@@ -510,7 +515,7 @@ public final class SecurityVerifier {
 
         // Try adding a bogus group with random name
         final String name = "TestGroup" + System.currentTimeMillis();
-        final Group group;
+        final WrapGroup group;
       /*:FVK: 
         try {
             // Create dummy test group

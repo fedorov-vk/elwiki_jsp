@@ -18,7 +18,6 @@
  */
 package org.apache.wiki;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
@@ -185,7 +184,7 @@ public class WikiContext implements Context, Command {
             throw new InternalWikiException( "Engine has not been properly started.  It is likely that the configuration is faulty.  Please check all logs for the possible reason." );
         }
     }
-
+    
     /**
      * {@inheritDoc}
      * @see org.apache.wiki.api.core.Command#getContentTemplate()
@@ -263,20 +262,21 @@ public class WikiContext implements Context, Command {
      *  @since 2.2
      */
     @Override
-    public String getRedirectURL() {
-        final String pagename = m_page.getName();
-        String redirectURL = m_engine.getManager( CommandResolver.class ).getSpecialPageReference( pagename );
-        if( redirectURL == null ) {
-            final String alias = m_page.getAlias();
-            if( alias != null ) {
-                redirectURL = getViewURL( alias );
-            } else {
-                redirectURL = m_page.getRedirect();
+	public String getRedirectURL() {
+		final String pagename = m_page.getName();
+		String redirectURL = m_engine.getManager(CommandResolver.class).getSpecialPageReference(pagename);
+		if (redirectURL == null) {
+			final String alias = m_page.getAlias();
+			/* TODO: :FVK: в `if` - добавил `&& !alias.isEmpty()` - чтоб не рестартовал вход через Wiki.jsp, без указания страницы. */
+			if (alias != null && !alias.isEmpty()) {
+				redirectURL = getViewURL(alias);
+			} else {
+				redirectURL = m_page.getRedirect();
 			}
-        }
-        
+		}
+
 		return (redirectURL == null || redirectURL.isEmpty()) ? null : redirectURL;
-    }
+	}
 
     /** {@inheritDoc} */
     @Override
@@ -609,23 +609,7 @@ public class WikiContext implements Context, Command {
     public WikiSession getWikiSession() {
         return ( WikiSession )m_session;
     }
-
-    /**
-     * This method can be used to find the WikiContext programmatically from a JSP PageContext. We check the request context.
-     * The wiki context, if it exists, is looked up using the key {@link #ATTR_CONTEXT}.
-     *
-     * @since 2.4
-     * @param pageContext the JSP page context
-     * @return Current WikiContext, or null, of no context exists.
-     * @deprecated use {@link Context#findContext( PageContext )} instead.
-     * @see Context#findContext( PageContext )
-     */
-    @Deprecated
-    public static WikiContext findContext( final PageContext pageContext ) {
-        final HttpServletRequest request = ( HttpServletRequest )pageContext.getRequest();
-        return ( WikiContext )request.getAttribute( ATTR_CONTEXT );
-    }
-
+    
     /**
      * Returns the permission required to successfully execute this context. For example, the a wiki context of VIEW for a certain page
      * means that the PagePermission "view" is required for the page. In some cases, no particular permission is required, in which case

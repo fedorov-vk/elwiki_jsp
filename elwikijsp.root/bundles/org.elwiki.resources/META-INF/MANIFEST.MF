@@ -5,16 +5,16 @@ Bundle-SymbolicName: org.elwiki.resources;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.elwiki.resources.ResourcesActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.elwiki.resources
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  taglibs-elwiki-2.3.jar,
  taglibs-standard-impl-1.2.5.fixed.jar,
  taglibs-standard-spec-1.2.5.jar,
- xmlrpc-2.0.1.jar,
  sandler-0.5.jar,
- freshcookies-security-0.60.jar
+ freshcookies-security-0.60.jar,
+ xmlrpc-2.0.1.jar
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.equinox.http.registry;bundle-version="1.1.700",
  org.eclipse.equinox.jsp.jasper;bundle-version="1.1.400",

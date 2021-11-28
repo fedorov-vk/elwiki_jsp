@@ -30,7 +30,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
 
   String text = c.getEngine().getManager( PageManager.class ).getText( c.getPage() );
   StringTokenizer tokens = new StringTokenizer( text );

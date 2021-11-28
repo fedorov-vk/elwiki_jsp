@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: AuthContext
+Bundle-Name: Authorize Context
 Bundle-SymbolicName: org.elwiki.authorize.context.anonymous;singleton:=true
 Automatic-Module-Name: org.elwiki.authorize.context.anonymous
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.authorize.context.anonymous.AnonymousContextActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: org.elwiki.authorize.context.anonymous

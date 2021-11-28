@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
+
 import org.elwiki_data.Elwiki_dataPackage;
 
 /**
@@ -80,7 +81,6 @@ public class StringToObjectMapImpl extends CDOObjectImpl implements BasicEMap.En
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	public Object getTypedValue() {
 		return (Object)eGet(Elwiki_dataPackage.Literals.STRING_TO_OBJECT_MAP__VALUE, true);
 	}

@@ -1,8 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
+ * Copyright (c) 2007 IBM Corporation All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse
+ * Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 package org.eclipse.equinox.http.helper;
@@ -48,7 +47,9 @@ public class ContextInitParametersServletAdaptor implements Servlet {
 		return delegate.getServletInfo();
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private class ServletConfigAdaptor implements ServletConfig {
+		
 		private ServletConfig config;
 		private ServletContext context;
 
@@ -74,6 +75,7 @@ public class ContextInitParametersServletAdaptor implements Servlet {
 		}
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private class ServletContextAdaptor implements ServletContext {
 
 		private ServletContext delegate;
@@ -181,7 +183,7 @@ public class ContextInitParametersServletAdaptor implements Servlet {
 		public void setAttribute(String arg0, Object arg1) {
 			delegate.setAttribute(arg0, arg1);
 		}
-		
+
 		// Added in Servlet 2.5
 		public String getContextPath() {
 			try {
@@ -194,138 +196,146 @@ public class ContextInitParametersServletAdaptor implements Servlet {
 		}
 
 		public int getEffectiveMajorVersion() {
-			// TODO Auto-generated method stub
-			return 0;
+			return delegate.getEffectiveMajorVersion();
 		}
 
 		public int getEffectiveMinorVersion() {
-			// TODO Auto-generated method stub
-			return 0;
+			return delegate.getEffectiveMinorVersion();
 		}
 
 		public boolean setInitParameter(String name, String value) {
-			// TODO Auto-generated method stub
-			return false;
+			return delegate.setInitParameter(name, value);
 		}
 
 		public Dynamic addServlet(String servletName, String className) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addServlet(servletName, className);
 		}
 
 		public Dynamic addServlet(String servletName, Servlet servlet) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addServlet(servletName, servlet);
 		}
 
 		public Dynamic addServlet(String servletName, Class servletClass) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addServlet(servletName, servletName);
 		}
 
 		public Servlet createServlet(Class clazz) throws ServletException {
-			// TODO Auto-generated method stub
-			return null;
+			return createServlet(clazz);
 		}
 
 		public ServletRegistration getServletRegistration(String servletName) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getServletRegistration(servletName);
 		}
 
 		public Map getServletRegistrations() {
-			// TODO Auto-generated method stub
-			return null;
+			return getServletRegistrations();
 		}
 
 		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addFilter(filterName, className);
 		}
 
 		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addFilter(filterName, filter);
 		}
 
 		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class filterClass) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.addFilter(filterName, filterClass);
 		}
 
 		public Filter createFilter(Class clazz) throws ServletException {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.createFilter(clazz);
 		}
 
 		public FilterRegistration getFilterRegistration(String filterName) {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getFilterRegistration(filterName);
 		}
 
 		public Map getFilterRegistrations() {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getFilterRegistrations();
 		}
 
 		public SessionCookieConfig getSessionCookieConfig() {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getSessionCookieConfig();
 		}
 
 		public void setSessionTrackingModes(Set sessionTrackingModes) {
-			// TODO Auto-generated method stub
-			
+			delegate.setSessionTrackingModes(sessionTrackingModes);
 		}
 
 		public Set getDefaultSessionTrackingModes() {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getDefaultSessionTrackingModes();
 		}
 
 		public Set getEffectiveSessionTrackingModes() {
-			// TODO Auto-generated method stub
-			return null;
+			return getEffectiveSessionTrackingModes();
 		}
 
 		public void addListener(String className) {
-			// TODO Auto-generated method stub
-			
+			delegate.addListener(className);
 		}
 
 		public void addListener(EventListener t) {
-			// TODO Auto-generated method stub
-			
+			delegate.addListener(t);
 		}
 
 		public void addListener(Class listenerClass) {
-			// TODO Auto-generated method stub
-			
+			delegate.addListener(listenerClass);
 		}
 
 		public EventListener createListener(Class clazz) throws ServletException {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.createListener(clazz);
 		}
 
 		public JspConfigDescriptor getJspConfigDescriptor() {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getJspConfigDescriptor();
 		}
 
 		public ClassLoader getClassLoader() {
-			// TODO Auto-generated method stub
-			return null;
+			return getClassLoader();
 		}
 
 		public void declareRoles(String[] roleNames) {
-			// TODO Auto-generated method stub
-			
+			delegate.declareRoles(roleNames);
 		}
 
 		public String getVirtualServerName() {
-			// TODO Auto-generated method stub
-			return null;
+			return delegate.getVirtualServerName();
+		}
+
+		@Override
+		public Dynamic addJspFile(String servletName, String jspFile) {
+			return delegate.addJspFile(servletName, jspFile);
+		}
+
+		@Override
+		public int getSessionTimeout() {
+			return delegate.getSessionTimeout();
+		}
+
+		@Override
+		public void setSessionTimeout(int sessionTimeout) {
+			delegate.setSessionTimeout(sessionTimeout);
+		}
+
+		@Override
+		public String getRequestCharacterEncoding() {
+			return delegate.getRequestCharacterEncoding();
+		}
+
+		@Override
+		public void setRequestCharacterEncoding(String encoding) {
+			delegate.setRequestCharacterEncoding(encoding);
+		}
+
+		@Override
+		public String getResponseCharacterEncoding() {
+			return delegate.getResponseCharacterEncoding();
+		}
+
+		@Override
+		public void setResponseCharacterEncoding(String encoding) {
+			delegate.setResponseCharacterEncoding(encoding);
 		}
 	}
 }

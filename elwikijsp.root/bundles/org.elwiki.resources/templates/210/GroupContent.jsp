@@ -22,8 +22,8 @@
 <%@ page import="java.security.Principal" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.apache.wiki.auth.authorize.Group" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
+<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
@@ -32,16 +32,14 @@
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
-<%!
-  Logger log = Logger.getLogger("JSPWiki");
-%>
+<%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-  Context c = Context.findContext( pageContext );
+Context c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );
-  Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
+  WrapGroup group = (WrapGroup)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
   Principal[] members = null;
   String modified = "";
   String created = "";
@@ -56,12 +54,12 @@
     creator = group.getCreator();
     if ( group.getCreated() != null )
     {
-      created = Preferences.renderDate(Context.findContext( pageContext ), group.getCreated(),Preferences.TimeFormat.DATETIME);
+      created = Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getCreated(),Preferences.TimeFormat.DATETIME);
     }
     modifier = group.getModifier();
     if ( group.getLastModified() != null )
     {
-      modified = Preferences.renderDate(Context.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME) ;
+      modified = Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME) ;
     }
   }
   name = TextUtil.replaceEntities(name);

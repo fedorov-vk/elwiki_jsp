@@ -18,13 +18,12 @@
  */
 package org.apache.wiki.spi;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wiki.WikiSession;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.spi.SessionSPI;
-
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * Default implementation for {@link SessionSPI}
@@ -33,28 +32,28 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SessionSPIDefaultImpl implements SessionSPI {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove( final Engine engine, final HttpServletRequest request ) {
-    	WikiSession.removeWikiSession( engine, request );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void remove(final Engine engine, final HttpServletRequest request) {
+		WikiSession.removeWikiSession(engine, request);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Session find( final Engine engine, final HttpServletRequest request ) {
-        return WikiSession.getWikiSession( engine, request );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Session find(final Engine engine, final HttpServletRequest request) {
+		return WikiSession.getWikiSession(engine, request);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Session guest( final Engine engine ) {
-        return WikiSession.guestSession( engine );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Session guest(final Engine engine) {
+		return WikiSession.guestSession(engine);
+	}
 
 }

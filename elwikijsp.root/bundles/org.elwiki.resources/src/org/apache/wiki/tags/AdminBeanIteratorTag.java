@@ -19,6 +19,7 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 
@@ -42,7 +43,7 @@ public class AdminBeanIteratorTag extends IteratorTag {
      */
     public void setType( final String type ) {
     	if (m_wikiContext == null) {
-    		m_wikiContext = Context.findContext(pageContext);
+    		m_wikiContext = ContextUtil.findContext(pageContext);
     	}
         m_type = m_wikiContext.getEngine().getManager( AdminBeanManager.class ).getTypeFromString( type );
     }

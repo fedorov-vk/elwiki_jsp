@@ -19,6 +19,7 @@
 package org.apache.wiki;
 
 import org.eclipse.core.runtime.Assert;
+import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
 
 import java.security.Principal;
@@ -35,7 +36,6 @@ import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
@@ -46,7 +46,6 @@ import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.authorize.Group;
 //import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.auth.user0.UserDatabase;
@@ -92,7 +91,7 @@ public final class WikiSession implements Session {
      * @param group the group to test
      * @return the result
      */
-    protected boolean isInGroup( final Group group ) {
+    protected boolean isInGroup( final WrapGroup group ) {
         for( final Principal principal : getPrincipals() ) {
             if( isAuthenticated() && group.isMember( principal ) ) {
                 return true;
@@ -134,9 +133,11 @@ public final class WikiSession implements Session {
     @Override
     public boolean isAnonymous() {
         final Set< Principal > principals = m_subject.getPrincipals();
-        return principals.contains( Role.ANONYMOUS ) ||
+        boolean result = principals.contains( Role.ANONYMOUS ) ||
                principals.contains( WikiPrincipal.GUEST ) ||
                HttpUtil.isIPV4Address( getUserPrincipal().getName() );
+
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -165,13 +166,13 @@ public final class WikiSession implements Session {
 
     /** {@inheritDoc} */
     @Override
-    public void addMessage( final String topic, final String message ) {
-        if ( topic == null ) {
-            throw new IllegalArgumentException( "addMessage: topic cannot be null." );
-        }
-        final Set< String > messages = m_messages.computeIfAbsent( topic, k -> new LinkedHashSet<>() );
-        messages.add( StringUtils.defaultString( message ) );
-    }
+	public void addMessage(final String topic, final String message) {
+		if (topic == null) {
+			throw new IllegalArgumentException("addMessage: topic cannot be null.");
+		}
+		final Set<String> messages = m_messages.computeIfAbsent(topic, k -> new LinkedHashSet<>());
+		messages.add((message != null) ? message : "");
+	}
 
     /** {@inheritDoc} */
     @Override
@@ -255,13 +256,13 @@ public final class WikiSession implements Session {
             if ( e.getTarget() != null ) {
                 switch( e.getType() ) {
                 case WikiSecurityEvent.GROUP_ADD:
-                    final Group groupAdd = ( Group )e.getTarget();
+                    final WrapGroup groupAdd = ( WrapGroup )e.getTarget();
                     if( isInGroup( groupAdd ) ) {
                         m_subject.getPrincipals().add( groupAdd.getPrincipal() );
                     }
                     break;
                 case WikiSecurityEvent.GROUP_REMOVE:
-                    final Group group = ( Group )e.getTarget();
+                    final WrapGroup group = ( WrapGroup )e.getTarget();
                     m_subject.getPrincipals().remove( group.getPrincipal() );
                     break;
                 case WikiSecurityEvent.GROUP_CLEAR_GROUPS:

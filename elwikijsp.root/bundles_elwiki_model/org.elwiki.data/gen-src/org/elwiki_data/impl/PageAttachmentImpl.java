@@ -3,7 +3,9 @@
 package org.elwiki_data.impl;
 
 import java.util.Date;
+
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 import org.elwiki_data.Elwiki_dataPackage;
@@ -148,6 +150,26 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
+	public String getId() {
+		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setId(String newId) {
+		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, newId);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getName() {
 		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__NAME, true);
 	}
@@ -240,26 +262,6 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	@Override
 	public void setSize(long newSize) {
 		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__SIZE, newSize);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getId() {
-		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setId(String newId) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, newId);
 	}
 
 } //PageAttachmentImpl

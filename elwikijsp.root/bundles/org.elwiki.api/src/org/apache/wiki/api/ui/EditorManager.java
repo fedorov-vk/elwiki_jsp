@@ -22,8 +22,6 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.modules.ModuleManager;
 
-import javax.servlet.jsp.PageContext;
-
 
 /**
  *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under templates/default/editors
@@ -92,21 +90,5 @@ public interface EditorManager extends ModuleManager, Initializable {
      *  @return e.g. "editors/plain.jsp"
      */
     String getEditorPath( Context context );
-
-    /**
-     *  Convenience function which examines the current context and attempts to figure out whether the edited text is in the HTTP
-     *  request parameters or somewhere in the session.
-     *
-     *  @param ctx the JSP page context
-     *  @return the edited text, if present in the session page context or as a parameter
-     */
-    static String getEditedText( final PageContext ctx ) {
-        String usertext = ctx.getRequest().getParameter( REQ_EDITEDTEXT );
-        if( usertext == null ) {
-            usertext = ( String )ctx.findAttribute( ATTR_EDITEDTEXT );
-        }
-
-        return usertext;
-    }
 
 }

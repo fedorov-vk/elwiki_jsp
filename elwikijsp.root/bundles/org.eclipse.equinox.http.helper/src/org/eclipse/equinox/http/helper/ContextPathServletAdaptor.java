@@ -50,6 +50,7 @@ public class ContextPathServletAdaptor implements Servlet {
 		return delegate.getServletInfo();
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private class ServletConfigAdaptor implements ServletConfig {
 		private ServletConfig config;
 		private ServletContext context;
@@ -76,6 +77,7 @@ public class ContextPathServletAdaptor implements Servlet {
 		}
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private class ServletContextAdaptor implements ServletContext {
 
 		private ServletContext delegate;
@@ -302,12 +304,47 @@ public class ContextPathServletAdaptor implements Servlet {
 		}
 
 		public void declareRoles(String[] roleNames) {
-			// TODO Auto-generated method stub
-			
+			delegate.declareRoles(roleNames);			
 		}
 
 		public String getVirtualServerName() {
 			return delegate.getVirtualServerName();
+		}
+
+		@Override
+		public Dynamic addJspFile(String servletName, String jspFile) {
+			return delegate.addJspFile(servletName, jspFile);
+		}
+
+		@Override
+		public int getSessionTimeout() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public void setSessionTimeout(int sessionTimeout) {
+			delegate.setSessionTimeout(sessionTimeout);
+		}
+
+		@Override
+		public String getRequestCharacterEncoding() {
+			return delegate.getRequestCharacterEncoding();
+		}
+
+		@Override
+		public void setRequestCharacterEncoding(String encoding) {
+			delegate.setRequestCharacterEncoding(encoding);			
+		}
+
+		@Override
+		public String getResponseCharacterEncoding() {
+			return delegate.getResponseCharacterEncoding();
+		}
+
+		@Override
+		public void setResponseCharacterEncoding(String encoding) {
+			delegate.setResponseCharacterEncoding(encoding);			
 		}
 	}
 

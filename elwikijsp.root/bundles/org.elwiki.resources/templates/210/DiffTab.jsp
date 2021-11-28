@@ -30,7 +30,7 @@
 <fmt:setBundle basename="templates.default"/>
 
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
   List history = c.getEngine().getManager( PageManager.class ).getVersionHistory(c.getPage().getName());
   pageContext.setAttribute( "history", history );
   pageContext.setAttribute( "diffprovider", c.getEngine().getManager( VariableManager.class ).getVariable(c,"jspwiki.diffProvider"));

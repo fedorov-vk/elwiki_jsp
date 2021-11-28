@@ -28,7 +28,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	Context ctx = Context.findContext( pageContext );
+	Context ctx = ContextUtil.findContext( pageContext );
     IIAuthenticationManager mgr = ctx.getEngine().getManager( IIAuthenticationManager.class );
     String loginURL = "";
 
@@ -272,4 +272,5 @@
 </div>
 
 </div>
+
 <!-- ~~ END ~~ LoginContent.jsp -->

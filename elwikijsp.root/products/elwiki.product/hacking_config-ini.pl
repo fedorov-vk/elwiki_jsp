@@ -28,7 +28,6 @@ my @bundles4run = (
 	'reference\:file\:org.apache.taglibs.standard.glassfish/@3',
 	'reference\:file\:org.eclipse.equinox.common/@2\:start',
 	'reference\:file\:org.eclipse.equinox.console/@2\:start',
-	'reference\:file\:org.eclipse.equinox.http.helper/@3\:start',
 	'reference\:file\:org.eclipse.equinox.http.registry/@2\:start',
 	'reference\:file\:org.eclipse.equinox.http.servlet/@2\:start',
 	'reference\:file\:org.eclipse.equinox.http.servletbridge/@2\:start',

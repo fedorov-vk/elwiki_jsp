@@ -18,7 +18,6 @@
 */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Context;
@@ -112,7 +111,7 @@ public abstract class ModuleBean extends SimpleAdminBean {
 
     protected String validModuleVersion( final WikiModuleInfo info ) {
         return Release.isNewerOrEqual( info.getMinVersion() ) && Release.isOlderOrEqual( info.getMaxVersion() )
-               ? StringUtils.EMPTY
+               ? ""
                : VER_WARNING;
     }
 

@@ -96,6 +96,10 @@
           body="return findPermission(permission) != null;">
         <genParameters ecoreParameter="elwiki_data.ecore#//AclEntry/checkPermission/permission"/>
       </genOperations>
+      <genOperations ecoreOperation="elwiki_data.ecore#//AclEntry/findPermission"
+          body="for (Permission pp : getPermission()) {&#xA;&#x9;if (pp.implies(p)) {&#xA;&#x9;&#x9;return pp;&#xA;&#x9;}&#xA;}&#xA;&#xA;return null;">
+        <genParameters ecoreParameter="elwiki_data.ecore#//AclEntry/findPermission/p"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="elwiki_data.ecore#//Principal"/>
     <genClasses ecoreClass="elwiki_data.ecore#//Acl">

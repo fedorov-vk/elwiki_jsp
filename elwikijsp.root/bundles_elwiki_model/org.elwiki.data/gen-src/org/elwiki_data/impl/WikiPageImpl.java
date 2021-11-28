@@ -7,14 +7,15 @@ import java.lang.Comparable;
 import java.lang.Object;
 
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.common.util.EMap;
+
 import org.eclipse.emf.ecore.EClass;
+
 import org.elwiki_data.Acl;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
@@ -52,7 +53,6 @@ import org.elwiki_data.WikiPage;
  * @generated
  */
 public class WikiPageImpl extends ComparableImpl implements WikiPage {
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -301,6 +301,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@Override
 	public int getTotalAttachment() {
 		EList<PageAttachment> attachments = getAttachments();
 		return attachments.size();
@@ -388,8 +389,9 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public Object clone() {
-		Assert.isTrue(false, ":FVK: Missed code!"); //:FVK: - удалить метод.
-		return null;
+		Object o = new Object(); // :FVK:
+		return o;
+		
 	}
 
 	/**

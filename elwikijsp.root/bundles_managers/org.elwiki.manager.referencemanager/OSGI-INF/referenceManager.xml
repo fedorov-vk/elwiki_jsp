@@ -4,4 +4,5 @@
    <service>
       <provide interface="org.apache.wiki.api.references.ReferenceManager"/>
    </service>
+   <reference bind="setStorageCdo" cardinality="1..1" interface="org.apache.wiki.api.IStorageCdo" name="IStorageCdo" policy="static"/>
 </scr:component>

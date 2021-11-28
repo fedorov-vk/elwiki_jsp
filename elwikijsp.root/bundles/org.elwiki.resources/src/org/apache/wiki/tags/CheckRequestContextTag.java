@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
 
 import java.io.IOException;
@@ -30,9 +30,10 @@ import java.io.IOException;
  *  @since 2.0
  *  @see org.apache.wiki.WikiContext
  */
-public class CheckRequestContextTag
-    extends WikiTagBase
-{
+public class CheckRequestContextTag extends WikiTagBase {
+
+    private static final Logger log = Logger.getLogger( CheckRequestContextTag.class );
+
     private static final long serialVersionUID = 0L;
     
     private String m_context;
@@ -68,7 +69,7 @@ public class CheckRequestContextTag
     {
         m_context = arg;
         
-        m_contextList = StringUtils.split(arg,'|');
+        m_contextList = arg.split("\\|");
     }
 
     /**

@@ -6,5 +6,7 @@ public class GroupContent {
 	String users[];
 	String permissions;
 	String uid;
+	String creator;
+	String modifier;
 
 }

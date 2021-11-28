@@ -19,6 +19,7 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.Editor;
@@ -39,7 +40,7 @@ public class EditorIteratorTag extends IteratorTag  {
     /** {@inheritDoc} */
     @Override
     public final int doStartTag() {
-        m_wikiContext = Context.findContext(pageContext);
+        m_wikiContext = ContextUtil.findContext(pageContext);
         final Engine engine = m_wikiContext.getEngine();
         final EditorManager mgr = engine.getManager( EditorManager.class );
         final String[] editorList = mgr.getEditorList();

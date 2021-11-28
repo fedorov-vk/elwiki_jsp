@@ -31,7 +31,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
 	/* dateformatting not yet supported by wiki:UserProfile tag - diy */
-  Context wikiContext = Context.findContext(pageContext);
+  Context wikiContext = ContextUtil.findContext(pageContext);
   UserManager manager = wikiContext.getEngine().getManager( UserManager.class );
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>

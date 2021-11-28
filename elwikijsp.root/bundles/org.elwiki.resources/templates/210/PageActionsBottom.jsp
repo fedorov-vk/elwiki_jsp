@@ -24,7 +24,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	Context c = Context.findContext(pageContext);
+	Context c = ContextUtil.findContext(pageContext);
   WikiPage wikipage = c.getPage();
 %>
 <wiki:CheckRequestContext context='view|diff|edit|upload|info'>

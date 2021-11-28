@@ -34,7 +34,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   //FIXME: this should better move to UserPreferences.jsp but that doesn't seem to work. Ugh ?
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
   TemplateManager t = c.getEngine().getManager( TemplateManager.class );
   pageContext.setAttribute( "skins", t.listSkins(pageContext, c.getTemplate() ) );
   pageContext.setAttribute( "languages", t.listLanguages(pageContext) );

@@ -29,7 +29,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
 %>
 <c:set var="history" value="<%= c.getEngine().getManager( PageManager.class ).getVersionHistory(c.getPage().getName()) %>" />
 <c:set var="diffprovider" value='<%= c.getEngine().getManager( VariableManager.class ).getVariable(c,"jspwiki.diffProvider") %>' />

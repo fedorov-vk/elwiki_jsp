@@ -3,24 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Wiki Configuration
 Bundle-SymbolicName: org.elwiki.configuration;singleton:=true
 Automatic-Module-Name: org.elwiki.configuration
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.configuration.bundle.ConfigurationActivator
 Require-Bundle: org.eclipse.core.resources,
  org.apache.log4j,
- org.apache.oro;bundle-version="2.0.8",
- org.jdom.2;bundle-version="2.0.6",
  org.eclipse.core.commands;bundle-version="3.9.700",
  org.elwiki.util,
  org.elwiki.configuration
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Export-Package: org.elwiki.configuration
-Import-Package: java.io,
- java.net,
- java.nio.charset,
- java.nio.file,
- java.util,
- org.eclipse.core.commands.common,
+Import-Package: org.eclipse.core.commands.common,
  org.eclipse.core.runtime;version="3.5.0",
  org.eclipse.core.runtime.preferences;version="3.3.0",
  org.eclipse.jface.preference,
@@ -30,3 +22,4 @@ Import-Package: java.io,
  org.osgi.service.prefs;version="1.1.1"
 Service-Component: OSGI-INF/component.xml
 Eclipse-BundleShape: dir
+Export-Package: org.elwiki.configuration

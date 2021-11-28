@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
-  <viewpoint:DAnalysis uid="_MickwG-QEeid6OKUsQuIXA" selectedViews="_NX9QcG-QEeid6OKUsQuIXA _NYUc0G-QEeid6OKUsQuIXA" version="14.3.1.202003261200">
+  <viewpoint:DAnalysis uid="_MickwG-QEeid6OKUsQuIXA" selectedViews="_NX9QcG-QEeid6OKUsQuIXA _NYUc0G-QEeid6OKUsQuIXA" version="14.5.1.202106111100">
     <semanticResources>elwiki_data.ecore</semanticResources>
     <semanticResources>http://www.eclipse.org/emf/2002/Ecore</semanticResources>
     <semanticResources>platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign</semanticResources>
@@ -8,7 +8,7 @@
     <semanticResources>http://www.eclipse.org/emf/2002/GenModel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="56a4c9ad-ca40-4896-aa7f-786a65de7eb4">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="fd7ce8fc-bf6d-428d-b582-ae3f33a7f3df">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -274,7 +274,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_aUKBKW-QEeid6OKUsQuIXA"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_aUKBJG-QEeid6OKUsQuIXA" fontName="Ubuntu" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aUKBJW-QEeid6OKUsQuIXA" x="636" y="300" height="58"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aUKBJW-QEeid6OKUsQuIXA" x="675" y="300" height="58"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_OvXWYK9ZEeinwawNAMwioA" type="2003" element="_OuelkK9ZEeinwawNAMwioA">
           <children xmi:type="notation:Node" xmi:id="_OvddAK9ZEeinwawNAMwioA" type="5007"/>
@@ -291,11 +291,15 @@
               <styles xmi:type="notation:FontStyle" xmi:id="_rhOSAa92EeiJm8lxes2RAg" fontName="Ubuntu" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_rhOSAq92EeiJm8lxes2RAg"/>
             </children>
+            <children xmi:type="notation:Node" xmi:id="_GwyGYER5Eey6OZ6bXc7xtw" type="3010" element="_GvfF4ER5Eey6OZ6bXc7xtw">
+              <styles xmi:type="notation:FontStyle" xmi:id="_GwyGYUR5Eey6OZ6bXc7xtw" fontName="Ubuntu" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_GwyGYkR5Eey6OZ6bXc7xtw"/>
+            </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_OverIa9ZEeinwawNAMwioA"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_OverIq9ZEeinwawNAMwioA"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_OvXWYa9ZEeinwawNAMwioA" fontName="Ubuntu" fontHeight="8"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OvXWYq9ZEeinwawNAMwioA" x="465" y="440" width="329" height="100"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OvXWYq9ZEeinwawNAMwioA" x="465" y="432" width="329" height="108"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_CQtisK9sEeiSDr3FZSHorg" type="2003" element="_CQbO0K9sEeiSDr3FZSHorg">
           <children xmi:type="notation:Node" xmi:id="_CQx0IK9sEeiSDr3FZSHorg" type="5007"/>
@@ -494,17 +498,17 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_aVihMm-QEeid6OKUsQuIXA" type="4001" element="_aTZzMG-QEeid6OKUsQuIXA" source="_aTw_kG-QEeid6OKUsQuIXA" target="_aUKBI2-QEeid6OKUsQuIXA">
           <children xmi:type="notation:Node" xmi:id="_aVihNm-QEeid6OKUsQuIXA" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihN2-QEeid6OKUsQuIXA" x="31" y="-10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihN2-QEeid6OKUsQuIXA" x="12" y="-10"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_aVihOG-QEeid6OKUsQuIXA" type="6002">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihOW-QEeid6OKUsQuIXA" x="23" y="-17" width="72" height="12"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihOW-QEeid6OKUsQuIXA" x="17" y="-17" width="72" height="12"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="_aVihOm-QEeid6OKUsQuIXA" type="6003">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihO2-QEeid6OKUsQuIXA" x="-27" y="-17"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aVihO2-QEeid6OKUsQuIXA" x="-34" y="-17"/>
           </children>
           <styles xmi:type="notation:ConnectorStyle" xmi:id="_aVihM2-QEeid6OKUsQuIXA" routing="Rectilinear"/>
           <styles xmi:type="notation:FontStyle" xmi:id="_aVihNG-QEeid6OKUsQuIXA" fontName="Ubuntu" fontHeight="8"/>
-          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_aVihNW-QEeid6OKUsQuIXA" points="[90, 213, -325, -53]$[356, 213, -59, -53]"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_aVihNW-QEeid6OKUsQuIXA" points="[125, 213, -294, -53]$[360, 213, -59, -53]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_aVjIQG-QEeid6OKUsQuIXA" id="(0.5,0.0)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_aVjIQW-QEeid6OKUsQuIXA" id="(0.5,1.75)"/>
         </edges>
@@ -554,7 +558,7 @@
           <styles xmi:type="notation:FontStyle" xmi:id="_4_ZS4q9sEeiJm8lxes2RAg" fontColor="7490599" fontName="Ubuntu" fontHeight="8"/>
           <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_4_ZS469sEeiJm8lxes2RAg" points="[0, 0, 382, -60]$[-442, 0, -60, -60]$[-442, 35, -60, -25]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_4_Z58K9sEeiJm8lxes2RAg" id="(0.0,0.6326530612244898)"/>
-          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_4_Z58a9sEeiJm8lxes2RAg" id="(0.36085626911314983,0.25510204081632654)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_4_Z58a9sEeiJm8lxes2RAg" id="(0.36085626911314983,0.3113207547169811)"/>
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_Z5yMAGPnEeu3dM5iEc3PcQ" type="4001" element="_Z5fRFmPnEeu3dM5iEc3PcQ" source="_aTw_kG-QEeid6OKUsQuIXA" target="_fn8a8GPiEeu3dM5iEc3PcQ">
           <children xmi:type="notation:Node" xmi:id="_Z5yMBGPnEeu3dM5iEc3PcQ" type="6001">
@@ -1112,6 +1116,15 @@
         <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//AclEntry/checkPermission"/>
         <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//AclEntry/checkPermission/permission"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_rg9zUK92EeiJm8lxes2RAg" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_GvfF4ER5Eey6OZ6bXc7xtw" name="findPermission(p PermissionObject) : PermissionObject" tooltipText="findPermission(p) : PermissionObject">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//AclEntry/findPermission"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//AclEntry/findPermission"/>
+        <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//AclEntry/findPermission/p"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_GvgUAER5Eey6OZ6bXc7xtw" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>

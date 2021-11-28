@@ -35,13 +35,13 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   Context context = Context.findContext( pageContext );
+   Context context = ContextUtil.findContext( pageContext );
    Engine engine = context.getEngine();
 
    TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT,
    		context.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "scripts/jspwiki-edit.js" ) );
 
-   String usertext = EditorManager.getEditedText( pageContext );
+   String usertext = ContextUtil.getEditedText( pageContext );
 %>
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>

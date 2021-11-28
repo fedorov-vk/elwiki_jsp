@@ -7,9 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.Principal;
 import java.util.Vector;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 import org.elwiki_data.Acl;

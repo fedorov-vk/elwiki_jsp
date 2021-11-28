@@ -843,23 +843,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ACL_ENTRY___CHECK_PERMISSION__PERMISSION = 0;
 
 	/**
+	 * The operation id for the '<em>Find Permission</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY___FIND_PERMISSION__PERMISSION = 1;
+
+	/**
 	 * The number of operations of the '<em>Acl Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_ENTRY_OPERATION_COUNT = 1;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
-	 * @generated
-	 */
-	int ACL = 11;
+	int ACL_ENTRY_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link java.security.Principal <em>Principal</em>}' class.
@@ -888,6 +887,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int PRINCIPAL_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.AclImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
+	 * @generated
+	 */
+	int ACL = 11;
 
 	/**
 	 * The feature id for the '<em><b>Acl Entries</b></em>' containment reference list.
@@ -981,6 +990,15 @@ public interface Elwiki_dataPackage extends EPackage {
 	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '<em>Array String</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
+	 * @generated
+	 */
+	int ARRAY_STRING = 13;
+
+	/**
 	 * The meta object id for the '<em>Access List</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1018,15 +1036,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	int PRINCIPAL_OBJECT = 17;
-
-	/**
-	 * The meta object id for the '<em>Array String</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
-	 * @generated
-	 */
-	int ARRAY_STRING = 13;
 
 
 	/**
@@ -1413,6 +1422,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EClass getPageAttachment();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.elwiki_data.PageAttachment#getId()
+	 * @see #getPageAttachment()
+	 * @generated
+	 */
+	EAttribute getPageAttachment_Id();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAttachment#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1466,17 +1486,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPageAttachment_Size();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.elwiki_data.PageAttachment#getId()
-	 * @see #getPageAttachment()
-	 * @generated
-	 */
-	EAttribute getPageAttachment_Id();
 
 	/**
 	 * Returns the meta object for class '{@link java.lang.Object <em>Object</em>}'.
@@ -1628,6 +1637,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EClass getAclEntry();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclEntry#getPrincipal <em>Principal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Principal</em>'.
+	 * @see org.elwiki_data.AclEntry#getPrincipal()
+	 * @see #getAclEntry()
+	 * @generated
+	 */
+	EAttribute getAclEntry_Principal();
+
+	/**
 	 * Returns the meta object for the attribute list '{@link org.elwiki_data.AclEntry#getPermission <em>Permission</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1649,15 +1669,25 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getAclEntry__CheckPermission__Permission();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclEntry#getPrincipal <em>Principal</em>}'.
+	 * Returns the meta object for the '{@link org.elwiki_data.AclEntry#findPermission(java.security.Permission) <em>Find Permission</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Principal</em>'.
-	 * @see org.elwiki_data.AclEntry#getPrincipal()
-	 * @see #getAclEntry()
+	 * @return the meta object for the '<em>Find Permission</em>' operation.
+	 * @see org.elwiki_data.AclEntry#findPermission(java.security.Permission)
 	 * @generated
 	 */
-	EAttribute getAclEntry_Principal();
+	EOperation getAclEntry__FindPermission__Permission();
+
+	/**
+	 * Returns the meta object for class '{@link java.security.Principal <em>Principal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Principal</em>'.
+	 * @see java.security.Principal
+	 * @model instanceClass="java.security.Principal"
+	 * @generated
+	 */
+	EClass getPrincipal();
 
 	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.Acl <em>Acl</em>}'.
@@ -1735,15 +1765,14 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getStringToObjectMap_Value();
 
 	/**
-	 * Returns the meta object for class '{@link java.security.Principal <em>Principal</em>}'.
+	 * Returns the meta object for data type '<em>Array String</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Principal</em>'.
-	 * @see java.security.Principal
-	 * @model instanceClass="java.security.Principal"
+	 * @return the meta object for data type '<em>Array String</em>'.
+	 * @model instanceClass="java.lang.String[]"
 	 * @generated
 	 */
-	EClass getPrincipal();
+	EDataType getArrayString();
 
 	/**
 	 * Returns the meta object for data type '{@link java.lang.Object <em>Access List</em>}'.
@@ -1787,16 +1816,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getPrincipalObject();
-
-	/**
-	 * Returns the meta object for data type '<em>Array String</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Array String</em>'.
-	 * @model instanceClass="java.lang.String[]"
-	 * @generated
-	 */
-	EDataType getArrayString();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -2118,6 +2137,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EClass PAGE_ATTACHMENT = eINSTANCE.getPageAttachment();
 
 		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PAGE_ATTACHMENT__ID = eINSTANCE.getPageAttachment_Id();
+
+		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2156,14 +2183,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PAGE_ATTACHMENT__SIZE = eINSTANCE.getPageAttachment_Size();
-
-		/**
-		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE_ATTACHMENT__ID = eINSTANCE.getPageAttachment_Id();
 
 		/**
 		 * The meta object literal for the '{@link java.lang.Object <em>Object</em>}' class.
@@ -2290,6 +2309,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EClass ACL_ENTRY = eINSTANCE.getAclEntry();
 
 		/**
+		 * The meta object literal for the '<em><b>Principal</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACL_ENTRY__PRINCIPAL = eINSTANCE.getAclEntry_Principal();
+
+		/**
 		 * The meta object literal for the '<em><b>Permission</b></em>' attribute list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2306,12 +2333,22 @@ public interface Elwiki_dataPackage extends EPackage {
 		EOperation ACL_ENTRY___CHECK_PERMISSION__PERMISSION = eINSTANCE.getAclEntry__CheckPermission__Permission();
 
 		/**
-		 * The meta object literal for the '<em><b>Principal</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Find Permission</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ACL_ENTRY__PRINCIPAL = eINSTANCE.getAclEntry_Principal();
+		EOperation ACL_ENTRY___FIND_PERMISSION__PERMISSION = eINSTANCE.getAclEntry__FindPermission__Permission();
+
+		/**
+		 * The meta object literal for the '{@link java.security.Principal <em>Principal</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.security.Principal
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
+		 * @generated
+		 */
+		EClass PRINCIPAL = eINSTANCE.getPrincipal();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
@@ -2374,14 +2411,13 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute STRING_TO_OBJECT_MAP__VALUE = eINSTANCE.getStringToObjectMap_Value();
 
 		/**
-		 * The meta object literal for the '{@link java.security.Principal <em>Principal</em>}' class.
+		 * The meta object literal for the '<em>Array String</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see java.security.Principal
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
 		 * @generated
 		 */
-		EClass PRINCIPAL = eINSTANCE.getPrincipal();
+		EDataType ARRAY_STRING = eINSTANCE.getArrayString();
 
 		/**
 		 * The meta object literal for the '<em>Access List</em>' data type.
@@ -2421,15 +2457,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType PRINCIPAL_OBJECT = eINSTANCE.getPrincipalObject();
-
-		/**
-		 * The meta object literal for the '<em>Array String</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
-		 * @generated
-		 */
-		EDataType ARRAY_STRING = eINSTANCE.getArrayString();
 
 	}
 

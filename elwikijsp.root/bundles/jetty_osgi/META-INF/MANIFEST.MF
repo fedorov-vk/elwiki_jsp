@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jetty_OSGi
+Bundle-SymbolicName: jetty_osgi;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: jetty_osgi.Activator
+Bundle-Vendor: FVK
+Export-Package: jetty_osgi
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: jetty.osgi
+Require-Bundle: org.eclipse.equinox.http.registry,
+ jakarta.servlet-api;bundle-version="4.0.0",
+ org.eclipse.equinox.jsp.jasper;bundle-version="1.1.500",
+ org.eclipse.equinox.jsp.jasper.registry;bundle-version="1.2.0",
+ javax.servlet.jsp;bundle-version="2.2.0"
+Bundle-ClassPath: .,
+ taglibs-standard-impl-1.2.5.fixed.jar,
+ taglibs-standard-spec-1.2.5.jar
+Import-Package: javax.servlet,
+ javax.servlet.http,
+ org.osgi.framework,
+ org.osgi.service.component.annotations;version="1.3.0"
+Service-Component: OSGI-INF/*.xml
+

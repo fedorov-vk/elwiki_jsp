@@ -23,8 +23,11 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.Wiki;
+import org.apache.wiki.api.IStorageCdo;
+import org.apache.wiki.api.IStorageCdo.ITransactionalOperation;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
+import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -42,7 +45,10 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.emf.cdo.transaction.CDOTransaction;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -60,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -151,6 +158,8 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /** We use this also a generic serialization id */
     private static final long serialVersionUID = 4L;
 
+    private IStorageCdo storageCdo;
+
     /**
      *  Builds a new ReferenceManager.
      *
@@ -226,6 +235,18 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
                     if( wp.getLastModified() == null ) {
                         log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
+                        
+                        /*:FVK: workaround
+						EList<PageContent> pageContents = wp.getPagecontents();
+						PageContent pageContent = pageContents.get(pageContents.size()-1);
+                        this.storageCdo.modify(pageContent, new ITransactionalOperation<PageContent>() {
+							@Override
+							public Object execute(PageContent pc1, CDOTransaction transaction) {
+								PageContent pageContent = transaction.getObject(pc1);
+								pageContent.setLastModify(new GregorianCalendar(1972, 2, 12).getTime());
+								return page;
+							}
+						});*/
                     } else if( wp.getLastModified().getTime() > saved ) {
                         updatePageReferences( wp );
                     }
@@ -909,4 +930,10 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         }
     }
 
+	// -- service support ---------------------------------
+
+	public void setStorageCdo(IStorageCdo storageCdo) {
+		this.storageCdo = storageCdo;
+	}
+    
 }

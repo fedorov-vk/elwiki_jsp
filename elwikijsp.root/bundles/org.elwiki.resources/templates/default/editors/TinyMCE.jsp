@@ -45,7 +45,7 @@
     This provides the WYSIWYG TinyMCE for JSPWiki.
 --%>
 <%
-	Context context = Context.findContext( pageContext );
+	Context context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
     context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
@@ -55,7 +55,7 @@
     String originalCCLOption = (String)wikiPage.getAttributes( MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
-    String usertext = EditorManager.getEditedText(pageContext);
+    String usertext = ContextUtil.getEditedText(pageContext);
 %>
 
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>

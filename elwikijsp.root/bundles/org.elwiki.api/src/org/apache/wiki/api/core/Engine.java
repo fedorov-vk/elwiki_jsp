@@ -44,7 +44,7 @@ import org.elwiki_data.WikiPage;
 /**
  *  Provides Wiki services to the JSP page.
  *
- *  <p>
+ *  <P>
  *  This is the main interface through which everything should go.
  *
  *  <p>

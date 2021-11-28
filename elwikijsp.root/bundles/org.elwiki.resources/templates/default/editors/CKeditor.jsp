@@ -41,7 +41,7 @@
     This provides the WYSIWYG CKeditor for JSPWiki.
 --%>
 <%
-	Context context = Context.findContext( pageContext );
+	Context context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
     /* local download of CKeditor */
@@ -59,7 +59,7 @@
     String originalCCLOption = (String)wikiPage.getAttributes().get(MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, "false");
 
-    String usertext = EditorManager.getEditedText(pageContext);
+    String usertext = ContextUtil.getEditedText(pageContext);
 %>
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
 <wiki:CheckRequestContext context="edit">

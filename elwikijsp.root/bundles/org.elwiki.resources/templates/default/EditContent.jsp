@@ -27,7 +27,7 @@
 <fmt:setBundle basename="templates.default"/>
 
 <%--
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
 --%>
 
 <%-- Main Content Section --%>

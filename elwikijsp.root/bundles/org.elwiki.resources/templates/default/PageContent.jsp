@@ -26,7 +26,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = Context.findContext( pageContext );
+  Context c = ContextUtil.findContext( pageContext );
 %>
 <%-- Main Content Section --%>
 <%-- This has been source ordered to come first in the markup (and on small devices)
@@ -37,7 +37,7 @@
 
   <wiki:PageType type="attachment">
     <div><%-- insert the actual attachement, image, etc... --%>
-      <wiki:Translate>[<%= Context.findContext( pageContext ).getPage().getName() %>]</wiki:Translate>
+      <wiki:Translate>[<%= ContextUtil.findContext( pageContext ).getPage().getName() %>]</wiki:Translate>
     </div>
   </wiki:PageType>
 

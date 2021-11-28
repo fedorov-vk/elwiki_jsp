@@ -24,7 +24,6 @@ import org.eclipse.net4j.util.container.IPluginContainer;
 import org.eclipse.net4j.util.lifecycle.Lifecycle;
 import org.eclipse.net4j.util.lifecycle.LifecycleException;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.jaxb_rw.archive.JAXBdataIO;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PagesStore;
 
@@ -67,7 +66,7 @@ public class StorageCdo extends Lifecycle implements IStorageCdo {
 		return this.isActive();
 	}
 
-	JAXBdataIO jaxbDataIO = new JAXBdataIO();
+	//:FVK: JAXBdataIO jaxbDataIO = new JAXBdataIO();
 	
 	@Override
 	public void activateStorage() throws Exception {

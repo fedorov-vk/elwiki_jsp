@@ -22,7 +22,6 @@ import java.security.Permission;
 import java.security.PermissionCollection;
 import java.util.Arrays;
 
-import org.apache.commons.lang3.StringUtils;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -152,7 +151,7 @@ public final class PagePermission extends APermission {
 		// Strip out attachment separator; it is irrelevant.
 
 		// FIXME3.0: Assumes attachment separator is "/".
-		String[] pathParams = StringUtils.split(page, WIKI_SEPARATOR);
+		String[] pathParams = page.split(WIKI_SEPARATOR);
 		String pageName;
 		if (pathParams.length >= 2) {
 			setWikiName(pathParams[0].length() > 0 ? pathParams[0] : null);
@@ -165,7 +164,7 @@ public final class PagePermission extends APermission {
 		this.m_page = (pos == -1) ? pageName : pageName.substring(0, pos);
 
 		// Parse actions
-		String[] pageActions = StringUtils.split(actions.toLowerCase(), ACTION_SEPARATOR);
+		String[] pageActions = actions.toLowerCase().split(ACTION_SEPARATOR);
 		Arrays.sort(pageActions, String.CASE_INSENSITIVE_ORDER);
 		setMask(createMask(actions));
 		StringBuilder buffer = new StringBuilder();
@@ -376,7 +375,7 @@ public final class PagePermission extends APermission {
 			throw new IllegalArgumentException("Actions cannot be blank or null");
 		}
 		int mask = 0;
-		String[] actionList = StringUtils.split(actions, ACTION_SEPARATOR);
+		String[] actionList = actions.split(ACTION_SEPARATOR);
 		for (String action : actionList) {
 			if (action.equalsIgnoreCase(VIEW_ACTION)) {
 				mask |= VIEW_MASK;

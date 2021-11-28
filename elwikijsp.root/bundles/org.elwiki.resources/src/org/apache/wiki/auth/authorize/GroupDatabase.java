@@ -21,6 +21,7 @@ package org.apache.wiki.auth.authorize;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.elwiki.api.authorization.WrapGroup;
 
 import java.security.Principal;
 import java.util.Properties;
@@ -32,7 +33,7 @@ import java.util.Properties;
 public interface GroupDatabase {
 
     /**
-     * Looks up and deletes a {@link Group} from the group database. If the
+     * Looks up and deletes a {@link WrapGroup} from the group database. If the
      * group database does not contain the supplied Group. this method throws a
      * {@link org.apache.wiki.api.exceptions.NoSuchPrincipalException}. The method commits the results
      * of the delete to persistent storage.
@@ -41,7 +42,7 @@ public interface GroupDatabase {
      * supplied group (thrown as {@link org.apache.wiki.api.exceptions.NoSuchPrincipalException}) or if
      * the commit did not succeed
      */
-    void delete( Group group ) throws WikiSecurityException;
+    void delete( WrapGroup group ) throws WikiSecurityException;
 
     /**
      * Initializes the group database based on values from a Properties object.
@@ -63,7 +64,7 @@ public interface GroupDatabase {
      * @param modifier the user who saved the Group
      * @throws WikiSecurityException if the Group could not be saved successfully
      */
-    void save( Group group, Principal modifier ) throws WikiSecurityException;
+    void save( WrapGroup group, Principal modifier ) throws WikiSecurityException;
 
     /**
      * Returns all wiki groups that are stored in the GroupDatabase as an array
@@ -71,13 +72,13 @@ public interface GroupDatabase {
      * method will return a zero-length array. This method causes back-end
      * storage to load the entire set of group; thus, it should be called
      * infrequently (e.g., at initialization time). Note that this method should
-     * use the protected constructor {@link Group#Group(String, String)} rather
+     * use the protected constructor {@link WrapGroup#Group(String, String)} rather
      * than the various "parse" methods ({@link GroupManager#parseGroup(String, String, boolean)})
      * to construct the group. This is so as not to flood GroupManager's event
      * queue with spurious events.
      * @return the wiki groups
      * @throws WikiSecurityException if the groups cannot be returned by the back-end
      */
-    Group[] groups() throws WikiSecurityException;
+    WrapGroup[] groups() throws WikiSecurityException;
 
 }

@@ -28,7 +28,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   int MAXATTACHNAMELENGTH = 30;
-  Context c = Context.findContext(pageContext);
+  Context c = ContextUtil.findContext(pageContext);
   String progressId = c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier();
 %>
 
