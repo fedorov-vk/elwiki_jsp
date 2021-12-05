@@ -48,8 +48,6 @@ import java.util.Vector;
  */
 public interface TemplateManager extends ModuleManager {
 
-    String SKIN_DIRECTORY = "skins";
-
     /** Requests a JavaScript function to be called during window.onload. Value is {@value}. */
     String RESOURCE_JSFUNCTION = "jsfunction";
 
@@ -64,12 +62,6 @@ public interface TemplateManager extends ModuleManager {
 
     /** Requests inlined CSS. Value is {@value}. */
     String RESOURCE_INLINECSS = "inlinecss";
-
-    /** The default directory for the properties. Value is {@value}. */
-    String DIRECTORY = "templates";
-
-    /** The name of the default template. Value is {@value}. */
-    String DEFAULT_TEMPLATE = "default";
 
     /** Name of the file that contains the properties. */
     String PROPERTYFILE = "template.properties";
@@ -106,7 +98,7 @@ public interface TemplateManager extends ModuleManager {
     /**
      *  An utility method for finding a JSP page.  It searches only under either current context or by the absolute name.
      *
-     *  @param pageContext the JSP PageContext
+     *  @param pageContext the JSP PageContext. (TODO: this param deprecated - not used)
      *  @param name The name of the JSP page to look for (e.g "Wiki.jsp")
      *  @return The context path to the resource
      */
@@ -118,7 +110,7 @@ public interface TemplateManager extends ModuleManager {
      *  <p>
      *  Even though the name suggests only JSP files can be located, but in fact this method can find also other resources than JSP files.
      *
-     *  @param pageContext The JSP PageContext
+     *  @param pageContext The JSP PageContext. (TODO: this param deprecated - may be not used)
      *  @param template From which template we should seek initially?
      *  @param name Which resource are we looking for (e.g. "ViewTemplate.jsp")
      *  @return path to the JSP page; null, if it was not found.
@@ -132,10 +124,10 @@ public interface TemplateManager extends ModuleManager {
      *  This method is typically used to locate any resource, including JSP pages, images, scripts, etc.
      *
      *  @since 2.6
-     *  @param ctx the wiki context
-     *  @param template the name of the template to use
-     *  @param name the name of the resource to fine
-     *  @return the path to the resource
+     *  @param ctx the wiki context. (TODO: this param deprecated - not used)
+     *  @param template the name of the template to use.
+     *  @param name the name of the resource to fine.
+     *  @return the path to the resource, or <code>null</code>.
      */
     String findResource( Context ctx, String template, String name );
 
