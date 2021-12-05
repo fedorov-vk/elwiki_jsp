@@ -437,6 +437,16 @@ public class WikiEngine implements Engine {
         initComponent( componentClass.getName(), componentClass, initArgs );
     }
 
+    
+	/**
+	 * :FVK: сделанл для JSPwiki менеджеров. (и, возможно, каких-то еще компонентов).
+	 * 
+	 * @param <T>
+	 * @param componentInitClass
+	 * @param componentClass
+	 * @param initArgs
+	 * @throws Exception
+	 */
     < T > void initComponent( final String componentInitClass, final Class< T > componentClass, final Object... initArgs ) throws Exception {
         final T component;
         if( initArgs == null || initArgs.length == 0 ) {
