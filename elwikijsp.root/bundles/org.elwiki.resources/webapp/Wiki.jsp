@@ -29,7 +29,7 @@
  page import="org.elwiki_data.impl.*" %><%@
  page errorPage="/Error.jsp" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%!
- Logger log = Logger.getLogger("JSPWiki"); %><%
+  Logger log = Logger.getLogger("JSPWiki"); %><%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
