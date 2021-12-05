@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Data Persist Manager
 Bundle-SymbolicName: org.elwiki.data.persist;singleton:=true
-Bundle-Version: 1.0.0.202111282215
+Bundle-Version: 1.0.0.202111282300
 Bundle-Activator: org.elwiki.data.persist.internal.PluginActivator
 Bundle-Vendor: FVK
 Bundle-RequiredExecutionEnvironment: JavaSE-11

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <units size='2'>
-  <unit id='org.elwiki.data.persist' version='1.0.0.202111282215' generation='2'>
-    <update id='org.elwiki.data.persist' range='[0.0.0,1.0.0.202111282215)' severity='0'/>
+  <unit id='org.elwiki.data.persist' version='1.0.0.202111282300' generation='2'>
+    <update id='org.elwiki.data.persist' range='[0.0.0,1.0.0.202111282300)' severity='0'/>
     <properties size='5'>
       <property name='org.eclipse.equinox.p2.name' value='Data Persist Manager'/>
       <property name='org.eclipse.equinox.p2.provider' value='FVK'/>
@@ -10,14 +10,14 @@
       <property name='maven-version' value='1.0.0-SNAPSHOT'/>
     </properties>
     <provides size='9'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.elwiki.data.persist' version='1.0.0.202111282215'/>
-      <provided namespace='osgi.bundle' name='org.elwiki.data.persist' version='1.0.0.202111282215'/>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.elwiki.data.persist' version='1.0.0.202111282300'/>
+      <provided namespace='osgi.bundle' name='org.elwiki.data.persist' version='1.0.0.202111282300'/>
       <provided namespace='java.package' name='org.elwiki.data.persist' version='0.0.0'/>
       <provided namespace='java.package' name='org.elwiki.data.persist.internal' version='0.0.0'/>
       <provided namespace='java.package' name='org.elwiki.data.persist.json' version='0.0.0'/>
       <provided namespace='java.package' name='org.elwiki.data.persist.json.deserialize' version='0.0.0'/>
       <provided namespace='java.package' name='org.elwiki.data.persist.json.serialize' version='0.0.0'/>
-      <provided namespace='osgi.identity' name='org.elwiki.data.persist' version='1.0.0.202111282215'>
+      <provided namespace='osgi.identity' name='org.elwiki.data.persist' version='1.0.0.202111282300'>
         <properties size='1'>
           <property name='type' value='osgi.bundle'/>
         </properties>
@@ -51,19 +51,19 @@
       </requiredProperties>
     </requires>
     <artifacts size='1'>
-      <artifact classifier='osgi.bundle' id='org.elwiki.data.persist' version='1.0.0.202111282215'/>
+      <artifact classifier='osgi.bundle' id='org.elwiki.data.persist' version='1.0.0.202111282300'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>
       <instructions size='1'>
         <instruction key='manifest'>
-          Bundle-SymbolicName: org.elwiki.data.persist;singleton:=true&#xA;Bundle-Version: 1.0.0.202111282215&#xA;
+          Bundle-SymbolicName: org.elwiki.data.persist;singleton:=true&#xA;Bundle-Version: 1.0.0.202111282300&#xA;
         </instruction>
       </instructions>
     </touchpointData>
   </unit>
-  <unit id='org.elwiki.data.persist.source' version='1.0.0.202111282215' singleton='false'>
-    <update id='org.elwiki.data.persist.source' range='[0.0.0,1.0.0.202111282215)' severity='0'/>
+  <unit id='org.elwiki.data.persist.source' version='1.0.0.202111282300' singleton='false'>
+    <update id='org.elwiki.data.persist.source' range='[0.0.0,1.0.0.202111282300)' severity='0'/>
     <properties size='9'>
       <property name='df_LT.bundleVendor' value='FVK'/>
       <property name='df_LT.bundleName' value='Data Persist Manager Source'/>
@@ -76,9 +76,9 @@
       <property name='maven-classifier' value='sources'/>
     </properties>
     <provides size='5'>
-      <provided namespace='org.eclipse.equinox.p2.iu' name='org.elwiki.data.persist.source' version='1.0.0.202111282215'/>
-      <provided namespace='osgi.bundle' name='org.elwiki.data.persist.source' version='1.0.0.202111282215'/>
-      <provided namespace='osgi.identity' name='org.elwiki.data.persist.source' version='1.0.0.202111282215'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.elwiki.data.persist.source' version='1.0.0.202111282300'/>
+      <provided namespace='osgi.bundle' name='org.elwiki.data.persist.source' version='1.0.0.202111282300'/>
+      <provided namespace='osgi.identity' name='org.elwiki.data.persist.source' version='1.0.0.202111282300'>
         <properties size='1'>
           <property name='type' value='osgi.bundle'/>
         </properties>
@@ -87,13 +87,13 @@
       <provided namespace='org.eclipse.equinox.p2.localization' name='df_LT' version='1.0.0'/>
     </provides>
     <artifacts size='1'>
-      <artifact classifier='osgi.bundle' id='org.elwiki.data.persist.source' version='1.0.0.202111282215'/>
+      <artifact classifier='osgi.bundle' id='org.elwiki.data.persist.source' version='1.0.0.202111282300'/>
     </artifacts>
     <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
     <touchpointData size='1'>
       <instructions size='1'>
         <instruction key='manifest'>
-          Bundle-SymbolicName: org.elwiki.data.persist.source&#xA;Bundle-Version: 1.0.0.202111282215&#xA;
+          Bundle-SymbolicName: org.elwiki.data.persist.source&#xA;Bundle-Version: 1.0.0.202111282300&#xA;
         </instruction>
       </instructions>
     </touchpointData>
