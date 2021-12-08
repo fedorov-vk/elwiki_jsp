@@ -59,3 +59,4 @@ Export-Package: javax.servlet.jsp.jstl.fmt,
  org.apache.wiki.ui.progress,
  org.apache.wiki.ui0,
  org.apache.wiki.xmlrpc
+Eclipse-BundleShape: dir
