@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="2021-09_all + My.">
+	<locations>
+		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository" type="Directory"/>
+		<location path="/home/vfedorov/dev/dev_wikijsp/Repository/fromEclipse/target/repository" type="Directory"/>
+		<location path="/home/repository/eclipse/releases/2021-12" type="Directory"/>
+	</locations>
+</target>

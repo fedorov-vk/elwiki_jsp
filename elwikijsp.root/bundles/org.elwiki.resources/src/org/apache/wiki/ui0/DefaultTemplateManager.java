@@ -56,7 +56,7 @@ import org.osgi.framework.BundleContext;
  * ResourceRequest mechanism.
  *
  * Размещается в бандле ''org.elwiki.resources''. <br/>
- * :FVK: !!! Бандл - не JAR.
+ * Бандл - развернут в каталоге.
  * <p>
  * TODO: Распаковывать в каталог. Снята связь с WikiEngine, так как не требуется доступ по контексту
  * сервлета к локальному каталогу, доступ к каталогу через Bundle.
