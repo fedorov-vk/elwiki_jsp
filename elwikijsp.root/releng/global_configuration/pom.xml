@@ -39,7 +39,7 @@
 		<platform-repo.url>file:/repo/eclipse/releases/2020-03</platform-repo.url>
 		<platform-repo.url>file:/repo/eclipse/releases/2020-12</platform-repo.url>
 		-->
-		<platform-repo.url>file:/repo/eclipse/releases/2021-09</platform-repo.url>
+		<platform-repo.url>file:/repo/eclipse/releases/2021-12</platform-repo.url>
 		<apachetools-repo.url>file:/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository</apachetools-repo.url>
 		<custom-repo01.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository</custom-repo01.url>
 		<custom-repo02.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>

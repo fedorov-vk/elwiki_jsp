@@ -11,7 +11,7 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.elwiki.api;bundle-version="0.0.1",
  org.elwiki.util;bundle-version="0.0.1",
  org.elwiki.data,
- javax.servlet;bundle-version="3.1.0"
+ jakarta.servlet-api;bundle-version="4.0.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration

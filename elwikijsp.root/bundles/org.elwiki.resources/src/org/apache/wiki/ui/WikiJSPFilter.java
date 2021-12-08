@@ -260,16 +260,17 @@ public class WikiJSPFilter extends WikiServletFilter {
                 m_buffer.write( aInt );
             }
 
-            /**{@inheritDoc} */
+            /*:FVK: - от servlet 3.0
+            / **{@inheritDoc} * /
             @Override
 			public boolean isReady() {
 				return false;
 			}
 
-            /**{@inheritDoc} */
+            / **{@inheritDoc} * /
             @Override
 			public void setWriteListener( final WriteListener writeListener ) {
-			}
+			}*/
 			
         }
 
