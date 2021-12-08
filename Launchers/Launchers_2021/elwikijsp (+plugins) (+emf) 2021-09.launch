@@ -23,7 +23,6 @@
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_target_bundles">
         <setEntry value="com.google.gson*2.7.0.v20170129-0911@default:default"/>
-        <setEntry value="com.google.gson*2.8.7.v20210624-1215@default:default"/>
         <setEntry value="com.sun.el@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.activation*1.1.0.v201211130549@default:default"/>
@@ -33,7 +32,6 @@
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.mail@default:default"/>
         <setEntry value="javax.servlet*3.0.0.v201112011016@default:default"/>
-        <setEntry value="javax.servlet*3.1.0.v201410161800@default:default"/>
         <setEntry value="javax.servlet.jsp@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jaxen@default:default"/>
@@ -110,13 +108,13 @@
         <setEntry value="org.eclipse.equinox.useradmin@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation*1.2.0.v20210519-0438@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation*2.2.600.v20200408-1511@default:default"/>
-        <setEntry value="org.eclipse.jetty.http*10.0.6@default:default"/>
-        <setEntry value="org.eclipse.jetty.io*10.0.6@default:default"/>
-        <setEntry value="org.eclipse.jetty.security*10.0.6@default:default"/>
-        <setEntry value="org.eclipse.jetty.server*10.0.6@default:default"/>
-        <setEntry value="org.eclipse.jetty.servlet*10.0.6@default:default"/>
-        <setEntry value="org.eclipse.jetty.util*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.http@default:default"/>
+        <setEntry value="org.eclipse.jetty.io@default:default"/>
+        <setEntry value="org.eclipse.jetty.security@default:default"/>
+        <setEntry value="org.eclipse.jetty.server@default:default"/>
+        <setEntry value="org.eclipse.jetty.servlet@default:default"/>
         <setEntry value="org.eclipse.jetty.util.ajax@default:default"/>
+        <setEntry value="org.eclipse.jetty.util@default:default"/>
         <setEntry value="org.eclipse.jetty.xml@default:default"/>
         <setEntry value="org.eclipse.jface@default:default"/>
         <setEntry value="org.eclipse.net4j.db.h2@default:default"/>
