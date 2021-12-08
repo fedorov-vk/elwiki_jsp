@@ -14,11 +14,6 @@
 	</parent>
 
 	<modules>
-<!--
-		<module>org.eclipse.equinox.http.helper</module>
-		<module>sample.http</module>
-		<module>sample.res</module>
--->
 		<module>org.elwiki.configuration</module>
 		<module>org.elwiki.api</module>
 		<module>org.elwiki.event</module>
