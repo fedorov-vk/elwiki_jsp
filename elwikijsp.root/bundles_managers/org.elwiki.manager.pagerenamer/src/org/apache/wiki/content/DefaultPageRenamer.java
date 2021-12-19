@@ -36,6 +36,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.Collection;
 import java.util.List;
@@ -85,11 +86,11 @@ public class DefaultPageRenamer implements PageRenamer {
         
         //  Preconditions: "from" page must exist, and "to" page must not yet exist.
         final Engine engine = context.getEngine();
-        final WikiPage fromPage = engine.getManager( PageManager.class ).getPage( renameFrom );
+        final WikiPage fromPage = ServicesRefs.getPageManager().getPage( renameFrom );
         if( fromPage == null ) {
             throw new WikiException("No such page "+renameFrom);
         }
-        WikiPage toPage = engine.getManager( PageManager.class ).getPage( renameToClean );
+        WikiPage toPage = ServicesRefs.getPageManager().getPage( renameToClean );
         if( toPage != null ) {
             throw new WikiException( "Page already exists " + renameToClean );
         }
@@ -98,30 +99,30 @@ public class DefaultPageRenamer implements PageRenamer {
 
         //  Do the actual rename by changing from the frompage to the topage, including all of the attachments
         //  Remove references to attachments under old name
-        final List< PageAttachment > attachmentsOldName = engine.getManager( AttachmentManager.class ).listAttachments( fromPage );
+        final List< PageAttachment > attachmentsOldName = ServicesRefs.getAttachmentManager().listAttachments( fromPage );
         for( final PageAttachment att: attachmentsOldName ) {
-            final WikiPage fromAttPage = engine.getManager( PageManager.class ).getPage( att.getName() );
-            engine.getManager( ReferenceManager.class ).pageRemoved( fromAttPage );
+            final WikiPage fromAttPage = ServicesRefs.getPageManager().getPage( att.getName() );
+            ServicesRefs.getReferenceManager().pageRemoved( fromAttPage );
         }
 
-        engine.getManager( PageManager.class ).getProvider().movePage( renameFrom, renameToClean );
-        if( engine.getManager( AttachmentManager.class ).attachmentsEnabled() ) {
-            engine.getManager( AttachmentManager.class ).getCurrentProvider().moveAttachmentsForPage( renameFrom, renameToClean );
+        ServicesRefs.getPageManager().getProvider().movePage( renameFrom, renameToClean );
+        if( ServicesRefs.getAttachmentManager().attachmentsEnabled() ) {
+        	ServicesRefs.getAttachmentManager().getCurrentProvider().moveAttachmentsForPage( renameFrom, renameToClean );
         }
         
         //  Add a comment to the page notifying what changed.  This adds a new revision to the repo with no actual change.
-        toPage = engine.getManager( PageManager.class ).getPage( renameToClean );
+        toPage = ServicesRefs.getPageManager().getPage( renameToClean );
         if( toPage == null ) {
             throw new ProviderException( "Rename seems to have failed for some strange reason - please check logs!" );
         }
         PageContent content = toPage.getLastContent();
         content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
         content.setAuthor( context.getCurrentUser().getName() );
-        engine.getManager( PageManager.class ).putPageText( toPage, engine.getManager( PageManager.class ).getPureText( toPage ), "author", "changenote" ); // FIXME: здесь надо не текст, а просто имя поменть.
+        ServicesRefs.getPageManager().putPageText( toPage, ServicesRefs.getPageManager().getPureText( toPage ), "author", "changenote" ); // FIXME: здесь надо не текст, а просто имя поменть.
 
         //  Update the references
-        engine.getManager( ReferenceManager.class ).pageRemoved( fromPage );
-        engine.getManager( ReferenceManager.class ).updateReferences( toPage );
+        ServicesRefs.getReferenceManager().pageRemoved( fromPage );
+        ServicesRefs.getReferenceManager().updateReferences( toPage );
 
         //  Update referrers
         if( changeReferrers ) {
@@ -129,14 +130,14 @@ public class DefaultPageRenamer implements PageRenamer {
         }
 
         //  re-index the page including its attachments
-        engine.getManager( SearchManager.class ).reindexPage( toPage );
+        ServicesRefs.getSearchManager().reindexPage( toPage );
         
-        final Collection< PageAttachment > attachmentsNewName = engine.getManager( AttachmentManager.class ).listAttachments( toPage );
+        final Collection< PageAttachment > attachmentsNewName = ServicesRefs.getAttachmentManager().listAttachments( toPage );
         for( final PageAttachment att:attachmentsNewName ) {
-            final WikiPage toAttPage = engine.getManager( PageManager.class ).getPage( att.getName() );
+            final WikiPage toAttPage = ServicesRefs.getPageManager().getPage( att.getName() );
             // add reference to attachment under new page name
-            engine.getManager( ReferenceManager.class ).updateReferences( toAttPage );
-            //:FVK: engine.getManager( SearchManager.class ).reindexPage( att );
+            ServicesRefs.getReferenceManager().updateReferences( toAttPage );
+            //:FVK: ServicesRefs.getSearchManager().reindexPage( att );
         }
 
         firePageRenameEvent( renameFrom, renameToClean );
@@ -179,9 +180,9 @@ public class DefaultPageRenamer implements PageRenamer {
                 pageName = toPage.getName();
             }
             
-            final WikiPage p = engine.getManager( PageManager.class ).getPage( pageName );
+            final WikiPage p = ServicesRefs.getPageManager().getPage( pageName );
 
-            final String sourceText = engine.getManager( PageManager.class ).getPureText( p );
+            final String sourceText = ServicesRefs.getPageManager().getPureText( p );
             String newText = replaceReferrerString( context, sourceText, fromPage.getName(), toPage.getName() );
 
             IPreferenceStore wikiPreferences = engine.getWikiPreferences();
@@ -195,8 +196,8 @@ public class DefaultPageRenamer implements PageRenamer {
             	content.setChangeNote(fromPage.getName()+" ==> "+toPage.getName()); // :FVK: workaround - previous change note is removed.
             	content.setAuthor(context.getCurrentUser().getName());
                 try {
-                    engine.getManager( PageManager.class ).putPageText( p, newText, "author", "changenote" ); // FIXME: здесь надо не текст, а что-то задать.
-                    engine.getManager( ReferenceManager.class ).updateReferences( p );
+                	ServicesRefs.getPageManager().putPageText( p, newText, "author", "changenote" ); // FIXME: здесь надо не текст, а что-то задать.
+                	ServicesRefs.getReferenceManager().updateReferences( p );
                 } catch( final ProviderException e ) {
                     //  We fail with an error, but we will try to continue to rename other referrers as well.
                     log.error("Unable to perform rename.",e);
@@ -207,15 +208,15 @@ public class DefaultPageRenamer implements PageRenamer {
 
     private Set<String> getReferencesToChange( final WikiPage fromPage, final Engine engine ) {
         final Set< String > referrers = new TreeSet<>();
-        final Collection< String > r = engine.getManager( ReferenceManager.class ).findReferrers( fromPage.getName() );
+        final Collection< String > r = ServicesRefs.getReferenceManager().findReferrers( fromPage.getName() );
         if( r != null ) {
             referrers.addAll( r );
         }
         
         try {
-            final List< PageAttachment > attachments = engine.getManager( AttachmentManager.class ).listAttachments( fromPage );
+            final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( fromPage );
             for( final PageAttachment att : attachments  ) {
-                final Collection< String > c = engine.getManager( ReferenceManager.class ).findReferrers( att.getName() );
+                final Collection< String > c = ServicesRefs.getReferenceManager().findReferrers( att.getName() );
                 if( c != null ) {
                     referrers.addAll( c );
                 }

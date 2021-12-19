@@ -22,6 +22,7 @@ import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.render0.RenderingManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 
@@ -44,7 +45,7 @@ public class ParentPageNameTag extends WikiTagBase {
 
         if( page != null ) {
             if( page instanceof PageAttachment ) {
-            	//:FVK: pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle( ((PageAttachment)page).getParentName()) );
+            	//:FVK: pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( ((PageAttachment)page).getParentName()) );
             	// TODO: release ...
             } else {
                 String name = page.getName();
@@ -58,7 +59,7 @@ public class ParentPageNameTag extends WikiTagBase {
                     name = name.substring( 0, commentstart );
                 }
 
-                pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle(name) );
+                pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle(name) );
             }
         }
 

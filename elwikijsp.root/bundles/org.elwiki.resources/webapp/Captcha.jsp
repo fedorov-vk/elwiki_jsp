@@ -27,6 +27,7 @@
 <%@ page import="org.apache.wiki.util.*" %>
 <%@ page import="org.apache.wiki.api.ui.EditorManager" %>
 <%@ page import="org.apache.commons.lang3.time.StopWatch" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -40,7 +41,7 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     String pagereq = wikiContext.getName();
     String reqPage = TextUtil.replaceEntities( request.getParameter( "page" ) );
     String content = TextUtil.replaceEntities( request.getParameter( "text" ) );

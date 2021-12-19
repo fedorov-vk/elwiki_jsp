@@ -32,6 +32,7 @@
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!
@@ -39,7 +40,7 @@
 %>
 <%
 	Engine wiki = Wiki.engine().find( getServletConfig() );
-    IIAuthenticationManager mgr = wiki.getManager( IIAuthenticationManager.class );
+    IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
     pageContext.setAttribute( Context.ATTR_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     Session wikiSession = wikiContext.getWikiSession();
@@ -52,7 +53,7 @@
 
     // Are we saving the profile?
     if( "saveProfile".equals(request.getParameter("action")) ) {
-        UserManager userMgr = wiki.getManager( UserManager.class );
+        UserManager userMgr = ServicesRefs.getUserManager();
         UserProfile profile = userMgr.parseProfile( wikiContext );
          
         // Validate the profile
@@ -65,7 +66,7 @@
                 CookieAssertionLoginModule.setUserCookie( response, profile.getFullname() );
             } catch( DuplicateUserException due ) {
                 // User collision! (full name or wiki name already taken)
-                wikiSession.addMessage( "profile", wiki.getManager( InternationalizationManager.class )
+                wikiSession.addMessage( "profile", ServicesRefs.getInternationalizationManager()
                 		                               .get( InternationalizationManager.CORE_BUNDLE,
                 		                            		 Preferences.getLocale( wikiContext ), 
                 		                            		 due.getMessage(), due.getArgs() ) );
@@ -151,7 +152,7 @@
 
         // If wiki page was "Login", redirect to main, otherwise use the page supplied
         String redirectPage = request.getParameter( "redirect" );
-        if( !wiki.getManager( PageManager.class ).wikiPageExists( redirectPage ) ) {
+        if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) ) {
            redirectPage = wikiContext.getConfiguration().getFrontPage();
         }
         String viewUrl = ( "Login".equals( redirectPage ) ) ? "Wiki.jsp" : wikiContext.getViewURL( redirectPage );

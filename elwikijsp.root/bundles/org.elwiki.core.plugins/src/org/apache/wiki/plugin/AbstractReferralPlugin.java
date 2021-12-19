@@ -44,6 +44,7 @@ import org.apache.wiki.util.comparators.CollatorComparator;
 import org.apache.wiki.util.comparators.HumanComparator;
 import org.apache.wiki.util.comparators.JavaNaturalComparator;
 import org.apache.wiki.util.comparators.LocaleComparator;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -306,7 +307,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 //  if we want to show the last modified date of the most recently change page, we keep a "high watermark" here:
                 final WikiPage page;
                 if( m_lastModified ) {
-                    page = m_engine.getManager( PageManager.class ).getPage( pageName );
+                    page = ServicesRefs.getPageManager().getPage( pageName );
                     if( page != null ) {
                         final Date lastModPage = page.getLastModified();
                         if( log.isDebugEnabled() ) {
@@ -370,7 +371,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
             output.append( m_before );
 
             // Make a Wiki markup link. See TranslatorReader.
-            output.append( "[" + m_engine.getManager( RenderingManager.class ).beautifyTitle(value) + "|" + value + "]" );
+            output.append( "[" + ServicesRefs.getRenderingManager().beautifyTitle(value) + "|" + value + "]" );
             count++;
         }
 
@@ -393,7 +394,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
     protected String makeHTML( final Context context, final String wikitext ) {
         String result = "";
 
-        final RenderingManager mgr = m_engine.getManager( RenderingManager.class );
+        final RenderingManager mgr = ServicesRefs.getRenderingManager();
 
         try {
             final MarkupParser parser = mgr.getParser(context, wikitext);
@@ -438,7 +439,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
         final String order = params.get( PARAM_SORTORDER );
         if( order == null || order.length() == 0 ) {
             // Use the configured comparator
-            m_sorter = context.getEngine().getManager( PageManager.class ).getPageSorter();
+            m_sorter = ServicesRefs.getPageManager().getPageSorter();
         } else if( order.equalsIgnoreCase( PARAM_SORTORDER_JAVA ) ) {
             // use Java "natural" ordering
             m_sorter = new PageSorter( JavaNaturalComparator.DEFAULT_JAVA_COMPARATOR );
@@ -455,7 +456,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 m_sorter = new PageSorter( new CollatorComparator( collator ) );
             } catch( final ParseException pe ) {
                 log.info( "Failed to parse requested collator - using default ordering", pe );
-                m_sorter = context.getEngine().getManager( PageManager.class ).getPageSorter();
+                m_sorter = ServicesRefs.getPageManager().getPageSorter();
             }
         }
     }

@@ -20,6 +20,7 @@ package org.apache.wiki.ui;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.ui.EditorManager;
+import org.elwiki.services.ServicesRefs;
 
 
 /**
@@ -36,7 +37,7 @@ public class Editor {
     public Editor( final Context wikiContext, final String editorName ) {
         m_wikiContext = wikiContext;
         m_editorName = editorName;
-        m_editorManager = wikiContext.getEngine().getManager( EditorManager.class );
+        m_editorManager = ServicesRefs.getEditorManager();
     }
 
     public String getName() {

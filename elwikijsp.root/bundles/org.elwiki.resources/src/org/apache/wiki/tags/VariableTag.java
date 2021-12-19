@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -78,7 +79,7 @@ public class VariableTag extends WikiTagBase {
         String value = null;
 
         try {
-            value = engine.getManager( VariableManager.class ).getValue( m_wikiContext, getVar() );
+            value = ServicesRefs.getVariableManager().getValue( m_wikiContext, getVar() );
         } catch( final NoSuchVariableException e ) {
             msg = "No such variable: " + e.getMessage();
         } catch( final IllegalArgumentException e ) {

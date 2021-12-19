@@ -24,6 +24,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.internal.MainActivator;
 import org.apache.wiki.url0.URLConstructor;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -98,7 +99,7 @@ public class WikiServlet extends HttpServlet {
             pageName = configuration.getFrontPage(); // FIXME: Add special pages as well
         }
 
-        final String jspPage = m_engine.getManager( URLConstructor.class ).getForwardPage( req );
+        final String jspPage = ServicesRefs.getUrlConstructor().getForwardPage( req );
         final RequestDispatcher dispatcher = req.getRequestDispatcher( "/" + jspPage + "?page=" +
         		configuration.encodeName( pageName ) + "&" + req.getQueryString() );
 

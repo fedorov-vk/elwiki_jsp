@@ -22,10 +22,12 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
+<%@ page import="org.apache.wiki.ui.admin0.*" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.commons.lang3.time.StopWatch" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
@@ -37,7 +39,7 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_ADMIN.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
     //
     //  This is an experimental feature, so we will turn it off unless the user really wants to.
@@ -70,13 +72,13 @@
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "admin/AdminTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "admin/AdminTemplate.jsp" );
 
     pageContext.setAttribute( "engine", wiki, PageContext.REQUEST_SCOPE );
     pageContext.setAttribute( "context", wikiContext, PageContext.REQUEST_SCOPE );
 
     if( request.getMethod().equalsIgnoreCase("post") && bean != null ) {
-        AdminBean ab = wiki.getManager( AdminBeanManager.class ).findBean( bean );
+    	AdminBean ab = ServicesRefs.getAdminBeanManager().findBean( bean );
 
         if( ab != null ) {
             ab.doPost( wikiContext );

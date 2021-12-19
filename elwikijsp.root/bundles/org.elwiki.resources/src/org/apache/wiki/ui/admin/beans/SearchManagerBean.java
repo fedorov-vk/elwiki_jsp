@@ -23,10 +23,11 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.search.SearchManager;
+import org.apache.wiki.api.ui.progress.ProgressItem;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
-import org.apache.wiki.ui.progress.ProgressItem;
-import org.apache.wiki.ui.progress.ProgressManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.management.NotCompliantMBeanException;
 import java.util.Collection;
@@ -90,9 +91,9 @@ public class SearchManagerBean extends SimpleAdminBean {
 
                 @Override
                 public void backgroundTask() throws Exception {
-                    final Collection< WikiPage > allPages = m_engine.getManager( PageManager.class ).getAllPages();
+                    final Collection< WikiPage > allPages = ServicesRefs.getPageManager().getAllPages();
 
-                    final SearchManager mgr = m_engine.getManager( SearchManager.class );
+                    final SearchManager mgr = ServicesRefs.getSearchManager();
                     m_max = allPages.size();
 
                     final ProgressItem pi = new ProgressItem() {
@@ -102,14 +103,14 @@ public class SearchManagerBean extends SimpleAdminBean {
                             return 100 * m_count / m_max;
                         }
                     };
-                    m_engine.getManager( ProgressManager.class ).startProgress( pi, PROGRESS_ID );
+                    ServicesRefs.getProgressManager().startProgress( pi, PROGRESS_ID );
 
                     for( final WikiPage page : allPages ) {
                         mgr.reindexPage( page );
                         m_count++;
                     }
 
-                    m_engine.getManager( ProgressManager.class ).stopProgress( PROGRESS_ID );
+                    ServicesRefs.getProgressManager().stopProgress( PROGRESS_ID );
                     shutdown();
                     m_updater = null;
                 }
@@ -128,7 +129,7 @@ public class SearchManagerBean extends SimpleAdminBean {
     @Override
     public String doGet( final Context context ) {
         if( m_updater != null ) {
-            return "Update already in progress ("+ context.getEngine().getManager( ProgressManager.class ).getProgress(PROGRESS_ID)+ "%)";
+            return "Update already in progress ("+ ServicesRefs.getProgressManager().getProgress(PROGRESS_ID)+ "%)";
         }
 
         return "<input type='submit' id='searchmanagerbean-reload' name='searchmanagerbean-reload' value='Force index reload'/>"+

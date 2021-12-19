@@ -7,7 +7,7 @@ Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.difference
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.apache.wiki.diff
-Service-Component: OSGI-INF/differenceManager.xml,
+Service-Component: OSGI-INF/differenceManager.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.elwiki.api;bundle-version="0.0.1",
  org.elwiki.util;bundle-version="0.0.1",

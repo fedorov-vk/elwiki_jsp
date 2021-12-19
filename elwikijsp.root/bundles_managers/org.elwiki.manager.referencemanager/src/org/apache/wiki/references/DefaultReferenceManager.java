@@ -49,6 +49,7 @@ import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -188,10 +189,10 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
      */
     private void updatePageReferences( final WikiPage page ) throws ProviderException {
-        final String content = m_engine.getManager( PageManager.class ).getPageText( page.getName(), PageProvider.LATEST_VERSION );
+        final String content = ServicesRefs.getPageManager().getPageText( page.getName(), PageProvider.LATEST_VERSION );
         final Collection< String > links = scanWikiLinks( page, content );
         final TreeSet< String > res = new TreeSet<>( links );
-        final List< PageAttachment > attachments = m_engine.getManager( AttachmentManager.class ).listAttachments( page );
+        final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( page );
         for( final PageAttachment att : attachments ) {
             res.add( att.getName() );
         }
@@ -231,7 +232,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
             for( final WikiPage page : pages ) {
                 if( !( page instanceof PageAttachment ) ) {
                     // Refresh with the latest copy
-                    final WikiPage wp = m_engine.getManager( PageManager.class ).getPage( page.getName() );
+                    final WikiPage wp = ServicesRefs.getPageManager().getPage( page.getName() );
 
                     if( wp.getLastModified() == null ) {
                         log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
@@ -272,7 +273,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         sw.stop();
         log.info( "Cross reference scan done in "+sw );
 
-        WikiEventManager.addWikiEventListener( m_engine.getManager( PageManager.class ), this );
+        WikiEventManager.addWikiEventListener( ServicesRefs.getPageManager(), this );
     }
 
     /**
@@ -469,7 +470,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @Override
     public Collection< String > scanWikiLinks( final WikiPage page, final String pagedata ) {
         final LinkCollector localCollector = new LinkCollector();
-        m_engine.getManager( RenderingManager.class ).textToHTML( Wiki.context().create( m_engine, page ),
+        ServicesRefs.getRenderingManager().textToHTML( Wiki.context().create( m_engine, page ),
                                                                   pagedata,
                                                                   localCollector,
                                                                   null,
@@ -509,7 +510,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
                 // We won't put it back again if it becomes empty and does not exist.  It will be added
                 // later on anyway, if it becomes referenced again.
-                if( !( refBy.isEmpty() && !m_engine.getManager( PageManager.class ).wikiPageExists( referredPageName ) ) ) {
+                if( !( refBy.isEmpty() && !ServicesRefs.getPageManager().wikiPageExists( referredPageName ) ) ) {
                     m_referredBy.put( referredPageName, refBy );
                 }
             }
@@ -543,7 +544,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      */
     @Override
     public void updateReferences( final WikiPage page ) {
-        final String pageData = m_engine.getManager( PageManager.class ).getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+        final String pageData = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
         updateReferences( page.getName(), scanWikiLinks( page, pageData ) );
     }
 
@@ -647,7 +648,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
             // If the page is referred to by no one AND it doesn't even exist, we might just as well forget about this
             // entry. It will be added again elsewhere if new references appear.
-            if( ( oldRefBy == null || oldRefBy.isEmpty() ) && !m_engine.getManager( PageManager.class ).wikiPageExists( referredPage ) ) {
+            if( ( oldRefBy == null || oldRefBy.isEmpty() ) && !ServicesRefs.getPageManager().wikiPageExists( referredPage ) ) {
                 m_referredBy.remove( referredPage );
             }
         }
@@ -771,7 +772,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         for( final Collection<String> refs : allReferences ) {
             if( refs != null ) {
                 for( final String aReference : refs ) {
-                    if( !m_engine.getManager( PageManager.class ).wikiPageExists( aReference ) ) {
+                    if( !ServicesRefs.getPageManager().wikiPageExists( aReference ) ) {
                         uncreated.add( aReference );
                     }
                 }

@@ -24,6 +24,7 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -48,7 +49,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
     @Override
     public String execute( final Context context, final Map<String, String> params) throws PluginException {
         final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
-        final ReferenceManager referenceManager = context.getEngine().getManager( ReferenceManager.class );
+        final ReferenceManager referenceManager = ServicesRefs.getReferenceManager();
 
         final int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
         String extras = params.get(PARAM_EXTRAS);

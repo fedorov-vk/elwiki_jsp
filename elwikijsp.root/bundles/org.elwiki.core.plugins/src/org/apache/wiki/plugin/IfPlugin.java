@@ -37,6 +37,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.Map;
@@ -147,7 +148,7 @@ public class IfPlugin implements Plugin {
     @Override 
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
         return ifInclude( context,params )
-                ? context.getEngine().getManager( RenderingManager.class ).textToHTML( context, params.get( PluginManager.PARAM_BODY ) )
+                ? ServicesRefs.getRenderingManager().textToHTML( context, params.get( PluginManager.PARAM_BODY ) )
                 : "" ;
     }
 
@@ -178,14 +179,14 @@ public class IfPlugin implements Plugin {
         include |= checkIP(context, ip);
 
         if( page != null ) {
-            final String content = context.getEngine().getManager( PageManager.class ).getPureText(page, WikiProvider.LATEST_VERSION).trim();
+            final String content = ServicesRefs.getPageManager().getPureText(page, WikiProvider.LATEST_VERSION).trim();
             include |= checkContains(content,contains);
             include |= checkIs(content,is);
             include |= checkExists(context,page,exists);
         }
 
         if( var != null ) {
-            final String content = context.getEngine().getManager( VariableManager.class ).getVariable(context, var);
+            final String content = ServicesRefs.getVariableManager().getVariable(context, var);
             include |= checkContains(content,contains);
             include |= checkIs(content,is);
             include |= checkVarExists(content,exists);
@@ -198,7 +199,7 @@ public class IfPlugin implements Plugin {
         if( exists == null ) {
             return false;
         }
-        return !context.getEngine().getManager( PageManager.class ).wikiPageExists( page ) ^ TextUtil.isPositive(exists);
+        return !ServicesRefs.getPageManager().wikiPageExists( page ) ^ TextUtil.isPositive(exists);
     }
 
     private static boolean checkVarExists( final String varContent, final String exists ) {
@@ -225,9 +226,9 @@ public class IfPlugin implements Plugin {
                 invert = true;
             }
 
-            final Principal g = context.getEngine().getManager( AuthorizationManager.class ).resolvePrincipal( gname );
+            final Principal g = ServicesRefs.getAuthorizationManager().resolvePrincipal( gname );
 
-            include |= context.getEngine().getManager( AuthorizationManager.class ).isUserInRole( context.getWikiSession(), g ) ^ invert;
+            include |= ServicesRefs.getAuthorizationManager().isUserInRole( context.getWikiSession(), g ) ^ invert;
         }
         return include;
     }

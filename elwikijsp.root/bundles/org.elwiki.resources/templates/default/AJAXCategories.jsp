@@ -21,6 +21,7 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! 
   public void jspInit()
@@ -32,7 +33,7 @@
 <%
   // Copied from a top-level jsp -- which would be a better place to put this 
   Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
-  if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+  if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
   String pagereq = wikiContext.getPage().getName();
 
   response.setContentType("text/html; charset="+wiki.getContentEncoding() );

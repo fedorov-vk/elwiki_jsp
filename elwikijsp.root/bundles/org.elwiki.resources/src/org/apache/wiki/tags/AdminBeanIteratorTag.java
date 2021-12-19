@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +46,7 @@ public class AdminBeanIteratorTag extends IteratorTag {
     	if (m_wikiContext == null) {
     		m_wikiContext = ContextUtil.findContext(pageContext);
     	}
-        m_type = m_wikiContext.getEngine().getManager( AdminBeanManager.class ).getTypeFromString( type );
+        m_type = ServicesRefs.getAdminBeanManager().getTypeFromString( type );
     }
 
     /**
@@ -53,7 +54,7 @@ public class AdminBeanIteratorTag extends IteratorTag {
      */
     @Override
     public void resetIterator() {
-        final AdminBeanManager mgr = m_wikiContext.getEngine().getManager( AdminBeanManager.class );
+        final AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
         final Collection< AdminBean > beans = mgr.getAllBeans();
         final ArrayList< AdminBean > typedBeans = new ArrayList<>();
         for( final AdminBean ab : beans ) {

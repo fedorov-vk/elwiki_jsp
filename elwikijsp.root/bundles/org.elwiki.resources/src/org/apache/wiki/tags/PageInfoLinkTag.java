@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class PageInfoLinkTag extends WikiLinkTag {
             }
         }
 
-        if( engine.getManager( PageManager.class ).wikiPageExists(pageName) ) {
+        if( ServicesRefs.getPageManager().wikiPageExists(pageName) ) {
             final JspWriter out = pageContext.getOut();
             final String url = m_wikiContext.getURL( ContextEnum.PAGE_INFO.getRequestContext(), pageName );
 

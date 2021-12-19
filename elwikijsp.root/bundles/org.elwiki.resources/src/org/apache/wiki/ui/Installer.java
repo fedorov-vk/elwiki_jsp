@@ -33,6 +33,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -93,7 +94,7 @@ public class Installer {
      */
     public boolean adminExists() {
         // See if the admin user exists already
-        final UserManager userMgr = m_engine.getManager( UserManager.class );
+        final UserManager userMgr = ServicesRefs.getUserManager();
         final UserDatabase userDb = userMgr.getUserDatabase();
         try {
             userDb.findByLoginName( ADMIN_ID );
@@ -118,7 +119,7 @@ public class Installer {
         }
         
         // See if the admin user exists already
-        final UserManager userMgr = m_engine.getManager( UserManager.class );
+        final UserManager userMgr = ServicesRefs.getUserManager();
         final UserDatabase userDb = userMgr.getUserDatabase();
         String password = null;
         
@@ -135,7 +136,7 @@ public class Installer {
         }
         
         // Create a new admin group
-        final IAuthorizer groupMgr = m_engine.getManager( IAuthorizer.class );
+        final IAuthorizer groupMgr = ServicesRefs.getGroupManager();
         WrapGroup group;
         /*:FVK:
         try {

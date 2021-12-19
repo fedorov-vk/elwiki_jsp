@@ -60,6 +60,7 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.PrincipalComparator;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.PermissionFactory;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -71,9 +72,6 @@ import org.elwiki_data.WikiPage;
 public class DefaultAclManager implements AclManager {
 
 	private static final Logger log = Logger.getLogger(DefaultAclManager.class);
-
-	private AuthorizationManager m_auth = null;
-	private Engine m_engine = null;
 
 	private IWikiConfiguration wikiConfiguration;
 
@@ -94,6 +92,7 @@ public class DefaultAclManager implements AclManager {
 	 */
 	@Override
 	public Acl parseAcl(WikiPage page, String ruleLine) throws WikiSecurityException {
+		AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
 		Acl acl = page.getAcl();
 		if (acl == null) {
 			acl = Elwiki_dataFactory.eINSTANCE.createAcl();
@@ -106,7 +105,7 @@ public class DefaultAclManager implements AclManager {
 
 			while (fieldToks.hasMoreTokens()) {
 				String principalName = fieldToks.nextToken(",").trim();
-				Principal principal = this.m_auth.resolvePrincipal(principalName);
+				Principal principal = authorizationManager.resolvePrincipal(principalName);
 				AclEntry oldEntry = acl.getEntry(principal);
 
 				if (oldEntry != null) {
@@ -211,8 +210,7 @@ public class DefaultAclManager implements AclManager {
 	 */
 	@Override
 	public void setPermissions(WikiPage page, Acl acl) throws WikiSecurityException {
-		final PageManager pageManager = m_engine.getManager( PageManager.class );
-
+		PageManager pageManager = ServicesRefs.getPageManager();
 		// Forcibly expire any page locks
 		PageLock lock = pageManager.getCurrentLock(page);
 		if (lock != null) {
@@ -281,7 +279,7 @@ public class DefaultAclManager implements AclManager {
 		return s.toString();
 	}
 
-	// -- service support ---------------------------------
+	// -- service handling --------------------------< start --
 
 	public synchronized void startup() {
 		//
@@ -291,11 +289,6 @@ public class DefaultAclManager implements AclManager {
 		//
 	}
 
-    /** {@inheritDoc} */
-    @Override
-    public void initialize( final Engine engine) {
-        m_auth = engine.getManager( AuthorizationManager.class );
-        m_engine = engine;
-    }
-	
+	// -- service handling ---------------------------- end >--
+
 }

@@ -26,6 +26,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -55,7 +56,7 @@ public class AttachmentsIteratorTag extends IteratorTag {
     public final int doStartTag()  {
         m_wikiContext = (Context) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
         final Engine engine = m_wikiContext.getEngine();
-        final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
+        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         final WikiPage page;
 
         page = m_wikiContext.getPage();
@@ -66,7 +67,7 @@ public class AttachmentsIteratorTag extends IteratorTag {
         }
 
         try {
-            if( page != null && engine.getManager( PageManager.class ).wikiPageExists(page) ) {
+            if( page != null && ServicesRefs.getPageManager().wikiPageExists(page) ) {
                 final List< PageAttachment > atts = mgr.listAttachments( page );
 
                 if( atts == null ) {

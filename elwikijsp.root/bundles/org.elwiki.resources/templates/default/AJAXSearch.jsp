@@ -34,9 +34,10 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.api.search.SearchManager" %>
 <%@ page import="org.apache.wiki.ui.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%!
@@ -52,7 +53,7 @@
   /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
 
   Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
-  if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+  if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
   String query = request.getParameter( "query");
 
@@ -60,10 +61,10 @@
   {
     try
     {
-      Collection< SearchResult > list = wiki.getManager( SearchManager.class ).findPages( query, wikiContext );
+      Collection< SearchResult > list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
 
       //  Filter down to only those that we actually have a permission to view
-      AuthorizationManager mgr = wiki.getManager( AuthorizationManager.class );
+      AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
       ArrayList< SearchResult > items = new ArrayList();
 

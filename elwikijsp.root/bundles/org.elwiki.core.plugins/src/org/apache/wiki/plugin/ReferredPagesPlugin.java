@@ -34,6 +34,7 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -188,11 +189,11 @@ public class ReferredPagesPlugin implements Plugin {
         if( pagename == null ) {
             return;
         }
-        if( !m_engine.getManager( PageManager.class ).wikiPageExists(pagename) ) {
+        if( !ServicesRefs.getPageManager().wikiPageExists(pagename) ) {
             return;
         }
 
-        final ReferenceManager mgr = m_engine.getManager( ReferenceManager.class );
+        final ReferenceManager mgr = ServicesRefs.getReferenceManager();
         final Collection< String > allPages = mgr.findRefersTo( pagename );
         handleLinks( context, allPages, ++depth, pagename );
     }
@@ -208,7 +209,7 @@ public class ReferredPagesPlugin implements Plugin {
         if( links != null )
             allLinks.addAll( links );
 
-        if( m_formatSort ) context.getEngine().getManager( PageManager.class ).getPageSorter().sort( allLinks );
+        if( m_formatSort ) ServicesRefs.getPageManager().getPageSorter().sort( allLinks );
 
         for( final String link : allLinks ) {
             if( localLinkSet.contains( link ) ) {
@@ -216,7 +217,7 @@ public class ReferredPagesPlugin implements Plugin {
             }
             localLinkSet.add( link );
 
-            if( !m_engine.getManager( PageManager.class ).wikiPageExists( link ) ) {
+            if( !ServicesRefs.getPageManager().wikiPageExists( link ) ) {
                 continue; // hide links to non existing pages
             }
             if(  m_matcher.matches( link , m_excludePattern ) ) {

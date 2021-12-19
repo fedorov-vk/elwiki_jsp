@@ -24,6 +24,7 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import javax.xml.crypto.dsig.keyinfo.PGPData;
@@ -100,9 +101,9 @@ public class InsertPageTag extends WikiTagBase {
 
         if( m_pageName == null ) {
             insertedPage = m_wikiContext.getPage();
-            if( !engine.getManager( PageManager.class ).wikiPageExists(insertedPage) ) return SKIP_BODY;
+            if( !ServicesRefs.getPageManager().wikiPageExists(insertedPage) ) return SKIP_BODY;
         } else {
-            insertedPage = engine.getManager( PageManager.class ).getPage( m_pageName );
+            insertedPage = ServicesRefs.getPageManager().getPage( m_pageName );
         }
 
         if( insertedPage != null ) {
@@ -115,8 +116,8 @@ public class InsertPageTag extends WikiTagBase {
             final WikiPage oldPage = m_wikiContext.setRealPage( insertedPage );
             
             switch( m_mode ) {
-              case HTML: out.print( engine.getManager( RenderingManager.class ).getHTML( m_wikiContext, insertedPage ) ); break;
-              case PLAIN: out.print( engine.getManager( PageManager.class ).getText( insertedPage ) ); break;
+              case HTML: out.print( ServicesRefs.getRenderingManager().getHTML( m_wikiContext, insertedPage ) ); break;
+              case PLAIN: out.print( ServicesRefs.getPageManager().getText( insertedPage ) ); break;
             }
             
             m_wikiContext.setRealPage( oldPage );

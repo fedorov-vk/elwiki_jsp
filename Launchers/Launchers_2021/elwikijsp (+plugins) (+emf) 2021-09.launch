@@ -31,8 +31,8 @@
         <setEntry value="javax.el@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.mail@default:default"/>
-        <setEntry value="javax.servlet*3.0.0.v201112011016@default:default"/>
         <setEntry value="javax.servlet.jsp@default:default"/>
+        <setEntry value="javax.servlet@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jaxen@default:default"/>
         <setEntry value="lpg.runtime.java@default:default"/>

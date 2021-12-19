@@ -22,11 +22,12 @@
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.attachment.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
   Context c = ContextUtil.findContext( pageContext );
-  int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments(c.getPage()).size();
+  int attCount = ServicesRefs.getAttachmentManager().listAttachments(c.getPage()).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";  
 %>

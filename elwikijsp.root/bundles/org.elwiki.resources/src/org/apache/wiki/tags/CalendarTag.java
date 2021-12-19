@@ -26,6 +26,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -146,7 +147,7 @@ public class CalendarTag extends WikiTagBase {
         if( m_pageFormat != null ) {
             final String pagename = m_pageFormat.format( day.getTime() );
             
-            if( engine.getManager( PageManager.class ).wikiPageExists( pagename ) ) {
+            if( ServicesRefs.getPageManager().wikiPageExists( pagename ) ) {
                 if( m_urlFormat != null ) {
                     final String url = m_urlFormat.format( day.getTime() );
                     result = "<td class=\"link\"><a href=\""+url+"\">"+day.get( Calendar.DATE )+"</a></td>";

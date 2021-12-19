@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
@@ -120,14 +121,14 @@ public class BreadcrumbsTag extends WikiTagBase
         } else {
             //  check if page still exists (could be deleted/renamed by another user)
             for (int i = 0;i<trail.size();i++) {
-                if( !m_wikiContext.getEngine().getManager( PageManager.class ).wikiPageExists( trail.get( i ) ) ) {
+                if( !ServicesRefs.getPageManager().wikiPageExists( trail.get( i ) ) ) {
                     trail.remove(i);
                 }
             }
         }
 
         if( m_wikiContext.getRequestContext().equals( ContextEnum.PAGE_VIEW.getRequestContext() ) ) {
-            if( m_wikiContext.getEngine().getManager( PageManager.class ).wikiPageExists( page ) ) {
+            if( ServicesRefs.getPageManager().wikiPageExists( page ) ) {
                 if( trail.isEmpty() ) {
                     trail.pushItem( page );
                 } else {

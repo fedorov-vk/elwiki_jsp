@@ -6,4 +6,5 @@
    <service>
       <provide interface="org.apache.wiki.auth.IIAuthenticationManager"/>
    </service>
+   <reference bind="setAuthorizationManager" cardinality="1..1" interface="org.apache.wiki.auth.AuthorizationManager" name="AuthorizationManager" policy="static"/>
 </scr:component>

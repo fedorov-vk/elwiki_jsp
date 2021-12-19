@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 
@@ -45,7 +46,7 @@ public class PageNameTag extends WikiTagBase {
             	//:FVK: было -- pageContext.getOut().print( TextUtil.replaceEntities( ((PageAttachment)page).getFileName() ) );
             	// TODO: реализовать ...
             } else {
-                pageContext.getOut().print( engine.getManager( RenderingManager.class ).beautifyTitle( m_wikiContext.getName() ) );
+                pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( m_wikiContext.getName() ) );
             }
         }
 

@@ -27,8 +27,9 @@
 <%@ page import="org.apache.wiki.api.i18n.InternationalizationManager" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.apache.wiki.ui.progress.ProgressManager" %>
+<%@ page import="org.apache.wiki.api.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <fmt:setLocale value="${prefs.Language}" />
@@ -36,7 +37,7 @@
 <%
 	Context c = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
-  int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments( c.getPage() ).size();
+  int attCount = ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";
 
@@ -46,7 +47,7 @@
   String creationAuthor ="";
 
   //FIXME -- seems not to work correctly for attachments !!
-  WikiPage firstPage = c.getEngine().getManager( PageManager.class ).getPage( wikiPage.getName(), 1 );
+  WikiPage firstPage = ServicesRefs.getPageManager().getPage( wikiPage.getName(), 1 );
   if( firstPage != null )
   {
     creationAuthor = firstPage.getAuthor();
@@ -272,7 +273,7 @@
 <wiki:PageType type="attachment">
 <%
 	int MAXATTACHNAMELENGTH = 30;
-  String progressId = c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier();
+  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
 %>
 
   <wiki:TabbedSection defaultTab="<%=tabParam%>">

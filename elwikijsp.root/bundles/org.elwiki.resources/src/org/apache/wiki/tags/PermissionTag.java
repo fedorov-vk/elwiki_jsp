@@ -31,6 +31,7 @@ import org.apache.wiki.auth.permissions.GroupPermission;
 import org.apache.wiki.auth.permissions.PermissionFactory;
 import org.apache.wiki.auth.permissions.WikiPermission;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Permission;
 
@@ -107,7 +108,7 @@ public class PermissionTag extends WikiTagBase {
     private boolean checkPermission( final String permission ) {
         final Session session          = m_wikiContext.getWikiSession();
         final WikiPage page                = m_wikiContext.getPage();
-        final AuthorizationManager mgr = m_wikiContext.getEngine().getManager( AuthorizationManager.class );
+        final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
         boolean gotPermission          = false;
         
         if ( CREATE_GROUPS.equals( permission ) || CREATE_PAGES.equals( permission ) || EDIT_PREFERENCES.equals( permission ) || EDIT_PROFILE.equals( permission ) || LOGIN.equals( permission ) ) {
@@ -133,7 +134,7 @@ public class PermissionTag extends WikiTagBase {
             //  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.
             //
             if( EDIT.equals(permission) ) {
-                final WikiPage latest = m_wikiContext.getEngine().getManager( PageManager.class ).getPage( page.getName() );
+                final WikiPage latest = ServicesRefs.getPageManager().getPage( page.getName() );
                 if( page.getVersion() != WikiProvider.LATEST_VERSION && latest.getVersion() != page.getVersion() ) {
                     return false;
                 }

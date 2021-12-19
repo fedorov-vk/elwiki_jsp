@@ -86,7 +86,7 @@ public class Wiki {
 		return new SessionDSL(sessionSPI);
 	}
 
-	// ----------------------------------------------------
+	// -- service handling --------------------------< start --
 
 	public void setAclsSPI(AclsSPI aclsSPI1) {
 		aclsSPI = aclsSPI1;
@@ -115,5 +115,7 @@ public class Wiki {
 	public void shutdown() {
 		//
 	}
+
+	// -- service handling ---------------------------- end >--
 
 }

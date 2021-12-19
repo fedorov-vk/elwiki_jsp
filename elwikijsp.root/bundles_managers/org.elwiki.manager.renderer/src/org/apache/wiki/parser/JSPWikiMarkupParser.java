@@ -56,6 +56,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -238,7 +239,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         m_allowHTML          = m_context.getBooleanWikiProperty( PROP_ALLOWHTML, m_allowHTML );
         m_useRelNofollow     = m_context.getBooleanWikiProperty( PROP_USERELNOFOLLOW, m_useRelNofollow );
 
-        if( m_engine.getManager( UserManager.class ).getUserDatabase() == null || m_engine.getManager( AuthorizationManager.class ) == null ) {
+        if( ServicesRefs.getUserManager().getUserDatabase() == null || ServicesRefs.getAuthorizationManager() == null ) {
             disableAccessRules();
         }
 
@@ -410,7 +411,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 final String imglink = m_context.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "images/attachment_small.png" );
                 el = createAnchor( LinkType.ATTACHMENT, attlink, text, "" );
 
-                if(  m_engine.getManager( AttachmentManager.class ).forceDownload( attlink ) ) {
+                if(  ServicesRefs.getAttachmentManager().forceDownload( attlink ) ) {
                     el.setAttribute("download", "");
                 }
 
@@ -1078,7 +1079,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
 
         try {
-            final Acl acl = m_engine.getManager( AclManager.class ).parseAcl( page, ruleLine );
+            final Acl acl = ServicesRefs.getAclManager().parseAcl( page, ruleLine );
             //:FVK: workaround - отмена, т.к. ERROR: запись в CDO view is read-only // page.setAcl( acl );
 
             if( log.isDebugEnabled() ) {
@@ -1114,7 +1115,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             // log.debug("SET name='"+name+"', value='"+val+"'.");
 
             if( name.length() > 0 && val.length() > 0 ) {
-                val = m_engine.getManager( VariableManager.class ).expandVariables( m_context, val );
+                val = ServicesRefs.getVariableManager().expandVariables( m_context, val );
                 m_context.getPage().setAttribute(name, val );
             }
         } catch( final Exception e ) {
@@ -1283,7 +1284,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 final int hashMark;
 
                 // Internal wiki link, but is it an attachment link?
-                String attachment = m_engine.getManager( AttachmentManager.class ).getAttachmentInfoName( m_context, linkRef );
+                String attachment = ServicesRefs.getAttachmentManager().getAttachmentInfoName( m_context, linkRef );
                 if( attachment != null ) {
                     callMutatorChain( m_attachmentLinkMutatorChain, attachment );
 

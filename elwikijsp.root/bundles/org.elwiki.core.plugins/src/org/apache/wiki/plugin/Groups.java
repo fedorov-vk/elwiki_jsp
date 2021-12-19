@@ -27,6 +27,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.eclipse.core.runtime.Assert;
 import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.Arrays;
@@ -55,7 +56,7 @@ public class Groups implements Plugin {
 		/*:FVK:
         // Retrieve groups, and sort by name
         final Engine engine = context.getEngine();
-        final IAuthorizer groupMgr = engine.getManager( IAuthorizer.class );
+        final IAuthorizer groupMgr = ServicesRefs.getGroupManager(); // IAuthorizer.class
         final Principal[] groups = groupMgr.getRoles();
         Arrays.sort( groups, COMPARATOR );
 
@@ -65,7 +66,7 @@ public class Groups implements Plugin {
             final String name = groups[ i ].getName();
             
             // Make URL
-            final String url = engine.getManager( URLConstructor.class ).makeURL( ContextEnum.GROUP_VIEW.getRequestContext(), name,  null );
+            final String url = ServicesRefs.getUrlConstructor().makeURL( ContextEnum.GROUP_VIEW.getRequestContext(), name,  null );
             
             // Create hyperlink
             s.append( "<a href=\"" );

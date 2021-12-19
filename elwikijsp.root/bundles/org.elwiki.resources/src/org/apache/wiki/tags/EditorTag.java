@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.TemplateManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
@@ -50,11 +51,11 @@ public class EditorTag extends WikiBodyTag {
     @Override
     public int doEndTag() throws JspException {
         final Engine engine = m_wikiContext.getEngine();
-        final EditorManager mgr = engine.getManager( EditorManager.class );
+        final EditorManager mgr = ServicesRefs.getEditorManager();
         final String editorPath = mgr.getEditorPath( m_wikiContext );
 
         try {
-            final String page = engine.getManager( TemplateManager.class ).findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
+            final String page = ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
 
             if( page == null ) {
                 //FIXME: should be I18N ...

@@ -35,6 +35,7 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 
 import java.text.DateFormat;
@@ -103,7 +104,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         log.debug("Calculating recent changes from "+sincedate.getTime());
 
         // FIXME: Should really have a since date on the getRecentChanges method.
-        Collection< WikiPage > changes = engine.getManager( PageManager.class ).getRecentChanges();
+        Collection< WikiPage > changes = ServicesRefs.getPageManager().getRecentChanges();
         super.initialize( context, params );
         changes = filterWikiPageCollection( changes );
         
@@ -138,7 +139,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
                 final String href = context.getURL( pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
                                                                                   : ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getName() );
-                Element link = XhtmlUtil.link( href, engine.getManager( RenderingManager.class ).beautifyTitle( pageref.getName() ) );
+                Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
                 final Element row = XhtmlUtil.element( XHTML.tr );
                 final Element col = XhtmlUtil.element( XHTML.td );
                 col.setAttribute( XHTML.ATTR_width, "30%" );
@@ -182,7 +183,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     authorinfo.setAttribute( XHTML.ATTR_class, "author" );
 
                     if( author != null ) {
-                        if( engine.getManager( PageManager.class ).wikiPageExists( author ) ) {
+                        if( ServicesRefs.getPageManager().wikiPageExists( author ) ) {
                             authorinfo.addContent( XhtmlUtil.link( context.getURL( Context.VIEW, author ), author ) );
                         } else {
                             authorinfo.addContent( author );

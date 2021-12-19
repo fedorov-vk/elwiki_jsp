@@ -21,6 +21,7 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.render0.RenderingManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -54,7 +55,7 @@ public class TranslateTag
 
             if( wikiText != null ) {
                 wikiText = wikiText.trim();
-                final String result = context.getEngine().getManager( RenderingManager.class ).textToHTML( context, wikiText );
+                final String result = ServicesRefs.getRenderingManager().textToHTML( context, wikiText );
                 getPreviousOut().write( result );
             }
         } catch( final Exception e ) {

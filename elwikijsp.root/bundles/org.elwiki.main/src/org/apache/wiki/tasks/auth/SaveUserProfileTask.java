@@ -12,6 +12,7 @@ import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -51,13 +52,13 @@ public class SaveUserProfileTask extends Task {
         final UserProfile profile = ( UserProfile )getWorkflowContext().get( WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE );
         if ( profile != null) {
         	// Save the profile (userdatabase will take care of timestamps for us)
-        	m_engine.getManager( UserManager.class ).getUserDatabase().save( profile );
+        	ServicesRefs.getUserManager().getUserDatabase().save( profile );
         	
             // Send e-mail if user supplied an e-mail address
         	final String to = profile.getEmail();
             if ( to != null && to.length() > 0) { // :FVK: TODO: реализовать проверку правильности email address. возможно не здесь.
                 try {
-                    final InternationalizationManager i18n = m_engine.getManager( InternationalizationManager.class );
+                    final InternationalizationManager i18n = ServicesRefs.getInternationalizationManager();
                     final String app = m_engine.getWikiConfiguration().getApplicationName();
                     final String subject = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
                                                      "notification.createUserProfile.accept.subject", app );

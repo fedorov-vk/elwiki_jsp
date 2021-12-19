@@ -27,6 +27,7 @@ import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 
@@ -57,9 +58,9 @@ public class AuthorTag extends WikiTagBase {
         if( author != null && author.length() > 0 ) {
             author = TextUtil.replaceEntities(author);
 
-            if( engine.getManager( PageManager.class ).wikiPageExists(author) && !( "plain".equalsIgnoreCase( m_format ) ) ) {
+            if( ServicesRefs.getPageManager().wikiPageExists(author) && !( "plain".equalsIgnoreCase( m_format ) ) ) {
                 // FIXME: It's very boring to have to do this.  Slow, too.
-                final RenderingManager mgr = engine.getManager( RenderingManager.class );
+                final RenderingManager mgr = ServicesRefs.getRenderingManager();
                 final MarkupParser p = mgr.getParser( m_wikiContext, "["+author+"|"+author+"]" );
                 final WikiDocument d = p.parse();
                 author = mgr.getHTML( m_wikiContext, d );

@@ -16,4 +16,6 @@ Require-Bundle: org.eclipse.osgi,
  org.elwiki.util
 Service-Component: OSGI-INF/pageManager.xml
 Bundle-Activator: org.elwiki.pagemanager.internal.bundle.PageManagerActivator
-Import-Package: org.eclipse.jface.preference
+Import-Package: org.eclipse.jface.preference,
+ org.elwiki.configuration
+Bundle-ActivationPolicy: lazy

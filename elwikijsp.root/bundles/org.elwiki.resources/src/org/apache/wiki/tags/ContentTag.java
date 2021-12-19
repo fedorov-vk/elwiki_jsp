@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.ui.TemplateManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
@@ -175,7 +176,7 @@ public class ContentTag extends WikiTagBase {
                 throw new JspException( "This template uses <wiki:Content/> in an unsupported context: " + requestContext );
             }
 
-            final String page = m_wikiContext.getEngine().getManager( TemplateManager.class ).findJSP( pageContext,
+            final String page = ServicesRefs.getTemplateManager().findJSP( pageContext,
                                                                                                  m_wikiContext.getTemplate(),
                                                                                                  contentTemplate );
             pageContext.include( page );

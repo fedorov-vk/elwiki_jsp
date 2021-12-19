@@ -34,6 +34,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.util.Map;
@@ -208,12 +209,12 @@ public class TableOfContents implements Plugin, HeadingListener {
         }
 
         try {
-            String wikiText = engine.getManager( PageManager.class ).getPureText( page );
-            final boolean runFilters = "true".equals( engine.getManager( VariableManager.class ).getValue( context, VariableManager.VAR_RUNFILTERS, "true" ) );
+            String wikiText = ServicesRefs.getPageManager().getPureText( page );
+            final boolean runFilters = "true".equals( ServicesRefs.getVariableManager().getValue( context, VariableManager.VAR_RUNFILTERS, "true" ) );
 
             if( runFilters ) {
 				try {
-					final FilterManager fm = engine.getManager( FilterManager.class );
+					final FilterManager fm = ServicesRefs.getFilterManager();
 					wikiText = fm.doPreTranslateFiltering(context, wikiText);
 
 				} catch( final Exception e ) {
@@ -224,7 +225,7 @@ public class TableOfContents implements Plugin, HeadingListener {
 
             context.setVariable( VAR_ALREADY_PROCESSING, "x" );
 
-            final MarkupParser parser = engine.getManager( RenderingManager.class ).getParser( context, wikiText );
+            final MarkupParser parser = ServicesRefs.getRenderingManager().getParser( context, wikiText );
             parser.addHeadingListener( this );
             parser.parse();
 

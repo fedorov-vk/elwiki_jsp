@@ -18,17 +18,26 @@
  */
 package org.apache.wiki.pages;
 
+import java.io.IOException;
+import java.security.Permission;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
-import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.framework.Bundle;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEvent;
@@ -65,22 +74,15 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
-
-import java.io.IOException;
-import java.security.Permission;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.Acl;
+import org.elwiki_data.AclEntry;
+import org.elwiki_data.PageContent;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -97,7 +99,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     private static final Logger LOG = Logger.getLogger( DefaultPageManager.class );
 
 	private static String ID_EXTENSION_PAGEPROVIDER = "pageProvider";
-    
+
     private PageProvider m_provider;
 
     private Engine m_engine;
@@ -110,11 +112,44 @@ public class DefaultPageManager implements PageManager, Initializable {
 
     private PageSorter pageSorter = new PageSorter();
     
+    private IWikiConfiguration wikiConfiguration;
+    private AclManager aclManager;
+    private ReferenceManager referenceManager;
+	private TasksManager tasksManager;
+	private DifferenceManager differenceManager;
+    
+	/**
+     * Create instance of DefaultPageManager.
+     */
     public DefaultPageManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+    // -- service handling --------------------------- start --
+    
+    public void setWikiConfiguration(IWikiConfiguration configuration) {
+    	this.wikiConfiguration = configuration;
+    }
+    
+    public void setAclManager(AclManager aclManager) {
+    	this.aclManager = aclManager;
+    }
+
+    public void setReferenceManager(ReferenceManager referenceManager) {
+    	this.referenceManager = referenceManager;
+    }
+
+    public void setTasksManager(TasksManager tasksManager) {
+    	this.tasksManager = tasksManager;
+    }
+
+    public void setDifferenceManager(DifferenceManager differenceManager) {
+		this.differenceManager = differenceManager;
+	}
+    
+    // -- service handling ----------------------------- end --
+    
 	/**
      * Creates a new PageManager.
      *
@@ -204,7 +239,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             //  Empty the references and yay, it shall be recalculated
             final WikiPage p = m_provider.getPageInfo( pageName, version );
 
-            m_engine.getManager( ReferenceManager.class ).updateReferences( p );
+            this.referenceManager.updateReferences( p );
             fireEvent( WikiPageEvent.PAGE_REINDEX, p.getName() );
             text = m_provider.getPageText( pageName, version );
         }
@@ -252,21 +287,22 @@ public class DefaultPageManager implements PageManager, Initializable {
         }
 
         // Check if creation of empty pages is allowed; bail if not
-        final boolean allowEmpty = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(),
-                                                                Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
-                                                         false );
-        if ( !allowEmpty && !wikiPageExists( page ) && text.trim().equals( "" ) ) {
-            return;
-        }
+		final boolean allowEmpty = TextUtil.getBooleanProperty(
+				this.wikiConfiguration.getWikiPreferences(),
+				Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
+				false);
+		if (!allowEmpty && !wikiPageExists(page) && text.trim().equals("")) {
+			return;
+		}
 
         // Create approval workflow for page save; add the diffed, proposed and old text versions as
         // Facts for the approver (if approval is required). If submitter is authenticated, any reject
         // messages will appear in his/her workflow inbox.
         final WorkflowBuilder builder = WorkflowBuilder.getBuilder( m_engine );
         final Principal submitter = context.getCurrentUser();
-        final Step prepTask = m_engine.getManager( TasksManager.class ).buildPreSaveWikiPageTask( context, proposedText );
-        final Step completionTask = m_engine.getManager( TasksManager.class ).buildSaveWikiPageTask( context, author, changenote );
-        final String diffText = m_engine.getManager( DifferenceManager.class ).makeDiff( context, oldText, proposedText );
+        final Step prepTask = this.tasksManager.buildPreSaveWikiPageTask( context, proposedText );
+        final Step completionTask = this.tasksManager.buildSaveWikiPageTask( context, author, changenote );
+        final String diffText = this.differenceManager.makeDiff( context, oldText, proposedText );
         final boolean isAuthenticated = context.getWikiSession().isAuthenticated();
         final Fact[] facts = new Fact[ 5 ];
         facts[ 0 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_PAGE_NAME, page.getName() );
@@ -399,7 +435,7 @@ public class DefaultPageManager implements PageManager, Initializable {
                 p = null;
                 //:FVK: попытка загрузки прикрепления 
                 //:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                // p = m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, pagereq );
+                // p = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, pagereq );
             }
 
             return p;
@@ -428,9 +464,9 @@ public class DefaultPageManager implements PageManager, Initializable {
             LOG.info( "Repository has been modified externally while fetching info for " + pageName );
             page = m_provider.getPageInfo( pageName, version );
             if( page != null ) {
-                m_engine.getManager( ReferenceManager.class ).updateReferences( page );
+                this.referenceManager.updateReferences( page );
             } else {
-                m_engine.getManager( ReferenceManager.class ).pageRemoved( Wiki.contents().page( m_engine, pageName ) );
+            	this.referenceManager.pageRemoved( Wiki.contents().page( pageName ) );
             }
         }
 
@@ -452,7 +488,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 
 			/*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
 			if( c == null ) {
-			    c = ( List< T > )m_engine.getManager( AttachmentManager.class ).getVersionHistory( pageName );
+			    c = ( List< T > )ServicesRefs.getAttachmentManager().getVersionHistory( pageName );
 			}*/
 		} catch (final ProviderException e) {
 			LOG.error("ProviderException requesting version history for " + page.getName(), e);
@@ -503,7 +539,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         try {
             final TreeSet< WikiPage > sortedPages = new TreeSet<>( new PageTimeComparator() );
             sortedPages.addAll( getAllPages() );
-          //:FVK: sortedPages.addAll( m_engine.getManager( AttachmentManager.class ).getAllAttachments() );
+          //:FVK: sortedPages.addAll( ServicesRefs.getAttachmentManager().getAllAttachments() );
 
             return sortedPages;
         } catch( final ProviderException e ) {
@@ -553,7 +589,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     	 * Не будем проверять присоединения к странице, специальные страницы...
     	 * Будем проверять наличие страницы по её имени.
     	 * -- старый код - удалим. deprecated.
-        if( m_engine.getManager( CommandResolver.class ).getSpecialPageReference( page ) != null ) {
+        if( ServicesRefs.getCommandResolver().getSpecialPageReference( page ) != null ) {
             return true;
         }
 
@@ -563,7 +599,7 @@ public class DefaultPageManager implements PageManager, Initializable {
                 return true;
             }
 
-            att = m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, page );
+            att = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, page );
         } catch( final ProviderException e ) {
             LOG.debug( "pageExists() failed to find attachments", e );
         }
@@ -583,7 +619,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     	 * Не будем проверять присоединения к странице, специальные страницы...
     	 * Будем проверять наличие страницы по её имени.
     	 * -- старый код - удалим. deprecated.
-        if( m_engine.getManager( CommandResolver.class ).getSpecialPageReference( page ) != null ) {
+        if( ServicesRefs.getCommandResolver().getSpecialPageReference( page ) != null ) {
             return true;
         }
 
@@ -596,7 +632,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         if( !isThere ) {
             //  Go check if such an attachment exists.
             try {
-                isThere = m_engine.getManager( AttachmentManager.class ).getAttachmentInfo( null, page, version ) != null;
+                isThere = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, page, version ) != null;
             } catch( final ProviderException e ) {
                 LOG.debug( "wikiPageExists() failed to find attachments", e );
             }
@@ -614,7 +650,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     public void deleteVersion( final WikiPage page ) throws ProviderException {
     	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы. 
         if( page instanceof PageAttachment ) {
-            m_engine.getManager( AttachmentManager.class ).deleteVersion( ( PageAttachment )page );
+            ServicesRefs.getAttachmentManager().deleteVersion( ( PageAttachment )page );
         } else */
     	{
         	//:FVK: m_provider.deleteVersion( page.getName(), page.getVersion() );
@@ -632,21 +668,21 @@ public class DefaultPageManager implements PageManager, Initializable {
         if( p != null ) {
         	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
             if( p instanceof PageAttachment ) {
-                m_engine.getManager( AttachmentManager.class ).deleteAttachment( ( PageAttachment )p );
+                ServicesRefs.getAttachmentManager().deleteAttachment( ( PageAttachment )p );
             } else*/ 
             {
-                final Collection< String > refTo = m_engine.getManager( ReferenceManager.class ).findRefersTo( pageName );
+                final Collection< String > refTo = this.referenceManager.findRefersTo( pageName );
                 // May return null, if the page does not exist or has not been indexed yet.
 
                 /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                if( m_engine.getManager( AttachmentManager.class ).hasAttachments( p ) ) {
-                    final List< PageAttachment > attachments = m_engine.getManager( AttachmentManager.class ).listAttachments( p );
+                if( ServicesRefs.getAttachmentManager().hasAttachments( p ) ) {
+                    final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( p );
                     for( final PageAttachment attachment : attachments ) {
                         if( refTo != null ) {
                             refTo.remove( attachment.getName() );
                         }
 
-                        m_engine.getManager( AttachmentManager.class ).deleteAttachment( attachment );
+                        ServicesRefs.getAttachmentManager().deleteAttachment( attachment );
                     }
                 }*/
                 deletePage( p );
@@ -748,7 +784,7 @@ public class DefaultPageManager implements PageManager, Initializable {
                     if( aclChanged ) {
                         // If the Acl needed changing, change it now
                         try {
-                            m_engine.getManager( AclManager.class ).setPermissions( page, page.getAcl() );
+                            this.aclManager.setPermissions( page, page.getAcl() );
                         } catch( final WikiSecurityException e ) {
                             LOG.error("Could not change page ACL for page " + page.getName() + ": " + e.getMessage(), e);
                         }

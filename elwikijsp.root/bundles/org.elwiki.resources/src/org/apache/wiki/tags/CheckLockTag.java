@@ -23,6 +23,7 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class CheckLockTag extends WikiTagBase {
 		final WikiPage page = m_wikiContext.getPage();
 
 		if (page != null) {
-			final PageManager mgr = engine.getManager(PageManager.class);
+			final PageManager mgr = ServicesRefs.getPageManager();
 			final PageLock lock = mgr.getCurrentLock(page);
 			final HttpSession session = pageContext.getSession();
 			final PageLock userLock = (PageLock) session.getAttribute("lock-" + page.getName());

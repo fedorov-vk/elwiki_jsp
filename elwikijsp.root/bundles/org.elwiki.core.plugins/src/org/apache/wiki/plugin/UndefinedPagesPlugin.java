@@ -21,6 +21,7 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.Collection;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
-        final ReferenceManager refmgr = context.getEngine().getManager( ReferenceManager.class );
+        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
         super.initialize( context, params );
 
         Collection< String > links = refmgr.findUncreated();

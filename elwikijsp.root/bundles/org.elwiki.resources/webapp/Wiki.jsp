@@ -15,26 +15,27 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
---%><!-- ~~ START ~~ Wiki.jsp --><%@
- page import="org.apache.commons.lang3.time.StopWatch" %><%@
- page import="org.apache.log4j.*" %><%@
- page import="org.apache.wiki.WatchDog" %><%@
- page import="org.apache.wiki.api.core.*" %><%@
- page import="org.apache.wiki.Wiki" %><%@
- page import="org.apache.wiki.auth.AuthorizationManager" %><%@
- page import="org.apache.wiki.preferences.Preferences" %><%@
- page import="org.apache.wiki.ui.TemplateManager" %><%@
- page import="org.apache.wiki.util.*" %><%@
- page import="org.elwiki_data.*" %><%@
- page import="org.elwiki_data.impl.*" %><%@
- page errorPage="/Error.jsp" %><%@
- taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%!
-  Logger log = Logger.getLogger("JSPWiki"); %><%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+--%><!-- ~~ START ~~ Wiki.jsp -->
+<%@ page import="org.apache.commons.lang3.time.StopWatch" %>
+<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.wiki.WatchDog" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.Wiki" %>
+<%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
+<%@ page import="org.apache.wiki.preferences.Preferences" %>
+<%@ page import="org.apache.wiki.ui.TemplateManager" %>
+<%@ page import="org.apache.wiki.util.*" %>
+<%@ page import="org.elwiki_data.*" %>
+<%@ page import="org.elwiki_data.impl.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page errorPage="/Error.jsp" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%! Logger log = Logger.getLogger("JSPWiki"); %>
+<% Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
 
-    if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) {
+    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
     	return;
     }
     String pagereq = wikiContext.getName();
@@ -55,7 +56,7 @@
 
         // Set the content type and include the response content
         response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-        String contentPage = wiki.getManager( TemplateManager.class )
+        String contentPage = ServicesRefs.getTemplateManager()
         		.findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 
 %><wiki:Include page="<%=contentPage%>" /><%

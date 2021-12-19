@@ -39,14 +39,15 @@ import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.api.ui.progress.ProgressItem;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PermissionFactory;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.ui.progress.ProgressItem;
-import org.apache.wiki.ui.progress.ProgressManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -189,8 +190,8 @@ public class AttachmentServlet extends HttpServlet {
     @Override
     public void doGet( final HttpServletRequest  req, final HttpServletResponse res ) throws IOException {
         final Context context = Wiki.context().create( m_engine, req, ContextEnum.PAGE_ATTACH.getRequestContext() );
-        final AttachmentManager mgr = m_engine.getManager( AttachmentManager.class );
-        final AuthorizationManager authmgr = m_engine.getManager( AuthorizationManager.class );
+        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
+        final AuthorizationManager authmgr = ServicesRefs.getAuthorizationManager();
         final String version = req.getParameter( HDR_VERSION );
         final String nextPage = req.getParameter( "nextpage" );
         final String page = context.getPage().getName();
@@ -409,7 +410,7 @@ public class AttachmentServlet extends HttpServlet {
             final Context context = Wiki.context().create( m_engine, req, ContextEnum.PAGE_ATTACH.getRequestContext() );
             final UploadListener pl = new UploadListener();
 
-            m_engine.getManager( ProgressManager.class ).startProgress( pl, progressId );
+            ServicesRefs.getProgressManager().startProgress( pl, progressId );
 
             final ServletFileUpload upload = new ServletFileUpload( factory );
             upload.setHeaderEncoding( "UTF-8" );
@@ -481,7 +482,7 @@ public class AttachmentServlet extends HttpServlet {
 
             throw new IOException( msg, e );
         } finally {
-            m_engine.getManager( ProgressManager.class ).stopProgress( progressId );
+        	ServicesRefs.getProgressManager().stopProgress( progressId );
             // FIXME: In case of exceptions should absolutely remove the uploaded file.
         }
 
@@ -537,7 +538,7 @@ public class AttachmentServlet extends HttpServlet {
         }
 
         final Principal user    = context.getCurrentUser();
-        final AttachmentManager mgr = m_engine.getManager( AttachmentManager.class );
+        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
 
         log.debug("file="+filename);
 
@@ -561,7 +562,7 @@ public class AttachmentServlet extends HttpServlet {
 
         //  Check if we're allowed to do this?
         final Permission permission = null; //:FVK: PermissionFactory.getPagePermission( att, "upload" );
-        if( m_engine.getManager( AuthorizationManager.class ).checkPermission( context.getWikiSession(), permission ) ) {
+        if( ServicesRefs.getAuthorizationManager().checkPermission( context.getWikiSession(), permission ) ) {
             if( user != null ) {
                 att.setAuthor( user.getName() );
             }
@@ -572,7 +573,7 @@ public class AttachmentServlet extends HttpServlet {
 
           /*:FVK: 
             try {
-                m_engine.getManager( AttachmentManager.class ).storeAttachment( att, data );
+                ResourcesRefs.getAttachmentManager().storeAttachment( att, data );
             } catch( final ProviderException pe ) {
                 // this is a kludge, the exception that is caught here contains the i18n key
                 // here we have the context available, so we can internationalize it properly :

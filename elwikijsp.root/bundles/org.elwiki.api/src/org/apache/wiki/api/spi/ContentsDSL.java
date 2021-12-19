@@ -45,13 +45,12 @@ public class ContentsDSL {
 
     /**
      * Creates a {@link WikiPage} instance.
-     *
-     * @param engine The Engine that owns this page.
      * @param name   The name of the page.
+     *
      * @return new {@link WikiPage} instance.
      */
-    public WikiPage page( final Engine engine, final String name ) {
-        return contentsSPI.page( engine, name );
+    public WikiPage page( final String name ) {
+        return contentsSPI.page( name );
     }
 
 }

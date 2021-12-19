@@ -26,6 +26,7 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -58,8 +59,8 @@ public class HistoryIteratorTag extends IteratorTag<PageContent>  {
         final WikiPage page = m_wikiContext.getPage();
 
         try {
-            if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page ) ) {
-                //:FVK: историю - просто извлечь из страницы.  final List< WikiPage > versions = engine.getManager( PageManager.class ).getVersionHistory( page );
+            if( page != null && ServicesRefs.getPageManager().wikiPageExists( page ) ) {
+                //:FVK: историю - просто извлечь из страницы.  final List< WikiPage > versions = ResourcesRefs.getPageManager().getVersionHistory( page );
             	List<PageContent> contents = new ArrayList<>(page.getPagecontents());
 				contents.sort((c1, c2) -> {
 					return c2.getVersion() - c1.getVersion();

@@ -27,6 +27,7 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.Map;
 
@@ -121,7 +122,7 @@ public class Image implements Plugin {
         }
 
         try {
-            final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
+            final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
             final PageAttachment att = mgr.getAttachmentInfo( context, src );
 
             if( att != null ) {

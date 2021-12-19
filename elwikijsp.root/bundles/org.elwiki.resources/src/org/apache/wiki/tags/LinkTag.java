@@ -38,6 +38,7 @@ import org.apache.wiki.parser0.LinkParsingOperations;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -201,7 +202,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				final String parms = (m_version != null) ? "version=" + getVersion() : null;
 
 				//  Internal wiki link, but is it an attachment link?
-				final WikiPage p = engine.getManager(PageManager.class).getPage(m_pageName);
+				final WikiPage p = ServicesRefs.getPageManager().getPage(m_pageName);
 				if (p instanceof PageAttachment) {
 					url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), m_pageName);
 				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
@@ -231,7 +232,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				}
 			}
 		} else if (m_pageName != null && m_pageName.length() > 0) {
-			final WikiPage p = engine.getManager(PageManager.class).getPage(m_pageName);
+			final WikiPage p = ServicesRefs.getPageManager().getPage(m_pageName);
 
 			String parms = (m_version != null) ? "version=" + getVersion() : null;
 
@@ -291,7 +292,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 			int r2;
 
 			if (DiffLinkTag.VER_LATEST.equals(getVersion())) {
-				final WikiPage latest = engine.getManager(PageManager.class).getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = ServicesRefs.getPageManager().getPage(page, WikiProvider.LATEST_VERSION);
 
 				r1 = latest.getVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(getVersion())) {
@@ -304,7 +305,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 			}
 
 			if (DiffLinkTag.VER_LATEST.equals(m_compareToVersion)) {
-				final WikiPage latest = engine.getManager(PageManager.class).getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = ServicesRefs.getPageManager().getPage(page, WikiProvider.LATEST_VERSION);
 
 				r2 = latest.getVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(m_compareToVersion)) {
@@ -344,8 +345,8 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 			sb.append((m_accesskey != null) ? "accesskey=\"" + m_accesskey + "\" " : "");
 			sb.append((m_tabindex != null) ? "tabindex=\"" + m_tabindex + "\" " : "");
 
-			if (engine.getManager(PageManager.class).getPage(m_pageName) instanceof PageAttachment) {
-				sb.append(engine.getManager(AttachmentManager.class).forceDownload(m_pageName) ? "download " : "");
+			if (ServicesRefs.getPageManager().getPage(m_pageName) instanceof PageAttachment) {
+				sb.append(ServicesRefs.getAttachmentManager().forceDownload(m_pageName) ? "download " : "");
 			}
 
 			switch (m_format) {

@@ -20,6 +20,7 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.elwiki.services.ServicesRefs;
 
 /**
  *  Includes the content if an user check validates.  This has been considerably enhanced for 2.2.  The possibilities for the
@@ -99,7 +100,7 @@ public class UserCheckTag extends WikiTagBase {
     public final int doWikiStartTag() {
         final Session session = m_wikiContext.getWikiSession();
         final String status = session.getStatus();
-        final IIAuthenticationManager mgr = m_wikiContext.getEngine().getManager( IIAuthenticationManager.class );
+        final IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
         final boolean containerAuth = mgr.isContainerAuthenticated();
         final boolean cookieAssertions = mgr.allowsCookieAssertions();
 

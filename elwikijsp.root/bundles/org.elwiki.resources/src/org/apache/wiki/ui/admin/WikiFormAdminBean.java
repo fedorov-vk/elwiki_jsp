@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.ui.admin0.AdminBean;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +43,7 @@ public abstract class WikiFormAdminBean implements AdminBean {
     public String doGet( final Context context ) {
         String result = "";
         final String wikiMarkup = getForm( context );
-        final RenderingManager mgr = context.getEngine().getManager( RenderingManager.class );
+        final RenderingManager mgr = ServicesRefs.getRenderingManager();
         final WikiDocument doc;
         try {
             doc = mgr.getParser( context, wikiMarkup ).parse();

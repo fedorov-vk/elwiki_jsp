@@ -41,6 +41,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -84,8 +85,15 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
     private IWikiConfiguration configuration;
 	private PageManager pageManager;
 	private URLConstructor urlConstructor;
-    
-    // -- service handling ------------------------------------
+
+	/**
+	 * Create instance of DefaultCommandResolver.
+	 */
+    public DefaultCommandResolver() {
+    	m_specialPages = new HashMap<>();
+	}
+
+    // -- service handling --------------------------- start --
     
     public void setConfiguration(IWikiConfiguration configuration) {
     	this.configuration = configuration;
@@ -98,14 +106,9 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	public void setURLConstructor(URLConstructor urlConstructor) {
 		this.urlConstructor = urlConstructor;
 	}
-	
-    /**
-     * Default constructor.
-     */
-    public DefaultCommandResolver() {
-    	m_specialPages = new HashMap<>();
-	}
 
+    // -- service handling ----------------------------- end --
+	
 	/**
      * Constructs a CommandResolver for a given Engine. This constructor will extract the special page references for this wiki and
      * store them in a cache used for resolution.
@@ -321,7 +324,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
             } else {
                 String pageId = this.urlConstructor.parsePageId(
                 		requestContext, request, this.configuration.getContentEncodingCs() );
-                PageManager pm = m_engine.getManager(PageManager.class);
+                PageManager pm = ServicesRefs.getPageManager();
                 WikiPage wikiPage = pm.getPageById(pageId);
                 if(wikiPage!=null) {
                 	return wikiPage.getName();
@@ -356,7 +359,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
         WikiPage wikipage = this.pageManager.getPage( page, version );
         if ( wikipage == null ) {
             page = MarkupParser.cleanLink( page );
-            wikipage = Wiki.contents().page( m_engine, page );
+            wikipage = Wiki.contents().page( page );
         }
         return wikipage;
     }

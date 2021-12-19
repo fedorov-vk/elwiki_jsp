@@ -34,6 +34,7 @@ import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -315,24 +316,24 @@ public class DefaultVariableManager implements VariableManager {
         }
 
         public String getTotalpages() {
-            return Integer.toString( m_context.getEngine().getManager( PageManager.class ).getTotalPageCount() );
+            return Integer.toString( ServicesRefs.getPageManager().getTotalPageCount() );
         }
 
         public String getPageprovider() {
-            return m_context.getEngine().getManager( PageManager.class ).getCurrentProvider();
+            return ServicesRefs.getPageManager().getCurrentProvider();
         }
 
         public String getPageproviderdescription() {
-            return m_context.getEngine().getManager( PageManager.class ).getProviderDescription();
+            return ServicesRefs.getPageManager().getProviderDescription();
         }
 
         public String getAttachmentprovider() {
-            final WikiProvider p = m_context.getEngine().getManager( AttachmentManager.class ).getCurrentProvider();
+            final WikiProvider p = ServicesRefs.getAttachmentManager().getCurrentProvider();
             return (p != null) ? p.getClass().getName() : "-";
         }
 
         public String getAttachmentproviderdescription() {
-            final WikiProvider p = m_context.getEngine().getManager( AttachmentManager.class ).getCurrentProvider();
+            final WikiProvider p = ServicesRefs.getAttachmentManager().getCurrentProvider();
             return (p != null) ? p.getProviderInfo() : "-";
         }
 
@@ -403,7 +404,7 @@ public class DefaultVariableManager implements VariableManager {
         }
 
         public String getPagefilters() {
-            final FilterManager fm = m_context.getEngine().getManager( FilterManager.class );
+            final FilterManager fm = ServicesRefs.getFilterManager();
             final List< PageFilter > filters = fm.getFilterList();
             final StringBuilder sb = new StringBuilder();
             for( final PageFilter pf : filters ) {

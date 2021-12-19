@@ -65,6 +65,7 @@ import org.elwiki.pageprovider.cdo.internal.bundle.PageProviderCdoActivator;
 //import org.elwiki.pageprovider.jspwiki.JdbcAttachmentProvider;
 //import org.elwiki.pageprovider.jspwiki.JdbcPageProvider;
 import org.elwiki.permissions.PermissionFactory;
+import org.elwiki.services.ServicesRefs;
 //import org.elwiki.utils.FileUtil;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
@@ -1309,7 +1310,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	//:FVK: @Override
 	public void putAcl(WikiPage page, String aclString) {
 		//:FVK: 
-		AclManager am = this.m_engine.getManager(AclManager.class);
+		AclManager am = ServicesRefs.getAclManager();
 
 		org.elwiki_data.Acl acl = null;
 		try {
@@ -1351,7 +1352,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			while (fieldToks.hasMoreTokens()) {
 				String principalName = fieldToks.nextToken(",").trim();
-				Principal principal = this.m_engine.getManager(AuthorizationManager.class)
+				Principal principal = ServicesRefs.getAuthorizationManager()
 						.resolvePrincipal(principalName); //:FVK: Principal principal = this.m_auth.resolvePrincipal(principalName);
 				AclEntry oldEntry = acl.getEntry(principal);
 

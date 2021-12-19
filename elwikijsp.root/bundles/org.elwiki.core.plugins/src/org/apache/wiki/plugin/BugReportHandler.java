@@ -30,6 +30,7 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -141,10 +142,10 @@ public class BugReportHandler implements Plugin {
 
             //  Now create a new page for this bug report
             final String pageName = findNextPage( context, title, params.get( PARAM_PAGE ) );
-            final WikiPage newPage = Wiki.contents().page( context.getEngine(), pageName );
+            final WikiPage newPage = Wiki.contents().page( pageName );
             final Context newContext = context.clone();
             newContext.setPage( newPage );
-            context.getEngine().getManager( PageManager.class ).saveText( newContext, str.toString(), "bugreporthandler", "" ); // :FVK: workaround - надо задать автора?
+            ServicesRefs.getPageManager().saveText( newContext, str.toString(), "bugreporthandler", "" ); // :FVK: workaround - надо задать автора?
 
             final MessageFormat formatter = new MessageFormat("");
             formatter.applyPattern( rb.getString("bugreporthandler.new") );
@@ -170,7 +171,7 @@ public class BugReportHandler implements Plugin {
 
         String pageName = basicPageName;
         long   lastbug  = 2;
-        while( engine.getManager( PageManager.class ).wikiPageExists( pageName ) ) {
+        while( ServicesRefs.getPageManager().wikiPageExists( pageName ) ) {
             pageName = basicPageName + lastbug++;
         }
 

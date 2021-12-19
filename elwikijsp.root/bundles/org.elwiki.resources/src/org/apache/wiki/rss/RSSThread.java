@@ -22,7 +22,9 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.util.FileUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -55,7 +57,7 @@ public class RSSThread extends WikiBackgroundThread {
      */
     public RSSThread( final Engine engine, final File rssFile, final int rssInterval ) {
         super( engine, rssInterval );
-        m_generator = engine.getManager( RSSGenerator.class );
+        m_generator = ServicesRefs.getRssGenerator();
         m_rssFile = rssFile;
         setName("JSPWiki RSS Generator");
         log.debug( "RSS file will be at "+m_rssFile.getAbsolutePath() );

@@ -28,6 +28,7 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -68,7 +69,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
-        final ReferenceManager refmgr = context.getEngine().getManager( ReferenceManager.class );
+        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
         String pageName = params.get( PARAM_PAGE );
         final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
 
@@ -78,7 +79,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
             pageName = context.getPage().getName();
         }
 
-        final WikiPage page = context.getEngine().getManager( PageManager.class ).getPage( pageName );
+        final WikiPage page = ServicesRefs.getPageManager().getPage( pageName );
 
         if( page != null ) {
             Collection< String > links  = refmgr.findReferrers( page.getName() );
