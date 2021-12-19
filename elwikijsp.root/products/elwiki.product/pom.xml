@@ -126,7 +126,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Модификация comfig.ini -->
+			<!-- Модификация config.ini -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>

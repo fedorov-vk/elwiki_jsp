@@ -74,7 +74,7 @@ public class WikiContext implements Context, Command {
     private Command  m_command;
     private WikiPage m_page;
     private WikiPage m_realPage;
-    private Engine   m_engine;
+    private Engine   m_engine; //TODO: удалить.
     private String   m_template = "default";
 
     private HashMap< String, Object > m_variableMap = new HashMap<>();
@@ -287,8 +287,8 @@ public class WikiContext implements Context, Command {
     
     /** {@inheritDoc} */
     @Override
-    public WikiEngine getEngine() {
-        return ( WikiEngine )m_engine;
+    public Engine getEngine() {
+        return ServicesRefs.Instance; //:FVK: workaround. Это излишнее, потребитель сам может получить Engine.
     }
 
     /**

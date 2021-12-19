@@ -67,7 +67,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
     @Override
     public void init( final ServletConfig config ) throws ServletException {
         super.init( config );
-        m_engine = Wiki.engine().find( config );
+        m_engine = ServicesRefs.Instance;
         this.config = m_engine.getWikiConfiguration();
         PATH_AJAX = "/" + TextUtil.getStringProperty( m_engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax" ) + "/";
         log.info( "WikiAjaxDispatcherServlet initialized." );

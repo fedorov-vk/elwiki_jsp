@@ -69,8 +69,8 @@ public class SessionDSL {
      * @param engine the wiki engine
      * @return the guest wiki session
      */
-    public Session guest( final Engine engine ) {
-        return sessionSPI.guest( engine );
+    public Session guest() {
+        return sessionSPI.guest( );
     }
 
 }

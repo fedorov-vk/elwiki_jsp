@@ -21,6 +21,7 @@ public class ApiActivator implements BundleActivator {
 		ApiActivator.context = null;
 	}
 
+	//:FVK: @deprecated ?
 	public static <T> T getService(Class<T> clazz) {
 		Bundle bundle = context.getBundle();
 		if (bundle != null) {

@@ -50,4 +50,5 @@ public class ConfigurationActivator implements BundleActivator {
 	public static ConfigurationActivator getDefault() {
 		return instance;
 	}
+
 }

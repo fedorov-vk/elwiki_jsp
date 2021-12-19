@@ -72,9 +72,6 @@ public final class WikiSession implements Session {
 
     private final Map< String, Set< String > > m_messages  = new ConcurrentHashMap<>();
 
-    /** The Engine that created this session. */
-    private Engine              m_engine              = null;
-
     private String              m_status              = ANONYMOUS;
 
     private Principal           m_userPrincipal       = WikiPrincipal.GUEST;
@@ -476,11 +473,11 @@ public final class WikiSession implements Session {
      * @param engine the wiki engine
      * @param request the users's HTTP request
      */
-    public static void removeWikiSession( final Engine engine, final HttpServletRequest request ) {
-        if ( engine == null || request == null ) {
+    public static void removeWikiSession(final HttpServletRequest request ) {
+        if ( request == null ) {
             throw new IllegalArgumentException( "Request or engine cannot be null." );
         }
-        final SessionMonitor monitor = SessionMonitor.getInstance( engine );
+        final SessionMonitor monitor = SessionMonitor.getInstance();
         monitor.remove( request.getSession() );
         c_guestSession.remove();
     }
@@ -508,11 +505,10 @@ public final class WikiSession implements Session {
 
         // Look for a WikiSession associated with the user's Http Session and create one if it isn't there yet.
         final HttpSession session = request.getSession();
-        final SessionMonitor monitor = SessionMonitor.getInstance( engine );
+        final SessionMonitor monitor = SessionMonitor.getInstance();
         final WikiSession wikiSession = ( WikiSession )monitor.find( session );
 
         // Attach reference to wiki engine
-        wikiSession.m_engine = engine;
         wikiSession.m_cachedLocale = request.getLocale();
         return wikiSession;
     }
@@ -525,9 +521,8 @@ public final class WikiSession implements Session {
      * @param engine the wiki engine
      * @return the guest wiki session
      */
-    public static Session guestSession( final Engine engine ) {
+    public static Session guestSession() {
         final WikiSession session = new WikiSession();
-        session.m_engine = engine;
         session.invalidate();
 
         // Add the session as listener for GroupManager, AuthManager, UserManager events
@@ -552,7 +547,7 @@ public final class WikiSession implements Session {
     private static Session staticGuestSession( final Engine engine ) {
         Session session = c_guestSession.get();
         if( session == null ) {
-            session = guestSession( engine );
+            session = guestSession();
             c_guestSession.set( session );
         }
 
@@ -570,7 +565,7 @@ public final class WikiSession implements Session {
      */
     @Deprecated
     public static int sessions( final Engine engine ) {
-        final SessionMonitor monitor = SessionMonitor.getInstance( engine );
+        final SessionMonitor monitor = SessionMonitor.getInstance();
         return monitor.sessions();
     }
 
@@ -586,7 +581,7 @@ public final class WikiSession implements Session {
      */
     @Deprecated
     public static Principal[] userPrincipals( final Engine engine ) {
-        final SessionMonitor monitor = SessionMonitor.getInstance( engine );
+        final SessionMonitor monitor = SessionMonitor.getInstance();
         return monitor.userPrincipals();
     }
 

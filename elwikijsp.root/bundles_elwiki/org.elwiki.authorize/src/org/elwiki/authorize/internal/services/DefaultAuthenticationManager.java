@@ -255,7 +255,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     @Override
     public boolean login( final HttpServletRequest request ) throws WikiSecurityException {
         final HttpSession httpSession = request.getSession();
-        final Session session = SessionMonitor.getInstance( m_engine ).find( httpSession );
+        final Session session = SessionMonitor.getInstance().find( httpSession );
 
 //:FVK: - ссылка сам на себя !!!        
         final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();

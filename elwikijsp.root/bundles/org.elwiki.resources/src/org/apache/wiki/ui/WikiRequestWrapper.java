@@ -47,7 +47,7 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
         super( request );
 
         // Get and stash a reference to the current Session
-        m_session = SessionMonitor.getInstance( engine ).find( request.getSession() );
+        m_session = SessionMonitor.getInstance().find( request.getSession() );
     }
 
     /**
