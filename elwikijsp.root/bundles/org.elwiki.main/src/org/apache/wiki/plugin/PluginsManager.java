@@ -3,10 +3,7 @@ package org.apache.wiki.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.security.auth.spi.LoginModule;
-
 import org.apache.log4j.Logger;
-import org.apache.wiki.WikiEngine;
 import org.apache.wiki.api.plugin.Plugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -16,7 +13,7 @@ import org.osgi.framework.Bundle;
 
 public class PluginsManager {
 
-    private static final Logger log = Logger.getLogger( WikiEngine.class );
+    private static final Logger log = Logger.getLogger( PluginsManager.class );
 	
 	private static PluginsManager instancePluginsManager;
 

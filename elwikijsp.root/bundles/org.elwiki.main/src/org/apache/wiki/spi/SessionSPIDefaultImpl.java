@@ -37,7 +37,7 @@ public class SessionSPIDefaultImpl implements SessionSPI {
 	 */
 	@Override
 	public void remove(final Engine engine, final HttpServletRequest request) {
-		WikiSession.removeWikiSession(engine, request);
+		WikiSession.removeWikiSession(request);
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class SessionSPIDefaultImpl implements SessionSPI {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Session guest(final Engine engine) {
-		return WikiSession.guestSession(engine);
+	public Session guest() {
+		return WikiSession.guestSession();
 	}
 
 }

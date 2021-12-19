@@ -57,7 +57,7 @@ public class SessionsPlugin implements Plugin {
         final String prop = params.get( PARAM_PROP );
 
         if( "users".equals( prop ) ) {
-            final Principal[] principals = SessionMonitor.getInstance( engine ).userPrincipals();
+            final Principal[] principals = SessionMonitor.getInstance().userPrincipals();
             final StringBuilder s = new StringBuilder();
             for( final Principal principal : principals ) {
                 s.append( principal.getName() ).append( ", " );
@@ -68,7 +68,7 @@ public class SessionsPlugin implements Plugin {
 
         // show each user session only once (with a counter that indicates the number of sessions for each user)
         if( "distinctUsers".equals( prop ) ) {
-            final Principal[] principals = SessionMonitor.getInstance( engine ).userPrincipals();
+            final Principal[] principals = SessionMonitor.getInstance().userPrincipals();
             // we do not assume that the principals are sorted, so first count them :
             final HashMap< String, Integer > distinctPrincipals = new HashMap<>();
             for( final Principal principal : principals ) {
@@ -94,6 +94,6 @@ public class SessionsPlugin implements Plugin {
 
         }
 
-        return String.valueOf( SessionMonitor.getInstance( engine ).sessions() );
+        return String.valueOf( SessionMonitor.getInstance().sessions() );
     }
 }

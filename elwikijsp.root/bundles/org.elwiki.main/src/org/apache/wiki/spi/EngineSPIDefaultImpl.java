@@ -20,7 +20,6 @@ package org.apache.wiki.spi;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wiki.WikiEngine;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.spi.EngineSPI;
 
@@ -32,12 +31,21 @@ import org.apache.wiki.api.spi.EngineSPI;
  */
 public class EngineSPIDefaultImpl implements EngineSPI {
 
+	private Engine engine;
+	
+	// -- service handling --------------------------< start --
+
+	public void setEngine(Engine engine) {
+		this.engine = engine;
+	}
+
+	
     /**
      * {@inheritDoc}
      */
     @Override
     public Engine find( final ServletContext context ) {
-        return WikiEngine.getInstance( context );
+        return engine; //:FVK: WikiEngine.getInstance( context );
     }
 
 }

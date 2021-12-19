@@ -19,6 +19,7 @@
 package org.apache.wiki.api.spi;
 
 import org.apache.wiki.api.core.Engine;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -51,7 +52,7 @@ public class EngineDSL {
      * @return a configured {@link Engine} instance.
      */
     public Engine find( final ServletContext context ) {
-        return engineSPI.find( context );
+        return ServicesRefs.Instance; //:FVK: workaround // .find( context );
     }
 
 }

@@ -4,4 +4,5 @@
    <service>
       <provide interface="org.apache.wiki.api.spi.EngineSPI"/>
    </service>
+   <reference bind="setEngine" cardinality="1..1" interface="org.apache.wiki.api.core.Engine" name="Engine" policy="static"/>
 </scr:component>

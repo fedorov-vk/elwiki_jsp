@@ -40,7 +40,7 @@ public interface SessionSPI {
     /**
      * <p>Returns the Session object associated with the current HTTP request. If not found, one is created.
      * This method is guaranteed to always return a Session, although the authentication status is unpredictable until the user
-     * attempts to log in. If the servlet request parameter is <code>null</code>, a synthetic {@link #guest(Engine)} is
+     * attempts to log in. If the servlet request parameter is <code>null</code>, a synthetic {@link #guest()} is
      * returned.</p>
      * <p>When a session is created, this method attaches a WikiEventListener to the GroupManager, UserManager and AuthenticationManager,
      * so that changes to users, groups, logins, etc. are detected automatically.</p>
@@ -56,9 +56,8 @@ public interface SessionSPI {
      * principals {@code Role#ALL} and {@code Role#ANONYMOUS}. This method also adds the session as a listener for GroupManager,
      * AuthenticationManager and UserManager events.
      *
-     * @param engine the wiki engine
      * @return the guest wiki session
      */
-    Session guest( Engine engine );
+    Session guest( );
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elwiki.services.ServicesRefs">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startupService" deactivate="shutdownService" name="org.elwiki.services.ServicesRefs">
    <implementation class="org.elwiki.services.ServicesRefs"/>
+   <reference bind="setWikiConfiguration" cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
    <reference bind="setAclManager" cardinality="1..1" interface="org.apache.wiki.auth.acl.AclManager" name="AclManager" policy="static"/>
    <reference bind="setAttachmentManager" cardinality="1..1" interface="org.apache.wiki.api.attachment.AttachmentManager" name="AttachmentManager" policy="static"/>
    <reference bind="setPageManager" cardinality="1..1" interface="org.apache.wiki.pages0.PageManager" name="PageManager" policy="static"/>
@@ -24,6 +25,9 @@
    <reference bind="setInternationalizationManager" cardinality="1..1" interface="org.apache.wiki.api.i18n.InternationalizationManager" name="InternationalizationManager" policy="static"/>
    <reference bind="setWorkflowManager" cardinality="1..1" interface="org.apache.wiki.workflow0.WorkflowManager" name="WorkflowManager" policy="static"/>
    <reference bind="setUrlConstructor" cardinality="1..1" interface="org.apache.wiki.url0.URLConstructor" name="URLConstructor" policy="static"/>
+   <service>
+      <provide interface="org.apache.wiki.api.core.Engine"/>
+   </service>
 <!--
    <reference bind="setRssGenerator" cardinality="1..1" interface="org.apache.wiki.rss.api.RSSGenerator" name="RSSGenerator" policy="static"/>
 -->

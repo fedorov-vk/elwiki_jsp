@@ -116,6 +116,7 @@ public interface PageFilter extends Initializable {
      *  @since 2.5.36
      */
     default void destroy( final Engine engine ) {
+//TODO: :FVK: - рефлексия. ? убрать ? 
         final Method m = methodOfNonPublicAPI( this, "destroy", "org.apache.wiki.WikiEngine" );
         executePageFilterPhase( () -> null, m, this, engine );
         // empty method

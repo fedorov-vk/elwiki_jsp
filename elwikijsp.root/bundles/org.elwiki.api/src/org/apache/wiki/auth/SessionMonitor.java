@@ -20,7 +20,6 @@ package org.apache.wiki.auth;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -48,13 +47,10 @@ public class SessionMonitor implements HttpSessionListener {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
 
-    /** Map with Engines as keys, and SessionMonitors as values. */
-    private static ConcurrentHashMap< Engine, SessionMonitor > c_monitors = new ConcurrentHashMap<>();
+    private static SessionMonitor this_instance;
 
     /** Weak hashmap with HttpSessions as keys, and WikiSessions as values. */
     private final Map< String, Session > m_sessions = new WeakHashMap<>();
-
-    private Engine m_engine;
 
     private final PrincipalComparator m_comparator = new PrincipalComparator();
 
@@ -64,25 +60,16 @@ public class SessionMonitor implements HttpSessionListener {
      * @param engine the wiki engine
      * @return the session monitor
      */
-    public static SessionMonitor getInstance( final Engine engine ) {
-        if( engine == null ) {
-            throw new IllegalArgumentException( "Engine cannot be null." );
-        }
-        SessionMonitor monitor = c_monitors.get( engine );
-        if( monitor == null ) {
-            monitor = new SessionMonitor( engine );
-            c_monitors.put( engine, monitor );
+    public static SessionMonitor getInstance() {
+        if( this_instance == null ) {
+        	this_instance = new SessionMonitor();
         }
 
-        return monitor;
+        return this_instance;
     }
 
     /** Construct the SessionListener */
     public SessionMonitor() {
-    }
-
-    private SessionMonitor( final Engine engine ) {
-        m_engine = engine;
     }
 
     /**
@@ -110,7 +97,7 @@ public class SessionMonitor implements HttpSessionListener {
     }
     /**
      * <p>Looks up the wiki session associated with a user's Http session and adds it to the session cache. This method will return the
-     * "guest session" as constructed by {@link org.apache.wiki.api.spi.SessionSPI#guest(Engine)} if the HttpSession is not currently
+     * "guest session" as constructed by {@link org.apache.wiki.api.spi.SessionSPI#guest()} if the HttpSession is not currently
      * associated with a WikiSession. This method is guaranteed to return a non-<code>null</code> WikiSession.</p>
      * <p>Internally, the session is stored in a HashMap; keys are the HttpSession objects, while the values are
      * {@link java.lang.ref.WeakReference}-wrapped WikiSessions.</p>
@@ -127,7 +114,7 @@ public class SessionMonitor implements HttpSessionListener {
             if( log.isDebugEnabled() ) {
                 log.debug( "Looking up WikiSession for session ID=" + sid + "... not found. Creating guestSession()" );
             }
-            wikiSession = Wiki.session().guest( m_engine );
+            wikiSession = Wiki.session().guest();
             synchronized( m_sessions ) {
                 m_sessions.put( sid, wikiSession );
             }
@@ -243,16 +230,14 @@ public class SessionMonitor implements HttpSessionListener {
      * @param se the HTTP session event
      */
     @Override
-    public void sessionDestroyed( final HttpSessionEvent se ) {
-        final HttpSession session = se.getSession();
-        for( final SessionMonitor monitor : c_monitors.values() ) {
-            final Session storedSession = monitor.findSession( session );
-            monitor.remove( session );
-            log.debug( "Removed session " + session.getId() + "." );
-            if( storedSession != null ) {
-                fireEvent( WikiSecurityEvent.SESSION_EXPIRED, storedSession.getLoginPrincipal(), storedSession );
-            }
-        }
-    }
+	public void sessionDestroyed(final HttpSessionEvent se) {
+		final HttpSession session = se.getSession();
+		final Session storedSession = this_instance.findSession(session);
+		this_instance.remove(session);
+		log.debug("Removed session " + session.getId() + ".");
+		if (storedSession != null) {
+			fireEvent(WikiSecurityEvent.SESSION_EXPIRED, storedSession.getLoginPrincipal(), storedSession);
+		}
+	}
 
 }

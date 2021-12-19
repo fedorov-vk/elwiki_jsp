@@ -50,6 +50,7 @@ public class BasePageFilter implements PageFilter {
     @Override
     public void initialize( final Engine engine ) throws WikiException {
         m_engine = engine;
+//TODO: :FVK: - рефлексия. ? убрать ? 
         final Method m = methodOfNonPublicAPI( this, "initialize", "org.apache.wiki.WikiEngine", "java.util.Properties" );
         executePageFilterPhase( () -> null, m, this, engine );
     }
