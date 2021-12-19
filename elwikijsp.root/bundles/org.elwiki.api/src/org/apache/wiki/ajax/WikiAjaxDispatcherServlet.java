@@ -27,6 +27,7 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -166,7 +167,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
         final Engine e = Wiki.engine().find( req.getSession().getServletContext() );
         boolean valid = false;
         if( container != null ) {
-            valid = e.getManager( AuthorizationManager.class ).checkPermission( Wiki.session().find( e, req ), container.permission );
+            valid = ServicesRefs.getAuthorizationManager().checkPermission( Wiki.session().find( e, req ), container.permission );
         }
         return valid;
     }

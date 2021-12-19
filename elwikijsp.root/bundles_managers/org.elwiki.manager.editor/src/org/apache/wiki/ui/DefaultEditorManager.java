@@ -30,6 +30,7 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.internal.EditorActivator;
 import org.apache.wiki.util.XmlUtil;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 
 import java.util.Collection;
@@ -113,7 +114,7 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
         if( editor == null ) {
             // or use the default editor in jspwiki.properties
             try {
-                editor = m_engine.getManager( VariableManager.class ).getValue( context, PROP_EDITORTYPE );
+                editor = ServicesRefs.getVariableManager().getValue( context, PROP_EDITORTYPE );
             } catch( final NoSuchVariableException e ) {} // This is fine
         }
 

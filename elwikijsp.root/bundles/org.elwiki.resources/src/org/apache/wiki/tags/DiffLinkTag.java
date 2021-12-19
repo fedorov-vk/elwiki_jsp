@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -99,12 +100,12 @@ public class DiffLinkTag extends WikiLinkTag {
 		int r2;
 
 		//  In case the page does not exist, we fail silently.
-		if (!engine.getManager(PageManager.class).wikiPageExists(pageName)) {
+		if (!ServicesRefs.getPageManager().wikiPageExists(pageName)) {
 			return SKIP_BODY;
 		}
 
 		if (VER_LATEST.equals(getVersion())) {
-			final WikiPage latest = engine.getManager(PageManager.class).getPage(pageName, WikiProvider.LATEST_VERSION);
+			final WikiPage latest = ServicesRefs.getPageManager().getPage(pageName, WikiProvider.LATEST_VERSION);
 			if (latest == null) {
 				// This may occur if matchEnglishPlurals is on, and we access the wrong page name
 				return SKIP_BODY;
@@ -120,7 +121,7 @@ public class DiffLinkTag extends WikiLinkTag {
 		}
 
 		if (VER_LATEST.equals(getNewVersion())) {
-			final WikiPage latest = engine.getManager(PageManager.class).getPage(pageName, WikiProvider.LATEST_VERSION);
+			final WikiPage latest = ServicesRefs.getPageManager().getPage(pageName, WikiProvider.LATEST_VERSION);
 			r2 = latest.getVersion();
 		} else if (VER_PREVIOUS.equals(getNewVersion())) {
 			r2 = m_wikiContext.getPage().getVersion() - 1;

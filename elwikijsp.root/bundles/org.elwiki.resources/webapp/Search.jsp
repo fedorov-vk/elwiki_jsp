@@ -17,26 +17,27 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Search.jsp --><%@
- page import="java.util.*" %><%@
- page import="org.elwiki_data.*" %><%@
- page import="org.apache.log4j.*" %><%@
- page import="org.apache.wiki.api.core.*" %><%@
- page import="org.apache.wiki.api.search.*" %><%@
- page import="org.apache.wiki.auth.*" %><%@
- page import="org.apache.wiki.auth.permissions.*" %><%@
- page import="org.apache.wiki.Wiki" %><%@
- page import="org.apache.wiki.preferences.Preferences" %><%@
- page import="org.apache.wiki.api.search.SearchManager" %><%@
- page import="org.apache.wiki.ui.TemplateManager" %><%@
- page import="org.apache.wiki.util.TextUtil" %><%@
- page errorPage="/Error.jsp" %><%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<!-- ~~ START ~~ Search.jsp -->
+<%@ page import="java.util.*" %>
+<%@ page import="org.elwiki_data.*" %>
+<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.api.search.*" %>
+<%@ page import="org.apache.wiki.auth.*" %>
+<%@ page import="org.apache.wiki.auth.permissions.*" %>
+<%@ page import="org.apache.wiki.Wiki" %>
+<%@ page import="org.apache.wiki.preferences.Preferences" %>
+<%@ page import="org.apache.wiki.api.search.SearchManager" %>
+<%@ page import="org.apache.wiki.ui.TemplateManager" %>
+<%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page errorPage="/Error.jsp" %><%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! Logger log = Logger.getLogger("JSPWikiSearch"); %>
 <%
 	Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     String pagereq = wikiContext.getName();
 
     // Get the search results
@@ -48,7 +49,7 @@
         log.info("Searching for string "+query);
 
         try {
-            list = wiki.getManager( SearchManager.class ).findPages( query, wikiContext );
+            list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
             pageContext.setAttribute( "searchresults", list, PageContext.REQUEST_SCOPE );
         } catch( Exception e ) {
             wikiContext.getWikiSession().addMessage( e.getMessage() );
@@ -74,7 +75,7 @@
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" /><%
     log.debug("SEARCH COMPLETE");
 %>

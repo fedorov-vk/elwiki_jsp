@@ -17,13 +17,14 @@
     under the License.
 --%>
 
-<%@ page errorPage="/Error.jsp" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.jar.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.preferences.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -35,7 +36,7 @@
 <%
   //FIXME: this should better move to UserPreferences.jsp but that doesn't seem to work. Ugh ?
   Context c = ContextUtil.findContext( pageContext );
-  TemplateManager t = c.getEngine().getManager( TemplateManager.class );
+  TemplateManager t = ServicesRefs.getTemplateManager();
   pageContext.setAttribute( "skins", t.listSkins(pageContext, c.getTemplate() ) );
   pageContext.setAttribute( "languages", t.listLanguages(pageContext) );
   pageContext.setAttribute( "timeformats", t.listTimeFormats(pageContext) );

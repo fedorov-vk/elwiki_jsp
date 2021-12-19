@@ -30,6 +30,7 @@ import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -101,7 +102,7 @@ public class UserProfileTag extends WikiTagBase {
 
     @Override
     public final int doWikiStartTag() throws IOException {
-        final UserManager manager = m_wikiContext.getEngine().getManager( UserManager.class );
+        final UserManager manager = ServicesRefs.getUserManager();
         final UserProfile profile = manager.getUserProfile( m_wikiContext.getWikiSession() );
         String result = null;
 
@@ -139,12 +140,12 @@ public class UserProfileTag extends WikiTagBase {
                 }
             }
         } else if( CHANGE_PASSWORD.equals( m_prop ) || CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final IIAuthenticationManager authMgr = m_wikiContext.getEngine().getManager( IIAuthenticationManager.class );
+            final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
             if( !authMgr.isContainerAuthenticated() ) {
                 return EVAL_BODY_INCLUDE;
             }
         } else if( NOT_CHANGE_PASSWORD.equals( m_prop ) || NOT_CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final IIAuthenticationManager authMgr = m_wikiContext.getEngine().getManager( IIAuthenticationManager.class );
+            final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
             if( authMgr.isContainerAuthenticated() ) {
                 return EVAL_BODY_INCLUDE;
             }

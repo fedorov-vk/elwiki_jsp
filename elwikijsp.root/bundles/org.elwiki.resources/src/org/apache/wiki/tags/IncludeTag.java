@@ -23,6 +23,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.FileLocator;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
@@ -66,7 +67,7 @@ public class IncludeTag extends WikiTagBase {
     @Override
     public final int doEndTag() throws JspException {
         try {
-        	TemplateManager templateManager = m_wikiContext.getEngine().getManager( TemplateManager.class );
+        	TemplateManager templateManager = ServicesRefs.getTemplateManager();
 			final String page = templateManager.findJSP(pageContext, m_wikiContext.getTemplate(), m_page);
 
             if( page == null ) {

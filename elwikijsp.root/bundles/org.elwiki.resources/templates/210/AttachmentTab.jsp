@@ -23,13 +23,14 @@
 <%@ page import="org.apache.wiki.ui.progress.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.*" %>
 <%@ page import="java.security.Permission" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
   int MAXATTACHNAMELENGTH = 30;
   Context c = ContextUtil.findContext(pageContext);
-  String progressId = c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier();
+  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
 %>
 
 <div id="addattachment">

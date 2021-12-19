@@ -20,6 +20,7 @@
 <!-- ~~ START ~~ LoginContent.jsp -->
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -29,7 +30,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
 	Context ctx = ContextUtil.findContext( pageContext );
-    IIAuthenticationManager mgr = ctx.getEngine().getManager( IIAuthenticationManager.class );
+    IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
     String loginURL = "";
 
     if( mgr.isContainerAuthenticated() ) {

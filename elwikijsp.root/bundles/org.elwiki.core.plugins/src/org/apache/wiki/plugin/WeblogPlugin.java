@@ -37,6 +37,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -164,7 +165,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         final Calendar   stopTime;
         int        numDays = DEFAULT_DAYS;
         final Engine engine = context.getEngine();
-        final AuthorizationManager mgr = engine.getManager( AuthorizationManager.class );
+        final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
         //
         //  Parse parameters.
@@ -292,7 +293,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         final Context entryCtx = context.clone();
         entryCtx.setPage( entry );
 
-        String html = engine.getManager( RenderingManager.class ).getHTML( entryCtx, engine.getManager( PageManager.class ).getPage( entry.getName() ) );
+        String html = ServicesRefs.getRenderingManager().getHTML( entryCtx, ServicesRefs.getPageManager().getPage( entry.getName() ) );
 
         // Extract the first h1/h2/h3 as title, and replace with null
         buffer.append("<div class=\"weblogentrytitle\">\n");
@@ -346,8 +347,8 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         String author = entry.getAuthor();
 
         if( author != null ) {
-            if( engine.getManager( PageManager.class ).wikiPageExists(author) ) {
-                author = "<a href=\""+entryCtx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), author )+"\">"+engine.getManager( RenderingManager.class ).beautifyTitle(author)+"</a>";
+            if( ServicesRefs.getPageManager().wikiPageExists(author) ) {
+                author = "<a href=\""+entryCtx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), author )+"\">"+ServicesRefs.getRenderingManager().beautifyTitle(author)+"</a>";
             }
         } else {
             author = "AnonymousCoward";
@@ -380,7 +381,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
     }
 
     private int guessNumberOfComments( final Engine engine, final String commentpage ) {
-        final String pagedata = engine.getManager( PageManager.class ).getPureText( commentpage, WikiProvider.LATEST_VERSION );
+        final String pagedata = ServicesRefs.getPageManager().getPureText( commentpage, WikiProvider.LATEST_VERSION );
         if( pagedata == null || pagedata.trim().length() == 0 ) {
             return 0;
         }
@@ -399,8 +400,8 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  @return a list of pages with their FIRST revisions.
      */
     public List< WikiPage > findBlogEntries( final Engine engine, String baseName, final Date start, final Date end ) {
-        final PageManager mgr = engine.getManager( PageManager.class );
-        final Set< String > allPages = engine.getManager( ReferenceManager.class ).findCreated();
+        final PageManager mgr = ServicesRefs.getPageManager();
+        final Set< String > allPages = ServicesRefs.getReferenceManager().findCreated();
         final ArrayList< WikiPage > result = new ArrayList<>();
 
         baseName = makeEntryPage( baseName );

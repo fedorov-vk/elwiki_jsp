@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.ui.progress;
+package org.apache.wiki.api.ui.progress;
 
 /**
  *  Manages progressing items.  In general this class is used whenever JSPWiki is doing something which may require a long time.

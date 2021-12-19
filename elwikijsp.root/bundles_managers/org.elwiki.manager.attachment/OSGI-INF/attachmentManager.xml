@@ -4,4 +4,6 @@
    <service>
       <provide interface="org.apache.wiki.api.attachment.AttachmentManager"/>
    </service>
+   <reference bind="setPageManager" cardinality="1..1" interface="org.apache.wiki.pages0.PageManager" name="PageManager" policy="static"/>
+   <reference bind="setReferenceManager" cardinality="1..1" interface="org.apache.wiki.api.references.ReferenceManager" name="ReferenceManager" policy="static"/>
 </scr:component>

@@ -54,9 +54,8 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 
 
 /**
@@ -71,23 +70,32 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     private SearchProvider m_searchProvider;
 
 	private IWikiConfiguration wikiConfiguration;
-    
+	private ReferenceManager referenceManager;
+	private PageManager pageManager;
+	
     public DefaultSearchManager() {
 		super();
 	}
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param bc
-	 * @throws WikiException
-	 */
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
-		}
+	// -- service handling --------------------------- start --
+
+	public void startup() {
+		//
 	}
+    
+	public void setWikiConfiguration(IWikiConfiguration configuration) {
+		this.wikiConfiguration = configuration;
+	}
+
+	public void setReferenceManager(ReferenceManager referenceManager) {
+		this.referenceManager = referenceManager;
+	}
+
+	public void setPageManager(PageManager pageManager) {
+		this.pageManager = pageManager;
+	}
+
+	// -- service handling ----------------------------- end --
     
 	/**
      *  Creates a new SearchManager.
@@ -100,13 +108,13 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     public DefaultSearchManager( final Engine engine, final Properties properties ) throws FilterException {
      
         initialize( engine, properties );
-        WikiEventManager.addWikiEventListener( m_engine.getManager( PageManager.class ), this );
+        WikiEventManager.addWikiEventListener( ServicesRefs.getPageManager(), this );
 
         // TODO: Replace with custom annotations. See JSPWIKI-566
         WikiAjaxDispatcherServlet.registerServlet( JSON_SEARCH, new JSONSearch() );
     }*/
 
-    /**
+	/**
      *  Provides a JSON AJAX API to the JSPWiki Search Engine.
      */
     public class JSONSearch implements WikiAjaxServlet {
@@ -183,7 +191,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 
                 final String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
                 final String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
-                final Set< String > allPages = m_engine.getManager( ReferenceManager.class ).findCreated();
+                final Set< String > allPages = DefaultSearchManager.this.referenceManager.findCreated();
 
                 int counter = 0;
                 for( final Iterator< String > i = allPages.iterator(); i.hasNext() && counter < maxLength; ) {
@@ -250,7 +258,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     @Override
     public void initialize( final Engine engine ) throws WikiException {
         super.initialize( engine );
-        WikiEventManager.addWikiEventListener( m_engine.getManager( PageManager.class ), this );
+        WikiEventManager.addWikiEventListener( this.pageManager, this );
 
         // TODO: Replace with custom annotations. See JSPWIKI-566
         WikiAjaxDispatcherServlet.registerServlet( JSON_SEARCH, new JSONSearch() );
@@ -310,13 +318,13 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
         if( event instanceof WikiPageEvent ) {
             final String pageName = ( ( WikiPageEvent ) event ).getPageName();
             if( event.getType() == WikiPageEvent.PAGE_DELETE_REQUEST ) {
-                final WikiPage p = m_engine.getManager( PageManager.class ).getPage( pageName );
+                final WikiPage p = this.pageManager.getPage( pageName );
                 if( p != null ) {
                     pageRemoved( p );
                 }
             }
             if( event.getType() == WikiPageEvent.PAGE_REINDEX ) {
-                final WikiPage p = m_engine.getManager( PageManager.class ).getPage( pageName );
+                final WikiPage p = this.pageManager.getPage( pageName );
                 if( p != null ) {
                     reindexPage( p );
                 }

@@ -13,6 +13,7 @@ import org.apache.wiki.preferences.Preferences_.TimeFormat;
 import org.apache.wiki.util.HttpUtil;
 //:FVK:import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -94,7 +95,7 @@ public class Preferences { // extends HashMap< String,String >
         //:FVK: final Properties props = PropertyReader.loadWebAppProps( pageContext.getServletContext() );
         
         final Context ctx = ContextUtil.findContext( pageContext );
-        InternationalizationManager i18lManager = ctx.getEngine().getManager( InternationalizationManager.class );
+        InternationalizationManager i18lManager = ServicesRefs.getInternationalizationManager();
         final String dateFormat = i18lManager.get( InternationalizationManager.CORE_BUNDLE, getLocale( ctx ), "common.datetimeformat" );
 
         /*:FVK:
@@ -248,7 +249,7 @@ public class Preferences { // extends HashMap< String,String >
      * @since 2.8
      */
     public static SimpleDateFormat getDateFormat( final Context context, final TimeFormat tf ) {
-        final InternationalizationManager imgr = context.getEngine().getManager( InternationalizationManager.class );
+        final InternationalizationManager imgr = ServicesRefs.getInternationalizationManager();
         final Locale clientLocale = getLocale( context );
         final String prefTimeZone = getPreference( context, "TimeZone" );
         String prefDateFormat;
@@ -303,7 +304,7 @@ public class Preferences { // extends HashMap< String,String >
      */
     public static ResourceBundle getBundle( final Context context, final String bundle ) throws MissingResourceException {
         final Locale loc = getLocale( context );
-        final InternationalizationManager i18n = context.getEngine().getManager( InternationalizationManager.class );
+        final InternationalizationManager i18n = ServicesRefs.getInternationalizationManager();
         return i18n.getBundle( bundle, loc );
     }
 

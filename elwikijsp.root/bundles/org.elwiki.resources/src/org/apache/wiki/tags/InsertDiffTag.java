@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
@@ -86,7 +87,7 @@ public class InsertDiffTag extends WikiTagBase {
             ctx = m_wikiContext;
         } else {
             ctx = m_wikiContext.clone();
-            ctx.setPage( engine.getManager( PageManager.class ).getPage(m_pageName) );
+            ctx.setPage( ServicesRefs.getPageManager().getPage(m_pageName) );
         }
 
         final Integer vernew = ( Integer )pageContext.getAttribute( ATTR_NEWVERSION, PageContext.REQUEST_SCOPE );
@@ -96,7 +97,7 @@ public class InsertDiffTag extends WikiTagBase {
 
         if( ctx.getPage() != null ) {
             final JspWriter out = pageContext.getOut();
-            final String diff = engine.getManager( DifferenceManager.class ).getDiff( ctx, vernew.intValue(), verold.intValue() );
+            final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx, vernew.intValue(), verold.intValue() );
 
             if( diff.length() == 0 ) {
                 return EVAL_BODY_INCLUDE;

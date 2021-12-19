@@ -20,9 +20,9 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.rss.Feed;
 import org.apache.wiki.plugin.WeblogPlugin;
 import org.elwiki_data.WikiPage;
-import org.apache.wiki.rss.Feed;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 

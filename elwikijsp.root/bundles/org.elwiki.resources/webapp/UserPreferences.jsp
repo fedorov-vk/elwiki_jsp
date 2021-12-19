@@ -37,6 +37,7 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! 
@@ -46,10 +47,10 @@
 	Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
     // Extract the user profile and action attributes
-    UserManager userMgr = wiki.getManager( UserManager.class );
+    UserManager userMgr = ServicesRefs.getUserManager();
     Session wikiSession = wikiContext.getWikiSession();
 
 /* FIXME: Obsolete
@@ -79,7 +80,7 @@
             catch( DuplicateUserException due )
             {
                 // User collision! (full name or wiki name already taken)
-                wikiSession.addMessage( "profile", wiki.getManager( InternationalizationManager.class )
+                wikiSession.addMessage( "profile", ServicesRefs.getInternationalizationManager()
                                                        .get( InternationalizationManager.CORE_BUNDLE,
                                                     		 Preferences.getLocale( wikiContext ), 
                                                              due.getMessage(), due.getArgs() ) );
@@ -100,7 +101,7 @@
         {
             String redirectPage = request.getParameter( "redirect" );
 
-            if( !wiki.getManager( PageManager.class ).wikiPageExists( redirectPage ) )
+            if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) )
             {
                redirectPage = wiki.getWikiConfiguration().getFrontPage();
             }
@@ -119,7 +120,7 @@
         CookieAssertionLoginModule.setUserCookie( response, assertedName );
 
         String redirectPage = request.getParameter( "redirect" );
-        if( !wiki.getManager( PageManager.class ).wikiPageExists( redirectPage ) )
+        if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) )
         {
           redirectPage = wiki.getWikiConfiguration().getFrontPage();
         }
@@ -136,7 +137,7 @@
         return;
     }
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 %>
 <wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ UserPreferences.jsp -->

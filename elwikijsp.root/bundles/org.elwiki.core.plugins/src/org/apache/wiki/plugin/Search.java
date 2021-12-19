@@ -30,6 +30,7 @@ import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 
 import java.io.IOException;
@@ -102,7 +103,7 @@ public class Search implements Plugin {
 
     private Collection<SearchResult> doBasicQuery( final Context context, final String query ) throws ProviderException, IOException {
         log.debug( "Searching for string " + query );
-        return context.getEngine().getManager( SearchManager.class ).findPages( query, context );
+        return ServicesRefs.getSearchManager().findPages( query, context );
     }
 
     private String renderResults( final Collection<SearchResult> results, final Context context, final int maxItems ) {
@@ -134,7 +135,7 @@ public class Search implements Plugin {
             name.setAttribute(XHTML.ATTR_width,"30%");
 
             name.addContent( XhtmlUtil.link(context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), sr.getPage().getName() ),
-                             engine.getManager( RenderingManager.class ).beautifyTitle(sr.getPage().getName() ) ) );
+            		ServicesRefs.getRenderingManager().beautifyTitle(sr.getPage().getName() ) ) );
 
             row.addContent(name);
 

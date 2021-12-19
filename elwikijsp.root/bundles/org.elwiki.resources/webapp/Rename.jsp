@@ -31,6 +31,7 @@
 <%@ page import="org.apache.wiki.tags.BreadcrumbsTag.FixedQueue" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -43,7 +44,7 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
 	Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RENAME.getRequestContext() );
-	if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+	if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
         return;
@@ -68,7 +69,7 @@
     {
         if (renameTo.length() > 0)
         {
-            String renamedTo = wiki.getManager( PageRenamer.class ).renamePage(wikiContext, renameFrom, renameTo, changeReferences);
+            String renamedTo = ServicesRefs.getPageRenamer().renamePage(wikiContext, renameFrom, renameTo, changeReferences);
 
             FixedQueue trail = (FixedQueue) session.getAttribute( BreadcrumbsTag.BREADCRUMBTRAIL_KEY );
             if( trail != null ) {
@@ -106,6 +107,6 @@
 
     pageContext.setAttribute( "renameto", TextUtil.replaceEntities( renameTo ), PageContext.REQUEST_SCOPE );
     response.setContentType("text/html; charset=" + wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 
 %><wiki:Include page="<%=contentPage%>" />

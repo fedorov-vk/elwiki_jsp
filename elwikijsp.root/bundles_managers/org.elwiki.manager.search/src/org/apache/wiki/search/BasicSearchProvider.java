@@ -35,6 +35,7 @@ import org.apache.wiki.api.search.SearchResultComparator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 import java.io.IOException;
 import java.util.Collection;
@@ -120,10 +121,10 @@ public class BasicSearchProvider implements SearchProvider {
     }
 
     private String attachmentNames( final WikiPage page ) {
-        if( m_engine.getManager( AttachmentManager.class ).hasAttachments( page ) ) {
+        if( ServicesRefs.getAttachmentManager().hasAttachments( page ) ) {
             final List< PageAttachment > attachments;
             try {
-                attachments = m_engine.getManager( AttachmentManager.class ).listAttachments( page );
+                attachments = ServicesRefs.getAttachmentManager().listAttachments( page );
             } catch( final ProviderException e ) {
                 log.error( "Unable to get attachments for page", e );
                 return "";
@@ -148,13 +149,13 @@ public class BasicSearchProvider implements SearchProvider {
         final SearchMatcher matcher = new SearchMatcher( m_engine, query );
         final Collection< WikiPage > allPages;
         try {
-            allPages = m_engine.getManager( PageManager.class ).getAllPages();
+            allPages = ServicesRefs.getPageManager().getAllPages();
         } catch( final ProviderException pe ) {
             log.error( "Unable to retrieve page list", pe );
             return null;
         }
 
-        final AuthorizationManager mgr = m_engine.getManager( AuthorizationManager.class );
+        final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
         for( final WikiPage page : allPages ) {
             try {
@@ -163,7 +164,7 @@ public class BasicSearchProvider implements SearchProvider {
                     if( wikiContext == null || mgr.checkPermission( wikiContext.getWikiSession(), pp ) ) {
                         final String pageName = page.getName();
                         final String pageContent =
-                                m_engine.getManager( PageManager.class ).getPageText( pageName, PageProvider.LATEST_VERSION ) + attachmentNames( page );
+                        		ServicesRefs.getPageManager().getPageText( pageName, PageProvider.LATEST_VERSION ) + attachmentNames( page );
                         final SearchResult comparison = matcher.matchPageContent( pageName, pageContent );
                         if( comparison != null ) {
                             res.add( comparison );

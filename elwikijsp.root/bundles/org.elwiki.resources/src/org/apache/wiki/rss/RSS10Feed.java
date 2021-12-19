@@ -21,6 +21,8 @@ package org.apache.wiki.rss;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.rss.Entry;
+import org.apache.wiki.api.rss.Feed;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.util.XhtmlUtil;
 import org.jdom2.Element;

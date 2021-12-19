@@ -20,6 +20,7 @@ package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.Map;
@@ -107,7 +108,7 @@ public final class WorkflowBuilder {
                                            final Fact[] facts,
                                            final Step completionTask,
                                            final String rejectedMessageKey ) throws WikiException {
-        final WorkflowManager mgr = m_engine.getManager( WorkflowManager.class );
+        final WorkflowManager mgr = ServicesRefs.getWorkflowManager();
         final Workflow workflow = new Workflow( workflowApproverKey, submitter );
 
         // Is a Decision required to run the approve task?

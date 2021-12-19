@@ -21,6 +21,7 @@ package org.apache.wiki;
 import org.eclipse.core.runtime.Assert;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -405,7 +406,7 @@ public final class WikiSession implements Session {
 
         // Get the GroupManager and test for each Group
         /*:FVK:
-        final IAuthorizer manager = m_engine.getManager( IAuthorizer.class ); // GroupManager
+        final IAuthorizer manager = ServicesRefs.getGroupManager(); // GroupManager
         for( final Principal group : manager.getRoles() ) {
             if ( manager.isUserInRole( this, group ) ) {
                 m_subject.getPrincipals().add( group );
@@ -429,7 +430,7 @@ public final class WikiSession implements Session {
         }
 
         // Look up the user and go get the new Principals
-        final UserDatabase database = m_engine.getManager( UserManager.class ).getUserDatabase();
+        final UserDatabase database = ServicesRefs.getUserManager().getUserDatabase();
         if( database == null ) {
             throw new IllegalStateException( "User database cannot be null." );
         }
@@ -530,9 +531,9 @@ public final class WikiSession implements Session {
         session.invalidate();
 
         // Add the session as listener for GroupManager, AuthManager, UserManager events
-      //:FVK: final GroupManager groupMgr = engine.getManager( GroupManager.class );
-        final IIAuthenticationManager authMgr = engine.getManager( IIAuthenticationManager.class );
-        final UserManager userMgr = engine.getManager( UserManager.class );
+      //:FVK: final GroupManager groupMgr = ServicesRefs.getGroupManager();
+        final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
+        final UserManager userMgr = ServicesRefs.getUserManager();
       //:FVK: groupMgr.addWikiEventListener( session );
         authMgr.addWikiEventListener( session );
         userMgr.addWikiEventListener( session );
@@ -597,7 +598,7 @@ public final class WikiSession implements Session {
 	private void setUser(Principal userPrincipal) {
 		try {
 			String userName = userPrincipal.getName();
-			UserProfile profile = this.m_engine.getManager(UserManager.class).getUserDatabase().find(userName);
+			UserProfile profile = ServicesRefs.getUserManager().getUserDatabase().find(userName);
 			this.user = profile.getAdapter(User.class);
 		} catch (NoSuchPrincipalException e) {
 			// TODO Auto-generated catch block

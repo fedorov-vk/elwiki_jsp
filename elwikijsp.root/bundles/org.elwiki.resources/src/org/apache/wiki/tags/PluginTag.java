@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.PluginManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -93,7 +94,7 @@ public class PluginTag
 
     private String executePlugin( final String plugin, final String args, final String body ) throws PluginException, IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final PluginManager pm  = engine.getManager( PluginManager.class );
+        final PluginManager pm  = ServicesRefs.getPluginManager();
 
         m_evaluated = true;
 

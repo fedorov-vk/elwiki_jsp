@@ -7,4 +7,6 @@
       <provide interface="org.apache.wiki.auth.AuthorizationManager"/>
    </service>
    <reference bind="setConfiguration" cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
+   <reference bind="setGroupManager" cardinality="1..1" interface="org.elwiki.api.authorization.IAuthorizer" name="IAuthorizer" policy="static"/>
+   <reference bind="setAclManager" cardinality="1..1" interface="org.apache.wiki.auth.acl.AclManager" name="AclManager" policy="static"/>
 </scr:component>

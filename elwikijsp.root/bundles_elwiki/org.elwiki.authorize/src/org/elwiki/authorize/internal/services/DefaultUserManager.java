@@ -243,6 +243,10 @@ public class DefaultUserManager implements UserManager {
 	private Map<String, Class<? extends UserDatabase>> userDataBases;
 
 	private IWikiConfiguration wikiConfiguration;
+	private AuthorizationManager authorizationManager;
+	private IIAuthenticationManager authenticationManager;
+	private TasksManager tasksManager;
+	private FilterManager filterManager;
 
 	private ScopedPreferenceStore prefsAauth;
 
@@ -354,7 +358,7 @@ public class DefaultUserManager implements UserManager {
 		// Verify user is allowed to save profile!
 		Permission p = new WikiPermission(this.m_engine.getWikiConfiguration().getApplicationName(),
 				WikiPermission.EDIT_PROFILE_ACTION);
-		if (!this.m_engine.getManager( AuthorizationManager.class ).checkPermission(session, p)) {
+		if (!getAuthorizationManager().checkPermission(session, p)) {
 			throw new WikiSecurityException("You are not allowed to save wiki profiles.");
 		}
 
@@ -389,7 +393,7 @@ public class DefaultUserManager implements UserManager {
             // If the profile doesn't need approval, then just log the user in
 
             try {
-                final IIAuthenticationManager mgr = m_engine.getManager( IIAuthenticationManager.class );
+                final IIAuthenticationManager mgr = getAuthenticationManager();
                 if( !mgr.isContainerAuthenticated() ) {
                     mgr.login( session, null, profile.getLoginName(), profile.getPassword() );
                 }
@@ -425,7 +429,7 @@ public class DefaultUserManager implements UserManager {
     public void startUserProfileCreationWorkflow( final Session session, final UserProfile profile ) throws WikiException {
         final WorkflowBuilder builder = WorkflowBuilder.getBuilder( m_engine );
         final Principal submitter = session.getUserPrincipal();
-        final Step completionTask = m_engine.getManager( TasksManager.class ).buildSaveUserProfileTask( m_engine, session.getLocale() );
+        final Step completionTask = getTasksManager().buildSaveUserProfileTask( m_engine, session.getLocale() );
 
         // Add user profile attribute as Facts for the approver (if required)
         final boolean hasEmail = profile.getEmail() != null;
@@ -495,7 +499,7 @@ public class DefaultUserManager implements UserManager {
         email = InputValidator.isBlank( email ) ? null : email;
 
         // A special case if we have container authentication: if authenticated, login name is always taken from container
-        if ( m_engine.getManager( IIAuthenticationManager.class ).isContainerAuthenticated() && context.getWikiSession().isAuthenticated() ) {
+        if ( getAuthenticationManager().isContainerAuthenticated() && context.getWikiSession().isAuthenticated() ) {
             loginName = context.getWikiSession().getLoginPrincipal().getName();
         }
 
@@ -533,7 +537,7 @@ public class DefaultUserManager implements UserManager {
         final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
 
         //  Query the SpamFilter first
-        final FilterManager fm = m_engine.getManager( FilterManager.class );
+        final FilterManager fm = getFilterManager();
         final List< PageFilter > ls = fm.getFilterList();
         for( final PageFilter pf : ls ) {
             if( pf instanceof SpamFilter ) {
@@ -546,7 +550,7 @@ public class DefaultUserManager implements UserManager {
         }
 
         // If container-managed auth and user not logged in, throw an error
-        if ( m_engine.getManager( IIAuthenticationManager.class ).isContainerAuthenticated()
+        if ( getAuthenticationManager().isContainerAuthenticated()
              && !context.getWikiSession().isAuthenticated() ) {
             session.addMessage( SESSION_MESSAGES, rb.getString("security.error.createprofilebeforelogin") );
         }
@@ -556,7 +560,7 @@ public class DefaultUserManager implements UserManager {
         validator.validate( profile.getEmail(), rb.getString("security.user.email"), InputValidator.EMAIL );
 
         // If new profile, passwords must match and can't be null
-        if( !m_engine.getManager( IIAuthenticationManager.class ).isContainerAuthenticated() ) {
+        if( !getAuthenticationManager().isContainerAuthenticated() ) {
             final String password = profile.getPassword();
             if( password == null ) {
                 if( isNew ) {
@@ -719,16 +723,52 @@ public class DefaultUserManager implements UserManager {
         }
     }
 
-	// -- service support -----------------------------------------------------
-
-	public void setConfiguration(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-	}
+	// -- service handling -------------------------------------------< start --
 
 	protected IWikiConfiguration getWikiConfiguration() {
 		return this.wikiConfiguration;
 	}
 
+	AuthorizationManager getAuthorizationManager() {
+		return authorizationManager;
+	}
+
+	IIAuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	TasksManager getTasksManager() {
+		return tasksManager;
+	}
+
+	FilterManager getFilterManager() {
+		return filterManager;
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+	public void setConfiguration(IWikiConfiguration wikiConfiguration) {
+		this.wikiConfiguration = wikiConfiguration;
+	}
+
+	public void setAuthorizationManager(AuthorizationManager authorizationManager) {
+		this.authorizationManager = authorizationManager;
+	}
+
+	public void setAuthenticationManager(IIAuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
+
+	public void	setTasksManager(TasksManager taskManager) {
+		this.tasksManager = taskManager;
+	}
+
+	public void setFilterManager(FilterManager filterManager) {
+		this.filterManager = filterManager;
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	
 	public synchronized void startup(BundleContext bc) {
 		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
@@ -774,5 +814,7 @@ public class DefaultUserManager implements UserManager {
 	public synchronized void shutdown() {
 		//
 	}
+
+	// -- service handling --------------------------------------------- end >--
 
 }

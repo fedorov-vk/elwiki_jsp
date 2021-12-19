@@ -27,6 +27,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 import org.apache.wiki.ui.admin0.AdminBean;
+import org.elwiki.services.ServicesRefs;
 
 import javax.management.NotCompliantMBeanException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class UserBean extends SimpleAdminBean {
     public String doPost( final Context context ) {
         final HttpServletRequest request = context.getHttpRequest();
         final Session session = context.getWikiSession();
-        final UserManager mgr = context.getEngine().getManager( UserManager.class );
+        final UserManager mgr = ServicesRefs.getUserManager();
         final String loginid = request.getParameter( "loginid" );
         final String loginname = request.getParameter( "loginname" );
         final String fullname = request.getParameter( "fullname" );

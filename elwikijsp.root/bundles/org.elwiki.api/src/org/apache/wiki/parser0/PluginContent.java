@@ -32,6 +32,7 @@ import org.apache.wiki.api.plugin.PluginElement;
 import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Text;
 
 import java.io.IOException;
@@ -161,10 +162,10 @@ public class PluginContent extends Text implements PluginElement {
                 //  Parse any variable instances from the string
                 for( final Map.Entry< String, String > e : m_params.entrySet() ) {
                     String val = e.getValue();
-                    val = engine.getManager( VariableManager.class).expandVariables( context, val );
+                    val = ServicesRefs.getVariableManager().expandVariables( context, val );
                     parsedParams.put( e.getKey(), val );
                 }
-                final PluginManager pm = engine.getManager( PluginManager.class );
+                final PluginManager pm = ServicesRefs.getPluginManager();
                 result = pm.execute( context, m_pluginName, parsedParams );
             }
         } catch( final Exception e ) {
@@ -186,7 +187,7 @@ public class PluginContent extends Text implements PluginElement {
     /**{@inheritDoc}*/
     @Override
     public void executeParse( final Context context ) throws PluginException {
-        final PluginManager pm = context.getEngine().getManager( PluginManager.class );
+        final PluginManager pm = ServicesRefs.getPluginManager();
         if( pm.pluginsEnabled() ) {
             final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
             final Map< String, String > params = getParameters();
@@ -215,7 +216,7 @@ public class PluginContent extends Text implements PluginElement {
         final PatternMatcher matcher = new Perl5Matcher();
 
         try {
-            final PluginManager pm = context.getEngine().getManager( PluginManager.class );
+            final PluginManager pm = ServicesRefs.getPluginManager();
             if( matcher.contains( commandline, pm.getPluginPattern() ) ) {
                 final MatchResult res = matcher.getMatch();
                 final String plugin = res.group( 2 );

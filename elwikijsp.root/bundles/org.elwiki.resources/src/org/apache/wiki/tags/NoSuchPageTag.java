@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 
@@ -60,10 +61,10 @@ public class NoSuchPageTag extends WikiTagBase {
         if( m_pageName == null ) {
             page = m_wikiContext.getPage();
         } else {
-            page = engine.getManager( PageManager.class ).getPage( m_pageName );
+            page = ServicesRefs.getPageManager().getPage( m_pageName );
         }
 
-        if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page.getName(), page.getVersion() ) ) {
+        if( page != null && ServicesRefs.getPageManager().wikiPageExists( page.getName(), page.getVersion() ) ) {
             return SKIP_BODY;
         }
 

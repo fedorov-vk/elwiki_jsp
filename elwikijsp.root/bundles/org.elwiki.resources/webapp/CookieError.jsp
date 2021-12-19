@@ -20,6 +20,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib prefix="wiki" uri="http://jspwiki.apache.org/tags" %>
 
 <%
@@ -29,5 +30,5 @@
  
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "CookieErrorTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "CookieErrorTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />

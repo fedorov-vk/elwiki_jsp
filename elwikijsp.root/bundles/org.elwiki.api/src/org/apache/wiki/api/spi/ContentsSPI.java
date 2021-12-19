@@ -40,11 +40,10 @@ public interface ContentsSPI {
 
     /**
      * Creates a {@link WikiPage} instance.
-     *
-     * @param engine The Engine that owns this page.
      * @param name   The name of the page.
+     *
      * @return new {@link WikiPage} instance.
      */
-    WikiPage page( Engine engine, String name );
+    WikiPage page( String name );
 
 }

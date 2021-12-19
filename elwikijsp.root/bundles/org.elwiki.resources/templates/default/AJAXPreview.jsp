@@ -24,6 +24,7 @@
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.permissions.*" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%! 
@@ -37,7 +38,7 @@
 <%
   // Copied from a top-level jsp -- which would be a better place to put this 
   Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
-  if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+  if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
   response.setContentType("text/html; charset="+wiki.getContentEncoding() );
   

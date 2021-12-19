@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elwiki.services.ServicesRefs">
+   <implementation class="org.elwiki.services.ServicesRefs"/>
+   <reference bind="setAclManager" cardinality="1..1" interface="org.apache.wiki.auth.acl.AclManager" name="AclManager" policy="static"/>
+   <reference bind="setAttachmentManager" cardinality="1..1" interface="org.apache.wiki.api.attachment.AttachmentManager" name="AttachmentManager" policy="static"/>
+   <reference bind="setPageManager" cardinality="1..1" interface="org.apache.wiki.pages0.PageManager" name="PageManager" policy="static"/>
+   <reference bind="setPageRenamer" cardinality="1..1" interface="org.apache.wiki.content0.PageRenamer" name="PageRenamer" policy="static"/>
+   <reference bind="setAuthorizationManager" cardinality="1..1" interface="org.apache.wiki.auth.AuthorizationManager" name="AuthorizationManager" policy="static"/>
+   <reference bind="setGroupManager" cardinality="1..1" interface="org.elwiki.api.authorization.IAuthorizer" name="IAuthorizer" policy="static"/>
+   <reference bind="setProgressManager" cardinality="1..1" interface="org.apache.wiki.api.ui.progress.ProgressManager" name="ProgressManager" policy="static"/>
+   <reference bind="setUserManager" cardinality="1..1" interface="org.apache.wiki.auth.UserManager" name="UserManager" policy="static"/>
+   <reference bind="setAdminBeanManager" cardinality="1..1" interface="org.apache.wiki.ui.admin0.AdminBeanManager" name="AdminBeanManager" policy="static"/>
+   <reference bind="setAuthenticationManager" cardinality="1..1" interface="org.apache.wiki.auth.IIAuthenticationManager" name="AuthenticationManager" policy="static"/>
+   <reference bind="setRenderingManager" cardinality="1..1" interface="org.apache.wiki.render0.RenderingManager" name="RenderingManager" policy="static"/>
+   <reference bind="setReferenceManager" cardinality="1..1" interface="org.apache.wiki.api.references.ReferenceManager" name="ReferenceManager" policy="static"/>
+   <reference bind="setVariableManager" cardinality="1..1" interface="org.apache.wiki.api.variables.VariableManager" name="VariableManager" policy="static"/>
+   <reference bind="setDifferenceManager" cardinality="1..1" interface="org.apache.wiki.api.diff.DifferenceManager" name="DifferenceManager" policy="static"/>
+   <reference bind="setTemplateManager" cardinality="1..1" interface="org.apache.wiki.ui.TemplateManager" name="TemplateManager" policy="static"/>
+   <reference bind="setEditorManager" cardinality="1..1" interface="org.apache.wiki.api.ui.EditorManager" name="EditorManager" policy="static"/>
+   <reference bind="setPluginManager" cardinality="1..1" interface="org.apache.wiki.api.plugin.PluginManager" name="PluginManager" policy="static"/>
+   <reference bind="setFilterManager" cardinality="1..1" interface="org.apache.wiki.filters0.FilterManager" name="FilterManager" policy="static"/>
+   <reference bind="setSearchManager" cardinality="1..1" interface="org.apache.wiki.api.search.SearchManager" name="SearchManager" policy="static"/>
+   <reference bind="setCommandResolver" cardinality="1..1" interface="org.apache.wiki.api.ui.CommandResolver" name="CommandResolver" policy="static"/>
+   <reference bind="setInternationalizationManager" cardinality="1..1" interface="org.apache.wiki.api.i18n.InternationalizationManager" name="InternationalizationManager" policy="static"/>
+   <reference bind="setWorkflowManager" cardinality="1..1" interface="org.apache.wiki.workflow0.WorkflowManager" name="WorkflowManager" policy="static"/>
+   <reference bind="setUrlConstructor" cardinality="1..1" interface="org.apache.wiki.url0.URLConstructor" name="URLConstructor" policy="static"/>
+<!--
+   <reference bind="setRssGenerator" cardinality="1..1" interface="org.apache.wiki.rss.api.RSSGenerator" name="RSSGenerator" policy="static"/>
+-->
+</scr:component>

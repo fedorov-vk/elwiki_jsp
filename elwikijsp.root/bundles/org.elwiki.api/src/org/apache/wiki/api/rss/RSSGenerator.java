@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.apache.wiki.api.rss;
 
 import org.apache.wiki.api.core.Context;
 import org.elwiki_data.WikiPage;

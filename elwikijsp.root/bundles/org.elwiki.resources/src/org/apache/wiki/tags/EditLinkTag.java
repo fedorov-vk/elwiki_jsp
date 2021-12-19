@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class EditLinkTag extends WikiLinkTag {
             if( "this".equalsIgnoreCase( m_version ) ) {
                 if( page == null ) {
                     // No page, so go fetch according to page name.
-                    page = engine.getManager( PageManager.class ).getPage( m_pageName );
+                    page = ServicesRefs.getPageManager().getPage( m_pageName );
                 }
 
                 if( page != null ) {

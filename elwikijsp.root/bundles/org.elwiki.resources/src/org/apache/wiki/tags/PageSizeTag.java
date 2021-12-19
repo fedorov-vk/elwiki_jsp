@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 
@@ -45,8 +46,8 @@ public class PageSizeTag extends WikiTagBase {
             if( page != null ) {
                 long size = 123; //:WORKAROUND. FVK: page.getSize();
 
-                if( size == -1 && engine.getManager( PageManager.class ).wikiPageExists( page ) ) { // should never happen with attachments
-                	size = engine.getManager( PageManager.class ).getPureText( page.getName(), page.getVersion() ).length();
+                if( size == -1 && ServicesRefs.getPageManager().wikiPageExists( page ) ) { // should never happen with attachments
+                	size = ServicesRefs.getPageManager().getPureText( page.getName(), page.getVersion() ).length();
                 	//:FVK: page.setSize( size );
                 }
 

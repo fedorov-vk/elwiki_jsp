@@ -43,6 +43,8 @@ import org.apache.wiki.providers.CachingAttachmentProvider;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -71,16 +73,33 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     private CacheManager m_cacheManager = CacheManager.getInstance();
     private Cache m_dynamicAttachments;
 
-    
+    private PageManager pageManager;
+    private ReferenceManager referenceManager;
+
+	/**
+     * Create instance of DefaultAttachmentManager.
+     */
     public DefaultAttachmentManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+    // -- service handling --------------------------- start --
+
+    public void setPageManager(PageManager pageManager) {
+		this.pageManager = pageManager;
+	}
+    
+    public void setReferenceManager(ReferenceManager referenceManager) {
+    	this.referenceManager = referenceManager;
+    }
+    
+    // -- service handling ----------------------------- end --
+    
 	/**
      *  Creates a new AttachmentManager.  Note that creation will never fail, but it's quite likely that attachments do not function.
      *  <p><b>DO NOT CREATE</b> an AttachmentManager on your own, unless you really know what you're doing. Just use
-     *  Wikiengine.getManager( AttachmentManager.class ) if you're making a module for JSPWiki.
+     *  Wikiengine.getAttachmentManager) if you're making a module for JSPWiki.
      *
      *  @param engine The wikiengine that owns this attachment manager.
      *  @param props A list of properties from which the AttachmentManager will seek its configuration. Typically this is the "jspwiki.properties".
@@ -145,7 +164,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
     }
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
     @Override
     public boolean attachmentsEnabled() {
         return m_provider != null;
@@ -196,13 +215,13 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
                 return null;
             }
 
-            currentPage = m_engine.getManager( PageManager.class ).getPage( parentPage );
+            currentPage = this.pageManager.getPage( parentPage );
 
             // Go check for legacy name
             // FIXME: This should be resolved using CommandResolver, not this adhoc way.  This also assumes that the
             //        legacy charset is a subset of the full allowed set.
             if( currentPage == null ) {
-                currentPage = m_engine.getManager( PageManager.class ).getPage( MarkupParser.wikifyLink( parentPage ) );
+                currentPage = this.pageManager.getPage( MarkupParser.wikifyLink( parentPage ) );
             }
         }
 
@@ -229,7 +248,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
 
         final List< PageAttachment > atts = new ArrayList<>( m_provider.listAttachments( wikipage ) );
-        atts.sort( Comparator.comparing( PageAttachment::getName, m_engine.getManager( PageManager.class ).getPageSorter() ) );
+        atts.sort( Comparator.comparing( PageAttachment::getName, this.pageManager.getPageSorter() ) );
 
         return atts;
     }
@@ -301,17 +320,17 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
 
         // Checks if the actual, real page exists without any modifications or aliases. We cannot store an attachment to a non-existent page.
-        if( !m_engine.getManager( PageManager.class ).pageExists( att.getParentName() ) ) {
+        if( !ServicesRefs.getPageManager().pageExists( att.getParentName() ) ) {
             // the caller should catch the exception and use the exception text as an i18n key
             throw new ProviderException( "attach.parent.not.exist" );
         }
 
         m_provider.putAttachmentData( att, in );
-        m_engine.getManager( ReferenceManager.class ).updateReferences( att.getName(), new ArrayList<>() );
+        ServicesRefs.getReferenceManager().updateReferences( att.getName(), new ArrayList<>() );
 
         final WikiPage parent = Wiki.contents().page( m_engine, att.getParentName() );
-        m_engine.getManager( ReferenceManager.class ).updateReferences( parent );
-        m_engine.getManager( SearchManager.class ).reindexPage( att );
+        ServicesRefs.getReferenceManager().updateReferences( parent );
+        ServicesRefs.getSearchManager().reindexPage( att );
     }
     */
 
@@ -365,8 +384,8 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
 
         m_provider.deleteAttachment( att );
-     // :FVK: m_engine.getManager( SearchManager.class ).pageRemoved( att );
-        m_engine.getManager( ReferenceManager.class ).clearPageEntries( att.getName() );
+     // :FVK: ServicesRefs.getSearchManager().pageRemoved( att );
+        this.referenceManager.clearPageEntries( att.getName() );
     }
 
 }

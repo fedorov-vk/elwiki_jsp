@@ -29,6 +29,8 @@ import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.services.ServicesRefs;
+
 import java.util.Map;
 
 /**
@@ -79,7 +81,7 @@ public class Note implements Plugin {
         String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE );
         commentImage = "images/" + commentImage;
         
-        String resource = engine.getManager( TemplateManager.class ).findResource( ctx, engine.getTemplateDir(), commentImage );
+        String resource = ServicesRefs.getTemplateManager().findResource( ctx, engine.getTemplateDir(), commentImage );
         
         // JSPWIKI-876 Fixed error with Note Plugin. Only one preceding "/" is needed.
         if( resource != null && resource.startsWith( "/" ) ) {

@@ -423,7 +423,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
                 String pageId = unmangleName( pagesWithAttachment );
                 pageId = pageId.substring( 0, pageId.length() - DIR_EXTENSION.length() );
 
-                final Collection< PageAttachment > c = listAttachments( Wiki.contents().page( m_engine, pageId ) );
+                final Collection< PageAttachment > c = listAttachments( Wiki.contents().page( pageId ) );
                 for( final PageAttachment att : c ) {
                     if( att.getLastModify().after( timestamp ) ) {
                         list.add( att );

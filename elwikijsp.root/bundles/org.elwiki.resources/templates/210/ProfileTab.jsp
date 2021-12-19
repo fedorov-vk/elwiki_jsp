@@ -17,20 +17,21 @@
     under the License.  
 --%>
 
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.user.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
 /* dateformatting not yet supported by wiki:UserProfile tag - diy */
   Context wikiContext = ContextUtil.findContext(pageContext);
-  DefaultUserManager manager = wikiContext.getEngine().getManager( DefaultUserManager.class );
+  UserManager manager = ServicesRefs.getUserManager();
   JIUserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form action="<wiki:CheckRequestContext 

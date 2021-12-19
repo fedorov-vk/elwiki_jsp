@@ -31,6 +31,7 @@
 <%@ page import="org.apache.wiki.api.references.ReferenceManager" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%!
     Logger log = Logger.getLogger("JSPWiki");
 %>
@@ -42,19 +43,19 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
-    if( !wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
-    Set< String > allPages = wiki.getManager( ReferenceManager.class ).findCreated();
+    Set< String > allPages = ServicesRefs.getReferenceManager().findCreated();
     
     response.setContentType("text/plain; charset=UTF-8");
     for( String pageName : allPages ) {
         // Let's not add attachments.
-        if( wiki.getManager( AttachmentManager.class ).getAttachmentInfoName( wikiContext, pageName ) != null ) continue;
+        if( ServicesRefs.getAttachmentManager().getAttachmentInfoName( wikiContext, pageName ) != null ) continue;
 
-        WikiPage wikiPage = wiki.getManager( PageManager.class ).getPage( pageName );
+        WikiPage wikiPage = ServicesRefs.getPageManager().getPage( pageName );
         if( wikiPage != null ) { // there's a possibility the wiki page may get deleted between the call to reference manager and now...
             PagePermission permission = PermissionFactory.getPagePermission( wikiPage, "view" );
-            boolean allowed = wiki.getManager( AuthorizationManager.class ).checkPermission( wikiContext.getWikiSession(), permission );
+            boolean allowed = ServicesRefs.getAuthorizationManager().checkPermission( wikiContext.getWikiSession(), permission );
             if( allowed ) {
                 String url = wikiContext.getViewURL( pageName );
                 out.write( url + " " + pageName + "\n" );

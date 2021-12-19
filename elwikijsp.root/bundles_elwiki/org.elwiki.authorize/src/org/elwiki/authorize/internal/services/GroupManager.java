@@ -84,6 +84,7 @@ import org.elwiki.authorize.internal.bundle.InternalClassUtil;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -263,7 +264,7 @@ public class GroupManager implements IAuthorizer {
 		}
 
 		// If passed members not empty, overwrite
-		UserManager um = this.m_engine.getManager(UserManager.class);
+		UserManager um = ServicesRefs.getUserManager();
 		String[] members = extractMembers(memberLine);
 		for (String member : members) {
 			UserProfile userProfile = um.getUserDatabase().find(member);

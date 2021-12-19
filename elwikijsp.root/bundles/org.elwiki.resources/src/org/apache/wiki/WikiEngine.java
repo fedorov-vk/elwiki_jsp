@@ -18,13 +18,27 @@
  */
 package org.apache.wiki;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEngineEvent;
@@ -36,13 +50,15 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.EditorManager;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.api.variables.VariableManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.acl.AclManager;
 //import org.apache.wiki.auth.authorize.GroupManager;
@@ -50,10 +66,8 @@ import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.rss.RSSGenerator;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
-import org.apache.wiki.ui.progress.ProgressManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.ClassUtil;
 //:FVK:import org.apache.wiki.util.PropertyReader;
@@ -61,33 +75,13 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.IWikiConstants;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 
 /**
@@ -372,8 +366,8 @@ public class WikiEngine implements Engine {
             initReferenceManager();
 
             //  Hook the different manager routines into the system.
-            getManager( FilterManager.class ).addPageFilter( getManager( ReferenceManager.class ), -1001 );
-            getManager( FilterManager.class ).addPageFilter( getManager( SearchManager.class ), -1002 );
+            ServicesRefs.getFilterManager().addPageFilter( ServicesRefs.getReferenceManager(), -1001 );
+            ServicesRefs.getFilterManager().addPageFilter( ServicesRefs.getSearchManager(), -1002 );
         } catch( final RuntimeException e ) {
             // RuntimeExceptions may occur here, even if they shouldn't.
             log.fatal( "Failed to start managers.", e );
@@ -414,12 +408,19 @@ public class WikiEngine implements Engine {
     }
 
     private <T> T initService(Class<T> clazz) throws Exception {
-        T service = ResourcesActivator.getService(clazz);
-        managers.put( clazz, service );
-		if(service instanceof Initializable) {
-			((Initializable) service).initialize(this);
+        try {
+			T service = ResourcesActivator.getService(clazz);
+			managers.put( clazz, service );
+			if(service instanceof Initializable) {
+				((Initializable) service).initialize(this);
+			}
+			return service;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.err.println(":FVK: -- ERROR");
 		}
-		return service;
+        return null;
 	}
 
 	void initExtraComponents( final Map< String, String > extraComponents ) {
@@ -525,13 +526,14 @@ public class WikiEngine implements Engine {
     public void initReferenceManager() throws WikiException {
         try {
             // Build a new manager with default key lists.
-            if( getManager( ReferenceManager.class ) == null ) {
+            if( ServicesRefs.getReferenceManager() == null ) {
                 final ArrayList< WikiPage > pages = new ArrayList<>();
                 pages.addAll( getManager( PageManager.class ).getAllPages() );
                 //:FVK: pages.addAll( getManager( AttachmentManager.class ).getAllAttachments() );
 
-                ReferenceManager manager = initService(ReferenceManager.class);
-                manager.initialize( pages );
+				ReferenceManager manager = initService(ReferenceManager.class);
+				if (manager != null)
+					manager.initialize(pages);
                 //initComponent( ReferenceManager.class, this );
                 //getManager( ReferenceManager.class ).initialize( pages );
             }
@@ -570,7 +572,7 @@ public class WikiEngine implements Engine {
     /** {@inheritDoc} */
     @Override
     public String getGlobalRSSURL() {
-        final RSSGenerator rssGenerator = getManager( RSSGenerator.class );
+        final RSSGenerator rssGenerator = ServicesRefs.getRssGenerator();
         if( rssGenerator != null && rssGenerator.isEnabled() ) {
             return this.wikiConfiguration.getBaseURL() + "/" + rssGenerator.getRssFile();
         }
@@ -584,7 +586,7 @@ public class WikiEngine implements Engine {
         if( pageName == null ) {
             pageName = this.wikiConfiguration.getFrontPage();
         }
-        final URLConstructor urlConstructor = getManager( URLConstructor.class );
+        final URLConstructor urlConstructor = ServicesRefs.getUrlConstructor();
         return urlConstructor.makeURL( context, pageName, params );
     }
 
@@ -597,13 +599,13 @@ public class WikiEngine implements Engine {
     /** {@inheritDoc} */
     @Override
     public String getSpecialPageReference( final String original ) {
-        return getManager( CommandResolver.class ).getSpecialPageReference( original );
+        return ServicesRefs.getCommandResolver().getSpecialPageReference( original );
     }
 
     /** {@inheritDoc} */
     @Override
     public String getFinalPageName( final String page ) throws ProviderException {
-        return getManager( CommandResolver.class ).getFinalPageName( page );
+        return ServicesRefs.getCommandResolver().getFinalPageName( page );
     }
 
     /** {@inheritDoc} */
@@ -620,307 +622,13 @@ public class WikiEngine implements Engine {
     @Override
     public void shutdown() {
         fireEvent( WikiEngineEvent.SHUTDOWN );
-        getManager( FilterManager.class ).destroy();
-    }
-
-    /**
-     *  Returns the current TemplateManager.
-     *
-     *  @return A TemplateManager instance.
-     * @deprecated use {@code getManager( TemplateManager.class )} instead.
-     */
-    @Deprecated
-    public TemplateManager getTemplateManager() {
-        return getManager( TemplateManager.class );
-    }
-
-    /**
-     * Returns the {@link org.apache.wiki.workflow0.WorkflowManager} associated with this WikiEngine. If the WikiEngine has not been
-     * initialized, this method will return <code>null</code>.
-     *
-     * @return the task queue
-     * @deprecated use {@code getManager( WorkflowManager.class )} instead.
-     */
-    @Deprecated
-    public WorkflowManager getWorkflowManager() {
-        return getManager( WorkflowManager.class );
-    }
-
-    /**
-     * Returns this object's ReferenceManager.
-     *
-     * @return The current ReferenceManager instance.
-     * @since 1.6.1
-     * @deprecated use {@code getManager( ReferenceManager.class )} instead.
-     */
-    @Deprecated
-    public ReferenceManager getReferenceManager() {
-        return getManager( ReferenceManager.class );
-    }
-
-    /**
-     * Returns the current rendering manager for this wiki application.
-     *
-     * @since 2.3.27
-     * @return A RenderingManager object.
-     * @deprecated use {@code getManager( RenderingManager.class )} instead.
-     */
-    @Deprecated
-    public RenderingManager getRenderingManager() {
-        return getManager( RenderingManager.class );
-    }
-
-    /**
-     * Returns the current plugin manager.
-     *
-     * @since 1.6.1
-     * @return The current PluginManager instance
-     * @deprecated use {@code getManager( PluginManager.class )} instead.
-     */
-    @Deprecated
-    public PluginManager getPluginManager() {
-        return getManager( PluginManager.class );
-    }
-
-    /**
-     *  Returns the current variable manager.
-     *
-     *  @return The current VariableManager.
-     * @deprecated use {@code getManager( VariableManager.class )} instead.
-     */
-    @Deprecated
-    public VariableManager getVariableManager()  {
-        return getManager( VariableManager.class );
-    }
-
-    /**
-     * Returns the current PageManager which is responsible for storing and managing WikiPages.
-     *
-     * @return The current PageManager instance.
-     * @deprecated use {@code getManager( PageManager.class )} instead.
-     */
-    @Deprecated
-    public PageManager getPageManager() {
-        return getManager( PageManager.class );
-    }
-
-    /**
-     * Returns the CommandResolver for this wiki engine.
-     *
-     * @return the resolver
-     * @deprecated use {@code getManager( CommandResolver.class )} instead.
-     */
-    @Deprecated
-    public CommandResolver getCommandResolver() {
-        return getManager( CommandResolver.class );
-    }
-
-    /**
-     * Returns the current AttachmentManager, which is responsible for storing and managing attachments.
-     *
-     * @since 1.9.31.
-     * @return The current AttachmentManager instance
-     * @deprecated use {@code getManager( AttachmentManager.class )} instead.
-     */
-    @Deprecated
-    public AttachmentManager getAttachmentManager() {
-        return getManager( AttachmentManager.class );
-    }
-
-    /**
-     * Returns the currently used authorization manager.
-     *
-     * @return The current AuthorizationManager instance.
-     * @deprecated use {@code getManager( AuthorizationManager.class )} instead.
-     */
-    @Deprecated
-    public AuthorizationManager getAuthorizationManager()  {
-        return getManager( AuthorizationManager.class );
-    }
-
-    /**
-     * Returns the currently used authentication manager.
-     *
-     * @return The current AuthenticationManager instance.
-     * @deprecated use {@code getManager( AuthenticationManager.class )} instead.
-     */
-    @Deprecated
-    public IIAuthenticationManager getAuthenticationManager() {
-        return getManager( IIAuthenticationManager.class );
-    }
-
-    /**
-     * Returns the manager responsible for the filters.
-     *
-     * @since 2.1.88
-     * @return The current FilterManager instance.
-     * @deprecated use {@code getManager( FilterManager.class )} instead.
-     */
-    @Deprecated
-    public FilterManager getFilterManager() {
-        return getManager( FilterManager.class );
-    }
-
-    /**
-     * Returns the manager responsible for searching the Wiki.
-     *
-     * @since 2.2.21
-     * @return The current SearchManager instance.
-     * @deprecated use {@code getManager( SearchManager.class )} instead.
-     */
-    @Deprecated
-    public SearchManager getSearchManager() {
-        return getManager( SearchManager.class );
-    }
-
-    /**
-     * Returns the progress manager we're using
-     *
-     * @return A ProgressManager.
-     * @since 2.6
-     * @deprecated use {@code getManager( ProgressManager.class )} instead.
-     */
-    @Deprecated
-    public ProgressManager getProgressManager() {
-        return getManager( ProgressManager.class );
+        ServicesRefs.getFilterManager().destroy();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getRootPath() {
         return m_rootPath;
-    }
-
-    /**
-     * @since 2.2.6
-     * @return the URL constructor.
-     * @deprecated use {@code getManager( URLConstructor.class )} instead.
-     */
-    @Deprecated
-    public URLConstructor getURLConstructor() {
-        return getManager( URLConstructor.class );
-    }
-
-    /**
-     * Returns the RSSGenerator. If the property <code>jspwiki.rss.generate</code> has not been set to <code>true</code>, this method
-     * will return <code>null</code>, <em>and callers should check for this value.</em>
-     *
-     * @since 2.1.165
-     * @return the RSS generator
-     * @deprecated use {@code getManager( RSSGenerator.class )} instead.
-     */
-    @Deprecated
-    public RSSGenerator getRSSGenerator() {
-        return getManager( RSSGenerator.class );
-    }
-
-    /**
-     *  Returns the PageRenamer employed by this WikiEngine.
-     *
-     *  @since 2.5.141
-     *  @return The current PageRenamer instance.
-     * @deprecated use {@code getManager( PageRenamer.class )} instead.
-     */
-    @Deprecated
-    public PageRenamer getPageRenamer() {
-        return getManager( PageRenamer.class );
-    }
-
-    /**
-     *  Returns the UserManager employed by this WikiEngine.
-     *
-     *  @since 2.3
-     *  @return The current UserManager instance.
-     * @deprecated use {@code getManager( UserManager.class )} instead.
-     */
-    @Deprecated
-    public UserManager getUserManager() {
-        return getManager( UserManager.class );
-    }
-
-    /**
-     *  Returns the TasksManager employed by this WikiEngine.
-     *
-     *  @return The current TasksManager instance.
-     * @deprecated use {@code getManager( TaskManager.class )} instead.
-     */
-    @Deprecated
-    public TasksManager getTasksManager() {
-        return getManager( TasksManager.class );
-    }
-
-    /**
-     *  Returns the GroupManager employed by this WikiEngine.
-     *
-     *  @since 2.3
-     *  @return The current GroupManager instance.
-     * @deprecated use {@code getManager( GroupManager.class )} instead.
-     */
-    /*:FVK:
-    @Deprecated
-    public GroupManager getGroupManager() {
-        return getManager( GroupManager.class ); -- new: IAuthorizer.class
-    }
-    */
-
-    /**
-     *  Returns the current {@link AdminBeanManager}.
-     *
-     *  @return The current {@link AdminBeanManager}.
-     *  @since  2.6
-     * @deprecated use {@code getManager( AdminBeanManager.class )} instead.
-     */
-    @Deprecated
-    public AdminBeanManager getAdminBeanManager() {
-        return getManager( AdminBeanManager.class );
-    }
-
-    /**
-     *  Returns the AclManager employed by this WikiEngine. The AclManager is lazily initialized.
-     *  <p>
-     *  The AclManager implementing class may be set by the System property {@link #PROP_ACL_MANAGER_IMPL}.
-     *  </p>
-     *
-     * @since 2.3
-     * @return The current AclManager.
-     * @deprecated use {@code getManager( AclManager.class )} instead.
-     */
-    @Deprecated
-    public AclManager getAclManager()  {
-        return getManager( AclManager.class );
-    }
-
-    /**
-     *  Returns the DifferenceManager so that texts can be compared.
-     *
-     *  @return the difference manager.
-     * @deprecated use {@code getManager( DifferenceManager.class )} instead.
-     */
-    @Deprecated
-    public DifferenceManager getDifferenceManager() {
-        return getManager( DifferenceManager.class );
-    }
-
-    /**
-     *  Returns the current EditorManager instance.
-     *
-     *  @return The current EditorManager.
-     * @deprecated use {@code getManager( EditorManager.class )} instead.
-     */
-    @Deprecated
-    public EditorManager getEditorManager() {
-        return getManager( EditorManager.class );
-    }
-
-    /**
-     *  Returns the current i18n manager.
-     *
-     *  @return The current Intertan... Interante... Internatatializ... Whatever.
-     * @deprecated use {@code getManager( InternationalizationManager.class )} instead.
-     */
-    @Deprecated
-    public InternationalizationManager getInternationalizationManager() {
-        return getManager( InternationalizationManager.class );
     }
 
     /** {@inheritDoc} */
@@ -985,7 +693,7 @@ public class WikiEngine implements Engine {
 	@Override
 	public WikiPage getPageById(String pageId) {
 		WikiPage wikiPage;
-		PageManager pageManager = this.getPageManager();
+		PageManager pageManager = ServicesRefs.getPageManager();
 		wikiPage = pageManager.getPageById(pageId);
 
 		return wikiPage;

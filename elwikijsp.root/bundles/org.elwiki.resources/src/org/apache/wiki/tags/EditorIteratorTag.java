@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.Editor;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class EditorIteratorTag extends IteratorTag  {
     public final int doStartTag() {
         m_wikiContext = ContextUtil.findContext(pageContext);
         final Engine engine = m_wikiContext.getEngine();
-        final EditorManager mgr = engine.getManager( EditorManager.class );
+        final EditorManager mgr = ServicesRefs.getEditorManager();
         final String[] editorList = mgr.getEditorList();
         final Collection< Editor > editors = new ArrayList<>();
 

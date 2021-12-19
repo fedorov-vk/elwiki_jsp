@@ -21,6 +21,7 @@ package org.apache.wiki.tags;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.ContextEnum;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 import javax.servlet.jsp.JspWriter;
@@ -97,7 +98,7 @@ public class LinkToTag extends WikiLinkTag {
             url = m_wikiContext.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), pageName, ( getVersion() != null ) ? "version=" + getVersion() : null );
             linkclass = "attachment";
 
-            if( m_wikiContext.getEngine().getManager( AttachmentManager.class ).forceDownload( pageName ) ) {
+            if( ServicesRefs.getAttachmentManager().forceDownload( pageName ) ) {
                 forceDownload = "download ";
             }
 

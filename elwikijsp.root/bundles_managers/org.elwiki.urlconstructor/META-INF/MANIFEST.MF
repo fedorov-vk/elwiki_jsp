@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Urlconstructor
-Bundle-SymbolicName: org.elwiki.urlconstructor
+Bundle-SymbolicName: org.elwiki.urlconstructor;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.urlconstructor

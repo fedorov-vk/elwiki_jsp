@@ -32,6 +32,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,9 +111,9 @@ public class InsertPage implements Plugin {
             try {
                 final String pageName = engine.getFinalPageName( includedPage );
                 if( pageName != null ) {
-                    page = engine.getManager( PageManager.class ).getPage( pageName );
+                    page = ServicesRefs.getPageManager().getPage( pageName );
                 } else {
-                    page = engine.getManager( PageManager.class ).getPage( includedPage );
+                    page = ServicesRefs.getPageManager().getPage( includedPage );
                 }
             } catch( final ProviderException e ) {
                 res.append( "<span class=\"error\">Page could not be found by the page provider.</span>" );
@@ -132,7 +133,7 @@ public class InsertPage implements Plugin {
                 }
 
                 // Check for permissions
-                final AuthorizationManager mgr = engine.getManager( AuthorizationManager.class );
+                final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
                 if( !mgr.checkPermission( context.getWikiSession(), PermissionFactory.getPagePermission( page, "view") ) ) {
                     res.append("<span class=\"error\">You do not have permission to view this included page.</span>");
@@ -164,7 +165,7 @@ public class InsertPage implements Plugin {
                 final Context includedContext = context.clone();
                 includedContext.setPage( page );
 
-                String pageData = engine.getManager( PageManager.class ).getPureText( page );
+                String pageData = ServicesRefs.getPageManager().getPureText( page );
                 String moreLink = "";
 
                 if( section != -1 ) {
@@ -186,7 +187,7 @@ public class InsertPage implements Plugin {
                 if( showOnce ) res.append("\" data-once=\""+cookieName );
                 res.append("\" >");
 
-                res.append( engine.getManager( RenderingManager.class ).textToHTML( includedContext, pageData ) );
+                res.append( ServicesRefs.getRenderingManager().textToHTML( includedContext, pageData ) );
                 res.append( moreLink );
 
                 res.append("</div>");

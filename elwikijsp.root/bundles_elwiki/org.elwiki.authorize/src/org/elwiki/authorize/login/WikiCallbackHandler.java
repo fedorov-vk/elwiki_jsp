@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.auth.UserManager;
 import org.elwiki.authorize.internal.services.DefaultUserManager;
+import org.elwiki.services.ServicesRefs;
 
 
 /**
@@ -81,7 +82,7 @@ public class WikiCallbackHandler implements CallbackHandler {
 				((WikiEngineCallback) callback).setEngine( m_engine );
 			} else if (callback instanceof UserDatabaseCallback) {
 				((UserDatabaseCallback) callback)
-						.setUserDatabase(this.m_engine.getManager( UserManager.class ).getUserDatabase() );
+						.setUserDatabase(ServicesRefs.getUserManager().getUserDatabase() );
 			} else if (callback instanceof NameCallback) {
 				((NameCallback) callback).setName(this.m_username);
 			} else if (callback instanceof PasswordCallback) {

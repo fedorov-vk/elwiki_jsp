@@ -16,13 +16,15 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.apache.wiki.api.rss;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.api.rss.Entry;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public abstract class Feed {
         String blogname = null;
 
         try {
-            blogname = engine.getManager( VariableManager.class ).getValue(context, VAR_BLOGNAME);
+            blogname = ServicesRefs.getVariableManager().getValue(context, VAR_BLOGNAME);
         } catch( final NoSuchVariableException e ) {
         }
 

@@ -43,10 +43,12 @@ Export-Package: org.apache.wiki,
  org.apache.wiki.api.plugin,
  org.apache.wiki.api.providers,
  org.apache.wiki.api.references,
+ org.apache.wiki.api.rss,
  org.apache.wiki.api.search,
  org.apache.wiki.api.spi,
  org.apache.wiki.api.tasks,
  org.apache.wiki.api.ui,
+ org.apache.wiki.api.ui.progress,
  org.apache.wiki.api.variables,
  org.apache.wiki.attachment0,
  org.apache.wiki.auth,
@@ -70,5 +72,7 @@ Export-Package: org.apache.wiki,
  org.elwiki.api,
  org.elwiki.api.authorization,
  org.elwiki.api.authorization.authorize,
- org.elwiki.authorize.login
-Service-Component: OSGI-INF/refsSPI.xml
+ org.elwiki.authorize.login,
+ org.elwiki.services
+Service-Component: OSGI-INF/refsSPI.xml,
+ OSGI-INF/resourcesServiceRefs.xml

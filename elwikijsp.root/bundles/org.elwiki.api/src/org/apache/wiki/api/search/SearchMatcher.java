@@ -142,7 +142,7 @@ public class SearchMatcher {
          *  @param score A score from 0+
          */
         public SearchResultImpl( final String name, final int score ) {
-            m_page  = Wiki.contents().page( m_engine, name );
+            m_page  = Wiki.contents().page( name );
             m_score = score;
         }
 

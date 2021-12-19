@@ -37,6 +37,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.services.ServicesRefs;
 import org.freshcookies.security.policy.PolicyReader;
 
 import javax.security.auth.Subject;
@@ -340,7 +341,7 @@ public final class SecurityVerifier {
      * @throws WikiException if tests fail for unexpected reasons
      */
     public String containerRoleTable() throws WikiException {
-        final AuthorizationManager authorizationManager = m_engine.getManager( AuthorizationManager.class );
+        final AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
         final Authorizer authorizer = (Authorizer) authorizationManager.getAuthorizer();
 
         // If authorizer not WebContainerAuthorizer, print error message
@@ -429,7 +430,7 @@ public final class SecurityVerifier {
      * @throws WikiException if the web authorizer cannot obtain the list of roles
      */
     public Principal[] webContainerRoles() throws WikiException {
-        final Authorizer authorizer = (Authorizer) m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+        final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
 /*:FVK:
         if ( authorizer instanceof WebContainerAuthorizer ) {
             return authorizer.getRoles();
@@ -445,7 +446,7 @@ public final class SecurityVerifier {
      */
     protected void verifyPolicyAndContainerRoles() throws WikiException
     {
-        final Authorizer authorizer = (Authorizer) m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+        final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
         final Principal[] containerRoles = authorizer.getRoles();
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
@@ -475,10 +476,10 @@ public final class SecurityVerifier {
     {
     	Object mgr = null, db = null; // :FVK:
     	/*:FVK:
-        final IAuthorizer mgr = m_engine.getManager( IAuthorizer.class ); // GroupManager
+        final IAuthorizer mgr = ServicesRefs.getGroupManager(); // GroupManager
         GroupDatabase db = null;
         try {
-            db = m_engine.getManager( IAuthorizer.class ).getGroupDatabase();
+            db = ServicesRefs.getGroupManager().getGroupDatabase();
         } catch ( final WikiSecurityException e ) {
             m_session.addMessage( ERROR_GROUPS, "Could not retrieve GroupManager: " + e.getMessage() );
         }
@@ -744,7 +745,7 @@ public final class SecurityVerifier {
 
         // Check local policy
         final Principal[] principals = new Principal[]{ principal };
-        return m_engine.getManager( AuthorizationManager.class ).allowedByLocalPolicy( principals, permission );
+        return ServicesRefs.getAuthorizationManager().allowedByLocalPolicy( principals, permission );
     }
 
     /**
@@ -753,7 +754,7 @@ public final class SecurityVerifier {
      */
     protected void verifyUserDatabase()
     {
-        final UserDatabase db = m_engine.getManager( UserManager.class ).getUserDatabase();
+        final UserDatabase db = ServicesRefs.getUserManager().getUserDatabase();
 
         // Check for obvious error conditions
         if ( db == null )

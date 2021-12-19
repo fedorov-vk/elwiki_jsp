@@ -22,6 +22,7 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <!DOCTYPE html>
@@ -42,7 +43,7 @@ in your <code>jspwiki.properties</code> file.</div>
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     Context ctx = ContextUtil.findContext(pageContext);
-    AdminBeanManager mgr = wiki.getManager( AdminBeanManager.class );
+    AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
  %>
 
 <wiki:TabbedSection defaultTab="${param['tab-admin']}">

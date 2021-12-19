@@ -394,7 +394,7 @@ public class CachingProvider implements PageProvider {
     private void refreshMetadata( final WikiPage page ) {
     	/*:FVK: 
         if( page != null && !page.hasMetadata() ) {
-            final RenderingManager mgr = m_engine.getManager( RenderingManager.class );
+            final RenderingManager mgr = ServicesRefs.getRenderingManager();
             try {
                 final String data = m_provider.getPageText( page.getName(), page.getVersion() );
                 final Context ctx = Wiki.context().create( m_engine, page );

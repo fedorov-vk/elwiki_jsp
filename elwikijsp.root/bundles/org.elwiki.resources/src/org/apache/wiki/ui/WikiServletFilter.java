@@ -30,6 +30,7 @@ import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -146,7 +147,7 @@ public class WikiServletFilter implements Filter {
         if ( !isWrapped( request ) ) {
             // Prepare the Session
             try {
-                m_engine.getManager( IIAuthenticationManager.class ).login( httpRequest );
+            	ServicesRefs.getAuthenticationManager().login( httpRequest );
                 final Session wikiSession = SessionMonitor.getInstance( m_engine ).find( httpRequest.getSession() );
                 httpRequest = new WikiRequestWrapper( m_engine, httpRequest );
                 if ( log.isDebugEnabled() ) {

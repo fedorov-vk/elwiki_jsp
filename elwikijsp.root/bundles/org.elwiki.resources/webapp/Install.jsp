@@ -26,6 +26,7 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.Installer" %>
 <%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -39,7 +40,7 @@
 Engine wiki = Wiki.engine().find( getServletConfig() );
 // Create wiki context and check for authorization
 Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_INSTALL.getRequestContext() );
-if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
+if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
 Installer installer = new Installer( request, config );
 Session wikiSession = wikiContext.getWikiSession();

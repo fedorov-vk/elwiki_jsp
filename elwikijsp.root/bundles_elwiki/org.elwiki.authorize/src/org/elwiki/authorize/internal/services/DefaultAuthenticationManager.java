@@ -59,6 +59,7 @@ import org.elwiki.authorize.login.UserDatabaseLoginModule;
 import org.elwiki.authorize.login.WebContainerCallbackHandler;
 import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 
 import javax.security.auth.Subject;
@@ -136,8 +137,26 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
+
+	private AuthorizationManager authorizationManager;
+	
+    // -- service handling --------------------------- start --
+	
+    public void setAuthorizationManager(AuthorizationManager authorizationManager) {
+		this.authorizationManager = authorizationManager;
+	}
+
+	public synchronized void startup() throws WikiException {
+		//
+	}
+
+	public synchronized void shutdown() {
+		//
+	}
     
-    /**
+    // -- service handling ----------------------------- end --
+    
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -220,7 +239,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     public boolean isContainerAuthenticated() {
     	/*:FVK:
         try {
-            final Authorizer authorizer = m_engine.getManager( AuthorizationManager.class ).getAuthorizer();
+            final Authorizer authorizer = this.authorizationManager.getAuthorizer();
             if ( authorizer instanceof WebContainerAuthorizer ) {
                  return ( ( WebContainerAuthorizer )authorizer ).isContainerAuthorized();
             }
@@ -237,8 +256,10 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     public boolean login( final HttpServletRequest request ) throws WikiSecurityException {
         final HttpSession httpSession = request.getSession();
         final Session session = SessionMonitor.getInstance( m_engine ).find( httpSession );
-        final IIAuthenticationManager authenticationMgr = m_engine.getManager( IIAuthenticationManager.class );
-        final AuthorizationManager authorizationMgr = m_engine.getManager( AuthorizationManager.class );
+
+//:FVK: - ссылка сам на себя !!!        
+        final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();
+        
         CallbackHandler handler = null;
         final Map< String, String > options = EMPTY_MAP;
 
@@ -261,7 +282,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
                 }
 
                 // Add all appropriate Authorizer roles
-                injectAuthorizerRoles( session, authorizationMgr.getAuthorizer(), request );
+                injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), request );
             }
         }
 
@@ -313,7 +334,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
             }
 
             // Add all appropriate Authorizer roles
-            injectAuthorizerRoles( session, m_engine.getManager( AuthorizationManager.class ).getAuthorizer(), null );
+            injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), null );
 
             return true;
         }
@@ -518,14 +539,4 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         }*/
     }
 
-	// -- service support ---------------------------------
-
-	public synchronized void startup() throws WikiException {
-		//
-	}
-
-	public synchronized void shutdown() {
-		//
-	}
-	
 }

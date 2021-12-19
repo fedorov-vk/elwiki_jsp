@@ -26,9 +26,10 @@
 <%@ page import="org.apache.wiki.api.attachment.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.apache.wiki.ui.progress.ProgressManager" %>
+<%@ page import="org.apache.wiki.api.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.elwiki_data.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="java.security.Permission" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -40,14 +41,14 @@
 <%
   Context c = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
-  int attCount = c.getEngine().getManager( AttachmentManager.class ).listAttachments( c.getPage() ).size();
+  int attCount = ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";
 
   String creationAuthor ="";
 
   //FIXME -- seems not to work correctly for attachments !!
-  WikiPage firstPage = c.getEngine().getManager( PageManager.class ).getPage( wikiPage.getName(), 1 );
+  WikiPage firstPage = ServicesRefs.getPageManager().getPage( wikiPage.getName(), 1 );
   if( firstPage != null )
   {
     creationAuthor = firstPage.getAuthor();
@@ -255,7 +256,7 @@
 <%
   int MAXATTACHNAMELENGTH = 30;
 %>
-<c:set var="progressId" value="<%=c.getEngine().getManager( ProgressManager.class ).getNewProgressIdentifier()%>" />
+<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
 <wiki:Permission permission="upload">
 
   <form action="<wiki:Link jsp='attach' format='url'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"

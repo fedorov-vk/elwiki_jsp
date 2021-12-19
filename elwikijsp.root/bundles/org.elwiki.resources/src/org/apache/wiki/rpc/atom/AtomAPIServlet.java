@@ -30,6 +30,7 @@ import org.apache.wiki.plugin.WeblogEntryPlugin;
 import org.apache.wiki.plugin.WeblogPlugin;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 import org.intabulas.sandler.Sandler;
 import org.intabulas.sandler.SyndicationFactory;
 import org.intabulas.sandler.elements.Content;
@@ -107,7 +108,7 @@ public class AtomAPIServlet extends HttpServlet {
 
         try {
             final String blogid = getPageName( request );
-            final WikiPage page = m_engine.getManager( PageManager.class ).getPage( blogid );
+            final WikiPage page = ServicesRefs.getPageManager().getPage( blogid );
             if( page == null ) {
                 throw new ServletException( "Page " + blogid + " does not exist, cannot add blog post." );
             }
@@ -125,7 +126,7 @@ public class AtomAPIServlet extends HttpServlet {
             final WeblogEntryPlugin plugin = new WeblogEntryPlugin();
             final String pageName = plugin.getNewEntryPage( m_engine, blogid );
             final String username = author.getName();
-            final WikiPage entryPage = Wiki.contents().page( m_engine, pageName );
+            final WikiPage entryPage = Wiki.contents().page( pageName );
 
             final Context context = Wiki.context().create( m_engine, request, entryPage );
             final StringBuilder text = new StringBuilder();
@@ -134,7 +135,7 @@ public class AtomAPIServlet extends HttpServlet {
                 .append( "\n\n" )
                 .append( content.getBody() );
             log.debug( "Writing entry: " + text );
-            m_engine.getManager( PageManager.class ).saveText( context, text.toString(), username, "" );
+            ServicesRefs.getPageManager().saveText( context, text.toString(), username, "" );
         } catch( final FeedMarshallException e ) {
             log.error("Received faulty Atom entry",e);
             throw new ServletException("Faulty Atom entry",e);
@@ -176,10 +177,10 @@ public class AtomAPIServlet extends HttpServlet {
     }
 
     private Entry getBlogEntry( final String entryid ) {
-        final WikiPage page = m_engine.getManager( PageManager.class ).getPage( entryid );
-        final WikiPage firstVersion = m_engine.getManager( PageManager.class ).getPage( entryid, 1 );
+        final WikiPage page = ServicesRefs.getPageManager().getPage( entryid );
+        final WikiPage firstVersion = ServicesRefs.getPageManager().getPage( entryid, 1 );
         final Entry entry = SyndicationFactory.newSyndicationEntry();
-        final String pageText = m_engine.getManager( PageManager.class ).getText(page.getName());
+        final String pageText = ServicesRefs.getPageManager().getText(page.getName());
         final int firstLine = pageText.indexOf('\n');
 
         String title = "";
@@ -209,7 +210,7 @@ public class AtomAPIServlet extends HttpServlet {
      *  Creates and outputs a full list of all available blogs
      */
     private Feed listBlogs() throws ProviderException {
-        final Collection< WikiPage > pages = m_engine.getManager( PageManager.class ).getAllPages();
+        final Collection< WikiPage > pages = ServicesRefs.getPageManager().getAllPages();
         final Feed feed = SyndicationFactory.newSyndicationFeed();
         feed.setTitle("List of blogs at this site");
         feed.setModified( new Date() );
@@ -225,7 +226,7 @@ public class AtomAPIServlet extends HttpServlet {
 
             final String encodedName = TextUtil.urlEncodeUTF8( p.getName() );
             final Context context = Wiki.context().create( m_engine, p );
-            final String title = TextUtil.replaceEntities( org.apache.wiki.rss.Feed.getSiteName( context ) );
+            final String title = TextUtil.replaceEntities( org.apache.wiki.api.rss.Feed.getSiteName( context ) );
             final Link postlink = createLink( "service.post", this.config.getBaseURL() + "atom/" + encodedName, title );
             final Link editlink = createLink( "service.edit", this.config.getBaseURL() + "atom/" + encodedName, title );
             final Link feedlink = createLink( "service.feed", this.config.getBaseURL() + "atom.jsp?page=" + encodedName, title );

@@ -32,6 +32,8 @@ import org.apache.wiki.workflow0.DecisionQueue;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
+import org.elwiki.services.ServicesRefs;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -214,7 +216,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
         // Try to resolve UnresolvedPrincipals
         if ( approver instanceof UnresolvedPrincipal ) {
             final String name = approver.getName();
-            approver = m_engine.getManager( AuthorizationManager.class ).resolvePrincipal( name );
+            approver = ServicesRefs.getAuthorizationManager().resolvePrincipal( name );
 
             // If still unresolved, throw exception; otherwise, freshen our cache
             if ( approver instanceof UnresolvedPrincipal ) {

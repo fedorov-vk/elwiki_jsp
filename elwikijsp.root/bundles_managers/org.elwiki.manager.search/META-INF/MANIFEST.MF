@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Search Manager
-Bundle-SymbolicName: org.elwiki.manager.search
+Bundle-SymbolicName: org.elwiki.manager.search;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.search

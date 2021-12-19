@@ -35,6 +35,7 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.url0.URLConstructor"%>
 <%@ page import="org.apache.wiki.util.*"%>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp"%>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!Logger log = Logger.getLogger( "JSPWiki" );
@@ -44,7 +45,7 @@
     public boolean resetPassword( Engine wiki, HttpServletRequest request, ResourceBundle rb ) {
         // Reset pw for account name
         String name = request.getParameter( "name" );
-        UserDatabase userDatabase = wiki.getManager( DefaultUserManager.class ).getUserDatabase();
+        UserDatabase userDatabase = ServicesRefs.getUserManager().getUserDatabase();
         boolean success = false;
 
         try {
@@ -68,7 +69,7 @@
             // Try sending email first, as that is more likely to fail.
 
             Object[] args = { profile.getLoginName(), randomPassword, request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort() +
-                             wiki.getManager( URLConstructor.class ).makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), wiki.getApplicationName() };
+                             ServicesRefs.getUrlConstructor().makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), wiki.getApplicationName() };
 
             String mailMessage = MessageFormat.format( rb.getString( "lostpwd.newpassword.email" ), args );
 
@@ -137,6 +138,6 @@
     response.setDateHeader( "Expires", new Date().getTime() );
     response.setDateHeader( "Last-Modified", new Date().getTime() );
 
-    String contentPage = wiki.getManager( TemplateManager.class ).findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
 %>
 <wiki:Include page="<%=contentPage%>" />

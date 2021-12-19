@@ -60,7 +60,6 @@ Bundle-Activator: org.apache.wiki.internal.MainActivator
 Service-Component: OSGI-INF/pluginManager.xml,
  OSGI-INF/variableManager.xml,
  OSGI-INF/groupManager.xml,
- OSGI-INF/progressManager.xml,
  OSGI-INF/tasksManager.xml,
  OSGI-INF/internationalizationManager.xml,
  OSGI-INF/aclsSPI.xml,

@@ -44,6 +44,7 @@ import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -324,7 +325,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                 Collection< String > referrers = null;
 
                 if( refer != null ) {
-                    final ReferenceManager refManager = engine.getManager( ReferenceManager.class );
+                    final ReferenceManager refManager = ServicesRefs.getReferenceManager();
                     for( final String name : refManager.findCreated() ) {
                         boolean use = false;
                         for( int n = 0; !use && n < refer.length; n++ ) {
@@ -332,7 +333,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                         }
 
                         if( use ) {
-                            final Collection< String > refs = engine.getManager( ReferenceManager.class ).findReferrers( name );
+                            final Collection< String > refs = ServicesRefs.getReferenceManager().findReferrers( name );
                             if( refs != null && !refs.isEmpty() ) {
                                 if( referrers == null ) {
                                     referrers = new HashSet<>();
@@ -434,7 +435,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                             }
 
                             if( use ) {
-                                args[ 1 ] = engine.getManager( RenderingManager.class ).beautifyTitle( name );
+                                args[ 1 ] = ServicesRefs.getRenderingManager().beautifyTitle( name );
                                 args[ 2 ] = entry.getValue();
 
                                 fmt.format( args, buf, null );
@@ -445,7 +446,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                         buf.append( footer );
 
                         // let the engine render the list
-                        result = engine.getManager( RenderingManager.class ).textToHTML( context, buf.toString() );
+                        result = ServicesRefs.getRenderingManager().textToHTML( context, buf.toString() );
                     }
                 }
             }

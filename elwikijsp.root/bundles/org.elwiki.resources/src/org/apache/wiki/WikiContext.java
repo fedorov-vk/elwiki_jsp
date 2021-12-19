@@ -42,6 +42,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -129,11 +130,11 @@ public class WikiContext implements Context, Command {
 
         // If page not supplied, default to front page to avoid NPEs
         if( m_page == null ) {
-            m_page = ( WikiPage )m_engine.getManager( PageManager.class ).getPage( this.wikiConfiguration.getFrontPage() );
+            m_page = ( WikiPage )ServicesRefs.getPageManager().getPage( this.wikiConfiguration.getFrontPage() );
 
             // Front page does not exist?
             if( m_page == null ) {
-                m_page = ( WikiPage )Wiki.contents().page( m_engine, this.wikiConfiguration.getFrontPage() );
+                m_page = ( WikiPage )Wiki.contents().page( this.wikiConfiguration.getFrontPage() );
             }
         }
 
@@ -179,7 +180,7 @@ public class WikiContext implements Context, Command {
      *  @since 2.1.15.
      */
     public WikiContext( final Engine engine, final HttpServletRequest request, final String requestContext ) {
-        this( engine, request, engine.getManager( CommandResolver.class ).findCommand( request, requestContext ) );
+        this( engine, request, ServicesRefs.getCommandResolver().findCommand( request, requestContext ) );
         if( !engine.isConfigured() ) {
             throw new InternalWikiException( "Engine has not been properly started.  It is likely that the configuration is faulty.  Please check all logs for the possible reason." );
         }
@@ -264,7 +265,7 @@ public class WikiContext implements Context, Command {
     @Override
 	public String getRedirectURL() {
 		final String pagename = m_page.getName();
-		String redirectURL = m_engine.getManager(CommandResolver.class).getSpecialPageReference(pagename);
+		String redirectURL = ServicesRefs.getCommandResolver().getSpecialPageReference(pagename);
 		if (redirectURL == null) {
 			final String alias = m_page.getAlias();
 			/* TODO: :FVK: в `if` - добавил `&& !alias.isEmpty()` - чтоб не рестартовал вход через Wiki.jsp, без указания страницы. */
@@ -625,7 +626,7 @@ public class WikiContext implements Context, Command {
         if ( WikiCommand.INSTALL.equals( m_command ) ) {
             // See if admin users exists
             try {
-                final UserManager userMgr = m_engine.getManager( UserManager.class );
+                final UserManager userMgr = ServicesRefs.getUserManager();
                 final UserDatabase userDb = userMgr.getUserDatabase();
                 userDb.findByLoginName( Installer.ADMIN_ID );
             } catch ( final NoSuchPrincipalException e ) {
@@ -667,7 +668,7 @@ public class WikiContext implements Context, Command {
      */
     @Override
     public boolean hasAdminPermissions() {
-        return m_engine.getManager( AuthorizationManager.class ).checkPermission( getWikiSession(), new AllPermission( wikiConfiguration.getApplicationName() ) );
+        return ServicesRefs.getAuthorizationManager().checkPermission( getWikiSession(), new AllPermission( wikiConfiguration.getApplicationName() ) );
     }
 
     /**
@@ -717,7 +718,7 @@ public class WikiContext implements Context, Command {
      */
     protected static Command findCommand( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
         final String defaultContext = ContextEnum.PAGE_VIEW.getRequestContext();
-        Command command = engine.getManager( CommandResolver.class ).findCommand( request, defaultContext );
+        Command command = ServicesRefs.getCommandResolver().findCommand( request, defaultContext );
         if ( command instanceof PageCommand && page != null ) {
             command = command.targetedCommand( page );
         }
@@ -735,7 +736,7 @@ public class WikiContext implements Context, Command {
         if ( requestContext == null ) {
             m_command = PageCommand.NONE;
         } else {
-            final CommandResolver resolver = m_engine.getManager( CommandResolver.class );
+            final CommandResolver resolver = ServicesRefs.getCommandResolver();
             m_command = resolver.findCommand( m_request, requestContext );
         }
 

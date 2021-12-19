@@ -28,6 +28,9 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.api.rss.Entry;
+import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
@@ -36,6 +39,7 @@ import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.util.Iterator;
@@ -131,7 +135,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
         final Context ctx = Wiki.context().create( m_engine, page );
       /*:FVK: 
         if( page.getVersion() > 1 ) {
-            final String diff = m_engine.getManager( DifferenceManager.class ).getDiff( ctx,
+            final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx,
                                                                 page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
                                                                          page.getVersion() );
 
@@ -139,7 +143,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             buf.append( diff );
         } else*/ {
             buf.append( author ).append( " created this page on " ).append( page.getLastModified() ).append( ":<br /><hr /><br />" );
-            buf.append( m_engine.getManager( RenderingManager.class ).getHTML( page.getName() ) );
+            buf.append( ServicesRefs.getRenderingManager().getHTML( page.getName() ) );
         }
 
         return buf.toString();
@@ -164,7 +168,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
     /** {@inheritDoc} */
     @Override
     public String generate() {
-        final Context context = Wiki.context().create( m_engine, Wiki.contents().page( m_engine, "__DUMMY" ) );
+        final Context context = Wiki.context().create( m_engine, Wiki.contents().page( "__DUMMY" ) );
         context.setRequestContext( ContextEnum.PAGE_RSS.getRequestContext() );
         final Feed feed = new RSS10Feed( context );
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + generateFullWikiRSS( context, feed );
@@ -225,7 +229,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
         feed.setChannelLanguage( m_channelLanguage );
         feed.setChannelDescription( m_channelDescription );
 
-        final Set< WikiPage > changed = m_engine.getManager( PageManager.class ).getRecentChanges();
+        final Set< WikiPage > changed = ServicesRefs.getPageManager().getRecentChanges();
 
         final Session session = Wiki.session().guest( m_engine );
         int items = 0;
@@ -233,7 +237,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             final WikiPage page = i.next();
 
             //  Check if the anonymous user has view access to this page.
-            if( !m_engine.getManager( AuthorizationManager.class ).checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
+            if( !ServicesRefs.getAuthorizationManager().checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
                 // No permission, skip to the next one.
                 continue;
             }
@@ -263,14 +267,14 @@ public class DefaultRSSGenerator implements RSSGenerator {
     public String generateWikiPageRSS( final Context wikiContext, final List< WikiPage > changed, final Feed feed ) {
         feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName()+": "+wikiContext.getPage().getName() );
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
-        final String language = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
+        final String language = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
 
         if( language != null ) {
             feed.setChannelLanguage( language );
         } else {
             feed.setChannelLanguage( m_channelLanguage );
         }
-        final String channelDescription = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
+        final String channelDescription = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
 
         if( channelDescription != null ) {
             feed.setChannelDescription( channelDescription );
@@ -312,7 +316,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             log.debug( "Generating RSS for blog, size=" + changed.size() );
         }
 
-        final String ctitle = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_TITLE );
+        final String ctitle = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_TITLE );
         if( ctitle != null ) {
             feed.setChannelTitle( ctitle );
         } else {
@@ -321,14 +325,14 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
 
-        final String language = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
+        final String language = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
         if( language != null ) {
             feed.setChannelLanguage( language );
         } else {
             feed.setChannelLanguage( m_channelLanguage );
         }
 
-        final String channelDescription = m_engine.getManager( VariableManager.class ).getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
+        final String channelDescription = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
         if( channelDescription != null ) {
             feed.setChannelDescription( channelDescription );
         }
@@ -351,7 +355,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             e.setURL( url );
 
             //  Title
-            String pageText = m_engine.getManager( PageManager.class ).getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+            String pageText = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
 
             String title = "";
             final int firstLine = pageText.indexOf('\n');
@@ -377,7 +381,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
                 if( maxlen > MAX_CHARACTERS ) {
                     maxlen = MAX_CHARACTERS;
                 }
-                pageText = m_engine.getManager( RenderingManager.class ).textToHTML( wikiContext, pageText.substring( firstLine + 1, maxlen ).trim() );
+                pageText = ServicesRefs.getRenderingManager().textToHTML( wikiContext, pageText.substring( firstLine + 1, maxlen ).trim() );
                 if( maxlen == MAX_CHARACTERS ) {
                     pageText += "...";
                 }

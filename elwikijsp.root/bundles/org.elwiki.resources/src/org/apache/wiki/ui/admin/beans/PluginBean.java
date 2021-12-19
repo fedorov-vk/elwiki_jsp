@@ -23,6 +23,7 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 
 import javax.management.NotCompliantMBeanException;
@@ -56,7 +57,7 @@ public class PluginBean extends ModuleBean {
      */
     @Override
     protected Collection< WikiModuleInfo > modules() {
-        return m_engine.getManager( PluginManager.class ).modules();
+        return ServicesRefs.getPluginManager().modules();
     }
 
     /**

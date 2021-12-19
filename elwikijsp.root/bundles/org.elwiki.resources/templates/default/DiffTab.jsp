@@ -23,6 +23,7 @@
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.tags.InsertDiffTag" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -31,8 +32,8 @@
 <%
   Context c = ContextUtil.findContext( pageContext );
 %>
-<c:set var="history" value="<%= c.getEngine().getManager( PageManager.class ).getVersionHistory(c.getPage().getName()) %>" />
-<c:set var="diffprovider" value='<%= c.getEngine().getManager( VariableManager.class ).getVariable(c,"jspwiki.diffProvider") %>' />
+<c:set var="history" value="<%= ServicesRefs.getPageManager().getVersionHistory(c.getPage().getName()) %>" />
+<c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(c,"jspwiki.diffProvider") %>' />
 <wiki:PageExists>
 <form action="<wiki:Link jsp='Diff.jsp' format='url' />"
        class="diffbody form-inline"

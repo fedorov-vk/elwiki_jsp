@@ -24,6 +24,7 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 
 /**
@@ -40,10 +41,10 @@ public class HasAttachmentsTag extends WikiTagBase {
     public final int doWikiStartTag() {
         final Engine engine = m_wikiContext.getEngine();
         final WikiPage page = m_wikiContext.getPage();
-        final AttachmentManager mgr = engine.getManager( AttachmentManager.class );
+        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
 
         try {
-            if( page != null && engine.getManager( PageManager.class ).wikiPageExists(page) && mgr.attachmentsEnabled() ) {
+            if( page != null && ServicesRefs.getPageManager().wikiPageExists(page) && mgr.attachmentsEnabled() ) {
                 if( mgr.hasAttachments(page) ) {
                     return EVAL_BODY_INCLUDE;
                 }

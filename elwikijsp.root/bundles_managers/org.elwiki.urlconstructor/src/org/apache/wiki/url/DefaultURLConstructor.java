@@ -50,7 +50,7 @@ public class DefaultURLConstructor implements URLConstructor {
 
     // -- service handling ------------------------------------
     
-    public void setConfiguration(IWikiConfiguration configuration) {
+    public void setWikiConfiguration(IWikiConfiguration configuration) {
     	this.wikiConfiguration = configuration;
     }
     

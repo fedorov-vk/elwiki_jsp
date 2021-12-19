@@ -27,6 +27,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.output.Format;
@@ -74,7 +75,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
         masterDiv.addContent(indexDiv);
         try {
             final List<String> pages = listPages(context,include,exclude);
-            context.getEngine().getManager( PageManager.class ).getPageSorter().sort(pages);
+            ServicesRefs.getPageManager().getPageSorter().sort(pages);
             char initialChar = ' ';
             Element currentDiv = new Element("div",xmlns_XHTML);            
             for ( final String name : pages ) {
@@ -137,7 +138,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
         final Pattern includePtrn = include != null ? Pattern.compile( include ) : Pattern.compile(".*");
         final Pattern excludePtrn = exclude != null ? Pattern.compile( exclude ) : Pattern.compile("\\p{Cntrl}"); // there are no control characters in page names
         final List< String > result = new ArrayList<>();
-        final Set< String > pages = context.getEngine().getManager( ReferenceManager.class ).findCreated();
+        final Set< String > pages = ServicesRefs.getReferenceManager().findCreated();
         for( final String pageName : pages ) {
             if( excludePtrn.matcher( pageName ).matches() ) {
                 continue;

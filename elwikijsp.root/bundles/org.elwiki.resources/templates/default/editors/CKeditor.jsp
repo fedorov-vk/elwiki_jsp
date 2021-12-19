@@ -31,6 +31,7 @@
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.elwiki_data.WikiPage" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -68,17 +69,17 @@
 	String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = engine.getManager( PageManager.class ).getPage( clone );
+    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = engine.getManager( AuthorizationManager.class );
+        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
 
         try
         {
           if( mgr.checkPermission( context.getWikiSession(), pp ) )
           {
-            usertext = engine.getManager( PageManager.class ).getPureText( p );
+            usertext = ServicesRefs.getPageManager().getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -89,7 +90,7 @@
 <%
   if( usertext == null )
   {
-    usertext = engine.getManager( PageManager.class ).getPureText( context.getPage() );
+    usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
@@ -99,7 +100,7 @@
     String pageAsHtml;
     try
     {
-        pageAsHtml = engine.getManager( RenderingManager.class ).getHTML( context, usertext );
+        pageAsHtml = ServicesRefs.getRenderingManager().getHTML( context, usertext );
     }
         catch( Exception e )
     {
@@ -209,7 +210,7 @@
       </ul>
     </div>
 
-  <c:set var="editors" value="<%= engine.getManager( EditorManager.class ).getEditorList() %>" />
+  <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
   <c:if test='${fn:length(editors)>1}'>
    <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

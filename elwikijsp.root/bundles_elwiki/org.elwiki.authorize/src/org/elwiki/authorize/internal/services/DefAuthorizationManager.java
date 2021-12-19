@@ -110,6 +110,7 @@ import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.WikiPermission;
+import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.WikiPage;
@@ -196,6 +197,8 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	private Engine m_engine;
 
 	private IWikiConfiguration wikiConfiguration;
+	private IAuthorizer groupManager;
+	private AclManager aclManager;
 
 	private ConditionalPermissionAdmin cpaService;
 
@@ -347,8 +350,8 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		// If the page or ACL is null, it's allowed.
 		//
 		String pageName = ((PagePermission) permission).getPage();
-		WikiPage page = this.m_engine.getManager(PageManager.class).getPage(pageName);
-		Acl acl = (page == null) ? null : this.m_engine.getManager( AclManager.class ).getPermissions(page);
+		WikiPage page = ServicesRefs.getPageManager().getPage(pageName);
+		Acl acl = (page == null) ? null : this.aclManager.getPermissions(page);
 		if (page == null || acl == null || acl.getAclEntries().isEmpty()) {
 			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
 			return true;
@@ -700,7 +703,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 
 		/*:FVK:
 		// Check Groups
-		principal = this.m_engine.getManager(IAuthorizer.class).findRole(name);
+		principal = ServicesRefs.getGroupManager().findRole(name); // IAuthorizer.class
 		if (principal != null) {
 			return principal;
 		}
@@ -809,7 +812,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		if (!isInfoExists) {
 			String bundleLocation = "*/org.elwiki.authorize.check.*"; 
 					// AuthorizeCheckActivator.getContext().getBundle().getLocation();
-			IAuthorizer groupManager = this.m_engine.getManager(IAuthorizer.class);
+			IAuthorizer groupManager = this.groupManager;
 
 			if(!flag11) {
 			//-- Add info of DENY AllPermission for context --
@@ -849,10 +852,18 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		}
 	}
 
-	// -- service support -----------------------------------------------------
+	// -- service handling -------------------------------------------< start --
 
 	public void setConfiguration(IWikiConfiguration wikiConfiguration) {
 		this.wikiConfiguration = wikiConfiguration;
+	}
+
+	public void setGroupManager(IAuthorizer groupManager) {
+		this.groupManager = groupManager;
+	}
+
+	public void setAclManager(AclManager aclManager) {
+		this.aclManager = aclManager;
 	}
 
 	/**
@@ -1105,4 +1116,6 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		 */
 	}
 
+	// -- service handling --------------------------------------------- end >--
+	
 }

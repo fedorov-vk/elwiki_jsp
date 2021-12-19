@@ -22,6 +22,7 @@ import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.services.ServicesRefs;
 
 /**
  *  Does a version check on the page.  Mode is as follows:
@@ -79,10 +80,10 @@ public class CheckVersionTag extends WikiTagBase {
         final Engine engine = m_wikiContext.getEngine();
         final WikiPage page = m_wikiContext.getPage();
 
-        if( page != null && engine.getManager( PageManager.class ).wikiPageExists( page.getName() ) ) {
+        if( page != null && ServicesRefs.getPageManager().wikiPageExists( page.getName() ) ) {
             final int version = page.getVersion();
             final boolean include;
-            final WikiPage latest = engine.getManager( PageManager.class ).getPage( page.getName() );
+            final WikiPage latest = ServicesRefs.getPageManager().getPage( page.getName() );
 
             switch( m_mode ) {
                 case LATEST    : include = ( version < 0 ) || ( latest.getVersion() == version ); break;

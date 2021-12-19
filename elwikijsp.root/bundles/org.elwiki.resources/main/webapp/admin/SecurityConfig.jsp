@@ -25,6 +25,7 @@
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%!
   public void jspInit()
@@ -39,7 +40,7 @@
 <html lang="en" name="top">
 <%
 	Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_NONE.getRequestContext() );
-  if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
+  if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
   response.setContentType("text/html; charset="+wiki.getContentEncoding() );
   verifier = new SecurityVerifier( wiki, wikiContext.getWikiSession() );
 
@@ -119,8 +120,8 @@ and everyone in between. You have been warned.  You can turn it off by setting</
 -->
 <h3>Container-Managed Authentication</h3>
 <%
-	boolean isContainerAuth = wiki.getManager( IIAuthenticationManager.class ).isContainerAuthenticated();
-  AuthorizationManager authorizationManager = wiki.getManager( AuthorizationManager.class );
+	boolean isContainerAuth = ServicesRefs.getAuthenticationManager().isContainerAuthenticated();
+  AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
   if( isContainerAuth ) {
 %>
     <!-- We are using container auth -->

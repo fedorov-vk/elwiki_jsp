@@ -21,6 +21,8 @@ package org.apache.wiki.ui.progress;
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcherServlet;
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.ui.progress.ProgressItem;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +54,18 @@ public class DefaultProgressManager implements ProgressManager {
         WikiAjaxDispatcherServlet.registerServlet( JSON_PROGRESSTRACKER, new JSONTracker() );
     }
 
+	// -- service handling --------------------------< start --
+
+    public void startup() {
+		//
+	}
+
+	public void shutdown() {
+		//
+	}
+
+	// -- service handling ---------------------------- end >--
+    
     /**
      *  You can use this to get an unique process identifier.
      *

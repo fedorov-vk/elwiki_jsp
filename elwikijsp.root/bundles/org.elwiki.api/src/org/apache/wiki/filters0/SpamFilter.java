@@ -48,6 +48,7 @@ import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 import org.suigeneris.jrcs.diff.Diff;
 import org.suigeneris.jrcs.diff.DifferentiationFailedException;
 import org.suigeneris.jrcs.diff.Revision;
@@ -679,14 +680,14 @@ public class SpamFilter extends BasePageFilter {
             boolean rebuild = false;
 
             //  Rebuild, if the spam words page, the attachment or the IP ban page has changed since.
-            final WikiPage sourceSpam = context.getEngine().getManager( PageManager.class ).getPage( m_forbiddenWordsPage );
+            final WikiPage sourceSpam = ServicesRefs.getPageManager().getPage( m_forbiddenWordsPage );
             if( sourceSpam != null ) {
                 if( m_spamPatterns == null || m_spamPatterns.isEmpty() || sourceSpam.getLastModified().after( m_lastRebuild ) ) {
                     rebuild = true;
                 }
             }
 
-            final PageAttachment att = context.getEngine().getManager( AttachmentManager.class ).getAttachmentInfo( context, m_blacklist );
+            final PageAttachment att = ServicesRefs.getAttachmentManager().getAttachmentInfo( context, m_blacklist );
             if( att != null ) {
 				if (m_spamPatterns == null
 						|| m_spamPatterns.isEmpty() /*:FVK: || att.getLastModified().after( m_lastRebuild )*/ ) {
@@ -694,7 +695,7 @@ public class SpamFilter extends BasePageFilter {
                 }
             }
 
-            final WikiPage sourceIPs = context.getEngine().getManager( PageManager.class ).getPage( m_forbiddenIPsPage );
+            final WikiPage sourceIPs = ServicesRefs.getPageManager().getPage( m_forbiddenIPsPage );
             if( sourceIPs != null ) {
                 if( m_IPPatterns == null || m_IPPatterns.isEmpty() || sourceIPs.getLastModified().after( m_lastRebuild ) ) {
                     rebuild = true;
@@ -712,7 +713,7 @@ public class SpamFilter extends BasePageFilter {
                 log.info( "IP filter reloaded - recognizing " + m_IPPatterns.size() + " patterns from page " + m_forbiddenIPsPage );
 
                 if( att != null ) {
-                    final InputStream in = context.getEngine().getManager( AttachmentManager.class ).getAttachmentStream(att);
+                    final InputStream in = ServicesRefs.getAttachmentManager().getAttachmentStream(att);
                     final StringWriter out = new StringWriter();
                     FileUtil.copyContents( new InputStreamReader( in, StandardCharsets.UTF_8 ), out );
                     final Collection< Pattern > blackList = parseBlacklist( out.toString() );
@@ -812,7 +813,7 @@ public class SpamFilter extends BasePageFilter {
         final Change ch = new Change();
         
         try {
-            final String oldText = engine.getManager( PageManager.class ).getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+            final String oldText = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
             final String[] first  = Diff.stringToArray( oldText );
             final String[] second = Diff.stringToArray( newText );
             final Revision rev = Diff.diff( first, second, new MyersDiff() );

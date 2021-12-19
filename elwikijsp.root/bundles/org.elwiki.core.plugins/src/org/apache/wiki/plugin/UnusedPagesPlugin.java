@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.util.Collection;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
-        final ReferenceManager refmgr = context.getEngine().getManager( ReferenceManager.class );
+        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
         Collection< String > links = refmgr.findUnreferenced();
 
         // filter out attachments if "excludeattachments" was requested:

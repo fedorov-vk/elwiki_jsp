@@ -32,7 +32,7 @@ import org.apache.wiki.auth.permissions.PagePermission;
  *
  *  @since 2.3
  */
-public interface AclManager extends Initializable {
+public interface AclManager {
 
 	//@formatter:off
     String PERM_REGEX = "("

@@ -47,8 +47,7 @@ public class ContentsSPIDefaultImpl implements ContentsSPI {
      * {@inheritDoc}
      */
     @Override
-    //TODO: для ElWiki в аргументах метода - не требуется Engine.   
-    public WikiPage page( final Engine engine, final String name ) {
+    public WikiPage page( final String name ) {
     	WikiPage wikiPage = Elwiki_dataFactory.eINSTANCE.createWikiPage();
     	wikiPage.setName(name);
         return wikiPage;

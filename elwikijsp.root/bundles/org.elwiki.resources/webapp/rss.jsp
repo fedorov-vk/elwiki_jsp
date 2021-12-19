@@ -34,6 +34,7 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 
 <%!
     private Logger log = Logger.getLogger("JSPWiki");
@@ -55,16 +56,16 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response ) ) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     WikiPage wikipage = wikiContext.getPage();
 
     // Redirect if RSS generation not on
-    if( wiki.getManager( RSSGenerator.class ) == null ) {
+    if( ServicesRefs.getRssGenerator() == null ) {
         response.sendError( 404, "RSS feeds are disabled at administrator request" );
         return;
     }
 
-    if( wikipage == null || !wiki.getManager( PageManager.class ).wikiPageExists( wikipage.getName() ) ) {
+    if( wikipage == null || !ServicesRefs.getPageManager().wikiPageExists( wikipage.getName() ) ) {
         response.sendError( 404, "No such page " + wikipage.getName() );
         return;
     }
@@ -101,7 +102,7 @@
         WeblogPlugin plug = new WeblogPlugin();
         changed = plug.findBlogEntries( wiki, wikipage.getName(), new Date(0L), new Date() );
     } else {
-        changed = wiki.getManager( PageManager.class ).getVersionHistory( wikipage.getName() );
+        changed = ServicesRefs.getPageManager().getVersionHistory( wikipage.getName() );
     }
     
     //
@@ -141,7 +142,7 @@
     if (element != null) {
       rss = (String) element.getObjectValue();
     } else { 
-        rss = wiki.getManager( RSSGenerator.class ).generateFeed( wikiContext, changed, mode, type );
+        rss = ServicesRefs.getRssGenerator().generateFeed( wikiContext, changed, mode, type );
         m_rssCache.put( new Element( hashKey, rss ) );
     }
     

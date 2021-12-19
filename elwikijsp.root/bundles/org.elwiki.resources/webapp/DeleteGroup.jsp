@@ -26,6 +26,7 @@
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
 <%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
+<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
@@ -37,10 +38,10 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_DELETE.getRequestContext() );
-    if(!wiki.getManager( AuthorizationManager.class ).hasAccess( wikiContext, response )) return;
+    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
     Session wikiSession = wikiContext.getWikiSession();
-    GroupManager groupMgr = wiki.getManager( GroupManager.class );
+    GroupManager groupMgr = ServicesRefs.getGroupManager();
     String name = request.getParameter( "group" );
 
     if ( name == null )

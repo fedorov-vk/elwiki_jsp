@@ -26,7 +26,11 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.rss.Entry;
+import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -79,9 +83,9 @@ public class RSS20Feed extends Feed
             //
             //  Attachments for enclosures
             //
-            if( engine.getManager( AttachmentManager.class ).hasAttachments( p ) && servletContext != null ) {
+            if( ServicesRefs.getAttachmentManager().hasAttachments( p ) && servletContext != null ) {
                 try {
-                    final List< PageAttachment > c = engine.getManager( AttachmentManager.class ).listAttachments( p );
+                    final List< PageAttachment > c = ServicesRefs.getAttachmentManager().listAttachments( p );
                     for( final PageAttachment att : c ) {
                         final Element attEl = new Element( "enclosure" );
                         attEl.setAttribute( "url", engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null ) );
@@ -138,10 +142,10 @@ public class RSS20Feed extends Feed
         channel.addContent( new Element("language").setText(getChannelLanguage()));
         channel.addContent( new Element("generator").setText("JSPWiki "+Release.VERSTR));
 
-        String mail = engine.getManager( VariableManager.class ).getVariable(m_wikiContext,RSSGenerator.PROP_RSS_AUTHOREMAIL);
+        String mail = ServicesRefs.getVariableManager().getVariable(m_wikiContext,RSSGenerator.PROP_RSS_AUTHOREMAIL);
         if( mail != null )
         {
-            final String editor = engine.getManager( VariableManager.class ).getVariable( m_wikiContext,RSSGenerator.PROP_RSS_AUTHOR );
+            final String editor = ServicesRefs.getVariableManager().getVariable( m_wikiContext,RSSGenerator.PROP_RSS_AUTHOR );
 
             if( editor != null )
                 mail = mail + " ("+editor+")";

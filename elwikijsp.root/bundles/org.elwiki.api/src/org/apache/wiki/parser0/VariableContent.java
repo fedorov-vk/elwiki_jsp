@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
+import org.elwiki.services.ServicesRefs;
 import org.jdom2.Text;
 
 /**
@@ -72,7 +73,7 @@ public class VariableContent extends Text {
             result = "[" + m_varName + "]";
         } else {
             try {
-                result = context.getEngine().getManager( VariableManager.class ).parseAndGetValue( context, m_varName );
+                result = ServicesRefs.getVariableManager().parseAndGetValue( context, m_varName );
             } catch( final NoSuchVariableException e ) {
                 result = MarkupParser.makeError( "No such variable: " + e.getMessage() ).getText(); 
             }
