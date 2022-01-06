@@ -110,11 +110,12 @@ public interface CommandResolver {
     String getSpecialPageReference( final String page );
 
     /**
-     * Determines the correct wiki page based on a supplied request context and HTTP request. This method attempts to determine the page
-     * requested by a user, taking into acccount special pages. The resolution algorithm will:
+     * Determines the correct wiki page based on a supplied request context and HTTP request.
+     * This method attempts to determine the page requested by a user, taking into acccount special pages.
+     * The resolution algorithm will:
      * <ul>
-     * <li>Extract the page name from the URL according to the rules for the current {@link org.apache.wiki.url0.URLConstructor}. If a
-     * page name was passed in the request, return the correct name after taking into account potential plural matches.</li>
+     * <li>Extract the page name from the URL according to the rules for the current {@link org.apache.wiki.url0.URLConstructor}.
+     * If a page name was passed in the request, return the correct name after taking into account potential plural matches.</li>
      * <li>If the extracted page name is <code>null</code>, attempt to see if a "special page" was intended by examining the servlet path.
      * For example, the request path "/UserPreferences.jsp" will resolve to "UserPreferences."</li>
      * <li>If neither of these methods work, this method returns <code>null</code></li>

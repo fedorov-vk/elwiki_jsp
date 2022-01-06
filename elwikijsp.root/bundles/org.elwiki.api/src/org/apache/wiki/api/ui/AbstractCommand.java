@@ -40,17 +40,20 @@ public abstract class AbstractCommand implements Command {
     private final Object m_target;
 
     /**
-     * Constructs a new Command with a specified wiki context, URL pattern, content template and target. The URL pattern is used to derive
-     * the JSP; if it is a "local" JSP (that is, it does not contain the <code>http://</code> or <code>https://</code> prefixes),
-     * then the JSP will be a cleansed version of the URL pattern; symbols (such as <code>%u</code>) will removed. If it the supplied
-     * URL pattern points to a non-local destination, the JSP will be set to the value supplied, unmodified.
-     *
-     * @param requestContext the request context
-     * @param urlPattern the URL pattern
-     * @param contentTemplate the content template; may be <code>null</code>
-     * @param target the target of the command, such as a WikiPage; may be <code>null</code>
-     * @throws IllegalArgumentException if the request content or URL pattern is <code>null</code>
-     */
+	 * Constructs a new Command with a specified wiki context, URL pattern, content template and
+	 * target. The URL pattern is used to derive the JSP; if it is a "local" JSP (that is, it does
+	 * not contain the <code>http://</code> or <code>https://</code> prefixes), then the JSP will be
+	 * a cleansed version of the URL pattern; symbols (such as <code>%u</code>) will removed. If it
+	 * the supplied URL pattern points to a non-local destination, the JSP will be set to the value
+	 * supplied, unmodified.
+	 *
+	 * @param requestContext  the request context
+	 * @param urlPattern      the URL pattern
+	 * @param contentTemplate the content template; may be <code>null</code>
+	 * @param target          the target of the command, such as a WikiPage; may be
+	 *                        <code>null</code>
+	 * @throws IllegalArgumentException if the request content or URL pattern is <code>null</code>
+	 */
     protected AbstractCommand( final String requestContext, final String urlPattern, final String contentTemplate, final Object target ) {
         if( requestContext == null || urlPattern == null ) {
             throw new IllegalArgumentException( "Request context, URL pattern and type must not be null." );

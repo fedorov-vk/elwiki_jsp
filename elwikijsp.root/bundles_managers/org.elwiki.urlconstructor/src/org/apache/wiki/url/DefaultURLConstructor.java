@@ -173,8 +173,8 @@ public class DefaultURLConstructor implements URLConstructor {
     }
 
 	@Override
-	public String parsePageId(String requestContext, HttpServletRequest request, Charset contentEncodingCs) {
-        String pageId = request.getParameter( "pageId" );
+	public String parsePageId(HttpServletRequest request) {
+		String pageId = request.getParameter("pageId");
 		return pageId;
 	}
     

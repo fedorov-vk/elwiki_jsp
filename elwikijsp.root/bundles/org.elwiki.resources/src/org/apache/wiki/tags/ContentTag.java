@@ -176,9 +176,9 @@ public class ContentTag extends WikiTagBase {
                 throw new JspException( "This template uses <wiki:Content/> in an unsupported context: " + requestContext );
             }
 
-            final String page = ServicesRefs.getTemplateManager().findJSP( pageContext,
-                                                                                                 m_wikiContext.getTemplate(),
-                                                                                                 contentTemplate );
+			final String page = ServicesRefs.getTemplateManager().findJSP(pageContext, m_wikiContext.getTemplate(),
+					contentTemplate);
+
             pageContext.include( page );
         }
         catch( final ServletException e )
