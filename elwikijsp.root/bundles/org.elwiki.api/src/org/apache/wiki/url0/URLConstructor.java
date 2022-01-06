@@ -87,7 +87,13 @@ public interface URLConstructor extends Initializable {
 
         return name;
     }
-
-	String parsePageId(String requestContext, HttpServletRequest request, Charset contentEncodingCs);
+    
+	/**
+	 * Takes the number of the page from the request URI. If there is no page, returns null.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	String parsePageId(HttpServletRequest request);
 
 }

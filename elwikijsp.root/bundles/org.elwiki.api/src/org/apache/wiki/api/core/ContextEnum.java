@@ -19,6 +19,14 @@
 package org.apache.wiki.api.core;
 
 
+/**
+ * Every enum contains 3 strings:
+ * <ul>
+ * <li> request context ID
+ * <li> URL pattern
+ * <li> JSP file name from the templates 
+ * </ul>
+ */
 public enum ContextEnum {
 
     GROUP_DELETE( "deleteGroup", "%uDeleteGroup.jsp?group=%n", null ),

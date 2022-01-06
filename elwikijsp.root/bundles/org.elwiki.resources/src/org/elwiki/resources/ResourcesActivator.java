@@ -1,9 +1,8 @@
 package org.elwiki.resources;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.framework.ServiceReference;
 
 public class ResourcesActivator implements BundleActivator {
 
@@ -22,17 +21,10 @@ public class ResourcesActivator implements BundleActivator {
 	}
 
 	public static <T> T getService(Class<T> clazz) {
-		Bundle bundle = context.getBundle();
-		if (bundle != null) {
-			ServiceTracker<T, T> st = new ServiceTracker<T, T>(bundle.getBundleContext(), clazz, null);
-			st.open();
-			if (st != null) {
-				try {
-					return st.waitForService(1500L);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+		BundleContext bundleContext = ResourcesActivator.getContext();
+		ServiceReference<T> ref = context.getServiceReference(clazz);
+		if (ref != null) {
+			return bundleContext.getService(ref);
 		}
 		return null;
 	}

@@ -42,6 +42,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
+import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,10 +56,12 @@ import java.util.Locale;
 import java.util.PropertyPermission;
 import java.util.TimeZone;
 
+/*TODO: удалить engine в аргументах конструкоров и т.д. */
 
 /**
- *  <p>Provides state information throughout the processing of a page.  A WikiContext is born when the JSP pages that are the main entry
- *  points, are invoked.  The JSPWiki engine creates the new WikiContext, which basically holds information about the page, the
+ *  <p>Provides state information throughout the processing of a page.</br>
+ *  A WikiContext is born when triggered filter before handle of servlet request.
+ *  The JSPWiki engine creates the new WikiContext, which basically holds information about the page, the
  *  handling engine, and in which context (view, edit, etc) the call was done.</p>
  *  <p>A WikiContext also provides request-specific variables, which can be used to communicate between plugins on the same page, or
  *  between different instances of the same plugin.  A WikiContext variable is valid until the processing of the page has ended.  For
@@ -71,6 +74,10 @@ import java.util.TimeZone;
  */
 public class WikiContext implements Context, Command {
 
+	private static final Logger log = Logger.getLogger( WikiContext.class );
+
+	private static final Permission DUMMY_PERMISSION = new PropertyPermission( "os.name", "read" );
+	
     private Command  m_command;
     private WikiPage m_page;
     private WikiPage m_realPage;
@@ -85,10 +92,6 @@ public class WikiContext implements Context, Command {
     private Session m_session;
 	final private IWikiConfiguration wikiConfiguration;
 
-    private static final Logger log = Logger.getLogger( WikiContext.class );
-
-    private static final Permission DUMMY_PERMISSION = new PropertyPermission( "os.name", "read" );
-
     /**
      *  Create a new WikiContext for the given WikiPage. Delegates to {@link #WikiContext(Engine, HttpServletRequest, WikiPage)}.
      *
@@ -98,6 +101,37 @@ public class WikiContext implements Context, Command {
     public WikiContext( final Engine engine, final WikiPage page ) {
         this( engine, null, findCommand( engine, null, page ) );
     }
+
+    /**
+     * Creates a new WikiContext for the given Engine, WikiPage and HttpServletRequest. This method simply looks up the appropriate
+     * Command using {@link #findCommand(Engine, HttpServletRequest, WikiPage)} and delegates to
+     * {@link #WikiContext(Engine, HttpServletRequest, Command)}.
+     *
+     * @param engine The Engine that is handling the request
+     * @param request The HttpServletRequest that should be associated with this context. This parameter may be <code>null</code>.
+     * @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must supply this parameter
+     */
+    public WikiContext( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
+        this( engine, request, findCommand( engine, request, page ) );
+    }
+
+    /**
+     *  Creates a new WikiContext from a supplied HTTP request, using a default wiki context.
+     *
+     *  @param engine The Engine that is handling the request
+     *  @param request the HTTP request
+     *  @param requestContext the default context to use
+     *  @see org.apache.wiki.api.ui.CommandResolver
+     *  @see org.apache.wiki.api.core.Command
+     *  @since 2.1.15.
+     */
+    public WikiContext( final Engine engine, final HttpServletRequest request, final String requestContext ) {
+        this( engine, request, ServicesRefs.getCommandResolver().findCommand( request, requestContext ) );
+        if( !engine.isConfigured() ) {
+            throw new InternalWikiException( "Engine has not been properly started.  It is likely that the configuration is faulty.  Please check all logs for the possible reason." );
+        }
+    }
+
 
     /**
      * <p>
@@ -154,36 +188,6 @@ public class WikiContext implements Context, Command {
 
         // Figure out what template to use
         setDefaultTemplate( request );
-    }
-
-    /**
-     * Creates a new WikiContext for the given Engine, WikiPage and HttpServletRequest. This method simply looks up the appropriate
-     * Command using {@link #findCommand(Engine, HttpServletRequest, WikiPage)} and delegates to
-     * {@link #WikiContext(Engine, HttpServletRequest, Command)}.
-     *
-     * @param engine The Engine that is handling the request
-     * @param request The HttpServletRequest that should be associated with this context. This parameter may be <code>null</code>.
-     * @param page The WikiPage. If you want to create a WikiContext for an older version of a page, you must supply this parameter
-     */
-    public WikiContext( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
-        this( engine, request, findCommand( engine, request, page ) );
-    }
-
-    /**
-     *  Creates a new WikiContext from a supplied HTTP request, using a default wiki context.
-     *
-     *  @param engine The Engine that is handling the request
-     *  @param request the HTTP request
-     *  @param requestContext the default context to use
-     *  @see org.apache.wiki.api.ui.CommandResolver
-     *  @see org.apache.wiki.api.core.Command
-     *  @since 2.1.15.
-     */
-    public WikiContext( final Engine engine, final HttpServletRequest request, final String requestContext ) {
-        this( engine, request, ServicesRefs.getCommandResolver().findCommand( request, requestContext ) );
-        if( !engine.isConfigured() ) {
-            throw new InternalWikiException( "Engine has not been properly started.  It is likely that the configuration is faulty.  Please check all logs for the possible reason." );
-        }
     }
     
     /**
