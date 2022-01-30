@@ -22,18 +22,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.LinkParsingOperations;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
@@ -78,7 +78,9 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 	@Override
 	public void initTag() {
 		super.initTag();
-		m_version = m_cssClass = m_style = m_title = m_target = m_compareToVersion = m_rel = m_jsp = m_ref = m_accesskey = m_templatefile = null;
+		m_version = m_cssClass = m_style = m_title = m_target = null;
+		m_compareToVersion = m_rel = m_jsp = m_ref = m_accesskey = null;
+		m_tabindex = m_templatefile = null;
 		m_context = ContextEnum.PAGE_VIEW.getRequestContext();
 		m_containedParams = new HashMap<>();
 	}
@@ -178,7 +180,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 					"templates/" + template + "/" + m_templatefile, params);
 		} else if (m_jsp != null) {
 			final String params = addParamsForRecipient(null, m_containedParams);
-			//url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
+			// url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params);
 		} else if (m_ref != null) {
 			final int interwikipoint;
@@ -201,7 +203,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 
 				final String parms = (m_version != null) ? "version=" + getVersion() : null;
 
-				//  Internal wiki link, but is it an attachment link?
+				// Internal wiki link, but is it an attachment link?
 				final WikiPage p = ServicesRefs.getPageManager().getPage(m_pageName);
 				if (p instanceof PageAttachment) {
 					url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), m_pageName);
@@ -246,7 +248,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 					ctx = ContextEnum.PAGE_ATTACH.getRequestContext();
 				}
 				url = engine.getURL(ctx, m_pageName, parms);
-				//url = m_wikiContext.getURL( ctx, m_pageName, parms );
+				// url = m_wikiContext.getURL( ctx, m_pageName, parms );
 			} else {
 				url = makeBasicURL(m_context, m_pageName, parms);
 			}
@@ -331,20 +333,24 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 	@Override
 	public int doEndTag() {
 		try {
-			final Engine engine = m_wikiContext.getEngine();
 			final JspWriter out = pageContext.getOut();
 			final String url = figureOutURL();
 
 			final StringBuilder sb = new StringBuilder(20);
 
-			sb.append((m_cssClass != null) ? "class=\"" + m_cssClass + "\" " : "");
-			sb.append((m_style != null) ? "style=\"" + m_style + "\" " : "");
-			sb.append((m_target != null) ? "target=\"" + m_target + "\" " : "");
-			sb.append((m_title != null) ? "title=\"" + m_title + "\" " : "");
-			sb.append((m_rel != null) ? "rel=\"" + m_rel + "\" " : "");
-			sb.append((m_accesskey != null) ? "accesskey=\"" + m_accesskey + "\" " : "");
-			sb.append((m_tabindex != null) ? "tabindex=\"" + m_tabindex + "\" " : "");
+			BiConsumer<String, String> appender = (option, var) -> {
+				if (var != null)
+					sb.append(option + '"' + var + "\" ");
+			};
+			appender.accept("class=", m_cssClass);
+			appender.accept("style=", m_style);
+			appender.accept("target=", m_target);
+			appender.accept("title=", m_title);
+			appender.accept("rel=", m_rel);
+			appender.accept("accesskey=", m_accesskey);
+			appender.accept("tabindex=", m_tabindex);
 
+			//TODO: пересмотреть код - страница не наследует Attach
 			if (ServicesRefs.getPageManager().getPage(m_pageName) instanceof PageAttachment) {
 				sb.append(ServicesRefs.getAttachmentManager().forceDownload(m_pageName) ? "download " : "");
 			}
@@ -359,13 +365,14 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				break;
 			}
 
-			// Add any explicit body content. This is not the intended use of LinkTag, but happens to be the way it has worked previously.
+			// Add any explicit body content. This is not the intended use of LinkTag,
+			// but happens to be the way it has worked previously.
 			if (m_bodyContent != null) {
 				final String linktext = m_bodyContent.getString().trim();
 				out.write(linktext);
 			}
 
-			//  Finish off by closing opened anchor
+			// Finish off by closing opened anchor
 			if (m_format == ANCHOR)
 				out.print("</a>");
 		} catch (final Exception e) {

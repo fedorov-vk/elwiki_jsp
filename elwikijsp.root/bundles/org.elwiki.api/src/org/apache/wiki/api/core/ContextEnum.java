@@ -30,22 +30,22 @@ package org.apache.wiki.api.core;
 public enum ContextEnum {
 
     GROUP_DELETE( "deleteGroup", "%uDeleteGroup.jsp?group=%n", null ),
-    GROUP_EDIT( "editGroup", "%uEditGroup.jsp?group=%n", "EditGroupContent.jsp" ),
+    GROUP_EDIT( "editGroup", "%ueditGroup.cmd?group=%n", "EditGroupContent.jsp" ),
     GROUP_VIEW( "viewGroup", "%uGroup.jsp?group=%n", "GroupContent.jsp" ),
 
     PAGE_ATTACH( "att", "%uattach/%n", null ),
     PAGE_COMMENT( "comment", "%uComment.jsp?page=%n", "CommentContent.jsp" ),
     PAGE_CONFLICT ( "conflict", "%uPageModified.jsp?page=%n", "ConflictContent.jsp" ),
     PAGE_DELETE( "del", "%uDelete.jsp?page=%n", null ),
-    PAGE_DIFF( "diff", "%uDiff.jsp?page=%n", "DiffContent.jsp" ),
-    PAGE_EDIT( "edit", "%uEdit.jsp?page=%n", "EditContent.jsp" ),
-    PAGE_INFO( "info", "%uPageInfo.jsp?page=%n", "InfoContent.jsp" ),
+    PAGE_DIFF( "diff", "%udiff.cmd?page=%n", "DiffContent.jsp" ),
+    PAGE_EDIT( "edit", "%uedit.cmd?page=%n", "EditContent.jsp" ),
+    PAGE_INFO( "info", "%uinfo.cmd?page=%n", "InfoContent.jsp" ),
     PAGE_NONE( "", "%u%n", null ),
-    PAGE_PREVIEW( "preview", "%uPreview.jsp?page=%n", "PreviewContent.jsp" ),
-    PAGE_RENAME( "rename", "%uRename.jsp?page=%n", "InfoContent.jsp" ),
+    PAGE_PREVIEW( "preview", "%upreview.cmd?page=%n", "PreviewContent.jsp" ),
+    PAGE_RENAME( "rename", "%urename.cmd?page=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss", "%urss.jsp", null ),
-    PAGE_UPLOAD( "upload", "%uUpload.jsp?page=%n", null ),
-    PAGE_VIEW( "view", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
+    PAGE_UPLOAD( "upload", "%uupload.cmd?page=%n", "AttachmentTab.jsp" ),
+    PAGE_VIEW( "view", "%uview.cmd?pageId=%n", "PageContent.jsp" ),
 
     //:FVK: PAGE_VIEWID( "viewId", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
     
@@ -56,32 +56,32 @@ public enum ContextEnum {
     WIKI_ERROR( "error", "%uError.jsp", "DisplayMessage.jsp" ),
     WIKI_FIND( "find", "%uSearch.jsp", "FindContent.jsp" ),
     WIKI_INSTALL( "install", "%uInstall.jsp", null ),
-    WIKI_LOGIN( "login", "%uLogin.jsp?redirect=%n", "LoginContent.jsp" ),
-    WIKI_LOGOUT( "logout", "%uLogout.jsp", null ),
+    WIKI_LOGIN( "login", "%ulogin.cmd?redirect=%n", "LoginContent.jsp" ),
+    WIKI_LOGOUT( "logout", "%ulogout.cmd", null ),
     WIKI_MESSAGE( "message", "%uMessage.jsp", "DisplayMessage.jsp" ),
-    WIKI_PREFS( "prefs", "%uUserPreferences.jsp", "PreferencesContent.jsp" ),
+    WIKI_PREFS( "prefs", "%uprefs.cmd", "PreferencesContent.jsp" ),
     WIKI_WORKFLOW( "workflow", "%uWorkflow.jsp", "WorkflowContent.jsp" );
 
+	private final String requestContext;
+	private final String urlPattern;
     private final String contentTemplate;
-    private final String requestContext;
-    private final String urlPattern;
 
     ContextEnum( final String requestContext, final String urlPattern, final String contentTemplate ) {
         this.requestContext = requestContext;
         this.urlPattern = urlPattern;
         this.contentTemplate = contentTemplate;
     }
-
-    public String getContentTemplate() {
-        return contentTemplate;
-    }
-
+    
     public String getRequestContext() {
-        return requestContext;
+    	return requestContext;
     }
-
+    
     public String getUrlPattern() {
-        return urlPattern;
+    	return urlPattern;
+    }
+    
+    public String getContentTemplate() {
+    	return contentTemplate;
     }
 
 }

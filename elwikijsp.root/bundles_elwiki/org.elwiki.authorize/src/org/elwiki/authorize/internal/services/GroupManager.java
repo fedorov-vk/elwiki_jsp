@@ -126,6 +126,70 @@ public class GroupManager implements IAuthorizer {
 
 	private UserAdmin userAdminService;
 
+	// -- service handling --------------------------< start --
+
+	// -- start code block -- Services reference setters
+	
+	public void setUserAdminService(UserAdmin userAdmin) {
+		this.userAdminService = userAdmin;
+	}
+
+	// -- end code block -- Services reference setters
+
+	public synchronized void startup(BundleContext bc) throws WikiException {
+		/*ServiceReference<?> ref = bc.getServiceReference(UserAdmin.class.getName());
+		if (ref != null) {
+			this.userAdminService = (UserAdmin) bc.getService(ref);
+		}*/
+	}
+
+	/**
+	 * Initializes the group cache by initializing the group database and obtaining a list of all of
+	 * the groups it stores.
+	 * 
+	 * @see GroupDatabase#initialize()
+	 * @see GroupDatabase#groups()
+	 * @throws WikiSecurityException
+	 *                               if GroupManager cannot be initialized
+	 */
+	/*:FVK: 
+	@Override
+	public void initialize(IApplicationSession applicationSession1) throws WikiSecurityException {
+		this.applicationSession = applicationSession1;
+		this.m_engine = this.applicationSession.getWikiEngine();
+
+		/ *:FVK: - group Database - устарело (XML...)
+		try {
+			this.m_groupDatabase = getGroupDatabase();
+		} catch (WikiException e) {
+			throw new WikiSecurityException(e.getMessage(), e);
+		}
+		* /
+
+		// Load all groups from the database into the cache
+		//:FVK:		Group[] groups = this.m_groupDatabase.groups();
+		//		synchronized (this.m_groups) {
+		//			for (Group group : groups) {
+		//				// Add new group to cache; fire GROUP_ADD event
+		//				this.m_groups.put(group.getPrincipal(), group);
+		//				fireEvent(WikiSecurityEvent.GROUP_ADD, group);
+		//			}
+		//		}
+
+		// Make the GroupManager listen for WikiEvents (WikiSecurityEvents for changed user profiles)
+		//:FVK: this.applicationSession.getUserManager().addWikiEventListener(this);
+
+		// Success!
+		//:FVK:		log.info("Authorizer GroupManager initialized successfully; loaded " + groups.length + " group(s).");
+	}
+	*/
+
+	public synchronized void shutdown() {
+		//
+	}
+	
+	// -- service handling ---------------------------- end >--
+	
 	// == CODE ================================================================
 
 	@Override
@@ -623,58 +687,6 @@ public class GroupManager implements IAuthorizer {
 	}
 
 	// -- service support -----------------------------------------------------
-
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		ServiceReference<?> ref = bc.getServiceReference(UserAdmin.class.getName());
-		if (ref != null) {
-			this.userAdminService = (UserAdmin) bc.getService(ref);
-		}
-	}
-
-	/**
-	 * Initializes the group cache by initializing the group database and obtaining a list of all of
-	 * the groups it stores.
-	 * 
-	 * @see GroupDatabase#initialize()
-	 * @see GroupDatabase#groups()
-	 * @throws WikiSecurityException
-	 *                               if GroupManager cannot be initialized
-	 */
-	/*:FVK: 
-	@Override
-	public void initialize(IApplicationSession applicationSession1) throws WikiSecurityException {
-		this.applicationSession = applicationSession1;
-		this.m_engine = this.applicationSession.getWikiEngine();
-
-		/ *:FVK: - group Database - устарело (XML...)
-		try {
-			this.m_groupDatabase = getGroupDatabase();
-		} catch (WikiException e) {
-			throw new WikiSecurityException(e.getMessage(), e);
-		}
-		* /
-
-		// Load all groups from the database into the cache
-		//:FVK:		Group[] groups = this.m_groupDatabase.groups();
-		//		synchronized (this.m_groups) {
-		//			for (Group group : groups) {
-		//				// Add new group to cache; fire GROUP_ADD event
-		//				this.m_groups.put(group.getPrincipal(), group);
-		//				fireEvent(WikiSecurityEvent.GROUP_ADD, group);
-		//			}
-		//		}
-
-		// Make the GroupManager listen for WikiEvents (WikiSecurityEvents for changed user profiles)
-		//:FVK: this.applicationSession.getUserManager().addWikiEventListener(this);
-
-		// Success!
-		//:FVK:		log.info("Authorizer GroupManager initialized successfully; loaded " + groups.length + " group(s).");
-	}
-	*/
-
-	public synchronized void shutdown() {
-		//
-	}
 
 	@Override
 	public Group getGroup(String groupName) {

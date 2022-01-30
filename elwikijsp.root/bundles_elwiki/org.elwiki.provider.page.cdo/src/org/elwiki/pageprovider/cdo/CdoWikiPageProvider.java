@@ -869,12 +869,12 @@ public class CdoWikiPageProvider implements PageProvider {
 		return wikiPages;
 	}
 
-	//:FVK: @Override
-	public String getMainPageCdoId() {
+	@Override
+	public String getMainPageId() {
 		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
-		String cdoId = pagesStore.getMainPageId();
+		String mainPageId = pagesStore.getMainPageId();
 
-		return cdoId;
+		return mainPageId;
 	}
 
 	//:FVK: @Override

@@ -18,8 +18,10 @@ import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
+
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
@@ -69,7 +71,7 @@ public class ServicesRefs implements Engine {
 
 	/** Stores configuration. */
 	private static IWikiConfiguration wikiConfiguration;
-	
+
 	private static AclManager aclManager;
 	private static AttachmentManager attachmentManager;
 	private static PageManager pageManager;
@@ -95,10 +97,12 @@ public class ServicesRefs implements Engine {
 	private static URLConstructor urlConstructor;
 	private static RSSGenerator rssGenerator;
 
-	public static ServicesRefs Instance; 
-	
+	public static ServicesRefs Instance;
+
 	private BundleContext bundleContext;
 
+    private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
+	
 	// -- service handling --------------------------< start --
 
 	// -- start code block -- Services reference setters
@@ -106,7 +110,7 @@ public class ServicesRefs implements Engine {
 	public void setWikiConfiguration(IWikiConfiguration wikiConfiguration) {
 		ServicesRefs.wikiConfiguration = wikiConfiguration;
 	}
-	
+
 	public void setAclManager(AclManager aclManager) {
 		ServicesRefs.aclManager = aclManager;
 	}
@@ -204,7 +208,7 @@ public class ServicesRefs implements Engine {
 	}
 
 	// -- end code block -- Services reference setters
-	
+
 	public synchronized void startupService(BundleContext bc) throws WikiException {
 		this.bundleContext = bc;
 		ServicesRefs.Instance = this;
@@ -751,6 +755,18 @@ public class ServicesRefs implements Engine {
 		return urlConstructor.makeURL(context, pageName, params);
 	}
 
+	public void setServletContext(ServletContext context) {
+		this.m_servletContext = context;
+		/*:FVK: System.err.println("---> setServletContext()");
+		StackTraceElement[] st = Thread.currentThread().getStackTrace();
+		for (int n = 1; n < 12; n++) {
+			if (st.length > n) {
+				StackTraceElement sTE = st[n];
+				System.err.println("    " + sTE.getClassName() + "::" + sTE.getMethodName() + "()");
+			}
+		}*/
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public ServletContext getServletContext() {
@@ -850,26 +866,48 @@ public class ServicesRefs implements Engine {
 	}
 	///////////////////////////////////////////////////////////
 
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings( "unchecked" )
-    @NonNull
+	/** {@inheritDoc} */
+	@Override
+	@SuppressWarnings("unchecked")
+	@NonNull
 	public <T> @NonNull T getManager(Class<T> manager) {
-    	T result = ( T )managers.entrySet().stream()
-                .filter( e -> manager.isAssignableFrom( e.getKey() ) )
-                .map( Map.Entry::getValue )
-                .findFirst().orElse( null );
-    	return result;
+		T result = (T) managers.entrySet().stream()
+                	.filter(e -> manager.isAssignableFrom(e.getKey()))
+                	.map(Map.Entry::getValue)
+                	.findFirst().orElse(null);
+		return result;
 	}
 
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings( "unchecked" )
+	/** {@inheritDoc} */
+	@Override
+	@SuppressWarnings("unchecked")
 	public <T> List<T> getManagers(Class<T> manager) {
-        return ( List< T > )managers.entrySet().stream()
-                .filter( e -> manager.isAssignableFrom( e.getKey() ) )
-                .map( Map.Entry::getValue )
-                .collect( Collectors.toList() );
+		return (List<T>) managers.entrySet().stream()
+                	.filter(e -> manager.isAssignableFrom(e.getKey()))
+                	.map(Map.Entry::getValue)
+                	.collect(Collectors.toList());
 	}
 
+	/**
+	 * Возвращает контекст Wiki для текущего процесса.
+	 *
+	 * @return контекста Wiki для текущего процесса.
+	 */
+	public static Context getCurrentContext() {
+        return thWikiContext.get();
+	}
+
+	/**
+	 * Сохранение контекста Wiki для текущего процесса.
+	 *  
+	 * @param wikiContext
+	 */
+	public static void setCurrentContext(Context wikiContext) {
+        thWikiContext.set(wikiContext);
+	}
+
+	public static void removeCurrentContext() {
+        thWikiContext.remove();
+	}
+	
 }

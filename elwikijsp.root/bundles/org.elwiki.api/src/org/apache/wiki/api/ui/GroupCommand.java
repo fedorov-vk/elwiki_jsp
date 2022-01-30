@@ -39,11 +39,11 @@ public final class GroupCommand extends AbstractCommand {
     /** GroupCommand for editing a group. */
     public static final Command EDIT_GROUP = new GroupCommand( ContextEnum.GROUP_EDIT, null, GroupPermission.EDIT_ACTION );
 
-       /** GroupCommand for viewing a group. */
+    /** GroupCommand for viewing a group. */
     public static final Command VIEW_GROUP = new GroupCommand( ContextEnum.GROUP_VIEW, null, GroupPermission.VIEW_ACTION );
 
     private final String m_action;
-    
+
     private final Permission m_permission;
 
     /**
@@ -55,9 +55,10 @@ public final class GroupCommand extends AbstractCommand {
      * @param action the action used to construct a suitable GroupPermission
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private GroupCommand( final ContextEnum currentContext, final GroupPrincipal target, final String action ) {
+/*    private GroupCommand( final ContextEnum currentContext, final GroupPrincipal target, final String action ) {
         this( currentContext.getRequestContext(), currentContext.getUrlPattern(), currentContext.getContentTemplate(), target, action );
     }
+*/    
     
     /**
      * Constructs a new Command with a specified wiki context, URL pattern, type, and content template. The WikiPage for this command is
@@ -70,12 +71,10 @@ public final class GroupCommand extends AbstractCommand {
      * @param contentTemplate the content template; may be <code>null</code>
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private GroupCommand( final String requestContext,
-                          final String urlPattern,
-                          final String contentTemplate,
+    private GroupCommand( final ContextEnum cntextCmd,
                           final GroupPrincipal target,
                           final String action ) {
-        super( requestContext, urlPattern, contentTemplate, target );
+        super( cntextCmd, target );
         m_action = action;
         if ( target == null || m_action == null ) {
             m_permission = null;
@@ -96,7 +95,7 @@ public final class GroupCommand extends AbstractCommand {
         if( !( target instanceof GroupPrincipal ) ) {
             throw new IllegalArgumentException( "Target must non-null and of type GroupPrincipal." );
         }
-        return new GroupCommand( getRequestContext(), getURLPattern(), getContentTemplate(), ( GroupPrincipal )target, m_action );
+        return new GroupCommand( getContextCmd(), ( GroupPrincipal )target, m_action );
     }
     
     /**

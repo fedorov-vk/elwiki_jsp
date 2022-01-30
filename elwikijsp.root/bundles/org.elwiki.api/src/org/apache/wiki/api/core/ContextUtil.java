@@ -1,5 +1,6 @@
 package org.apache.wiki.api.core;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
@@ -30,7 +31,8 @@ public class ContextUtil {
 	 * @return the edited text, if present in the session page context or as a parameter
 	 */
 	public static String getEditedText(final PageContext ctx) {
-		String usertext = ctx.getRequest().getParameter(EditorManager.REQ_EDITEDTEXT);
+		ServletRequest servletRequest = ctx.getRequest();
+		String usertext = servletRequest.getParameter(EditorManager.REQ_EDITEDTEXT);
 		if (usertext == null) {
 			usertext = (String) ctx.findAttribute(EditorManager.ATTR_EDITEDTEXT);
 		}

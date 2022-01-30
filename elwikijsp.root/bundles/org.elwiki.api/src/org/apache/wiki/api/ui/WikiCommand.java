@@ -56,9 +56,10 @@ public final class WikiCommand extends AbstractCommand {
      * @param currentContext the current context.
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private WikiCommand( final ContextEnum currentContext, final String target ) {
-        this( currentContext.getRequestContext(), currentContext.getUrlPattern(), currentContext.getContentTemplate(), target );
+/*    private WikiCommand( final ContextEnum currentContext, final String target ) {
+        this( currentContext, target );
     }
+*/
 
     /**
      * Constructs a new Command with a specified wiki context, URL pattern, type, and content template. The WikiPage for this action is
@@ -68,10 +69,11 @@ public final class WikiCommand extends AbstractCommand {
      * @param action The action
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private WikiCommand( final ContextEnum currentContext, final String target, final String action ) {
+/*    private WikiCommand( final ContextEnum currentContext, final String target, final String action ) {
         this( currentContext.getRequestContext(), currentContext.getUrlPattern(), currentContext.getContentTemplate(), target, action );
     }
-    
+*/
+
     /**
      * Constructs a new Command with a specified wiki context, URL pattern, type, and content template. The WikiPage for this action is
      * initialized to <code>null</code>.
@@ -82,12 +84,10 @@ public final class WikiCommand extends AbstractCommand {
      * @param action The action
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private WikiCommand( final String requestContext,
-                         final String urlPattern,
-                         final String contentTemplate,
+    private WikiCommand( ContextEnum contextCmd,
                          final String target,
                          final String action ) {
-        super( requestContext, urlPattern, contentTemplate, target );
+        super( contextCmd, target );
         m_action = action;
         if ( target == null || m_action == null ) {
             m_permission = null;
@@ -105,8 +105,8 @@ public final class WikiCommand extends AbstractCommand {
      * @param target the target of the command, such as a WikiPage; may be <code>null</code>
      * @throws IllegalArgumentException if the request content or URL pattern is <code>null</code>
      */
-    private WikiCommand( final String requestContext, final String urlPattern, final String contentTemplate, final String target ) {
-        super( requestContext, urlPattern, contentTemplate, target );
+    private WikiCommand( ContextEnum context, String target ) {
+        super( context, target );
         m_action = null;
         m_permission = new AllPermission( target );
     }
@@ -124,7 +124,7 @@ public final class WikiCommand extends AbstractCommand {
         if ( !( target instanceof String ) ) {
             throw new IllegalArgumentException( "Target must non-null and of type String." );
         }
-        return new WikiCommand( getRequestContext(), getURLPattern(), getContentTemplate(), (String)target, m_action );
+        return new WikiCommand( getContextCmd(), (String)target, m_action );
     }
     
     /**
