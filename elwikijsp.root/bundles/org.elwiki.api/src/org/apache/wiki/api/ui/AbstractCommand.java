@@ -19,6 +19,7 @@
 package org.apache.wiki.api.ui;
 
 import org.apache.wiki.api.core.Command;
+import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.util.TextUtil;
 
 
@@ -38,6 +39,7 @@ public abstract class AbstractCommand implements Command {
     private final String m_requestContext;
     private final String m_contentTemplate;
     private final Object m_target;
+	private final ContextEnum contextCmd;
 
     /**
 	 * Constructs a new Command with a specified wiki context, URL pattern, content template and
@@ -54,12 +56,20 @@ public abstract class AbstractCommand implements Command {
 	 *                        <code>null</code>
 	 * @throws IllegalArgumentException if the request content or URL pattern is <code>null</code>
 	 */
-    protected AbstractCommand( final String requestContext, final String urlPattern, final String contentTemplate, final Object target ) {
+    protected AbstractCommand( ContextEnum contextCmd, final Object target ) {
+    	final String requestContext = contextCmd.getRequestContext(); 
+    	final String urlPattern = contextCmd.getUrlPattern();
+    	final String contentTemplate = contextCmd.getContentTemplate();
         if( requestContext == null || urlPattern == null ) {
             throw new IllegalArgumentException( "Request context, URL pattern and type must not be null." );
         }
 
+        this.contextCmd = contextCmd; 
         m_requestContext = requestContext;
+        m_urlPattern = urlPattern;
+        m_contentTemplate = contentTemplate;
+        m_target = target;
+        
         if ( urlPattern.toUpperCase().startsWith( HTTP ) || urlPattern.toUpperCase().startsWith( HTTPS ) ) {
             // For an HTTP/HTTPS url, pass it through without modification
             m_jsp = urlPattern;
@@ -80,9 +90,6 @@ public abstract class AbstractCommand implements Command {
                 m_jspFriendlyName = m_jsp;
             }
         }
-        m_urlPattern = urlPattern;
-        m_contentTemplate = contentTemplate;
-        m_target = target;
     }
 
     //
@@ -107,9 +114,15 @@ public abstract class AbstractCommand implements Command {
      */
     public abstract Command targetedCommand( final Object target );
 
+    @Override
+    public final ContextEnum getContextCmd() {
+    	return this.contextCmd;
+    }
+
     /**
      * @see org.apache.wiki.api.core.Command#getContentTemplate()
      */
+    @Override
     public final String getContentTemplate() {
         return m_contentTemplate;
     }
@@ -117,6 +130,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * @see org.apache.wiki.api.core.Command#getJSP()
      */
+    @Override
     public final String getJSP() {
         return m_jsp;
     }
@@ -124,11 +138,13 @@ public abstract class AbstractCommand implements Command {
     /**
      * @see org.apache.wiki.api.core.Command#getName()
      */
+    @Override
     public abstract String getName();
 
     /**
      * @see org.apache.wiki.api.core.Command#getRequestContext()
      */
+    @Override
     public final String getRequestContext() {
         return m_requestContext;
     }
@@ -136,6 +152,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * @see org.apache.wiki.api.core.Command#getTarget()
      */
+    @Override
     public final Object getTarget() {
         return m_target;
     }
@@ -143,6 +160,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * @see org.apache.wiki.api.core.Command#getURLPattern()
      */
+    @Override
     public final String getURLPattern() {
         return m_urlPattern;
     }

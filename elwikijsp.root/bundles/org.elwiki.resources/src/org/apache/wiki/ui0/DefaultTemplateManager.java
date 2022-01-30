@@ -48,6 +48,8 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -73,8 +75,17 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	/** The name of the default template. Value is {@value}. */
 	String DEFAULT_TEMPLATE = "default";
 
+	/** Stores configuration. */
+	private IWikiConfiguration wikiConfiguration;
+	
 	private Bundle bundle;
 
+	// -- service handling --------------------------< start --
+
+	public void setWikiConfiguration(IWikiConfiguration wikiConfiguration) {
+		this.wikiConfiguration = wikiConfiguration;
+	}
+	
 	/**
 	 * DefaultTemplateManager initializer.
 	 * 
@@ -84,6 +95,8 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 		this.bundle = bc.getBundle();
 	}
 
+	// -- service handling ---------------------------- end >--
+	
 	/**
 	 * Returns the full name (/templates/foo/bar) for: template=foo, name=bar.
 	 *
@@ -336,7 +349,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	@Override
 	public Map<String, String> listTimeFormats(final PageContext pageContext) {
 		final Context context = ContextUtil.findContext(pageContext);
-		IPreferenceStore props = m_engine.getWikiPreferences();
+		IPreferenceStore props = this.wikiConfiguration.getWikiPreferences();
 		final ArrayList<String> tfArr = new ArrayList<>(40);
 		final LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
 

@@ -378,4 +378,6 @@ public interface PageManager extends WikiEventListener {
 
 	WikiPage getPageById(String pageId);
 
+	String getMainPageId();
+
 }

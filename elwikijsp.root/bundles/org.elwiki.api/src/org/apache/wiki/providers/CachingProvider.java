@@ -546,4 +546,11 @@ public class CachingProvider implements PageProvider {
 		return null;
 	}
 
+	@Override
+	public String getMainPageId() {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

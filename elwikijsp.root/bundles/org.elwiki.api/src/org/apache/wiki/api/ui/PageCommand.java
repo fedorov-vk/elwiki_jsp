@@ -63,10 +63,11 @@ public final class PageCommand extends AbstractCommand {
      * @param action the action used to construct a suitable PagePermission
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private PageCommand( final ContextEnum currentContext, final WikiPage target, final String action ) {
-        this( currentContext.getRequestContext(), currentContext.getUrlPattern(), currentContext.getContentTemplate(), target, action );
+/*    private PageCommand( final ContextEnum currentContext, final WikiPage target, final String action ) {
+        this( currentContext, target, action );
     }
-    
+*/
+
     /**
      * Constructs a new Command with a specified wiki context, URL pattern, type, and content template. The target for this command is
      * initialized to <code>null</code>.
@@ -78,12 +79,10 @@ public final class PageCommand extends AbstractCommand {
      * @param contentTemplate the content template; may be <code>null</code>
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private PageCommand( final String requestContext,
-                         final String urlPattern,
-                         final String contentTemplate,
+    private PageCommand( ContextEnum contextCmd,
                          final WikiPage target,
                          final String action ) {
-        super( requestContext, urlPattern, contentTemplate, target );
+        super( contextCmd, target );
         m_action = action;
         if( target == null || m_action == null ) {
             m_permission = null;
@@ -104,7 +103,7 @@ public final class PageCommand extends AbstractCommand {
         if( !( target instanceof WikiPage ) ) {
             throw new IllegalArgumentException( "Target must non-null and of type Page." );
         }
-        return new PageCommand( getRequestContext(), getURLPattern(), getContentTemplate(), ( WikiPage )target, m_action );
+        return new PageCommand( getContextCmd(), ( WikiPage )target, m_action );
     }
 
     /**

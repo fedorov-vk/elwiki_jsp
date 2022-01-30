@@ -11,8 +11,10 @@ import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences_.TimeFormat;
 import org.apache.wiki.util.HttpUtil;
+import org.apache.wiki.util.PropertyReader;
 //:FVK:import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
@@ -91,15 +93,16 @@ public class Preferences { // extends HashMap< String,String >
     //        language preferences (like in a web cafe), the old preferences still remain in a site cookie.
     public static void reloadPreferences( final PageContext pageContext ) {
         final Preferences_ prefs = new Preferences_();
-        
-        //:FVK: final Properties props = PropertyReader.loadWebAppProps( pageContext.getServletContext() );
-        
+
+        //:FVK: Properties props = PropertyReader.loadWebAppProps( pageContext.getServletContext() );
+        IPreferenceStore props = ServicesRefs.Instance.getWikiPreferences();
+
         final Context ctx = ContextUtil.findContext( pageContext );
         InternationalizationManager i18lManager = ServicesRefs.getInternationalizationManager();
         final String dateFormat = i18lManager.get( InternationalizationManager.CORE_BUNDLE, getLocale( ctx ), "common.datetimeformat" );
-
-        /*:FVK:
         
+        /*:FVK:
+        */
         prefs.put("SkinName", TextUtil.getStringProperty( props, "jspwiki.defaultprefs.template.skinname", "PlainVanilla" ) );
         prefs.put("DateFormat", TextUtil.getStringProperty( props, "jspwiki.defaultprefs.template.dateformat", dateFormat ) );
         prefs.put("TimeZone", TextUtil.getStringProperty( props, "jspwiki.defaultprefs.template.timezone", java.util.TimeZone.getDefault().getID() ) );
@@ -120,8 +123,6 @@ public class Preferences { // extends HashMap< String,String >
 
         // FIXME: editormanager reads jspwiki.editor -- which of both properties should continue
         prefs.put("editor", TextUtil.getStringProperty( props, "jspwiki.defaultprefs.template.editor", "plain" ) );
-        
-        */
         
         parseJSONPreferences( (HttpServletRequest) pageContext.getRequest(), prefs );
         pageContext.getSession().setAttribute( SESSIONPREFS, prefs );
@@ -238,7 +239,7 @@ public class Preferences { // extends HashMap< String,String >
         logger.debug( "using locale " + loc.toString() );
         return loc;
     }
-    
+
     /**
      * Get SimpleTimeFormat according to user browser locale and preferred time formats. If not found, it will revert to whichever format
      * is set for the default.

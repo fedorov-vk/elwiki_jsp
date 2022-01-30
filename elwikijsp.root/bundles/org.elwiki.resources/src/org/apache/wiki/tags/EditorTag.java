@@ -54,9 +54,12 @@ public class EditorTag extends WikiBodyTag {
         final EditorManager mgr = ServicesRefs.getEditorManager();
         final String editorPath = mgr.getEditorPath( m_wikiContext );
 
+        //:FVK: - TemplateManager выдает неверный путь к "/editors/plain.jsp"
         try {
-            final String page = ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
+            final String page = "/page/templates/default/editors/plain.cmd"; //:FVK: HACK: 
+            		//ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
 
+            
             if( page == null ) {
                 //FIXME: should be I18N ...
                 pageContext.getOut().println( "Unable to find editor '" + editorPath + "'" );

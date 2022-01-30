@@ -170,4 +170,6 @@ public interface PageProvider extends WikiProvider {
 
 	WikiPage getPageById(String pageId);
 
+	String getMainPageId();
+
 }

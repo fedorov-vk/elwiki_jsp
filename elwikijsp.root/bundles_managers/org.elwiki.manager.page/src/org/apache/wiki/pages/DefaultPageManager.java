@@ -959,4 +959,12 @@ public class DefaultPageManager implements PageManager, Initializable {
 		page = this.m_provider.getPageById(pageId);
 		return page;
 	}
+	
+	@Override
+	public String getMainPageId() {
+		String mainPageId = this.m_provider.getMainPageId();
+
+		return mainPageId;
+	}
+
 }

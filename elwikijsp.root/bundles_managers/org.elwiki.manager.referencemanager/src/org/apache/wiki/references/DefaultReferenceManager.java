@@ -283,7 +283,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     private synchronized long unserializeFromDisk() throws IOException, ClassNotFoundException {
         final long saved;
 
-        final File f = new File( m_engine.getWorkDir(), SERIALIZATION_FILE );
+        final File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_FILE );
         try( final ObjectInputStream in = new ObjectInputStream( new BufferedInputStream( new FileInputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -312,7 +312,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  Serializes hashmaps to disk.  The format is private, don't touch it.
      */
     private synchronized void serializeToDisk() {
-        final File f = new File( m_engine.getWorkDir(), SERIALIZATION_FILE );
+        final File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_FILE );
         try( final ObjectOutputStream out = new ObjectOutputStream( new BufferedOutputStream( new FileOutputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -354,7 +354,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         //  Find attribute cache, and check if it exists
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-        	File f = new File( m_engine.getWorkDir(), SERIALIZATION_DIR );
+        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
             f = new File( f, hashName );
             if( !f.exists() ) {
                 return 0L;
@@ -404,7 +404,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-        	File f = new File( m_engine.getWorkDir(), SERIALIZATION_DIR );
+        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
             if( !f.exists() ) {
                 f.mkdirs();
             }
@@ -470,7 +470,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @Override
     public Collection< String > scanWikiLinks( final WikiPage page, final String pagedata ) {
         final LinkCollector localCollector = new LinkCollector();
-        ServicesRefs.getRenderingManager().textToHTML( Wiki.context().create( m_engine, page ),
+        ServicesRefs.getRenderingManager().textToHTML( Wiki.context().create( ServicesRefs.Instance, page ),
                                                                   pagedata,
                                                                   localCollector,
                                                                   null,
@@ -529,7 +529,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( pageName );
         if( hashName != null ) {
-        	File f = new File( m_engine.getWorkDir(), SERIALIZATION_DIR );
+        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
             f = new File( f, getHashFileName( pageName ) );
             if( f.exists() ) {
                 f.delete();
@@ -910,7 +910,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
     private String getFinalPageName( final String orig ) {
         try {
-            final String s = m_engine.getFinalPageName( orig );
+            final String s = ServicesRefs.Instance.getFinalPageName( orig );
             return s != null ? s : orig;
         } catch( final ProviderException e ) {
             log.error("Error while trying to fetch a page name; trying to cope with the situation.",e);

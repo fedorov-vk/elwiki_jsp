@@ -1,6 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <!-- START ~~ :FVK: definitions ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
+   <extension
+         id="filter.context"
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/*.cmd"
+            class="org.elwiki.web.PageFilterContext"
+            httpcontextId="org.elwiki.resources.httpcontext"
+            load-on-startup="true">
+      </filter>
+   </extension>
+   
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/*.cmd"
+            class="org.elwiki.web.PageFilterAuthentication"
+            httpcontextId="org.elwiki.resources.httpcontext"
+            load-on-startup="true">
+      </filter>
+   </extension>
+
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/*.cmd"
+            class="org.elwiki.web.PageFilter"
+            httpcontextId="org.elwiki.resources.httpcontext"
+            load-on-startup="true">
+      </filter>
+   </extension>
+
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/*.cmd"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory"
+            httpcontextId="org.elwiki.resources.httpcontext">
+      </servlet>
+   </extension>
+   <extension
+         id="pages"
+         point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext
+            class="org.elwiki.web.PageServletContextHelper"
+            id="org.elwiki.resources.httpcontext">
+         <resource-mapping
+               path="/page">
+         </resource-mapping>
+      </httpcontext>
+   </extension>
+<!--
+         <resource-mapping
+               path="/">
+         </resource-mapping>
+-->
+   <!-- END ~ ~~ :FVK: definitions ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
+
    <extension
          point="org.eclipse.equinox.http.registry.resources">
       <resource
@@ -50,7 +108,12 @@
             alias="/templates/default/haddock.css"
             base-name="/resources/templates/default/haddock.css">
       </resource>
+      <resource
+            alias="/templates/default/haddock-dark.css"
+            base-name="/resources/templates/default/haddock-dark.css">
+      </resource>
    </extension>
+<!-- JSPwiki
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
@@ -62,6 +125,8 @@
             class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/templates/default">
       </servlet>
    </extension>
+-->
+
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -97,6 +162,7 @@
       </filter>
    </extension>
 -->
+
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -105,6 +171,19 @@
             load-on-startup="true">
       </filter>
    </extension>
+
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.apache.wiki.api.core.Command"
+            class="org.elwiki.internal.CmdCodeAdapterFactory">
+         <adapter
+               type="org.elwiki.internal.CmdCode">
+         </adapter>
+      </factory>
+   </extension>
+
+<!-- JSPwiki
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -113,5 +192,5 @@
             load-on-startup="true">
       </filter>
    </extension>
-
+-->
 </plugin>

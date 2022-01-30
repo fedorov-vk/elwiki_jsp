@@ -6,4 +6,5 @@
    <service>
       <provide interface="org.elwiki.api.authorization.IAuthorizer"/>
    </service>
+   <reference bind="setUserAdminService" cardinality="1..1" interface="org.osgi.service.useradmin.UserAdmin" name="UserAdmin" policy="static"/>
 </scr:component>

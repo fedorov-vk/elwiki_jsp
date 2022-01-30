@@ -39,6 +39,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
@@ -518,15 +519,16 @@ public class WikiContext implements Context, Command {
     }
 
     /**
-     *  Returns an URL from a page. It this WikiContext instance was constructed with an actual HttpServletRequest, we will attempt to
-     *  construct the URL using HttpUtil, which preserves the HTTPS portion if it was used.
-     *
-     *  @param context The request context (e.g. WikiContext.UPLOAD)
-     *  @param page The page to which to link
-     *  @param params A list of parameters, separated with "&amp;"
-     *
-     *  @return An URL to the given context and page.
-     */
+	 * Returns an URL from a page. It this WikiContext instance was constructed with an actual
+	 * HttpServletRequest, we will attempt to construct the URL using HttpUtil, which preserves the
+	 * HTTPS portion if it was used.
+	 *
+	 * @param context The request context (e.g. WikiContext.UPLOAD)
+	 * @param page    The page to which to link
+	 * @param params  A list of parameters, separated with "&amp;"
+	 *
+	 * @return An URL to the given context and page.
+	 */
     @Override
     public String getURL( final String context, final String page, final String params ) {
         // FIXME: is rather slow
@@ -748,5 +750,12 @@ public class WikiContext implements Context, Command {
             m_command = m_command.targetedCommand( m_page );
         }
     }
+
+	@Override
+	public ContextEnum getContextCmd() {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -52,7 +52,9 @@ public class EngineDSL {
      * @return a configured {@link Engine} instance.
      */
     public Engine find( final ServletContext context ) {
-        return ServicesRefs.Instance; //:FVK: workaround // .find( context );
+    	ServicesRefs engine = ServicesRefs.Instance;
+    	engine.setServletContext(context); //TODO: :FVK: - это не нужно!!!
+        return engine; //:FVK: workaround // .find( context );
     }
 
 }

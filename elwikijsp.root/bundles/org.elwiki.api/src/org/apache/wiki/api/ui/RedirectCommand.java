@@ -44,7 +44,7 @@ public final class RedirectCommand extends AbstractCommand {
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
     private RedirectCommand( final ContextEnum currentContext, final String target ) {
-        this( currentContext.getRequestContext(), currentContext.getUrlPattern(), currentContext.getContentTemplate(), target );
+    	super(currentContext, target );
     }
 
     /**
@@ -55,10 +55,11 @@ public final class RedirectCommand extends AbstractCommand {
      * @param target the target of the command
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-    private RedirectCommand( final String requestContext, final String urlPattern, final String contentTemplate, final String target ) {
-        super( requestContext, urlPattern, contentTemplate, target );
+/*    private RedirectCommand( final String requestContext, final String urlPattern, final String contentTemplate, final String target ) {
+        super(currentContext, target );
     }
-    
+*/
+
     /**
      * Creates and returns a targeted Command by combining a URL (as String) with this Command. The supplied <code>target</code>
      * object must be non-<code>null</code> and of type String. The URL passed to the constructor is actually an URL pattern, but it
@@ -72,7 +73,8 @@ public final class RedirectCommand extends AbstractCommand {
         if ( !( target instanceof String ) ) {
             throw new IllegalArgumentException( "Target must non-null and of type String." );
         }
-        return new RedirectCommand( getRequestContext(), ( String )target, getContentTemplate(), ( String )target );
+        //:FVK: тут введена ошибка - на месте параметра getContextCmd() - 'urlPattern' - был (String)target. 
+        return new RedirectCommand( getContextCmd(), ( String )target );
     }
     
     /**
