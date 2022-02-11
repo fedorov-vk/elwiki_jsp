@@ -42,7 +42,7 @@
   Context grCtx = ServicesRefs.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
   // Extract the group name and members
   //String name = request.getParameter( "group" );
-  //Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
+  //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
 
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
   IAuthorizer groupMgr = ServicesRefs.getGroupManager();

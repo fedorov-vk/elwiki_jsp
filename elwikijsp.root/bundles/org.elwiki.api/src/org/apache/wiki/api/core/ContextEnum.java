@@ -18,20 +18,20 @@
  */
 package org.apache.wiki.api.core;
 
-
 /**
  * Every enum contains 3 strings:
  * <ul>
- * <li> request context ID
- * <li> URL pattern
- * <li> JSP file name from the templates 
+ * <li>request context ID
+ * <li>URL pattern
+ * <li>JSP file name from the templates
  * </ul>
  */
 public enum ContextEnum {
 
+	//@formatter:off
     GROUP_DELETE( "deleteGroup", "%uDeleteGroup.jsp?group=%n", null ),
     GROUP_EDIT( "editGroup", "%ueditGroup.cmd?group=%n", "EditGroupContent.jsp" ),
-    GROUP_VIEW( "viewGroup", "%uGroup.jsp?group=%n", "GroupContent.jsp" ),
+    GROUP_VIEW( "viewGroup", "%uviewGroup.cmd?group=%n", "PreferencesContent.jsp" ),
 
     PAGE_ATTACH( "att", "%uattach/%n", null ),
     PAGE_COMMENT( "comment", "%uComment.jsp?page=%n", "CommentContent.jsp" ),
@@ -48,7 +48,7 @@ public enum ContextEnum {
     PAGE_VIEW( "view", "%uview.cmd?pageId=%n", "PageContent.jsp" ),
 
     //:FVK: PAGE_VIEWID( "viewId", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
-    
+
     REDIRECT( "", "%u%n", null ),
 
     WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),
@@ -61,27 +61,28 @@ public enum ContextEnum {
     WIKI_MESSAGE( "message", "%uMessage.jsp", "DisplayMessage.jsp" ),
     WIKI_PREFS( "prefs", "%uprefs.cmd", "PreferencesContent.jsp" ),
     WIKI_WORKFLOW( "workflow", "%uWorkflow.jsp", "WorkflowContent.jsp" );
+	//@formatter:on
 
 	private final String requestContext;
 	private final String urlPattern;
-    private final String contentTemplate;
+	private final String contentTemplate;
 
-    ContextEnum( final String requestContext, final String urlPattern, final String contentTemplate ) {
-        this.requestContext = requestContext;
-        this.urlPattern = urlPattern;
-        this.contentTemplate = contentTemplate;
-    }
-    
-    public String getRequestContext() {
-    	return requestContext;
-    }
-    
-    public String getUrlPattern() {
-    	return urlPattern;
-    }
-    
-    public String getContentTemplate() {
-    	return contentTemplate;
-    }
+	ContextEnum(final String requestContext, final String urlPattern, final String contentTemplate) {
+		this.requestContext = requestContext;
+		this.urlPattern = urlPattern;
+		this.contentTemplate = contentTemplate;
+	}
+
+	public String getRequestContext() {
+		return requestContext;
+	}
+
+	public String getUrlPattern() {
+		return urlPattern;
+	}
+
+	public String getContentTemplate() {
+		return contentTemplate;
+	}
 
 }
