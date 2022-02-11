@@ -42,7 +42,8 @@ public class PageFilterContext extends HttpFilter {
 		Map.entry("/rename.cmd", ContextEnum.PAGE_RENAME),
 		Map.entry("/diff.cmd", ContextEnum.PAGE_DIFF),
 		Map.entry("/upload.cmd", ContextEnum.PAGE_DIFF),
-		Map.entry("/editGroup.cmd", ContextEnum.GROUP_EDIT)
+		Map.entry("/editGroup.cmd", ContextEnum.GROUP_EDIT),
+		Map.entry("/viewGroup.cmd", ContextEnum.GROUP_VIEW)
 	); //@formatter:on
 
 	/**

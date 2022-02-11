@@ -56,7 +56,11 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 		case "editGroup":
 			cmdCode = new EditGroupCmdCode(command);
 			break;
-			
+
+		/*case "viewGroup":
+			cmdCode = new EditGroupCmdCode(command);
+			break;*/
+
 		default:
 			break;
 		}

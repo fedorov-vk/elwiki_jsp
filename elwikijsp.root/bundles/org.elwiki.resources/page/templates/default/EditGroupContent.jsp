@@ -69,7 +69,7 @@ Context grCtx = ContextUtil.findContext( pageContext );
       <button class="btn btn-success" type="submit" name="action" value="save">
         <fmt:message key="editgroup.submit.save"/>
       </button>
-      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' jsp='Group.jsp'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
+      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' jsp='viewGroup.cmd'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
         <fmt:message key='editgroup.cancel.submit'/>
       </a>
     </div>

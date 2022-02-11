@@ -246,6 +246,12 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 */
 	void setGroup(Session session, WrapGroup group) throws WikiSecurityException;
 
+	/**
+	 * Returns useradmin OSGi group by specified name.
+	 * 
+	 * @param groupName
+	 * @return
+	 */
 	org.osgi.service.useradmin.Group getGroup(String groupName);
 
 	boolean isUserInGroup(String attrValue, org.osgi.service.useradmin.Group group);
