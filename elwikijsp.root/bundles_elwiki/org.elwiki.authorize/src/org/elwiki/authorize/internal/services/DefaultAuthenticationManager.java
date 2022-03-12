@@ -26,6 +26,7 @@ import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.Authorizer;
 import org.apache.wiki.auth.IIAuthenticationManager;
@@ -139,10 +140,10 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
 
 	private AuthorizationManager authorizationManager;
-	
-    // -- service handling --------------------------- start --
-	
-    public void setAuthorizationManager(AuthorizationManager authorizationManager) {
+
+	// -- service handling -------------------------< start >--
+
+	public void setAuthorizationManager(AuthorizationManager authorizationManager) {
 		this.authorizationManager = authorizationManager;
 	}
 
@@ -153,8 +154,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	public synchronized void shutdown() {
 		//
 	}
-    
-    // -- service handling ----------------------------- end --
+	
+    // -- service handling ---------------------------< end >--
     
 	/**
      * {@inheritDoc}
@@ -257,7 +258,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         final HttpSession httpSession = request.getSession();
         final Session session = SessionMonitor.getInstance().find( httpSession );
 
-//:FVK: - ссылка сам на себя !!!        
+//:FVK: - ссылка сам на себя !!! ??        
         final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();
         
         CallbackHandler handler = null;
@@ -323,7 +324,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
             delayLogin( username );
         }
 
-        final CallbackHandler handler = new WikiCallbackHandler( m_engine, null, username, password );
+		final CallbackHandler handler = new WikiCallbackHandler(m_engine, null, username, password);
 
         // Execute the user's specified login module
         final Set< Principal > principals = doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
@@ -429,8 +430,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
             throw new WikiSecurityException( e.getMessage(), e );
         }
         
-		if (loginModule == null) //:FVK: workaround - вместо @NonNull 
+		if (loginModule == null) { // :FVK: workaround - вместо @NonNull
 			return Collections.emptySet();
+		}
 
         // Initialize the LoginModule
         final Subject subject = new Subject();
@@ -439,14 +441,14 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         // Try to log in:
         boolean loginSucceeded = false;
         boolean commitSucceeded = false;
-        try {
-            loginSucceeded = loginModule.login();
-            if( loginSucceeded ) {
-                commitSucceeded = loginModule.commit();
-            }
-        } catch( final LoginException e ) {
-            // Login or commit failed! No principal for you!
-        }
+		try {
+			loginSucceeded = loginModule.login();
+			if (loginSucceeded) {
+				commitSucceeded = loginModule.commit();
+			}
+		} catch (final LoginException e) {
+			// Login or commit failed! No principal for you!
+		}
 
         // If we successfully logged in & committed, return all the principals
         if( loginSucceeded && commitSucceeded ) {

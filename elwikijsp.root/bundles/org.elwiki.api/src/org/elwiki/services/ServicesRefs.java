@@ -103,7 +103,7 @@ public class ServicesRefs implements Engine {
 
     private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
 	
-	// -- service handling --------------------------< start --
+	// -- service handling -------------------------< start >--
 
 	// -- start code block -- Services reference setters
 
@@ -240,7 +240,7 @@ public class ServicesRefs implements Engine {
 		ServicesRefs.getFilterManager().destroy();
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- service handling ---------------------------< end >--
 
 	public static AclManager getAclManager() {
 		return aclManager;

@@ -61,7 +61,7 @@ public class WikiCallbackHandler implements CallbackHandler {
 	 * @param password
 	 *            the password
 	 */
-	public WikiCallbackHandler(final Engine engine, final HttpServletRequest request, String username, String password) {
+	public WikiCallbackHandler(Engine engine, HttpServletRequest request, String username, String password) {
 		this.m_request = request;
 		this.m_engine = engine;
 		this.m_username = username;
@@ -79,7 +79,7 @@ public class WikiCallbackHandler implements CallbackHandler {
 			if (callback instanceof HttpRequestCallback) {
 				((HttpRequestCallback) callback).setRequest(this.m_request);
 			} else if (callback instanceof WikiEngineCallback) {
-				((WikiEngineCallback) callback).setEngine( m_engine );
+				((WikiEngineCallback) callback).setEngine(ServicesRefs.Instance);
 			} else if (callback instanceof UserDatabaseCallback) {
 				((UserDatabaseCallback) callback)
 						.setUserDatabase(ServicesRefs.getUserManager().getUserDatabase() );
