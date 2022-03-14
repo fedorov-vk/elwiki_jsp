@@ -38,7 +38,9 @@ import org.h2.jdbcx.JdbcDataSource;
  */
 abstract class Repository implements IPasswordCredentialsProvider {
 
-	private static final String FOLDER = "/home/vfedorov/dev/dev_wikijsp/WS/database_repository";
+	// linux: "/home/vfedorov/dev/dev_wikijsp/WS/database_repository"
+	// windows: "D:/devj/dev_wikijsp/WS/database_repository/"
+	private static final String FOLDER = "D:/devj/dev_wikijsp/WS/database_repository/";
 	private String name = "repo_elwiki";
 
 	private boolean tcpDisabled = false;
