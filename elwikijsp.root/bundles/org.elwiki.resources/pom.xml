@@ -4,6 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.elwiki.resources</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	<name>[bundle] Resources</name>
 
 	<parent>
 		<groupId>elwiki</groupId>
@@ -22,28 +23,30 @@
 				<artifactId>wro4j-maven-plugin</artifactId>
 				<version>${wro4j.version}</version>
 				<executions>
+					<!-- template "210" -->
 					<execution>
 						<id>buildDefaultJsAndCss</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
 						<configuration>
 							<cssDestinationFolder>${project.basedir}/resources/templates/210/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro.xml</wroFile>
+							<targetGroups>jspwiki,jspwiki_print,jspwiki-common,jspwiki-edit,jspwiki-prefs</targetGroups>
 						</configuration>
 					</execution>
-
-					<!-- HADDOCK template -->
+					<!-- HADDOCK template (default) -->
 					<execution>
 						<id>buildHaddockJsAndCss</id>
-						<phase>prepare-package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
 						<configuration>
 							<cssDestinationFolder>${project.basedir}/resources/templates/default/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro-haddock.xml</wroFile>
+							<targetGroups>haddock,haddock-wysiwyg,haddock-edit</targetGroups>
 						</configuration>
 					</execution>
 				</executions>
@@ -54,18 +57,21 @@
 					<minimize>${minimize}</minimize>
 					<ignoreMissingResources>false</ignoreMissingResources>
 					<parallelProcessing>true</parallelProcessing>
+					<!--
 					<incrementalBuildEnabled>true</incrementalBuildEnabled>
+					-->
+					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 				</configuration>
 				<!-- https://github.com/wro4j/wro4j/issues/1039#issuecomment-382474533 -->
 				<dependencies>
 					<dependency>
 						<groupId>org.mockito</groupId>
 						<artifactId>mockito-core</artifactId>
-						<version>2.18.0</version>
+						<version>3.6.0</version>
 					</dependency>
 				</dependencies>
 			</plugin>
-
+			<!-- Copying already prepared resources. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -73,7 +79,7 @@
 				<executions>
 					<execution>
 						<id>copy-resources_2_templates-default</id>
-						<phase>generate-resources</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>resources</goal>
 						</goals>
@@ -94,7 +100,7 @@
 					</execution>
 					<execution>
 						<id>copy-resources_2_scripts</id>
-						<phase>generate-resources</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>resources</goal>
 						</goals>
@@ -134,7 +140,7 @@
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0,)
+											[2.5.0,)
 										</versionRange>
 										<goals>
 											<goal>validate-id</goal>
@@ -153,7 +159,7 @@
 											tycho-compiler-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0,)
+											[2.5.0,)
 										</versionRange>
 										<goals>
 											<goal>compile</goal>
