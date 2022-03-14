@@ -40,7 +40,7 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 		case "logout":
 			cmdCode = new LogoutCmdCode(command);
 			break;
-			
+
 		case "rename":
 			cmdCode = new RenameCmdCode(command);
 			break;
@@ -61,6 +61,18 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			cmdCode = new EditGroupCmdCode(command);
 			break;*/
 
+		case "createGroup":
+			cmdCode = new CreateGroupCmdCode(command);
+			break;
+			
+		case "deleteGroup":
+			cmdCode = new DeleteGroupCmdCode(command);
+			break;
+
+		case "find":
+			cmdCode = new FindCmdCode(command);
+			break;
+			
 		default:
 			break;
 		}
