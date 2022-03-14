@@ -40,7 +40,7 @@ abstract class Repository implements IPasswordCredentialsProvider {
 
 	// linux: "/home/vfedorov/dev/dev_wikijsp/WS/database_repository"
 	// windows: "D:/devj/dev_wikijsp/WS/database_repository/"
-	private static final String FOLDER = "D:/devj/dev_wikijsp/WS/database_repository/";
+	private static final String FOLDER = "/home/vfedorov/dev/dev_wikijsp/WS/database_repository";
 	private String name = "repo_elwiki";
 
 	private boolean tcpDisabled = false;
