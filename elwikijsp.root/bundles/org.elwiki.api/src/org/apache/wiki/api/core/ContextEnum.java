@@ -47,8 +47,6 @@ public enum ContextEnum {
     PAGE_UPLOAD( "upload", "%uupload.cmd?page=%n", "AttachmentTab.jsp" ),
     PAGE_VIEW( "view", "%uview.cmd?pageId=%n", "PageContent.jsp" ),
 
-    //:FVK: PAGE_VIEWID( "viewId", "%uWiki.jsp?pageId=%n", "PageContent.jsp" ),
-
     REDIRECT( "", "%u%n", null ),
 
     WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),
