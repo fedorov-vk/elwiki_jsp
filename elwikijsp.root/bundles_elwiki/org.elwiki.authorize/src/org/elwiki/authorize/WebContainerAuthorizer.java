@@ -516,7 +516,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	}
 
 	@Override
-	public void removeGroup(String index) throws WikiSecurityException {
+	public void removeGroup(WrapGroup index) throws WikiSecurityException {
 		// TODO Auto-generated method stub
 		Assert.isTrue(false, ":FVK: Код не реализован.");
 	}

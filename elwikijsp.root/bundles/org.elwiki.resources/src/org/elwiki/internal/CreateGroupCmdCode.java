@@ -1,5 +1,8 @@
 package org.elwiki.internal;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,14 +12,16 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.useradmin.Group;
 
-public class EditGroupCmdCode extends CmdCode {
+public class CreateGroupCmdCode extends CmdCode {
 
-	protected EditGroupCmdCode(Command command) {
+	protected CreateGroupCmdCode(Command command) {
 		super(command);
 	}
 
@@ -55,13 +60,23 @@ public class EditGroupCmdCode extends CmdCode {
 			// Validate the group
 			groupMgr.validateGroup(wikiContext, group);
 
+			Group grp2 = groupMgr.getGroup(group.getName());
+			if (grp2 != null) {
+
+				// Oops! The group already exists. This is mischief!
+				ResourceBundle rb = null; // Preferences.getBundle( wikiContext, "CoreResources");
+				wikiSession.addMessage(IAuthorizer.MESSAGES_KEY,
+						MessageFormat.format(rb.getString("newgroup.exists"), group.getName()));
+			}
+			// Group not found; this is good!
+			
 			// If no errors, save the group now
 			if (wikiSession.getMessages(IAuthorizer.MESSAGES_KEY).length == 0) {
 				try {
-					groupMgr.setGroup(wikiSession, group);
+					groupMgr.setGroup( wikiSession, group );
 				} catch (WikiSecurityException e) {
 					// Something went horribly wrong! Maybe it's an I/O error...
-					wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
+	                wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
 				}
 			}
 			if (wikiSession.getMessages(IAuthorizer.MESSAGES_KEY).length == 0) {

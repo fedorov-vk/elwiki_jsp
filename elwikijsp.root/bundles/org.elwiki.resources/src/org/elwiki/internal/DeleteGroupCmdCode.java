@@ -14,9 +14,9 @@ import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.services.ServicesRefs;
 
-public class EditGroupCmdCode extends CmdCode {
+public class DeleteGroupCmdCode extends CmdCode {
 
-	protected EditGroupCmdCode(Command command) {
+	protected DeleteGroupCmdCode(Command command) {
 		super(command);
 	}
 
@@ -26,9 +26,8 @@ public class EditGroupCmdCode extends CmdCode {
 
 		// Create wiki context and check for authorization
 		Context wikiContext = Wiki.context().create(wiki, httpRequest, ContextEnum.GROUP_EDIT.getRequestContext());
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response)) {
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response))
 			return;
-		}
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
@@ -42,33 +41,26 @@ public class EditGroupCmdCode extends CmdCode {
 			/* TODO: if group == null (undefined) - make redirect:
 	        wikiSession.addMessage( GroupManager.MESSAGES_KEY, "Parameter 'group' cannot be null." );
 	        response.sendRedirect( "Group.jsp" );*/        	
-
+			
 			httpRequest.setAttribute("Group", group); //HACK: вместо pageContext.setAttribute() 
 		} catch (WikiSecurityException e) {
 			wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
 			response.sendRedirect("Group.jsp");
 		}
 
-		// Are we saving the group?
-		// :FVK: TODO:... проверить, рефакторизовать (выделить функционал групп).
-		if ("save".equals(httpRequest.getParameter("action"))) {
-			// Validate the group
-			groupMgr.validateGroup(wikiContext, group);
-
-			// If no errors, save the group now
-			if (wikiSession.getMessages(IAuthorizer.MESSAGES_KEY).length == 0) {
-				try {
-					groupMgr.setGroup(wikiSession, group);
-				} catch (WikiSecurityException e) {
-					// Something went horribly wrong! Maybe it's an I/O error...
-					wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
-				}
-			}
-			if (wikiSession.getMessages(IAuthorizer.MESSAGES_KEY).length == 0) {
-				response.sendRedirect("Group.jsp?group=" + group.getName());
-				return;
-			}
-		}
+	    // Now, let's delete the group
+	    try
+	    {
+	        groupMgr.removeGroup( group );
+	        //response.sendRedirect( "." );
+	        response.sendRedirect( "Group.jsp?group=" + group.getName() );
+	    }
+	    catch ( WikiSecurityException e )
+	    {
+	        // Send error message
+	        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
+	        response.sendRedirect( "Group.jsp" );
+	    }
 	}
 
 }

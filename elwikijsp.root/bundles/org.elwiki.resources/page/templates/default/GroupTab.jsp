@@ -61,7 +61,7 @@
 
 <wiki:CheckRequestContext context="!createGroup"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
-  <form action="<wiki:Link format='url' jsp='NewGroup.jsp'/>"
+  <form action="<wiki:Link format='url' jsp='createGroup.cmd'/>"
          class="accordion${createFormClose}"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -97,7 +97,7 @@
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
 
-<form action="<wiki:Link format='url' jsp='DeleteGroup.jsp'/>"
+<form action="<wiki:Link format='url' jsp='deleteGroup.cmd'/>"
       class="hidden"
         name="deleteGroupForm" id="deleteGroupForm"
       method="POST" accept-charset="UTF-8">

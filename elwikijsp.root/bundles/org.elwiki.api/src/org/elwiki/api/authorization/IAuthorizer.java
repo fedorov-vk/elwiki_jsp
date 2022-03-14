@@ -207,7 +207,7 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 *                               if the Group cannot be removed by the back-end.
 	 * @see GroupDatabase#delete(GroupWiki)
 	 */
-	void removeGroup(String index) throws WikiSecurityException;
+	void removeGroup(WrapGroup index) throws WikiSecurityException;
 
 	/**
 	 * Saves the {@link GroupWiki} created by a user in a wiki session. This method registers the Group

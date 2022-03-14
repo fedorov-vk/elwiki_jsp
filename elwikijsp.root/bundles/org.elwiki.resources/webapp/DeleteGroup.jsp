@@ -24,7 +24,7 @@
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.api.exceptions.NoSuchPrincipalException" %>
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
-<%@ page import="org.apache.wiki.auth.authorize.GroupManager" %>
+<%@ page import="org.elwiki.api.authorization.IAuthorizer" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
@@ -41,13 +41,13 @@
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
     Session wikiSession = wikiContext.getWikiSession();
-    GroupManager groupMgr = ServicesRefs.getGroupManager();
+    IAuthorizer groupMgr = ServicesRefs.getGroupManager();
     String name = request.getParameter( "group" );
 
     if ( name == null )
     {
         // Group parameter was null
-        wikiSession.addMessage( GroupManager.MESSAGES_KEY, "Parameter 'group' cannot be null." );
+        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, "Parameter 'group' cannot be null." );
         response.sendRedirect( "Group.jsp" );
     }
 
@@ -59,7 +59,7 @@
     catch ( NoSuchPrincipalException e )
     {
         // Group does not exist
-        wikiSession.addMessage( GroupManager.MESSAGES_KEY, e.getMessage() );
+        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
         response.sendRedirect( "Group.jsp" );
     }
 
@@ -73,7 +73,7 @@
     catch ( WikiSecurityException e )
     {
         // Send error message
-        wikiSession.addMessage( GroupManager.MESSAGES_KEY, e.getMessage() );
+        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
         response.sendRedirect( "Group.jsp" );
     }
 

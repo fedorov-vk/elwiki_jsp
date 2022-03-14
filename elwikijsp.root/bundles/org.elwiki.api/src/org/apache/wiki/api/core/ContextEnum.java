@@ -29,7 +29,7 @@ package org.apache.wiki.api.core;
 public enum ContextEnum {
 
 	//@formatter:off
-    GROUP_DELETE( "deleteGroup", "%uDeleteGroup.jsp?group=%n", null ),
+    GROUP_DELETE( "deleteGroup", "%udeleteGroup.cmd?group=%n", null ),
     GROUP_EDIT( "editGroup", "%ueditGroup.cmd?group=%n", "EditGroupContent.jsp" ),
     GROUP_VIEW( "viewGroup", "%uviewGroup.cmd?group=%n", "PreferencesContent.jsp" ),
 
@@ -52,9 +52,9 @@ public enum ContextEnum {
     REDIRECT( "", "%u%n", null ),
 
     WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),
-    WIKI_CREATE_GROUP( "createGroup", "%uNewGroup.jsp", "NewGroupContent.jsp" ),
+    WIKI_CREATE_GROUP( "createGroup", "%ucreateGroup.cmd", "NewGroupContent.jsp" ),
     WIKI_ERROR( "error", "%uError.jsp", "DisplayMessage.jsp" ),
-    WIKI_FIND( "find", "%uSearch.jsp", "FindContent.jsp" ),
+    WIKI_FIND( "find", "%ufind.cmd", "FindContent.jsp" ),
     WIKI_INSTALL( "install", "%uInstall.jsp", null ),
     WIKI_LOGIN( "login", "%ulogin.cmd?redirect=%n", "LoginContent.jsp" ),
     WIKI_LOGOUT( "logout", "%ulogout.cmd", null ),

@@ -399,9 +399,8 @@ public class GroupManager implements IAuthorizer {
 	}
 
 	@Override
-	//? :FVK: этот метод используется в коде DeleteGroup.jsp.
-	//? :FVK: этот метод нигде не используется (только в тестах) -- см. JSP файлы.
-	public void removeGroup(String index) throws WikiSecurityException {
+	//:FVK: этот метод используется в коде DeleteGroup.jsp.
+	public void removeGroup(WrapGroup index) throws WikiSecurityException {
 		if (index == null) {
 			throw new IllegalArgumentException("Group cannot be null.");
 		}
