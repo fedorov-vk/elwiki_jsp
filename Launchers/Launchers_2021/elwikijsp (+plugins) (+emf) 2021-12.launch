@@ -129,6 +129,8 @@
         <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi.util@default:default"/>
         <setEntry value="org.eclipse.osgi@-1:true"/>
+        <setEntry value="org.eclipse.rap.rwt.osgi@default:default"/>
+        <setEntry value="org.eclipse.rap.rwt@default:default"/>
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.h2@default:default"/>
         <setEntry value="org.jdom.2@default:default"/>
@@ -137,6 +139,7 @@
         <setEntry value="oro@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="RapTest@default:default"/>
         <setEntry value="org.elwiki.api@default:default"/>
         <setEntry value="org.elwiki.authorize.check@default:default"/>
         <setEntry value="org.elwiki.authorize.condition@default:false"/>

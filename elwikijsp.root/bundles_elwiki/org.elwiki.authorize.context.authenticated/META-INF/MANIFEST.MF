@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Authorize Authenticated
+Bundle-Name: Authorize Context Authenticated
 Bundle-SymbolicName: org.elwiki.authorize.context.authenticated;singleton:=true
 Automatic-Module-Name: org.elwiki.authorize.context.authenticated
 Bundle-Version: 1.0.0.qualifier

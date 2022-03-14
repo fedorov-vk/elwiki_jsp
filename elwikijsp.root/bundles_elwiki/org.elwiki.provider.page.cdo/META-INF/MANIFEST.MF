@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CDO page provide
+Bundle-Name: CDO page provider
 Bundle-SymbolicName: org.elwiki.provider.page.cdo;singleton:=true
 Automatic-Module-Name: org.elwiki.provider.page.cdo
 Bundle-Version: 1.0.0.qualifier
