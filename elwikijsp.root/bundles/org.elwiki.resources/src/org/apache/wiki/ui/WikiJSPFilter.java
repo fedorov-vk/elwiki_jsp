@@ -262,18 +262,17 @@ public class WikiJSPFilter extends WikiServletFilter {
                 m_buffer.write( aInt );
             }
 
-            /*:FVK: - от servlet 3.0
-            / **{@inheritDoc} * /
+            /*:FVK: - от servlet 3.0*/
+            /**{@inheritDoc} */
             @Override
 			public boolean isReady() {
 				return false;
 			}
 
-            / **{@inheritDoc} * /
+            /**{@inheritDoc} */
             @Override
 			public void setWriteListener( final WriteListener writeListener ) {
-			}*/
-			
+			}			
         }
 
         /** Returns whatever was written so far into the Writer. */

@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.WriteListener;
 import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -280,18 +281,17 @@ public class PageFilter extends HttpFilter {
 				m_buffer.write(aInt);
 			}
 
-			/*:FVK: - от servlet 3.0
-			/ **{@inheritDoc} * /
+			/*:FVK: - от servlet 3.0*/
+			/**{@inheritDoc} */
 			@Override
 			public boolean isReady() {
 				return false;
 			}
 			
-			/ **{@inheritDoc} * /
+			/**{@inheritDoc} */
 			@Override
 			public void setWriteListener( final WriteListener writeListener ) {
-			}*/
-
+			}
 		}
 
 		/** Returns whatever was written so far into the Writer. */
@@ -376,18 +376,17 @@ public class PageFilter extends HttpFilter {
                 m_buffer.write( aInt );
             }
 
-            /*:FVK: - от servlet 3.0
-            / **{@inheritDoc} * /
+            /*:FVK: - от servlet 3.0*/
+            /**{@inheritDoc} */
             @Override
 			public boolean isReady() {
 				return false;
 			}
 
-            / **{@inheritDoc} * /
+            /**{@inheritDoc} */
             @Override
 			public void setWriteListener( final WriteListener writeListener ) {
-			}*/
-			
+			}			
         }
 
         /** Returns whatever was written so far into the Writer. */

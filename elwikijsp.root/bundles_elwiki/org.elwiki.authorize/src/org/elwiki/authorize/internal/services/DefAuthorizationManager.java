@@ -96,6 +96,7 @@ import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.authorize.authenticated.AuthenticatedContextActivator;
 import org.elwiki.authorize.check.AuthorizeCheckActivator;
 import org.elwiki.authorize.condition.SessionTypeCondition;
+//import org.elwiki.authorize.condition.SessionTypeCondition;
 //import org.elwiki.authorize.anonymous.AnonymousActivator;
 //import org.elwiki.authorize.asserted.AssertedActivator;
 import org.elwiki.authorize.context.anonymous.AnonymousContextActivator;
