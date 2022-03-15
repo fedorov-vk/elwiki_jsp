@@ -56,10 +56,8 @@
 					<extraConfigFile>${project.basedir}/main/config/wro/wro.properties</extraConfigFile>
 					<minimize>${minimize}</minimize>
 					<ignoreMissingResources>false</ignoreMissingResources>
-					<parallelProcessing>true</parallelProcessing>
-					<!--
-					<incrementalBuildEnabled>true</incrementalBuildEnabled>
-					-->
+					<parallelProcessing>false</parallelProcessing>
+					<incrementalBuildEnabled>false</incrementalBuildEnabled>
 					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 				</configuration>
 				<!-- https://github.com/wro4j/wro4j/issues/1039#issuecomment-382474533 -->
