@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.content.DefaultPageRenamer">
-   <implementation class="org.apache.wiki.content.DefaultPageRenamer"/>
-   <service>
-      <provide interface="org.apache.wiki.content0.PageRenamer"/>
-   </service>
-</scr:component>

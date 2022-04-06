@@ -33,6 +33,7 @@ import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
 //import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.ui.TemplateManager;
 //import org.apache.wiki.auth.authorize.WebAuthorizer;
 //import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 //import org.apache.wiki.auth.login.AnonymousLoginModule;
@@ -50,6 +51,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.authorize.WebContainerAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
@@ -62,6 +64,10 @@ import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -88,6 +94,8 @@ import java.util.Set;
  * 
  * @since 2.3
  */
+@Component(name = "elwiki.DefaultAuthenticationManager", service = IIAuthenticationManager.class, //
+factory = "elwiki.AuthenticationManager.factory")
 public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
@@ -139,23 +147,22 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
 
+	// -- service handling ---------------------------{start}--
+
+	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
-	// -- service handling -------------------------< start >--
-
-	public void setAuthorizationManager(AuthorizationManager authorizationManager) {
-		this.authorizationManager = authorizationManager;
-	}
-
+	@Activate
 	public synchronized void startup() throws WikiException {
 		//
 	}
 
+	@Deactivate
 	public synchronized void shutdown() {
 		//
 	}
 	
-    // -- service handling ---------------------------< end >--
+	// -- service handling -----------------------------{end}--
     
 	/**
      * {@inheritDoc}

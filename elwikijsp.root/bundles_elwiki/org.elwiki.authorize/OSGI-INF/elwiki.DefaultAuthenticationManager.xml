@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" deactivate="shutdown" factory="elwiki.AuthenticationManager.factory" name="elwiki.DefaultAuthenticationManager">
+   <service>
+      <provide interface="org.apache.wiki.auth.IIAuthenticationManager"/>
+   </service>
+   <implementation class="org.elwiki.authorize.internal.services.DefaultAuthenticationManager"/>
+</scr:component>

@@ -35,7 +35,8 @@ Import-Package: javax.mail;version="1.4.0",
  org.apache.wiki.util,
  org.eclipse.jface.preference,
  org.elwiki.authorize.condition,
- org.elwiki.configuration
+ org.elwiki.configuration,
+ org.osgi.service.component.annotations;version="1.2.0"
 Export-Package: org.elwiki.authorize;
   uses:="org.elwiki.api.authorization,
    javax.servlet.http,
@@ -45,7 +46,6 @@ Export-Package: org.elwiki.authorize;
    org.jdom2,
    org.elwiki.data.authorize,
    org.elwiki.api,
-   org.xml.sax,
    org.apache.log4j",
  org.elwiki.authorize.login;
   uses:="org.elwiki.api,
@@ -61,10 +61,10 @@ Export-Package: org.elwiki.authorize;
    org.osgi.service.useradmin,
    org.elwiki.api.authorization.user,
    org.apache.log4j"
-Service-Component: OSGI-INF/authenticationManager.xml,
- OSGI-INF/authorizationManager.xml,
- OSGI-INF/groupManager.xml,
- OSGI-INF/userManager.xml,
- OSGI-INF/defaultAclManager.xml
+Service-Component: OSGI-INF/elwiki.DefaultAclManager.xml,
+ OSGI-INF/elwiki.DefaultAuthenticationManager.xml,
+ OSGI-INF/elwiki.DefaultAuthorizationManager.xml,
+ OSGI-INF/elwiki.DefaultUserManager.xml,
+ OSGI-INF/elwiki.GroupManager.xml
 Bundle-ClassPath: freshcookies-security-0.60.jar,
  .

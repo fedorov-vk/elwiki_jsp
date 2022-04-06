@@ -26,6 +26,7 @@ import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventEmitter;
 import org.apache.wiki.api.event.WorkflowEvent;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
@@ -33,6 +34,7 @@ import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.component.annotations.Component;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -59,6 +61,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * users or groups expected to approve particular Workflows.
  * </p>
  */
+@Component(name = "elwiki.DefaultWorkflowManager", service = WorkflowManager.class, //
+factory = "elwiki.WorkflowManager.factory")
 public class DefaultWorkflowManager implements WorkflowManager {
 
     private static final Logger LOG = Logger.getLogger( DefaultWorkflowManager.class );

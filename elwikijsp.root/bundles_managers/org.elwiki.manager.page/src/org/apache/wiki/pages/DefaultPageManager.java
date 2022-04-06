@@ -59,6 +59,7 @@ import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.pages0.PageTimeComparator;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.Decision;
@@ -74,6 +75,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
@@ -83,6 +85,8 @@ import org.elwiki_data.AclEntry;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 
 /**
@@ -94,6 +98,8 @@ import org.osgi.framework.Bundle;
  *
  * @since 2.0
  */
+@Component(name = "elwiki.DefaultPageManager", service = PageManager.class, //
+		factory = "elwiki.PageManager.factory")
 public class DefaultPageManager implements PageManager, Initializable {
 
     private static final Logger LOG = Logger.getLogger( DefaultPageManager.class );
@@ -112,12 +118,6 @@ public class DefaultPageManager implements PageManager, Initializable {
 
     private PageSorter pageSorter = new PageSorter();
     
-    private IWikiConfiguration wikiConfiguration;
-    private AclManager aclManager;
-    private ReferenceManager referenceManager;
-	private TasksManager tasksManager;
-	private DifferenceManager differenceManager;
-    
 	/**
      * Create instance of DefaultPageManager.
      */
@@ -126,29 +126,25 @@ public class DefaultPageManager implements PageManager, Initializable {
 		// TODO Auto-generated constructor stub
 	}
 
-    // -- service handling --------------------------- start --
-    
-    public void setWikiConfiguration(IWikiConfiguration configuration) {
-    	this.wikiConfiguration = configuration;
-    }
-    
-    public void setAclManager(AclManager aclManager) {
-    	this.aclManager = aclManager;
-    }
+	// -- service handling ---------------------------{start}--
 
-    public void setReferenceManager(ReferenceManager referenceManager) {
-    	this.referenceManager = referenceManager;
-    }
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    private IWikiConfiguration wikiConfiguration;
 
-    public void setTasksManager(TasksManager tasksManager) {
-    	this.tasksManager = tasksManager;
-    }
+	@WikiServiceReference
+	private AclManager aclManager;
+	
+	@WikiServiceReference
+    private ReferenceManager referenceManager;
+	
+	@WikiServiceReference
+	private TasksManager tasksManager;
+	
+	@WikiServiceReference
+	private DifferenceManager differenceManager;
 
-    public void setDifferenceManager(DifferenceManager differenceManager) {
-		this.differenceManager = differenceManager;
-	}
-    
-    // -- service handling ----------------------------- end --
+	// -- service handling -----------------------------{end}--
     
 	/**
      * Creates a new PageManager.

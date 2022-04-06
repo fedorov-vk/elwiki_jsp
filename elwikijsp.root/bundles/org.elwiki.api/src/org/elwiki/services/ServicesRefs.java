@@ -1,6 +1,8 @@
 package org.elwiki.services;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -10,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -18,7 +21,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
-
+import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Context;
@@ -60,17 +63,17 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentFactory;
+import org.osgi.service.component.annotations.Reference;
 
 public class ServicesRefs implements Engine {
-
-	/** Stores configuration. */
-	private static IWikiConfiguration wikiConfiguration;
 
 	private static AclManager aclManager;
 	private static AttachmentManager attachmentManager;
@@ -96,113 +99,99 @@ public class ServicesRefs implements Engine {
 	private static WorkflowManager workflowManager;
 	private static URLConstructor urlConstructor;
 	private static RSSGenerator rssGenerator;
+	private static TasksManager tasksManager;
+	private static IStorageCdo storageCdo;
 
 	public static ServicesRefs Instance;
 
 	private BundleContext bundleContext;
 
-    private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
-	
+	private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
+
 	// -- service handling -------------------------< start >--
+
+	/** Stores configuration. */
+	//@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
 
 	// -- start code block -- Services reference setters
 
-	public void setWikiConfiguration(IWikiConfiguration wikiConfiguration) {
-		ServicesRefs.wikiConfiguration = wikiConfiguration;
-	}
+	// @Reference(target = "(component.factory=elwiki.AclManager.factory)")
+	private ComponentFactory<AclManager> factoryAclManager;
 
-	public void setAclManager(AclManager aclManager) {
-		ServicesRefs.aclManager = aclManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.AttachmentManager.factory)")
+	private ComponentFactory<AttachmentManager> factoryAttachmentManager;
 
-	public void setAttachmentManager(AttachmentManager attachmentManager) {
-		ServicesRefs.attachmentManager = attachmentManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.PageManager.factory)")
+	private ComponentFactory<PageManager> factoryPageManager;
 
-	public void setPageManager(PageManager pageManager) {
-		ServicesRefs.pageManager = pageManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.PageRenamer.factory)")
+	private ComponentFactory<PageRenamer> factoryPageRenamer;
 
-	public void setPageRenamer(PageRenamer pageRenamer) {
-		ServicesRefs.pageRenamer = pageRenamer;
-	}
+	// @Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
+	private ComponentFactory<AuthorizationManager> factoryAuthorizationManager;
 
-	public void setAuthorizationManager(AuthorizationManager authorizationManager) {
-		ServicesRefs.authorizationManager = authorizationManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
+	private ComponentFactory<IAuthorizer> factoryGroupManager;
 
-	public void setGroupManager(IAuthorizer groupManager) {
-		ServicesRefs.groupManager = groupManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
+	private ComponentFactory<ProgressManager> factoryProgressManager;
 
-	public void setProgressManager(ProgressManager progressManager) {
-		ServicesRefs.progressManager = progressManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.UserManager.factory)")
+	private ComponentFactory<UserManager> factoryUserManager;
 
-	public void setUserManager(UserManager userManager) {
-		ServicesRefs.userManager = userManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.AdminBeanManager.factory)")
+	private ComponentFactory<AdminBeanManager> factoryAdminBeanManager;
 
-	public void setAdminBeanManager(AdminBeanManager adminBeanManager) {
-		ServicesRefs.adminBeanManager = adminBeanManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.AuthenticationManager.factory)")
+	private ComponentFactory<IIAuthenticationManager> factoryAuthenticationManager;
 
-	public void setAuthenticationManager(IIAuthenticationManager authenticationManager) {
-		ServicesRefs.authenticationManager = authenticationManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.RenderingManager.factory)")
+	private ComponentFactory<RenderingManager> factoryRenderingManager;
 
-	public void setRenderingManager(RenderingManager renderingManager) {
-		ServicesRefs.renderingManager = renderingManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.ReferenceManager.factory)")
+	private ComponentFactory<ReferenceManager> factoryReferenceManager;
 
-	public void setReferenceManager(ReferenceManager referenceManager) {
-		ServicesRefs.referenceManager = referenceManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.VariableManager.factory)")
+	private ComponentFactory<VariableManager> factoryVariableManager;
 
-	public void setVariableManager(VariableManager variableManager) {
-		ServicesRefs.variableManager = variableManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.DifferenceManager.factory)")
+	private ComponentFactory<DifferenceManager> factoryDifferenceManager;
 
-	public void setDifferenceManager(DifferenceManager differenceManager) {
-		ServicesRefs.differenceManager = differenceManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.TemplateManager.factory)")
+	private ComponentFactory<TemplateManager> factoryTemplateManager;
 
-	public void setTemplateManager(TemplateManager templateManager) {
-		ServicesRefs.templateManager = templateManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.EditorManager.factory)")
+	private ComponentFactory<EditorManager> factoryEditorManager;
 
-	public void setEditorManager(EditorManager editorManager) {
-		ServicesRefs.editorManager = editorManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.PluginManager.factory)")
+	private ComponentFactory<PluginManager> factoryPluginManager;
 
-	public void setPluginManager(PluginManager pluginManager) {
-		ServicesRefs.pluginManager = pluginManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.FilterManager.factory)")
+	private ComponentFactory<FilterManager> factoryFilterManager;
 
-	public void setFilterManager(FilterManager filterManager) {
-		ServicesRefs.filterManager = filterManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.SearchManager.factory)")
+	private ComponentFactory<SearchManager> factorySearchManager;
 
-	public void setSearchManager(SearchManager searchManager) {
-		ServicesRefs.searchManager = searchManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.UrlConstructor.factory)")
+	private ComponentFactory<CommandResolver> factoryCommandResolver;
 
-	public void setCommandResolver(CommandResolver commandResolver) {
-		ServicesRefs.commandResolver = commandResolver;
-	}
+	// @Reference(target = "(component.factory=elwiki.InternationalizationManager.factory)")
+	private ComponentFactory<InternationalizationManager> factoryInternationalizationManager;
 
-	public void setInternationalizationManager(InternationalizationManager internationalizationManager) {
-		ServicesRefs.internationalizationManager = internationalizationManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.WorkflowManager.factory)")
+	private ComponentFactory<WorkflowManager> factoryWorkflowManager;
 
-	public void setWorkflowManager(WorkflowManager workflowManager) {
-		ServicesRefs.workflowManager = workflowManager;
-	}
+	// @Reference(target = "(component.factory=elwiki.UrlConstructor.factory)")
+	private ComponentFactory<URLConstructor> factoryUrlConstructor;
 
-	public void setUrlConstructor(URLConstructor urlConstructor) {
-		ServicesRefs.urlConstructor = urlConstructor;
-	}
+	// @Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
+	private ComponentFactory<TasksManager> factoryTasksManager;
 
+	// @Reference(target = "(component.factory=elwiki.StorageCdo.factory)")
+	private ComponentFactory<IStorageCdo> factoryStorageCdo;
+	
+	//:FVK:
 	public void setRssGenerator(RSSGenerator rssGenerator) {
 		ServicesRefs.rssGenerator = rssGenerator;
 	}
@@ -215,12 +204,84 @@ public class ServicesRefs implements Engine {
 
 		try {
 			// Note: rootPath - may be null, if JSPWiki has been deployed in a WAR file.
+			servicesMaker();
 			initialize();
 			log.info("Root path for this Wiki is: '" + m_rootPath + "'");
 		} catch (final Exception e) {
 			final String msg = Release.APPNAME + ": Unable to load and setup properties from jspwiki.properties. "
 					+ e.getMessage();
 			throw new WikiException(msg, e);
+		}
+	}
+
+	private void servicesMaker() {
+		managers.put(PageRenamer.class,
+				ServicesRefs.pageRenamer = this.factoryPageRenamer.newInstance(null).getInstance());
+		managers.put(ProgressManager.class,
+				ServicesRefs.progressManager = this.factoryProgressManager.newInstance(null).getInstance());
+		managers.put(AdminBeanManager.class,
+				ServicesRefs.adminBeanManager = this.factoryAdminBeanManager.newInstance(null).getInstance());
+		managers.put(TemplateManager.class,
+				ServicesRefs.templateManager = this.factoryTemplateManager.newInstance(null).getInstance());
+		managers.put(EditorManager.class,
+				ServicesRefs.editorManager = this.factoryEditorManager.newInstance(null).getInstance());
+		managers.put(PluginManager.class,
+				ServicesRefs.pluginManager = this.factoryPluginManager.newInstance(null).getInstance());
+		managers.put(InternationalizationManager.class,
+				ServicesRefs.internationalizationManager = this.factoryInternationalizationManager.newInstance(null)
+						.getInstance());
+		managers.put(WorkflowManager.class,
+				ServicesRefs.workflowManager = this.factoryWorkflowManager.newInstance(null).getInstance());
+		managers.put(URLConstructor.class,
+				ServicesRefs.urlConstructor = this.factoryUrlConstructor.newInstance(null).getInstance());
+		managers.put(CommandResolver.class,
+				ServicesRefs.commandResolver = this.factoryCommandResolver.newInstance(null).getInstance());
+		managers.put(VariableManager.class,
+				ServicesRefs.variableManager = this.factoryVariableManager.newInstance(null).getInstance());
+		managers.put(SearchManager.class,
+				ServicesRefs.searchManager = this.factorySearchManager.newInstance(null).getInstance());
+		managers.put(RenderingManager.class,
+				ServicesRefs.renderingManager = this.factoryRenderingManager.newInstance(null).getInstance());
+		managers.put(AttachmentManager.class,
+				ServicesRefs.attachmentManager = this.factoryAttachmentManager.newInstance(null).getInstance());
+		managers.put(UserManager.class,
+				ServicesRefs.userManager = this.factoryUserManager.newInstance(null).getInstance());
+		managers.put(FilterManager.class,
+				ServicesRefs.filterManager = this.factoryFilterManager.newInstance(null).getInstance());
+		managers.put(IIAuthenticationManager.class,
+				ServicesRefs.authenticationManager = this.factoryAuthenticationManager.newInstance(null).getInstance());
+		managers.put(AuthorizationManager.class,
+				ServicesRefs.authorizationManager = this.factoryAuthorizationManager.newInstance(null).getInstance());
+		managers.put(IAuthorizer.class,
+				ServicesRefs.groupManager = this.factoryGroupManager.newInstance(null).getInstance());
+		managers.put(PageManager.class,
+				ServicesRefs.pageManager = this.factoryPageManager.newInstance(null).getInstance());
+		managers.put(DifferenceManager.class,
+				ServicesRefs.differenceManager = this.factoryDifferenceManager.newInstance(null).getInstance());
+		managers.put(ReferenceManager.class,
+				ServicesRefs.referenceManager = this.factoryReferenceManager.newInstance(null).getInstance());
+		managers.put(TasksManager.class,
+				ServicesRefs.tasksManager = this.factoryTasksManager.newInstance(null).getInstance());
+		managers.put(AclManager.class,
+				ServicesRefs.aclManager = this.factoryAclManager.newInstance(null).getInstance());
+		managers.put(IStorageCdo.class,
+				ServicesRefs.storageCdo = this.factoryStorageCdo.newInstance(null).getInstance());
+
+		// Обработка аннотаций @WikiServiceReference.
+		for (Object serviceInstance : managers.values()) {
+			for (Field field : serviceInstance.getClass().getDeclaredFields()) {
+				if (field.isAnnotationPresent(WikiServiceReference.class)) {
+					try {
+						Class<?> typeField = field.getType();
+						Object targetService = managers.get(typeField);
+						field.setAccessible(true);
+						field.set(serviceInstance, targetService);
+					} catch (Exception e) {
+						// TODO:
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 
@@ -376,7 +437,7 @@ public class ServicesRefs implements Engine {
 	/** Stores wikiengine attributes. */
 	private Map<String, Object> m_attributes = new ConcurrentHashMap<>();
 
-	/** Stores WikiEngine's associated managers. */
+	/** Stores WikiEngine's associated managers- <interface, instance>. */
 	protected Map<Class<?>, Object> managers = new ConcurrentHashMap<>();
 
 	// == code =================================================================
@@ -871,10 +932,8 @@ public class ServicesRefs implements Engine {
 	@SuppressWarnings("unchecked")
 	@NonNull
 	public <T> @NonNull T getManager(Class<T> manager) {
-		T result = (T) managers.entrySet().stream()
-                	.filter(e -> manager.isAssignableFrom(e.getKey()))
-                	.map(Map.Entry::getValue)
-                	.findFirst().orElse(null);
+		T result = (T) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+				.map(Map.Entry::getValue).findFirst().orElse(null);
 		return result;
 	}
 
@@ -882,10 +941,8 @@ public class ServicesRefs implements Engine {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getManagers(Class<T> manager) {
-		return (List<T>) managers.entrySet().stream()
-                	.filter(e -> manager.isAssignableFrom(e.getKey()))
-                	.map(Map.Entry::getValue)
-                	.collect(Collectors.toList());
+		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+				.map(Map.Entry::getValue).collect(Collectors.toList());
 	}
 
 	/**
@@ -894,20 +951,20 @@ public class ServicesRefs implements Engine {
 	 * @return контекста Wiki для текущего процесса.
 	 */
 	public static Context getCurrentContext() {
-        return thWikiContext.get();
+		return thWikiContext.get();
 	}
 
 	/**
 	 * Сохранение контекста Wiki для текущего процесса.
-	 *  
+	 * 
 	 * @param wikiContext
 	 */
 	public static void setCurrentContext(Context wikiContext) {
-        thWikiContext.set(wikiContext);
+		thWikiContext.set(wikiContext);
 	}
 
 	public static void removeCurrentContext() {
-        thWikiContext.remove();
+		thWikiContext.remove();
 	}
-	
+
 }

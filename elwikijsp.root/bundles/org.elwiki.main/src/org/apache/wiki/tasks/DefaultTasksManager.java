@@ -24,13 +24,17 @@ import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.tasks.auth.SaveUserProfileTask;
 import org.apache.wiki.tasks.pages.PreSaveWikiPageTask;
 import org.apache.wiki.tasks.pages.SaveWikiPageTask;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.workflow0.Step;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Locale;
 
 /**
  * Default implementation for {@link TasksManager}.
  */
+@Component(name = "elwiki.DefaultTasksManager", service = TasksManager.class, //
+		factory = "elwiki.TasksManager.factory")
 public class DefaultTasksManager implements TasksManager {
 
     /**

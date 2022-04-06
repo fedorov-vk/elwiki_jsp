@@ -29,12 +29,16 @@ import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -44,35 +48,17 @@ import java.util.Properties;
 /**
  * Load, initialize and delegate to the DiffProvider that will actually do the work.
  */
+@Component(name = "elwiki.DefaultDifferenceManager", service = DifferenceManager.class, //
+		factory = "elwiki.DifferenceManager.factory")
 public class DefaultDifferenceManager implements DifferenceManager, Initializable {
 
     private static final Logger log = Logger.getLogger( DefaultDifferenceManager.class );
 
     private DiffProvider m_provider;
 
-	private IWikiConfiguration wikiConfiguration;
-
-	// -- service handling ------------------------------------
-
-    public void setConfiguration(IWikiConfiguration configuration) {
-    	this.wikiConfiguration = configuration;
-    }
-	
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param bc
-	 * @throws WikiException
-	 */
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		/*:FVK: old code - now used service declaration initialization.
-		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
-		}
-		*/
-	}
-    
+    /**
+     * Creates instance of DefaultDifferenceManager.
+     */
     public DefaultDifferenceManager() {
 		super();
 	}
@@ -89,6 +75,38 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
 
         log.info( "Using difference provider: " + m_provider.getProviderInfo() );
     }
+
+	// -- service handling ---------------------------{start}--
+
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    private IWikiConfiguration wikiConfiguration;
+
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 * 
+	 * @param bc
+	 * @throws WikiException
+	 */
+    @Activate
+	public synchronized void startup(BundleContext bc) throws WikiException {
+		/*:FVK: old code - now used service declaration initialization.
+		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
+		if (ref != null) {
+			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
+		}
+		*/
+	}
+
+	// -- service handling -----------------------------{end}--
+
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+        loadProvider();
+        initializeProvider( engine );
+
+        log.info( "Using difference provider: " + m_provider.getProviderInfo() );
+	}
 
     private void loadProvider() {
         final String providerClassName = TextUtil.getStringProperty(
@@ -108,7 +126,6 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
             m_provider = new DiffProvider.NullDiffProvider();
         }
     }
-
 
     private void initializeProvider( final Engine engine ) {
         try {
@@ -167,14 +184,6 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
 
         return makeDiff( context, page1, page2 );
     }
-
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-        loadProvider();
-        initializeProvider( engine );
-
-        log.info( "Using difference provider: " + m_provider.getProviderInfo() );
-	}
 
 }
 

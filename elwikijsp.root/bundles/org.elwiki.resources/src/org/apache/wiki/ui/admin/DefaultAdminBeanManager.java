@@ -28,6 +28,7 @@ import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.ModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.ui.admin.beans.CoreBean;
 import org.apache.wiki.ui.admin.beans.FilterBean;
 import org.apache.wiki.ui.admin.beans.PluginBean;
@@ -35,6 +36,9 @@ import org.apache.wiki.ui.admin.beans.SearchManagerBean;
 import org.apache.wiki.ui.admin.beans.UserBean;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 
 import javax.management.DynamicMBean;
 import javax.management.InstanceAlreadyExistsException;
@@ -57,6 +61,8 @@ import java.util.Properties;
  *
  *  @since  2.5.52
  */
+@Component(name = "elwiki.DefaultAdminBeanManager", service = AdminBeanManager.class, //
+		factory = "elwiki.AdminBeanManager.factory")
 public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanManager, Initializable {
 
     private Engine m_engine;
@@ -73,8 +79,22 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
             log.info( m_mbeanServer.getClass().getName() );
             log.info( m_mbeanServer.getDefaultDomain() );
         }
-
     }
+    
+	// -- service handling --------------------------< start --
+
+	@Activate
+	public void startup() {
+		//
+	}
+
+	@Deactivate
+	public void shutdown() {
+		//
+	}
+
+	// -- service handling ---------------------------- end >--
+
 
     private String getJMXTitleString( final int title ) {
         switch( title ) {

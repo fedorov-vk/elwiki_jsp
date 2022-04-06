@@ -23,6 +23,8 @@ import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Context;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.filters.PageFilter;
@@ -33,6 +35,7 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.ui.TemplateManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
@@ -49,6 +52,8 @@ import java.util.ResourceBundle;
  *
  *  @since 1.9.20.
  */
+@Component(name = "elwiki.DefaultVariableManager", service = VariableManager.class, //
+		factory = "elwiki.VariableManager.factory")
 public class DefaultVariableManager implements VariableManager {
 
     private static final Logger log = Logger.getLogger( DefaultVariableManager.class );
@@ -60,20 +65,13 @@ public class DefaultVariableManager implements VariableManager {
         "jspwiki.auth.masterpassword"
     };
 
-	private IWikiConfiguration wikiConfiguration;
-
-    // -- service handling ------------------------------------
-
-    public void setConfiguration(IWikiConfiguration configuration) {
-    	this.wikiConfiguration = configuration;
-    	/* старый код (из любого места)
-		BundleContext context = MainActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
-		}
-    	 */
-    }
+	// -- service handling ---------------------------{start}--
+    
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    private IWikiConfiguration wikiConfiguration;
+	
+	// -- service handling -----------------------------{end}--
 	
     /**
      *  Creates a VariableManager object using the property list given.

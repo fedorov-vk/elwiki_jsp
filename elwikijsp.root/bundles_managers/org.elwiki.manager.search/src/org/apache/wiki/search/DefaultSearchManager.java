@@ -50,12 +50,17 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
+import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 
 /**
@@ -63,39 +68,39 @@ import org.elwiki_data.WikiPage;
  *
  *  @since 2.2.21.
  */
+@Component(name = "elwiki.DefaultSearchManager", service = SearchManager.class, //
+		factory = "elwiki.SearchManager.factory")
 public class DefaultSearchManager extends BasePageFilter implements SearchManager {
 
     private static final Logger log = Logger.getLogger( DefaultSearchManager.class );
 
     private SearchProvider m_searchProvider;
 
-	private IWikiConfiguration wikiConfiguration;
-	private ReferenceManager referenceManager;
-	private PageManager pageManager;
-	
+    /**
+     * Creates instance of DefaultSearchManager.
+     */
     public DefaultSearchManager() {
 		super();
 	}
 
-	// -- service handling --------------------------- start --
+    // -- service handling ---------------------------{start}--
+    
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    private IWikiConfiguration wikiConfiguration;
 
+	@WikiServiceReference
+    private ReferenceManager referenceManager;
+	
+	@WikiServiceReference
+    private PageManager pageManager;
+
+    @Activate
 	public void startup() {
 		//
 	}
-    
-	public void setWikiConfiguration(IWikiConfiguration configuration) {
-		this.wikiConfiguration = configuration;
-	}
 
-	public void setReferenceManager(ReferenceManager referenceManager) {
-		this.referenceManager = referenceManager;
-	}
-
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
-	// -- service handling ----------------------------- end --
+	// -- service handling -----------------------------{end}--
     
 	/**
      *  Creates a new SearchManager.

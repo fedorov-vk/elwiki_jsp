@@ -70,9 +70,9 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPath;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.useradmin.Group;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+//import org.xml.sax.EntityResolver;
+//import org.xml.sax.InputSource;
+//import org.xml.sax.SAXException;
 
 /**
  * Authorizes users by delegating role membership checks to the servlet container. In addition to
@@ -379,7 +379,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		URL url;
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
-		builder.setEntityResolver(new LocalEntityResolver());
+//:FVK:		builder.setEntityResolver(new LocalEntityResolver());
 		Document doc = null;
 
 		if (m_engine.getServletContext() == null) {
@@ -417,59 +417,59 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * <code>WEB-INF/dtd/web-app_2_3.dtd</code>.
 	 * </p>
 	 */
-	public class LocalEntityResolver implements EntityResolver {
-		/**
-		 * Returns an XML input source for a requested external resource by reading the resource instead
-		 * from local storage. The local resource path is <code>WEB-INF/dtd</code>, plus the file name of
-		 * the requested resource, minus the non-filename path information.
-		 * 
-		 * @param publicId
-		 *            the public ID, such as
-		 *            <code>-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN</code>
-		 * @param systemId
-		 *            the system ID, such as <code>http://java.sun.com/dtd/web-app_2_3.dtd</code>
-		 * @return the InputSource containing the resolved resource
-		 * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String, java.lang.String)
-		 * @throws SAXException
-		 *             if the resource cannot be resolved locally
-		 * @throws IOException
-		 *             if the resource cannot be opened
-		 */
-		@Override
-		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-			String file = systemId.substring(systemId.lastIndexOf('/') + 1);
-			URL url;
-
-			if (m_engine.getServletContext() == null) {
-				ClassLoader cl = WebContainerAuthorizer.class.getClassLoader();
-				url = cl.getResource("WEB-INF/dtd/" + file);
-			} else {
-				url = m_engine.getServletContext().getResource("/WEB-INF/dtd/" + file);
-			}
-
-			if (url != null) {
-				InputSource is = new InputSource(url.openStream());
-				log.debug("Resolved systemID=" + systemId + " using local file " + url);
-				return is;
-			}
-
-			//
-			//  Let's fall back to default behaviour of the container, and let's
-			//  also let the user know what is going on.  This caught me by surprise
-			//  while running JSPWiki on an unconnected laptop...
-			//
-			//  The DTD needs to be resolved and read because it contains things like
-			//  entity definitions...
-			//
-			log.info("Please note: There are no local DTD references in /WEB-INF/dtd/" + file
-					+ "; falling back to default behaviour."
-					+ " This may mean that the XML parser will attempt to connect to the internet to find the DTD."
-					+ " If you are running JSPWiki locally in an unconnected network, you might want to put the DTD files in place to avoid nasty UnknownHostExceptions.");
-
-			// Fall back to default behaviour
-			return null;
-		}
-	}
+//:FVK:	public class LocalEntityResolver implements EntityResolver {
+//		/**
+//		 * Returns an XML input source for a requested external resource by reading the resource instead
+//		 * from local storage. The local resource path is <code>WEB-INF/dtd</code>, plus the file name of
+//		 * the requested resource, minus the non-filename path information.
+//		 * 
+//		 * @param publicId
+//		 *            the public ID, such as
+//		 *            <code>-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN</code>
+//		 * @param systemId
+//		 *            the system ID, such as <code>http://java.sun.com/dtd/web-app_2_3.dtd</code>
+//		 * @return the InputSource containing the resolved resource
+//		 * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String, java.lang.String)
+//		 * @throws SAXException
+//		 *             if the resource cannot be resolved locally
+//		 * @throws IOException
+//		 *             if the resource cannot be opened
+//		 */
+//		@Override
+//		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+//			String file = systemId.substring(systemId.lastIndexOf('/') + 1);
+//			URL url;
+//
+//			if (m_engine.getServletContext() == null) {
+//				ClassLoader cl = WebContainerAuthorizer.class.getClassLoader();
+//				url = cl.getResource("WEB-INF/dtd/" + file);
+//			} else {
+//				url = m_engine.getServletContext().getResource("/WEB-INF/dtd/" + file);
+//			}
+//
+//			if (url != null) {
+//				InputSource is = new InputSource(url.openStream());
+//				log.debug("Resolved systemID=" + systemId + " using local file " + url);
+//				return is;
+//			}
+//
+//			//
+//			//  Let's fall back to default behaviour of the container, and let's
+//			//  also let the user know what is going on.  This caught me by surprise
+//			//  while running JSPWiki on an unconnected laptop...
+//			//
+//			//  The DTD needs to be resolved and read because it contains things like
+//			//  entity definitions...
+//			//
+//			log.info("Please note: There are no local DTD references in /WEB-INF/dtd/" + file
+//					+ "; falling back to default behaviour."
+//					+ " This may mean that the XML parser will attempt to connect to the internet to find the DTD."
+//					+ " If you are running JSPWiki locally in an unconnected network, you might want to put the DTD files in place to avoid nasty UnknownHostExceptions.");
+//
+//			// Fall back to default behaviour
+//			return null;
+//		}
+//	}
 
 	//:FVK: @Override
 	public void actionPerformed(WikiEvent event) {

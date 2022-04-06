@@ -24,6 +24,8 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -40,6 +42,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
@@ -55,6 +58,8 @@ import java.util.Map;
  *
  * @since 2.4.22
  */
+@Component(name = "elwiki.DefaultCommandResolver", service = CommandResolver.class, //
+		factory = "elwiki.CommandResolver.factory")
 public final class DefaultCommandResolver implements CommandResolver, Initializable {
 
 	private static final String URL_CMD_SUFFIX = ".cmd";
@@ -86,10 +91,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	/** Stores special page names as keys, and Commands as values. */
 	private final Map<String, Command> m_specialPages;
 
-	private IWikiConfiguration configuration;
-	private PageManager pageManager;
-	private URLConstructor urlConstructor;
-
 	/**
 	 * Create instance of DefaultCommandResolver.
 	 */
@@ -97,21 +98,19 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		m_specialPages = new HashMap<>();
 	}
 
-	// -- service handling --------------------------- start --
+	// -- service handling ---------------------------{start}--
 
-	public void setConfiguration(IWikiConfiguration configuration) {
-		this.configuration = configuration;
-	}
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration configuration;
 
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
+	@WikiServiceReference
+	private PageManager pageManager;
 
-	public void setURLConstructor(URLConstructor urlConstructor) {
-		this.urlConstructor = urlConstructor;
-	}
+	@WikiServiceReference
+	private URLConstructor urlConstructor;
 
-	// -- service handling ----------------------------- end --
+	// -- service handling -----------------------------{end}--
 
 	/**
 	 * Constructs a CommandResolver for a given Engine. This constructor will extract the special

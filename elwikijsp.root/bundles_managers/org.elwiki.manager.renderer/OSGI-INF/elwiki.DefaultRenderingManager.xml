@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="elwiki.RenderingManager.factory" name="elwiki.DefaultRenderingManager">
+   <service>
+      <provide interface="org.apache.wiki.render0.RenderingManager"/>
+   </service>
+   <implementation class="org.apache.wiki.render.DefaultRenderingManager"/>
+</scr:component>

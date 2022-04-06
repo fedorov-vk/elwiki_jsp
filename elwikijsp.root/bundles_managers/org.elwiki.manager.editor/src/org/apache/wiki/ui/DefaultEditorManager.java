@@ -28,10 +28,14 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.apache.wiki.ui.internal.EditorActivator;
 import org.apache.wiki.util.XmlUtil;
 import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,6 +63,8 @@ import java.util.Set;
  *
  *  @since 2.4
  */
+@Component(name = "elwiki.DefaultEditorManager", service = EditorManager.class, //
+		factory = "elwiki.EditorManager.factory")
 public class DefaultEditorManager extends BaseModuleManager implements EditorManager {
 
     private Map< String, WikiEditorInfo > m_editors;
@@ -69,6 +75,15 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
         super();
     }
 
+	// -- service handling --------------------------< start --
+
+    @Activate
+	public synchronized void startup(BundleContext bc) {
+		//this.bundle = bc.getBundle();
+	}
+
+	// -- service handling ---------------------------- end >--
+    
     /**
      * {@inheritDoc}
      *

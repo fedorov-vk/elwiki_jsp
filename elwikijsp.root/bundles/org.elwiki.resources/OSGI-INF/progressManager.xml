@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" name="org.apache.wiki.ui.progress.DefaultProgressManager">
-   <implementation class="org.apache.wiki.ui.progress.DefaultProgressManager"/>
-   <service>
-      <provide interface="org.apache.wiki.api.ui.progress.ProgressManager"/>
-   </service>
-</scr:component>

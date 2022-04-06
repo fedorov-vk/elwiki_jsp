@@ -31,6 +31,8 @@ import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -44,10 +46,12 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
@@ -134,6 +138,8 @@ import java.util.TreeSet;
 // FIXME: The way that we save attributes is now a major booboo, and must be
 //        replace forthwith.  However, this is a workaround for the great deal
 //        of problems that occur here...
+@Component(name = "elwiki.DefaultReferenceManager", service = ReferenceManager.class, //
+		factory = "elwiki.ReferenceManager.factory")
 public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, Initializable {
 
     /**
@@ -159,8 +165,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /** We use this also a generic serialization id */
     private static final long serialVersionUID = 4L;
 
-    private IStorageCdo storageCdo;
-
     /**
      *  Builds a new ReferenceManager.
      *
@@ -176,14 +180,20 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         m_unmutableReferredBy = Collections.unmodifiableMap( m_referredBy );
         m_unmutableRefersTo   = Collections.unmodifiableMap( m_refersTo );
     }
-    
+
+	// -- service handling ---------------------------{start}--
+
+    @WikiServiceReference
+    private IStorageCdo storageCdo;
+
+	// -- service handling -----------------------------{end}--
+
     @Override
 	public void initialize(Engine engine) throws WikiException {
 		super.initialize(engine);
 		IPreferenceStore wikiPreferences = engine.getWikiPreferences();
 		m_matchEnglishPlurals = TextUtil.getBooleanProperty( wikiPreferences, Engine.PROP_MATCHPLURALS, false );
 	}
-
 
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
@@ -931,10 +941,4 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         }
     }
 
-	// -- service support ---------------------------------
-
-	public void setStorageCdo(IStorageCdo storageCdo) {
-		this.storageCdo = storageCdo;
-	}
-    
 }

@@ -23,9 +23,12 @@ import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.CommandResolver;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,6 +42,8 @@ import java.nio.charset.Charset;
  *
  *  @since 2.2
  */
+@Component(name = "elwiki.DefaultUrlConstructor", service = URLConstructor.class, //
+factory = "elwiki.UrlConstructor.factory")
 public class DefaultURLConstructor implements URLConstructor {
 
     protected Engine m_engine;
@@ -46,13 +51,13 @@ public class DefaultURLConstructor implements URLConstructor {
     /** Contains the absolute path of the JSPWiki Web application without the actual servlet (which is the m_urlPrefix). */
     protected String m_pathPrefix = "";
 
+	// -- service handling --------------------------< start --
+    
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
-    // -- service handling ------------------------------------
-    
-    public void setWikiConfiguration(IWikiConfiguration configuration) {
-    	this.wikiConfiguration = configuration;
-    }
+	// -- service handling ---------------------------- end >--
     
     /**
      *

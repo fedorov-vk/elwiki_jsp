@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.DifferenceManager.factory" name="elwiki.DefaultDifferenceManager">
+   <service>
+      <provide interface="org.apache.wiki.api.diff.DifferenceManager"/>
+   </service>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
+   <implementation class="org.apache.wiki.diff.DefaultDifferenceManager"/>
+</scr:component>
