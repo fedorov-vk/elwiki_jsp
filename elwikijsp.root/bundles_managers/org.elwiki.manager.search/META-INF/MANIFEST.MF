@@ -6,10 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.search
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Service-Component: OSGI-INF/searchManager.xml
+Service-Component: OSGI-INF/elwiki.DefaultSearchManager.xml
 Import-Package: org.elwiki.configuration,
  org.elwiki_data,
- org.osgi.framework;version="1.9.0"
+ org.osgi.framework;version="1.9.0",
+ org.osgi.service.component.annotations;version="1.2.0"
 Require-Bundle: org.eclipse.jface;bundle-version="3.19.0",
  org.apache.log4j;bundle-version="1.2.15",
  org.apache.lucene.analyzers-common;bundle-version="8.5.1",

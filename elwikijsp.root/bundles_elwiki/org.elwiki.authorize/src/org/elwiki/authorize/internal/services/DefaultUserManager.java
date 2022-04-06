@@ -62,6 +62,7 @@ import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.ui.InputValidator;
 import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.workflow0.Decision;
@@ -80,7 +81,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.annotation.NonNull;
-
+import org.elwiki.api.WikiServiceReference;
 //import com.opcoach.e4.preferences.ScopedPreferenceStore;
 //import org.elwiki.api.FilterManager;
 //import org.elwiki.api.IApplicationSession;
@@ -117,6 +118,10 @@ import org.elwiki.permissions.WikiPermission;
 //import org.elwiki.utils.MailUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.useradmin.User;
 
 /**
@@ -124,6 +129,8 @@ import org.osgi.service.useradmin.User;
  * <p>
  * NOTE: The PageManager is attached as a listener.
  */
+@Component(name = "elwiki.DefaultUserManager", service = UserManager.class, //
+		factory = "elwiki.UserManager.factory")
 public class DefaultUserManager implements UserManager {
 
 	// -- workflow task inner classes -----------------------------------------
@@ -242,12 +249,6 @@ public class DefaultUserManager implements UserManager {
 
 	private Map<String, Class<? extends UserDatabase>> userDataBases;
 
-	private IWikiConfiguration wikiConfiguration;
-	private AuthorizationManager authorizationManager;
-	private IIAuthenticationManager authenticationManager;
-	private TasksManager tasksManager;
-	private FilterManager filterManager;
-
 	private ScopedPreferenceStore prefsAauth;
 
 	private Class<? extends UserDatabase> classUserDatabase;
@@ -261,6 +262,93 @@ public class DefaultUserManager implements UserManager {
 		super();
 	}
 
+	// -- service handling ---------------------------{start}--
+
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private AuthorizationManager authorizationManager;
+
+	@WikiServiceReference
+	private IIAuthenticationManager authenticationManager;
+
+	@WikiServiceReference
+	private TasksManager tasksManager;
+
+	@WikiServiceReference
+	private FilterManager filterManager;
+
+	protected IWikiConfiguration getWikiConfiguration() {
+		return this.wikiConfiguration;
+	}
+
+	AuthorizationManager getAuthorizationManager() {
+		return authorizationManager;
+	}
+
+	IIAuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
+
+	TasksManager getTasksManager() {
+		return tasksManager;
+	}
+
+	FilterManager getFilterManager() {
+		return filterManager;
+	}
+
+	@Activate
+	public synchronized void startup(BundleContext bc) {
+		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
+	}
+
+	private Map<String, Class<? extends UserDatabase>> getUserDatabaseImplementations() throws WikiException {
+		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint ep;
+		Map<String, Class<? extends UserDatabase>> userDatabaseClasses = new HashMap<>();
+
+		//
+		// Load the UserDatabase definitions from Equinox extensions.
+		//
+		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_USER_DATABASE);
+		if (ep != null) {
+			for (IConfigurationElement el : ep.getConfigurationElements()) {
+				String contributorName = el.getContributor().getName();
+				String className = el.getAttribute("class");
+				String userDatabaseId = el.getAttribute("id");
+				try {
+					final Bundle bundle = Platform.getBundle(contributorName);
+					Class<?> clazz = bundle.loadClass(className);
+					try {
+						Class<? extends UserDatabase> cl = clazz.asSubclass(UserDatabase.class);
+						userDatabaseClasses.put(userDatabaseId, (Class<? extends UserDatabase>) cl);
+					} catch (ClassCastException e) {
+						log.fatal("UserDatabase " + className + " is not extends IUserDatabase interface.", e);
+						throw new WikiException(
+								"UserDatabase " + className + " is not extends IUserDatabase interface.", e);
+					}
+				} catch (ClassNotFoundException e) {
+					log.fatal("UserDatabase " + className + " cannot be found.", e);
+					throw new WikiException("UserDatabase " + className + " cannot be found.", e);
+				}
+			}
+		}
+
+		return userDatabaseClasses;
+	}
+
+	@Deactivate
+	public synchronized void shutdown() {
+		//
+	}
+	
+	// -- service handling -----------------------------{end}--
+	
 	@Override
 	public void initialize(final Engine engine) throws WikiException {
 		this.m_engine = engine;
@@ -722,99 +810,5 @@ public class DefaultUserManager implements UserManager {
             throw new IllegalStateException( "The manager is offline." );
         }
     }
-
-	// -- service handling -------------------------------------------< start --
-
-	protected IWikiConfiguration getWikiConfiguration() {
-		return this.wikiConfiguration;
-	}
-
-	AuthorizationManager getAuthorizationManager() {
-		return authorizationManager;
-	}
-
-	IIAuthenticationManager getAuthenticationManager() {
-		return authenticationManager;
-	}
-
-	TasksManager getTasksManager() {
-		return tasksManager;
-	}
-
-	FilterManager getFilterManager() {
-		return filterManager;
-	}
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-	public void setConfiguration(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-	}
-
-	public void setAuthorizationManager(AuthorizationManager authorizationManager) {
-		this.authorizationManager = authorizationManager;
-	}
-
-	public void setAuthenticationManager(IIAuthenticationManager authenticationManager) {
-		this.authenticationManager = authenticationManager;
-	}
-
-	public void	setTasksManager(TasksManager taskManager) {
-		this.tasksManager = taskManager;
-	}
-
-	public void setFilterManager(FilterManager filterManager) {
-		this.filterManager = filterManager;
-	}
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	
-	public synchronized void startup(BundleContext bc) {
-		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
-	}
-
-
-	private Map<String, Class<? extends UserDatabase>> getUserDatabaseImplementations() throws WikiException {
-		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint ep;
-		Map<String, Class<? extends UserDatabase>> userDatabaseClasses = new HashMap<>();
-
-		//
-		// Load the UserDatabase definitions from Equinox extensions.
-		//
-		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_USER_DATABASE);
-		if (ep != null) {
-			for (IConfigurationElement el : ep.getConfigurationElements()) {
-				String contributorName = el.getContributor().getName();
-				String className = el.getAttribute("class");
-				String userDatabaseId = el.getAttribute("id");
-				try {
-					final Bundle bundle = Platform.getBundle(contributorName);
-					Class<?> clazz = bundle.loadClass(className);
-					try {
-						Class<? extends UserDatabase> cl = clazz.asSubclass(UserDatabase.class);
-						userDatabaseClasses.put(userDatabaseId, (Class<? extends UserDatabase>) cl);
-					} catch (ClassCastException e) {
-						log.fatal("UserDatabase " + className + " is not extends IUserDatabase interface.", e);
-						throw new WikiException(
-								"UserDatabase " + className + " is not extends IUserDatabase interface.", e);
-					}
-				} catch (ClassNotFoundException e) {
-					log.fatal("UserDatabase " + className + " cannot be found.", e);
-					throw new WikiException("UserDatabase " + className + " cannot be found.", e);
-				}
-			}
-		}
-
-		return userDatabaseClasses;
-	}
-
-	public synchronized void shutdown() {
-		//
-	}
-
-	// -- service handling --------------------------------------------- end >--
 
 }

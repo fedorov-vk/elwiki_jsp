@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.references.DefaultReferenceManager">
-   <implementation class="org.apache.wiki.references.DefaultReferenceManager"/>
-   <service>
-      <provide interface="org.apache.wiki.api.references.ReferenceManager"/>
-   </service>
-   <reference bind="setStorageCdo" cardinality="1..1" interface="org.apache.wiki.api.IStorageCdo" name="IStorageCdo" policy="static"/>
-</scr:component>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="elwiki.FilterManager.factory" name="elwiki.DefaultFilterManager">
+   <service>
+      <provide interface="org.apache.wiki.filters0.FilterManager"/>
+   </service>
+   <implementation class="org.apache.wiki.filters.DefaultFilterManager"/>
+</scr:component>

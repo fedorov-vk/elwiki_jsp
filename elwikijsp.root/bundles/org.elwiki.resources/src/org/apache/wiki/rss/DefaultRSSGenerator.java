@@ -54,6 +54,7 @@ import java.util.Set;
  * {@inheritDoc}
  */
 // FIXME: Limit diff and page content size.
+//TODO: RSS generator.
 public class DefaultRSSGenerator implements RSSGenerator {
 
     private static final Logger log = Logger.getLogger( DefaultRSSGenerator.class );

@@ -47,11 +47,15 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.ui.TemplateManager;
+import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * This class takes care of managing JSPWiki templates. This class also provides the
@@ -63,6 +67,8 @@ import org.osgi.framework.BundleContext;
  * TODO: Распаковывать в каталог. Снята связь с WikiEngine, так как не требуется доступ по контексту
  * сервлета к локальному каталогу, доступ к каталогу через Bundle.
  */
+@Component(name = "elwiki.DefaultTemplateManager", service = TemplateManager.class, //
+		factory = "elwiki.TemplateManager.factory")
 public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager {
 
 	private static final Logger log = Logger.getLogger(DefaultTemplateManager.class);
@@ -75,27 +81,25 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	/** The name of the default template. Value is {@value}. */
 	String DEFAULT_TEMPLATE = "default";
 
-	/** Stores configuration. */
-	private IWikiConfiguration wikiConfiguration;
-	
 	private Bundle bundle;
 
-	// -- service handling --------------------------< start --
+	// -- service handling ---------------------------{start}--
 
-	public void setWikiConfiguration(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-	}
-	
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
+
 	/**
 	 * DefaultTemplateManager initializer.
 	 * 
 	 * @param bc A bundle's execution context.
 	 */
+	@Activate
 	public synchronized void startup(BundleContext bc) {
 		this.bundle = bc.getBundle();
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- service handling -----------------------------{end}--
 	
 	/**
 	 * Returns the full name (/templates/foo/bar) for: template=foo, name=bar.

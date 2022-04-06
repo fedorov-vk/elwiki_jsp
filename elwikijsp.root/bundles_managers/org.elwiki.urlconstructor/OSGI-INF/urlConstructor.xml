@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.url.defaultURLConstructor">
-   <implementation class="org.apache.wiki.url.DefaultURLConstructor"/>
-   <service>
-      <provide interface="org.apache.wiki.url0.URLConstructor"/>
-   </service>
-   <reference bind="setWikiConfiguration" cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
-</scr:component>

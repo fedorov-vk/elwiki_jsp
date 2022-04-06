@@ -54,6 +54,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.InputValidator;
+import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jdt.annotation.NonNull;
@@ -88,6 +89,10 @@ import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.useradmin.Authorization;
 import org.osgi.service.useradmin.Group;
@@ -107,6 +112,8 @@ import org.osgi.service.useradmin.UserAdmin;
  * </p>
  */
 /* For ElWiki reviewed by Victor Fedorov. */
+@Component(name = "elwiki.GroupManager", service = IAuthorizer.class, //
+		factory = "elwiki.GroupManager.factory")
 public class GroupManager implements IAuthorizer {
 
 	private static final Logger log = Logger.getLogger(GroupManager.class);
@@ -124,18 +131,15 @@ public class GroupManager implements IAuthorizer {
 
 	//:FVK: private IApplicationSession applicationSession;
 
+
+	// == CODE ================================================================
+	
+	// -- service handling ---------------------------{start}--
+
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private UserAdmin userAdminService;
 
-	// -- service handling --------------------------< start --
-
-	// -- start code block -- Services reference setters
-	
-	public void setUserAdminService(UserAdmin userAdmin) {
-		this.userAdminService = userAdmin;
-	}
-
-	// -- end code block -- Services reference setters
-
+	@Activate
 	public synchronized void startup(BundleContext bc) throws WikiException {
 		/*ServiceReference<?> ref = bc.getServiceReference(UserAdmin.class.getName());
 		if (ref != null) {
@@ -184,14 +188,13 @@ public class GroupManager implements IAuthorizer {
 	}
 	*/
 
+	@Deactivate
 	public synchronized void shutdown() {
 		//
 	}
 	
-	// -- service handling ---------------------------- end >--
+	// -- service handling -----------------------------{end}--
 	
-	// == CODE ================================================================
-
 	@Override
 	public List<Group> getRoles() {
 		List<Group> groups = new ArrayList<>();

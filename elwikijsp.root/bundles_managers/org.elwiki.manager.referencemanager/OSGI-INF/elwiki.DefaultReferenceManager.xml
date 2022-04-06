@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="elwiki.ReferenceManager.factory" name="elwiki.DefaultReferenceManager">
+   <service>
+      <provide interface="org.apache.wiki.api.references.ReferenceManager"/>
+   </service>
+   <implementation class="org.apache.wiki.references.DefaultReferenceManager"/>
+</scr:component>

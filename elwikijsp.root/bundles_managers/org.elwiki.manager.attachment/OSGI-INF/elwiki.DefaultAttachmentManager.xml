@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="elwiki.AttachmentManager.factory" name="elwiki.DefaultAttachmentManager">
+   <service>
+      <provide interface="org.apache.wiki.api.attachment.AttachmentManager"/>
+   </service>
+   <implementation class="org.apache.wiki.attachment.DefaultAttachmentManager"/>
+</scr:component>

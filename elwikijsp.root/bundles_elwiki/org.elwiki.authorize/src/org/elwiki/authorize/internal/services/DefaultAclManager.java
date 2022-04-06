@@ -40,6 +40,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.ui.TemplateManager;
 //import org.eclipse.rap.rwt.RWT;
 //import org.elwiki.api.IApplicationSession;
 //import org.elwiki.api.IAuthorizationManager;
@@ -63,18 +64,37 @@ import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 
 /**
  * Default implementation that parses Acls from wiki page markup.
  *
  * @since 2.3
  */
+@Component(name = "elwiki.DefaultAclManager", service = AclManager.class, //
+		factory = "elwiki.AclManager.factory")
 public class DefaultAclManager implements AclManager {
 
 	private static final Logger log = Logger.getLogger(DefaultAclManager.class);
 
 	private IWikiConfiguration wikiConfiguration;
 
+	// -- service handling ---------------------------{start}--
+
+	@Activate
+	public synchronized void startup() {
+		//
+	}
+
+	@Deactivate
+	public synchronized void shutdown() {
+		//
+	}
+
+	// -- service handling -----------------------------{end}--
+	
 	/**
 	 * A helper method for parsing textual AccessControlLists.</br>
 	 * The line is in form "ALLOW <permission> <principal>, <principal>, <principal>". This method was
@@ -278,17 +298,5 @@ public class DefaultAclManager implements AclManager {
 		}
 		return s.toString();
 	}
-
-	// -- service handling --------------------------< start --
-
-	public synchronized void startup() {
-		//
-	}
-
-	public synchronized void shutdown() {
-		//
-	}
-
-	// -- service handling ---------------------------- end >--
 
 }

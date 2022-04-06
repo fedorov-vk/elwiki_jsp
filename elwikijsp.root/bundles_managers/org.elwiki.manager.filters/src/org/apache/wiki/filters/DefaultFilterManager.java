@@ -31,11 +31,13 @@ import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.filters.internal.FiltersActivator;
 import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.PriorityList;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.jdom2.Element;
+import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,6 +90,8 @@ import java.util.Properties;
  *
  *  The &lt;filter> -sections define the filters.  For more information, please see the PageFilterConfiguration page in the JSPWiki distribution.
  */
+@Component(name = "elwiki.DefaultFilterManager", service = FilterManager.class, //
+		factory = "elwiki.FilterManager.factory")
 public class DefaultFilterManager extends BaseModuleManager implements FilterManager, Initializable {
 
     private PriorityList< PageFilter > m_pageFilters = new PriorityList<>();
@@ -110,6 +114,10 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     }
     */
 
+	// -- service handling ---------------------------{start}--
+    
+	// -- service handling -----------------------------{end}--
+    
     /**
      *  Adds a page filter to the queue.  The priority defines in which order the page filters are run, the highest priority filters go
      *  in the queue first.

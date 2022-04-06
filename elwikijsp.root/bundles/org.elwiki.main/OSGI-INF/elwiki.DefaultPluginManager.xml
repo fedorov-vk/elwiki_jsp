@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" factory="elwiki.PluginManager.factory" name="elwiki.DefaultPluginManager">
+   <service>
+      <provide interface="org.apache.wiki.api.plugin.PluginManager"/>
+   </service>
+   <implementation class="org.apache.wiki.plugin.DefaultPluginManager"/>
+</scr:component>

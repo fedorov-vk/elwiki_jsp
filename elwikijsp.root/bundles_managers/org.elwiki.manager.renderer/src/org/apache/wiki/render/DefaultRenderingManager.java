@@ -31,6 +31,8 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -48,9 +50,11 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.render0.WikiRenderer;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -69,6 +73,8 @@ import java.util.Properties;
  *
  *  @since  2.4
  */
+@Component(name = "elwiki.DefaultRenderingManager", service = RenderingManager.class, //
+		factory = "elwiki.RenderingManager.factory")
 public class DefaultRenderingManager implements RenderingManager {
 
     private static final Logger log = Logger.getLogger( DefaultRenderingManager.class );
@@ -100,38 +106,25 @@ public class DefaultRenderingManager implements RenderingManager {
     private Constructor< ? > m_rendererWysiwygConstructor;
     private String m_markupParserClass = DEFAULT_PARSER;
 
+	// -- service handling ---------------------------{start}--
+
+    @WikiServiceReference
 	private AttachmentManager attachmentManager;
 
+    @WikiServiceReference
 	private FilterManager filterManager;
 
+    @WikiServiceReference
 	private PageManager pageManager;
 	
+    @WikiServiceReference
 	private ReferenceManager referenceManager;
 
+    @WikiServiceReference
 	private VariableManager variableManager;
 
-    // -- service handling -----------------------------------------------------
+	// -- service handling -----------------------------{end}--
 
-    public void setAttachmentManager(AttachmentManager attachmentManager) {
-    	this.attachmentManager = attachmentManager;
-    }
-    
-	public void setFilterManager(FilterManager filterManager) {
-		this.filterManager = filterManager;
-	}
-
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-
-	public void setReferenceManager(ReferenceManager referenceManager) {
-		this.referenceManager = referenceManager;
-	}
-
-	public void setVariableManager(VariableManager variableManager) {
-		this.variableManager = variableManager;
-	}
-    
     /**
      *  {@inheritDoc}
      *

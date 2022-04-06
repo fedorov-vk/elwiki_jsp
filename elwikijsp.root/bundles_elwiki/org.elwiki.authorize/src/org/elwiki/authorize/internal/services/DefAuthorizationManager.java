@@ -62,6 +62,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -82,6 +83,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.authorization.Group;
 import org.osgi.service.useradmin.Group;
 import org.elwiki.IWikiConstants.StatusType;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IAuthorizer;
 //import org.elwiki.api.authorization.user.IUserDatabase;
 //import org.elwiki.api.authorization.user.UserProfile;
@@ -119,6 +121,10 @@ import org.freshcookies.security.policy.LocalPolicy;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.condpermadmin.BundleLocationCondition;
 import org.osgi.service.condpermadmin.ConditionInfo;
 import org.osgi.service.condpermadmin.ConditionalPermissionAdmin;
@@ -170,6 +176,8 @@ import org.osgi.service.permissionadmin.PermissionInfo;
  * @see AuthenticationManager
  */
 @SuppressWarnings("unused")
+@Component(name = "elwiki.DefaultAuthorizationManager", service = AuthorizationManager.class, //
+		factory = "elwiki.AuthorizationManager.factory")
 public class DefAuthorizationManager implements AuthorizationManager , WikiEventListener {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
@@ -197,10 +205,6 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 
 	private Engine m_engine;
 
-	private IWikiConfiguration wikiConfiguration;
-	private IAuthorizer groupManager;
-	private AclManager aclManager;
-
 	private ConditionalPermissionAdmin cpaService;
 
 	// == CODE ================================================================
@@ -212,6 +216,149 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		//
 	}
 
+	// -- service handling ---------------------------{start}--
+
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private IAuthorizer groupManager;
+
+	@WikiServiceReference
+	private AclManager aclManager;
+
+	/**
+	 * Initializes security policy of AuthorizationManager.
+	 * 
+	 * @param bc
+	 *           context of this bundle.
+	 * @throws WikiException
+	 *                       if the AuthorizationManager failed on startup.
+	 */
+	@Activate
+	public synchronized void startup(BundleContext bc) throws WikiException {
+		cpaService = bc.getService(bc.getServiceReference(ConditionalPermissionAdmin.class));
+
+		/* TODO: place principals into file *.properties
+		//
+		// If preference data of InstantScope is empty - initialize it from resource. 
+		//
+		String[] prefsKeys;
+		try {
+			prefsKeys = this.preferences.keys();
+		} catch (BackingStoreException | IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			prefsKeys = new String[0];
+		}
+		if (prefsKeys.length == 0) {
+		}
+		*/
+
+		// Initialize security policy, from definitions in the resource file.
+		try {
+			String policyFileName = DEFAULT_POLICY;
+			URL policyURL = findConfigFile(policyFileName, bc);
+			if (policyURL != null) {
+				File policyFile = new File(policyURL.toURI().getPath());
+				log.debug("We found security policy URL:\n\t" + policyURL + "\n and transformed it to file name\n\t"
+						+ policyFile.getAbsolutePath());
+				String contentEncoding = this.wikiConfiguration.getContentEncoding();
+				this.m_localPolicy = new LocalPolicy(policyFile, contentEncoding);
+				this.m_localPolicy.refresh();
+				log.info("Initialized default security policy, from: " + policyFile.getAbsolutePath());
+			} else {
+				String msg = "ElWiki was unable to initialize the default security policy (jspwiki.policy) file.\nInternal error.";
+				WikiSecurityException wse = new WikiSecurityException(msg);
+				log.fatal(msg, wse);
+				throw wse;
+			}
+		} catch (Exception e) {
+			log.error("Could not initialize local security policy: " + e.getMessage());
+			throw new WikiException("Could not initialize local security policy: " + e.getMessage(), e);
+		}
+
+		/*
+		{ // WORKAROUND - :FVK: вывод считанных принциаплов, определителей доступа для них.
+			Class<? extends LocalPolicy> cl = this.m_localPolicy.getClass();
+			Object v = null;
+			try {
+				Field field = cl.getDeclaredField("pds");
+				field.setAccessible(true);
+				v = field.get(this.m_localPolicy);
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (v != null) {
+				Set<LocalProtectionDomain> pd = (Set<LocalProtectionDomain>) v;
+				for (LocalProtectionDomain lpd : pd) {
+					for (Principal principal : lpd.getPrincipals()) {
+						System.out.printf("%s \"%s\"\n", principal.getClass().getCanonicalName(), principal.getName());
+					}
+					PermissionCollection pc = lpd.getPermissions();
+					// System.out.println(pc);
+					Enumeration<Permission> permissions = pc.elements();
+					while (permissions.hasMoreElements()) {
+						Permission permission = permissions.nextElement();
+						if (permission instanceof UnresolvedPermission) {
+							UnresolvedPermission up = (UnresolvedPermission) permission;
+							System.out.printf("    %s %s %s\n", up.getUnresolvedType(), up.getUnresolvedName(),
+									up.getUnresolvedActions());
+						}
+					}
+				}
+			}
+		}
+		*/
+	}
+
+	/**
+	 * Looks up and obtains a policy configuration file inside this bundle area.
+	 * 
+	 * @param name
+	 *             the file to obtain, <em>e.g.</em>, <code>jspwiki.policy</code>
+	 * @param bc
+	 *             context of this bundle.
+	 *
+	 * @return the URL to the file
+	 */
+	protected URL findConfigFile(String name, BundleContext bc) {
+		log.debug("Looking for '" + name + "' inside 'org.elwiki.authorize' bundle area.");
+		// Try creating an absolute path first
+		File defaultFile = null;
+		IPath cfgPath = null;
+		URL url = FileLocator.find(bc.getBundle(), new Path(""), null);
+		try {
+			url = FileLocator.toFileURL(url);
+			cfgPath = new Path(url.getPath()).makeAbsolute();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			log.fatal(e.getMessage(), e);
+			return null;
+		}
+
+		defaultFile = cfgPath.append(name).toFile();
+		if (defaultFile.exists()) {
+			try {
+				return defaultFile.toURI().toURL();
+			} catch (MalformedURLException e) {
+				// Shouldn't happen, but log it if it does
+				log.debug("Malformed URL: " + e.getMessage());
+			}
+		}
+
+		return null;
+	}
+	
+	@Deactivate
+	public synchronized void shutdown() {
+		//
+	}
+	
+	// -- service handling -----------------------------{end}--
+	
 	@Override
 	public boolean checkPermission(Session session, Permission permission) {
 		Function<Permission, Boolean> function = this::test1;
@@ -855,141 +1002,6 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 
 	// -- service handling -------------------------------------------< start --
 
-	public void setConfiguration(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-	}
-
-	public void setGroupManager(IAuthorizer groupManager) {
-		this.groupManager = groupManager;
-	}
-
-	public void setAclManager(AclManager aclManager) {
-		this.aclManager = aclManager;
-	}
-
-	/**
-	 * Initializes security policy of AuthorizationManager.
-	 * 
-	 * @param bc
-	 *           context of this bundle.
-	 * @throws WikiException
-	 *                       if the AuthorizationManager failed on startup.
-	 */
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		cpaService = bc.getService(bc.getServiceReference(ConditionalPermissionAdmin.class));
-
-		/* TODO: place principals into file *.properties
-		//
-		// If preference data of InstantScope is empty - initialize it from resource. 
-		//
-		String[] prefsKeys;
-		try {
-			prefsKeys = this.preferences.keys();
-		} catch (BackingStoreException | IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			prefsKeys = new String[0];
-		}
-		if (prefsKeys.length == 0) {
-		}
-		*/
-
-		// Initialize security policy, from definitions in the resource file.
-		try {
-			String policyFileName = DEFAULT_POLICY;
-			URL policyURL = findConfigFile(policyFileName, bc);
-			if (policyURL != null) {
-				File policyFile = new File(policyURL.toURI().getPath());
-				log.debug("We found security policy URL:\n\t" + policyURL + "\n and transformed it to file name\n\t"
-						+ policyFile.getAbsolutePath());
-				String contentEncoding = this.wikiConfiguration.getContentEncoding();
-				this.m_localPolicy = new LocalPolicy(policyFile, contentEncoding);
-				this.m_localPolicy.refresh();
-				log.info("Initialized default security policy, from: " + policyFile.getAbsolutePath());
-			} else {
-				String msg = "ElWiki was unable to initialize the default security policy (jspwiki.policy) file.\nInternal error.";
-				WikiSecurityException wse = new WikiSecurityException(msg);
-				log.fatal(msg, wse);
-				throw wse;
-			}
-		} catch (Exception e) {
-			log.error("Could not initialize local security policy: " + e.getMessage());
-			throw new WikiException("Could not initialize local security policy: " + e.getMessage(), e);
-		}
-
-		/*
-		{ // WORKAROUND - :FVK: вывод считанных принциаплов, определителей доступа для них.
-			Class<? extends LocalPolicy> cl = this.m_localPolicy.getClass();
-			Object v = null;
-			try {
-				Field field = cl.getDeclaredField("pds");
-				field.setAccessible(true);
-				v = field.get(this.m_localPolicy);
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (v != null) {
-				Set<LocalProtectionDomain> pd = (Set<LocalProtectionDomain>) v;
-				for (LocalProtectionDomain lpd : pd) {
-					for (Principal principal : lpd.getPrincipals()) {
-						System.out.printf("%s \"%s\"\n", principal.getClass().getCanonicalName(), principal.getName());
-					}
-					PermissionCollection pc = lpd.getPermissions();
-					// System.out.println(pc);
-					Enumeration<Permission> permissions = pc.elements();
-					while (permissions.hasMoreElements()) {
-						Permission permission = permissions.nextElement();
-						if (permission instanceof UnresolvedPermission) {
-							UnresolvedPermission up = (UnresolvedPermission) permission;
-							System.out.printf("    %s %s %s\n", up.getUnresolvedType(), up.getUnresolvedName(),
-									up.getUnresolvedActions());
-						}
-					}
-				}
-			}
-		}
-		*/
-	}
-
-	/**
-	 * Looks up and obtains a policy configuration file inside this bundle area.
-	 * 
-	 * @param name
-	 *             the file to obtain, <em>e.g.</em>, <code>jspwiki.policy</code>
-	 * @param bc
-	 *             context of this bundle.
-	 *
-	 * @return the URL to the file
-	 */
-	protected URL findConfigFile(String name, BundleContext bc) {
-		log.debug("Looking for '" + name + "' inside 'org.elwiki.authorize' bundle area.");
-		// Try creating an absolute path first
-		File defaultFile = null;
-		IPath cfgPath = null;
-		URL url = FileLocator.find(bc.getBundle(), new Path(""), null);
-		try {
-			url = FileLocator.toFileURL(url);
-			cfgPath = new Path(url.getPath()).makeAbsolute();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			log.fatal(e.getMessage(), e);
-			return null;
-		}
-
-		defaultFile = cfgPath.append(name).toFile();
-		if (defaultFile.exists()) {
-			try {
-				return defaultFile.toURI().toURL();
-			} catch (MalformedURLException e) {
-				// Shouldn't happen, but log it if it does
-				log.debug("Malformed URL: " + e.getMessage());
-			}
-		}
-
-		return null;
-	}
-
 	/**
 	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
 	 * 
@@ -1078,10 +1090,6 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		}
 
 		return authorizer;
-	}
-
-	public synchronized void shutdown() {
-		//
 	}
 
 	@Override

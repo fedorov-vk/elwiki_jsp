@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" factory="elwiki.CommandResolver.factory" name="elwiki.DefaultCommandResolver">
+   <service>
+      <provide interface="org.apache.wiki.api.ui.CommandResolver"/>
+   </service>
+   <reference cardinality="1..1" field="configuration" interface="org.elwiki.configuration.IWikiConfiguration" name="configuration"/>
+   <implementation class="org.apache.wiki.ui.DefaultCommandResolver"/>
+</scr:component>

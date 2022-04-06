@@ -26,10 +26,11 @@ Require-Bundle: org.eclipse.core.runtime,
 Import-Package: javax.inject,
  org.eclipse.jface.preference,
  org.elwiki.api,
- org.elwiki.configuration
+ org.elwiki.configuration,
+ org.osgi.service.component.annotations;version="1.2.0"
 Export-Package: org.elwiki.data.persist,
  org.elwiki.data.persist.internal,
  org.elwiki.data.persist.json,
  org.elwiki.data.persist.json.deserialize,
  org.elwiki.data.persist.json.serialize
-Service-Component: OSGI-INF/storagecdo.xml
+Service-Component: OSGI-INF/elwiki.StorageCdo.xml

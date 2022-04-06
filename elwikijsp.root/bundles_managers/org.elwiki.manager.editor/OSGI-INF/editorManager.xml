@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.ui.DefaultEditorManager">
-   <implementation class="org.apache.wiki.ui.DefaultEditorManager"/>
-   <service>
-      <provide interface="org.apache.wiki.api.ui.EditorManager"/>
-   </service>
-</scr:component>

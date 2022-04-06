@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startupService" deactivate="shutdownService" name="org.elwiki.services.ServicesRefs">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startupService" deactivate="shutdownService" name="org.elwiki.services.ServicesRefs">
    <implementation class="org.elwiki.services.ServicesRefs"/>
-   <reference bind="setWikiConfiguration" cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
-   <reference bind="setAclManager" cardinality="1..1" interface="org.apache.wiki.auth.acl.AclManager" name="AclManager" policy="static"/>
-   <reference bind="setAttachmentManager" cardinality="1..1" interface="org.apache.wiki.api.attachment.AttachmentManager" name="AttachmentManager" policy="static"/>
-   <reference bind="setPageManager" cardinality="1..1" interface="org.apache.wiki.pages0.PageManager" name="PageManager" policy="static"/>
-   <reference bind="setPageRenamer" cardinality="1..1" interface="org.apache.wiki.content0.PageRenamer" name="PageRenamer" policy="static"/>
-   <reference bind="setAuthorizationManager" cardinality="1..1" interface="org.apache.wiki.auth.AuthorizationManager" name="AuthorizationManager" policy="static"/>
-   <reference bind="setGroupManager" cardinality="1..1" interface="org.elwiki.api.authorization.IAuthorizer" name="IAuthorizer" policy="static"/>
-   <reference bind="setProgressManager" cardinality="1..1" interface="org.apache.wiki.api.ui.progress.ProgressManager" name="ProgressManager" policy="static"/>
-   <reference bind="setUserManager" cardinality="1..1" interface="org.apache.wiki.auth.UserManager" name="UserManager" policy="static"/>
-   <reference bind="setAdminBeanManager" cardinality="1..1" interface="org.apache.wiki.ui.admin0.AdminBeanManager" name="AdminBeanManager" policy="static"/>
-   <reference bind="setAuthenticationManager" cardinality="1..1" interface="org.apache.wiki.auth.IIAuthenticationManager" name="AuthenticationManager" policy="static"/>
-   <reference bind="setRenderingManager" cardinality="1..1" interface="org.apache.wiki.render0.RenderingManager" name="RenderingManager" policy="static"/>
-   <reference bind="setReferenceManager" cardinality="1..1" interface="org.apache.wiki.api.references.ReferenceManager" name="ReferenceManager" policy="static"/>
-   <reference bind="setVariableManager" cardinality="1..1" interface="org.apache.wiki.api.variables.VariableManager" name="VariableManager" policy="static"/>
-   <reference bind="setDifferenceManager" cardinality="1..1" interface="org.apache.wiki.api.diff.DifferenceManager" name="DifferenceManager" policy="static"/>
-   <reference bind="setTemplateManager" cardinality="1..1" interface="org.apache.wiki.ui.TemplateManager" name="TemplateManager" policy="static"/>
-   <reference bind="setEditorManager" cardinality="1..1" interface="org.apache.wiki.api.ui.EditorManager" name="EditorManager" policy="static"/>
-   <reference bind="setPluginManager" cardinality="1..1" interface="org.apache.wiki.api.plugin.PluginManager" name="PluginManager" policy="static"/>
-   <reference bind="setFilterManager" cardinality="1..1" interface="org.apache.wiki.filters0.FilterManager" name="FilterManager" policy="static"/>
-   <reference bind="setSearchManager" cardinality="1..1" interface="org.apache.wiki.api.search.SearchManager" name="SearchManager" policy="static"/>
-   <reference bind="setCommandResolver" cardinality="1..1" interface="org.apache.wiki.api.ui.CommandResolver" name="CommandResolver" policy="static"/>
-   <reference bind="setInternationalizationManager" cardinality="1..1" interface="org.apache.wiki.api.i18n.InternationalizationManager" name="InternationalizationManager" policy="static"/>
-   <reference bind="setWorkflowManager" cardinality="1..1" interface="org.apache.wiki.workflow0.WorkflowManager" name="WorkflowManager" policy="static"/>
-   <reference bind="setUrlConstructor" cardinality="1..1" interface="org.apache.wiki.url0.URLConstructor" name="URLConstructor" policy="static"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
+   <reference cardinality="1..1" field="factoryAclManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAclManager" target="(component.factory=elwiki.AclManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAttachmentManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAttachmentManager" target="(component.factory=elwiki.AttachmentManager.factory)"/>
+   <reference cardinality="1..1" field="factoryPageManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPageManager" target="(component.factory=elwiki.PageManager.factory)"/>
+   <reference cardinality="1..1" field="factoryPageRenamer" interface="org.osgi.service.component.ComponentFactory" name="factoryPageRenamer" target="(component.factory=elwiki.PageRenamer.factory)"/>
+   <reference cardinality="1..1" field="factoryAuthorizationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAuthorizationManager" target="(component.factory=elwiki.AuthorizationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryGroupManager" interface="org.osgi.service.component.ComponentFactory" name="factoryGroupManager" target="(component.factory=elwiki.GroupManager.factory)"/>
+   <reference cardinality="1..1" field="factoryProgressManager" interface="org.osgi.service.component.ComponentFactory" name="factoryProgressManager" target="(component.factory=elwiki.ProgressManager.factory)"/>
+   <reference cardinality="1..1" field="factoryUserManager" interface="org.osgi.service.component.ComponentFactory" name="factoryUserManager" target="(component.factory=elwiki.UserManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAdminBeanManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAdminBeanManager" target="(component.factory=elwiki.AdminBeanManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAuthenticationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAuthenticationManager" target="(component.factory=elwiki.AuthenticationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryRenderingManager" interface="org.osgi.service.component.ComponentFactory" name="factoryRenderingManager" target="(component.factory=elwiki.RenderingManager.factory)"/>
+   <reference cardinality="1..1" field="factoryReferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryReferenceManager" target="(component.factory=elwiki.ReferenceManager.factory)"/>
+   <reference cardinality="1..1" field="factoryVariableManager" interface="org.osgi.service.component.ComponentFactory" name="factoryVariableManager" target="(component.factory=elwiki.VariableManager.factory)"/>
+   <reference cardinality="1..1" field="factoryDifferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryDifferenceManager" target="(component.factory=elwiki.DifferenceManager.factory)"/>
+   <reference cardinality="1..1" field="factoryTemplateManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTemplateManager" target="(component.factory=elwiki.TemplateManager.factory)"/>
+   <reference cardinality="1..1" field="factoryEditorManager" interface="org.osgi.service.component.ComponentFactory" name="factoryEditorManager" target="(component.factory=elwiki.EditorManager.factory)"/>
+   <reference cardinality="1..1" field="factoryPluginManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPluginManager" target="(component.factory=elwiki.PluginManager.factory)"/>
+   <reference cardinality="1..1" field="factoryFilterManager" interface="org.osgi.service.component.ComponentFactory" name="factoryFilterManager" target="(component.factory=elwiki.FilterManager.factory)"/>
+   <reference cardinality="1..1" field="factorySearchManager" interface="org.osgi.service.component.ComponentFactory" name="factorySearchManager" target="(component.factory=elwiki.SearchManager.factory)"/>
+   <reference cardinality="1..1" field="factoryCommandResolver" interface="org.osgi.service.component.ComponentFactory" name="factoryCommandResolver" target="(component.factory=elwiki.CommandResolver.factory)"/>
+   <reference cardinality="1..1" field="factoryInternationalizationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryInternationalizationManager" target="(component.factory=elwiki.InternationalizationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryWorkflowManager" interface="org.osgi.service.component.ComponentFactory" name="factoryWorkflowManager" target="(component.factory=elwiki.WorkflowManager.factory)"/>
+   <reference cardinality="1..1" field="factoryUrlConstructor" interface="org.osgi.service.component.ComponentFactory" name="factoryUrlConstructor" target="(component.factory=elwiki.UrlConstructor.factory)"/>
+   <reference cardinality="1..1" field="factoryTasksManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTasksManager" target="(component.factory=elwiki.TasksManager.factory)"/>
+   <reference cardinality="1..1" field="factoryStorageCdo" interface="org.osgi.service.component.ComponentFactory" name="factoryStorageCdo" target="(component.factory=elwiki.StorageCdo.factory)"/>
    <service>
       <provide interface="org.apache.wiki.api.core.Engine"/>
    </service>

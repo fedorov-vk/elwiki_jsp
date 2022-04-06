@@ -42,6 +42,7 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.plugin.PluginManager;
+import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
@@ -51,6 +52,7 @@ import org.apache.wiki.util.XhtmlUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.jdom2.Element;
+import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
@@ -161,6 +163,8 @@ import java.util.StringTokenizer;
  *
  *  @since 1.6.1
  */
+@Component(name = "elwiki.DefaultPluginManager", service = PluginManager.class, //
+		factory = "elwiki.PluginManager.factory")
 public class DefaultPluginManager extends BaseModuleManager implements PluginManager, Initializable {
 
     private static final String PLUGIN_INSERT_PATTERN = "\\{?(INSERT)?\\s*([\\w\\._]+)[ \\t]*(WHERE)?[ \\t]*";
@@ -176,7 +180,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
     private Map< String, WikiPluginInfo > m_pluginClassMap = new HashMap<>();
     
 	/**
-	 * Create a new PluginManager.
+	 * Create instance of PluginManager.
 	 */
     public DefaultPluginManager() {
 		super();

@@ -26,6 +26,8 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.attachment.IDynamicAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -40,8 +42,10 @@ import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.providers.CachingAttachmentProvider;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
@@ -54,7 +58,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-
 /**
  *  Default implementation for {@link AttachmentManager}
  *
@@ -62,6 +65,8 @@ import java.util.Properties;
  *
  *  @since 1.9.28
  */
+@Component(name = "elwiki.DefaultAttachmentManager", service = AttachmentManager.class, //
+		factory = "elwiki.AttachmentManager.factory")
 public class DefaultAttachmentManager implements AttachmentManager, Initializable {
 
     /** List of attachment types which are forced to be downloaded */
@@ -73,29 +78,24 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     private CacheManager m_cacheManager = CacheManager.getInstance();
     private Cache m_dynamicAttachments;
 
-    private PageManager pageManager;
-    private ReferenceManager referenceManager;
-
 	/**
-     * Create instance of DefaultAttachmentManager.
+     * Creates instance of DefaultAttachmentManager.
      */
     public DefaultAttachmentManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-    // -- service handling --------------------------- start --
+    // -- service handling ---------------------------{start}--
 
-    public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
-	}
-    
-    public void setReferenceManager(ReferenceManager referenceManager) {
-    	this.referenceManager = referenceManager;
-    }
-    
-    // -- service handling ----------------------------- end --
-    
+    @WikiServiceReference
+    private PageManager pageManager;
+
+    @WikiServiceReference
+    private ReferenceManager referenceManager;
+
+    // -- service handling -----------------------------{end}--
+
 	/**
      *  Creates a new AttachmentManager.  Note that creation will never fail, but it's quite likely that attachments do not function.
      *  <p><b>DO NOT CREATE</b> an AttachmentManager on your own, unless you really know what you're doing. Just use

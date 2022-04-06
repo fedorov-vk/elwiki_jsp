@@ -56,7 +56,7 @@ import org.elwiki.data.authorize.WikiPrincipal;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+//:FVK:import org.xml.sax.SAXException;
 
 /**
  * <p>
@@ -264,12 +264,12 @@ public class XMLGroupDatabase implements GroupDatabase {
 			this.m_lastCheck = System.currentTimeMillis();
 		} catch (ParserConfigurationException e) {
 			log.error("Configuration error: " + e.getMessage());
-		} catch (SAXException e) {
-			log.error("SAX error: " + e.getMessage());
 		} catch (FileNotFoundException e) {
 			log.info("Group database not found; creating from scratch...");
 		} catch (IOException e) {
 			log.error("IO error: " + e.getMessage());
+		} catch (Exception e) { //SAXException
+			log.error("SAX error: " + e.getMessage());
 		}
 		if (this.m_dom == null) {
 			try {
