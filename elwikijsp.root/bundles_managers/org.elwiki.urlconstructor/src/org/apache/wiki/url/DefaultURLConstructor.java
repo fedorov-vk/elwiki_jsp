@@ -61,7 +61,7 @@ public class DefaultURLConstructor implements URLConstructor {
 	private IWikiConfiguration wikiConfiguration;
 
 	/**
-	 * URLConstructor activator.
+	 * This component activate routine. Does all the real initialization.
 	 * 
 	 * @param componentContext passed the Engine.
 	 */
