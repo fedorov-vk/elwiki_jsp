@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.ui.EditorManager;
@@ -34,6 +35,7 @@ import org.apache.wiki.util.XmlUtil;
 import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
@@ -77,9 +79,17 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
 
 	// -- service handling --------------------------< start --
 
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     */
     @Activate
-	public synchronized void startup(BundleContext bc) {
-		//this.bundle = bc.getBundle();
+	protected void startup(ComponentContext componentContext) {
+		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (engine instanceof Engine) {
+			initialize((Engine) engine);
+		}
 	}
 
 	// -- service handling ---------------------------- end >--

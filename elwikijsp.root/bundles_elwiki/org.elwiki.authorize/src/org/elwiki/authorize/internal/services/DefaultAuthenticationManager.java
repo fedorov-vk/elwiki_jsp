@@ -64,6 +64,7 @@ import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -152,13 +153,27 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
-	@Activate
-	public synchronized void startup() throws WikiException {
-		//
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     * @throws WikiException
+     */
+    @Activate
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 	

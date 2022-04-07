@@ -140,7 +140,7 @@ public class GroupManager implements IAuthorizer {
 	private UserAdmin userAdminService;
 
 	@Activate
-	public synchronized void startup(BundleContext bc) throws WikiException {
+	protected void startup(BundleContext bc) throws WikiException {
 		/*ServiceReference<?> ref = bc.getServiceReference(UserAdmin.class.getName());
 		if (ref != null) {
 			this.userAdminService = (UserAdmin) bc.getService(ref);
@@ -189,7 +189,7 @@ public class GroupManager implements IAuthorizer {
 	*/
 
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 	

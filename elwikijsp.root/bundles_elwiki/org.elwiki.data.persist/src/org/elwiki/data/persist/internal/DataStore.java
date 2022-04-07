@@ -55,12 +55,12 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 
 	@Deprecated
 	@Activate
-	public synchronized void startup() {
+	protected void startup() {
 		//:FVK:	StorageCdoActivator.setStorageCdo(this);
 	}
 
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 	

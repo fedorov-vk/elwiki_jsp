@@ -118,6 +118,7 @@ import org.elwiki.permissions.WikiPermission;
 //import org.elwiki.utils.MailUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -280,6 +281,35 @@ public class DefaultUserManager implements UserManager {
 	@WikiServiceReference
 	private FilterManager filterManager;
 
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 *
+	 * @param componentContext
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		BundleContext bc = componentContext.getBundleContext();
+		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
+
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
+	@Deactivate
+	protected void shutdown() {
+		//
+	}
+	
+	// -- service handling -----------------------------{end}--
+
 	protected IWikiConfiguration getWikiConfiguration() {
 		return this.wikiConfiguration;
 	}
@@ -299,12 +329,35 @@ public class DefaultUserManager implements UserManager {
 	FilterManager getFilterManager() {
 		return filterManager;
 	}
+	
+	@Override
+	public void initialize(final Engine engine) throws WikiException {
+		this.m_engine = engine;
 
-	@Activate
-	public synchronized void startup(BundleContext bc) {
-		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
+		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
+
+		/*TODO: Replace with custom annotations. See JSPWIKI-566
+		WikiAjaxDispatcherServlet.registerServlet(JSON_USERS, new JSONUserModule(this), new AllPermission(null));
+		*/
+
+		this.userDataBases = getUserDatabaseImplementations();
+		String dbId = this.prefsAauth.getString(PROP_DATABASE);
+		if (dbId.length() == 0) {
+			// get default UserDatabase.
+			dbId = DEFAULT_DATABASE_ID; // WORKARUND. -- такого идентификатора может не быть.
+		}
+		this.classUserDatabase = this.userDataBases.get(dbId);
+
+		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
+
+		// Attach the PageManager as a listener
+		// TODO: it would be better if we did this in PageManager directly
+		// :FVK: addWikiEventListener( engine.getPageManager() );
+
+		//TODO: Replace with custom annotations. See JSPWIKI-566
+		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
 	}
+
 
 	private Map<String, Class<? extends UserDatabase>> getUserDatabaseImplementations() throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
@@ -341,42 +394,7 @@ public class DefaultUserManager implements UserManager {
 
 		return userDatabaseClasses;
 	}
-
-	@Deactivate
-	public synchronized void shutdown() {
-		//
-	}
 	
-	// -- service handling -----------------------------{end}--
-	
-	@Override
-	public void initialize(final Engine engine) throws WikiException {
-		this.m_engine = engine;
-
-		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
-
-		/*TODO: Replace with custom annotations. See JSPWIKI-566
-		WikiAjaxDispatcherServlet.registerServlet(JSON_USERS, new JSONUserModule(this), new AllPermission(null));
-		*/
-
-		this.userDataBases = getUserDatabaseImplementations();
-		String dbId = this.prefsAauth.getString(PROP_DATABASE);
-		if (dbId.length() == 0) {
-			// get default UserDatabase.
-			dbId = DEFAULT_DATABASE_ID; // WORKARUND. -- такого идентификатора может не быть.
-		}
-		this.classUserDatabase = this.userDataBases.get(dbId);
-
-		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
-
-		// Attach the PageManager as a listener
-		// TODO: it would be better if we did this in PageManager directly
-		// :FVK: addWikiEventListener( engine.getPageManager() );
-
-		//TODO: Replace with custom annotations. See JSPWIKI-566
-		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
-	}
-
 	@Override
 	public UserDatabase getUserDatabase() {
 		// FIXME: Must not throw RuntimeException, but something else.

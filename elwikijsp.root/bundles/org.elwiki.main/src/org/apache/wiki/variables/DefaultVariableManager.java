@@ -64,14 +64,6 @@ public class DefaultVariableManager implements VariableManager {
     static final String[] THE_BIG_NO_NO_LIST = {
         "jspwiki.auth.masterpassword"
     };
-
-	// -- service handling ---------------------------{start}--
-    
-	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-    private IWikiConfiguration wikiConfiguration;
-	
-	// -- service handling -----------------------------{end}--
 	
     /**
      *  Creates a VariableManager object using the property list given.
@@ -80,6 +72,14 @@ public class DefaultVariableManager implements VariableManager {
     public DefaultVariableManager() {
         super();
     }
+
+	// -- service handling ---------------------------{start}--
+    
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+    private IWikiConfiguration wikiConfiguration;
+	
+	// -- service handling -----------------------------{end}--
 
     /**
      *  {@inheritDoc}

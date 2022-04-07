@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" factory="elwiki.PageManager.factory" name="elwiki.DefaultPageManager">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.PageManager.factory" name="elwiki.DefaultPageManager">
    <service>
       <provide interface="org.apache.wiki.pages0.PageManager"/>
    </service>

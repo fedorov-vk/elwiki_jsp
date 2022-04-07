@@ -34,6 +34,8 @@ import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.BufferedInputStream;
@@ -53,7 +55,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 
 /**
  * <p>
@@ -86,6 +87,23 @@ public class DefaultWorkflowManager implements WorkflowManager {
         m_completed = new CopyOnWriteArrayList<>();
         WikiEventEmitter.attach( this );
     }
+
+	// -- service handling --------------------------< start --
+
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     */
+    @Activate
+	protected void startup(ComponentContext componentContext) {
+		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (engine instanceof Engine) {
+			initialize((Engine) engine);
+		}
+	}
+    
+	// -- service handling ---------------------------- end >--
 
     /**
      * {@inheritDoc}

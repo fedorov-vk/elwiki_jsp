@@ -31,6 +31,9 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.event.WikiEvent;
@@ -53,8 +56,10 @@ import org.apache.wiki.render0.WikiRenderer;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.configuration.ScopedPreferenceStore;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -122,6 +127,24 @@ public class DefaultRenderingManager implements RenderingManager {
 
     @WikiServiceReference
 	private VariableManager variableManager;
+
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 *
+	 * @param componentContext
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 
 	// -- service handling -----------------------------{end}--
 

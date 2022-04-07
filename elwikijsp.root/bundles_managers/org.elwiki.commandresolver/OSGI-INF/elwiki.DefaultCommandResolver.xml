@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" factory="elwiki.CommandResolver.factory" name="elwiki.DefaultCommandResolver">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.CommandResolver.factory" name="elwiki.DefaultCommandResolver">
    <service>
       <provide interface="org.apache.wiki.api.ui.CommandResolver"/>
    </service>

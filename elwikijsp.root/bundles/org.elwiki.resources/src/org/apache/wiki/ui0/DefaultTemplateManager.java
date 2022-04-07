@@ -95,7 +95,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	 * @param bc A bundle's execution context.
 	 */
 	@Activate
-	public synchronized void startup(BundleContext bc) {
+	protected void startup(BundleContext bc) {
 		this.bundle = bc.getBundle();
 	}
 

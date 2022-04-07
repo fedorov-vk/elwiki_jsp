@@ -85,6 +85,8 @@ import org.elwiki_data.AclEntry;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -144,8 +146,128 @@ public class DefaultPageManager implements PageManager, Initializable {
 	@WikiServiceReference
 	private DifferenceManager differenceManager;
 
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 * 
+	 * @param componentContext passed the Engine.
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	// -- service handling -----------------------------{end}--
-    
+	
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+        m_engine = engine;
+        IPreferenceStore props = engine.getWikiPreferences();
+        final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
+
+        m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
+
+        /*:FVK: - подключить CachingProvider
+        final String classname;
+        //  If user wants to use a cache, then we'll use the CachingProvider.
+        if( useCache ) {
+            classname = "org.apache.wiki.providers.CachingProvider";
+        } else {
+            classname = TextUtil.getRequiredProperty( props, PROP_PAGEPROVIDER );
+        }
+
+        pageSorter.initialize( props );
+
+        try {
+            LOG.debug("Page provider class: '" + classname + "'");
+
+            final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
+            m_provider = ( PageProvider ) providerclass.newInstance();
+
+            m_provider = new VersioningFileProvider(); 
+            		//new org.apache.wiki.providers.CachingProvider();
+
+            LOG.debug("Initializing page provider class " + m_provider);
+            m_provider.initialize(m_engine, props);
+        } catch (final ClassNotFoundException e) {
+        	...
+        */
+        
+
+		try {
+			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
+			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/);
+			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
+		} catch (WikiException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}        
+	}
+
+	private PageProvider getPageProvider(String requiredId) throws WikiException {
+		//
+		// Сканирование расширений провайдеров страниц.
+		//
+		String namespace = PageManagerActivator.PLIGIN_ID;
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint ep;
+
+		Class<? extends PageProvider> clazzPageProvider = null;
+		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_PAGEPROVIDER);
+		if (ep != null) {
+			for (IConfigurationElement el : ep.getConfigurationElements()) {
+				String contributorName = el.getContributor().getName();
+				String className = el.getAttribute("class");
+				String pageProviderId = el.getAttribute("id");
+				if (pageProviderId.equals(requiredId)) {
+					try {
+						final Bundle bundle = Platform.getBundle(contributorName);
+						Class<?> clazz = bundle.loadClass(className);
+						try {
+							clazzPageProvider = clazz.asSubclass(PageProvider.class);
+						} catch (ClassCastException e) {
+							LOG.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
+							throw new WikiException(
+									"Page provider " + className + " is not extends PageProvider interface.", e);
+						}
+					} catch (ClassNotFoundException e) {
+						LOG.fatal("Page provider " + className + " cannot be found.", e);
+						throw new WikiException("Page provider " + className + " cannot be found.", e);
+					}
+					break; // -- finalize for --
+				}
+			}
+		}
+
+		if (clazzPageProvider == null) {
+			// TODO: это сообщение не к месту (логика не адекватна).
+			throw new NoRequiredPropertyException("Unable to find a " + PROP_PAGEPROVIDER + " entry in the properties.",
+					PROP_PAGEPROVIDER);
+		}
+
+		PageProvider pageProvider;
+		try {
+			pageProvider = clazzPageProvider.newInstance();
+		} catch (InstantiationException e) {
+			LOG.fatal("Page provider " + clazzPageProvider + " cannot be created.", e);
+			throw new WikiException("Page provider " + clazzPageProvider + " cannot be created.", e);
+		} catch (IllegalAccessException e) {
+			LOG.fatal("You are not allowed to access page provider class " + clazzPageProvider, e);
+			throw new WikiException("You are not allowed to access page provider class " + clazzPageProvider, e);
+		}
+
+		LOG.debug("Loaded page provider from extension: " + pageProvider);
+
+		return pageProvider;
+	}
+
 	/**
      * Creates a new PageManager.
      *
@@ -845,109 +967,6 @@ public class DefaultPageManager implements PageManager, Initializable {
     public PageSorter getPageSorter() {
         return pageSorter;
     }
-
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-        m_engine = engine;
-        IPreferenceStore props = engine.getWikiPreferences();
-        final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
-
-        m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
-
-        /*:FVK: - подключить CachingProvider
-        final String classname;
-        //  If user wants to use a cache, then we'll use the CachingProvider.
-        if( useCache ) {
-            classname = "org.apache.wiki.providers.CachingProvider";
-        } else {
-            classname = TextUtil.getRequiredProperty( props, PROP_PAGEPROVIDER );
-        }
-
-        pageSorter.initialize( props );
-
-        try {
-            LOG.debug("Page provider class: '" + classname + "'");
-
-            final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
-            m_provider = ( PageProvider ) providerclass.newInstance();
-
-            m_provider = new VersioningFileProvider(); 
-            		//new org.apache.wiki.providers.CachingProvider();
-
-            LOG.debug("Initializing page provider class " + m_provider);
-            m_provider.initialize(m_engine, props);
-        } catch (final ClassNotFoundException e) {
-        	...
-        */
-        
-
-		try {
-			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
-			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/);
-			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
-		} catch (WikiException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}        
-	}
-
-
-	private PageProvider getPageProvider(String requiredId) throws WikiException {
-		//
-		// Сканирование расширений провайдеров страниц.
-		//
-		String namespace = PageManagerActivator.PLIGIN_ID;
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint ep;
-
-		Class<? extends PageProvider> clazzPageProvider = null;
-		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_PAGEPROVIDER);
-		if (ep != null) {
-			for (IConfigurationElement el : ep.getConfigurationElements()) {
-				String contributorName = el.getContributor().getName();
-				String className = el.getAttribute("class");
-				String pageProviderId = el.getAttribute("id");
-				if (pageProviderId.equals(requiredId)) {
-					try {
-						final Bundle bundle = Platform.getBundle(contributorName);
-						Class<?> clazz = bundle.loadClass(className);
-						try {
-							clazzPageProvider = clazz.asSubclass(PageProvider.class);
-						} catch (ClassCastException e) {
-							LOG.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
-							throw new WikiException(
-									"Page provider " + className + " is not extends PageProvider interface.", e);
-						}
-					} catch (ClassNotFoundException e) {
-						LOG.fatal("Page provider " + className + " cannot be found.", e);
-						throw new WikiException("Page provider " + className + " cannot be found.", e);
-					}
-					break; // -- finalize for --
-				}
-			}
-		}
-
-		if (clazzPageProvider == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find a " + PROP_PAGEPROVIDER + " entry in the properties.",
-					PROP_PAGEPROVIDER);
-		}
-
-		PageProvider pageProvider;
-		try {
-			pageProvider = clazzPageProvider.newInstance();
-		} catch (InstantiationException e) {
-			LOG.fatal("Page provider " + clazzPageProvider + " cannot be created.", e);
-			throw new WikiException("Page provider " + clazzPageProvider + " cannot be created.", e);
-		} catch (IllegalAccessException e) {
-			LOG.fatal("You are not allowed to access page provider class " + clazzPageProvider, e);
-			throw new WikiException("You are not allowed to access page provider class " + clazzPageProvider, e);
-		}
-
-		LOG.debug("Loaded page provider from extension: " + pageProvider);
-
-		return pageProvider;
-	}
 
 	@Override
 	public WikiPage getPageById(String pageId) {

@@ -22,11 +22,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -57,18 +60,31 @@ public class DefaultURLConstructor implements URLConstructor {
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
-	// -- service handling ---------------------------- end >--
-    
-    /**
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public void initialize( final Engine engine ) {
-        m_engine = engine;
-        m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
-    }
+	/**
+	 * URLConstructor activator.
+	 * 
+	 * @param componentContext passed the Engine.
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (engine instanceof Engine) {
+			initialize((Engine) engine);
+		}
+	}
 
+	// -- service handling ---------------------------- end >--
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initialize( final Engine engine ) {
+		m_engine = engine;
+		m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
+	}
+    
     /**
      *  Does replacement of some particular variables.  The variables are:
      *

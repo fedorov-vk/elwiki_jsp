@@ -121,6 +121,7 @@ import org.freshcookies.security.policy.LocalPolicy;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -229,15 +230,15 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	private AclManager aclManager;
 
 	/**
+	 * This component activate routine. Does all the real initialization.
 	 * Initializes security policy of AuthorizationManager.
 	 * 
-	 * @param bc
-	 *           context of this bundle.
-	 * @throws WikiException
-	 *                       if the AuthorizationManager failed on startup.
+	 * @param componentContext
+	 * @throws WikiException if the AuthorizationManager failed on startup.
 	 */
 	@Activate
-	public synchronized void startup(BundleContext bc) throws WikiException {
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		BundleContext bc = componentContext.getBundleContext();
 		cpaService = bc.getService(bc.getServiceReference(ConditionalPermissionAdmin.class));
 
 		/* TODO: place principals into file *.properties
@@ -312,6 +313,16 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 			}
 		}
 		*/
+		
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	/**
@@ -353,7 +364,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	}
 	
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 	
@@ -1008,7 +1019,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
 	 * to take care of role lookup operations.
 	 */
-	//@Override
+	@Override
 	public void initialize(Engine engine1) throws WikiException {
 		log.debug("Initialize.");
 		this.m_engine = engine1;

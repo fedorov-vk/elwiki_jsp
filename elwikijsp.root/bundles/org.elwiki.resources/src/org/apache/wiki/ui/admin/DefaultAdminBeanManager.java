@@ -84,12 +84,12 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
 	// -- service handling --------------------------< start --
 
 	@Activate
-	public void startup() {
+	protected void startup() {
 		//
 	}
 
 	@Deactivate
-	public void shutdown() {
+	protected void shutdown() {
 		//
 	}
 
