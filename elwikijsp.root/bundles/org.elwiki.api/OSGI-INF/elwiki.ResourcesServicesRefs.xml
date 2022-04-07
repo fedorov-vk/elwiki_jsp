@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startupService" deactivate="shutdownService" name="elwiki.ResourcesServicesRefs">
+   <service>
+      <provide interface="org.apache.wiki.api.core.Engine"/>
+   </service>
+   <reference cardinality="1..1" field="factoryAclManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAclManager" target="(component.factory=elwiki.AclManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAdminBeanManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAdminBeanManager" target="(component.factory=elwiki.AdminBeanManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAttachmentManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAttachmentManager" target="(component.factory=elwiki.AttachmentManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAuthenticationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAuthenticationManager" target="(component.factory=elwiki.AuthenticationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAuthorizationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAuthorizationManager" target="(component.factory=elwiki.AuthorizationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryCommandResolver" interface="org.osgi.service.component.ComponentFactory" name="factoryCommandResolver" target="(component.factory=elwiki.CommandResolver.factory)"/>
+   <reference cardinality="1..1" field="factoryDifferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryDifferenceManager" target="(component.factory=elwiki.DifferenceManager.factory)"/>
+   <reference cardinality="1..1" field="factoryEditorManager" interface="org.osgi.service.component.ComponentFactory" name="factoryEditorManager" target="(component.factory=elwiki.EditorManager.factory)"/>
+   <reference cardinality="1..1" field="factoryFilterManager" interface="org.osgi.service.component.ComponentFactory" name="factoryFilterManager" target="(component.factory=elwiki.FilterManager.factory)"/>
+   <reference cardinality="1..1" field="factoryGroupManager" interface="org.osgi.service.component.ComponentFactory" name="factoryGroupManager" target="(component.factory=elwiki.GroupManager.factory)"/>
+   <reference cardinality="1..1" field="factoryInternationalizationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryInternationalizationManager" target="(component.factory=elwiki.InternationalizationManager.factory)"/>
+   <reference cardinality="1..1" field="factoryPageManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPageManager" target="(component.factory=elwiki.PageManager.factory)"/>
+   <reference cardinality="1..1" field="factoryPageRenamer" interface="org.osgi.service.component.ComponentFactory" name="factoryPageRenamer" target="(component.factory=elwiki.PageRenamer.factory)"/>
+   <reference cardinality="1..1" field="factoryPluginManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPluginManager" target="(component.factory=elwiki.PluginManager.factory)"/>
+   <reference cardinality="1..1" field="factoryProgressManager" interface="org.osgi.service.component.ComponentFactory" name="factoryProgressManager" target="(component.factory=elwiki.ProgressManager.factory)"/>
+   <reference cardinality="1..1" field="factoryReferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryReferenceManager" target="(component.factory=elwiki.ReferenceManager.factory)"/>
+   <reference cardinality="1..1" field="factoryRenderingManager" interface="org.osgi.service.component.ComponentFactory" name="factoryRenderingManager" target="(component.factory=elwiki.RenderingManager.factory)"/>
+   <reference cardinality="1..1" field="factorySearchManager" interface="org.osgi.service.component.ComponentFactory" name="factorySearchManager" target="(component.factory=elwiki.SearchManager.factory)"/>
+   <reference cardinality="1..1" field="factoryStorageCdo" interface="org.osgi.service.component.ComponentFactory" name="factoryStorageCdo" target="(component.factory=elwiki.StorageCdo.factory)"/>
+   <reference cardinality="1..1" field="factoryTasksManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTasksManager" target="(component.factory=elwiki.TasksManager.factory)"/>
+   <reference cardinality="1..1" field="factoryTemplateManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTemplateManager" target="(component.factory=elwiki.TemplateManager.factory)"/>
+   <reference cardinality="1..1" field="factoryUrlConstructor" interface="org.osgi.service.component.ComponentFactory" name="factoryUrlConstructor" target="(component.factory=elwiki.UrlConstructor.factory)"/>
+   <reference cardinality="1..1" field="factoryUserManager" interface="org.osgi.service.component.ComponentFactory" name="factoryUserManager" target="(component.factory=elwiki.UserManager.factory)"/>
+   <reference cardinality="1..1" field="factoryVariableManager" interface="org.osgi.service.component.ComponentFactory" name="factoryVariableManager" target="(component.factory=elwiki.VariableManager.factory)"/>
+   <reference cardinality="1..1" field="factoryWorkflowManager" interface="org.osgi.service.component.ComponentFactory" name="factoryWorkflowManager" target="(component.factory=elwiki.WorkflowManager.factory)"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
+   <implementation class="org.elwiki.services.ServicesRefs"/>
+</scr:component>

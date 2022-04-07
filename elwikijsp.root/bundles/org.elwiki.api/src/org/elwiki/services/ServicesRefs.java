@@ -71,8 +71,12 @@ import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentFactory;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
+@Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class)
 public class ServicesRefs implements Engine {
 
 	private static AclManager aclManager;
@@ -108,87 +112,87 @@ public class ServicesRefs implements Engine {
 
 	private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
 
-	// -- service handling -------------------------< start >--
+	// -- service handling ---------------------------{start}--
 
 	/** Stores configuration. */
-	//@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
 	// -- start code block -- Services reference setters
 
-	// @Reference(target = "(component.factory=elwiki.AclManager.factory)")
+	@Reference(target = "(component.factory=elwiki.AclManager.factory)")
 	private ComponentFactory<AclManager> factoryAclManager;
 
-	// @Reference(target = "(component.factory=elwiki.AttachmentManager.factory)")
+	@Reference(target = "(component.factory=elwiki.AttachmentManager.factory)")
 	private ComponentFactory<AttachmentManager> factoryAttachmentManager;
 
-	// @Reference(target = "(component.factory=elwiki.PageManager.factory)")
+	@Reference(target = "(component.factory=elwiki.PageManager.factory)")
 	private ComponentFactory<PageManager> factoryPageManager;
 
-	// @Reference(target = "(component.factory=elwiki.PageRenamer.factory)")
+	@Reference(target = "(component.factory=elwiki.PageRenamer.factory)")
 	private ComponentFactory<PageRenamer> factoryPageRenamer;
 
-	// @Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
+	@Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
 	private ComponentFactory<AuthorizationManager> factoryAuthorizationManager;
 
-	// @Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
+	@Reference(target = "(component.factory=elwiki.GroupManager.factory)")
 	private ComponentFactory<IAuthorizer> factoryGroupManager;
 
-	// @Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
+	@Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
 	private ComponentFactory<ProgressManager> factoryProgressManager;
 
-	// @Reference(target = "(component.factory=elwiki.UserManager.factory)")
+	@Reference(target = "(component.factory=elwiki.UserManager.factory)")
 	private ComponentFactory<UserManager> factoryUserManager;
 
-	// @Reference(target = "(component.factory=elwiki.AdminBeanManager.factory)")
+	@Reference(target = "(component.factory=elwiki.AdminBeanManager.factory)")
 	private ComponentFactory<AdminBeanManager> factoryAdminBeanManager;
 
-	// @Reference(target = "(component.factory=elwiki.AuthenticationManager.factory)")
+	@Reference(target = "(component.factory=elwiki.AuthenticationManager.factory)")
 	private ComponentFactory<IIAuthenticationManager> factoryAuthenticationManager;
 
-	// @Reference(target = "(component.factory=elwiki.RenderingManager.factory)")
+	@Reference(target = "(component.factory=elwiki.RenderingManager.factory)")
 	private ComponentFactory<RenderingManager> factoryRenderingManager;
 
-	// @Reference(target = "(component.factory=elwiki.ReferenceManager.factory)")
+	@Reference(target = "(component.factory=elwiki.ReferenceManager.factory)")
 	private ComponentFactory<ReferenceManager> factoryReferenceManager;
 
-	// @Reference(target = "(component.factory=elwiki.VariableManager.factory)")
+	@Reference(target = "(component.factory=elwiki.VariableManager.factory)")
 	private ComponentFactory<VariableManager> factoryVariableManager;
 
-	// @Reference(target = "(component.factory=elwiki.DifferenceManager.factory)")
+	@Reference(target = "(component.factory=elwiki.DifferenceManager.factory)")
 	private ComponentFactory<DifferenceManager> factoryDifferenceManager;
 
-	// @Reference(target = "(component.factory=elwiki.TemplateManager.factory)")
+	@Reference(target = "(component.factory=elwiki.TemplateManager.factory)")
 	private ComponentFactory<TemplateManager> factoryTemplateManager;
 
-	// @Reference(target = "(component.factory=elwiki.EditorManager.factory)")
+	@Reference(target = "(component.factory=elwiki.EditorManager.factory)")
 	private ComponentFactory<EditorManager> factoryEditorManager;
 
-	// @Reference(target = "(component.factory=elwiki.PluginManager.factory)")
+	@Reference(target = "(component.factory=elwiki.PluginManager.factory)")
 	private ComponentFactory<PluginManager> factoryPluginManager;
 
-	// @Reference(target = "(component.factory=elwiki.FilterManager.factory)")
+	@Reference(target = "(component.factory=elwiki.FilterManager.factory)")
 	private ComponentFactory<FilterManager> factoryFilterManager;
 
-	// @Reference(target = "(component.factory=elwiki.SearchManager.factory)")
+	@Reference(target = "(component.factory=elwiki.SearchManager.factory)")
 	private ComponentFactory<SearchManager> factorySearchManager;
 
-	// @Reference(target = "(component.factory=elwiki.UrlConstructor.factory)")
+	@Reference(target = "(component.factory=elwiki.CommandResolver.factory)")
 	private ComponentFactory<CommandResolver> factoryCommandResolver;
 
-	// @Reference(target = "(component.factory=elwiki.InternationalizationManager.factory)")
+	@Reference(target = "(component.factory=elwiki.InternationalizationManager.factory)")
 	private ComponentFactory<InternationalizationManager> factoryInternationalizationManager;
 
-	// @Reference(target = "(component.factory=elwiki.WorkflowManager.factory)")
+	@Reference(target = "(component.factory=elwiki.WorkflowManager.factory)")
 	private ComponentFactory<WorkflowManager> factoryWorkflowManager;
 
-	// @Reference(target = "(component.factory=elwiki.UrlConstructor.factory)")
+	@Reference(target = "(component.factory=elwiki.UrlConstructor.factory)")
 	private ComponentFactory<URLConstructor> factoryUrlConstructor;
 
-	// @Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
+	@Reference(target = "(component.factory=elwiki.TasksManager.factory)")
 	private ComponentFactory<TasksManager> factoryTasksManager;
 
-	// @Reference(target = "(component.factory=elwiki.StorageCdo.factory)")
+	@Reference(target = "(component.factory=elwiki.StorageCdo.factory)")
 	private ComponentFactory<IStorageCdo> factoryStorageCdo;
 	
 	//:FVK:
@@ -196,8 +200,7 @@ public class ServicesRefs implements Engine {
 		ServicesRefs.rssGenerator = rssGenerator;
 	}
 
-	// -- end code block -- Services reference setters
-
+	@Activate
 	public synchronized void startupService(BundleContext bc) throws WikiException {
 		this.bundleContext = bc;
 		ServicesRefs.Instance = this;
@@ -285,6 +288,7 @@ public class ServicesRefs implements Engine {
 		}
 	}
 
+	@Deactivate
 	public synchronized void shutdownService() {
 		//
 	}
@@ -301,7 +305,7 @@ public class ServicesRefs implements Engine {
 		ServicesRefs.getFilterManager().destroy();
 	}
 
-	// -- service handling ---------------------------< end >--
+	// -- service handling -----------------------------{end}--
 
 	public static AclManager getAclManager() {
 		return aclManager;

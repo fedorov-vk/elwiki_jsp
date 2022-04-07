@@ -74,5 +74,5 @@ Export-Package: org.apache.wiki,
  org.elwiki.api.authorization.authorize,
  org.elwiki.authorize.login,
  org.elwiki.services
-Service-Component: OSGI-INF/refsSPI.xml,
- OSGI-INF/resourcesServiceRefs.xml
+Service-Component: OSGI-INF/elwiki.ResourcesServicesRefs.xml,
+ OSGI-INF/refsSPI.xml
