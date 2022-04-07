@@ -24,6 +24,8 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.engine.Initializable;
@@ -83,8 +85,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 
 	private static final Logger LOG = Logger.getLogger(DefaultCommandResolver.class);
 
-	private /*:FVK:final*/ Engine m_engine;
-
 	/** If true, we'll also consider english plurals (+s) a match. */
 	private /*final*/ boolean m_matchEnglishPlurals;
 
@@ -100,6 +100,8 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 
 	// -- service handling ---------------------------{start}--
 
+	private Engine m_engine;
+	
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration configuration;
@@ -110,7 +112,57 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	@WikiServiceReference
 	private URLConstructor urlConstructor;
 
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 * 
+	 * @param componentContext passed the Engine.
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	// -- service handling -----------------------------{end}--
+
+	@Override
+	public void initialize(Engine wikiEngine) throws WikiException {
+		m_engine = wikiEngine;
+
+		// Skim through the properties and look for anything with the "special page" prefix. Create maps
+		// that allow us look up
+		// the correct Command based on special page name. If a matching command isn't found, create a
+		// RedirectCommand.
+		/*:FVK:
+		for (final String key : properties.stringPropertyNames()) {
+			if (key.startsWith(PROP_SPECIALPAGE)) {
+				String specialPage = key.substring(PROP_SPECIALPAGE.length());
+				String jsp = properties.getProperty(key);
+				if (jsp != null) {
+					specialPage = specialPage.trim();
+					jsp = jsp.trim();
+					Command command = JSPS.get(jsp);
+					if (command == null) {
+						final Command redirect = RedirectCommand.REDIRECT;
+						command = redirect.targetedCommand(jsp);
+					}
+					m_specialPages.put(specialPage, command);
+				}
+			}
+		}
+		*/
+
+		// Do we match plurals?
+		m_matchEnglishPlurals = TextUtil.getBooleanProperty(wikiEngine.getWikiPreferences(), Engine.PROP_MATCHPLURALS,
+				true);
+	}
 
 	/**
 	 * Constructs a CommandResolver for a given Engine. This constructor will extract the special
@@ -385,38 +437,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			return true;
 		}
 		return this.pageManager.pageExists(page);
-	}
-
-	@Override
-	public void initialize(Engine wikiEngine) throws WikiException {
-		m_engine = wikiEngine;
-
-		// Skim through the properties and look for anything with the "special page" prefix. Create maps
-		// that allow us look up
-		// the correct Command based on special page name. If a matching command isn't found, create a
-		// RedirectCommand.
-		/*:FVK:
-		for (final String key : properties.stringPropertyNames()) {
-			if (key.startsWith(PROP_SPECIALPAGE)) {
-				String specialPage = key.substring(PROP_SPECIALPAGE.length());
-				String jsp = properties.getProperty(key);
-				if (jsp != null) {
-					specialPage = specialPage.trim();
-					jsp = jsp.trim();
-					Command command = JSPS.get(jsp);
-					if (command == null) {
-						final Command redirect = RedirectCommand.REDIRECT;
-						command = redirect.targetedCommand(jsp);
-					}
-					m_specialPages.put(specialPage, command);
-				}
-			}
-		}
-		*/
-
-		// Do we match plurals?
-		m_matchEnglishPlurals = TextUtil.getBooleanProperty(wikiEngine.getWikiPreferences(), Engine.PROP_MATCHPLURALS,
-				true);
 	}
 
 }

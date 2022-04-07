@@ -53,6 +53,9 @@ import org.elwiki_data.WikiPage;
  */
 public interface Engine {
 
+	/** Reference identifier for Engine in the service activator parameters. */
+	String ENGINE_REFERENCE = "ENGINE_REFERENCE";
+
     /** The name used for the default template. The value is {@value}. */
     String DEFAULT_TEMPLATE_NAME = "default";
 

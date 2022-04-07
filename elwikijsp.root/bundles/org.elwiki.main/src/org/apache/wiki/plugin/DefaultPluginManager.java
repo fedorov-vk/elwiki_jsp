@@ -52,6 +52,8 @@ import org.apache.wiki.util.XhtmlUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.jdom2.Element;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import javax.servlet.http.HttpServlet;
@@ -178,14 +180,120 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
     /** Keeps a list of all known plugin classes. */
     private Map< String, WikiPluginInfo > m_pluginClassMap = new HashMap<>();
-    
+
 	/**
-	 * Create instance of PluginManager.
+	 * Creates instance of PluginManager.
 	 */
     public DefaultPluginManager() {
 		super();
 	}
 
+	// -- service handling ---------------------------{start}--
+
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 * 
+	 * @param componentContext passed the Engine.
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	// -- service handling -----------------------------{end}--
+	
+	/**
+	 * @param engine Engine which owns this manager.
+	 * @param props  Contents of a "jspwiki.properties" file.
+	 */
+	@Override
+	public void initialize(Engine engine) throws WikiException {
+		m_engine = engine;
+		IPreferenceStore props = engine.getWikiPreferences();
+		
+        final String packageNames = TextUtil.getStringProperty(props, Engine.PROP_SEARCHPATH, null );
+        if ( packageNames != null ) {
+            final StringTokenizer tok = new StringTokenizer( packageNames, "," );
+            while( tok.hasMoreTokens() ) {
+                m_searchPath.add( tok.nextToken().trim() );
+            }
+        }
+
+        final String externalJars = TextUtil.getStringProperty(props, PROP_EXTERNALJARS, null );
+        if( externalJars != null ) {
+            final StringTokenizer tok = new StringTokenizer( externalJars, "," );
+            while( tok.hasMoreTokens() ) {
+                m_externalJars.add( tok.nextToken().trim() );
+            }
+        }
+
+        registerPlugins();
+
+        //  The default packages are always added.
+        m_searchPath.add( DEFAULT_PACKAGE );
+        m_searchPath.add( DEFAULT_FORMS_PACKAGE );
+
+        final PatternCompiler compiler = new Perl5Compiler();
+        try {
+            m_pluginPattern = compiler.compile( PLUGIN_INSERT_PATTERN );
+        } catch( final MalformedPatternException e ) {
+            log.fatal( "Internal error: someone messed with pluginmanager patterns.", e );
+            throw new InternalWikiException( "PluginManager patterns are broken" , e );
+        }
+	}
+
+    private void registerPlugins() {
+        // Register all plugins which have created a resource containing its properties.
+        log.info( "Registering plugins" );
+        final List< Element > plugins = //:FVK: XmlUtil.parse( PLUGIN_RESOURCE_LOCATION, "/modules/plugin" );
+        		Collections.emptyList();
+
+        // Get all resources of all plugins.
+        for( final Element pluginEl : plugins ) {
+            final String className = pluginEl.getAttributeValue( "class" );
+            final WikiPluginInfo pluginInfo = WikiPluginInfo.newInstance( className, pluginEl ,m_searchPath, m_externalJars );
+            if( pluginInfo != null ) {
+                registerPlugin( pluginInfo );
+            }
+        }
+    }
+	
+    /** Register a plugin. */
+    private void registerPlugin( final WikiPluginInfo pluginClass ) {
+        String name;
+
+        // Register the plugin with the className without the package-part
+        name = pluginClass.getName();
+        if( name != null ) {
+            log.debug( "Registering plugin [name]: " + name );
+            m_pluginClassMap.put( name, pluginClass );
+        }
+
+        // Register the plugin with a short convenient name.
+        name = pluginClass.getAlias();
+        if( name != null ) {
+            log.debug( "Registering plugin [shortName]: " + name );
+            m_pluginClassMap.put( name, pluginClass );
+        }
+
+        // Register the plugin with the className with the package-part
+        name = pluginClass.getClassName();
+        if( name != null ) {
+            log.debug( "Registering plugin [className]: " + name );
+            m_pluginClassMap.put( name, pluginClass );
+        }
+
+        pluginClass.initializePlugin( pluginClass, m_engine, m_searchPath, m_externalJars );
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void enablePlugins( final boolean enabled ) {
@@ -390,50 +498,6 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         // FIXME: We could either return an empty string "", or the original line.  If we want unsuccessful requests
         // to be invisible, then we should return an empty string.
         return commandline;
-    }
-
-    /** Register a plugin. */
-    private void registerPlugin( final WikiPluginInfo pluginClass ) {
-        String name;
-
-        // Register the plugin with the className without the package-part
-        name = pluginClass.getName();
-        if( name != null ) {
-            log.debug( "Registering plugin [name]: " + name );
-            m_pluginClassMap.put( name, pluginClass );
-        }
-
-        // Register the plugin with a short convenient name.
-        name = pluginClass.getAlias();
-        if( name != null ) {
-            log.debug( "Registering plugin [shortName]: " + name );
-            m_pluginClassMap.put( name, pluginClass );
-        }
-
-        // Register the plugin with the className with the package-part
-        name = pluginClass.getClassName();
-        if( name != null ) {
-            log.debug( "Registering plugin [className]: " + name );
-            m_pluginClassMap.put( name, pluginClass );
-        }
-
-        pluginClass.initializePlugin( pluginClass, m_engine, m_searchPath, m_externalJars );
-    }
-
-    private void registerPlugins() {
-        // Register all plugins which have created a resource containing its properties.
-        log.info( "Registering plugins" );
-        final List< Element > plugins = //:FVK: XmlUtil.parse( PLUGIN_RESOURCE_LOCATION, "/modules/plugin" );
-        		Collections.emptyList();
-
-        // Get all resources of all plugins.
-        for( final Element pluginEl : plugins ) {
-            final String className = pluginEl.getAttributeValue( "class" );
-            final WikiPluginInfo pluginInfo = WikiPluginInfo.newInstance( className, pluginEl ,m_searchPath, m_externalJars );
-            if( pluginInfo != null ) {
-                registerPlugin( pluginInfo );
-            }
-        }
     }
 
     /**
@@ -700,45 +764,5 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         }
         return plugin;
     }
-
-	/**
-	 * @param engine Engine which owns this manager.
-	 * @param props  Contents of a "jspwiki.properties" file.
-	 */
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-		m_engine = engine;
-		IPreferenceStore props = engine.getWikiPreferences();
-		
-        final String packageNames = TextUtil.getStringProperty(props, Engine.PROP_SEARCHPATH, null );
-        if ( packageNames != null ) {
-            final StringTokenizer tok = new StringTokenizer( packageNames, "," );
-            while( tok.hasMoreTokens() ) {
-                m_searchPath.add( tok.nextToken().trim() );
-            }
-        }
-
-        final String externalJars = TextUtil.getStringProperty(props, PROP_EXTERNALJARS, null );
-        if( externalJars != null ) {
-            final StringTokenizer tok = new StringTokenizer( externalJars, "," );
-            while( tok.hasMoreTokens() ) {
-                m_externalJars.add( tok.nextToken().trim() );
-            }
-        }
-
-        registerPlugins();
-
-        //  The default packages are always added.
-        m_searchPath.add( DEFAULT_PACKAGE );
-        m_searchPath.add( DEFAULT_FORMS_PACKAGE );
-
-        final PatternCompiler compiler = new Perl5Compiler();
-        try {
-            m_pluginPattern = compiler.compile( PLUGIN_INSERT_PATTERN );
-        } catch( final MalformedPatternException e ) {
-            log.fatal( "Internal error: someone messed with pluginmanager patterns.", e );
-            throw new InternalWikiException( "PluginManager patterns are broken" , e );
-        }
-	}
 
 }

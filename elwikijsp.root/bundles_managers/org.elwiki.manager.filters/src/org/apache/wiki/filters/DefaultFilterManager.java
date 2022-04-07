@@ -36,7 +36,12 @@ import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.PriorityList;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.elwiki.configuration.ScopedPreferenceStore;
 import org.jdom2.Element;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import java.io.File;
@@ -115,7 +120,25 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     */
 
 	// -- service handling ---------------------------{start}--
-    
+
+	/**
+	 * This component activate routine. Does all the real initialization.
+	 *
+	 * @param componentContext
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
 	// -- service handling -----------------------------{end}--
     
     /**

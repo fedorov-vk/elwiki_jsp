@@ -16,4 +16,5 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration,
+ org.osgi.service.component;version="1.4.0",
  org.osgi.service.component.annotations;version="1.2.0"

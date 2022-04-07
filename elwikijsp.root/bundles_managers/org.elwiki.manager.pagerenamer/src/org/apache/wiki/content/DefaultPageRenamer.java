@@ -65,12 +65,12 @@ public class DefaultPageRenamer implements PageRenamer {
 	// -- service handling -------------------------< start >--
 
 	@Activate
-	public synchronized void startup() throws WikiException {
+	protected void startup() throws WikiException {
 		//
 	}
 
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 

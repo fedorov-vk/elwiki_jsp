@@ -9,6 +9,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -115,7 +117,7 @@ public class ServicesRefs implements Engine {
 	// -- service handling ---------------------------{start}--
 
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
 	// -- start code block -- Services reference setters
@@ -194,14 +196,14 @@ public class ServicesRefs implements Engine {
 
 	@Reference(target = "(component.factory=elwiki.StorageCdo.factory)")
 	private ComponentFactory<IStorageCdo> factoryStorageCdo;
-	
-	//:FVK:
+
+	// :FVK:
 	public void setRssGenerator(RSSGenerator rssGenerator) {
 		ServicesRefs.rssGenerator = rssGenerator;
 	}
 
 	@Activate
-	public synchronized void startupService(BundleContext bc) throws WikiException {
+	protected void startupService(BundleContext bc) throws WikiException {
 		this.bundleContext = bc;
 		ServicesRefs.Instance = this;
 
@@ -218,57 +220,61 @@ public class ServicesRefs implements Engine {
 	}
 
 	private void servicesMaker() {
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put(ENGINE_REFERENCE, this);
+
 		managers.put(PageRenamer.class,
-				ServicesRefs.pageRenamer = this.factoryPageRenamer.newInstance(null).getInstance());
+				ServicesRefs.pageRenamer = this.factoryPageRenamer.newInstance(properties).getInstance());
 		managers.put(ProgressManager.class,
-				ServicesRefs.progressManager = this.factoryProgressManager.newInstance(null).getInstance());
+				ServicesRefs.progressManager = this.factoryProgressManager.newInstance(properties).getInstance());
 		managers.put(AdminBeanManager.class,
-				ServicesRefs.adminBeanManager = this.factoryAdminBeanManager.newInstance(null).getInstance());
+				ServicesRefs.adminBeanManager = this.factoryAdminBeanManager.newInstance(properties).getInstance());
 		managers.put(TemplateManager.class,
-				ServicesRefs.templateManager = this.factoryTemplateManager.newInstance(null).getInstance());
+				ServicesRefs.templateManager = this.factoryTemplateManager.newInstance(properties).getInstance());
 		managers.put(EditorManager.class,
-				ServicesRefs.editorManager = this.factoryEditorManager.newInstance(null).getInstance());
+				ServicesRefs.editorManager = this.factoryEditorManager.newInstance(properties).getInstance());
 		managers.put(PluginManager.class,
-				ServicesRefs.pluginManager = this.factoryPluginManager.newInstance(null).getInstance());
+				ServicesRefs.pluginManager = this.factoryPluginManager.newInstance(properties).getInstance());
 		managers.put(InternationalizationManager.class,
-				ServicesRefs.internationalizationManager = this.factoryInternationalizationManager.newInstance(null)
-						.getInstance());
+				ServicesRefs.internationalizationManager = this.factoryInternationalizationManager
+						.newInstance(properties).getInstance());
 		managers.put(WorkflowManager.class,
-				ServicesRefs.workflowManager = this.factoryWorkflowManager.newInstance(null).getInstance());
+				ServicesRefs.workflowManager = this.factoryWorkflowManager.newInstance(properties).getInstance());
 		managers.put(URLConstructor.class,
-				ServicesRefs.urlConstructor = this.factoryUrlConstructor.newInstance(null).getInstance());
+				ServicesRefs.urlConstructor = this.factoryUrlConstructor.newInstance(properties).getInstance());
 		managers.put(CommandResolver.class,
-				ServicesRefs.commandResolver = this.factoryCommandResolver.newInstance(null).getInstance());
+				ServicesRefs.commandResolver = this.factoryCommandResolver.newInstance(properties).getInstance());
 		managers.put(VariableManager.class,
-				ServicesRefs.variableManager = this.factoryVariableManager.newInstance(null).getInstance());
+				ServicesRefs.variableManager = this.factoryVariableManager.newInstance(properties).getInstance());
 		managers.put(SearchManager.class,
-				ServicesRefs.searchManager = this.factorySearchManager.newInstance(null).getInstance());
+				ServicesRefs.searchManager = this.factorySearchManager.newInstance(properties).getInstance());
 		managers.put(RenderingManager.class,
-				ServicesRefs.renderingManager = this.factoryRenderingManager.newInstance(null).getInstance());
+				ServicesRefs.renderingManager = this.factoryRenderingManager.newInstance(properties).getInstance());
 		managers.put(AttachmentManager.class,
-				ServicesRefs.attachmentManager = this.factoryAttachmentManager.newInstance(null).getInstance());
+				ServicesRefs.attachmentManager = this.factoryAttachmentManager.newInstance(properties).getInstance());
 		managers.put(UserManager.class,
-				ServicesRefs.userManager = this.factoryUserManager.newInstance(null).getInstance());
+				ServicesRefs.userManager = this.factoryUserManager.newInstance(properties).getInstance());
 		managers.put(FilterManager.class,
-				ServicesRefs.filterManager = this.factoryFilterManager.newInstance(null).getInstance());
+				ServicesRefs.filterManager = this.factoryFilterManager.newInstance(properties).getInstance());
 		managers.put(IIAuthenticationManager.class,
-				ServicesRefs.authenticationManager = this.factoryAuthenticationManager.newInstance(null).getInstance());
-		managers.put(AuthorizationManager.class,
-				ServicesRefs.authorizationManager = this.factoryAuthorizationManager.newInstance(null).getInstance());
+				ServicesRefs.authenticationManager = this.factoryAuthenticationManager.newInstance(properties)
+						.getInstance());
+		managers.put(AuthorizationManager.class, ServicesRefs.authorizationManager = this.factoryAuthorizationManager
+				.newInstance(properties).getInstance());
 		managers.put(IAuthorizer.class,
-				ServicesRefs.groupManager = this.factoryGroupManager.newInstance(null).getInstance());
+				ServicesRefs.groupManager = this.factoryGroupManager.newInstance(properties).getInstance());
 		managers.put(PageManager.class,
-				ServicesRefs.pageManager = this.factoryPageManager.newInstance(null).getInstance());
+				ServicesRefs.pageManager = this.factoryPageManager.newInstance(properties).getInstance());
 		managers.put(DifferenceManager.class,
-				ServicesRefs.differenceManager = this.factoryDifferenceManager.newInstance(null).getInstance());
+				ServicesRefs.differenceManager = this.factoryDifferenceManager.newInstance(properties).getInstance());
 		managers.put(ReferenceManager.class,
-				ServicesRefs.referenceManager = this.factoryReferenceManager.newInstance(null).getInstance());
+				ServicesRefs.referenceManager = this.factoryReferenceManager.newInstance(properties).getInstance());
 		managers.put(TasksManager.class,
-				ServicesRefs.tasksManager = this.factoryTasksManager.newInstance(null).getInstance());
+				ServicesRefs.tasksManager = this.factoryTasksManager.newInstance(properties).getInstance());
 		managers.put(AclManager.class,
-				ServicesRefs.aclManager = this.factoryAclManager.newInstance(null).getInstance());
+				ServicesRefs.aclManager = this.factoryAclManager.newInstance(properties).getInstance());
 		managers.put(IStorageCdo.class,
-				ServicesRefs.storageCdo = this.factoryStorageCdo.newInstance(null).getInstance());
+				ServicesRefs.storageCdo = this.factoryStorageCdo.newInstance(properties).getInstance());
 
 		// Обработка аннотаций @WikiServiceReference.
 		for (Object serviceInstance : managers.values()) {
@@ -289,7 +295,7 @@ public class ServicesRefs implements Engine {
 	}
 
 	@Deactivate
-	public synchronized void shutdownService() {
+	protected void shutdownService() {
 		//
 	}
 
@@ -537,82 +543,82 @@ public class ServicesRefs implements Engine {
 																// AclManager.class.getName() ).getName();
 			final String aclClassName = TextUtil.getStringProperty(preferences, PROP_ACL_MANAGER_IMPL, def);
 
-			initService(CommandResolver.class);
+			// initService(CommandResolver.class);
 			// initComponent( CommandResolver.class, this, props );
 
 			/*final String urlConstructorClassName = TextUtil.getStringProperty( props, PROP_URLCONSTRUCTOR, "DefaultURLConstructor" );
 			final Class< ? > urlclass; //:FVK: = ClassUtil.findClass( "org.apache.wiki.url", urlConstructorClassName );
 			urlclass = DefaultURLConstructor.class;*/
 
-			initService(URLConstructor.class); // org.apache.wiki.url.DefaultURLConstructor
+			// initService(URLConstructor.class); // org.apache.wiki.url.DefaultURLConstructor
 			// initComponent( urlclass.getName(), URLConstructor.class );
 
-			initService(PageManager.class);
+			// initService(PageManager.class);
 			// initComponent( PageManager.class, this, props );
 
-			initService(PluginManager.class);
+			// initService(PluginManager.class);
 			// initComponent( PluginManager.class, this, props );
 
-			initService(DifferenceManager.class);
+			// initService(DifferenceManager.class);
 			// initComponent( DifferenceManager.class, this, props );
 
-			initService(AttachmentManager.class);
+			// initService(AttachmentManager.class);
 			// initComponent( AttachmentManager.class, this, props );
 
-			initService(VariableManager.class);
+			// initService(VariableManager.class);
 			// initComponent( VariableManager.class, props );
 
-			initService(SearchManager.class);
+			// initService(SearchManager.class);
 			// initComponent( SearchManager.class, this, props );
 
-			initService(IIAuthenticationManager.class);
+			// initService(IIAuthenticationManager.class);
 			// initComponent( AuthenticationManager.class );
 
-			initService(AuthorizationManager.class);
+			// initService(AuthorizationManager.class);
 			// initComponent( AuthorizationManager.class );
 
-			initService(UserManager.class);
+			// initService(UserManager.class);
 			// initComponent( UserManager.class );
 
 			/*:FVK: 
 			initService(GroupManager.class);
 			//initComponent( GroupManager.class );
 			 */
-			initService(IAuthorizer.class);
+			// initService(IAuthorizer.class);
 
 //:FVK: отладить:
-			initService(EditorManager.class);
+			// initService(EditorManager.class);
 			// initComponent( EditorManager.class, this );
 
-			initService(ProgressManager.class);
+			// initService(ProgressManager.class);
 			// initComponent( ProgressManager.class, this );
 
-			initService(AclManager.class);
+			// initService(AclManager.class);
 			// initComponent( aclClassName, AclManager.class );
 
-			initService(WorkflowManager.class);
+			// initService(WorkflowManager.class);
 			// initComponent( WorkflowManager.class );
 
-			initService(TasksManager.class);
+			// initService(TasksManager.class);
 			// initComponent( TasksManager.class );
 
-			initService(InternationalizationManager.class);
+			// initService(InternationalizationManager.class);
 			// initComponent( InternationalizationManager.class, this );
 
-			initService(TemplateManager.class);
+			// initService(TemplateManager.class);
 			// initComponent( TemplateManager.class, this, props );
 
-			initService(FilterManager.class);
+			// initService(FilterManager.class);
 			// initComponent( FilterManager.class, this, props );
 
-			initService(AdminBeanManager.class);
+			// initService(AdminBeanManager.class);
 			// initComponent( AdminBeanManager.class, this );
 
-			initService(PageRenamer.class);
+			// initService(PageRenamer.class);
 			// initComponent( PageRenamer.class, this, props );
 
 			// RenderingManager depends on FilterManager events.
-			initService(RenderingManager.class);
+			// initService(RenderingManager.class);
 			// initComponent( RenderingManager.class );
 //TODO
 			// ReferenceManager has the side effect of loading all pages. Therefore after this point, all
@@ -628,16 +634,18 @@ public class ServicesRefs implements Engine {
 			// RuntimeExceptions may occur here, even if they shouldn't.
 			log.fatal("Failed to start managers.", e);
 			throw new WikiException("Failed to start managers: " + e.getMessage(), e);
-		} catch (final ClassNotFoundException e) {
-			log.fatal("JSPWiki could not start, URLConstructor was not found: " + e.getMessage(), e);
-			throw new WikiException(e.getMessage(), e);
-		} catch (final InstantiationException e) {
-			log.fatal("JSPWiki could not start, URLConstructor could not be instantiated: " + e.getMessage(), e);
-			throw new WikiException(e.getMessage(), e);
-		} catch (final IllegalAccessException e) {
-			log.fatal("JSPWiki could not start, URLConstructor cannot be accessed: " + e.getMessage(), e);
-			throw new WikiException(e.getMessage(), e);
-		} catch (final Exception e) {
+		}
+//		catch (final ClassNotFoundException e) {
+//			log.fatal("JSPWiki could not start, URLConstructor was not found: " + e.getMessage(), e);
+//			throw new WikiException(e.getMessage(), e);
+//		} catch (final InstantiationException e) {
+//			log.fatal("JSPWiki could not start, URLConstructor could not be instantiated: " + e.getMessage(), e);
+//			throw new WikiException(e.getMessage(), e);
+//		} catch (final IllegalAccessException e) {
+//			log.fatal("JSPWiki could not start, URLConstructor cannot be accessed: " + e.getMessage(), e);
+//			throw new WikiException(e.getMessage(), e);
+//		}
+		catch (final Exception e) {
 			// Final catch-all for everything
 			log.fatal("JSPWiki could not start, due to an unknown exception when starting.", e);
 			throw new WikiException("Failed to start. Caused by: " + e.getMessage()
@@ -691,6 +699,7 @@ public class ServicesRefs implements Engine {
 		}
 	}
 
+	@Deprecated
 	private <T> T initService(Class<T> clazz) throws Exception {
 		try {
 			T service = this.getService(clazz);
@@ -761,7 +770,7 @@ public class ServicesRefs implements Engine {
 				pages.addAll(getManager(PageManager.class).getAllPages());
 				// :FVK: pages.addAll( getManager( AttachmentManager.class ).getAllAttachments() );
 
-				ReferenceManager manager = initService(ReferenceManager.class);
+				ReferenceManager manager = getReferenceManager();
 				if (manager != null)
 					manager.initialize(pages);
 				// initComponent( ReferenceManager.class, this );

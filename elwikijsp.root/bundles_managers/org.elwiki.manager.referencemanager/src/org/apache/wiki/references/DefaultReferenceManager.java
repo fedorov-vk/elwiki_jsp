@@ -31,6 +31,9 @@ import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.engine.Initializable;
@@ -167,8 +170,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
     /**
      *  Builds a new ReferenceManager.
-     *
-     *  @param engine The Engine to which this is managing references to.
      */
     public DefaultReferenceManager() {
         m_refersTo = new HashMap<>();
@@ -186,14 +187,32 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @WikiServiceReference
     private IStorageCdo storageCdo;
 
-	// -- service handling -----------------------------{end}--
-
-    @Override
+	/**
+	 * ReferenceManager initializer.
+	 * 
+	 * @param componentContext passed the Engine.
+	 */
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
+	@Override
 	public void initialize(Engine engine) throws WikiException {
 		super.initialize(engine);
 		IPreferenceStore wikiPreferences = engine.getWikiPreferences();
 		m_matchEnglishPlurals = TextUtil.getBooleanProperty( wikiPreferences, Engine.PROP_MATCHPLURALS, false );
 	}
+
+	// -- service handling -----------------------------{end}--
 
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.

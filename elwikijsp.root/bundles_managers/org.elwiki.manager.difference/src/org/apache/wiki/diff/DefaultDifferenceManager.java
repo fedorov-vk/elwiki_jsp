@@ -36,6 +36,7 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -82,20 +83,23 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
     private IWikiConfiguration wikiConfiguration;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param bc
-	 * @throws WikiException
-	 */
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     * @throws WikiException
+     */
     @Activate
-	public synchronized void startup(BundleContext bc) throws WikiException {
-		/*:FVK: old code - now used service declaration initialization.
-		ServiceReference<?> ref = bc.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) bc.getService(ref);
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		*/
 	}
 
 	// -- service handling -----------------------------{end}--

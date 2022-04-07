@@ -79,7 +79,7 @@ public class WikiCallbackHandler implements CallbackHandler {
 			if (callback instanceof HttpRequestCallback) {
 				((HttpRequestCallback) callback).setRequest(this.m_request);
 			} else if (callback instanceof WikiEngineCallback) {
-				((WikiEngineCallback) callback).setEngine(ServicesRefs.Instance);
+				((WikiEngineCallback) callback).setEngine(this.m_engine);
 			} else if (callback instanceof UserDatabaseCallback) {
 				((UserDatabaseCallback) callback)
 						.setUserDatabase(ServicesRefs.getUserManager().getUserDatabase() );

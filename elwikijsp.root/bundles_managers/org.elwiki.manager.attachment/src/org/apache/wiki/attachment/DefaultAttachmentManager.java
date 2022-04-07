@@ -26,6 +26,8 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.attachment.IDynamicAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.elwiki_data.PageAttachment;
@@ -94,6 +96,25 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     @WikiServiceReference
     private ReferenceManager referenceManager;
 
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     * @throws WikiException
+     */
+    @Activate
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		try {
+			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+			if (engine instanceof Engine) {
+				initialize((Engine) engine);
+			}
+		} catch (WikiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+    
     // -- service handling -----------------------------{end}--
 
 	/**

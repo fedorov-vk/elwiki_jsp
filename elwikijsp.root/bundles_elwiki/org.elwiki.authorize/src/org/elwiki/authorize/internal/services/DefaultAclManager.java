@@ -67,6 +67,7 @@ import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * Default implementation that parses Acls from wiki page markup.
@@ -79,17 +80,19 @@ public class DefaultAclManager implements AclManager {
 
 	private static final Logger log = Logger.getLogger(DefaultAclManager.class);
 
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
 	// -- service handling ---------------------------{start}--
 
 	@Activate
-	public synchronized void startup() {
+	protected void startup() {
 		//
 	}
 
 	@Deactivate
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 

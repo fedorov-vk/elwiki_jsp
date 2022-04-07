@@ -186,7 +186,7 @@ public class WikiConfiguration implements IWikiConfiguration {
     
 	// -- service support ---------------------------------
 
-	public synchronized void startup(BundleContext bc) {
+    protected void startup(BundleContext bc) {
 		log.debug("** Startup ** Configuration ** Service *****************************************");
 
 		/*
@@ -321,7 +321,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return result;
 	}
 
-	public synchronized void shutdown() {
+	protected void shutdown() {
 		//
 	}
 
