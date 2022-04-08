@@ -23,11 +23,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.internal.ApiActivator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -51,14 +54,28 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WikiAjaxDispatcherServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2371163144047926990L;
     private static final Map< String, AjaxServletContainer > ajaxServlets = new ConcurrentHashMap<>();
     private static final Logger log = Logger.getLogger( WikiAjaxDispatcherServlet.class.getName() );
+    final private Engine m_engine;
     private String PATH_AJAX = "/ajax/";
-    private Engine m_engine;
 	private IWikiConfiguration config;
 
     /**
+     * Creates a WikiAjaxDispatcherServlet.
+     */
+    public WikiAjaxDispatcherServlet() {
+		super();
+		BundleContext context = ApiActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine == null) {
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+	}
+
+	/**
      * {@inheritDoc}
      *
      * This sets the AjaxPath to "/ajax/" as configured in "jspwiki.ajax.url.prefix".
@@ -67,7 +84,6 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
     @Override
     public void init( final ServletConfig config ) throws ServletException {
         super.init( config );
-        m_engine = ServicesRefs.Instance;
         this.config = m_engine.getWikiConfiguration();
         PATH_AJAX = "/" + TextUtil.getStringProperty( m_engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax" ) + "/";
         log.info( "WikiAjaxDispatcherServlet initialized." );
@@ -164,10 +180,9 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
      * @return true if permission is valid
      */
     private boolean validatePermission( final HttpServletRequest req, final AjaxServletContainer container ) {
-        final Engine e = Wiki.engine().find( req.getSession().getServletContext() );
         boolean valid = false;
         if( container != null ) {
-            valid = ServicesRefs.getAuthorizationManager().checkPermission( Wiki.session().find( e, req ), container.permission );
+            valid = ServicesRefs.getAuthorizationManager().checkPermission( Wiki.session().find( m_engine, req ), container.permission );
         }
         return valid;
     }

@@ -383,12 +383,14 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		Document doc = null;
 
 		if (m_engine.getServletContext() == null) {
+			//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
 			ClassLoader cl = WebContainerAuthorizer.class.getClassLoader();
 			url = cl.getResource("WEB-INF/web.xml");
 			if (url != null) {
 				log.info("Examining " + url.toExternalForm());
 			}
 		} else {
+			//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
 			url = m_engine.getServletContext().getResource("/WEB-INF/web.xml");
 			if (url != null) {
 				log.info("Examining " + url.toExternalForm());

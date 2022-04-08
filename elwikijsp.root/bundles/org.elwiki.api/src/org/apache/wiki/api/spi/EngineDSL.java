@@ -40,6 +40,7 @@ public class EngineDSL {
      * @param config servlet config holding the {@link Engine} instance.
      * @return a configured {@link Engine} instance.
      */
+    @Deprecated
     public Engine find( final ServletConfig config ) {
         return find( config.getServletContext());
     }
@@ -51,6 +52,7 @@ public class EngineDSL {
      * @param props Engine configuration properties.
      * @return a configured {@link Engine} instance.
      */
+    @Deprecated
     public Engine find( final ServletContext context ) {
     	ServicesRefs engine = ServicesRefs.Instance;
     	engine.setServletContext(context); //TODO: :FVK: - это не нужно!!!

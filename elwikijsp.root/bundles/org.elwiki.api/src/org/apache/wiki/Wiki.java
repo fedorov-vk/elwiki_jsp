@@ -73,6 +73,7 @@ public class Wiki {
 	 *
 	 * @return {@link EngineSPI} operations.
 	 */
+	@Deprecated
 	public static EngineDSL engine() {
 		return new EngineDSL(engineSPI);
 	}

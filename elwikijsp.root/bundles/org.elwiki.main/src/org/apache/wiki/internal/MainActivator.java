@@ -21,6 +21,7 @@ public class MainActivator implements BundleActivator {
 		MainActivator.context = null;
 	}
 
+	@Deprecated
 	public static <T> T getService(Class<T> clazz) {
 		Bundle bundle = context.getBundle();
 		if (bundle != null) {

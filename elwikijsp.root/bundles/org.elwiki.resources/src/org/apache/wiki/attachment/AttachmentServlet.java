@@ -33,6 +33,8 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
@@ -47,6 +49,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletConfig;
@@ -81,18 +84,19 @@ import java.util.Properties;
  */
 public class AttachmentServlet extends HttpServlet {
 
-    private static final int BUFFER_SIZE = 8192;
+	private static final Logger log = Logger.getLogger( AttachmentServlet.class );
+
+	private static final int BUFFER_SIZE = 8192;
 
     private static final long serialVersionUID = 3257282552187531320L;
-
-    private Engine m_engine;
-    private static final Logger log = Logger.getLogger( AttachmentServlet.class );
 
     private static final String HDR_VERSION     = "version";
     // private static final String HDR_NAME        = "page";
 
     /** Default expiry period is 1 day */
     protected static final long DEFAULT_EXPIRY = 1 * 24 * 60 * 60 * 1000;
+
+    final private Engine m_engine;
 
     /**
      *  The maximum size that an attachment can be.
@@ -113,12 +117,22 @@ public class AttachmentServlet extends HttpServlet {
     //
     //private final DateFormat rfcDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 
+    public AttachmentServlet() {
+		super();
+		BundleContext context = ResourcesActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine == null) {
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+	}
+
     /**
      *  Initializes the servlet from Engine properties.
      */
     @Override
     public void init( final ServletConfig config ) throws ServletException {
-        m_engine = Wiki.engine().find( config );
         final IPreferenceStore props = m_engine.getWikiPreferences();
         final String tmpDir = m_engine.getWorkDir() + File.separator + "attach-tmp";
         final String allowed = TextUtil.getStringProperty( props, AttachmentManager.PROP_ALLOWEDEXTENSIONS, null );
@@ -147,7 +161,7 @@ public class AttachmentServlet extends HttpServlet {
         log.debug( "UploadServlet initialized. Using " + tmpDir + " for temporary storage." );
     }
 
-    private boolean isTypeAllowed( String name )
+	private boolean isTypeAllowed( String name )
     {
         if( name == null || name.length() == 0 ) return false;
 

@@ -35,21 +35,37 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
+import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 public class PageFilter extends HttpFilter {
 
 	private static final Logger log = Logger.getLogger(PageFilter.class);
 
-	private Engine engine;
+	final private Engine engine;
 	private ServletContext context;
     private String m_wiki_encoding;
     private boolean useEncoding;
 
+	/**
+	 * Creates a ElWiki Page Filter.
+	 */
+	public PageFilter() {
+		super();
+		BundleContext context = ResourcesActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (engine == null) {
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+	}
+
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		final ServletContext context = config.getServletContext();
-		engine = Wiki.engine().find(context);
 		this.context = context;
 		
         m_wiki_encoding = engine.getWikiPreferences().getString( IWikiPreferences.PROP_ENCODING );

@@ -427,6 +427,7 @@ public class ServicesRefs implements Engine {
 	 * Store the ServletContext that we're in. This may be null if WikiEngine is not running inside
 	 * a servlet container (i.e. when testing).
 	 */
+	//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
 	private ServletContext m_servletContext = null;
 
 	/** Stores the template path. This is relative to "templates". */
@@ -484,6 +485,7 @@ public class ServicesRefs implements Engine {
 		log.debug("Default server timezone: " + TimeZone.getDefault().getDisplayName(true, TimeZone.LONG));
 
 		if (m_servletContext != null) {
+			//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null). 
 			log.info("Servlet container: " + m_servletContext.getServerInfo());
 			if (m_servletContext.getMajorVersion() < 3
 					|| (m_servletContext.getMajorVersion() == 3 && m_servletContext.getMinorVersion() < 1)) {
@@ -736,6 +738,9 @@ public class ServicesRefs implements Engine {
 	 * {@code m_servletContext.getResource} is made.
 	 */
 	void enforceValidTemplateDirectory() {
+		//TODO: перенести вычисление размещения JSP - относительно osgi-bundle, вместо данных из ServletContext. 
+		// Место размещения JSP файлов темплейта - определялось из ServletContext.
+		// Для ElWiki - это работает через bundle. 
 		if (m_servletContext != null) {
 			final String viewTemplate = "templates" + File.separator + getTemplateDir() + File.separator
 					+ "ViewTemplate.jsp";
@@ -844,6 +849,7 @@ public class ServicesRefs implements Engine {
 	/** {@inheritDoc} */
 	@Override
 	public ServletContext getServletContext() {
+		//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
 		return m_servletContext;
 	}
 
