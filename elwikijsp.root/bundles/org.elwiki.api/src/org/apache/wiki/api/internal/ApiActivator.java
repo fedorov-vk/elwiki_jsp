@@ -9,7 +9,7 @@ public class ApiActivator implements BundleActivator {
 
 	private static BundleContext context;
 
-	static BundleContext getContext() {
+	public static BundleContext getContext() {
 		return context;
 	}
 
@@ -22,6 +22,7 @@ public class ApiActivator implements BundleActivator {
 	}
 
 	//:FVK: @deprecated ?
+	@Deprecated
 	public static <T> T getService(Class<T> clazz) {
 		Bundle bundle = context.getBundle();
 		if (bundle != null) {

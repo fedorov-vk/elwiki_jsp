@@ -33,7 +33,10 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -73,9 +76,22 @@ public class Installer {
     private HttpServletRequest m_request;
     private boolean m_validated;
     
-    public Installer( final HttpServletRequest request, final ServletConfig config ) {
+	/**
+	 * Creates an Installer.
+	 * 
+	 * @param request
+	 * @param config
+	 */
+	public Installer( final HttpServletRequest request, final ServletConfig config ) {
+		BundleContext context = ResourcesActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine == null) {
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+		
         // Get wiki session for this user
-        m_engine = Wiki.engine().find( config );
         m_session = Wiki.session().find( m_engine, request );
         
         // Get the file for properties

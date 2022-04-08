@@ -49,7 +49,7 @@ import org.elwiki_data.WikiPage;
  *
  *  <p>
  *  There's basically only a single Engine for each web application, and you should always get it using either the
- *  {@code Context#getEngine()} method or through {@code Wiki.engine().find(..)} DSL methods.
+ *  {@code Context#getEngine()} method or through OSGi {@code ServiceReference}.
  */
 public interface Engine {
 
@@ -226,6 +226,7 @@ public interface Engine {
         URL path = null;
 
         if( getServletContext() != null ) {
+        	//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null). 
             final File tmpFile;
             try {
                 tmpFile = File.createTempFile( "temp." + name, "" );

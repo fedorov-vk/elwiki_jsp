@@ -155,6 +155,8 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	public boolean templateExists(final String templateName) {
 //////////		
 		final ServletContext context = m_engine.getServletContext();
+		//TODO: этот код устарел - переделать (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
+		/*
 		try (final InputStream in = context.getResourceAsStream(getPath(templateName) + "ViewTemplate.jsp")) {
 			if (in != null) {
 				return true;
@@ -162,6 +164,8 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 		} catch (final IOException e) {
 			log.error(e.getMessage(), e);
 		}
+		*/
+
 		return false;
 	}
 

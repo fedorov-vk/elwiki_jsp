@@ -25,6 +25,8 @@ import org.apache.wiki.internal.MainActivator;
 import org.apache.wiki.url0.URLConstructor;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -46,22 +48,35 @@ public class WikiServlet extends HttpServlet {
     private static final long serialVersionUID = 3258410651167633973L;
     private static final Logger log = Logger.getLogger( WikiServlet.class.getName() );
 
-    private Engine m_engine;
-
-    private IWikiConfiguration configuration;
+    final private Engine m_engine;
+    final private IWikiConfiguration wikiConfiguration;
+    
     
     /**
+     * Creates a WikiServlet.
+     */
+    public WikiServlet() {
+		super();
+		BundleContext context = MainActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine != null) {
+			this.wikiConfiguration = m_engine.getWikiConfiguration();
+		} else {
+			this.wikiConfiguration = null;
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+	}
+
+	/**
      * {@inheritDoc}
      */
     @Override
     public void init( final ServletConfig config ) throws ServletException {
         super.init( config );
-        m_engine = Wiki.engine().find( config );
         log.info( "WikiServlet initialized." );
-
-        // :FVK: workaround (возможно далее код не нужен - так как этот WikiServlet - не используется.
-        // (перенос некоторых методов в configuration.)
-        configuration = MainActivator.getService(IWikiConfiguration.class);
+        // :FVK: workaround (возможно далее код не нужен - так как этот WikiServlet - не используется.?
     }
 
     /**
@@ -92,16 +107,16 @@ public class WikiServlet extends HttpServlet {
      */
     @Override
     public void doGet( final HttpServletRequest req, final HttpServletResponse res ) throws IOException, ServletException {
-        String pageName = URLConstructor.parsePageFromURL( req, configuration.getContentEncodingCs() );
+        String pageName = URLConstructor.parsePageFromURL( req, wikiConfiguration.getContentEncodingCs() );
 
         log.info( "Request for page: " + pageName );
         if( pageName == null ) {
-            pageName = configuration.getFrontPage(); // FIXME: Add special pages as well
+            pageName = wikiConfiguration.getFrontPage(); // FIXME: Add special pages as well
         }
 
         final String jspPage = ServicesRefs.getUrlConstructor().getForwardPage( req );
         final RequestDispatcher dispatcher = req.getRequestDispatcher( "/" + jspPage + "?page=" +
-        		configuration.encodeName( pageName ) + "&" + req.getQueryString() );
+        		wikiConfiguration.encodeName( pageName ) + "&" + req.getQueryString() );
 
         dispatcher.forward( req, res );
     }

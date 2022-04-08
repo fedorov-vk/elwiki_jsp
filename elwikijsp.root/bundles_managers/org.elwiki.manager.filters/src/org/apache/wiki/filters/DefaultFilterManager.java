@@ -207,6 +207,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
             registerFilters();
 
             if( m_engine.getServletContext() != null ) {
+            	//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
                 log.debug( "Attempting to locate " + DEFAULT_XMLFILE + " from servlet context." );
                 if( xmlFile == null ) {
                     xmlStream = m_engine.getServletContext().getResourceAsStream( DEFAULT_XMLFILE );

@@ -58,20 +58,24 @@ import java.io.PrintWriter;
 public class WikiServletFilter implements Filter {
 
     private static final Logger log = Logger.getLogger( WikiServletFilter.class );
-    protected Engine m_engine = null;
-	private IWikiConfiguration wikiConfiguration;
+    final protected Engine m_engine;
+    final private IWikiConfiguration wikiConfiguration;
 
     /**
-     *  Creates a Wiki Servlet Filter.
+     *  Creates a ElWiki Servlet Filter.
      */
     public WikiServletFilter()
     {
-        super();
-        
+		super();
 		BundleContext context = ResourcesActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(IWikiConfiguration.class.getName());
-		if (ref != null) {
-			this.wikiConfiguration = (IWikiConfiguration) context.getService(ref);
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine != null) {
+			this.wikiConfiguration = m_engine.getWikiConfiguration();
+		} else {
+			this.wikiConfiguration = null;
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
 		}
     }
 
@@ -94,9 +98,7 @@ public class WikiServletFilter implements Filter {
             context.log( "== JSPWIKI WARNING ==  : This container is running with a security manager. JSPWiki does not yet really support that right now. See issue JSPWIKI-129 for details and information on how to proceed." );
         }
 
-        m_engine = Wiki.engine().find( context);
-
-		{// это - workaround
+		{// TODO: это - workaround. :FVK: (хотя, BaseURL - настроен в конфигурации. И можно ли получить его другим путем?)
 			ServletContext servletContext = config.getServletContext();
 			m_engine.getWikiConfiguration().setBaseURL(servletContext.getContextPath());
 		}

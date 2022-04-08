@@ -30,6 +30,7 @@ import org.apache.wiki.plugin.WeblogEntryPlugin;
 import org.apache.wiki.plugin.WeblogPlugin;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.intabulas.sandler.Sandler;
 import org.intabulas.sandler.SyndicationFactory;
@@ -40,6 +41,8 @@ import org.intabulas.sandler.elements.Link;
 import org.intabulas.sandler.elements.Person;
 import org.intabulas.sandler.elements.impl.LinkImpl;
 import org.intabulas.sandler.exceptions.FeedMarshallException;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -59,20 +62,35 @@ import java.util.Date;
 // FIXME: Rewrite using some other library
 public class AtomAPIServlet extends HttpServlet {
 
-    private static final Logger log = Logger.getLogger( AtomAPIServlet.class );
+	private static final Logger log = Logger.getLogger( AtomAPIServlet.class );
+	private static final long serialVersionUID = 5138413973259407464L;
 
-    private static final long serialVersionUID = 0L;
-
-    private Engine m_engine;
-    IWikiConfiguration config;
+    final private Engine m_engine;
+    final IWikiConfiguration wikiConfiguration;
 
     /**
+     * Creates a AtomAPIServlet
+     */
+    public AtomAPIServlet() {
+		super();
+		BundleContext context = ResourcesActivator.getContext();
+		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
+		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
+		if (m_engine != null) {
+			this.wikiConfiguration = m_engine.getWikiConfiguration();
+		} else {
+			this.wikiConfiguration = null;
+			//TODO: обработать аварию - нет сервиса Engine.
+			throw new NullPointerException("missed Engine service.");
+		}
+	}
+
+	/**
      *  {@inheritDoc}
      */
     @Override
     public void init( final ServletConfig config ) throws ServletException {
-        m_engine = Wiki.engine().find( config );
-        this.config = m_engine.getWikiConfiguration();
+    	// empty.
     }
 
     /**
@@ -227,9 +245,9 @@ public class AtomAPIServlet extends HttpServlet {
             final String encodedName = TextUtil.urlEncodeUTF8( p.getName() );
             final Context context = Wiki.context().create( m_engine, p );
             final String title = TextUtil.replaceEntities( org.apache.wiki.api.rss.Feed.getSiteName( context ) );
-            final Link postlink = createLink( "service.post", this.config.getBaseURL() + "atom/" + encodedName, title );
-            final Link editlink = createLink( "service.edit", this.config.getBaseURL() + "atom/" + encodedName, title );
-            final Link feedlink = createLink( "service.feed", this.config.getBaseURL() + "atom.jsp?page=" + encodedName, title );
+            final Link postlink = createLink( "service.post", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );
+            final Link editlink = createLink( "service.edit", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );
+            final Link feedlink = createLink( "service.feed", this.wikiConfiguration.getBaseURL() + "atom.jsp?page=" + encodedName, title );
 
             feed.addLink( postlink );
             feed.addLink( feedlink );
