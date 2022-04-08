@@ -24,8 +24,6 @@ import org.apache.wiki.api.spi.ContentsDSL;
 import org.apache.wiki.api.spi.ContentsSPI;
 import org.apache.wiki.api.spi.ContextDSL;
 import org.apache.wiki.api.spi.ContextSPI;
-import org.apache.wiki.api.spi.EngineDSL;
-import org.apache.wiki.api.spi.EngineSPI;
 import org.apache.wiki.api.spi.SessionDSL;
 import org.apache.wiki.api.spi.SessionSPI;
 //:FVK:import org.apache.wiki.util.PropertyReader;
@@ -38,7 +36,6 @@ public class Wiki {
 	private static AclsSPI aclsSPI;
 	private static ContentsSPI contentsSPI;
 	private static ContextSPI contextSPI;
-	private static EngineSPI engineSPI;
 	private static SessionSPI sessionSPI;
 
 	/**
@@ -69,16 +66,6 @@ public class Wiki {
 	}
 
 	/**
-	 * Access to {@link EngineSPI} operations.
-	 *
-	 * @return {@link EngineSPI} operations.
-	 */
-	@Deprecated
-	public static EngineDSL engine() {
-		return new EngineDSL(engineSPI);
-	}
-
-	/**
 	 * Access to {@link SessionSPI} operations.
 	 *
 	 * @return {@link SessionSPI} operations.
@@ -99,10 +86,6 @@ public class Wiki {
 
 	public void setContextSPI(ContextSPI contextSPI1) {
 		contextSPI = contextSPI1;
-	}
-
-	public void setEngineSPI(EngineSPI engineSPI1) {
-		engineSPI = engineSPI1;
 	}
 
 	public void setSessionSPI(SessionSPI sessionSPI1) {

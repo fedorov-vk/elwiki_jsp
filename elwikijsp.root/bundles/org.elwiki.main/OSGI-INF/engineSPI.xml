@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.apache.wiki.spi.EngineSPIDefault">
-   <implementation class="org.apache.wiki.spi.EngineSPIDefaultImpl"/>
-   <service>
-      <provide interface="org.apache.wiki.api.spi.EngineSPI"/>
-   </service>
-   <reference bind="setEngine" cardinality="1..1" interface="org.apache.wiki.api.core.Engine" name="Engine" policy="static"/>
-</scr:component>
