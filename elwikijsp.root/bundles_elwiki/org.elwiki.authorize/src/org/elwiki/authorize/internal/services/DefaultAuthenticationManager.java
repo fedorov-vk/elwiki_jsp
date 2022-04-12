@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
@@ -69,6 +70,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -96,7 +99,7 @@ import java.util.Set;
  * @since 2.3
  */
 @Component(name = "elwiki.DefaultAuthenticationManager", service = IIAuthenticationManager.class, //
-factory = "elwiki.AuthenticationManager.factory")
+	factory = "elwiki.AuthenticationManager.factory")
 public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
@@ -119,9 +122,6 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     /** The default {@link LoginModule} class name to use for custom authentication. */
     private static final String DEFAULT_LOGIN_MODULE = UserDatabaseLoginModule.class.getCanonicalName(); 
     		//:FVK: "org.apache.wiki.auth.login.UserDatabaseLoginModule";
-
-    /** Empty principal set. */
-    private static final Set<Principal> NO_PRINCIPALS = new HashSet<>();
 
     /** Static Boolean for lazily-initializing the "allows assertions" flag */
     private boolean m_allowsCookieAssertions = true;
@@ -149,6 +149,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
 
 	// -- service handling ---------------------------{start}--
+
+	@Reference
+    EventAdmin eventAdmin;
 
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
@@ -276,60 +279,81 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean login( final HttpServletRequest request ) throws WikiSecurityException {
-        final HttpSession httpSession = request.getSession();
-        final Session session = SessionMonitor.getInstance().find( httpSession );
+	public boolean login(final HttpServletRequest request) throws WikiSecurityException {
+		final HttpSession httpSession = request.getSession();
+		final Session session = m_engine.getSessionMonitor().find(httpSession);
 
 //:FVK: - ссылка сам на себя !!! ??        
-        final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();
-        
-        CallbackHandler handler = null;
-        final Map< String, String > options = EMPTY_MAP;
+		final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();
 
-        // If user not authenticated, check if container logged them in, or if there's an authentication cookie
-        if ( !session.isAuthenticated() ) {
-            // Create a callback handler
-            handler = new WebContainerCallbackHandler( m_engine, request );
+		CallbackHandler handler = null;
+		final Map<String, String> options = EMPTY_MAP;
 
-            // Execute the container login module, then (if that fails) the cookie auth module
-            Set< Principal > principals = authenticationMgr.doJAASLogin( WebContainerLoginModule.class, handler, options );
-            if ( principals.size() == 0 && authenticationMgr.allowsCookieAuthentication() ) {
-                principals = authenticationMgr.doJAASLogin( CookieAuthenticationLoginModule.class, handler, options );
-            }
+		// If user not authenticated, check if container logged them in,
+		// or if there's an authentication cookie
+		if (!session.isAuthenticated()) {
+			// Create a callback handler
+			handler = new WebContainerCallbackHandler(m_engine, request);
 
-            // If the container logged the user in successfully, tell the Session (and add all of the Principals)
-            if ( principals.size() > 0 ) {
-                fireEvent( WikiSecurityEvent.LOGIN_AUTHENTICATED, getLoginPrincipal( principals ), session );
-                for( final Principal principal : principals ) {
-                    fireEvent( WikiSecurityEvent.PRINCIPAL_ADD, principal, session );
-                }
+			// Execute the container login module, then (if that fails) the cookie auth module
+			Set<Principal> principals = authenticationMgr.doJAASLogin(WebContainerLoginModule.class, handler, options);
+			if (principals.size() == 0 && authenticationMgr.allowsCookieAuthentication()) {
+				principals = authenticationMgr.doJAASLogin(CookieAuthenticationLoginModule.class, handler, options);
+			}
 
-                // Add all appropriate Authorizer roles
-                injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), request );
-            }
-        }
+			// If the container logged the user in successfully,
+			// tell the Session (and add all of the Principals)
+			if (principals.size() > 0) {
+				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
+						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
+	        	{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
+					fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED,
+							IIAuthenticationManager.getLoginPrincipal(principals), session);
+					for (final Principal principal : principals) {
+						fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, principal, session);
+					}
+				}
 
-        // If user still not authenticated, check if assertion cookie was supplied
-        if ( !session.isAuthenticated() && authenticationMgr.allowsCookieAssertions() ) {
-            // Execute the cookie assertion login module
-            final Set< Principal > principals = authenticationMgr.doJAASLogin( CookieAssertionLoginModule.class, handler, options );
-            if ( principals.size() > 0 ) {
-                fireEvent( WikiSecurityEvent.LOGIN_ASSERTED, getLoginPrincipal( principals ), session);
-            }
-        }
+				// Add all appropriate Authorizer roles
+				injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), request);
 
-        // If user still anonymous, use the remote address
-        if( session.isAnonymous() ) {
-            final Set< Principal > principals = authenticationMgr.doJAASLogin( AnonymousLoginModule.class, handler, options );
-            if( principals.size() > 0 ) {
-                fireEvent( WikiSecurityEvent.LOGIN_ANONYMOUS, getLoginPrincipal( principals ), session );
-                return true;
-            }
-        }
+				return true;
+			}
+		}
 
-        // If by some unusual turn of events the Anonymous login module doesn't work, login failed!
-        return false;
-    }
+		// If user still not authenticated, check if assertion cookie was supplied
+		if (!session.isAuthenticated() && authenticationMgr.allowsCookieAssertions()) {
+			// Execute the cookie assertion login module
+			final Set<Principal> principals = authenticationMgr.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
+			if (principals.size() > 0) {
+				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED, Map.of( //
+						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
+	        	{//:FVK: устаревший код. @Deprecated
+					fireEvent(WikiSecurityEvent.LOGIN_ASSERTED, IIAuthenticationManager.getLoginPrincipal(principals), session);
+				}
+				return true;
+			}
+		}
+
+		// If user still anonymous, use the remote address
+		if (session.isAnonymous()) {
+			final Set<Principal> principals = authenticationMgr.doJAASLogin(AnonymousLoginModule.class, handler, options);
+			if (principals.size() > 0) {
+				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS, Map.of( //
+						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
+				{// :FVK: устаревший код. @Deprecated
+					fireEvent(WikiSecurityEvent.LOGIN_ANONYMOUS, IIAuthenticationManager.getLoginPrincipal(principals), session);
+				}
+				return true;
+			}
+		}
+
+		// If by some unusual turn of events the Anonymous login module doesn't work, login failed!
+		return false;
+	}
 
     /**
      * {@inheritDoc}
@@ -351,10 +375,15 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         // Execute the user's specified login module
         final Set< Principal > principals = doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
         if( principals.size() > 0 ) {
-            fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED, getLoginPrincipal( principals ), session );
-            for ( final Principal principal : principals ) {
-                fireEvent( WikiSecurityEvent.PRINCIPAL_ADD, principal, session );
-            }
+			eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
+					ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+					ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
+        	{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
+				fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED, IIAuthenticationManager.getLoginPrincipal(principals), session);
+				for (final Principal principal : principals) {
+					fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, principal, session);
+				}
+        	}
 
             // Add all appropriate Authorizer roles
             injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), null );
@@ -392,33 +421,22 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * {@inheritDoc}
      */
     @Override
-    public void logout( final HttpServletRequest request ) {
-        if( request == null ) {
-            log.error( "No HTTP reqest provided; cannot log out." );
-            return;
-        }
+	public void logout(final HttpServletRequest request) {
+		if (request == null) {
+			log.error("No HTTP reqest provided; cannot log out.");
+			return;
+		}
 
-        final HttpSession session = request.getSession();
-        final String sid = ( session == null ) ? "(null)" : session.getId();
-        if( log.isDebugEnabled() ) {
-            log.debug( "Invalidating Session for session ID=" + sid );
-        }
-        // Retrieve the associated Session and clear the Principal set
-        final Session wikiSession = Wiki.session().find( m_engine, request );
-        final Principal originalPrincipal = wikiSession.getLoginPrincipal();
-        wikiSession.invalidate();
+		HttpSession httpSession = request.getSession();
+		String httpSessionId = (httpSession != null) ? httpSession.getId() : null;
+		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGOUT, Map.of( //
+				ElWikiEventsConstants.PROPERTY_KEY_TARGET, httpSessionId)));
 
-        // Remove the wikiSession from the WikiSession cache
-        Wiki.session().remove( m_engine, request );
-
-        // We need to flush the HTTP session too
-        if( session != null ) {
-            session.invalidate();
-        }
-
-        // Log the event
-        fireEvent( WikiSecurityEvent.LOGOUT, originalPrincipal, null );
-    }
+		// We need to flush the HTTP session too
+		if (httpSession != null) {
+			httpSession.invalidate();
+		}
+	}
 
     /**
      * {@inheritDoc}
@@ -476,7 +494,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         if( loginSucceeded && commitSucceeded ) {
             return subject.getPrincipals();
         }
-        return NO_PRINCIPALS;
+
+        return Collections.emptySet();
     }
 
     // events processing .......................................................

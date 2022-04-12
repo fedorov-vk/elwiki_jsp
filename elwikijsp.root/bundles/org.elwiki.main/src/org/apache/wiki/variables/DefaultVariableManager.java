@@ -48,9 +48,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- *  Manages variables.  Variables are case-insensitive.  A list of all available variables is on a Wiki page called "WikiVariables".
+ * Manages variables. Variables are case-insensitive. A list of all available
+ * variables is on a Wiki page called "WikiVariables".
  *
- *  @since 1.9.20.
+ * @since 1.9.20.
  */
 @Component(name = "elwiki.DefaultVariableManager", service = VariableManager.class, //
 		factory = "elwiki.VariableManager.factory")
@@ -387,13 +388,14 @@ public class DefaultVariableManager implements VariableManager {
 
         public String getLoginstatus() {
             final Session session = m_context.getWikiSession();
-            return Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE ).getString( "varmgr." + session.getStatus() );
+            ResourceBundle rcBundle = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            return rcBundle.getString( "varmgr." + session.getLoginStatus().name());
         }
 
         public String getUsername() {
             final Principal wup = m_context.getCurrentUser();
-            final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
-            return wup != null ? wup.getName() : rb.getString( "varmgr.not.logged.in" );
+            final ResourceBundle rcBundle = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            return wup != null ? wup.getName() : rcBundle.getString( "varmgr.not.logged.in" );
         }
 
         public String getRequestcontext()

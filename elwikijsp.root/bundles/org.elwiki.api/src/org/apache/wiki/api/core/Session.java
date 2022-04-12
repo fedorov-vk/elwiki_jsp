@@ -26,6 +26,7 @@ import java.util.Locale;
 import javax.security.auth.Subject;
 
 import org.apache.wiki.api.event.WikiEventListener;
+import org.elwiki.IWikiConstants.StatusType;
 import org.osgi.service.useradmin.User;
 
 
@@ -60,15 +61,6 @@ import org.osgi.service.useradmin.User;
  * to obtain a list of the current wiki session users.</p>
  */
 public interface Session extends WikiEventListener {
-
-    /** An anonymous user's session status. */
-    String  ANONYMOUS = "anonymous";
-
-    /** An asserted user's session status. */
-    String  ASSERTED = "asserted";
-
-    /** An authenticated user's session status. */
-    String  AUTHENTICATED = "authenticated";
 
     /**
      * Returns <code>true</code> if the user is considered asserted via a session cookie; that is, the Subject contains the Principal
@@ -211,20 +203,12 @@ public interface Session extends WikiEventListener {
      */
     boolean hasPrincipal( Principal principal );
 
-    /** Invalidates the Session and resets its Subject's Principals to the equivalent of a "guest session". */
-    void invalidate();
-
     /**
-     * <p>Returns the status of the wiki session as a text string. Valid values are:</p>
-     * <ul>
-     *   <li>{@link #AUTHENTICATED}</li>
-     *   <li>{@link #ASSERTED}</li>
-     *   <li>{@link #ANONYMOUS}</li>
-     * </ul>
+     * <p>Returns the logged status of the wiki session.</p>
      *
-     * @return the user's session status
+     * @return the user's session status.
      */
-    String getStatus();
+    StatusType getLoginStatus();
 
     /**
      * Returns the {@link Subject} associated to the session.
@@ -248,5 +232,7 @@ public interface Session extends WikiEventListener {
     }
 
 	User getUser();
+
+	void setCachedLocale(Locale locale);
 
 }

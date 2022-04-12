@@ -373,7 +373,7 @@ public class AttachmentServlet extends HttpServlet {
             req.getSession().removeAttribute("msg");
             res.sendRedirect( nextPage );
         } catch( final RedirectException e ) {
-            final Session session = Wiki.session().find( m_engine, req );
+            final Session session = m_engine.getSessionMonitor().getWikiSession(req); 
             session.addMessage( e.getMessage() );
 
             req.getSession().setAttribute("msg", e.getMessage());

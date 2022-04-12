@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.internal.ApiActivator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.permissions.PagePermission;
@@ -182,7 +183,8 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
     private boolean validatePermission( final HttpServletRequest req, final AjaxServletContainer container ) {
         boolean valid = false;
         if( container != null ) {
-            valid = ServicesRefs.getAuthorizationManager().checkPermission( Wiki.session().find( m_engine, req ), container.permission );
+        	Session wikiSession = m_engine.getSessionMonitor().getWikiSession(req);
+            valid = ServicesRefs.getAuthorizationManager().checkPermission(wikiSession, container.permission );
         }
         return valid;
     }

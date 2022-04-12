@@ -20,11 +20,25 @@ package org.apache.wiki.auth;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEngineEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.acl.AclManager;
+import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.util.comparators.PrincipalComparator;
+import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentFactory;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.EventConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +48,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,37 +59,44 @@ import java.util.concurrent.ConcurrentHashMap;
  *  <p>The Sessions are stored both in the remote user HttpSession and in the SessionMonitor for the Engine.
  *  This class must be configured as a session listener in the web.xml for the wiki web application.</p>
  */
-public class SessionMonitor implements HttpSessionListener {
+@Component (name = "elwiki.SessionMonitor", service = org.apache.wiki.auth.ISessionMonitor.class)
+public final class SessionMonitor implements ISessionMonitor, HttpSessionListener {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
 
-    private static SessionMonitor this_instance;
-
+    private static ThreadLocal< Session > c_guestSession = new ThreadLocal<>();
+    
     /** Weak hashmap with HttpSessions as keys, and WikiSessions as values. */
     private final Map< String, Session > m_sessions = new WeakHashMap<>();
 
     private final PrincipalComparator m_comparator = new PrincipalComparator();
 
     /**
-     * Returns the instance of the SessionMonitor for this wiki. Only one SessionMonitor exists per Engine.
-     *
-     * @param engine the wiki engine
-     * @return the session monitor
+     * Construct the SessionListener
      */
-    public static SessionMonitor getInstance() {
-        if( this_instance == null ) {
-        	this_instance = new SessionMonitor();
-        }
-
-        return this_instance;
-    }
-
-    /** Construct the SessionListener */
     public SessionMonitor() {
+    	// empty.
     }
+
+	// -- service handling ---------------------------{start}--
+
+	@Reference(target = "(component.factory=elwiki.WikiSession.factory)")
+	private ComponentFactory<AclManager> factoryWikiSession;
+
+	@Activate
+	protected void startup() {
+		// TODO:
+	}
+
+	@Deactivate
+	public void shutdown() {
+		// TODO:
+	}
+
+	// -- service handling -----------------------------{end}--
 
     /**
-     *  Just looks for a WikiSession; does not create a new one.
+     * Just looks for a WikiSession; does not create a new one.
      * This method may return <code>null</code>, <em>and
      * callers should check for this value</em>.
      *
@@ -95,17 +118,12 @@ public class SessionMonitor implements HttpSessionListener {
 
         return wikiSession;
     }
+
     /**
-     * <p>Looks up the wiki session associated with a user's Http session and adds it to the session cache. This method will return the
-     * "guest session" as constructed by {@link org.apache.wiki.api.spi.SessionSPI#guest()} if the HttpSession is not currently
-     * associated with a WikiSession. This method is guaranteed to return a non-<code>null</code> WikiSession.</p>
-     * <p>Internally, the session is stored in a HashMap; keys are the HttpSession objects, while the values are
-     * {@link java.lang.ref.WeakReference}-wrapped WikiSessions.</p>
-     *
-     * @param session the HTTP session
-     * @return the wiki session
+     * {@inheritDoc}
      */
-    public final Session find( final HttpSession session ) {
+    @Override
+    public Session find( final HttpSession session ) {
         Session wikiSession = findSession( session );
         final String sid = ( session == null ) ? "(null)" : session.getId();
 
@@ -114,7 +132,7 @@ public class SessionMonitor implements HttpSessionListener {
             if( log.isDebugEnabled() ) {
                 log.debug( "Looking up WikiSession for session ID=" + sid + "... not found. Creating guestSession()" );
             }
-            wikiSession = Wiki.session().guest();
+            wikiSession = this.guestSession(sid);
             synchronized( m_sessions ) {
                 m_sessions.put( sid, wikiSession );
             }
@@ -124,10 +142,9 @@ public class SessionMonitor implements HttpSessionListener {
     }
 
     /**
-     * Removes the wiki session associated with the user's HttpRequest from the session cache.
-     *
-     * @param request the user's HTTP request
+     * {@inheritDoc}
      */
+    @Override
     public final void remove( final HttpServletRequest request ) {
         if( request == null ) {
             throw new IllegalArgumentException( "Request cannot be null." );
@@ -136,38 +153,32 @@ public class SessionMonitor implements HttpSessionListener {
     }
 
     /**
-     * Removes the wiki session associated with the user's HttpSession from the session cache.
-     *
-     * @param session the user's HTTP session
+     * {@inheritDoc}
      */
-    public final void remove( final HttpSession session ) {
+    @Override
+    public void remove( HttpSession session ) {
         if( session == null ) {
             throw new IllegalArgumentException( "Session cannot be null." );
         }
         synchronized( m_sessions ) {
-            m_sessions.remove( session.getId() );
+            Session wikiSession = m_sessions.remove( session.getId() );
+            c_guestSession.remove();
         }
     }
 
     /**
-     * Returns the current number of active wiki sessions.
-     * @return the number of sessions
+     * {@inheritDoc}
      */
-    public final int sessions()
+    public int sessions()
     {
         return userPrincipals().length;
     }
 
     /**
-     * <p>Returns the current wiki users as a sorted array of Principal objects. The principals are those returned by
-     * each WikiSession's {@link Session#getUserPrincipal()}'s method.</p>
-     * <p>To obtain the list of current WikiSessions, we iterate through our session Map and obtain the list of values,
-     * which are WikiSessions wrapped in {@link java.lang.ref.WeakReference} objects. Those <code>WeakReference</code>s
-     * whose <code>get()</code> method returns non-<code>null</code> values are valid sessions.</p>
-     *
-     * @return the array of user principals
+     * {@inheritDoc}
      */
-    public final Principal[] userPrincipals() {
+    @Override
+    public Principal[] userPrincipals() {
         final Collection<Principal> principals = new ArrayList<>();
         synchronized ( m_sessions ) {
             for ( final Session session : m_sessions.values()) {
@@ -232,12 +243,78 @@ public class SessionMonitor implements HttpSessionListener {
     @Override
 	public void sessionDestroyed(final HttpSessionEvent se) {
 		final HttpSession session = se.getSession();
-		final Session storedSession = this_instance.findSession(session);
-		this_instance.remove(session);
+		final Session storedSession = this.findSession(session);
+		this.remove(session);
 		log.debug("Removed session " + session.getId() + ".");
 		if (storedSession != null) {
 			fireEvent(WikiSecurityEvent.SESSION_EXPIRED, storedSession.getLoginPrincipal(), storedSession);
 		}
 	}
 
-}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Session getWikiSession(HttpServletRequest request) {
+		if (request == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("Looking up WikiSession for NULL HttpRequest: returning guestSession()");
+			}
+			return staticGuestSession();
+		}
+
+		// Look for a WikiSession associated with the user's Http Session and create one if it isn't there yet.
+		Session wikiSession = this.find(request.getSession());
+		wikiSession.setCachedLocale(request.getLocale()); //:FVK: workaround?
+
+		return wikiSession;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @param sid 
+	 */
+	@Override
+	public Session guestSession(String sid) {
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put(SESSION_MONITOR, this);
+		properties.put(EventConstants.EVENT_TOPIC, ElWikiEventsConstants.TOPIC_LOGGING_ALL); //!!!:FVK:
+		if (sid != null) {
+			properties.put(EventConstants.EVENT_FILTER,
+					"(" + ElWikiEventsConstants.PROPERTY_KEY_TARGET + "=" + sid + ")");
+		}
+
+		Session wikiSession = (Session) this.factoryWikiSession.newInstance(properties).getInstance();
+
+		// Add the session as listener for GroupManager, AuthManager, UserManager events
+		//TODO: add listeners...
+		/*
+		//:FVK: final GroupManager groupMgr = ServicesRefs.getGroupManager();
+		final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
+		final UserManager userMgr = ServicesRefs.getUserManager();
+		//:FVK: groupMgr.addWikiEventListener( session );
+		authMgr.addWikiEventListener( session );
+		userMgr.addWikiEventListener( session );
+		 */
+
+		return wikiSession;
+	}
+
+    /**
+     *  Returns a static guest session, which is available for this thread only.  This guest session is used internally whenever
+     *  there is no HttpServletRequest involved, but the request is done e.g. when embedding JSPWiki code.
+     *
+     *  @param engine Engine for this session
+     *  @return A static WikiSession which is shared by all in this same Thread.
+     */
+    // FIXME: Should really use WeakReferences to clean away unused sessions.
+	// :FVK: Deprecated? не использовать?
+    private Session staticGuestSession() {
+        Session session = c_guestSession.get();
+        if( session == null ) {
+            session = guestSession(null);
+            c_guestSession.set( session );
+        }
+
+        return session;
+    }}

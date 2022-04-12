@@ -60,15 +60,19 @@ public final class WikiSecurityEvent extends WikiEvent {
     private static final long serialVersionUID    = -6751950399721334496L;
 
     /** When a user's attempts to log in as guest, via cookies, using a password or otherwise. */
+    @Deprecated
     public static final int   LOGIN_INITIATED          = 30;
     
     /** When a user first accesses JSPWiki, but before logging in or setting a cookie. */
+    @Deprecated
     public static final int   LOGIN_ANONYMOUS          = 31;
     
     /** When a user sets a cookie to assert their identity. */
+    @Deprecated
     public static final int   LOGIN_ASSERTED           = 32;
     
     /** When a user authenticates with a username and password, or via container auth. */
+    @Deprecated
     public static final int   LOGIN_AUTHENTICATED      = 40;
 
     /** When a login fails due to account expiration. */
@@ -81,9 +85,11 @@ public final class WikiSecurityEvent extends WikiEvent {
     public static final int   LOGIN_FAILED             = 43;
     
     /** When a user logs out. */
+    @Deprecated
     public static final int   LOGOUT                   = 44;
 
     /** When a Principal should be added to the Session */
+    @Deprecated
     public static final int PRINCIPAL_ADD               = 35;
 
     /** When a session expires. */

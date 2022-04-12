@@ -30,6 +30,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -186,13 +187,13 @@ public interface IIAuthenticationManager extends Initializable {
      * @param principals the principal set
      * @return the login principal
      */
-    default Principal getLoginPrincipal( final Set< Principal > principals ) {
-        for( final Principal principal : principals ) {
-            if ( isUserPrincipal( principal ) ) {
-                return principal;
-            }
-        }
-        return null;
+    static Principal getLoginPrincipal(Collection< Principal > principals ) {
+		for (final Principal principal : principals) {
+			if (isUserPrincipal(principal)) {
+				return principal;
+			}
+		}
+		return null;
     }
 
     // events processing .......................................................

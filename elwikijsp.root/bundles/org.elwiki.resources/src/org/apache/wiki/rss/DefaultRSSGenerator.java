@@ -232,7 +232,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
         final Set< WikiPage > changed = ServicesRefs.getPageManager().getRecentChanges();
 
-        final Session session = Wiki.session().guest( );
+        final Session session = m_engine.getSessionMonitor().guestSession(null);
         int items = 0;
         for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
             final WikiPage page = i.next();

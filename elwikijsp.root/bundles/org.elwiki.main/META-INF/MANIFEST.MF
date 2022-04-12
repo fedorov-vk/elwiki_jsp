@@ -64,5 +64,4 @@ Service-Component: OSGI-INF/aclsSPI.xml,
  OSGI-INF/elwiki.DefaultInternationalizationManager.xml,
  OSGI-INF/elwiki.DefaultPluginManager.xml,
  OSGI-INF/elwiki.DefaultTasksManager.xml,
- OSGI-INF/elwiki.DefaultVariableManager.xml,
- OSGI-INF/sessionSPI.xml
+ OSGI-INF/elwiki.DefaultVariableManager.xml

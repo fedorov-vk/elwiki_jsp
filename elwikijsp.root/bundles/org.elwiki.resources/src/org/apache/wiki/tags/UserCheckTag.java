@@ -99,7 +99,6 @@ public class UserCheckTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() {
         final Session session = m_wikiContext.getWikiSession();
-        final String status = session.getStatus();
         final IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
         final boolean containerAuth = mgr.isContainerAuthenticated();
         final boolean cookieAssertions = mgr.allowsCookieAssertions();
@@ -107,17 +106,17 @@ public class UserCheckTag extends WikiTagBase {
         if( m_status != null ) {
             switch( m_status ) {
             case ANONYMOUS:
-                if( status.equals( Session.ANONYMOUS ) ) {
+                if( session.isAnonymous() ) {
                     return EVAL_BODY_INCLUDE;
                 }
                 break;
             case AUTHENTICATED:
-                if( status.equals( Session.AUTHENTICATED ) ) {
+                if( session.isAuthenticated() ) {
                     return EVAL_BODY_INCLUDE;
                 }
                 break;
             case ASSERTED:
-                if( status.equals( Session.ASSERTED ) ) {
+                if( session.isAsserted() ) {
                     return EVAL_BODY_INCLUDE;
                 }
                 break;
@@ -147,7 +146,7 @@ public class UserCheckTag extends WikiTagBase {
                 }
                 return SKIP_BODY;
             case NOT_AUTHENTICATED:
-                if( !status.equals( Session.AUTHENTICATED ) ) {
+                if( !session.isAuthenticated() ) {
                     return EVAL_BODY_INCLUDE;
                 }
                 break;
