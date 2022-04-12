@@ -49,6 +49,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -131,7 +132,10 @@ import org.osgi.service.condpermadmin.ConditionInfo;
 import org.osgi.service.condpermadmin.ConditionalPermissionAdmin;
 import org.osgi.service.condpermadmin.ConditionalPermissionInfo;
 import org.osgi.service.condpermadmin.ConditionalPermissionUpdate;
+import org.osgi.service.event.EventHandler;
 import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 
 /**
  * <p>
@@ -177,9 +181,14 @@ import org.osgi.service.permissionadmin.PermissionInfo;
  * @see AuthenticationManager
  */
 @SuppressWarnings("unused")
-@Component(name = "elwiki.DefaultAuthorizationManager", service = AuthorizationManager.class, //
-		factory = "elwiki.AuthorizationManager.factory")
-public class DefAuthorizationManager implements AuthorizationManager , WikiEventListener {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAuthorizationManager",
+	service = {AuthorizationManager.class, EventHandler.class},
+	factory = "elwiki.AuthorizationManager.factory",
+	property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+//@formatter:on
+public class DefAuthorizationManager implements AuthorizationManager, WikiEventListener, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
@@ -885,6 +894,24 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 	// -- events processing ---------------------------------------------------
 
 	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
+			addPermissionsFor(StatusType.ANONYMOUS.name());
+			break;
+		}
+		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
+			addPermissionsFor(StatusType.ASSERTED.name());
+			break;
+		}
+		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED:
+			addPermissionsFor(StatusType.AUTHENTICATED.name());
+			break;
+		}
+	}
+
+	@Override
 	public /*:FVK: synchronized*/ void addWikiEventListener(WikiEventListener listener) {
 		WikiEventManager.addWikiEventListener(this, listener);
 	}
@@ -912,6 +939,7 @@ public class DefAuthorizationManager implements AuthorizationManager , WikiEvent
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void actionPerformed(WikiEvent event) {
 		if (event instanceof WikiSecurityEvent) {

@@ -92,7 +92,7 @@ public class Installer {
 		}
 		
         // Get wiki session for this user
-        m_session = Wiki.session().find( m_engine, request );
+        m_session = m_engine.getSessionMonitor().getWikiSession(request);
         
         // Get the file for properties
         m_propertyFile = new File(TMP_DIR, PROPFILENAME);

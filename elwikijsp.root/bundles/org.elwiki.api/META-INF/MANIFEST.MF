@@ -75,4 +75,5 @@ Export-Package: org.apache.wiki,
  org.elwiki.authorize.login,
  org.elwiki.services
 Service-Component: OSGI-INF/elwiki.ResourcesServicesRefs.xml,
+ OSGI-INF/elwiki.SessionMonitor.xml,
  OSGI-INF/refsSPI.xml

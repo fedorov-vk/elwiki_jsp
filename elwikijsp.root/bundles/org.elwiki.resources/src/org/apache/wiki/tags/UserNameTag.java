@@ -49,7 +49,7 @@ public class UserNameTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException {
         final Engine engine = m_wikiContext.getEngine();
-        final Session wikiSession = Wiki.session().find( engine, ( HttpServletRequest )pageContext.getRequest() );
+        final Session wikiSession = engine.getSessionMonitor().getWikiSession(( HttpServletRequest )pageContext.getRequest()); 
         final Principal user = wikiSession.getUserPrincipal();
 
         if( user != null ) {

@@ -27,6 +27,7 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Deactivate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -90,7 +91,7 @@ public class WikiServlet extends HttpServlet {
     public void destroy() {
         log.info( "WikiServlet shutdown." );
         CacheManager.getInstance().shutdown();
-        m_engine.shutdown();
+        m_engine.shutdown(); //:FVK: workaround. метод можно настроить как @Deactivate.
         super.destroy();
     }
 

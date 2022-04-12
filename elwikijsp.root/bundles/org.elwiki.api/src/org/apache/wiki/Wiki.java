@@ -24,8 +24,6 @@ import org.apache.wiki.api.spi.ContentsDSL;
 import org.apache.wiki.api.spi.ContentsSPI;
 import org.apache.wiki.api.spi.ContextDSL;
 import org.apache.wiki.api.spi.ContextSPI;
-import org.apache.wiki.api.spi.SessionDSL;
-import org.apache.wiki.api.spi.SessionSPI;
 //:FVK:import org.apache.wiki.util.PropertyReader;
 
 public class Wiki {
@@ -36,7 +34,6 @@ public class Wiki {
 	private static AclsSPI aclsSPI;
 	private static ContentsSPI contentsSPI;
 	private static ContextSPI contextSPI;
-	private static SessionSPI sessionSPI;
 
 	/**
 	 * Access to {@link AclsSPI} operations.
@@ -65,15 +62,6 @@ public class Wiki {
 		return new ContextDSL(contextSPI);
 	}
 
-	/**
-	 * Access to {@link SessionSPI} operations.
-	 *
-	 * @return {@link SessionSPI} operations.
-	 */
-	public static SessionDSL session() {
-		return new SessionDSL(sessionSPI);
-	}
-
 	// -- service handling --------------------------< start --
 
 	public void setAclsSPI(AclsSPI aclsSPI1) {
@@ -86,10 +74,6 @@ public class Wiki {
 
 	public void setContextSPI(ContextSPI contextSPI1) {
 		contextSPI = contextSPI1;
-	}
-
-	public void setSessionSPI(SessionSPI sessionSPI1) {
-		sessionSPI = sessionSPI1;
 	}
 
 	public void startup() {

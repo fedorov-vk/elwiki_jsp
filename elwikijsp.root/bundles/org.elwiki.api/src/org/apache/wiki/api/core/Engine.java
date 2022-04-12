@@ -35,6 +35,7 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -340,6 +341,8 @@ public interface Engine {
 
 	IWikiConfiguration getWikiConfiguration();
 
+	ISessionMonitor getSessionMonitor();
+	
     /**
      *  :FVK: WORKAROUND.
      *

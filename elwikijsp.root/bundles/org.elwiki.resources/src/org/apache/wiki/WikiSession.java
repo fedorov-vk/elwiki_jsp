@@ -19,6 +19,7 @@
 package org.apache.wiki;
 
 import org.eclipse.core.runtime.Assert;
+import org.elwiki.IWikiConstants.StatusType;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.services.ServicesRefs;
@@ -26,6 +27,7 @@ import org.elwiki.services.ServicesRefs;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -43,8 +45,10 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.UserManager;
 //import org.apache.wiki.auth.authorize.GroupManager;
@@ -52,7 +56,17 @@ import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.HttpUtil;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.ComponentInstance;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.osgi.service.useradmin.User;
+import org.osgi.service.event.EventConstants;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 
 /**
  * <p>Default implementation for {@link Session}.</p>
@@ -60,19 +74,19 @@ import org.osgi.service.useradmin.User;
  * methods for managing WikiSessions for an entire wiki. These methods allow callers to find, query and remove WikiSession objects, and
  * to obtain a list of the current wiki session users.</p>
  */
-public final class WikiSession implements Session {
+@Component (name = "elwiki.WikiSession", //
+		service = { org.apache.wiki.api.core.Session.class, EventHandler.class}, //
+		factory = "elwiki.WikiSession.factory" //
+		/*property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGIN*/)
+public final class WikiSession implements Session, EventHandler {
 
     private static final Logger log                   = Logger.getLogger( WikiSession.class );
 
     private static final String ALL                   = "*";
 
-    private static ThreadLocal< Session > c_guestSession = new ThreadLocal<>();
-
     private final Subject       m_subject             = new Subject();
 
     private final Map< String, Set< String > > m_messages  = new ConcurrentHashMap<>();
-
-    private String              m_status              = ANONYMOUS;
 
     private Principal           m_userPrincipal       = WikiPrincipal.GUEST;
 
@@ -99,11 +113,44 @@ public final class WikiSession implements Session {
     }
 
     /**
-     * Private constructor to prevent WikiSession from being instantiated directly.
+     * TODO: hide this class into *.internal package --
+     * to prevent WikiSession from being instantiated directly. 
      */
-    private WikiSession() {
+    public WikiSession() {
+    	//
     }
 
+	@Override
+	public void setCachedLocale(Locale locale) {
+		this.m_cachedLocale = locale;		
+	}
+    
+    // -- service handling ---------------------------{start}--
+
+	private ISessionMonitor sessionMonitor;
+	
+    /**
+     * This component activate routine. Does all the real initialization.
+     * 
+     * @param componentContext
+     * @throws WikiException
+     */
+    @Activate
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object sm = componentContext.getProperties().get(ISessionMonitor.SESSION_MONITOR);
+		if (sm instanceof ISessionMonitor) {
+			this.sessionMonitor = (ISessionMonitor) sm;
+		}
+		this.invalidate();
+	}
+
+	@Deactivate
+	protected void shutdown() {
+		//
+	}
+	
+	// -- service handling -----------------------------{end}--
+    
     /** {@inheritDoc} */
     @Override
     public boolean isAsserted() {
@@ -119,7 +166,7 @@ public final class WikiSession implements Session {
         }
 
         // With non-JSPWiki LoginModules, the role may not be there, so we need to add it if the user really is authenticated.
-        if ( !isAnonymous() && !isAsserted() ) {
+        if ( !isAnonymous() && !isAsserted() ) { //:FVK: workaround? (from JSPwiki code)
             m_subject.getPrincipals().add( Role.AUTHENTICATED );
             return true;
         }
@@ -241,6 +288,74 @@ public final class WikiSession implements Session {
         return m_subject.getPrincipals().contains( principal );
     }
 
+    @Override
+    public void handleEvent(Event event) {
+        log.debug("Recevied event with topic: " + event.getTopic());
+
+		String topic = event.getTopic();    	 
+		switch (topic) {
+		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
+			@SuppressWarnings("unchecked")
+			Collection<Principal> eventPrincipals = (Collection<Principal>) event
+					.getProperty(ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS);
+
+			// Set the login/user principals and login status
+			m_loginPrincipal = m_userPrincipal = IIAuthenticationManager.getLoginPrincipal(eventPrincipals);
+			setUser(this.m_userPrincipal);
+
+			// Puts the login principal to the Subject, and set the built-in roles.
+			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
+			subjectPrincipals.clear();
+			subjectPrincipals.add(m_loginPrincipal);
+			subjectPrincipals.add(Role.ALL);
+			subjectPrincipals.add(Role.ANONYMOUS);
+		}
+			break;
+		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
+			@SuppressWarnings("unchecked")
+			Collection<Principal> eventPrincipals = (Collection<Principal>) event
+					.getProperty(ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS);
+
+			// Set the login/user principals and login status
+			m_loginPrincipal = m_userPrincipal = IIAuthenticationManager.getLoginPrincipal(eventPrincipals);
+			setUser(this.m_userPrincipal);
+
+			// Puts the login principal to the Subject, and set the built-in roles.
+			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
+			subjectPrincipals.clear();
+			subjectPrincipals.add(m_loginPrincipal);
+			subjectPrincipals.add(Role.ALL);
+			subjectPrincipals.add(Role.ASSERTED);
+		}
+			break;
+		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED: {
+			@SuppressWarnings("unchecked")
+			Collection<Principal> eventPrincipals = (Collection<Principal>) event
+					.getProperty(ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS);
+
+			// Set the login/user principals and login status
+			m_loginPrincipal = m_userPrincipal = IIAuthenticationManager.getLoginPrincipal(eventPrincipals);
+			setUser(this.m_userPrincipal);
+
+			// Puts the login principal to the Subject, and set the built-in roles.
+			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
+			subjectPrincipals.clear();
+			subjectPrincipals.addAll(eventPrincipals);
+			subjectPrincipals.add(Role.ALL);
+			subjectPrincipals.add(Role.AUTHENTICATED);
+
+			// Add the user and group principals
+			injectUserProfilePrincipals(); // Add principals for the user profile
+			injectGroupPrincipals(); // Inject group principals
+		}
+			break;
+		case ElWikiEventsConstants.TOPIC_LOGOUT: {
+			this.invalidate();
+		}
+			break;
+		}
+    }
+
     /**
      * Listens for WikiEvents generated by source objects such as the GroupManager, UserManager or AuthenticationManager. This method adds
      * Principals to the private Subject managed by the WikiSession.
@@ -270,17 +385,20 @@ public final class WikiSession implements Session {
                     // Do nothing
                     break;
                 case WikiSecurityEvent.PRINCIPAL_ADD:
+                	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
                     final WikiSession targetPA = ( WikiSession )e.getTarget();
-                    if( this.equals( targetPA ) && m_status.equals( AUTHENTICATED ) ) {
-                        final Set< Principal > principals = m_subject.getPrincipals();
-                        principals.add( ( Principal )e.getPrincipal() );
-                    }
+                    Principal principal = (Principal) e.getPrincipal();
+                    // bypass wrong logging status - don't add ANONYMOUS, ASSERTED roles.
+					if (principal != null && !principal.equals(Role.ANONYMOUS) && !principal.equals(Role.ASSERTED)
+							&& this.equals(targetPA) && isAuthenticated()) {
+						final Set<Principal> principals = m_subject.getPrincipals();
+						principals.add(principal);
+					}
                     break;
                 case WikiSecurityEvent.LOGIN_ANONYMOUS:
+                	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
                     final WikiSession targetLAN = ( WikiSession )e.getTarget();
                     if( this.equals( targetLAN ) ) {
-                        m_status = ANONYMOUS;
-
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
                         m_loginPrincipal = ( Principal )e.getPrincipal();
@@ -296,10 +414,9 @@ public final class WikiSession implements Session {
                     }
                     break;
                 case WikiSecurityEvent.LOGIN_ASSERTED:
+                	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
                     final WikiSession targetLAS = ( WikiSession )e.getTarget();
                     if( this.equals( targetLAS ) ) {
-                        m_status = ASSERTED;
-
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
                         m_loginPrincipal = ( Principal )e.getPrincipal();
@@ -315,10 +432,9 @@ public final class WikiSession implements Session {
                     }
                     break;
                 case WikiSecurityEvent.LOGIN_AUTHENTICATED:
+                	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
                     final WikiSession targetLAU = ( WikiSession )e.getTarget();
                     if( this.equals( targetLAU ) ) {
-                        m_status = AUTHENTICATED;
-
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
                         m_loginPrincipal = ( Principal )e.getPrincipal();
@@ -347,7 +463,7 @@ public final class WikiSession implements Session {
                 case WikiSecurityEvent.PROFILE_NAME_CHANGED:
                     // Refresh user principals based on new user profile
                     final WikiSession sourcePNC = e.getSrc();
-                    if( this.equals( sourcePNC ) && m_status.equals( AUTHENTICATED ) ) {
+                    if( this.equals( sourcePNC ) && isAuthenticated()) {
                         // To prepare for refresh, set the new full name as the primary principal
                         final UserProfile[] profiles = (org.apache.wiki.auth.user0.UserProfile[] )e.getTarget();
                         final UserProfile newProfile = profiles[ 1 ];
@@ -378,15 +494,20 @@ public final class WikiSession implements Session {
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Invalidates the Session and resets its Subject's Principals to the equivalent of a "guest session".
+     */
     public void invalidate() {
-        m_subject.getPrincipals().clear();
-        m_subject.getPrincipals().add( WikiPrincipal.GUEST );
-        m_subject.getPrincipals().add( Role.ANONYMOUS );
-        m_subject.getPrincipals().add( Role.ALL );
-        m_userPrincipal = WikiPrincipal.GUEST;
-        m_loginPrincipal = WikiPrincipal.GUEST;
+		if (log.isDebugEnabled()) {
+			log.debug("Invalidating Session for wiki session (" + this + ")");
+		}
+
+		Set<Principal> principals = m_subject.getPrincipals();
+		principals.clear();
+		principals.add(WikiPrincipal.GUEST);
+		principals.add(Role.ANONYMOUS);
+		principals.add(Role.ALL);
+		m_loginPrincipal = m_userPrincipal = WikiPrincipal.GUEST;
     }
 
     /**
@@ -455,134 +576,25 @@ public final class WikiSession implements Session {
     }
 
     /** {@inheritDoc} */
-    @Override
-    public String getStatus() {
-        return m_status;
-    }
+	@Override
+	public StatusType getLoginStatus() {
+		if (isAnonymous()) {
+			return StatusType.ANONYMOUS;
+		}
+		if (isAsserted()) {
+			return StatusType.ASSERTED;
+		}
+		if (isAuthenticated()) {
+			return StatusType.AUTHENTICATED;
+		}
+
+		return StatusType.ANONYMOUS; //:FVK: workaround.
+	}
 
     /** {@inheritDoc} */
     @Override
     public Subject getSubject() {
         return m_subject;
-    }
-
-    /**
-     * Removes the wiki session associated with the user's HTTP request from the cache of wiki sessions, typically as part of a
-     * logout process.
-     *
-     * @param engine the wiki engine
-     * @param request the users's HTTP request
-     */
-    public static void removeWikiSession(final HttpServletRequest request ) {
-        if ( request == null ) {
-            throw new IllegalArgumentException( "Request or engine cannot be null." );
-        }
-        final SessionMonitor monitor = SessionMonitor.getInstance();
-        monitor.remove( request.getSession() );
-        c_guestSession.remove();
-    }
-
-    /**
-     * <p>Static factory method that returns the Session object associated with the current HTTP request. This method looks up
-     * the associated HttpSession in an internal WeakHashMap and attempts to retrieve the WikiSession. If not found, one is created.
-     * This method is guaranteed to always return a Session, although the authentication status is unpredictable until the user
-     * attempts to log in. If the servlet request parameter is <code>null</code>, a synthetic {@link #guestSession(Engine)} is
-     * returned.</p>
-     * <p>When a session is created, this method attaches a WikiEventListener to the GroupManager, UserManager and AuthenticationManager,
-     * so that changes to users, groups, logins, etc. are detected automatically.</p>
-     *
-     * @param engine the engine
-     * @param request the servlet request object
-     * @return the existing (or newly created) session
-     */
-    public static Session getWikiSession( final Engine engine, final HttpServletRequest request ) {
-        if ( request == null ) {
-            if ( log.isDebugEnabled() ) {
-                log.debug( "Looking up WikiSession for NULL HttpRequest: returning guestSession()" );
-            }
-            return staticGuestSession( engine );
-        }
-
-        // Look for a WikiSession associated with the user's Http Session and create one if it isn't there yet.
-        final HttpSession session = request.getSession();
-        final SessionMonitor monitor = SessionMonitor.getInstance();
-        final WikiSession wikiSession = ( WikiSession )monitor.find( session );
-
-        // Attach reference to wiki engine
-        wikiSession.m_cachedLocale = request.getLocale();
-        return wikiSession;
-    }
-
-    /**
-     * Static factory method that creates a new "guest" session containing a single user Principal
-     * {@link org.apache.wiki.auth.WikiPrincipal#GUEST}, plus the role principals {@link Role#ALL} and {@link Role#ANONYMOUS}. This
-     * method also adds the session as a listener for GroupManager, AuthenticationManager and UserManager events.
-     *
-     * @param engine the wiki engine
-     * @return the guest wiki session
-     */
-    public static Session guestSession() {
-        final WikiSession session = new WikiSession();
-        session.invalidate();
-
-        // Add the session as listener for GroupManager, AuthManager, UserManager events
-      //:FVK: final GroupManager groupMgr = ServicesRefs.getGroupManager();
-        final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
-        final UserManager userMgr = ServicesRefs.getUserManager();
-      //:FVK: groupMgr.addWikiEventListener( session );
-        authMgr.addWikiEventListener( session );
-        userMgr.addWikiEventListener( session );
-
-        return session;
-    }
-
-    /**
-     *  Returns a static guest session, which is available for this thread only.  This guest session is used internally whenever
-     *  there is no HttpServletRequest involved, but the request is done e.g. when embedding JSPWiki code.
-     *
-     *  @param engine Engine for this session
-     *  @return A static WikiSession which is shared by all in this same Thread.
-     */
-    // FIXME: Should really use WeakReferences to clean away unused sessions.
-    private static Session staticGuestSession( final Engine engine ) {
-        Session session = c_guestSession.get();
-        if( session == null ) {
-            session = guestSession();
-            c_guestSession.set( session );
-        }
-
-        return session;
-    }
-
-    /**
-     * Returns the total number of active wiki sessions for a particular wiki. This method delegates to the wiki's
-     * {@link SessionMonitor#sessions()} method.
-     *
-     * @param engine the wiki session
-     * @return the number of sessions
-     * @deprecated use {@link SessionMonitor#sessions()} instead
-     * @see SessionMonitor#sessions()
-     */
-    @Deprecated
-    public static int sessions( final Engine engine ) {
-        final SessionMonitor monitor = SessionMonitor.getInstance();
-        return monitor.sessions();
-    }
-
-    /**
-     * Returns Principals representing the current users known to a particular wiki. Each Principal will correspond to the
-     * value returned by each WikiSession's {@link #getUserPrincipal()} method. This method delegates to
-     * {@link SessionMonitor#userPrincipals()}.
-     *
-     * @param engine the wiki engine
-     * @return an array of Principal objects, sorted by name
-     * @deprecated use {@link SessionMonitor#userPrincipals()} instead
-     * @see SessionMonitor#userPrincipals()
-     */
-    @Deprecated
-    public static Principal[] userPrincipals( final Engine engine ) {
-        final SessionMonitor monitor = SessionMonitor.getInstance();
-        return monitor.userPrincipals();
     }
 
 	@Override
@@ -591,6 +603,10 @@ public final class WikiSession implements Session {
 	}
 
 	private void setUser(Principal userPrincipal) {
+		if (userPrincipal == null) {
+			throw new IllegalArgumentException("setUser: user principal cannot be null.");
+		}
+
 		try {
 			String userName = userPrincipal.getName();
 			UserProfile profile = ServicesRefs.getUserManager().getUserDatabase().find(userName);

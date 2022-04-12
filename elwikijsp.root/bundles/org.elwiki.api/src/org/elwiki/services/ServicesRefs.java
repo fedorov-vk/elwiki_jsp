@@ -49,6 +49,7 @@ import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.content0.PageRenamer;
@@ -119,6 +120,9 @@ public class ServicesRefs implements Engine {
 	/** Stores configuration. */
 	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
+	
+	@Reference
+	private ISessionMonitor sessionMonitor;
 
 	// -- start code block -- Services reference setters
 
@@ -936,6 +940,11 @@ public class ServicesRefs implements Engine {
 		return this.wikiConfiguration;
 	}
 
+	@Override
+	public ISessionMonitor getSessionMonitor() {
+		return this.sessionMonitor;
+	}
+	
 	@Override
 	public WikiPage getPageById(String pageId) {
 		WikiPage wikiPage;
