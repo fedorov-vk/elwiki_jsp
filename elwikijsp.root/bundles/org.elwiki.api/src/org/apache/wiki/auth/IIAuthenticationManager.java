@@ -102,7 +102,12 @@ public interface IIAuthenticationManager extends Initializable {
      * @throws org.apache.wiki.auth.WikiSecurityException if the user cannot be logged in for any reason
      * @since 2.3
      */
-    boolean login( HttpServletRequest request ) throws WikiSecurityException;
+	boolean login(HttpServletRequest request) throws WikiSecurityException;
+
+	/**
+	 *
+	 */
+	boolean login(HttpServletRequest request, Session session) throws WikiSecurityException;
     
     /**
      * Attempts to perform a Session login for the given username/password combination using JSPWiki's custom authentication mode. In

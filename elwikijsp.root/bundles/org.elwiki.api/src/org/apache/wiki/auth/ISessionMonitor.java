@@ -28,10 +28,10 @@ public interface ISessionMonitor {
 	 * WikiSessions.
 	 * </p>
 	 *
-	 * @param session the HTTP session
+	 * @param session the HTTP Servlet request
 	 * @return the wiki session
 	 */
-	Session find(final HttpSession session);
+	//:FVK: Session find(HttpServletRequest request);
 
 	/**
 	 * Removes the wiki session associated with the user's HttpRequest from the
@@ -104,5 +104,5 @@ public interface ISessionMonitor {
 	 *
 	 * @return the guest wiki session
 	 */
-	Session guestSession(String sid);
+	Session createGuestSession(String sid);
 }

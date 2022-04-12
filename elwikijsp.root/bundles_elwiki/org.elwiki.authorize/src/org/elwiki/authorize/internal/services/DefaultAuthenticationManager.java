@@ -280,12 +280,15 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      */
     @Override
 	public boolean login(final HttpServletRequest request) throws WikiSecurityException {
-		final HttpSession httpSession = request.getSession();
-		final Session session = m_engine.getSessionMonitor().find(httpSession);
+    	final Session session = m_engine.getSessionMonitor().getWikiSession(request);
+    	return login(request, session);
+    }
 
-//:FVK: - ссылка сам на себя !!! ??        
-		final IIAuthenticationManager authenticationMgr = ServicesRefs.getAuthenticationManager();
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+	public boolean login(final HttpServletRequest request, Session session) throws WikiSecurityException {
 		CallbackHandler handler = null;
 		final Map<String, String> options = EMPTY_MAP;
 
@@ -296,9 +299,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 			handler = new WebContainerCallbackHandler(m_engine, request);
 
 			// Execute the container login module, then (if that fails) the cookie auth module
-			Set<Principal> principals = authenticationMgr.doJAASLogin(WebContainerLoginModule.class, handler, options);
-			if (principals.size() == 0 && authenticationMgr.allowsCookieAuthentication()) {
-				principals = authenticationMgr.doJAASLogin(CookieAuthenticationLoginModule.class, handler, options);
+			Set<Principal> principals = this.doJAASLogin(WebContainerLoginModule.class, handler, options);
+			if (principals.size() == 0 && this.allowsCookieAuthentication()) {
+				principals = this.doJAASLogin(CookieAuthenticationLoginModule.class, handler, options);
 			}
 
 			// If the container logged the user in successfully,
@@ -323,9 +326,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		}
 
 		// If user still not authenticated, check if assertion cookie was supplied
-		if (!session.isAuthenticated() && authenticationMgr.allowsCookieAssertions()) {
+		if (!session.isAuthenticated() && this.allowsCookieAssertions()) {
 			// Execute the cookie assertion login module
-			final Set<Principal> principals = authenticationMgr.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
+			final Set<Principal> principals = this.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
 			if (principals.size() > 0) {
 				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED, Map.of( //
 						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
@@ -339,7 +342,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
 		// If user still anonymous, use the remote address
 		if (session.isAnonymous()) {
-			final Set<Principal> principals = authenticationMgr.doJAASLogin(AnonymousLoginModule.class, handler, options);
+			final Set<Principal> principals = this.doJAASLogin(AnonymousLoginModule.class, handler, options);
 			if (principals.size() > 0) {
 				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS, Map.of( //
 						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //

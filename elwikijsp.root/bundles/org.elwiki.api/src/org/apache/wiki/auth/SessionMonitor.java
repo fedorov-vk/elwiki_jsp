@@ -31,8 +31,10 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.util.comparators.PrincipalComparator;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.ComponentFactory;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -59,7 +61,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *  <p>The Sessions are stored both in the remote user HttpSession and in the SessionMonitor for the Engine.
  *  This class must be configured as a session listener in the web.xml for the wiki web application.</p>
  */
-@Component (name = "elwiki.SessionMonitor", service = org.apache.wiki.auth.ISessionMonitor.class)
+@Component (name = "elwiki.SessionMonitor", service = org.apache.wiki.auth.ISessionMonitor.class,
+	factory = "elwiki.SessionMonitor.factory")
 public final class SessionMonitor implements ISessionMonitor, HttpSessionListener {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
@@ -71,6 +74,8 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
     private final PrincipalComparator m_comparator = new PrincipalComparator();
 
+    private Engine m_engine = null;
+
     /**
      * Construct the SessionListener
      */
@@ -80,12 +85,18 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
 	// -- service handling ---------------------------{start}--
 
+	@WikiServiceReference
+	private IIAuthenticationManager authenticationManager;
+    
 	@Reference(target = "(component.factory=elwiki.WikiSession.factory)")
 	private ComponentFactory<AclManager> factoryWikiSession;
 
 	@Activate
-	protected void startup() {
-		// TODO:
+	protected void startup(ComponentContext componentContext) {
+		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (engine instanceof Engine) {
+			this.m_engine = (Engine) engine;
+		}
 	}
 
 	@Deactivate
@@ -122,8 +133,9 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     /**
      * {@inheritDoc}
      */
-    @Override
-    public Session find( final HttpSession session ) {
+    //@Override //TODO: убрать @Override, сделать protected - так как этот метод заменен методом getWikiSession
+    public Session find(HttpServletRequest request) {
+    	HttpSession session = request.getSession();
         Session wikiSession = findSession( session );
         final String sid = ( session == null ) ? "(null)" : session.getId();
 
@@ -132,7 +144,13 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
             if( log.isDebugEnabled() ) {
                 log.debug( "Looking up WikiSession for session ID=" + sid + "... not found. Creating guestSession()" );
             }
-            wikiSession = this.guestSession(sid);
+            wikiSession = this.createGuestSession(sid);
+            try {
+				this.authenticationManager.login(request, wikiSession);
+			} catch (WikiSecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}            
             synchronized( m_sessions ) {
                 m_sessions.put( sid, wikiSession );
             }
@@ -258,13 +276,13 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	public Session getWikiSession(HttpServletRequest request) {
 		if (request == null) {
 			if (log.isDebugEnabled()) {
-				log.debug("Looking up WikiSession for NULL HttpRequest: returning guestSession()");
+				log.debug("Looking up WikiSession for NULL HttpRequest: returning createGuestSession()");
 			}
 			return staticGuestSession();
 		}
 
 		// Look for a WikiSession associated with the user's Http Session and create one if it isn't there yet.
-		Session wikiSession = this.find(request.getSession());
+		Session wikiSession = this.find(request);
 		wikiSession.setCachedLocale(request.getLocale()); //:FVK: workaround?
 
 		return wikiSession;
@@ -275,7 +293,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	 * @param sid 
 	 */
 	@Override
-	public Session guestSession(String sid) {
+	public Session createGuestSession(String sid) {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(SESSION_MONITOR, this);
 		properties.put(EventConstants.EVENT_TOPIC, ElWikiEventsConstants.TOPIC_LOGGING_ALL); //!!!:FVK:
@@ -312,7 +330,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     private Session staticGuestSession() {
         Session session = c_guestSession.get();
         if( session == null ) {
-            session = guestSession(null);
+            session = createGuestSession(null);
             c_guestSession.set( session );
         }
 
