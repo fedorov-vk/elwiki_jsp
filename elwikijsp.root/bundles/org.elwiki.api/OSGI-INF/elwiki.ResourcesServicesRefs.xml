@@ -21,6 +21,7 @@
    <reference cardinality="1..1" field="factoryReferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryReferenceManager" target="(component.factory=elwiki.ReferenceManager.factory)"/>
    <reference cardinality="1..1" field="factoryRenderingManager" interface="org.osgi.service.component.ComponentFactory" name="factoryRenderingManager" target="(component.factory=elwiki.RenderingManager.factory)"/>
    <reference cardinality="1..1" field="factorySearchManager" interface="org.osgi.service.component.ComponentFactory" name="factorySearchManager" target="(component.factory=elwiki.SearchManager.factory)"/>
+   <reference cardinality="1..1" field="factorySessionMonitor" interface="org.osgi.service.component.ComponentFactory" name="factorySessionMonitor" target="(component.factory=elwiki.SessionMonitor.factory)"/>
    <reference cardinality="1..1" field="factoryStorageCdo" interface="org.osgi.service.component.ComponentFactory" name="factoryStorageCdo" target="(component.factory=elwiki.StorageCdo.factory)"/>
    <reference cardinality="1..1" field="factoryTasksManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTasksManager" target="(component.factory=elwiki.TasksManager.factory)"/>
    <reference cardinality="1..1" field="factoryTemplateManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTemplateManager" target="(component.factory=elwiki.TemplateManager.factory)"/>
@@ -28,7 +29,6 @@
    <reference cardinality="1..1" field="factoryUserManager" interface="org.osgi.service.component.ComponentFactory" name="factoryUserManager" target="(component.factory=elwiki.UserManager.factory)"/>
    <reference cardinality="1..1" field="factoryVariableManager" interface="org.osgi.service.component.ComponentFactory" name="factoryVariableManager" target="(component.factory=elwiki.VariableManager.factory)"/>
    <reference cardinality="1..1" field="factoryWorkflowManager" interface="org.osgi.service.component.ComponentFactory" name="factoryWorkflowManager" target="(component.factory=elwiki.WorkflowManager.factory)"/>
-   <reference cardinality="1..1" field="sessionMonitor" interface="org.apache.wiki.auth.ISessionMonitor" name="sessionMonitor"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.services.ServicesRefs"/>
 </scr:component>

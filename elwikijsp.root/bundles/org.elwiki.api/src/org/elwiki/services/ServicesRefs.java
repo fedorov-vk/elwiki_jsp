@@ -108,6 +108,7 @@ public class ServicesRefs implements Engine {
 	private static RSSGenerator rssGenerator;
 	private static TasksManager tasksManager;
 	private static IStorageCdo storageCdo;
+	private static ISessionMonitor sessionMonitor;
 
 	public static ServicesRefs Instance;
 
@@ -121,9 +122,6 @@ public class ServicesRefs implements Engine {
 	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 	
-	@Reference
-	private ISessionMonitor sessionMonitor;
-
 	// -- start code block -- Services reference setters
 
 	@Reference(target = "(component.factory=elwiki.AclManager.factory)")
@@ -200,6 +198,9 @@ public class ServicesRefs implements Engine {
 
 	@Reference(target = "(component.factory=elwiki.StorageCdo.factory)")
 	private ComponentFactory<IStorageCdo> factoryStorageCdo;
+
+	@Reference(target = "(component.factory=elwiki.SessionMonitor.factory)")
+	private ComponentFactory<ISessionMonitor> factorySessionMonitor;
 
 	// :FVK:
 	public void setRssGenerator(RSSGenerator rssGenerator) {
@@ -279,6 +280,8 @@ public class ServicesRefs implements Engine {
 				ServicesRefs.aclManager = this.factoryAclManager.newInstance(properties).getInstance());
 		managers.put(IStorageCdo.class,
 				ServicesRefs.storageCdo = this.factoryStorageCdo.newInstance(properties).getInstance());
+		managers.put(ISessionMonitor.class,
+				ServicesRefs.sessionMonitor = this.factorySessionMonitor.newInstance(properties).getInstance());
 
 		// Обработка аннотаций @WikiServiceReference.
 		for (Object serviceInstance : managers.values()) {
@@ -413,6 +416,11 @@ public class ServicesRefs implements Engine {
 		return rssGenerator;
 	}
 
+	@Override
+	public ISessionMonitor getSessionMonitor() {
+		return this.sessionMonitor;
+	}
+	
 	// =========================================================================
 
 //:FVK:	private static final String ATTR_WIKIENGINE = "org.apache.wiki.WikiEngine";
@@ -938,11 +946,6 @@ public class ServicesRefs implements Engine {
 	@Override
 	public IWikiConfiguration getWikiConfiguration() {
 		return this.wikiConfiguration;
-	}
-
-	@Override
-	public ISessionMonitor getSessionMonitor() {
-		return this.sessionMonitor;
 	}
 	
 	@Override
