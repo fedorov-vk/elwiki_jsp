@@ -6,17 +6,21 @@ public interface IWikiConstants {
 	 * Статус аутентификации.
 	 */
 	public enum StatusType {
-		//@formatter:off
-		ANONYMOUS("anonymous"), /** An anonymous user's session status. */
-		ASSERTED("asserted"), /** An asserted user's session status. */
-		AUTHENTICATED("authenticated"); /** An authenticated user's session status. */
-		//@formatter:on
+		/** An anonymous user's session status. */
+		ANONYMOUS("anonymous"),
+		/** An asserted user's session status. */
+		ASSERTED("asserted"),
+		/** An authenticated user's session status. */
+		AUTHENTICATED("authenticated");
 
-		@SuppressWarnings("unused")
 		private String id;
 
 		private StatusType(String id) {
 			this.id = id;
+		}
+
+		public String getId() {
+			return this.id;
 		}
 	}
 
