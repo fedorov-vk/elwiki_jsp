@@ -389,7 +389,7 @@ public class DefaultVariableManager implements VariableManager {
         public String getLoginstatus() {
             final Session session = m_context.getWikiSession();
             ResourceBundle rcBundle = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
-            return rcBundle.getString( "varmgr." + session.getLoginStatus().name());
+            return rcBundle.getString( "varmgr." + session.getLoginStatus().getId());
         }
 
         public String getUsername() {

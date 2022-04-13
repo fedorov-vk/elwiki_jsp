@@ -418,7 +418,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			}
 			 */
 			if (!testPermission(acc, new AllPermission(), false)) {
-				System.out.println("03: AllPermission shoul be disabled.");
+				System.out.println("03: AllPermission should be disabled.");
 			}
 
 			System.out.println("::01::" + test1(new AllPermission()));
