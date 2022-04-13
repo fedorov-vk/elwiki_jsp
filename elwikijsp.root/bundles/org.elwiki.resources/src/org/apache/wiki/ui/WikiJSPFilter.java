@@ -255,14 +255,12 @@ public class WikiJSPFilter extends WikiServletFilter {
                 m_buffer = byteArrayOutputStream;
             }
 
-            //
             /**{@inheritDoc} */
             @Override
             public void write( final int aInt ) {
                 m_buffer.write( aInt );
             }
 
-            /*:FVK: - от servlet 3.0*/
             /**{@inheritDoc} */
             @Override
 			public boolean isReady() {

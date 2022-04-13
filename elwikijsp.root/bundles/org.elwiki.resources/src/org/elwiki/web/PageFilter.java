@@ -290,14 +290,12 @@ public class PageFilter extends HttpFilter {
 				m_buffer = byteArrayOutputStream;
 			}
 
-			//
 			/** {@inheritDoc} */
 			@Override
 			public void write(final int aInt) {
 				m_buffer.write(aInt);
 			}
 
-			/*:FVK: - от servlet 3.0*/
 			/**{@inheritDoc} */
 			@Override
 			public boolean isReady() {
@@ -385,14 +383,12 @@ public class PageFilter extends HttpFilter {
                 m_buffer = byteArrayOutputStream;
             }
 
-            //
             /**{@inheritDoc} */
             @Override
             public void write( final int aInt ) {
                 m_buffer.write( aInt );
             }
 
-            /*:FVK: - от servlet 3.0*/
             /**{@inheritDoc} */
             @Override
 			public boolean isReady() {
@@ -402,7 +398,7 @@ public class PageFilter extends HttpFilter {
             /**{@inheritDoc} */
             @Override
 			public void setWriteListener( final WriteListener writeListener ) {
-			}			
+			}
         }
 
         /** Returns whatever was written so far into the Writer. */

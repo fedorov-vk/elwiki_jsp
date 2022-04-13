@@ -70,11 +70,11 @@ abstract class Repository implements IPasswordCredentialsProvider {
 		  CDOBranch mainBranch = branchManager.getMainBranch(); mainBranch.addListener(mainBranchListener);
 		 */
 		this.view = this.session.openView();
-		
+
 	}
 
 	/**
-	 * Close session. 
+	 * Close session.
 	 */
 	public void doDisconnect() {
 		try {
@@ -82,12 +82,12 @@ abstract class Repository implements IPasswordCredentialsProvider {
 		} finally {
 			session = null;
 		}
-		
-	    LifecycleUtil.deactivate(tcpAcceptor);
-	    tcpAcceptor = null;
 
-	    LifecycleUtil.deactivate(repository);
-	    repository = null;
+		LifecycleUtil.deactivate(tcpAcceptor);
+		tcpAcceptor = null;
+
+		LifecycleUtil.deactivate(repository);
+		repository = null;
 	}
 
 	protected void closeSession() {
