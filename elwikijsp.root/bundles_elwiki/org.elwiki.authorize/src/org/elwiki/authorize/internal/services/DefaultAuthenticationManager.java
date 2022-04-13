@@ -32,18 +32,9 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.Authorizer;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
-//import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.ui.TemplateManager;
 //import org.apache.wiki.auth.authorize.WebAuthorizer;
-//import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
-//import org.apache.wiki.auth.login.AnonymousLoginModule;
-//import org.apache.wiki.auth.login.CookieAssertionLoginModule;
-//import org.apache.wiki.auth.login.CookieAuthenticationLoginModule;
-//import org.apache.wiki.auth.login.UserDatabaseLoginModule;
-//import org.apache.wiki.auth.login.WebContainerCallbackHandler;
-//import org.apache.wiki.auth.login.WebContainerLoginModule;
-//import org.apache.wiki.auth.login.WikiCallbackHandler;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.TimedCounterList;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -98,8 +89,12 @@ import java.util.Set;
  * 
  * @since 2.3
  */
-@Component(name = "elwiki.DefaultAuthenticationManager", service = IIAuthenticationManager.class, //
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAuthenticationManager",
+	service = IIAuthenticationManager.class,
 	factory = "elwiki.AuthenticationManager.factory")
+//@formatter:on
 public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
@@ -217,8 +212,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     }
 
 	/**
-	 * Look up the LoginModule class, via extension point "org.elwiki.authorize.loginModule".
-	 * 
+	 * Looks up the LoginModule class, via extension point "org.elwiki.authorize.loginModule".
+	 *
 	 * @param loginModuleId
 	 * @return
 	 * @throws WikiException
@@ -310,7 +305,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
 						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
 						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-	        	{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
+				{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
 					fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED,
 							IIAuthenticationManager.getLoginPrincipal(principals), session);
 					for (final Principal principal : principals) {
@@ -333,7 +328,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED, Map.of( //
 						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
 						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-	        	{//:FVK: устаревший код. @Deprecated
+				{//:FVK: устаревший код. @Deprecated
 					fireEvent(WikiSecurityEvent.LOGIN_ASSERTED, IIAuthenticationManager.getLoginPrincipal(principals), session);
 				}
 				return true;
@@ -362,7 +357,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean login( final Session session, final HttpServletRequest request, final String username, final String password ) throws WikiSecurityException {
+    public boolean loginAsserted( final Session session, final HttpServletRequest request, final String username, final String password ) throws WikiSecurityException {
         if ( session == null ) {
             log.error( "No wiki session provided, cannot log in." );
             return false;
@@ -458,12 +453,18 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     }
 
     /**
-     * {@inheritDoc}
+     * Instantiates and executes a single JAAS {@link LoginModule}, and returns a Set of Principals that results from a successful login.
+     * The LoginModule is instantiated, then its {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)} method is called. The
+     * parameters passed to <code>initialize</code> is a dummy Subject, an empty shared-state Map, and an options Map the caller supplies.
+     *
+     * @param clazz the LoginModule class to instantiate
+     * @param handler the callback handler to supply to the LoginModule
+     * @param options a Map of key/value strings for initializing the LoginModule
+     * @return the set of Principals returned by the JAAS method {@link Subject#getPrincipals()}
+     * @throws WikiSecurityException if the LoginModule could not be instantiated for any reason
      */
-	@Override
-    public Set< Principal > doJAASLogin( final Class< ? extends LoginModule > clazz,
-                                         final CallbackHandler handler,
-                                         final Map< String, String > options ) throws WikiSecurityException {
+	protected Set<Principal> doJAASLogin(final Class<? extends LoginModule> clazz, final CallbackHandler handler,
+			final Map<String, String> options) throws WikiSecurityException {
         // Instantiate the login module
     	//@NonNull //:FVK: workaround - commented.
         final LoginModule loginModule;

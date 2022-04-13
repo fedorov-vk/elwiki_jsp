@@ -105,7 +105,7 @@
             log.debug( "Attempting to authenticate user " + uid );
 
             // Log the user in!
-            if ( mgr.login( wikiSession, request, uid, passwd ) ) {
+            if ( mgr.loginAsserted( wikiSession, request, uid, passwd ) ) {
                 log.info( "Successfully authenticated user " + uid + " (custom auth)" );
             } else {
                 log.info( "Failed to authenticate user " + uid );
