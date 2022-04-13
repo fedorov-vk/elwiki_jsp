@@ -107,7 +107,7 @@ public class LoginCmdCode extends CmdCode {
 				log.debug("Attempting to authenticate user " + uid);
 
 				// Log the user in!
-				if (mgr.login(wikiSession, httpRequest, uid, passwd)) {
+				if (mgr.loginAsserted(wikiSession, httpRequest, uid, passwd)) {
 					log.info("Successfully authenticated user " + uid + " (custom auth)");
 				} else {
 					log.info("Failed to authenticate user " + uid);

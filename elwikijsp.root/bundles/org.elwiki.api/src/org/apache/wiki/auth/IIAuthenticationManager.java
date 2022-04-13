@@ -105,7 +105,30 @@ public interface IIAuthenticationManager extends Initializable {
 	boolean login(HttpServletRequest request) throws WikiSecurityException;
 
 	/**
-	 *
+	  * <p>Logs in the user by attempting to populate a Session Subject from a web servlet request by examining the request
+     *  for the presence of container credentials and user cookies. The processing logic is as follows:
+     * </p>
+     * <ul>
+     * <li>If the Session had previously been unauthenticated, check to see if user has subsequently authenticated. To be considered
+     * "authenticated," the request must supply one of the following (in order of preference): the container <code>userPrincipal</code>,
+     * container <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method fires event
+     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_AUTHENTICATED} with two parameters: a Principal representing the login principal,
+     * and the current Session. In addition, if the authorizer is of type WebContainerAuthorizer, this method iterates through the
+     * container roles returned by {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#getRoles()}, tests for membership in each
+     * one, and adds those that pass to the Subject's principal set.</li>
+     * <li>If, after checking for authentication, the Session is still Anonymous, this method next checks to see if the user has
+     * "asserted" an identity by supplying an assertion cookie. If the user is found to be asserted, this method fires event
+     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ASSERTED} with two parameters: <code>WikiPrincipal(<em>cookievalue</em>)</code>,
+     * and the current Session.</li>
+     * <li>If, after checking for authenticated and asserted status, the  Session is <em>still</em> anonymous, this method fires event
+     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ANONYMOUS} with two parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>,
+     * and the current Session </li>
+     * </ul>
+     * 
+	 * @param request servlet request for this user
+	 * @param session WikiSession which should be authenticated
+	 * @return always returns <code>true</code> (because anonymous login, at least, will always succeed)
+	 * @throws WikiSecurityException if the user cannot be logged in for any reason
 	 */
 	boolean login(HttpServletRequest request, Session session) throws WikiSecurityException;
     
@@ -125,7 +148,7 @@ public interface IIAuthenticationManager extends Initializable {
      * @return true, if the username/password is valid
      * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer or UserManager cannot be obtained
      */
-    boolean login( Session session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
+    boolean loginAsserted( Session session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
 
     /**
      * Logs the user out by retrieving the Session associated with the HttpServletRequest and unbinding all of the Subject's Principals,
@@ -153,19 +176,6 @@ public interface IIAuthenticationManager extends Initializable {
      */
     boolean allowsCookieAuthentication();
 
-    /**
-     * Instantiates and executes a single JAAS {@link LoginModule}, and returns a Set of Principals that results from a successful login.
-     * The LoginModule is instantiated, then its {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)} method is called. The
-     * parameters passed to <code>initialize</code> is a dummy Subject, an empty shared-state Map, and an options Map the caller supplies.
-     *
-     * @param clazz the LoginModule class to instantiate
-     * @param handler the callback handler to supply to the LoginModule
-     * @param options a Map of key/value strings for initializing the LoginModule
-     * @return the set of Principals returned by the JAAS method {@link Subject#getPrincipals()}
-     * @throws WikiSecurityException if the LoginModule could not be instantiated for any reason
-     */
-    Set< Principal > doJAASLogin( Class< ? extends LoginModule > clazz, CallbackHandler handler, Map< String, String > options) throws WikiSecurityException;
-    
     /**
      * Determines whether the supplied Principal is a "role principal".
      *

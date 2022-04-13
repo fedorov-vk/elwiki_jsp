@@ -501,7 +501,7 @@ public class DefaultUserManager implements UserManager {
             try {
                 final IIAuthenticationManager mgr = getAuthenticationManager();
                 if( !mgr.isContainerAuthenticated() ) {
-                    mgr.login( session, null, profile.getLoginName(), profile.getPassword() );
+                    mgr.loginAsserted( session, null, profile.getLoginName(), profile.getPassword() );
                 }
             } catch( final WikiException e ) {
                 throw new WikiSecurityException( e.getMessage(), e );
