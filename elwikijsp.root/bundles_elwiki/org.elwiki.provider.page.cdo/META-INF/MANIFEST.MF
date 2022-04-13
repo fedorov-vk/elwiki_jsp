@@ -21,5 +21,6 @@ Import-Package: org.apache.wiki.api,
  org.apache.wiki.auth,
  org.apache.wiki.auth.acl,
  org.eclipse.core.internal.utils,
- org.elwiki.configuration
+ org.elwiki.configuration,
+ org.elwiki.services
 Export-Package: org.elwiki.pageprovider.cdo
