@@ -222,7 +222,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 					@SuppressWarnings("unchecked")
 					Dictionary<String, Object> groupProps = group.getProperties();
 					groupProps.put(GROUP_NAME, groupData.name);
-					groupProps.put("PERMISSIONS", groupData.permissions);
+					groupProps.put(GROUP_PERMISSIONS, groupData.permissions);
 					groupProps.put(GROUP_CREATOR, groupData.creator);
 					groupProps.put(GROUP_MODIFIER, groupData.modifier);
 					

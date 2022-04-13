@@ -58,6 +58,7 @@ public interface UserDatabase {
 	
 	//TODO: :FVK: внести в свойства группы этот атрибут. Он будет означать зарезервированную, специальную не удаляемую группу.
 	String SPECIAL_GROUP = "specialGroup";
+	String GROUP_PERMISSIONS = "PERMISSIONS";
 
 	String GROUP_CREATOR = "groupCreator";
 	String GROUP_MODIFIER = "groupModofier";

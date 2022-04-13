@@ -713,14 +713,14 @@ public class GroupManager implements IAuthorizer {
 	String chrLevel1 = "\u2666"; // \u2666 == '♦'
 	*/
 	@Override
-	public PermissionInfo[] getRolePermissionInfo(String roleName) {
-		Role role = userAdminService.getUser("groupName", roleName); //:FVK: workaround.
+	public PermissionInfo[] getRolePermissionInfo(String roleName) throws IllegalArgumentException {
+		Role role = userAdminService.getUser(UserDatabase.GROUP_NAME, roleName); //:FVK: workaround.
 		if (!(role instanceof Group)) {
-			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not Group.");
+			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not founded as group of UserAdmin service.");
 		}
 		Group group = (Group) role;
 
-		String permissions = (String) group.getProperties().get("PERMISSIONS");//:FVK: workaround
+		String permissions = (String) group.getProperties().get(UserDatabase.GROUP_PERMISSIONS);//:FVK: workaround
 		String splitChar = "\u2666"; // \u2666 == '♦'
 		Pattern pattern = Pattern.compile(splitChar);
 		List<PermissionInfo> listPi = new ArrayList<>();

@@ -78,7 +78,7 @@ public interface IIAuthenticationManager extends Initializable {
 
     /**
      * <p>Logs in the user by attempting to populate a Session Subject from a web servlet request by examining the request
-     *  for the presence of container credentials and user cookies. The processing logic is as follows:
+     * for the presence of container credentials and user cookies. The processing logic is as follows:
      * </p>
      * <ul>
      * <li>If the Session had previously been unauthenticated, check to see if user has subsequently authenticated. To be considered
@@ -105,25 +105,7 @@ public interface IIAuthenticationManager extends Initializable {
 	boolean login(HttpServletRequest request) throws WikiSecurityException;
 
 	/**
-	  * <p>Logs in the user by attempting to populate a Session Subject from a web servlet request by examining the request
-     *  for the presence of container credentials and user cookies. The processing logic is as follows:
-     * </p>
-     * <ul>
-     * <li>If the Session had previously been unauthenticated, check to see if user has subsequently authenticated. To be considered
-     * "authenticated," the request must supply one of the following (in order of preference): the container <code>userPrincipal</code>,
-     * container <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_AUTHENTICATED} with two parameters: a Principal representing the login principal,
-     * and the current Session. In addition, if the authorizer is of type WebContainerAuthorizer, this method iterates through the
-     * container roles returned by {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#getRoles()}, tests for membership in each
-     * one, and adds those that pass to the Subject's principal set.</li>
-     * <li>If, after checking for authentication, the Session is still Anonymous, this method next checks to see if the user has
-     * "asserted" an identity by supplying an assertion cookie. If the user is found to be asserted, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ASSERTED} with two parameters: <code>WikiPrincipal(<em>cookievalue</em>)</code>,
-     * and the current Session.</li>
-     * <li>If, after checking for authenticated and asserted status, the  Session is <em>still</em> anonymous, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ANONYMOUS} with two parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>,
-     * and the current Session </li>
-     * </ul>
+	 * The same as {@link IIAuthenticationManager#login(HttpServletRequest)} with session specified directly for authenticate. 
      * 
 	 * @param request servlet request for this user
 	 * @param session WikiSession which should be authenticated

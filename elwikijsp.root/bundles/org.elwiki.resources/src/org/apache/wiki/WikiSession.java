@@ -363,6 +363,7 @@ public final class WikiSession implements Session, EventHandler {
      * @see org.apache.wiki.api.event.WikiEventListener#actionPerformed(WikiEvent)
      */
     @Override
+    @Deprecated
     public void actionPerformed( final WikiEvent event ) {
         if ( event instanceof WikiSecurityEvent ) {
             final WikiSecurityEvent e = (WikiSecurityEvent)event;
