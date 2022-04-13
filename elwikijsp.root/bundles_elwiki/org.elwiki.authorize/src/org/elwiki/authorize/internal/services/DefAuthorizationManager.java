@@ -215,8 +215,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	private Engine m_engine;
 
-	private ConditionalPermissionAdmin cpaService;
-
 	// == CODE ================================================================
 
 	/**
@@ -228,6 +226,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	// -- service handling ---------------------------{start}--
 
+	@Reference
+	private ConditionalPermissionAdmin cpaService;
+
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
@@ -237,6 +238,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	@WikiServiceReference
 	private AclManager aclManager;
+
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -248,7 +250,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	@Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
 		BundleContext bc = componentContext.getBundleContext();
-		cpaService = bc.getService(bc.getServiceReference(ConditionalPermissionAdmin.class));
 
 		/* TODO: place principals into file *.properties
 		//
