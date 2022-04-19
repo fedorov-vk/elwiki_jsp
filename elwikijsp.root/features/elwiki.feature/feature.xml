@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="elwiki.feature"
-      label="Feature"
+      label="ElWiki Feature"
       version="1.0.0.qualifier"
       provider-name="FVK">
 

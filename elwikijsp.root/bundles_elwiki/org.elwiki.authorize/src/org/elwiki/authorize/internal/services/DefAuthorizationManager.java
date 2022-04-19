@@ -239,7 +239,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	@WikiServiceReference
 	private AclManager aclManager;
 
-
 	/**
 	 * This component activate routine. Does all the real initialization.
 	 * Initializes security policy of AuthorizationManager.
