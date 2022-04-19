@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.elwiki.tests;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: FVK
+Automatic-Module-Name: org.elwiki.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-ActivationPolicy: lazy
+Export-Package: org.elwiki.tests
+Require-Bundle: org.junit

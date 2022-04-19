@@ -1,0 +1,315 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>tests_configuration</artifactId>
+	<packaging>pom</packaging>
+	<name>ElWiki tests configuration definition</name>
+	<description>ElWiki tests configuration definition</description>
+
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>global_configuration</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../global_configuration</relativePath>
+	</parent>
+
+	<!-- org.eclipse.osgi_3.12.50.v20170928-1321.jar -->
+
+	<!-- :FVK: - зачем эта зависимость может быть нужна?
+		<dependencies>
+		<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+		<version>5.8</version>
+		<scope>test</scope>
+		<classifier>jdk15</classifier>
+		</dependency>
+		</dependencies>
+	-->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<!-- product IU under test -->
+							<!-- :FVK: ?this needs for centralized place of ElWiki bundles after building. -->
+							<!-- не обязательно. если задать - в конфигурации запуска будет ссылка на org.eclipse.equinox.launcher.win32.win32.x86_64
+							<requirement>
+								<type>p2-installable-unit</type>
+								<id>elwiki.product</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							-->
+
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>elwiki.feature</id>
+								<versionRange>1.0.0</versionRange>
+							</requirement>
+
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>elwiki.test.feature</id>
+								<versionRange>1.0.0</versionRange>
+							</requirement>
+							<!--
+ -->
+							<!--
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.elwiki.test.plugins</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.elwiki.test.utils</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.elwiki.test.storage</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							 -->
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.ocl.common</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.ocl</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<!--
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.osgi</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+-->
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.equinox.console</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.apache.felix.gogo.command</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.apache.felix.gogo.runtime</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.apache.felix.gogo.shell</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.apache.felix.scr</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<!-- org.eclipse.equinox.ds ~ заменяется ~ org.apache.felix.scr
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.equinox.ds</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+-->
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.equinox.useradmin</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.jdt.annotation</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<!--
+-->
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<testClass>org.elwiki.tests.AllTests</testClass>
+					<!--
+					<defaultStartLevel>
+						<level>6</level>
+						<autoStart>true</autoStart>
+					</defaultStartLevel>
+ -->
+					<useUIHarness>false</useUIHarness>
+					<appArgLine>-console 10008</appArgLine>
+
+					<argLine>
+-Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
+-Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
+
+-Declipse.ignoreApp=true -Dosgi.noShutdown=true
+-Dorg.osgi.service.http.port=8088
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+
+-Dstorage.cdo.port=2039
+
+<!--
+ -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+						-Declipse.ignoreApp=true -Dosgi.noShutdown=true
+-Dorg.osgi.service.http.port=8088
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+
+ -Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
+ -Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
+ -Dstorage.cdo.port=2039
+
+ -Djava.security.policy=D:/devj/dev_wikijsp/2021-12/GIT/elwiki+jsp_2021-12/elwikijsp.root/tests/all.policy
+ -Djava.securiti.manager=osgi
+ -Djava.security.auth.debug=failure
+ -Declipse.security
+    
+ -Delwiki.custom.configuration=org.elwiki.test.utils
+ -Delwiki.users.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/users.json
+ -Delwiki.groups.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/groups.json
+--> 
+
+<!--
+ -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+ -Dlog4j.debug=true
+
+    -Declipse.ignoreApp=true -Dosgi.noShutdown=true
+    -Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info
+    -Dequinox.ds.print=true
+    -D_log4j.configuration=file:///home/vfedorov/dev/dev_wiki/WikiRoot/Logging/log4j.properties
+
+-Dorg.osgi.framework.security="osgi"
+-Declipse.security=java.lang.SecurityManager
+-->
+					</argLine>
+					<!--
+         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+-->
+					<!--
+<argLine> OLD //:FVK:
+         -Delwiki.custom.configuration=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/test.properties
+         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+</argLine>
+<argLine>-Dorg.osgi.service.http.port=11042</argLine>
+-->
+					<showEclipseLog>true</showEclipseLog>
+					<bundleStartLevel>
+						<bundle>
+							<id>org.apache.felix.scr</id>
+							<level>1</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.core.runtime</id>
+							<level>3</level>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.equinox.common</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.equinox.http.jetty</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<!-- add ~~ for console ~~~~~~~~~~~~~~~~~ -->
+						<bundle>
+							<id>org.apache.felix.gogo.shell</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<!-- 
+						<bundle>
+							<id>org.eclipse.equinox.console</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
+ -->
+						<!-- add ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+						<bundle>
+							<id>org.eclipse.equinox.useradmin</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<!-- Start bundles that contribute ElWiki -->
+						<!--  :FVK:
+						<bundle>
+							<id>org.elwiki.app</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
+ -->
+						<bundle>
+							<id>org.elwiki.test.storage</id>
+							<level>5</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.elwiki.test.utils</id>
+							<level>6</level>
+							<autoStart>true</autoStart>
+						</bundle>
+<!--
+ 						<bundle>
+							<id>org.elwiki.main</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
+ 						<bundle>
+							<id>org.elwiki.io.tests</id>
+							<level>6</level>
+							<autoStart>true</autoStart>
+						</bundle>
+ -->
+					</bundleStartLevel>
+					<!--
+					<dependencies>
+							<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.elwiki.test.feature</artifactId>
+							<version>0.0.1</version>
+							</dependency>
+						-->
+					<!--
+							<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.equinox.ds</artifactId>
+							<version>1.5.0</version>
+							</dependency>
+							<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.eclipse.equinox.server.jetty</artifactId>
+							<version>1.4.0</version>
+							</dependency>
+					</dependencies>
+						-->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,196 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>tests_configuration</artifactId>
+	<packaging>pom</packaging>
+	<name>ElWiki tests configuration definition</name>
+	<description>ElWiki tests configuration definition</description>
+
+	<parent>
+		<groupId>org.elwiki</groupId>
+		<artifactId>global_configuration</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../global_configuration</relativePath>
+	</parent>
+
+	<!-- org.eclipse.osgi_3.12.50.v20170928-1321.jar -->
+
+	<!-- :FVK: - зачем эта зависимость может быть нужна?
+		<dependencies>
+		<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+		<version>5.8</version>
+		<scope>test</scope>
+		<classifier>jdk15</classifier>
+		</dependency>
+		</dependencies>
+	-->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<configuration>
+					<!--
+						<target>
+						<artifact>
+						<groupId>org.elwiki</groupId>
+						<artifactId>org.elwiki.tests.targetplatform</artifactId>
+						<version>0.0.1-SNAPSHOT</version>
+						</artifact>
+						</target>
+					-->
+					<dependency-resolution>
+						<extraRequirements>
+							<!-- product IU under test -->
+							<requirement>
+								<type>p2-installable-unit</type>
+								<id>org.elwiki.product</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.elwiki.test.storage</id>
+								<versionRange>0.0.1</versionRange>
+								</requirement>
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.emf.cdo.server.ocl</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.ocl.ecore</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.osgi</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.equinox.ds</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+								<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.eclipse.equinox.useradmin</id>
+								<versionRange>0.0.0</versionRange>
+								</requirement>
+<!--
+-->
+							<!--
+								<requirement>
+								<type>eclipse-feature</type>
+								<id>org.elwiki.test.feature</id>
+								<versionRange>0.0.1</versionRange>
+								</requirement>
+							-->
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<useUIHarness>false</useUIHarness>
+<argLine>
+-Delwiki.custom.configuration=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/test.properties
+-Dequinox.ds.print=true
+-Dlog4j.configuration=file:///home/vfedorov/dev/dev_wiki/WikiRoot/Logging/log4j.properties
+-Djava.security.policy=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/all.policy
+-Djava.security.debug=access,failure
+-Djava.security.auth.debug=failure
+-Dosgi.debug.verbose=true
+-Dosgi.debug=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/debug_osgi.params
+-Dorg.osgi.framework.security="osgi"
+
+    -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+<!--
+    -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+-Dorg.osgi.framework.security="osgi"
+-Declipse.security=java.lang.SecurityManager
+-->
+</argLine>
+<!--
+         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+-->
+<!--
+<argLine>-Delwiki.custom.configuration=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/test.properties
+         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+</argLine>
+<argLine>-Dorg.osgi.service.http.port=11042</argLine>
+-->
+					<showEclipseLog>true</showEclipseLog>
+					<bundleStartLevel>
+						<bundle>
+							<id>org.apache.felix.scr</id>
+							<level>1</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.equinox.ds</id>
+							<level>5</level>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.equinox.http.jetty</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<!-- add ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+						<bundle>
+							<id>org.eclipse.equinox.useradmin</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<!-- Start bundles that contribute ElWiki -->
+						<bundle>
+							<id>org.elwiki.app</id>
+							<level>4</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.elwiki.test.storage</id>
+							<level>4</level>
+							<autoStart>true</autoStart>
+						</bundle>
+					</bundleStartLevel>
+					<dependencies>
+						<!--
+							<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.elwiki.feature/</artifactId>
+							This is the minimum required version
+							<version>0.0.1</version>
+							</dependency>
+						-->
+						<!--
+							<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.equinox.ds</artifactId>
+							<version>1.5.0</version>
+							</dependency>
+							<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.eclipse.equinox.server.jetty</artifactId>
+							<version>1.4.0</version>
+							</dependency>
+						-->
+					</dependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

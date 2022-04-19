@@ -1,0 +1,12 @@
+-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info
+-Dlog4j.configuration=file:///home/vfedorov/dev/dev_wiki/WikiRoot/Logging/log4j.properties
+-Dequinox.ds.print=true
+-Declipse.product=org.elwiki.configuration.config_id
+-Delwiki.custom.configuration=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/test.properties
+-Djava.security.policy=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/all.policy
+-Djava.security.debug_=access,failure
+-Djava.security.auth.debug=failure
+-Dosgi.debug.verbose=true
+-Dosgi.debug=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/debug_osgi.params
+-Declipse.security="java.lang.SecurityManager"
+-Dorg.osgi.framework.security_="osgi"

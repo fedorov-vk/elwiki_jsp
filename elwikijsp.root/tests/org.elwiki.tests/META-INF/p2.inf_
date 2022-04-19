@@ -1,0 +1,10 @@
+requires.0.namespace = osgi.extender
+requires.0.name = osgi.component
+requires.0.version = 1.2.0
+requires.1.namespace = osgi.service
+requires.1.name = org.apache.wiki.api.core.Engine
+
+#requires.3.name = org.eclipse.jface
+#requires.3.namespace = org.eclipse.equinox.p2.iu
+#requires.3.min = 0
+#requires.3.max = 0

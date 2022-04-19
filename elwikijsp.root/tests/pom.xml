@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>tests</artifactId>
+	<packaging>pom</packaging>
+	<name>~~~ ElWiki Tests ~~~</name>
+	<description>Testing.</description>
+
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>tests_configuration</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../releng/tests_configuration</relativePath>
+	</parent>
+
+	<modules>
+		<module>elwiki.test.feature</module>
+		<module>org.elwiki.tests</module>
+<!--
+		<module>bundles_test_util</module>
+-->
+<!--
+		<module>org.elwiki.authorize.tests</module>
+
+		<module>org.elwiki.test.rendering</module>
+		<module>org.elwiki.test.acl</module>
+		<module>org.elwiki.io.tests</module>
+ -->
+	</modules>
+</project>

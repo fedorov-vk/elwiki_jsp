@@ -1,0 +1,81 @@
+[
+  {
+    "attributes": {},
+    "email": "janne@ecyrd.com",
+    "fullname": "Janne Jalkanen",
+    "loginName": "janne",
+    "password": "myP@5sw0rd",
+    "uid": "cb4c31ef-2726-4067-a5fc-8981d7c4936c",
+    "wikiname": "JanneJalkanen"
+  },
+  {
+    "attributes": {},
+    "email": "user@example.com",
+    "loginName": "user",
+    "password": "myP@5sw0rd",
+    "uid": "ad806de3-ba3d-4d14-b563-acf043c198a7"
+  },
+  {
+    "attributes": {},
+    "email": "admin@locahost",
+    "fullname": "Administrator",
+    "loginName": "admin",
+    "password": "myP@5sw0rd",
+    "uid": "ad806de3-ba3d-4d14-b563-acf043c198a7",
+    "wikiname": "Administrator"
+  },
+  {
+    "attributes": {},
+    "email": "alice@example.com",
+    "fullname": "Alice",
+    "loginName": "Alice",
+    "password": "password",
+    "uid": "9c47a6c1-1d33-40b8-a4b6-79cafed18fb5",
+    "wikiname": "Alice"
+  },
+  {
+    "attributes": {},
+    "email": "bob@example.com",
+    "fullname": "Bob",
+    "loginName": "Bob",
+    "password": "password",
+    "uid": "d4d1cb5c-c718-42fb-bfc5-d6b3fa489e6d",
+    "wikiname": "Bob"
+  },
+  {
+    "attributes": {},
+    "email": "biff@example.com",
+    "fullname": "Biff",
+    "loginName": "Biff",
+    "password": "password",
+    "uid": "fbb8242d-5bf6-443f-9ac7-66fc52ba6035",
+    "wikiname": "Biff"
+  },
+  {
+    "attributes": {},
+    "email": "charlie@example.com",
+    "fullname": "Charlie",
+    "loginName": "Charlie",
+    "password": "password",
+    "uid": "4695abfd-4a2e-48cb-9f50-d8a2a1583f5c",
+    "wikiname": "Charlie"
+  },
+  {
+    "attributes": {},
+    "email": "fred@example.com",
+    "fullname": "Fred",
+    "loginName": "Fred",
+    "password": "password",
+    "uid": "370dcad2-7bf2-4006-a02d-5fa5afc9dd3f",
+    "wikiname": "FredFlintstone"
+  },
+  {
+    "attributes": {},
+    "email": "vfedorov@mail.com",
+    "fullname": "Victor Fedorov",
+    "loginName": "vfedorov",
+    "password": "123123",
+    "uid": "3591e6df-a40b-4863-add4-f4e9aef0fcb4",
+    "wikiname": "VictorFedorov"
+  }
+]
