@@ -19,6 +19,11 @@
 		<module>bundles_elwiki</module>
 		<module>bundles_elwiki_model</module>
 		<module>features</module>
+
+		<module>bundles_4tests</module>
+		<module>tests</module>
+
 		<module>products</module>
+
 	</modules>
 </project>

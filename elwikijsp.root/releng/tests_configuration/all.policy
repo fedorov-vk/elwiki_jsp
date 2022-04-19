@@ -1,0 +1,28 @@
+grant {
+ permission java.security.AllPermission;
+};
+
+grant {
+ permission org.osgi.framework.ServicePermission "org.eclipse.osgi.service.resolver.PlatformAdmin", "register";
+};
+
+//grant codeBase "file:/repo/releases/2019-06/*" {
+// permission java.security.AllPermission;
+//};
+
+//grant codeBase "file:/home/vfedorov/dev/dev_wiki/GIT/secure_testing/secure_osgi/*" {
+// permission java.security.AllPermission;
+//};
+
+
+//grant codeBase "file:/home/vfedorov/dev/dev_wiki/ws_secure/*" {
+// permission java.security.AllPermission;
+//};
+
+//grant {
+// permission java.io.FilePermission "/home/vfedorov/dev/dev_wiki/ws_secure/-", "read"; 
+//};
+
+//grant {
+// permission java.io.FilePermission "test", "read"; 
+//};
