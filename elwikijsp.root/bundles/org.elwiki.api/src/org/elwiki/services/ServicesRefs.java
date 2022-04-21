@@ -79,7 +79,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
-@Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class)
+@Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class, immediate = true)
 public class ServicesRefs implements Engine {
 
 	private static AclManager aclManager;
