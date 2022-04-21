@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="part2.FilterAuthentication">
+   <property name="osgi.http.whiteboard.filter.pattern" value="/*"/>
+   <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
+   <service scope="prototype">
+      <provide interface="javax.servlet.Filter"/>
+   </service>
+   <implementation class="org.elwiki.web.jsp.FilterAuthenticationPart"/>
+</scr:component>
