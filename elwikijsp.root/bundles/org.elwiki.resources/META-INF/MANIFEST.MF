@@ -49,7 +49,12 @@ Import-Package: org.apache.commons.io,
 Service-Component: OSGI-INF/elwiki.DefaultAdminBeanManager.xml,
  OSGI-INF/elwiki.DefaultProgressManager.xml,
  OSGI-INF/elwiki.DefaultTemplateManager.xml,
- OSGI-INF/elwiki.WikiSession.xml
+ OSGI-INF/elwiki.WikiSession.xml,
+ OSGI-INF/part1.FilterContext.xml,
+ OSGI-INF/part2.FilterAuthentication.xml,
+ OSGI-INF/part3.FilterPage.xml,
+ OSGI-INF/partContextHelper.xml,
+ OSGI-INF/partJspServlet.xml
 Export-Package: javax.servlet.jsp.jstl.fmt,
  org.apache.wiki,
  org.apache.wiki.auth,

@@ -37,6 +37,17 @@
 				<configuration>
 					<dependency-resolution>
 						<extraRequirements>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>elwiki.test_environment.feature</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.elwiki.data.persist</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+
 							<!-- product IU under test -->
 							<!-- :FVK: ?this needs for centralized place of ElWiki bundles after building. -->
 							<!-- не обязательно. если задать - в конфигурации запуска будет ссылка на org.eclipse.equinox.launcher.win32.win32.x86_64
@@ -49,7 +60,7 @@
 
 							<requirement>
 								<type>eclipse-feature</type>
-								<id>elwiki.feature</id>
+								<id>org.elwiki.feature</id>
 								<versionRange>1.0.0</versionRange>
 							</requirement>
 
@@ -162,7 +173,7 @@
 					<appArgLine>-console 10008</appArgLine>
 
 					<argLine>
--Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
+						-Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
 -Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
 
 -Declipse.ignoreApp=true -Dosgi.noShutdown=true
@@ -172,7 +183,7 @@
 -Dstorage.cdo.port=2039
 
 <!--
- -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
 						-Declipse.ignoreApp=true -Dosgi.noShutdown=true
 -Dorg.osgi.service.http.port=8088
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
@@ -189,7 +200,7 @@
  -Delwiki.custom.configuration=org.elwiki.test.utils
  -Delwiki.users.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/users.json
  -Delwiki.groups.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/groups.json
---> 
+-->
 
 <!--
  -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
@@ -215,46 +226,108 @@
 <argLine>-Dorg.osgi.service.http.port=11042</argLine>
 -->
 					<showEclipseLog>true</showEclipseLog>
+					<defaultStartLevel>
+						<level>4</level>
+						<autoStart>true</autoStart>
+					</defaultStartLevel>
 					<bundleStartLevel>
+						<!-- Prevent autostart operation for fragments. -->
+						<bundle>
+							<id>org.eclipse.swt.gtk.linux.x86_64</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.swt.win32.win32.x86_64</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.elwiki.authorize.condition</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.elwiki.log4.definition</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.tycho.surefire.junit4</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.ui.workbench.texteditor</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.ui.ide</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.ui</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<!-- Activating main bundles of OSGI. -->
 						<bundle>
 							<id>org.apache.felix.scr</id>
 							<level>1</level>
 							<autoStart>true</autoStart>
 						</bundle>
 						<bundle>
-							<id>org.eclipse.core.runtime</id>
-							<level>3</level>
-							<autoStart>false</autoStart>
-						</bundle>
-						<bundle>
 							<id>org.eclipse.equinox.common</id>
 							<level>2</level>
 							<autoStart>true</autoStart>
+						</bundle>
+						<!-- Force activate ElWiki Engine.  ~~~~~~~~~~~~~~~~~ -->
+						<bundle>
+							<id>org.elwiki.api</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+
+<!--
+						<bundle>
+							<id>org.eclipse.core.runtime</id>
+							<level>3</level>
+							<autoStart>false</autoStart>
 						</bundle>
 						<bundle>
 							<id>org.eclipse.equinox.http.jetty</id>
 							<level>2</level>
 							<autoStart>true</autoStart>
 						</bundle>
+-->
 						<!-- add ~~ for console ~~~~~~~~~~~~~~~~~ -->
+<!--
 						<bundle>
 							<id>org.apache.felix.gogo.shell</id>
 							<level>3</level>
 							<autoStart>true</autoStart>
 						</bundle>
-						<!-- 
 						<bundle>
 							<id>org.eclipse.equinox.console</id>
 							<level>3</level>
 							<autoStart>true</autoStart>
 						</bundle>
+						<bundle>
+							<id>org.apache.felix.gogo.shell</id>
+							<level>3</level>
+							<autoStart>true</autoStart>
+						</bundle>
  -->
+
 						<!-- add ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!--
 						<bundle>
 							<id>org.eclipse.equinox.useradmin</id>
 							<level>2</level>
 							<autoStart>true</autoStart>
 						</bundle>
+ -->
+
+						<!-- activate Jetty ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+						<!-- ~~ ACTIVATE ALL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+						<!-- ACTIVATE ElWiki ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
 						<!-- Start bundles that contribute ElWiki -->
 						<!--  :FVK:
 						<bundle>

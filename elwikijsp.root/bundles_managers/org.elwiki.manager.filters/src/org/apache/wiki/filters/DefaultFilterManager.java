@@ -97,7 +97,7 @@ import java.util.Properties;
  */
 @Component(name = "elwiki.DefaultFilterManager", service = FilterManager.class, //
 		factory = "elwiki.FilterManager.factory")
-public class DefaultFilterManager extends BaseModuleManager implements FilterManager, Initializable {
+public class DefaultFilterManager extends BaseModuleManager implements FilterManager {
 
     private PriorityList< PageFilter > m_pageFilters = new PriorityList<>();
 
@@ -197,8 +197,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      *  @throws WikiException If something goes wrong.
      */
     //protected void initialize( final Properties props ) throws WikiException {
-	@Override
-	public void initialize(Engine engine) throws WikiException {
+	protected void initialize(Engine engine) throws WikiException {
 		m_engine = engine;
         InputStream xmlStream = null;
         final String xmlFile = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_FILTERXML, null ) ;
