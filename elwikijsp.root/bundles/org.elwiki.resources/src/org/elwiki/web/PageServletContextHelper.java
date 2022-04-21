@@ -12,6 +12,7 @@ import org.elwiki.resources.ResourcesActivator;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 
+@Deprecated
 public class PageServletContextHelper implements HttpContext {
 
 	private static final Logger log = Logger.getLogger(PageServletContextHelper.class);

@@ -39,39 +39,66 @@ import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 
+//@formatter:off
+//@Component(
+//		property= {
+//	    	"osgi.http.whiteboard.filter.pattern=/*.cmd",
+//	        "osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=org.elwiki.resources.httpcontext)"
+//	    },
+//	    scope=ServiceScope.PROTOTYPE,
+//	    name = "web.PageFilter",
+//	    immediate = true
+//)
+//@formatter:on
+@Deprecated
 public class PageFilter extends HttpFilter {
 
 	private static final Logger log = Logger.getLogger(PageFilter.class);
 
-	final private Engine engine;
+	//@Reference
+	/*final private*/ Engine engine;
 	private ServletContext context;
-    private String m_wiki_encoding;
-    private boolean useEncoding;
+	private String m_wiki_encoding;
+	private boolean useEncoding;
+
+	//@Activate
+	protected void startup() {
+		System.out.println("Hi :FVK:!");
+	}
 
 	/**
 	 * Creates a ElWiki Page Filter.
 	 */
 	public PageFilter() {
 		super();
-		BundleContext context = ResourcesActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
-		engine = (ref != null) ? (Engine) context.getService(ref) : null;
-		if (engine == null) {
-			//TODO: обработать аварию - нет сервиса Engine.
-			throw new NullPointerException("missed Engine service.");
+	}
+
+	protected Engine getEngine() {
+		if (this.engine == null) {
+			if (null == (this.engine = ResourcesActivator.getService(Engine.class))) {
+				//TODO: handle the crash - there is no Engine service.
+				throw new NullPointerException("missed Engine service.");
+			}
 		}
+
+		return this.engine;
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		final ServletContext context = config.getServletContext();
 		this.context = context;
-		
-        m_wiki_encoding = engine.getWikiPreferences().getString( IWikiPreferences.PROP_ENCODING );
 
-        useEncoding = !TextUtil.getBooleanProperty(engine.getWikiPreferences(), Engine.PROP_NO_FILTER_ENCODING, false);
-		
+		Engine engine1 = getEngine();
+		m_wiki_encoding = engine1.getWikiPreferences().getString(IWikiPreferences.PROP_ENCODING);
+
+		useEncoding = !TextUtil.getBooleanProperty(engine1.getWikiPreferences(), Engine.PROP_NO_FILTER_ENCODING, false);
+
 	}
 
 	@Override
@@ -83,17 +110,18 @@ public class PageFilter extends HttpFilter {
 	public void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		//:FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w = WatchDog.getCurrentWatchDog( m_engine );
-		
+
 		log.debug("doFilter()");
 		String uri = httpRequest.getRequestURI();
-		if( false == uri.matches(".+?(\\.cmd|\\.jsp)$") ) { //:FVK: uri.matches(".+?(\\.js|\\.css)$")
+		if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { //:FVK: uri.matches(".+?(\\.js|\\.css)$")
 			System.err.println("PF original resource: " + uri);
 			super.doFilter(httpRequest, response, chain);
 		}
 		System.out.println("PageFilter, URI: " + uri);
 
-        final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper(response, m_wiki_encoding, useEncoding );
-		
+		final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper(response, m_wiki_encoding,
+				useEncoding);
+
 		CmdCode cmdCode = null;
 		try {
 			// final HttpServletResponseWrapper responseWrapper = new MyWikiServletResponseWrapper( (
@@ -110,7 +138,7 @@ public class PageFilter extends HttpFilter {
 				cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
 				if (cmdCode != null) {
 					try {
-						cmdCode.applyPrologue(httpRequest,responseWrapper);
+						cmdCode.applyPrologue(httpRequest, responseWrapper);
 					} catch (Exception e) {
 						// TODO: Auto-generated catch block
 						e.printStackTrace();
@@ -118,7 +146,7 @@ public class PageFilter extends HttpFilter {
 				}
 			}
 
-//		chain.doFilter(request, response);
+			//		chain.doFilter(request, response);
 			String path;
 			RequestDispatcher requestDispatcher;
 			path = "/page/PageHead.cmd";
@@ -132,32 +160,33 @@ public class PageFilter extends HttpFilter {
 			path = "/page/PageBottom.cmd";
 			requestDispatcher = httpRequest.getRequestDispatcher(path);
 			requestDispatcher.include(httpRequest, responseWrapper);
-			
+
 			try {
-                //:FVK: w.enterState( "Delivering response", 30 );
-                final Context wikiContext = ServicesRefs.getCurrentContext();
-                final String r = filter( wikiContext, responseWrapper );
+				//:FVK: w.enterState( "Delivering response", 30 );
+				final Context wikiContext = ServicesRefs.getCurrentContext();
+				final String r = filter(wikiContext, responseWrapper);
 
-                if( useEncoding ) {
-                    final OutputStreamWriter out = new OutputStreamWriter( response.getOutputStream(), response.getCharacterEncoding() );
-                    out.write( r );
-                    out.flush();
-                    out.close();
-                } else {
-                    response.getWriter().write(r);
-                }
+				if (useEncoding) {
+					final OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(),
+							response.getCharacterEncoding());
+					out.write(r);
+					out.flush();
+					out.close();
+				} else {
+					response.getWriter().write(r);
+				}
 
-                // Clean up the UI messages and loggers
-                if( wikiContext != null ) {
-                    wikiContext.getWikiSession().clearMessages();
-                }
+				// Clean up the UI messages and loggers
+				if (wikiContext != null) {
+					wikiContext.getWikiSession().clearMessages();
+				}
 
-                // fire PAGE_DELIVERED event
-                //:FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
+				// fire PAGE_DELIVERED event
+				//:FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
 
-            } finally {
-                //:FVK: w.exitState();
-            }
+			} finally {
+				//:FVK: w.exitState();
+			}
 		} finally {
 			if (cmdCode != null) {
 				try {
@@ -172,73 +201,75 @@ public class PageFilter extends HttpFilter {
 		}
 	}
 
-    /**
-     * Goes through all types and writes the appropriate response.
-     *
-     * @param wikiContext The usual processing context
-     * @param response The source string
-     * @return The modified string with all the insertions in place.
-     */
-    private String filter( final Context wikiContext, final HttpServletResponse response ) {
-        String string = response.toString();
+	/**
+	 * Goes through all types and writes the appropriate response.
+	 *
+	 * @param wikiContext The usual processing context
+	 * @param response    The source string
+	 * @return The modified string with all the insertions in place.
+	 */
+	private String filter(final Context wikiContext, final HttpServletResponse response) {
+		String string = response.toString();
 
-        if( wikiContext != null ) {
-            final String[] resourceTypes = TemplateManager.getResourceTypes( wikiContext );
-            for( final String resourceType : resourceTypes ) {
-                string = insertResources( wikiContext, string, resourceType );
-            }
+		if (wikiContext != null) {
+			final String[] resourceTypes = TemplateManager.getResourceTypes(wikiContext);
+			for (final String resourceType : resourceTypes) {
+				string = insertResources(wikiContext, string, resourceType);
+			}
 
-            //  Add HTTP header Resource Requests
-            final String[] headers = TemplateManager.getResourceRequests( wikiContext, TemplateManager.RESOURCE_HTTPHEADER );
+			//  Add HTTP header Resource Requests
+			final String[] headers = TemplateManager.getResourceRequests(wikiContext,
+					TemplateManager.RESOURCE_HTTPHEADER);
 
-            for( final String header : headers ) {
-                String key = header;
-                String value = "";
-                final int split = header.indexOf( ':' );
-                if( split > 0 && split < header.length() - 1 ) {
-                    key = header.substring( 0, split );
-                    value = header.substring( split + 1 );
-                }
+			for (final String header : headers) {
+				String key = header;
+				String value = "";
+				final int split = header.indexOf(':');
+				if (split > 0 && split < header.length() - 1) {
+					key = header.substring(0, split);
+					value = header.substring(split + 1);
+				}
 
-                response.addHeader( key.trim(), value.trim() );
-            }
-        }
+				response.addHeader(key.trim(), value.trim());
+			}
+		}
 
-        return string;
-    }
+		return string;
+	}
 
-    /**
-     *  Inserts whatever resources were requested by any plugins or other components for this particular type.
-     *
-     *  @param wikiContext The usual processing context
-     *  @param string The source string
-     *  @param type Type identifier for insertion
-     *  @return The filtered string.
-     */
-    private String insertResources( final Context wikiContext, final String string, final String type ) {
-        if( wikiContext == null ) {
-            return string;
-        }
+	/**
+	 * Inserts whatever resources were requested by any plugins or other components
+	 * for this particular type.
+	 *
+	 * @param wikiContext The usual processing context
+	 * @param string      The source string
+	 * @param type        Type identifier for insertion
+	 * @return The filtered string.
+	 */
+	private String insertResources(final Context wikiContext, final String string, final String type) {
+		if (wikiContext == null) {
+			return string;
+		}
 
-        final String marker = TemplateManager.getMarker( wikiContext, type );
-        final int idx = string.indexOf( marker );
-        if( idx == -1 ) {
-            return string;
-        }
+		final String marker = TemplateManager.getMarker(wikiContext, type);
+		final int idx = string.indexOf(marker);
+		if (idx == -1) {
+			return string;
+		}
 
-        log.debug("...Inserting...");
+		log.debug("...Inserting...");
 
-        final String[] resources = TemplateManager.getResourceRequests( wikiContext, type );
-        final StringBuilder concat = new StringBuilder( resources.length * 40 );
+		final String[] resources = TemplateManager.getResourceRequests(wikiContext, type);
+		final StringBuilder concat = new StringBuilder(resources.length * 40);
 
-        for( final String resource : resources ) {
-            log.debug( "...:::" + resource );
-            concat.append( resource );
-        }
+		for (final String resource : resources) {
+			log.debug("...:::" + resource);
+			concat.append(resource);
+		}
 
-        return TextUtil.replaceString( string, idx, idx + marker.length(), concat.toString() );
-    }
-    
+		return TextUtil.replaceString(string, idx, idx + marker.length(), concat.toString());
+	}
+
 	private static class MyWikiServletResponseWrapper extends HttpServletResponseWrapper {
 
 		ByteArrayOutputStream m_output;
@@ -248,8 +279,8 @@ public class PageFilter extends HttpFilter {
 		private boolean useEncoding;
 
 		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
-		 * and memory consumption.
+		 * How large the initial buffer should be. This should be tuned to achieve a
+		 * balance in speed and memory consumption.
 		 */
 		private static final int INIT_BUFFER_SIZE = 0x8000;
 
@@ -264,7 +295,10 @@ public class PageFilter extends HttpFilter {
 			m_response = r;
 		}
 
-		/** Returns a writer for output; this wraps the internal buffer into a PrintWriter. */
+		/**
+		 * Returns a writer for output; this wraps the internal buffer into a
+		 * PrintWriter.
+		 */
 		@Override
 		public PrintWriter getWriter() {
 			return m_writer;
@@ -296,15 +330,15 @@ public class PageFilter extends HttpFilter {
 				m_buffer.write(aInt);
 			}
 
-			/**{@inheritDoc} */
+			/** {@inheritDoc} */
 			@Override
 			public boolean isReady() {
 				return false;
 			}
-			
-			/**{@inheritDoc} */
+
+			/** {@inheritDoc} */
 			@Override
-			public void setWriteListener( final WriteListener writeListener ) {
+			public void setWriteListener(final WriteListener writeListener) {
 			}
 		}
 
@@ -332,96 +366,103 @@ public class PageFilter extends HttpFilter {
 
 	}
 
-    /**
-     *  Simple response wrapper that just allows us to gobble through the entire
-     *  response before it's output.
-     */
-    private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
+	/**
+	 * Simple response wrapper that just allows us to gobble through the entire
+	 * response before it's output.
+	 */
+	private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
 
-        ByteArrayOutputStream m_output;
-        private ByteArrayServletOutputStream m_servletOut;
-        private PrintWriter m_writer;
-        private HttpServletResponse m_response;
-        private boolean useEncoding;
+		ByteArrayOutputStream m_output;
+		private ByteArrayServletOutputStream m_servletOut;
+		private PrintWriter m_writer;
+		private HttpServletResponse m_response;
+		private boolean useEncoding;
 
-        /** How large the initial buffer should be.  This should be tuned to achieve a balance in speed and memory consumption. */
-        private static final int INIT_BUFFER_SIZE = 0x8000;
+		/**
+		 * How large the initial buffer should be. This should be tuned to achieve a
+		 * balance in speed and memory consumption.
+		 */
+		private static final int INIT_BUFFER_SIZE = 0x8000;
 
-        public JSPWikiServletResponseWrapper( final HttpServletResponse r, final String wikiEncoding, final boolean useEncoding ) throws UnsupportedEncodingException {
-            super( r );
-            m_output = new ByteArrayOutputStream( INIT_BUFFER_SIZE );
-            m_servletOut = new ByteArrayServletOutputStream( m_output );
-            m_writer = new PrintWriter( new OutputStreamWriter( m_servletOut, wikiEncoding ), true );
-            this.useEncoding = useEncoding;
+		public JSPWikiServletResponseWrapper(final HttpServletResponse r, final String wikiEncoding,
+				final boolean useEncoding) throws UnsupportedEncodingException {
+			super(r);
+			m_output = new ByteArrayOutputStream(INIT_BUFFER_SIZE);
+			m_servletOut = new ByteArrayServletOutputStream(m_output);
+			m_writer = new PrintWriter(new OutputStreamWriter(m_servletOut, wikiEncoding), true);
+			this.useEncoding = useEncoding;
 
-            m_response = r;
-        }
+			m_response = r;
+		}
 
-        /** Returns a writer for output; this wraps the internal buffer into a PrintWriter. */
-        @Override
-        public PrintWriter getWriter() {
-            return m_writer;
-        }
+		/**
+		 * Returns a writer for output; this wraps the internal buffer into a
+		 * PrintWriter.
+		 */
+		@Override
+		public PrintWriter getWriter() {
+			return m_writer;
+		}
 
-        @Override
-        public ServletOutputStream getOutputStream() {
-            return m_servletOut;
-        }
+		@Override
+		public ServletOutputStream getOutputStream() {
+			return m_servletOut;
+		}
 
-        @Override
-        public void flushBuffer() throws IOException {
-            m_writer.flush();
-            super.flushBuffer();
-        }
+		@Override
+		public void flushBuffer() throws IOException {
+			m_writer.flush();
+			super.flushBuffer();
+		}
 
-        class ByteArrayServletOutputStream extends ServletOutputStream {
+		class ByteArrayServletOutputStream extends ServletOutputStream {
 
-            ByteArrayOutputStream m_buffer;
+			ByteArrayOutputStream m_buffer;
 
-            public ByteArrayServletOutputStream( final ByteArrayOutputStream byteArrayOutputStream ) {
-                super();
-                m_buffer = byteArrayOutputStream;
-            }
+			public ByteArrayServletOutputStream(final ByteArrayOutputStream byteArrayOutputStream) {
+				super();
+				m_buffer = byteArrayOutputStream;
+			}
 
-            /**{@inheritDoc} */
-            @Override
-            public void write( final int aInt ) {
-                m_buffer.write( aInt );
-            }
+			/** {@inheritDoc} */
+			@Override
+			public void write(final int aInt) {
+				m_buffer.write(aInt);
+			}
 
-            /**{@inheritDoc} */
-            @Override
+			/** {@inheritDoc} */
+			@Override
 			public boolean isReady() {
 				return false;
 			}
 
-            /**{@inheritDoc} */
-            @Override
-			public void setWriteListener( final WriteListener writeListener ) {
+			/** {@inheritDoc} */
+			@Override
+			public void setWriteListener(final WriteListener writeListener) {
 			}
-        }
+		}
 
-        /** Returns whatever was written so far into the Writer. */
-        @Override
-        public String toString() {
-            try {
+		/** Returns whatever was written so far into the Writer. */
+		@Override
+		public String toString() {
+			try {
 				flushBuffer();
-			} catch( final IOException e ) {
-                log.error( e );
-                return "";
+			} catch (final IOException e) {
+				log.error(e);
+				return "";
 			}
 
-            try {
-				if( useEncoding ) {
-					return m_output.toString( m_response.getCharacterEncoding() );
+			try {
+				if (useEncoding) {
+					return m_output.toString(m_response.getCharacterEncoding());
 				}
 
 				return m_output.toString();
-			} catch( final UnsupportedEncodingException e ) {
-                log.error( e );
-                return "";
-             }
-        }
+			} catch (final UnsupportedEncodingException e) {
+				log.error(e);
+				return "";
+			}
+		}
 
-    }
+	}
 }

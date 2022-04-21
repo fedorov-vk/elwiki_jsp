@@ -13,7 +13,7 @@
          </adapter>
       </factory>
    </extension>
-<!-- ~~ :FVK: ~~ перенесено в @Component -->
+<!-- ~~ :FVK: ~~ перенесено в @Component
    <extension
          id="filter.context"
          point="org.eclipse.equinox.http.registry.filters">
@@ -24,7 +24,6 @@
             load-on-startup="true">
       </filter>
    </extension>
-<!-- ~~ :FVK: ~~ перенесено в @Component -->
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -34,7 +33,6 @@
             load-on-startup="true">
       </filter>
    </extension>
-<!-- ~~ :FVK: ~~ перенесено в @Component -->
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -44,7 +42,6 @@
             load-on-startup="true">
       </filter>
    </extension>
-<!-- ~~TEST~~ -->
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
@@ -53,7 +50,6 @@
             httpcontextId="org.elwiki.resources.httpcontext">
       </servlet>
    </extension>
-<!-- ~~TEST~~ -->
    <extension
          id="pages"
          point="org.eclipse.equinox.http.registry.httpcontexts">
@@ -65,6 +61,7 @@
          </resource-mapping>
       </httpcontext>
    </extension>
+-->
 
 <!--
          <resource-mapping
@@ -143,6 +140,7 @@
    </extension>
 -->
 
+<!-- ~~ :FVK: ~~ перенесено в @Component -->
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter

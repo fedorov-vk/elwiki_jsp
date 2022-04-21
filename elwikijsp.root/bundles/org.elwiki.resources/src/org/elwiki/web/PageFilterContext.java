@@ -22,14 +22,30 @@ import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 
+//@formatter:off
+//@Component(
+//		property= {
+//	    	"osgi.http.whiteboard.filter.pattern=/*.cmd",
+//	        "osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=org.elwiki.resources.httpcontext)"
+//	    },
+//	    scope=ServiceScope.PROTOTYPE,
+//	    name = "web.PageFilterContext",
+//	    immediate = true
+//)
+//@formatter:on
+@Deprecated
 public class PageFilterContext extends HttpFilter {
 
 	private static final long serialVersionUID = -4683126485266937165L;
 	private static final Logger log = Logger.getLogger(PageFilterContext.class);
 
 	private IWikiConfiguration wikiConfiguration;
-	private Engine servicesRef;
+
+	private Engine engine;
 
 	//@formatter:off
 	private Map<String, ContextEnum> cmd2context = Map.ofEntries(
@@ -51,9 +67,18 @@ public class PageFilterContext extends HttpFilter {
 	 */
 	public PageFilterContext() {
 		super();
-		if (null != (this.servicesRef = ResourcesActivator.getService(Engine.class))) {
-			this.wikiConfiguration = servicesRef.getWikiConfiguration();
-		} // TODO: else - error: missed service.
+	}
+
+	protected Engine getEngine() {
+		if (this.engine == null) {
+			if (null == (this.engine = ResourcesActivator.getService(Engine.class))) {
+				//TODO: handle the crash - there is no Engine service.
+				throw new NullPointerException("missed Engine service.");
+			} // TODO: else - error: missed service.
+			this.wikiConfiguration = this.engine.getWikiConfiguration();
+		}
+
+		return this.engine;
 	}
 
 	@Override
@@ -65,6 +90,7 @@ public class PageFilterContext extends HttpFilter {
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		log.debug("doFilter() " + httpRequest.getRequestURI());
+		Engine servicesRef = getEngine();
 
 		// workaround - skip all, except *.cmd, *.jsp
 		String uri = httpRequest.getRequestURI();
@@ -81,7 +107,7 @@ public class PageFilterContext extends HttpFilter {
 
 		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
 
-		response.setContentType("text/html; charset=" + this.servicesRef.getContentEncoding());
+		response.setContentType("text/html; charset=" + servicesRef.getContentEncoding());
 
 		super.doFilter(httpRequest, response, chain);
 	}

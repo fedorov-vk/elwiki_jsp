@@ -34,7 +34,6 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.services.ServicesRefs;
-import org.elwiki.web.PageFilter;
 
 
 public class PrefsCmdCode extends CmdCode {

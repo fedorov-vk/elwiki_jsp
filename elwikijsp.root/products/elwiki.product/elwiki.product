@@ -25,7 +25,7 @@
    </plugins>
 
    <features>
-      <feature id="elwiki.feature" installMode="root"/>
+      <feature id="org.elwiki.feature" installMode="root"/>
       <feature id="jsp.bridge.feature" installMode="root"/>
    </features>
 

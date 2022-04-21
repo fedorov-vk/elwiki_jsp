@@ -10,7 +10,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ServiceScope;
 
+//@formatter:off
+//@Component(
+//		property= {
+//	    	"osgi.http.whiteboard.filter.pattern=/*.cmd",
+//	        "osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=org.elwiki.resources.httpcontext)"
+//	    },
+//	    scope=ServiceScope.PROTOTYPE,
+//	    name = "web.PageFilterAuthentication",
+//	    immediate = true
+//)
+//@formatter:on
+@Deprecated
 public class PageFilterAuthentication extends HttpFilter {
 
 	private static final long serialVersionUID = 3385815640489532788L;

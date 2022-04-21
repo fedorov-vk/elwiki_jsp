@@ -16,7 +16,6 @@
 	</parent>
 
 	<modules>
-		<module>elwiki.test.feature</module>
 		<module>org.elwiki.tests</module>
 <!--
 		<module>bundles_test_util</module>
