@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="partContextHelper">
+   <property name="osgi.http.whiteboard.context.name" value="eclipse"/>
+   <property name="osgi.http.whiteboard.context.path" value="/"/>
+   <service scope="bundle">
+      <provide interface="org.osgi.service.http.context.ServletContextHelper"/>
+   </service>
+   <reference cardinality="1..1" field="httpService" interface="org.osgi.service.http.HttpService" name="httpService"/>
+   <implementation class="org.elwiki.web.jsp.ContextHelperPart"/>
+</scr:component>

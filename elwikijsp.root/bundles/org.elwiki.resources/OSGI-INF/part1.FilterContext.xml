@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="part1.FilterContext">
+   <property name="osgi.http.whiteboard.filter.pattern" value="/*"/>
+   <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
+   <service scope="prototype">
+      <provide interface="javax.servlet.Filter"/>
+   </service>
+   <reference cardinality="1..1" field="engine" interface="org.apache.wiki.api.core.Engine" name="engine"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
+   <implementation class="org.elwiki.web.jsp.FilterContextPart"/>
+</scr:component>
