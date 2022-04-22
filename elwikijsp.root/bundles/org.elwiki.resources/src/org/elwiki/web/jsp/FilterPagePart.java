@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -40,7 +41,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 		"osgi.http.whiteboard.filter.pattern=/*",
 		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
-    name = "part3.FilterPage"
+    name = "part03.FilterPage"
 )
 //@formatter:on
 public class FilterPagePart extends HttpFilter implements Filter {
@@ -54,6 +55,11 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	private String m_wiki_encoding;
 	private boolean useEncoding;
 
+	@Activate
+	protected void startup() {
+		log.debug("startup FilterPagePart.");
+	}
+	
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		this.context = config.getServletContext();

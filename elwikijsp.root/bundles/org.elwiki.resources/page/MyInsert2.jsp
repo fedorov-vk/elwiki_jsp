@@ -6,6 +6,7 @@
 <title>OSGi - Sample Web Application</title>
 </head>
 <body>
+<!-- :FVK: это отладка при разработке. -->
 	<div style="text-align: center; margin: 50px auto;">
 		<h2>
 			<%

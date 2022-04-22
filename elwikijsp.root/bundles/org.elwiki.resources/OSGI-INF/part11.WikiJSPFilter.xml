@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" name="part11.WikiJSPFilter">
+   <property name="osgi.http.whiteboard.filter.pattern" value="/wiki/*"/>
+   <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
+   <implementation class="org.elwiki.web.jsp.WikiJSPFilter"/>
+</scr:component>

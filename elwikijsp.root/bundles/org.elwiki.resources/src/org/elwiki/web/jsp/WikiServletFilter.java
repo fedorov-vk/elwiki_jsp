@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.    
  */
-package org.apache.wiki.ui;
+package org.elwiki.web.jsp;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -33,6 +33,10 @@ import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -55,30 +59,28 @@ import java.io.PrintWriter;
  * {@link org.apache.wiki.auth.IIAuthenticationManager#login(HttpServletRequest)} executes; this method contains all of the logic needed to
  * grab any user login credentials set by the container or by cookies.
  */
+//@formatter:off
+@Component(
+	property = {
+		"osgi.http.whiteboard.filter.pattern=/attach/*",
+		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+  scope=ServiceScope.PROTOTYPE,
+  name = "part10.WikiServletFilter"
+)
+//@formatter:on
 public class WikiServletFilter implements Filter {
 
     private static final Logger log = Logger.getLogger( WikiServletFilter.class );
-    final protected Engine m_engine;
-    final private IWikiConfiguration wikiConfiguration;
+    @Reference
+    protected Engine m_engine;
+    @Reference
+    private IWikiConfiguration wikiConfiguration;
 
-    /**
-     *  Creates a ElWiki Servlet Filter.
-     */
-    public WikiServletFilter()
-    {
-		super();
-		BundleContext context = ResourcesActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
-		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
-		if (m_engine != null) {
-			this.wikiConfiguration = m_engine.getWikiConfiguration();
-		} else {
-			this.wikiConfiguration = null;
-			//TODO: обработать аварию - нет сервиса Engine.
-			throw new NullPointerException("missed Engine service.");
-		}
-    }
-
+	@Activate
+	protected void startup() {
+		log.debug("startup WikiServletFilter.");
+	}
+    
     public IWikiConfiguration getWikiConfiguration() {
 		return wikiConfiguration;
 	}

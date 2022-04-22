@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.    
  */
-package org.apache.wiki.ui;
+package org.elwiki.web.jsp;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;

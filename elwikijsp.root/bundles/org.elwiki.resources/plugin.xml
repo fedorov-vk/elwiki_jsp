@@ -140,7 +140,9 @@
    </extension>
 -->
 
-<!-- ~~ :FVK: ~~ перенесено в @Component -->
+   <!-- filters ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
+
+<!-- ~~ :FVK: ~~ перенесено в @Component
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -150,8 +152,6 @@
       </filter>
    </extension>
 
-   <!-- filters ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
-
    <extension
          point="org.eclipse.equinox.http.registry.filters">
       <filter
@@ -160,6 +160,19 @@
             load-on-startup="true">
       </filter>
    </extension>
+-->
+
+<!-- JSPwiki
+   <extension
+         point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="*.jsp"
+            class="org.apache.wiki.ui.WikiJSPFilter"
+            load-on-startup="true">
+      </filter>
+   </extension>
+-->
+
 
 <!--:FVK:
    <extension
@@ -183,16 +196,6 @@
       <filter
             alias="/RPC2/"
             class="org.apache.wiki.ui.WikiServletFilter"
-            load-on-startup="true">
-      </filter>
-   </extension>
--->
-<!-- JSPwiki
-   <extension
-         point="org.eclipse.equinox.http.registry.filters">
-      <filter
-            alias="*.jsp"
-            class="org.apache.wiki.ui.WikiJSPFilter"
             load-on-startup="true">
       </filter>
    </extension>

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 
@@ -19,7 +20,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 		"osgi.http.whiteboard.filter.pattern=/*",
 		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
 	scope=ServiceScope.PROTOTYPE,
-	name = "part2.FilterAuthentication"
+	name = "part02.FilterAuthentication"
 )
 //@formatter:on
 public class FilterAuthenticationPart extends HttpFilter implements Filter {
@@ -27,6 +28,11 @@ public class FilterAuthenticationPart extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 3385815640489532788L;
 	private static final Logger log = Logger.getLogger(FilterAuthenticationPart.class);
 
+	@Activate
+	protected void startup() {
+		log.debug("startup FilterAuthenticationPart.");
+	}
+	
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub

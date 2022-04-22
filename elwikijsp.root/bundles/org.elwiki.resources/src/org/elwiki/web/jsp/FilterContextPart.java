@@ -17,6 +17,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -27,7 +28,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 		"osgi.http.whiteboard.filter.pattern=/*",
 		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
-    name = "part1.FilterContext"
+    name = "part01.FilterContext"
 )
 //@formatter:on
 public class FilterContextPart extends HttpFilter implements Filter {
@@ -55,6 +56,11 @@ public class FilterContextPart extends HttpFilter implements Filter {
 		Map.entry("/viewGroup.cmd", ContextEnum.GROUP_VIEW)
 	); //@formatter:on
 
+	@Activate
+	protected void startup() {
+		log.debug("startup FilterContextPart.");
+	}
+	
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
