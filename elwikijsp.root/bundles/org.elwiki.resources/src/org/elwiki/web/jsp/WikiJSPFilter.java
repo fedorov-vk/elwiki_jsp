@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.ui;
+package org.elwiki.web.jsp;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -25,10 +25,14 @@ import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiPreferences;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ServiceScope;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -73,18 +77,31 @@ import java.nio.charset.Charset;
  * @see TemplateManager
  * @see org.apache.wiki.tags.RequestResourceTag
  */
+//@formatter:off
+@Component(
+	property = {
+		"osgi.http.whiteboard.filter.pattern=/wiki/*",
+		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+	scope=ServiceScope.PROTOTYPE,
+	name = "part11.WikiJSPFilter"
+)
+//@formatter:on
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
     private String m_wiki_encoding;
     private boolean useEncoding;
-
+  
+	@Activate
+	protected void startup() {
+		log.debug("startup WikiJSPFilter.");
+	}
+    
     /** {@inheritDoc} */
     @Override
     public void init( final FilterConfig config ) throws ServletException {
         super.init( config );
         m_wiki_encoding = m_engine.getWikiPreferences().getString( IWikiPreferences.PROP_ENCODING );
-
         useEncoding = !TextUtil.getBooleanProperty(getWikiConfiguration().getWikiPreferences(), Engine.PROP_NO_FILTER_ENCODING, false);
     }
 

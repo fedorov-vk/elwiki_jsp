@@ -55,11 +55,6 @@ public class PageFilter extends HttpFilter {
 	private String m_wiki_encoding;
 	private boolean useEncoding;
 
-	//@Activate
-	protected void startup() {
-		System.out.println("Hi :FVK:!");
-	}
-
 	/**
 	 * Creates a ElWiki Page Filter.
 	 */
