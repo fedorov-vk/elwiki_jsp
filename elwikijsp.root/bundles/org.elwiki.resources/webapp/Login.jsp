@@ -42,7 +42,7 @@
 	Engine wiki = Wiki.engine().find( getServletConfig() );
     IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
-    pageContext.setAttribute( Context.ATTR_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+    pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     Session wikiSession = wikiContext.getWikiSession();
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
 

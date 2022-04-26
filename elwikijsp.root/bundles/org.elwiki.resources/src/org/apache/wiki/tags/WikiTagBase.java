@@ -63,7 +63,7 @@ public abstract class WikiTagBase extends TagSupport implements TryCatchFinally 
     
     public int doStartTag() throws JspException {
         try {
-            m_wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+            m_wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
             if( m_wikiContext == null ) {
                 throw new JspException("WikiContext may not be NULL - serious internal problem!");
             }

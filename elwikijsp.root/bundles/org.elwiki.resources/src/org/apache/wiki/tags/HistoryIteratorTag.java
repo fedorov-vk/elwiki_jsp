@@ -54,7 +54,7 @@ public class HistoryIteratorTag extends IteratorTag<PageContent>  {
     /** {@inheritDoc} */
     @Override
     public final int doStartTag() {
-        m_wikiContext = (Context) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+        m_wikiContext = (Context) pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
         final Engine engine = m_wikiContext.getEngine();
         final WikiPage page = m_wikiContext.getPage();
 
@@ -69,7 +69,7 @@ public class HistoryIteratorTag extends IteratorTag<PageContent>  {
                 if( m_iterator.hasNext() ) {
                     final Context context = m_wikiContext.clone();
 // :FVK:              context.setPage( ( WikiPage )m_iterator.next() );
-                    pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
+                    pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE );
 // :FVK:              pageContext.setAttribute( getId(), context.getPage() );
                     pageContext.setAttribute( getId(), m_iterator.next() );
                 } else {
@@ -103,7 +103,7 @@ public class HistoryIteratorTag extends IteratorTag<PageContent>  {
         if( m_iterator != null && m_iterator.hasNext() ) {
             final Context context = m_wikiContext.clone();
 // :FVK:      context.setPage( ( WikiPage )m_iterator.next() );
-            pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
+            pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE );
 // :FVK:      pageContext.setAttribute( getId(), context.getPage() );
             pageContext.setAttribute( getId(), m_iterator.next() );
             return EVAL_BODY_BUFFERED;

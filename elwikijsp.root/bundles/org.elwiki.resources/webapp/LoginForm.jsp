@@ -41,18 +41,17 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Retrieve the Login page context, then go and find the login form
 
-    Context wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+    Context wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
     
     // If no context, it means we're using container auth.  So, create one anyway
     if( wikiContext == null ) {
         wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
-        pageContext.setAttribute( Context.ATTR_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     }
     
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
     String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
                                                             
     log.debug("Login template content is: " + contentPage);
-    
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ LoginForm.jsp -->

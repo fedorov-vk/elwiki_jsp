@@ -42,7 +42,7 @@ public class LoginCmdCode extends CmdCode {
 		Context wikiContext = ServicesRefs.getCurrentContext();
 		Wiki.context().create(ServicesRefs.Instance, httpRequest, ContextEnum.WIKI_LOGIN.getRequestContext());
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE
-		// httpRequest.setAttribute( Context.ATTR_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+		// httpRequest.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();
 		ResourceBundle rb = Preferences.getBundle(wikiContext, "CoreResources"); // :FVK: это ресурсы в заданном
 																					// каталоге...

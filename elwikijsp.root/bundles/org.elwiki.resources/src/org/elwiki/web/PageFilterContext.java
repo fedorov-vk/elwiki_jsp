@@ -92,7 +92,7 @@ public class PageFilterContext extends HttpFilter {
 		ContextEnum context = (cmd2context.containsKey(uri)) ? cmd2context.get(uri) : ContextEnum.PAGE_VIEW;
 		Context wikiContext = new WikiContext(servicesRef, httpRequest, context.getRequestContext());
 		ServicesRefs.setCurrentContext(wikiContext);
-		httpRequest.setAttribute(Context.ATTR_CONTEXT, wikiContext);
+		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 
 		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
 

@@ -41,7 +41,7 @@ public abstract class WikiBodyTag extends BodyTagSupport implements TryCatchFina
 
     public int doStartTag() throws JspException {
         try {
-            m_wikiContext = (WikiContext) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+            m_wikiContext = (WikiContext) pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
             if( m_wikiContext == null ) {
                 throw new JspException("WikiContext may not be NULL - serious internal problem!");
             }
