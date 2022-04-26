@@ -21,8 +21,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
@@ -43,7 +45,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
-    name = "part03.FilterPage"
+    name = "part00.FilterPage"
 )
 //@formatter:on
 public class FilterPagePart extends HttpFilter implements Filter {
@@ -82,13 +84,37 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 		// WatchDog.getCurrentWatchDog( m_engine );
 
+		// skip all, except *.cmd, *.jsp
 		String uri = httpRequest.getRequestURI();
 		if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
-			System.err.println("PF original resource: " + uri);
+			// System.err.println("PFC original resource: " + uri);
 			super.doFilter(httpRequest, response, chain);
 		}
-		System.out.println("PageFilter, URI: " + uri);
+		log.debug("PageFilter, URI: " + uri);
 
+		/* Prepare Wiki context.
+		 */
+		ContextEnum context;
+		Context wikiContext;
+		context = (Context.cmd2context.containsKey(uri)) ? Context.cmd2context.get(uri) : ContextEnum.PAGE_VIEW;
+		wikiContext = new WikiContext(engine, httpRequest, context.getRequestContext());
+		ServicesRefs.setCurrentContext(wikiContext);
+		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+
+		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
+	
+		response.setContentType("text/html; charset=" + engine.getContentEncoding());
+
+		/* Authorize.
+		 */
+		/*TODO: :FVK: для Wiki.jsp, т.е. view.cmd
+		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ServicesRefs.getCurrentContext(), response)) {
+			return;
+		}
+		*/
+
+		/* Make content of page.
+		 */
 		final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper(response, m_wiki_encoding,
 				useEncoding);
 
@@ -133,7 +159,6 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 			try {
 				// :FVK: w.enterState( "Delivering response", 30 );
-				final Context wikiContext = ServicesRefs.getCurrentContext();
 				final String r = filter(wikiContext, responseWrapper);
 
 				if (useEncoding) {
@@ -147,9 +172,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				}
 
 				// Clean up the UI messages and loggers
-				if (wikiContext != null) {
-					wikiContext.getWikiSession().clearMessages();
-				}
+				wikiContext.getWikiSession().clearMessages();
 
 				// fire PAGE_DELIVERED event
 				// :FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );

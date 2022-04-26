@@ -84,7 +84,7 @@ import java.nio.charset.Charset;
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/wiki/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
-	scope=ServiceScope.PROTOTYPE,
+//	scope=ServiceScope.PROTOTYPE,
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
