@@ -43,7 +43,7 @@ public class TranslateTag
     @Override
     public final int doAfterBody() throws JspException {
         try {
-            Context context = (Context) pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+            Context context = (Context) pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
 
             //  Because the TranslateTag should not affect any of the real page attributes we have to make a clone here.
             context = context.deepClone();

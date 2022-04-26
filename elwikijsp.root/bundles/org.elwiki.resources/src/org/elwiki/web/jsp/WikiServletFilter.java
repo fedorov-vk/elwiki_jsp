@@ -187,7 +187,7 @@ public class WikiServletFilter implements Filter {
      */
     protected WikiContext getWikiContext( final ServletRequest request ) {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
-        return ( WikiContext )httpRequest.getAttribute( Context.ATTR_CONTEXT );
+        return ( WikiContext )httpRequest.getAttribute( Context.ATTR_WIKI_CONTEXT );
     }
 
     /** 

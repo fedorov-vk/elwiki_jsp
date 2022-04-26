@@ -113,7 +113,7 @@ public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchF
             context.setPage( ( WikiPage )o );
         }
 
-        pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE );
         pageContext.setAttribute( getId(), o );
     }
 
@@ -121,7 +121,7 @@ public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchF
     @Override
     public int doEndTag() {
         // Return back to the original.
-        pageContext.setAttribute( Context.ATTR_CONTEXT, m_wikiContext, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, m_wikiContext, PageContext.REQUEST_SCOPE );
 
         return EVAL_PAGE;
     }

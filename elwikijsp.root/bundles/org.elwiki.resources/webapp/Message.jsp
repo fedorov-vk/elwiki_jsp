@@ -32,7 +32,7 @@
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_MESSAGE.getRequestContext() );
 
     // Stash the wiki context and message text
-    request.setAttribute( Context.ATTR_CONTEXT, wikiContext );
+    request.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext );
     request.setAttribute( "message", request.getParameter( "message" ) );
 
     // Set the content type and include the response content

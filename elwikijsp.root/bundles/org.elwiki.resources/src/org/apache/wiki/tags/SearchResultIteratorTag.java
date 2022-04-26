@@ -90,7 +90,7 @@ public class SearchResultIteratorTag extends IteratorTag {
         }
 
         m_count = 0;
-        m_wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_CONTEXT, PageContext.REQUEST_SCOPE );
+        m_wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
 
         return nextResult();
     }
@@ -108,7 +108,7 @@ public class SearchResultIteratorTag extends IteratorTag {
             final Context context = Wiki.context().create( engine, request, command );
 
             // Stash it in the page context
-            pageContext.setAttribute( Context.ATTR_CONTEXT, context, PageContext.REQUEST_SCOPE );
+            pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE );
             pageContext.setAttribute( getId(), r );
 
             return EVAL_BODY_BUFFERED;

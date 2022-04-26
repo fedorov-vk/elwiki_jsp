@@ -1136,8 +1136,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
         //:FVK: final boolean allowed = checkPermission( context.getWikiSession(), context.requiredPermission() );
 
         // Stash the wiki context
-        if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( Context.ATTR_CONTEXT ) == null ) {
-            context.getHttpRequest().setAttribute( Context.ATTR_CONTEXT, context );
+        if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( Context.ATTR_WIKI_CONTEXT ) == null ) {
+            context.getHttpRequest().setAttribute( Context.ATTR_WIKI_CONTEXT, context );
         }
 
 		return true;

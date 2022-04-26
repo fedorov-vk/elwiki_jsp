@@ -144,7 +144,7 @@ public interface Context extends Cloneable, Command {
         DATETIME
     }
 	
-    String ATTR_CONTEXT = "jspwiki.context";
+    String ATTR_WIKI_CONTEXT = "jspwiki.context";
 
     /**
      *  Variable name which tells whether plugins should be executed or not. Value can be either {@code Boolean.TRUE} or
