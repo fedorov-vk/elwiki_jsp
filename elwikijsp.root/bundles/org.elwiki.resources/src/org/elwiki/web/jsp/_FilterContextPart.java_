@@ -23,6 +23,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
+/*
 //@formatter:off
 @Component(
 	property = {
@@ -33,6 +34,8 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
     name = "part01.FilterContext"
 )
 //@formatter:on
+*/
+@Deprecated
 public class FilterContextPart extends HttpFilter implements Filter {
 
 	private static final long serialVersionUID = 2682124581256937131L;
