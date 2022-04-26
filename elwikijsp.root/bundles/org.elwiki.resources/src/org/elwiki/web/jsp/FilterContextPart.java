@@ -21,19 +21,21 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 //@formatter:off
 @Component(
 	property = {
-		"osgi.http.whiteboard.filter.pattern=/*",
-		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/*",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
     name = "part01.FilterContext"
 )
 //@formatter:on
 public class FilterContextPart extends HttpFilter implements Filter {
 
-	private static final long serialVersionUID = -4683126485266937165L;
+	private static final long serialVersionUID = 2682124581256937131L;
 	private static final Logger log = Logger.getLogger(FilterContextPart.class);
 
 	@Reference
@@ -88,6 +90,12 @@ public class FilterContextPart extends HttpFilter implements Filter {
 
 		response.setContentType("text/html; charset=" + engine.getContentEncoding());
 
+		/*TODO: :FVK: для Wiki.jsp, т.е. view.cmd
+		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ServicesRefs.getCurrentContext(), response)) {
+			return;
+		}
+		*/
+		
 		super.doFilter(httpRequest, response, chain);
 	}
 

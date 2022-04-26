@@ -6,14 +6,15 @@ import org.apache.log4j.Logger;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 //@formatter:off
 @Component(
     service=Servlet.class,
     property= {
     	"osgi.http.whiteboard.servlet.pattern=/*",
-    	"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"
-    },
+    	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+    	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
     name="partJspServlet")
 //@formatter:on

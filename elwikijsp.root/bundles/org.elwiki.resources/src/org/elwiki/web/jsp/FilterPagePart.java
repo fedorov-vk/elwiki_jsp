@@ -34,12 +34,14 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 //@formatter:off
 @Component(
 	property= {
-		"osgi.http.whiteboard.filter.pattern=/*",
-		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/*",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
     name = "part03.FilterPage"
 )
@@ -76,10 +78,10 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		log.debug("doFilter()");
 		// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 		// WatchDog.getCurrentWatchDog( m_engine );
 
-		log.debug("doFilter()");
 		String uri = httpRequest.getRequestURI();
 		if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
 			System.err.println("PF original resource: " + uri);
