@@ -37,6 +37,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -62,8 +63,9 @@ import java.io.PrintWriter;
 //@formatter:off
 @Component(
 	property = {
-		"osgi.http.whiteboard.filter.pattern=/attach/*",
-		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/attach/*",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
   scope=ServiceScope.PROTOTYPE,
   name = "part10.WikiServletFilter"
 )

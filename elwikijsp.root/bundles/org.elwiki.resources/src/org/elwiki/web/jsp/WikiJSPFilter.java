@@ -33,6 +33,7 @@ import org.elwiki.configuration.IWikiPreferences;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -80,8 +81,9 @@ import java.nio.charset.Charset;
 //@formatter:off
 @Component(
 	property = {
-		"osgi.http.whiteboard.filter.pattern=/wiki/*",
-		"osgi.http.whiteboard.context.select=(osgi.http.whiteboard.context.name=eclipse)"},
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/wiki/*",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
 	scope=ServiceScope.PROTOTYPE,
 	name = "part11.WikiJSPFilter"
 )
