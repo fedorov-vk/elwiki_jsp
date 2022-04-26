@@ -62,7 +62,7 @@ public class ContextHelperPart extends ServletContextHelper implements HttpConte
 				name = name.replaceAll("/do/", "/page/");
 			}
 			
-			if(name.endsWith(".cmd")) {
+			if(name.endsWith(".cmd")) { //:FVK: workaround.
 				name = name.replaceAll(".cmd$", ".jsp");
 			}
 		}

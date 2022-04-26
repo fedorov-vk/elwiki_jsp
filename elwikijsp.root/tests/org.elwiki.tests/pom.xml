@@ -12,9 +12,13 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-<!--
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
@@ -25,7 +29,7 @@
 					<application>org.eclipse.tycho.surefire.osgibooter.headlesstest</application>
 				</configuration>
 			</plugin>
+-->
 		</plugins>
 	</build>
--->
 </project>

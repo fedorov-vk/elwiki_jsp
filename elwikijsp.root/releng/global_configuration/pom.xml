@@ -17,7 +17,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-		<tycho.version>2.5.0</tycho.version>
+		<tycho.version>2.7.1</tycho.version>
 		<!-- definitions of resources plugin build -->
 		<wro4j.version>1.10.1</wro4j.version>
 		<minimize>true</minimize> <!-- wro4j compression -->
@@ -65,6 +65,11 @@
 			<id>custom-p2-repo03</id>
 			<layout>p2</layout>
 			<url>${custom-repo03.url}</url>
+		</repository>
+		<repository>
+			<id>for-test-repo(repo04)</id>
+			<layout>p2</layout>
+			<url>${custom-repo04.url}</url>
 		</repository>
 <!--
 		<license-repo.url>file:/repo/License/p2_archive</license-repo.url>
@@ -277,6 +282,7 @@
 				<custom-repo01.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository</custom-repo01.url>
 				<custom-repo02.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>
 				<custom-repo03.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/fromEclipse/target/repository</custom-repo03.url>
+				<custom-repo04.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/for-test-site/target/repository</custom-repo04.url>
 				<target-os>linux</target-os>
 				<target-ws>gtk</target-ws>
 				<target-arch>x86_64</target-arch>
@@ -297,6 +303,7 @@
 				<custom-repo01.url>file:///D:/devj/dev_wikijsp/2021-12/Repositories/custom-p2-site/target/repository</custom-repo01.url>
 				<custom-repo02.url>file:///D:/devj/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>
 				<custom-repo03.url>file:///D:/devj/dev_wikijsp/Repository/fromEclipse/target/repository</custom-repo03.url>
+				<custom-repo04.url>file:///D:/devj/dev_wikijsp/Repository/for-test-site/target/repository</custom-repo04.url>
 				<target-os>win32</target-os>
 				<target-ws>win32</target-ws>
 				<target-arch>x86_64</target-arch>

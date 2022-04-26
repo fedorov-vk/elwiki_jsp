@@ -70,8 +70,6 @@
 								<versionRange>1.0.0</versionRange>
 							</requirement>
 							<!--
- -->
-							<!--
 							<requirement>
 								<type>eclipse-plugin</type>
 								<id>org.elwiki.test.plugins</id>
@@ -152,6 +150,21 @@
 							</requirement>
 							<!--
 -->
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.junit</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.junit.jupiter.api</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+							<requirement>
+								<type>eclipse-plugin</type>
+								<id>org.junit.platform.suite.api</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
 				</configuration>
@@ -162,69 +175,32 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<testClass>org.elwiki.tests.AllTests</testClass>
+					<includes>
+						<include>**/*.class</include>
+					</includes>
+					<excludes>
+						<!-- Tests fails currently in the command line build-->
+						<exclude>AllTests</exclude>
+					</excludes>
 					<!--
+					<testClass>org.elwiki.tests.AllTests</testClass>
+					<testSuite>org.elwiki.tests</testSuite>
+					<testClass>org.elwiki.tests.WikiSessionTests</testClass>
 					<defaultStartLevel>
-						<level>6</level>
+						<level>7</level>
 						<autoStart>true</autoStart>
 					</defaultStartLevel>
- -->
+					-->
 					<useUIHarness>false</useUIHarness>
 					<appArgLine>-console 10008</appArgLine>
-
 					<argLine>
-						-Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
--Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
-
--Declipse.ignoreApp=true -Dosgi.noShutdown=true
--Dorg.osgi.service.http.port=8088
--DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
-
--Dstorage.cdo.port=2039
-
-<!--
--Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
-						-Declipse.ignoreApp=true -Dosgi.noShutdown=true
--Dorg.osgi.service.http.port=8088
--DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
-
- -Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
- -Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
+ -Dorg.osgi.service.http.port=8088
+ -Delwiki.users.database=/home/vfedorov/dev/dev_wikijsp/WS/data/users.json
+ -Delwiki.groups.database=/home/vfedorov/dev/dev_wikijsp/WS/data/groups.json
+ -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
  -Dstorage.cdo.port=2039
-
- -Djava.security.policy=D:/devj/dev_wikijsp/2021-12/GIT/elwiki+jsp_2021-12/elwikijsp.root/tests/all.policy
- -Djava.securiti.manager=osgi
- -Djava.security.auth.debug=failure
- -Declipse.security
-    
- -Delwiki.custom.configuration=org.elwiki.test.utils
- -Delwiki.users.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/users.json
- -Delwiki.groups.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/groups.json
--->
-
-<!--
- -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
- -Dlog4j.debug=true
-
-    -Declipse.ignoreApp=true -Dosgi.noShutdown=true
-    -Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info
-    -Dequinox.ds.print=true
-    -D_log4j.configuration=file:///home/vfedorov/dev/dev_wiki/WikiRoot/Logging/log4j.properties
-
--Dorg.osgi.framework.security="osgi"
--Declipse.security=java.lang.SecurityManager
--->
 					</argLine>
-					<!--
-         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
--->
-					<!--
-<argLine> OLD //:FVK:
-         -Delwiki.custom.configuration=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/test.properties
-         -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
-</argLine>
-<argLine>-Dorg.osgi.service.http.port=11042</argLine>
--->
+<!-- см. внизу файла -->
 					<showEclipseLog>true</showEclipseLog>
 					<defaultStartLevel>
 						<level>4</level>
@@ -232,6 +208,14 @@
 					</defaultStartLevel>
 					<bundleStartLevel>
 						<!-- Prevent autostart operation for fragments. -->
+						<bundle>
+							<id>org.eclipse.tycho.surefire.junit58withvintage</id>
+							<autoStart>false</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.tycho.surefire.junit57</id>
+							<autoStart>false</autoStart>
+						</bundle>						
 						<bundle>
 							<id>org.eclipse.swt.gtk.linux.x86_64</id>
 							<autoStart>false</autoStart>
@@ -289,15 +273,8 @@
 							<autoStart>true</autoStart>
 						</bundle>-->
 
-<!--
-						<bundle>
-							<id>org.eclipse.equinox.http.jetty</id>
-							<level>2</level>
-							<autoStart>true</autoStart>
-						</bundle>
--->
 						<!-- add ~~ for console ~~~~~~~~~~~~~~~~~ -->
-<!--
+						<!--
 						<bundle>
 							<id>org.apache.felix.gogo.shell</id>
 							<level>3</level>
@@ -313,23 +290,38 @@
 							<level>3</level>
 							<autoStart>true</autoStart>
 						</bundle>
- -->
-
+						-->
 						<!-- add ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-<!--
+						<!--
 						<bundle>
 							<id>org.eclipse.equinox.useradmin</id>
 							<level>2</level>
 							<autoStart>true</autoStart>
 						</bundle>
- -->
-
+						-->
 						<!-- activate Jetty ~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+						<!--
+						<bundle>
+							<id>org.eclipse.equinox.http.jetty</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.jetty.http</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						<bundle>
+							<id>org.eclipse.jetty.server</id>
+							<level>2</level>
+							<autoStart>true</autoStart>
+						</bundle>
+						org.eclipse.jetty.io
+						org.eclipse.jetty.security
+						org.eclipse.jetty.util
+						-->
 						<!-- ~~ ACTIVATE ALL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 						<!-- ACTIVATE ElWiki ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-
 						<!-- Start bundles that contribute ElWiki -->
 						<!--  :FVK:
 						<bundle>
@@ -337,7 +329,7 @@
 							<level>3</level>
 							<autoStart>true</autoStart>
 						</bundle>
- -->
+						-->
 						<bundle>
 							<id>org.elwiki.test.storage</id>
 							<level>5</level>
@@ -348,7 +340,7 @@
 							<level>6</level>
 							<autoStart>true</autoStart>
 						</bundle>
-<!--
+						<!--
  						<bundle>
 							<id>org.elwiki.main</id>
 							<level>3</level>
@@ -359,32 +351,47 @@
 							<level>6</level>
 							<autoStart>true</autoStart>
 						</bundle>
- -->
+						-->
 					</bundleStartLevel>
-					<!--
-					<dependencies>
-							<dependency>
-							<type>eclipse-feature</type>
-							<artifactId>org.elwiki.test.feature</artifactId>
-							<version>0.0.1</version>
-							</dependency>
-						-->
-					<!--
-							<dependency>
-							<type>p2-installable-unit</type>
-							<artifactId>org.eclipse.equinox.ds</artifactId>
-							<version>1.5.0</version>
-							</dependency>
-							<dependency>
-							<type>eclipse-feature</type>
-							<artifactId>org.eclipse.equinox.server.jetty</artifactId>
-							<version>1.4.0</version>
-							</dependency>
-					</dependencies>
-						-->
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 </project>
+<!--
+-Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+ -Declipse.ignoreApp=true
+ -Dosgi.noShutdown=true
+
+
+-Declipse.ignoreApp=true -Dosgi.noShutdown=true
+-Dorg.osgi.service.http.port=8088
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+
+ -Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
+ -Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
+ -Dstorage.cdo.port=2039
+
+ -Djava.security.policy=D:/devj/dev_wikijsp/2021-12/GIT/elwiki+jsp_2021-12/elwikijsp.root/tests/all.policy
+ -Djava.securiti.manager=osgi
+ -Djava.security.auth.debug=failure
+ -Declipse.security
+    
+ -Delwiki.custom.configuration=org.elwiki.test.utils
+ -Delwiki.users.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/users.json
+ -Delwiki.groups.database=/home/vfedorov/dev/dev_wiki/GIT/ELwiki_e4_2019/elwiki.root/tests/groups.json
+-->
+
+<!--
+ -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+ -Dlog4j.debug=true
+
+    -Declipse.ignoreApp=true -Dosgi.noShutdown=true
+    -Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info
+    -Dequinox.ds.print=true
+    -D_log4j.configuration=file:///home/vfedorov/dev/dev_wiki/WikiRoot/Logging/log4j.properties
+
+-Dorg.osgi.framework.security="osgi"
+-Declipse.security=java.lang.SecurityManager
+-->

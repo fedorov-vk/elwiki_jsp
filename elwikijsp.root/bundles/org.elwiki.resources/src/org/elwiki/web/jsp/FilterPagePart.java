@@ -53,6 +53,10 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 5461829698518145349L;
 	private static final Logger log = Logger.getLogger(FilterPagePart.class);
 
+	private static final String PATH_HEAD_PART = "/page/PageHead.jsp";
+	private static final String PATH_MIDDLE_PART = "/page/PageMiddle.jsp";
+	private static final String PATH_BOTTOM_PART = "/page/PageBottom.jsp";
+
 	@Reference
 	private Engine engine;
 	private ServletContext context;
@@ -63,7 +67,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	protected void startup() {
 		log.debug("startup FilterPagePart.");
 	}
-	
+
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		this.context = config.getServletContext();
@@ -102,7 +106,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 
 		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
-	
+
 		response.setContentType("text/html; charset=" + engine.getContentEncoding());
 
 		/* Authorize.
@@ -129,33 +133,22 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				log.debug("    RequestURI: " + httpRequest.getRequestURI());
 			}
 
-			{// Code for context`s command: get it, execute.
-				Command cmd = ServicesRefs.getCurrentContext().getCommand();
-				cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
-				if (cmdCode != null) {
-					try {
-						cmdCode.applyPrologue(httpRequest, responseWrapper);
-					} catch (Exception e) {
-						// TODO: Auto-generated catch block
-						e.printStackTrace();
-					}
+			Command cmd = ServicesRefs.getCurrentContext().getCommand();
+			cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
+			if (cmdCode != null) {
+				// Code for context`s command: execute prolog.
+				try {
+					cmdCode.applyPrologue(httpRequest, responseWrapper);
+				} catch (Exception e) {
+					// TODO: Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 
 			// chain.doFilter(request, response);
-			String path;
-			RequestDispatcher requestDispatcher;
-			path = "/page/PageHead.cmd";
-			requestDispatcher = httpRequest.getRequestDispatcher(path);
-			requestDispatcher.include(httpRequest, responseWrapper);
-
-			path = "/page/PageMiddle.cmd";
-			requestDispatcher = httpRequest.getRequestDispatcher(path);
-			requestDispatcher.include(httpRequest, responseWrapper);
-
-			path = "/page/PageBottom.cmd";
-			requestDispatcher = httpRequest.getRequestDispatcher(path);
-			requestDispatcher.include(httpRequest, responseWrapper);
+			httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
+			httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
+			httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
 
 			try {
 				// :FVK: w.enterState( "Delivering response", 30 );
@@ -182,6 +175,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 			}
 		} finally {
 			if (cmdCode != null) {
+				// Code for context`s command: execute epilogue.
 				try {
 					cmdCode.applyEpilogue();
 				} catch (Exception e) {
@@ -231,8 +225,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Inserts whatever resources were requested by any plugins or other components for this
-	 * particular type.
+	 * Inserts whatever resources were requested by any plugins or other components
+	 * for this particular type.
 	 *
 	 * @param wikiContext The usual processing context
 	 * @param string      The source string
@@ -272,8 +266,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		private boolean useEncoding;
 
 		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
-		 * and memory consumption.
+		 * How large the initial buffer should be. This should be tuned to achieve a
+		 * balance in speed and memory consumption.
 		 */
 		private static final int INIT_BUFFER_SIZE = 0x8000;
 
@@ -289,7 +283,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		}
 
 		/**
-		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
+		 * Returns a writer for output; this wraps the internal buffer into a
+		 * PrintWriter.
 		 */
 		@Override
 		public PrintWriter getWriter() {
@@ -359,8 +354,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Simple response wrapper that just allows us to gobble through the entire response before it's
-	 * output.
+	 * Simple response wrapper that just allows us to gobble through the entire
+	 * response before it's output.
 	 */
 	private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
 
@@ -371,8 +366,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		private boolean useEncoding;
 
 		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
-		 * and memory consumption.
+		 * How large the initial buffer should be. This should be tuned to achieve a
+		 * balance in speed and memory consumption.
 		 */
 		private static final int INIT_BUFFER_SIZE = 0x8000;
 
@@ -388,7 +383,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		}
 
 		/**
-		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
+		 * Returns a writer for output; this wraps the internal buffer into a
+		 * PrintWriter.
 		 */
 		@Override
 		public PrintWriter getWriter() {
