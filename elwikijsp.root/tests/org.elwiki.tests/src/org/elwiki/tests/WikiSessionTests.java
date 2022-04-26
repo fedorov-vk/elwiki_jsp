@@ -1,12 +1,16 @@
 package org.elwiki.tests;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author v.fedorov
- *
  */
 public class WikiSessionTests {
 
@@ -29,14 +33,19 @@ public class WikiSessionTests {
 	@Test
 	public void test() {
 		//fail("Not yet implemented");
-		System.out.println("test() - assertTrue");
-		assertTrue("assertTrue message", 1==1);
+		System.out.println(">>> test(4) - assertTrue");
+		//assertTrue("assertTrue message", 1==1);
+		Assertions.assertEquals( 4 , 2+2);
 		try {
-			Thread.sleep(6000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	
+	void tttt() {
+		
+	}
 }

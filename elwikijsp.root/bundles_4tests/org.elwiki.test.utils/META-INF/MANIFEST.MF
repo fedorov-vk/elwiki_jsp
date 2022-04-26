@@ -23,6 +23,8 @@ Export-Package: org.elwiki.test,
  org.mockito.stubbing
 Import-Package: javax.servlet;version="2.6.0",
  javax.servlet.http;version="2.6.0",
+ org.apache.wiki.api.exceptions,
+ org.apache.wiki.pages0,
  org.elwiki.api,
  org.elwiki.authorize.login,
  org.elwiki.authorize.user
