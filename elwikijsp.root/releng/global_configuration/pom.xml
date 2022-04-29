@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>elwiki</groupId>
@@ -71,7 +69,7 @@
 			<layout>p2</layout>
 			<url>${custom-repo04.url}</url>
 		</repository>
-<!--
+		<!--
 		<license-repo.url>file:/repo/License/p2_archive</license-repo.url>
 		<rap-repo.url>file:/repo/RAP/rap-e4-3.9.0-R-20190612-1720</rap-repo.url>
 		<repository>
@@ -277,12 +275,12 @@
 				</os>
 			</activation>
 			<properties>
-				<platform-repo.url>file:/repo/eclipse/releases/2021-12</platform-repo.url>
-				<apachetools-repo.url>file:/home/vfedorov/dev/dev_osgi+jsp/GIT/Repositories/apacheTools/target/repository</apachetools-repo.url>
-				<custom-repo01.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/custom-p2-site/target/repository</custom-repo01.url>
-				<custom-repo02.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>
-				<custom-repo03.url>file:/home/vfedorov/dev/dev_wikijsp/Repository/fromEclipse/target/repository</custom-repo03.url>
-				<custom-repo04.url>file:/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp/for-test-site/target/repository</custom-repo04.url>
+				<platform-repo.url>file:${env.PLATFORM_REPO}</platform-repo.url>
+				<apachetools-repo.url>file:${env.APACHETOOLS_REPO}</apachetools-repo.url>
+				<custom-repo01.url>file:${env.CUSTOM_REPO01}</custom-repo01.url>
+				<custom-repo02.url>file:${env.CUSTOM_REPO02}</custom-repo02.url>
+				<custom-repo03.url>file:${env.CUSTOM_REPO03}</custom-repo03.url>
+				<custom-repo04.url>file:${env.CUSTOM_REPO04}</custom-repo04.url>
 				<target-os>linux</target-os>
 				<target-ws>gtk</target-ws>
 				<target-arch>x86_64</target-arch>
