@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
@@ -101,7 +102,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		ContextEnum context;
 		Context wikiContext;
 		context = (Context.cmd2context.containsKey(uri)) ? Context.cmd2context.get(uri) : ContextEnum.PAGE_VIEW;
-		wikiContext = new WikiContext(engine, httpRequest, context.getRequestContext());
+		wikiContext = Wiki.context().create(engine, httpRequest, context.getRequestContext());
 		ServicesRefs.setCurrentContext(wikiContext);
 		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 
@@ -133,7 +134,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				log.debug("    RequestURI: " + httpRequest.getRequestURI());
 			}
 
-			Command cmd = ServicesRefs.getCurrentContext().getCommand();
+			Command cmd = wikiContext.getCommand();
 			cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
 			if (cmdCode != null) {
 				// Code for context`s command: execute prolog.

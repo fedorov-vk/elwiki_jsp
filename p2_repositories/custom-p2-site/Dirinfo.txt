@@ -1,0 +1,25 @@
+-- список артефактов, полученных с  'pom.xml.V1' --
+
+antlr_2.7.2.jar
+antlr.source_2.7.2.jar
+commons-beanutils_1.7.0.jar
+commons-beanutils.source_1.7.0.jar
+commons-collections_2.1.0.jar
+commons-collections.source_2.1.0.jar
+commons-digester_1.6.0.jar
+commons-digester.source_1.6.0.jar
+commons-fileupload_1.0.0.jar
+commons-fileupload.source_1.0.0.jar
+commons-logging_1.0.3.jar
+commons-logging_1.0.4.jar
+commons-logging.source_1.0.4.jar
+commons-validator_1.1.4.jar
+commons-validator.source_1.1.4.jar
+org.apache.felix.webconsole_4.3.16.jar
+oro_2.0.7.jar
+struts_1.2.9.jar
+struts.source_1.2.9.jar
+xalan_2.5.1.jar
+xalan.source_2.5.1.jar
+xml-apis_1.0.0.b2.jar
+xml-apis.source_1.0.0.b2.jar

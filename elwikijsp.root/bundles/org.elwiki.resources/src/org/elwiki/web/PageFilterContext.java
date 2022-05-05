@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -90,7 +91,7 @@ public class PageFilterContext extends HttpFilter {
 		System.out.println("PageFilterContext, URI: " + uri);
 
 		ContextEnum context = (cmd2context.containsKey(uri)) ? cmd2context.get(uri) : ContextEnum.PAGE_VIEW;
-		Context wikiContext = new WikiContext(servicesRef, httpRequest, context.getRequestContext());
+		Context wikiContext = Wiki.context().create(servicesRef, httpRequest, context.getRequestContext());
 		ServicesRefs.setCurrentContext(wikiContext);
 		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 

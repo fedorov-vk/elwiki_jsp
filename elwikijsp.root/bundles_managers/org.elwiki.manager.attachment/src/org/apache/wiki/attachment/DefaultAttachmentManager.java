@@ -88,7 +88,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 		// TODO Auto-generated constructor stub
 	}
 
-    // -- service handling ---------------------------{start}--
+    // -- service handling ---------------------------(start)--
 
     @WikiServiceReference
     private PageManager pageManager;
@@ -115,7 +115,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 		}
 	}
     
-    // -- service handling -----------------------------{end}--
+    // -- service handling -----------------------------(end)--
 
 	/**
      *  Creates a new AttachmentManager.  Note that creation will never fail, but it's quite likely that attachments do not function.

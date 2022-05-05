@@ -134,7 +134,7 @@ public class GroupManager implements IAuthorizer {
 
 	// == CODE ================================================================
 	
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private UserAdmin userAdminService;
@@ -193,7 +193,7 @@ public class GroupManager implements IAuthorizer {
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	@Override
 	public List<Group> getRoles() {

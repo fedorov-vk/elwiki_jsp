@@ -74,13 +74,13 @@ public class DefaultVariableManager implements VariableManager {
         super();
     }
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
     
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
     private IWikiConfiguration wikiConfiguration;
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
     /**
      *  {@inheritDoc}

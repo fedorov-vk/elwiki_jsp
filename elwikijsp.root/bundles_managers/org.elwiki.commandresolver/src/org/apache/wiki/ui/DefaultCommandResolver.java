@@ -98,7 +98,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		m_specialPages = new HashMap<>();
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	private Engine m_engine;
 	
@@ -130,7 +130,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		}
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
 	@Override
 	public void initialize(Engine wikiEngine) throws WikiException {

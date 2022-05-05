@@ -84,7 +84,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 		super();
 	}
 
-    // -- service handling ---------------------------{start}--
+    // -- service handling ---------------------------(start)--
     
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -115,7 +115,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 		}
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
     
 	/**
      *  Creates a new SearchManager.

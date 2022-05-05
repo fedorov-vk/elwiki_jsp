@@ -111,7 +111,7 @@ public class DefaultRenderingManager implements RenderingManager {
     private Constructor< ? > m_rendererWysiwygConstructor;
     private String m_markupParserClass = DEFAULT_PARSER;
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
     @WikiServiceReference
 	private AttachmentManager attachmentManager;
@@ -146,7 +146,7 @@ public class DefaultRenderingManager implements RenderingManager {
 		}		
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
     /**
      *  {@inheritDoc}

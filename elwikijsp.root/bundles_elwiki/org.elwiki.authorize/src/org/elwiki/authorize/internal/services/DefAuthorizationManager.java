@@ -224,7 +224,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		//
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	@Reference
 	private ConditionalPermissionAdmin cpaService;
@@ -377,7 +377,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	@Override
 	public boolean checkPermission(Session session, Permission permission) {

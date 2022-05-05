@@ -128,7 +128,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -164,7 +164,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 		}
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	@Override
 	public void initialize(Engine engine) throws WikiException {

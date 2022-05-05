@@ -182,7 +182,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         m_unmutableRefersTo   = Collections.unmodifiableMap( m_refersTo );
     }
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
     @WikiServiceReference
     private IStorageCdo storageCdo;
@@ -212,7 +212,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 		m_matchEnglishPlurals = TextUtil.getBooleanProperty( wikiPreferences, Engine.PROP_MATCHPLURALS, false );
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
