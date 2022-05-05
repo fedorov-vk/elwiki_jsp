@@ -43,7 +43,7 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 		super();
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -64,7 +64,7 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
 	private void createResource(String path, EObject eObject) {
 		CDOTransaction transaction = this.session.openTransaction();

@@ -83,7 +83,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     	// empty.
     }
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	@WikiServiceReference
 	private IIAuthenticationManager authenticationManager;
@@ -104,7 +104,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 		// TODO:
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
     /**
      * Just looks for a WikiSession; does not create a new one.
@@ -246,7 +246,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      * Fires when the web container creates a new HTTP session.
      * 
      * @param se the HTTP session event
-     */
+     */ //:FVK: TODO: обеспечить вызов метода.
     @Override
     public void sessionCreated( final HttpSessionEvent se ) {
         final HttpSession session = se.getSession();
@@ -257,7 +257,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      * Removes the user's WikiSession from the internal session cache when the web
      * container destroys an HTTP session.
      * @param se the HTTP session event
-     */
+     */ //:FVK: TODO: обеспечить вызов метода.
     @Override
 	public void sessionDestroyed(final HttpSessionEvent se) {
 		final HttpSession session = se.getSession();

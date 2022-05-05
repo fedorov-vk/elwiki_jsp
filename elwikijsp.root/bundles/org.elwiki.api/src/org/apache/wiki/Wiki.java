@@ -62,7 +62,7 @@ public class Wiki {
 		return new ContextDSL(contextSPI);
 	}
 
-	// -- service handling --------------------------< start --
+	// -- service handling ---------------------------(start)--
 
 	public void setAclsSPI(AclsSPI aclsSPI1) {
 		aclsSPI = aclsSPI1;
@@ -84,6 +84,6 @@ public class Wiki {
 		//
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- service handling -----------------------------(end)--
 
 }

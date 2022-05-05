@@ -143,7 +143,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	@Reference
     EventAdmin eventAdmin;
@@ -175,7 +175,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
     
 	/**
      * {@inheritDoc}

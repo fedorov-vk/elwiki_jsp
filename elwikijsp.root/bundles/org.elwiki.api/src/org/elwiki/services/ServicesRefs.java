@@ -116,7 +116,7 @@ public class ServicesRefs implements Engine {
 
 	private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
 	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -318,7 +318,7 @@ public class ServicesRefs implements Engine {
 		ServicesRefs.getFilterManager().destroy();
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
 	public static AclManager getAclManager() {
 		return aclManager;
@@ -423,7 +423,6 @@ public class ServicesRefs implements Engine {
 	
 	// =========================================================================
 
-//:FVK:	private static final String ATTR_WIKIENGINE = "org.apache.wiki.WikiEngine";
 	private static final Logger log = Logger.getLogger(ServicesRefs.class);
 
 	/** Should the user info be saved with the page data as well? */
@@ -988,7 +987,7 @@ public class ServicesRefs implements Engine {
 
 	/**
 	 * Сохранение контекста Wiki для текущего процесса.
-	 * 
+	 * :FVK: workaround.
 	 * @param wikiContext
 	 */
 	public static void setCurrentContext(Context wikiContext) {

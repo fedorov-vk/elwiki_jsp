@@ -125,7 +125,7 @@ public final class WikiSession implements Session, EventHandler {
 		this.m_cachedLocale = locale;		
 	}
     
-    // -- service handling ---------------------------{start}--
+    // -- service handling ---------------------------(start)--
 
 	private ISessionMonitor sessionMonitor;
 	
@@ -149,7 +149,7 @@ public final class WikiSession implements Session, EventHandler {
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
     
     /** {@inheritDoc} */
     @Override

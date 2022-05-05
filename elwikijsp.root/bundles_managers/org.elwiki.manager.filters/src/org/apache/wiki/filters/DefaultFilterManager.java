@@ -119,7 +119,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     }
     */
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -139,7 +139,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 		}		
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
     
     /**
      *  Adds a page filter to the queue.  The priority defines in which order the page filters are run, the highest priority filters go

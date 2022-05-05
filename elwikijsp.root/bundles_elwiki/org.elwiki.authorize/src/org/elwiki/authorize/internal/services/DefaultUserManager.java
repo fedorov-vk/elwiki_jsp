@@ -263,7 +263,7 @@ public class DefaultUserManager implements UserManager {
 		super();
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -308,7 +308,7 @@ public class DefaultUserManager implements UserManager {
 		//
 	}
 	
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 
 	protected IWikiConfiguration getWikiConfiguration() {
 		return this.wikiConfiguration;

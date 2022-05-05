@@ -188,7 +188,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 		super();
 	}
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -208,7 +208,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 		}
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	/**
 	 * @param engine Engine which owns this manager.

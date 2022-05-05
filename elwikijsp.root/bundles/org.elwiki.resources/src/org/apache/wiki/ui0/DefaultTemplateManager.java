@@ -83,7 +83,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 
 	private Bundle bundle;
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -99,7 +99,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 		this.bundle = bc.getBundle();
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	/**
 	 * Returns the full name (/templates/foo/bar) for: template=foo, name=bar.

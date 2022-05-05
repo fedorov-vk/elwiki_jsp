@@ -84,7 +84,7 @@ public class DefaultAclManager implements AclManager {
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
-	// -- service handling ---------------------------{start}--
+	// -- service handling ---------------------------(start)--
 
 	@Activate
 	protected void startup() {
@@ -96,7 +96,7 @@ public class DefaultAclManager implements AclManager {
 		//
 	}
 
-	// -- service handling -----------------------------{end}--
+	// -- service handling -----------------------------(end)--
 	
 	/**
 	 * A helper method for parsing textual AccessControlLists.</br>
