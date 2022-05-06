@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>elwiki</groupId>
@@ -69,7 +71,7 @@
 			<layout>p2</layout>
 			<url>${custom-repo04.url}</url>
 		</repository>
-		<!--
+<!--
 		<license-repo.url>file:/repo/License/p2_archive</license-repo.url>
 		<rap-repo.url>file:/repo/RAP/rap-e4-3.9.0-R-20190612-1720</rap-repo.url>
 		<repository>
@@ -296,12 +298,12 @@
 				</os>
 			</activation>
 			<properties>
-				<platform-repo.url>file:///D:/Repositories/p2/eclipse/releases/2021-12</platform-repo.url>
-				<apachetools-repo.url>file:///D:/devj/dev_wikijsp/2021-12/Repositories/apacheTools/target/repository</apachetools-repo.url>
-				<custom-repo01.url>file:///D:/devj/dev_wikijsp/2021-12/Repositories/custom-p2-site/target/repository</custom-repo01.url>
-				<custom-repo02.url>file:///D:/devj/dev_wikijsp/Repository/additionalArtifacts/target/repository</custom-repo02.url>
-				<custom-repo03.url>file:///D:/devj/dev_wikijsp/Repository/fromEclipse/target/repository</custom-repo03.url>
-				<custom-repo04.url>file:///D:/devj/dev_wikijsp/Repository/for-test-site/target/repository</custom-repo04.url>
+				<platform-repo.url>file:///${env.PLATFORM_REPO}</platform-repo.url>
+				<apachetools-repo.url>file:///${env.APACHETOOLS_REPO}</apachetools-repo.url>
+				<custom-repo01.url>file:///${env.CUSTOM_REPO01}</custom-repo01.url>
+				<custom-repo02.url>file:///${env.CUSTOM_REPO02}</custom-repo02.url>
+				<custom-repo03.url>file:///${env.CUSTOM_REPO03}</custom-repo03.url>
+				<custom-repo04.url>file:///${env.CUSTOM_REPO04}</custom-repo04.url>
 				<target-os>win32</target-os>
 				<target-ws>win32</target-ws>
 				<target-arch>x86_64</target-arch>

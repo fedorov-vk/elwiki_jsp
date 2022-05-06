@@ -1,3 +1,2 @@
 *.log
-/target/
-/target.v1/
+/target*/
