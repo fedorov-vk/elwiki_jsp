@@ -7,6 +7,7 @@
 		<location path="D:\devj\dev_wikijsp\Repository\additionalArtifacts\target\repository" type="Directory"/>
 		<location path="D:\devj\dev_wikijsp\Repository\fromEclipse\target\repository" type="Directory"/>
 		<location path="D:\Repositories\p2\eclipse\releases\2021-12" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\for-test-site\target\repository" type="Directory"/>
 	</locations>
 </target><!--
 	<location path="${eclipse_home}" type="Profile"/>

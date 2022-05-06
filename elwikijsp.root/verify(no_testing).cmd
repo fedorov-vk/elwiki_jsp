@@ -1,5 +1,6 @@
 @echo off
 
+call repositories_list.cmd
 set MAVEN_SETTINGS=-s "D:\Program Files\apache-maven\conf\settings.xml"
 
 mvn verify %MAVEN_SETTINGS% ^
