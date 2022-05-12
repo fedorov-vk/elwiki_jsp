@@ -19,6 +19,7 @@
 package org.elwiki.authorize.internal.services;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.Principal;
 import java.text.MessageFormat;
@@ -248,6 +249,7 @@ public class DefaultUserManager implements UserManager {
 
 	//:FVK: private IApplicationSession applicationSession;
 
+	/** Presents the available implementations of UserDatabase. */
 	private Map<String, Class<? extends UserDatabase>> userDataBases;
 
 	private ScopedPreferenceStore prefsAauth;
@@ -303,6 +305,33 @@ public class DefaultUserManager implements UserManager {
 		}		
 	}
 
+	public void initialize(final Engine engine) throws WikiException {
+		this.m_engine = engine;
+
+		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
+
+		/*TODO: Replace with custom annotations. See JSPWIKI-566
+		WikiAjaxDispatcherServlet.registerServlet(JSON_USERS, new JSONUserModule(this), new AllPermission(null));
+		*/
+
+		this.userDataBases = getUserDatabaseImplementations();
+		String dbId = this.prefsAauth.getString(PROP_DATABASE);
+		if (dbId.length() == 0) {
+			// get default UserDatabase.
+			dbId = DEFAULT_DATABASE_ID; // WORKARUND. -- такого идентификатора может не быть.
+		}
+		this.classUserDatabase = this.userDataBases.get(dbId);
+
+		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
+
+		// Attach the PageManager as a listener
+		// TODO: it would be better if we did this in PageManager directly
+		// :FVK: addWikiEventListener( engine.getPageManager() );
+
+		//TODO: Replace with custom annotations. See JSPWIKI-566
+		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
+	}
+	
 	@Deactivate
 	protected void shutdown() {
 		//
@@ -330,35 +359,6 @@ public class DefaultUserManager implements UserManager {
 		return filterManager;
 	}
 	
-	@Override
-	public void initialize(final Engine engine) throws WikiException {
-		this.m_engine = engine;
-
-		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
-
-		/*TODO: Replace with custom annotations. See JSPWIKI-566
-		WikiAjaxDispatcherServlet.registerServlet(JSON_USERS, new JSONUserModule(this), new AllPermission(null));
-		*/
-
-		this.userDataBases = getUserDatabaseImplementations();
-		String dbId = this.prefsAauth.getString(PROP_DATABASE);
-		if (dbId.length() == 0) {
-			// get default UserDatabase.
-			dbId = DEFAULT_DATABASE_ID; // WORKARUND. -- такого идентификатора может не быть.
-		}
-		this.classUserDatabase = this.userDataBases.get(dbId);
-
-		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
-
-		// Attach the PageManager as a listener
-		// TODO: it would be better if we did this in PageManager directly
-		// :FVK: addWikiEventListener( engine.getPageManager() );
-
-		//TODO: Replace with custom annotations. See JSPWIKI-566
-		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
-	}
-
-
 	private Map<String, Class<? extends UserDatabase>> getUserDatabaseImplementations() throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -403,11 +403,11 @@ public class DefaultUserManager implements UserManager {
 		}
 
 		try {
-			this.m_database = this.classUserDatabase.newInstance();
+			this.m_database = this.classUserDatabase.getDeclaredConstructor().newInstance();
 			log.info("Attempting to load user database class " + this.m_database.getClass().getName());
 			this.m_database.initialize(this.m_engine, null);
 			log.info("UserDatabase initialized.");
-		} catch (InstantiationException e) {
+		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | InstantiationException e) {
 			log.error("UserDatabase class " + this.classUserDatabase.getClass().getName() + " cannot be created.", e);
 			// throw new WikiException("UserDatabase class " + this.classUserDatabase + " cannot be created.", e);
 		} catch (IllegalAccessException e) {

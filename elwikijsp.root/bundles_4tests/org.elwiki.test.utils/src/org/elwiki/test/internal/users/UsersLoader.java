@@ -65,7 +65,7 @@ public class UsersLoader {
 	}
 
 
-	static final String filePath = "/home/vfedorov/dev/dev_wiki/WikiRoot/Logging/users.json";
+	static final String filePath = "/home/vfedorov/dev/dev_wikijsp/WS/data/users.json";
 
 
 	public void test() {

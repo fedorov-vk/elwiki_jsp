@@ -5,7 +5,7 @@
 set PLATFORM_REPO=D:/Repositories/p2/eclipse/releases/2021-12
 
 set P2_REPO_PLACE=%~dp0..\p2_repositories
-
+:: APACHETOOLS_REPO - probably not used anymore.
 set APACHETOOLS_REPO=%P2_REPO_PLACE%\apacheTools\target\repository
 set CUSTOM_REPO01=%P2_REPO_PLACE%\custom-p2-site\target\repository
 set CUSTOM_REPO02=%P2_REPO_PLACE%\additionalArtifacts\target\repository
