@@ -38,9 +38,8 @@ import org.h2.jdbcx.JdbcDataSource;
  */
 abstract class Repository implements IPasswordCredentialsProvider {
 
-	// linux: "/home/vfedorov/dev/dev_wikijsp/WS/database_repository"
-	// windows: "D:/devj/dev_wikijsp/WS/database_repository/"
-	private static final String FOLDER = "/home/vfedorov/dev/dev_wikijsp/WS/database_repository";
+	private static final String FOLDER_LINUX = "/home/vfedorov/dev/dev_wikijsp/WS/database_repository";
+	private static final String FOLDER_WINDOWS = "D:/devj/dev_wikijsp/WS/database_repository/";
 	private String name = "repo_elwiki";
 
 	private boolean tcpDisabled = false;
@@ -95,7 +94,13 @@ abstract class Repository implements IPasswordCredentialsProvider {
 	}
 
 	private String getFolder() {
-		return FOLDER;
+		//:FVK: workaround.
+		String os = org.eclipse.core.runtime.Platform.getOS();
+		if (org.eclipse.core.runtime.Platform.OS_LINUX.equals(os)) {
+			return FOLDER_LINUX;
+		}
+
+		return FOLDER_WINDOWS;
 	}
 
 	/**

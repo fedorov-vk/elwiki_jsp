@@ -37,7 +37,7 @@ import java.security.Principal;
  *
  * @since 2.3
  */
-public interface UserManager extends Initializable {
+public interface UserManager {
 
     /** Message key for the "save profile" message. */
     String PROP_DATABASE = "jspwiki.userdatabase";

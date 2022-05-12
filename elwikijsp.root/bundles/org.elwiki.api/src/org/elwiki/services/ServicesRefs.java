@@ -212,6 +212,48 @@ public class ServicesRefs implements Engine {
 		this.bundleContext = bc;
 		ServicesRefs.Instance = this;
 
+		/* Intialize this instance.
+		 */
+		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
+
+		// Create and find the default working directory.
+		m_workDir = TextUtil.getStringProperty(preferences, PROP_WORKDIR, null);
+
+		if (m_workDir == null || m_workDir.length() == 0) {
+			m_workDir = System.getProperty("java.io.tmpdir", ".");
+			m_workDir += File.separator + Release.APPNAME + "-" + m_appid;
+		}
+
+		try {
+			final File f = new File(m_workDir);
+			f.mkdirs();
+
+			//
+			// A bunch of sanity checks
+			//
+			if (!f.exists()) {
+				throw new WikiException("Work directory does not exist: " + m_workDir);
+			}
+			if (!f.canRead()) {
+				throw new WikiException("No permission to read work directory: " + m_workDir);
+			}
+			if (!f.canWrite()) {
+				throw new WikiException("No permission to write to work directory: " + m_workDir);
+			}
+			if (!f.isDirectory()) {
+				throw new WikiException("jspwiki.workDir does not point to a directory: " + m_workDir);
+			}
+		} catch (final SecurityException e) {
+			log.fatal("Unable to find or create the working directory: " + m_workDir, e);
+			throw new IllegalArgumentException("Unable to find or create the working dir: " + m_workDir, e);
+		}
+
+		log.info("JSPWiki working directory is '" + m_workDir + "'");
+
+		m_saveUserInfo = TextUtil.getBooleanProperty(preferences, PROP_STOREUSERNAME, m_saveUserInfo);
+		m_templateDir = TextUtil.getStringProperty(preferences, PROP_TEMPLATEDIR, "default");
+		enforceValidTemplateDirectory();
+		
 		try {
 			// Note: rootPath - may be null, if JSPWiki has been deployed in a WAR file.
 			servicesMaker();
@@ -506,46 +548,7 @@ public class ServicesRefs implements Engine {
 		}
 
 		log.debug("Configuring WikiEngine...");
-
 		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
-
-		// Create and find the default working directory.
-		m_workDir = TextUtil.getStringProperty(preferences, PROP_WORKDIR, null);
-
-		if (m_workDir == null || m_workDir.length() == 0) {
-			m_workDir = System.getProperty("java.io.tmpdir", ".");
-			m_workDir += File.separator + Release.APPNAME + "-" + m_appid;
-		}
-
-		try {
-			final File f = new File(m_workDir);
-			f.mkdirs();
-
-			//
-			// A bunch of sanity checks
-			//
-			if (!f.exists()) {
-				throw new WikiException("Work directory does not exist: " + m_workDir);
-			}
-			if (!f.canRead()) {
-				throw new WikiException("No permission to read work directory: " + m_workDir);
-			}
-			if (!f.canWrite()) {
-				throw new WikiException("No permission to write to work directory: " + m_workDir);
-			}
-			if (!f.isDirectory()) {
-				throw new WikiException("jspwiki.workDir does not point to a directory: " + m_workDir);
-			}
-		} catch (final SecurityException e) {
-			log.fatal("Unable to find or create the working directory: " + m_workDir, e);
-			throw new IllegalArgumentException("Unable to find or create the working dir: " + m_workDir, e);
-		}
-
-		log.info("JSPWiki working directory is '" + m_workDir + "'");
-
-		m_saveUserInfo = TextUtil.getBooleanProperty(preferences, PROP_STOREUSERNAME, m_saveUserInfo);
-		m_templateDir = TextUtil.getStringProperty(preferences, PROP_TEMPLATEDIR, "default");
-		enforceValidTemplateDirectory();
 
 		//
 		// Initialize the important modules. Any exception thrown by the managers means that we will not
@@ -589,9 +592,6 @@ public class ServicesRefs implements Engine {
 
 			// initService(AuthorizationManager.class);
 			// initComponent( AuthorizationManager.class );
-
-			// initService(UserManager.class);
-			// initComponent( UserManager.class );
 
 			/*:FVK: 
 			initService(GroupManager.class);
