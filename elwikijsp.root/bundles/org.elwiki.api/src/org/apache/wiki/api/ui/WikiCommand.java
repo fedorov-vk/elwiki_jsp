@@ -20,8 +20,8 @@ package org.apache.wiki.api.ui;
 
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.auth.permissions.AllPermission;
-import org.apache.wiki.auth.permissions.WikiPermission;
+import org.elwiki.permissions.AllPermission;
+import org.elwiki.permissions.WikiPermission;
 
 import java.security.Permission;
 

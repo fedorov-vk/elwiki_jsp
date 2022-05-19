@@ -44,7 +44,7 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.permissions.PermissionFactory;
+import org.elwiki.permissions.PermissionFactory;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;

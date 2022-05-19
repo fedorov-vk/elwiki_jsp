@@ -33,12 +33,12 @@ import org.apache.wiki.api.rss.Feed;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.permissions.PagePermission;
 import org.elwiki.services.ServicesRefs;
 
 import java.io.File;

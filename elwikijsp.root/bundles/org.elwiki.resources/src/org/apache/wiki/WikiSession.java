@@ -19,7 +19,7 @@
 package org.apache.wiki;
 
 import org.eclipse.core.runtime.Assert;
-import org.elwiki.IWikiConstants.StatusType;
+import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.services.ServicesRefs;
@@ -578,18 +578,18 @@ public final class WikiSession implements Session, EventHandler {
 
     /** {@inheritDoc} */
 	@Override
-	public StatusType getLoginStatus() {
+	public AuthenticationStatus getLoginStatus() {
 		if (isAnonymous()) {
-			return StatusType.ANONYMOUS;
+			return AuthenticationStatus.ANONYMOUS;
 		}
 		if (isAsserted()) {
-			return StatusType.ASSERTED;
+			return AuthenticationStatus.ASSERTED;
 		}
 		if (isAuthenticated()) {
-			return StatusType.AUTHENTICATED;
+			return AuthenticationStatus.AUTHENTICATED;
 		}
 
-		return StatusType.ANONYMOUS; //:FVK: workaround.
+		return AuthenticationStatus.ANONYMOUS; //:FVK: workaround.
 	}
 
     /** {@inheritDoc} */

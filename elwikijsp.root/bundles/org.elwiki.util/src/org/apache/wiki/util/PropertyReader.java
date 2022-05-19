@@ -271,7 +271,7 @@ public final class PropertyReader {
 	 *  var.basedir = /p/mywiki;
 	 *  jspwiki.fileSystemProvider.pageDir =         $basedir/www/
 	 *  jspwiki.basicAttachmentProvider.storageDir = $basedir/www/
-	 *  jspwiki.workDir =                            $basedir/wrk/
+	 *  eliki.workDir =                            $basedir/wrk/
 	 * </pre>
 	 *
 	 * @param properties - properties to expand;

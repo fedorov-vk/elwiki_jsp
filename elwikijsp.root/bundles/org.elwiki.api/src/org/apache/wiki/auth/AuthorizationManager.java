@@ -38,9 +38,9 @@ import java.security.Principal;
  * <p>Manages all access control and authorization; determines what authenticated users are allowed to do.</p>
  * <p>Privileges in JSPWiki are expressed as Java-standard {@link java.security.Permission} classes. There are two types of permissions:</p>
  * <ul>
- *   <li>{@link org.apache.wiki.auth.permissions.WikiPermission} - privileges that apply to an entire wiki instance: <em>e.g.,</em>
+ *   <li>{@link org.elwiki.permissions.WikiPermission} - privileges that apply to an entire wiki instance: <em>e.g.,</em>
  *   editing user profiles, creating pages, creating groups</li>
- *   <li>{@link org.apache.wiki.auth.permissions.PagePermission} - privileges that apply to a single wiki page or range of pages:
+ *   <li>{@link org.elwiki.permissions.PagePermission} - privileges that apply to a single wiki page or range of pages:
  *   <em>e.g.,</em> reading, editing, renaming
  * </ul>
  * <p>Calling classes determine whether they are entitled to perform a particular action by constructing the appropriate permission first,

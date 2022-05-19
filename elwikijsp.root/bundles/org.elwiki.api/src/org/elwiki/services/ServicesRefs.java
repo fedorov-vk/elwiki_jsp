@@ -49,6 +49,7 @@ import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.IPermissionManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.acl.AclManager;
@@ -82,6 +83,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class, immediate = true)
 public class ServicesRefs implements Engine {
 
+	private static IPermissionManager permissionManager;
 	private static AclManager aclManager;
 	private static AttachmentManager attachmentManager;
 	private static PageManager pageManager;
@@ -123,6 +125,9 @@ public class ServicesRefs implements Engine {
 	private IWikiConfiguration wikiConfiguration;
 	
 	// -- start code block -- Services reference setters
+
+	@Reference(target = "(component.factory=" + IPermissionManager.COMPONENT_FACTORY +")")
+	private ComponentFactory<IPermissionManager> factoryPermissionManager;
 
 	@Reference(target = "(component.factory=elwiki.AclManager.factory)")
 	private ComponentFactory<AclManager> factoryAclManager;
@@ -241,7 +246,7 @@ public class ServicesRefs implements Engine {
 				throw new WikiException("No permission to write to work directory: " + m_workDir);
 			}
 			if (!f.isDirectory()) {
-				throw new WikiException("jspwiki.workDir does not point to a directory: " + m_workDir);
+				throw new WikiException("elwiki.workDir does not point to a directory: " + m_workDir);
 			}
 		} catch (final SecurityException e) {
 			log.fatal("Unable to find or create the working directory: " + m_workDir, e);
@@ -270,6 +275,8 @@ public class ServicesRefs implements Engine {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(ENGINE_REFERENCE, this);
 
+		managers.put(IPermissionManager.class,
+				ServicesRefs.permissionManager = this.factoryPermissionManager.newInstance(properties).getInstance());
 		managers.put(PageRenamer.class,
 				ServicesRefs.pageRenamer = this.factoryPageRenamer.newInstance(properties).getInstance());
 		managers.put(ProgressManager.class,
@@ -361,6 +368,10 @@ public class ServicesRefs implements Engine {
 	}
 
 	// -- service handling -----------------------------(end)--
+
+	public static IPermissionManager getPermissionManager() {
+		return permissionManager;
+	}
 
 	public static AclManager getAclManager() {
 		return aclManager;

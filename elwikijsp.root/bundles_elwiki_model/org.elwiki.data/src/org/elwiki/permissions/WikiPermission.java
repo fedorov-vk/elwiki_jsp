@@ -39,7 +39,7 @@ import java.util.Arrays;
  */
 public final class WikiPermission extends APermission {
 
-	private static final long serialVersionUID = 14L;
+	private static final long serialVersionUID = -7293877464652228726L;
 
 	/** Name of the action for createGroups permission. */
 	public static final String CREATE_GROUPS_ACTION = "createGroups";

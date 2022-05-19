@@ -49,7 +49,7 @@ import org.elwiki.data.authorize.WikiPrincipal;
 
 /**
  * Logs in an user based on a cookie stored in the user's computer. The cookie information is stored in the
- * <code>jspwiki.workDir</code>, under the directory {@value #COOKIE_DIR}. For security purposes it is a very,
+ * <code>elwiki.workDir</code>, under the directory {@value #COOKIE_DIR}. For security purposes it is a very,
  * very good idea to prevent access to this directory by everyone except the web server process; otherwise
  * people having read access to this directory may be able to spoof other users.
  * <p>

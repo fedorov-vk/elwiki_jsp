@@ -80,10 +80,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IAuthenticationManager;
 //import org.elwiki.api.IAuthorizationManager;
 //import org.elwiki.api.IElWikiSession;
-//import org.elwiki.api.IWikiConstants.StatusType;
 //import org.elwiki.api.authorization.Group;
 import org.osgi.service.useradmin.Group;
-import org.elwiki.IWikiConstants.StatusType;
+import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IAuthorizer;
 //import org.elwiki.api.authorization.user.IUserDatabase;
@@ -185,8 +184,8 @@ import org.osgi.service.event.EventConstants;
 @Component(
 	name = "elwiki.DefaultAuthorizationManager",
 	service = {AuthorizationManager.class, EventHandler.class},
-	factory = "elwiki.AuthorizationManager.factory",
-	property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+	factory = "elwiki.AuthorizationManager.factory")
+	//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
 //@formatter:on
 public class DefAuthorizationManager implements AuthorizationManager, WikiEventListener, EventHandler {
 
@@ -376,107 +375,125 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	protected void shutdown() {
 		//
 	}
-	
+
+	/**
+	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
+	 * 
+	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
+	 * to take care of role lookup operations.
+	 */
+	@Override
+	public void initialize(Engine engine1) throws WikiException {
+		log.debug("Initialize.");
+		this.m_engine = engine1;
+
+		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
+
+		//
+		//  JAAS authorization continues.
+		//
+		String authorizerName = properties.getString(PROP_AUTHORIZER);
+		if (authorizerName.length() == 0) {
+			authorizerName = DEFAULT_AUTHORIZER;
+		}
+		this.m_authorizer = getAuthorizerImplementation(authorizerName);
+		/*:FVK:
+		this.m_authorizer.initialize(this.m_engine);
+
+		// Make the AuthorizationManager listen for WikiEvents
+		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
+		m_engine.getAuthenticationManager().addWikiEventListener(this);
+		*/
+	}
+
+	/**
+	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a
+	 * WikiException if no entry is found, or if one fails to initialize.
+	 * 
+	 * @param defaultAuthorizerId
+	 *                            default authorizer Id of extension point.
+	 * @return a Authorizer used to get page authorization information
+	 * @throws WikiException
+	 */
+	private IAuthorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
+		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint ep;
+
+		//
+		// Load an Authorizer from Equinox extensions.
+		//
+		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_AUTHORIZER);
+		if (ep != null) {
+			for (IConfigurationElement el : ep.getConfigurationElements()) {
+				String contributorName = el.getContributor().getName();
+				String className = el.getAttribute("class");
+				String authorizerId = el.getAttribute("id");
+				try {
+					final Bundle bundle = Platform.getBundle(contributorName);
+					Class<?> clazz = bundle.loadClass(className);
+					try {
+						Class<? extends IAuthorizer> cl = clazz.asSubclass(IAuthorizer.class);
+						this.authorizerClasses.put(authorizerId, (Class<? extends IAuthorizer>) cl);
+					} catch (ClassCastException e) {
+						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
+						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
+					}
+				} catch (ClassNotFoundException e) {
+					log.fatal("Authorizer " + className + " cannot be found.", e);
+					throw new WikiException("Authorizer " + className + " cannot be found.", e);
+				}
+			}
+		}
+
+		Class<? extends IAuthorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
+		if (clazzAuthorizer == null) {
+			// TODO: это сообщение не к месту (логика не адекватна).
+			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
+		}
+
+		IAuthorizer authorizer;
+		try {
+			authorizer = clazzAuthorizer.newInstance();
+		} catch (InstantiationException e) {
+			log.fatal("Authorizer " + clazzAuthorizer + " cannot be created.", e);
+			throw new WikiException("Authorizer " + clazzAuthorizer + " cannot be created.", e);
+		} catch (IllegalAccessException e) {
+			log.fatal("You are not allowed to access authorizer class " + clazzAuthorizer, e);
+			throw new WikiException("You are not allowed to access authorizer class " + clazzAuthorizer, e);
+		}
+
+		return authorizer;
+	}
+
 	// -- service handling -----------------------------(end)--
-	
+
 	@Override
 	public boolean checkPermission(Session session, Permission permission) {
+		Boolean result = false;
 		Function<Permission, Boolean> function = this::test1;
 
+		if (2 == 1) {
+			test();
+			// return true;
+		}
+
 		if (session.isAnonymous()) {
-			Boolean status = AnonymousContextActivator.test2(function, permission);
-			//return status;
-			return true; //:FVK: WORKAROUND 
+			result = AnonymousContextActivator.test2(function, permission);
 		}
 		if (session.isAsserted()) {
-			Boolean status = AssertedContextActivator.test2(function, permission);
-			//return status;
-			return true; //:FVK: WORKAROUND
+			result = AssertedContextActivator.test2(function, permission);
 		}
 		if (session.isAuthenticated()) {
-			Boolean status = AuthenticatedContextActivator.test2(function, permission);
-			//return status;
-			return true; //:FVK: WORKAROUND
+			result = AuthenticatedContextActivator.test2(function, permission);
 		}
 
-		if (1 == 2) {
-			PolicyControl.checkPermission();
-		} else {
-			log.info("--TEST-------------------------------------");
-
-			/* Anonymous Context
-			 */
-			Bundle bundle = AnonymousContextActivator.getDefault().getBundle();
-			@Nullable AccessControlContext acc = bundle.adapt(AccessControlContext.class);
-
-			/*
-			if (!testPermission(acc, new FilePermission("test", "write"), false)) {
-				System.out.println("01: File should not write.");
-			}
-			if(!testPermission(acc, new FilePermission("test", "read"), true)){
-				System.out.println("02: File should be read.");
-			}
-			 */
-			if (!testPermission(acc, new AllPermission(), false)) {
-				System.out.println("03: AllPermission should be disabled.");
-			}
-
-			System.out.println("::01::" + test1(new AllPermission()));
-			;
-			System.out.println("::02::" + AnonymousContextActivator.test1(new AllPermission()));
-
-			System.out.println("::03:: " + function.apply(new AllPermission()));
-			Boolean res = AnonymousContextActivator.test2(function, new AllPermission());
-			System.out.println("::04:: " + //
-					AnonymousContextActivator.test2(function, new AllPermission()));
-
-			//testPermission(acc, new PagePermission("page", "edit"), true);
-			//testPermission(acc, new PagePermission("_:page", "view"), true);
-
-			if (!testPermission(acc, new PagePermission("wiki:page", "edit"), false)) {
-				System.out.println("05: Page should not be edit.");
-			}
-			if (!testPermission(acc, new PagePermission("wiki:page", "delete"), false)) {
-				System.out.println("06: Page should not be deleted.");
-			}
-			if (!testPermission(acc, new PagePermission("wiki:page", "view"), true)) {
-				System.out.println("07: Page should be view.");
-			}
-			System.out.println("::05:: " + //
-					AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "edit")));
-			System.out.println("::06:: " + //
-					AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "delete")));
-			System.out.println("::07:: " + //
-					AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "view")));
-
-			/* Asserted Context
-			 */
-			bundle = AssertedContextActivator.getDefault().getBundle();
-			acc = bundle.adapt(AccessControlContext.class);
-			if (!testPermission(acc, new PagePermission("wiki:page", "edit"), true)) {
-				System.out.println("10: Page should be edit.");
-			}
-			System.out.println("::10:: " + //
-					AssertedContextActivator.test2(function, new PagePermission("wiki:page", "edit")));
-
-			/* Authenticated Context
-			 */
-			bundle = AuthenticatedContextActivator.getDefault().getBundle();
-			acc = bundle.adapt(AccessControlContext.class);
-			if (!testPermission(acc, new GroupPermission("vfedorov:group", "view"), true)) {
-				System.out.println("20: Group should be viewed.");
-			}
-			if (!testPermission(acc, new GroupPermission("elwiki:<groupmember>", "edit"), true)) {
-				System.out.println("21: Group should be edited.");
-			}
-			System.out.println("::20:: " + //
-					AuthenticatedContextActivator.test2(function, new GroupPermission("vfedorov:group", "view")));
-			System.out.println("::21:: " + //
-					AuthenticatedContextActivator.test2(function, new GroupPermission("elwiki:<groupmember>", "edit")));
+		if (!result) {
+			// System.out.println("not enabled!");
 		}
 
 		if (1 == 1) {
-			return true;
+			return result;
 		}
 
 		// ##############################################################################
@@ -557,6 +574,88 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		return false;
 	}
 
+	private void test() {
+		Function<Permission, Boolean> function = this::test1;
+
+		log.info("--TEST-------------------------------------");
+
+		/* Anonymous Context
+		 */
+		Bundle bundle = AnonymousContextActivator.getDefault().getBundle();
+		@Nullable AccessControlContext acc = bundle.adapt(AccessControlContext.class);
+
+		/*
+		if (!testPermission(acc, new FilePermission("test", "write"), false)) {
+			System.out.println("01: File should not write.");
+		}
+		if(!testPermission(acc, new FilePermission("test", "read"), true)){
+			System.out.println("02: File should be read.");
+		}
+		 */
+		if (!testPermission(acc, new AllPermission(), false)) {
+			System.out.println("03: AllPermission should be disabled.");
+		}
+
+		System.out.println("::01::" + test1(new AllPermission()));
+		;
+		System.out.println("::02::" + AnonymousContextActivator.test1(new AllPermission()));
+
+		System.out.println("::03:: " + function.apply(new AllPermission()));
+		Boolean res = AnonymousContextActivator.test2(function, new AllPermission());
+		System.out.println("::04:: " + //
+				AnonymousContextActivator.test2(function, new AllPermission()));
+
+		//testPermission(acc, new PagePermission("page", "edit"), true);
+		//testPermission(acc, new PagePermission("_:page", "view"), true);
+
+		if (!testPermission(acc, new PagePermission("wiki:page", "edit"), false)) {
+			System.out.println("05: Page should not be edit.");
+		}
+		if (!testPermission(acc, new PagePermission("wiki:page", "delete"), false)) {
+			System.out.println("06: Page should not be deleted.");
+		}
+		if (!testPermission(acc, new PagePermission("wiki:page", "view"), true)) {
+			System.out.println("07: Page should be view.");
+		}
+		System.out.println("::05:: " + //
+				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "edit")));
+		System.out.println("::06:: " + //
+				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "delete")));
+		System.out.println("::07:: " + //
+				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "view")));
+
+		/* Asserted Context
+		 */
+		bundle = AssertedContextActivator.getDefault().getBundle();
+		acc = bundle.adapt(AccessControlContext.class);
+		PagePermission perm100 = new PagePermission("wiki:page", "edit");
+		if (!testPermission(acc, perm100, true)) {
+			System.out.println("100: Page should be edit.");
+		}
+		System.out.println("::100:: " + AssertedContextActivator.test2(function, perm100));
+		PagePermission perm101 = new PagePermission("elwiki:SandBox", "edit");
+		if (!testPermission(acc, perm101, true)) {
+			System.out.println("101: Page should be edit.");
+		}
+		System.out.println("::101:: " + AssertedContextActivator.test2(function, perm101));
+		
+
+		/* Authenticated Context
+		 */
+		bundle = AuthenticatedContextActivator.getDefault().getBundle();
+		acc = bundle.adapt(AccessControlContext.class);
+		if (!testPermission(acc, new GroupPermission("vfedorov:group", "view"), true)) {
+			System.out.println("200: Group should be viewed.");
+		}
+		if (!testPermission(acc, new GroupPermission("elwiki:<groupmember>", "edit"), true)) {
+			System.out.println("201: Group should be edited.");
+		}
+		System.out.println("::200:: " + //
+				AuthenticatedContextActivator.test2(function, new GroupPermission("vfedorov:group", "view")));
+		System.out.println("::201:: " + //
+				AuthenticatedContextActivator.test2(function, new GroupPermission("elwiki:<groupmember>", "edit")));
+	}
+
 	private Boolean test1(Permission permission1) {
 		try {
 			AccessController.checkPermission(permission1);
@@ -575,6 +674,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	private boolean testPermission(AccessControlContext acc, Permission permission, boolean expectedToPass) {
 		try {
 			SecurityManager sm = System.getSecurityManager();
+			if (sm == null) {
+				return true; //:FVK: workaround.
+			}
 			sm.checkPermission(permission, acc);
 			return expectedToPass;
 			//			if (!expectedToPass) {
@@ -896,17 +998,14 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
+		switch (topic) {//:FVK:
 		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
-			addPermissionsFor(StatusType.ANONYMOUS.name());
 			break;
 		}
 		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
-			addPermissionsFor(StatusType.ASSERTED.name());
 			break;
 		}
 		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED:
-			addPermissionsFor(StatusType.AUTHENTICATED.name());
 			break;
 		}
 	}
@@ -942,193 +1041,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	@Deprecated
 	@Override
 	public void actionPerformed(WikiEvent event) {
-		if (event instanceof WikiSecurityEvent) {
-			WikiSecurityEvent secEvent = (WikiSecurityEvent) event;
-			if (secEvent.getTarget() != null) {
-				switch (secEvent.getType()) {
-				case WikiSecurityEvent.LOGIN_ANONYMOUS: {
-					addPermissionsFor(StatusType.ANONYMOUS.name());
-					break;
-				}
-				case WikiSecurityEvent.LOGIN_ASSERTED: {
-					addPermissionsFor(StatusType.ASSERTED.name());
-					break;
-				}
-				case WikiSecurityEvent.LOGIN_AUTHENTICATED: {
-					addPermissionsFor(StatusType.AUTHENTICATED.name());
-					break;
-				}
-				}
-			}
-		}
-	}
-
-	private static final PermissionInfo[] ANONYMOUS_PERMISSIONS = new PermissionInfo[] {
-			new PermissionInfo(PagePermission.class.getName(), "*:*", "edit"),
-			new PermissionInfo(WikiPermission.class.getName(), "*", "createPages") };
-
-	private static final PermissionInfo[] ASSERTED_PERMISSIONS = new PermissionInfo[] {
-			new PermissionInfo(PagePermission.class.getName(), "*:*", "edit"),
-			new PermissionInfo(WikiPermission.class.getName(), "*", "createPages"),
-			new PermissionInfo(GroupPermission.class.getName(), "*:*", "view") };
-
-	private static final PermissionInfo[] AUTHENTICATED_PERMISSIONS = new PermissionInfo[] {
-			new PermissionInfo(PagePermission.class.getName(), "*:*", "modify,rename"),
-			new PermissionInfo(WikiPermission.class.getName(), "*", "createPages,createGroups"),
-			new PermissionInfo(GroupPermission.class.getName(), "*:*", "view"),
-			new PermissionInfo(GroupPermission.class.getName(), "*:<groupmember>", "edit"), };
-
-	static boolean flag11=false; //:FVK: workaround
-	
-	private void addPermissionsFor(String cpiName) {
-		log.debug("Commit permissions for \"" + cpiName + "\"");
-//		ConditionalPermissionAdmin cpaService = AuthorizePluginActivator.getDefault().getCpaService();
-
-		ConditionalPermissionUpdate cpUpdate = cpaService.newConditionalPermissionUpdate();
-		List<ConditionalPermissionInfo> listInfo = cpUpdate.getConditionalPermissionInfos();
-		// Проверка наличия в таблице требуемого ConditionalPermissionInfo.
-		boolean isInfoExists = false;
-		for (ConditionalPermissionInfo info : listInfo) {
-			if (info.getName().equals(cpiName)) {
-				isInfoExists = true;
-				break;
-			}
-		}
-
-		// Создать ConditionalPermissionInfo, добавить в список.
-		if (!isInfoExists) {
-			String bundleLocation = "*/org.elwiki.authorize.check.*"; 
-					// AuthorizeCheckActivator.getContext().getBundle().getLocation();
-			IAuthorizer groupManager = this.groupManager;
-
-			if(!flag11) {
-			//-- Add info of DENY AllPermission for context --
-			listInfo.add(cpaService.newConditionalPermissionInfo("elwiki.context.denyAllPermission",
-					new ConditionInfo[] {
-							new ConditionInfo(
-									BundleLocationCondition.class.getName(),
-									new String[] { bundleLocation, "!" })
-					},
-					new PermissionInfo[] {
-							new PermissionInfo("java.security.AllPermission", "<all permissions>", "<all actions>") },
-//							new PermissionInfo("java.security.AllPermission", "*", "*") },						
-					ConditionalPermissionInfo.ALLOW));
-			flag11=true;
-			}
-			
-			//@formatter:off
-			listInfo.add(cpaService.newConditionalPermissionInfo(
-					cpiName,
-					new ConditionInfo[] {
-							new ConditionInfo(
-									SessionTypeCondition.class.getName(),
-									new String[] { cpiName }),
-							new ConditionInfo(
-									BundleLocationCondition.class.getName(),
-									new String[] { bundleLocation }),
-					},
-					groupManager.getRolePermissionInfo(cpiName),
-					ConditionalPermissionInfo.ALLOW));
-			//@formatter:on
-
-			if (!cpUpdate.commit()) {
-				log.error("Unsuccessful commit of ConditionalPermissionInfo \"" + cpiName + "\"");
-			} else {
-				log.debug("Commit permissions for \"" + cpiName + "\" - done.");
-			}
-		}
-	}
-
-	// -- service handling -------------------------------------------< start --
-
-	/**
-	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
-	 * 
-	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
-	 * to take care of role lookup operations.
-	 */
-	@Override
-	public void initialize(Engine engine1) throws WikiException {
-		log.debug("Initialize.");
-		this.m_engine = engine1;
-
-		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
-
-		//
-		//  JAAS authorization continues.
-		//
-		String authorizerName = properties.getString(PROP_AUTHORIZER);
-		if (authorizerName.length() == 0) {
-			authorizerName = DEFAULT_AUTHORIZER;
-		}
-		this.m_authorizer = getAuthorizerImplementation(authorizerName);
-		/*:FVK:
-		this.m_authorizer.initialize(this.m_engine);
-
-		// Make the AuthorizationManager listen for WikiEvents
-		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
-		m_engine.getAuthenticationManager().addWikiEventListener(this);
-		*/
-	}
-
-	/**
-	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a
-	 * WikiException if no entry is found, or if one fails to initialize.
-	 * 
-	 * @param defaultAuthorizerId
-	 *                            default authorizer Id of extension point.
-	 * @return a Authorizer used to get page authorization information
-	 * @throws WikiException
-	 */
-	private IAuthorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
-		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint ep;
-
-		//
-		// Load an Authorizer from Equinox extensions.
-		//
-		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_AUTHORIZER);
-		if (ep != null) {
-			for (IConfigurationElement el : ep.getConfigurationElements()) {
-				String contributorName = el.getContributor().getName();
-				String className = el.getAttribute("class");
-				String authorizerId = el.getAttribute("id");
-				try {
-					final Bundle bundle = Platform.getBundle(contributorName);
-					Class<?> clazz = bundle.loadClass(className);
-					try {
-						Class<? extends IAuthorizer> cl = clazz.asSubclass(IAuthorizer.class);
-						this.authorizerClasses.put(authorizerId, (Class<? extends IAuthorizer>) cl);
-					} catch (ClassCastException e) {
-						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
-						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
-					}
-				} catch (ClassNotFoundException e) {
-					log.fatal("Authorizer " + className + " cannot be found.", e);
-					throw new WikiException("Authorizer " + className + " cannot be found.", e);
-				}
-			}
-		}
-
-		Class<? extends IAuthorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
-		if (clazzAuthorizer == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
-		}
-
-		IAuthorizer authorizer;
-		try {
-			authorizer = clazzAuthorizer.newInstance();
-		} catch (InstantiationException e) {
-			log.fatal("Authorizer " + clazzAuthorizer + " cannot be created.", e);
-			throw new WikiException("Authorizer " + clazzAuthorizer + " cannot be created.", e);
-		} catch (IllegalAccessException e) {
-			log.fatal("You are not allowed to access authorizer class " + clazzAuthorizer, e);
-			throw new WikiException("You are not allowed to access authorizer class " + clazzAuthorizer, e);
-		}
-
-		return authorizer;
 	}
 
 	@Override
@@ -1163,7 +1075,5 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
         return allowed;
 		 */
 	}
-
-	// -- service handling --------------------------------------------- end >--
 	
 }

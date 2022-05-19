@@ -75,7 +75,7 @@ public interface Engine {
 
     /** Property name for where the jspwiki work directory should be.
      If not specified, reverts to ${java.tmpdir}. */
-    String PROP_WORKDIR = "jspwiki.workDir";
+    String PROP_WORKDIR = "elwiki.workDir";
 
     /** The name of the cookie that gets stored to the user browser. */
     String PREFS_COOKIE_NAME = "JSPWikiUserProfile";
@@ -142,7 +142,7 @@ public interface Engine {
     IPreferenceStore getWikiPreferences();
 
     /**
-     *  Returns the JSPWiki working directory set with "jspwiki.workDir".
+     *  Returns the JSPWiki working directory set with "elwiki.workDir".
      *
      *  @since 2.1.100
      *  @return The working directory.

@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.permissions.PagePermission;
+import org.elwiki.permissions.PagePermission;
 
 /**
  *  Specifies how to parse and return ACLs from wiki pages.

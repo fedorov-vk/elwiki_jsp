@@ -26,7 +26,7 @@ import java.util.Locale;
 import javax.security.auth.Subject;
 
 import org.apache.wiki.api.event.WikiEventListener;
-import org.elwiki.IWikiConstants.StatusType;
+import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.osgi.service.useradmin.User;
 
 
@@ -208,7 +208,7 @@ public interface Session extends WikiEventListener {
      *
      * @return the user's session status.
      */
-    StatusType getLoginStatus();
+    AuthenticationStatus getLoginStatus();
 
     /**
      * Returns the {@link Subject} associated to the session.
