@@ -21,8 +21,8 @@ package org.apache.wiki.api.ui;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.elwiki_data.WikiPage;
-import org.apache.wiki.auth.permissions.PagePermission;
-import org.apache.wiki.auth.permissions.PermissionFactory;
+import org.elwiki.permissions.PermissionFactory;
+import org.elwiki.permissions.PagePermission;
 
 import java.security.Permission;
 

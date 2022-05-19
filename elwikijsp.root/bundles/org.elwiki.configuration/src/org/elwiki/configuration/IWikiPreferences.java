@@ -17,13 +17,13 @@ public interface IWikiPreferences {
 	 * Property name for where the ElWiki work directory should be. If not specified, sets to
 	 * workspace place.
 	 */
-	String PROP_WORKDIR = "jspwiki.workDir"; //:FVK: "elwiki.workDir"
+	String PROP_WORKDIR = "elwiki.workDir";
 
 	/**
 	 * Property name for where the ElWiki attachment directory should be. If not specified, sets to
 	 * area in the workspace place.
 	 */
-	String PROP_ATTACHMENTDIR = "jspwiki.attachmentDir"; //:FVK: "elwiki.attachmentDir"
+	String PROP_ATTACHMENTDIR = "elwiki.attachmentDir";
 
 	/** If true, then the user name will be stored with the page data. */
 	String PROP_STOREUSERNAME = "jspwiki.storeUserName";

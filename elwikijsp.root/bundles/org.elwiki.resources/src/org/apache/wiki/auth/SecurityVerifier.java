@@ -27,16 +27,16 @@ import org.apache.wiki.auth.authorize.GroupDatabase;
 //import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.authorize.Role;
 //:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
-import org.apache.wiki.auth.permissions.AllPermission;
-import org.apache.wiki.auth.permissions.GroupPermission;
-import org.apache.wiki.auth.permissions.PermissionFactory;
-import org.apache.wiki.auth.permissions.WikiPermission;
+import org.elwiki.permissions.AllPermission;
+import org.elwiki.permissions.GroupPermission;
+import org.elwiki.permissions.PermissionFactory;
 /*:FVK:
 import org.apache.wiki.auth.user.DummyUserDatabase;*/
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.permissions.WikiPermission;
 import org.elwiki.services.ServicesRefs;
 import org.freshcookies.security.policy.PolicyReader;
 

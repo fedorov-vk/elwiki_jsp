@@ -62,12 +62,12 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.permissions.PagePermission;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.permissions.PagePermission;
 import org.elwiki.services.ServicesRefs;
 
 import java.io.File;

@@ -16,6 +16,7 @@
    <reference cardinality="1..1" field="factoryInternationalizationManager" interface="org.osgi.service.component.ComponentFactory" name="factoryInternationalizationManager" target="(component.factory=elwiki.InternationalizationManager.factory)"/>
    <reference cardinality="1..1" field="factoryPageManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPageManager" target="(component.factory=elwiki.PageManager.factory)"/>
    <reference cardinality="1..1" field="factoryPageRenamer" interface="org.osgi.service.component.ComponentFactory" name="factoryPageRenamer" target="(component.factory=elwiki.PageRenamer.factory)"/>
+   <reference cardinality="1..1" field="factoryPermissionManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPermissionManager" target="(component.factory=elwiki.PermissionManager.factory)"/>
    <reference cardinality="1..1" field="factoryPluginManager" interface="org.osgi.service.component.ComponentFactory" name="factoryPluginManager" target="(component.factory=elwiki.PluginManager.factory)"/>
    <reference cardinality="1..1" field="factoryProgressManager" interface="org.osgi.service.component.ComponentFactory" name="factoryProgressManager" target="(component.factory=elwiki.ProgressManager.factory)"/>
    <reference cardinality="1..1" field="factoryReferenceManager" interface="org.osgi.service.component.ComponentFactory" name="factoryReferenceManager" target="(component.factory=elwiki.ReferenceManager.factory)"/>

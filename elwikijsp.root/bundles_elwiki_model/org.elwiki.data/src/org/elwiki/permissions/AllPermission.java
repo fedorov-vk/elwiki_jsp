@@ -30,7 +30,7 @@ import java.security.PermissionCollection;
  */
 public final class AllPermission extends APermission {
 
-	private static final long serialVersionUID = 11L;
+	private static final long serialVersionUID = 4520283353774198171L;
 
 	private static final String WILDCARD = "*";
 

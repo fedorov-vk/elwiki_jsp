@@ -28,7 +28,7 @@ public interface IWikiConfiguration {
 	IPath getAttachmentPath();
 
 	/**
-	 * Returns the ElWiki working directory set with "jspwiki.workDir".
+	 * Returns the ElWiki working directory set with "elwiki.workDir".
 	 *
 	 * @return The working directory.
 	 */

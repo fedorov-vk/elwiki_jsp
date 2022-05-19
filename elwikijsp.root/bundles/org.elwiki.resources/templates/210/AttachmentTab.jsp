@@ -21,7 +21,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.ui.progress.*" %>
-<%@ page import="org.apache.wiki.auth.permissions.*" %>
+<%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="java.security.Permission" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>

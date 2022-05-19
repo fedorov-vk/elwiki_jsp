@@ -5,7 +5,7 @@ public interface IWikiConstants {
 	/**
 	 * Статус аутентификации.
 	 */
-	public enum StatusType {
+	public enum AuthenticationStatus {
 		/** An anonymous user's session status. */
 		ANONYMOUS("anonymous"),
 		/** An asserted user's session status. */
@@ -15,7 +15,7 @@ public interface IWikiConstants {
 
 		private String id;
 
-		private StatusType(String id) {
+		private AuthenticationStatus(String id) {
 			this.id = id;
 		}
 

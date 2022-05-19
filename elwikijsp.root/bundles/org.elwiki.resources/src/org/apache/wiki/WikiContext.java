@@ -34,7 +34,7 @@ import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.permissions.AllPermission;
+import org.elwiki.permissions.AllPermission;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;

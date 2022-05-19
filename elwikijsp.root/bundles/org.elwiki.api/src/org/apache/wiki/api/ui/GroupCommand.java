@@ -21,7 +21,7 @@ package org.apache.wiki.api.ui;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.auth.GroupPrincipal;
-import org.apache.wiki.auth.permissions.GroupPermission;
+import org.elwiki.permissions.GroupPermission;
 
 import java.security.Permission;
 

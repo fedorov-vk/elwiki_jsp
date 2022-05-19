@@ -26,11 +26,11 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.GroupPrincipal;
-import org.apache.wiki.auth.permissions.AllPermission;
-import org.apache.wiki.auth.permissions.GroupPermission;
-import org.apache.wiki.auth.permissions.PermissionFactory;
-import org.apache.wiki.auth.permissions.WikiPermission;
+import org.elwiki.permissions.AllPermission;
+import org.elwiki.permissions.GroupPermission;
+import org.elwiki.permissions.PermissionFactory;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.permissions.WikiPermission;
 import org.elwiki.services.ServicesRefs;
 
 import java.security.Permission;
