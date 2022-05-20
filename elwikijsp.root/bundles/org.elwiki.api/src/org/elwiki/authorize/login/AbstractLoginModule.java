@@ -68,7 +68,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 	 * Implementing classes should add Principals to this collection to specify what Principals
 	 * <em>must</em> be removed if login for this module, or for the entire login configuration overall,
 	 * fails. Generally, these will be Principals of type
-	 * {@link org.elwiki.data.authorize.core.auth.authorize.wiki.auth.authorize.Role}.
+	 * {@link org.elwiki.data.authorize.Role}.
 	 * 
 	 * @deprecated
 	 */
@@ -78,13 +78,13 @@ public abstract class AbstractLoginModule implements LoginModule {
 	 * Implementing classes should add Principals to this collection to specify what Principals, perhaps
 	 * suppled by other LoginModules, <em>must</em> be removed if login for this module, or for the
 	 * entire login configuration overall, succeeds. Generally, these will be Principals of type
-	 * {@link org.elwiki.data.authorize.core.auth.authorize.wiki.auth.authorize.Role}. For example,
+	 * {@link org.elwiki.data.authorize.Role}. For example,
 	 * {@link CookieAssertionLoginModule} adds
-	 * {@link org.elwiki.data.authorize.core.auth.authorize.wiki.auth.authorize.Role#ANONYMOUS} to its
+	 * {@link org.elwiki.data.authorize.Role#ANONYMOUS} to its
 	 * <code>m_principalsToOverwrite</code> collection because when it succeeds, its own
-	 * {@link org.elwiki.data.authorize.core.auth.authorize.wiki.auth.authorize.Role#AUTHENTICATED}
+	 * {@link org.elwiki.data.authorize.Role#AUTHENTICATED}
 	 * should over-write
-	 * {@link org.elwiki.data.authorize.core.auth.authorize.wiki.auth.authorize.Role#ANONYMOUS}.
+	 * {@link org.elwiki.data.authorize.Role#ANONYMOUS}.
 	 * 
 	 * @deprecated
 	 */

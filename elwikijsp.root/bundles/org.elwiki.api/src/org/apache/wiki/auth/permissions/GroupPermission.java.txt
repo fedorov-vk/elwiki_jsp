@@ -69,7 +69,7 @@ import org.apache.wiki.auth.GroupPrincipal;
  *
  * <pre>
  *  grant signedBy &quot;jspwiki&quot;,
- *    principal org.apache.wiki.auth.authorize.Role &quot;Authenticated&quot; {
+ *    principal org.elwiki.data.authorize.Role &quot;Authenticated&quot; {
  *      permission org.apache.wiki.auth.permissions.GroupPermission &quot;*:&lt;groupmember&gt;&quot;, &quot;edit&quot;;
  * </pre>
  *
@@ -78,6 +78,7 @@ import org.apache.wiki.auth.GroupPrincipal;
  * must be granted explicitly.
  * @since 2.4.17
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public final class GroupPermission extends Permission implements Serializable
 {
     /** Special target token that denotes all groups that a Subject's Principals are members of. */

@@ -19,8 +19,8 @@
 package org.elwiki.api.authorization;
 
 import org.apache.wiki.api.internal.ApiActivator;
-import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.user0.UserDatabase;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.Role;
 import org.osgi.service.useradmin.User;

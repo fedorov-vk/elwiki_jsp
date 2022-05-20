@@ -18,7 +18,6 @@
  */
 package org.apache.wiki;
 
-import org.eclipse.core.runtime.Assert;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
@@ -46,13 +45,13 @@ import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.UserManager;
+import org.elwiki.data.authorize.GroupPrincipal;
 //import org.apache.wiki.auth.authorize.GroupManager;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.Role;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.HttpUtil;

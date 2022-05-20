@@ -25,7 +25,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.authorize.GroupDatabase;
 //import org.apache.wiki.auth.authorize.GroupManager;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.Role;
 //:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;

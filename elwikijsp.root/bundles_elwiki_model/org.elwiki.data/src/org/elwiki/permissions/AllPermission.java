@@ -32,8 +32,6 @@ public final class AllPermission extends APermission {
 
 	private static final long serialVersionUID = 4520283353774198171L;
 
-	private static final String WILDCARD = "*";
-
 	/** For serialization purposes. */
 	protected AllPermission() {
 		this(null);
@@ -42,12 +40,12 @@ public final class AllPermission extends APermission {
 	/**
 	 * Creates a new AllPermission for the given wikis.
 	 * 
-	 * @param wiki
-	 *            the wiki to which the permission should apply. If null, will apply to all wikis.
+	 * @param wiki the wiki to which the permission should apply. If null, will
+	 *             apply to all wikis.
 	 */
 	public AllPermission(String wiki) {
 		super(wiki);
-		setWikiName((wiki == null) ? WILDCARD : wiki);
+		setWikiName((wiki == null || wiki.isEmpty() || wiki.isBlank()) ? WILDCARD : wiki);
 	}
 
 	/**
@@ -56,8 +54,7 @@ public final class AllPermission extends APermission {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
 	 * @return {@inheritDoc}
-	 * @param obj
-	 *            {@inheritDoc}
+	 * @param obj {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -93,13 +90,15 @@ public final class AllPermission extends APermission {
 	}
 
 	/**
-	 * WikiPermission can only imply other WikiPermissions; no other permission types are implied. One
-	 * WikiPermission implies another if all of the other WikiPermission's actions are equal to, or a
-	 * subset of, those for this permission.
+	 * WikiPermission can only imply other WikiPermissions; no other permission
+	 * types are implied. One WikiPermission implies another if all of the other
+	 * WikiPermission's actions are equal to, or a subset of, those for this
+	 * permission.
 	 * 
-	 * @param permission
-	 *            the permission which may (or may not) be implied by this instance
-	 * @return <code>true</code> if the permission is implied, <code>false</code> otherwise
+	 * @param permission the permission which may (or may not) be implied by this
+	 *                   instance
+	 * @return <code>true</code> if the permission is implied, <code>false</code>
+	 *         otherwise
 	 * @see java.security.Permission#implies(java.security.Permission)
 	 */
 	@Override
@@ -137,4 +136,14 @@ public final class AllPermission extends APermission {
 	public String toString() {
 		return this.getClass().getName() + "|" + this.getWikiName();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected int createMask(String[] actions) {
+		// nothing to do.
+		return 0;
+	}
+
 }

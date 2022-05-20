@@ -23,7 +23,8 @@ import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.data.authorize.Role;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;

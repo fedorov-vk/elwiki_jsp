@@ -28,7 +28,7 @@ import java.util.Hashtable;
  */
 public class AllPermissionCollection extends PermissionCollection {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8627167711908878722L;
 
 	private boolean m_notEmpty = false;
 
@@ -37,14 +37,13 @@ public class AllPermissionCollection extends PermissionCollection {
 	protected final Hashtable<Permission, Permission> m_permissions = new Hashtable<Permission, Permission>();
 
 	/**
-	 * Adds an AllPermission object to this AllPermissionCollection. If this collection
-	 * was previously marked read-only, or if the permission supplied is not of type
-	 * {@link AllPermission}, a {@link SecurityException} is thrown.
+	 * Adds an AllPermission object to this AllPermissionCollection. If this
+	 * collection was previously marked read-only, or if the permission supplied is
+	 * not of type {@link AllPermission}, a {@link SecurityException} is thrown.
 	 * 
 	 * @see java.security.PermissionCollection#add(java.security.Permission)
 	 * 
-	 * @param permission
-	 *            {@inheritDoc}
+	 * @param permission {@inheritDoc}
 	 */
 	@Override
 	public void add(Permission permission) {
@@ -64,7 +63,8 @@ public class AllPermissionCollection extends PermissionCollection {
 	}
 
 	/**
-	 * Returns an enumeration of all AllPermission objects stored in this collection.
+	 * Returns an enumeration of all AllPermission objects stored in this
+	 * collection.
 	 * 
 	 * @see java.security.PermissionCollection#elements()
 	 * 
@@ -76,18 +76,18 @@ public class AllPermissionCollection extends PermissionCollection {
 	}
 
 	/**
-	 * Iterates through the AllPermission objects stored by this AllPermissionCollection
-	 * and determines if any of them imply a supplied Permission. If the Permission is not
-	 * of type {@link AllPermission}, {@link PagePermission} or {@link WikiPermission},
-	 * this method will return <code>false</code>. If none of the AllPermissions stored in
-	 * this collection imply the permission, the method returns <code>false</code>;
-	 * conversely, if one of the AllPermission objects implies the permission, the method
-	 * returns <code>true</code>.
+	 * Iterates through the AllPermission objects stored by this
+	 * AllPermissionCollection and determines if any of them imply a supplied
+	 * Permission. If the Permission is not of type {@link AllPermission},
+	 * {@link PagePermission} or {@link WikiPermission}, this method will return
+	 * <code>false</code>. If none of the AllPermissions stored in this collection
+	 * imply the permission, the method returns <code>false</code>; conversely, if
+	 * one of the AllPermission objects implies the permission, the method returns
+	 * <code>true</code>.
 	 * 
-	 * @param permission
-	 *            the Permission to test. It may be any Permission type, but only the
-	 *            AllPermission, PagePermission or WikiPermission types are actually
-	 *            evaluated.
+	 * @param permission the Permission to test. It may be any Permission type, but
+	 *                   only the AllPermission, PagePermission or WikiPermission
+	 *                   types are actually evaluated.
 	 * @see java.security.PermissionCollection#implies(java.security.Permission)
 	 * 
 	 * @return {@inheritDoc}
@@ -130,4 +130,5 @@ public class AllPermissionCollection extends PermissionCollection {
 	public void setReadOnly() {
 		this.m_readOnly = true;
 	}
+
 }

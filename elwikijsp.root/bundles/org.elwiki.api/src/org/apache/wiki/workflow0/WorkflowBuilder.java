@@ -61,7 +61,7 @@ public final class WorkflowBuilder {
     /**
      * <p>Builds an approval workflow that requests approval from a named
      * user, {@link org.apache.wiki.auth.authorize.Group} or
-     * {@link org.apache.wiki.auth.authorize.Role} before running a Task.</p>
+     * {@link org.elwiki.data.authorize.Role} before running a Task.</p>
      * <p>The Principal who approves the activity is determined by looking up
      * the property <code>jspwiki.approver.<var>workflowApproverKey</var></code>
      * in <code>jspwiki.properties</code>. If that Principal resolves to a known user, Group

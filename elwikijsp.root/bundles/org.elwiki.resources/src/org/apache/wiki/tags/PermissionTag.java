@@ -25,7 +25,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.GroupPrincipal;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;

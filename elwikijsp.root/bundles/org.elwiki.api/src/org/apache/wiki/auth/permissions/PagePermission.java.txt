@@ -62,6 +62,7 @@ import java.util.Arrays;
  * </ul>
  * @since 2.3
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public final class PagePermission extends Permission implements Serializable
 {
     private static final long          serialVersionUID = 2L;

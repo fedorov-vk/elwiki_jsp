@@ -26,6 +26,7 @@ import java.util.Hashtable;
 /**
  * A collection of AllPermission objects.
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public class AllPermissionCollection extends PermissionCollection
 {
 

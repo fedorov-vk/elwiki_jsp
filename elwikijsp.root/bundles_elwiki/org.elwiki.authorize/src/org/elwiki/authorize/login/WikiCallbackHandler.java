@@ -36,7 +36,7 @@ import org.elwiki.services.ServicesRefs;
 /**
  * Handles logins made from inside the wiki application, rather than via the web container. This
  * handler is instantiated in
- * {@link org.elwiki.authorize.internal.services.IIAuthenticationManager.auth.wiki.auth.AuthenticationManager#login(org.apache.wiki.WikiSession,HttpServletRequest, String, String)}.
+ * {@link org.apache.wiki.auth.IIAuthenticationManager#login(HttpServletRequest, Session)}.
  * If container-managed authentication is used, the {@link WebContainerCallbackHandler}is used
  * instead. This callback handler is designed to be used with {@link UserDatabaseLoginModule}.
  * 
