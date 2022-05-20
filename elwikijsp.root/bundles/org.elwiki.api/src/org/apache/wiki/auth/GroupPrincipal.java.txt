@@ -32,6 +32,7 @@ import java.security.Principal;
  * @see org.apache.wiki.auth.authorize.Group
  * @since 2.3.79
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public final class GroupPrincipal implements Principal
 {
     private final String m_name;

@@ -20,22 +20,24 @@ package org.elwiki.permissions;
 
 import java.security.Permission;
 import java.security.PermissionCollection;
-import java.util.Arrays;
 
 import org.elwiki_data.WikiPage;
 
 /**
  * <p>
- * Permission to perform an operation on a single page or collection of pages in a given wiki.
- * Permission actions include: <code>view</code>,&nbsp; <code>edit</code> (edit the text of a wiki
- * page),&nbsp;<code>comment</code>,&nbsp; <code>upload</code>,&nbsp;<code>modify</code>&nbsp;(edit
- * text and upload attachments),&nbsp;<code>delete</code>&nbsp; and&nbsp;<code>rename</code>.
+ * Permission to perform an operation on a single page or collection of pages in
+ * a given wiki. Permission actions include: <code>view</code>,&nbsp;
+ * <code>edit</code> (edit the text of a wiki
+ * page),&nbsp;<code>comment</code>,&nbsp;
+ * <code>upload</code>,&nbsp;<code>modify</code>&nbsp;(edit text and upload
+ * attachments),&nbsp;<code>delete</code>&nbsp; and&nbsp;<code>rename</code>.
  * </p>
  * <p>
- * The target of a permission is a single page or collection in a given wiki. The syntax for the
- * target is the wiki name, followed by a colon (:) and the name of the page. "All wikis" can be
- * specified using a wildcard (*). Page collections may also be specified using a wildcard. For
- * pages, the wildcard may be a prefix, suffix, or all by itself. Examples of targets include:
+ * The target of a permission is a single page or collection in a given wiki.
+ * The syntax for the target is the wiki name, followed by a colon (:) and the
+ * name of the page. "All wikis" can be specified using a wildcard (*). Page
+ * collections may also be specified using a wildcard. For pages, the wildcard
+ * may be a prefix, suffix, or all by itself. Examples of targets include:
  * </p>
  * <blockquote><code>*:*<br/>
  * *:JanneJalkanen<br/>
@@ -57,11 +59,11 @@ import org.elwiki_data.WikiPage;
  */
 public final class PagePermission extends APermission {
 
-	private static final long serialVersionUID = 13L;
+	private static final long serialVersionUID = 5211426500968895383L;
 
 	/** Action name for the view permission. */
 	public static final String VIEW_ACTION = "view";
-	
+
 	/** Action name for the edit permission. */
 	public static final String EDIT_ACTION = "edit";
 
@@ -109,12 +111,6 @@ public final class PagePermission extends APermission {
 	/** A static instance of the view permission. */
 	public static final PagePermission VIEW = new PagePermission(VIEW_ACTION);
 
-	private static final String ACTION_SEPARATOR = ",";
-
-	private static final String WILDCARD = "*";
-
-	private static final String WIKI_SEPARATOR = ":";
-
 	private static final String ATTACHMENT_SEPARATOR = "/";
 
 	private final String m_page;
@@ -125,8 +121,8 @@ public final class PagePermission extends APermission {
 	}
 
 	/**
-	 * Private convenience constructor that creates a new PagePermission for all wikis and pages (*:*)
-	 * and set of actions.
+	 * Private convenience constructor that creates a new PagePermission for all
+	 * wikis and pages (*:*) and set of actions.
 	 * 
 	 * @param actions
 	 */
@@ -135,14 +131,13 @@ public final class PagePermission extends APermission {
 	}
 
 	/**
-	 * Creates a new PagePermission for a specified page name and set of actions. Page should include a
-	 * prepended wiki name followed by a colon (:). If the wiki name is not supplied or starts with a
-	 * colon, the page refers to no wiki in particular, and will never imply any other PagePermission.
+	 * Creates a new PagePermission for a specified page name and set of actions.
+	 * Page should include a prepended wiki name followed by a colon (:). If the
+	 * wiki name is not supplied or starts with a colon, the page refers to no wiki
+	 * in particular, and will never imply any other PagePermission.
 	 * 
-	 * @param page
-	 *            the wiki page
-	 * @param actions
-	 *            the allowed actions for this page
+	 * @param page    the wiki page
+	 * @param actions the allowed actions for this page
 	 */
 	public PagePermission(String page, String actions) {
 		super(page);
@@ -163,38 +158,24 @@ public final class PagePermission extends APermission {
 		int pos = pageName.indexOf(ATTACHMENT_SEPARATOR);
 		this.m_page = (pos == -1) ? pageName : pageName.substring(0, pos);
 
-		// Parse actions
-		String[] pageActions = actions.toLowerCase().split(ACTION_SEPARATOR);
-		Arrays.sort(pageActions, String.CASE_INSENSITIVE_ORDER);
-		setMask(createMask(actions));
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < pageActions.length; i++) {
-			buffer.append(pageActions[i]);
-			if (i < (pageActions.length - 1)) {
-				buffer.append(ACTION_SEPARATOR);
-			}
-		}
-		setActions(buffer.toString());
+		parseActions(actions);
 	}
 
 	/**
 	 * Creates a new PagePermission for a specified page and set of actions.
 	 * 
-	 * @param page
-	 *            The wikipage.
-	 * @param actions
-	 *            A set of actions; a comma-separated list of actions.
+	 * @param page    The wikipage.
+	 * @param actions A set of actions; a comma-separated list of actions.
 	 */
 	public PagePermission(WikiPage page, String actions) {
 		this(page.getWiki() + WIKI_SEPARATOR + page.getName(), actions);
 	}
 
 	/**
-	 * Two PagePermission objects are considered equal if their actions (after normalization), wiki and
-	 * target are equal.
+	 * Two PagePermission objects are considered equal if their actions (after
+	 * normalization), wiki and target are equal.
 	 * 
-	 * @param obj
-	 *            {@inheritDoc}
+	 * @param obj {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */
 	@Override
@@ -218,24 +199,26 @@ public final class PagePermission extends APermission {
 
 	/**
 	 * <p>
-	 * PagePermission can only imply other PagePermissions; no other permission types are implied. One
-	 * PagePermission implies another if its actions if three conditions are met:
+	 * PagePermission can only imply other PagePermissions; no other permission
+	 * types are implied. One PagePermission implies another if its actions if three
+	 * conditions are met:
 	 * </p>
 	 * <ol>
-	 * <li>The other PagePermission's wiki is equal to, or a subset of, that of this permission. This
-	 * permission's wiki is considered a superset of the other if it contains a matching prefix plus a
-	 * wildcard, or a wildcard followed by a matching suffix.</li>
-	 * <li>The other PagePermission's target is equal to, or a subset of, the target specified by this
-	 * permission. This permission's target is considered a superset of the other if it contains a
-	 * matching prefix plus a wildcard, or a wildcard followed by a matching suffix.</li>
-	 * <li>All of other PagePermission's actions are equal to, or a subset of, those of this
-	 * permission</li>
+	 * <li>The other PagePermission's wiki is equal to, or a subset of, that of this
+	 * permission. This permission's wiki is considered a superset of the other if
+	 * it contains a matching prefix plus a wildcard, or a wildcard followed by a
+	 * matching suffix.</li>
+	 * <li>The other PagePermission's target is equal to, or a subset of, the target
+	 * specified by this permission. This permission's target is considered a
+	 * superset of the other if it contains a matching prefix plus a wildcard, or a
+	 * wildcard followed by a matching suffix.</li>
+	 * <li>All of other PagePermission's actions are equal to, or a subset of, those
+	 * of this permission</li>
 	 * </ol>
 	 * 
 	 * @see java.security.Permission#implies(java.security.Permission)
 	 * 
-	 * @param permission
-	 *            {@inheritDoc}
+	 * @param permission {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */
 	@Override
@@ -291,11 +274,10 @@ public final class PagePermission extends APermission {
 	}
 
 	/**
-	 * Creates an "implied mask" based on the actions originally assigned: for example, delete implies
-	 * modify, comment, upload and view.
+	 * Creates an "implied mask" based on the actions originally assigned: for
+	 * example, delete implies modify, comment, upload and view.
 	 * 
-	 * @param resultMask
-	 *            binary mask for actions
+	 * @param resultMask binary mask for actions
 	 * @return binary mask for implied actions
 	 */
 	protected static int impliedMask(int mask) {
@@ -324,12 +306,10 @@ public final class PagePermission extends APermission {
 	/**
 	 * Determines whether one target string is a logical subset of the other.
 	 * 
-	 * @param superSet
-	 *            the prospective superset
-	 * @param subSet
-	 *            the prospective subset
-	 * @return the results of the test, where <code>true</code> indicates that <code>subSet</code> is a
-	 *         subset of <code>superSet</code>
+	 * @param superSet the prospective superset
+	 * @param subSet   the prospective subset
+	 * @return the results of the test, where <code>true</code> indicates that
+	 *         <code>subSet</code> is a subset of <code>superSet</code>
 	 */
 	protected static boolean isSubset(String superSet, String subSet) {
 		// If either is null, return false
@@ -363,33 +343,28 @@ public final class PagePermission extends APermission {
 	}
 
 	/**
-	 * Private method that creates a binary mask based on the actions specified. This is used by
-	 * {@link #implies(Permission)}.
-	 * 
-	 * @param actions
-	 *            the actions for this permission, separated by commas
-	 * @return the binary actions mask
+	 * {@inheritDoc}
 	 */
-	protected static int createMask(String actions) {
-		if (actions == null || actions.length() == 0) {
+	@Override
+	protected int createMask(String[] actions) {
+		if (actions == null || actions.length == 0) {
 			throw new IllegalArgumentException("Actions cannot be blank or null");
 		}
 		int mask = 0;
-		String[] actionList = actions.split(ACTION_SEPARATOR);
-		for (String action : actionList) {
-			if (action.equalsIgnoreCase(VIEW_ACTION)) {
+		for (String action : actions) {
+			if (VIEW_ACTION.equalsIgnoreCase(action)) {
 				mask |= VIEW_MASK;
-			} else if (action.equalsIgnoreCase(EDIT_ACTION)) {
+			} else if (EDIT_ACTION.equalsIgnoreCase(action)) {
 				mask |= EDIT_MASK;
-			} else if (action.equalsIgnoreCase(COMMENT_ACTION)) {
+			} else if (COMMENT_ACTION.equalsIgnoreCase(action)) {
 				mask |= COMMENT_MASK;
-			} else if (action.equalsIgnoreCase(MODIFY_ACTION)) {
+			} else if (MODIFY_ACTION.equalsIgnoreCase(action)) {
 				mask |= MODIFY_MASK;
-			} else if (action.equalsIgnoreCase(UPLOAD_ACTION)) {
+			} else if (UPLOAD_ACTION.equalsIgnoreCase(action)) {
 				mask |= UPLOAD_MASK;
-			} else if (action.equalsIgnoreCase(DELETE_ACTION)) {
+			} else if (DELETE_ACTION.equalsIgnoreCase(action)) {
 				mask |= DELETE_MASK;
-			} else if (action.equalsIgnoreCase(RENAME_ACTION)) {
+			} else if (RENAME_ACTION.equalsIgnoreCase(action)) {
 				mask |= RENAME_MASK;
 			} else {
 				throw new IllegalArgumentException("Unrecognized action: " + action);
@@ -397,4 +372,5 @@ public final class PagePermission extends APermission {
 		}
 		return mask;
 	}
+
 }

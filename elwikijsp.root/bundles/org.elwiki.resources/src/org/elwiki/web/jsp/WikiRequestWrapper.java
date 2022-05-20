@@ -21,7 +21,7 @@ package org.elwiki.web.jsp;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.SessionMonitor;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

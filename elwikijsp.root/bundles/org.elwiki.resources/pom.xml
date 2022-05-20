@@ -57,7 +57,7 @@
 					<minimize>${minimize}</minimize>
 					<ignoreMissingResources>false</ignoreMissingResources>
 					<parallelProcessing>false</parallelProcessing>
-					<incrementalBuildEnabled>false</incrementalBuildEnabled>
+					<incrementalBuildEnabled>true</incrementalBuildEnabled>
 					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 				</configuration>
 				<!-- https://github.com/wro4j/wro4j/issues/1039#issuecomment-382474533 -->

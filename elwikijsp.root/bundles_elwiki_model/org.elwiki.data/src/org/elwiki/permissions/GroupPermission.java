@@ -23,7 +23,6 @@ import java.security.AccessController;
 import java.security.DomainCombiner;
 import java.security.Permission;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.Set;
 
 import javax.security.auth.Subject;
@@ -33,15 +32,16 @@ import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
  * <p>
- * Permission to perform an operation on a group in a given wiki. Permission actions include:
- * <code>view</code>, <code>edit</code>, <code>delete</code>.
+ * Permission to perform an operation on a group in a given wiki. Permission
+ * actions include: <code>view</code>, <code>edit</code>, <code>delete</code>.
  * </p>
  * <p>
- * The target of a permission is a single group or collection in a given wiki. The syntax for the
- * target is the wiki name, followed by a colon (:) and the name of the group. &#8220;All
- * wikis&#8221; can be specified using a wildcard (*). Group collections may also be specified using
- * a wildcard. For groups, the wildcard may be a prefix, suffix, or all by itself. Examples of
- * targets include:
+ * The target of a permission is a single group or collection in a given wiki.
+ * The syntax for the target is the wiki name, followed by a colon (:) and the
+ * name of the group. &#8220;All wikis&#8221; can be specified using a wildcard
+ * (*). Group collections may also be specified using a wildcard. For groups,
+ * the wildcard may be a prefix, suffix, or all by itself. Examples of targets
+ * include:
  * </p>
  * <blockquote><code>*:*<br/>
  * *:TestPlanners<br/>
@@ -55,15 +55,17 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * </p>
  * <ul>
  * <li><code>edit</code>&nbsp;implies&nbsp;<code>view</code></li>
- * <li><code>delete</code>&nbsp;implies&nbsp;<code>edit</code> and <code>view</code></li>
+ * <li><code>delete</code>&nbsp;implies&nbsp;<code>edit</code> and
+ * <code>view</code></li>
  * </ul>
  * <P>
  * Targets that do not include a wiki prefix <em>never </em> imply others.
  * </p>
  * <p>
- * GroupPermission accepts a special target called <code>&lt;groupmember&gt;</code> that means
- * &#8220;all groups that a user is a member of.&#8221; When included in a policy file
- * <code>grant</code> block, it functions like a wildcard. Thus, this block:
+ * GroupPermission accepts a special target called
+ * <code>&lt;groupmember&gt;</code> that means &#8220;all groups that a user is
+ * a member of.&#8221; When included in a policy file <code>grant</code> block,
+ * it functions like a wildcard. Thus, this block:
  *
  * <pre>
  *  grant signedBy &quot;jspwiki&quot;,
@@ -71,15 +73,18 @@ import org.elwiki.data.authorize.GroupPrincipal;
  *      permission org.elwiki.auth.permissions.GroupPermission &quot;*:&lt;groupmember&gt;&quot;, &quot;edit&quot;;
  * </pre>
  *
- * means, &#8220;allow Authenticated users to edit any groups they are members of.&#8221; The
- * wildcard target (*) does <em>not</em> imply <code>&lt;groupmember&gt;</code>; it must be granted
- * explicitly.
+ * means, &#8220;allow Authenticated users to edit any groups they are members
+ * of.&#8221; The wildcard target (*) does <em>not</em> imply
+ * <code>&lt;groupmember&gt;</code>; it must be granted explicitly.
  */
 public final class GroupPermission extends APermission {
 
-	private static final long serialVersionUID = 12L;
+	private static final long serialVersionUID = 347330660713847609L;
 
-	/** Special target token that denotes all groups that a Subject's Principals are members of. */
+	/**
+	 * Special target token that denotes all groups that a Subject's Principals are
+	 * members of.
+	 */
 	public static final String MEMBER_TOKEN = "<groupmember>";
 
 	/** Action for deleting a group or collection of groups. */
@@ -97,20 +102,23 @@ public final class GroupPermission extends APermission {
 
 	protected static final int VIEW_MASK = 0x1;
 
-	/** Convenience constant that denotes <code>GroupPermission( "*:*, "delete" )</code>. */
+	/**
+	 * Convenience constant that denotes
+	 * <code>GroupPermission( "*:*, "delete" )</code>.
+	 */
 	public static final GroupPermission DELETE = new GroupPermission(DELETE_ACTION);
 
-	/** Convenience constant that denotes <code>GroupPermission( "*:*, "edit" )</code>. */
+	/**
+	 * Convenience constant that denotes
+	 * <code>GroupPermission( "*:*, "edit" )</code>.
+	 */
 	public static final GroupPermission EDIT = new GroupPermission(EDIT_ACTION);
 
-	/** Convenience constant that denotes <code>GroupPermission( "*:*, "view" )</code>. */
+	/**
+	 * Convenience constant that denotes
+	 * <code>GroupPermission( "*:*, "view" )</code>.
+	 */
 	public static final GroupPermission VIEW = new GroupPermission(VIEW_ACTION);
-
-	private static final String ACTION_SEPARATOR = ",";
-
-	private static final String WILDCARD = "*";
-
-	private static final String WIKI_SEPARATOR = ":";
 
 	private final String m_group;
 
@@ -120,24 +128,22 @@ public final class GroupPermission extends APermission {
 	}
 
 	/**
-	 * Private convenience constructor that creates a new GroupPermission for all wikis and groups (*:*)
-	 * and set of actions.
+	 * Private convenience constructor that creates a new GroupPermission for all
+	 * wikis and groups (*:*) and set of actions.
 	 * 
 	 * @param actions
 	 */
 	private GroupPermission(String actions) {
-		this(WILDCARD + WIKI_SEPARATOR + WILDCARD, actions);
+		this(WILDCARD + APermission.WIKI_SEPARATOR + WILDCARD, actions);
 	}
 
 	/**
-	 * Creates a new GroupPermission for a specified group and set of actions. Group should include a
-	 * prepended wiki name followed by a colon (:). If the wiki name is not supplied or starts with a
-	 * colon, the group refers to all wikis.
+	 * Creates a new GroupPermission for a specified group and set of actions. Group
+	 * should include a prepended wiki name followed by a colon (:). If the wiki
+	 * name is not supplied or starts with a colon, the group refers to all wikis.
 	 * 
-	 * @param group
-	 *            the wiki group
-	 * @param actions
-	 *            the allowed actions for this group
+	 * @param group   the wiki group
+	 * @param actions the allowed actions for this group
 	 */
 	public GroupPermission(String group, String actions) {
 		super(group);
@@ -155,26 +161,14 @@ public final class GroupPermission extends APermission {
 		}
 		this.m_group = groupName;
 
-		// Parse actions
-		String[] groupActions = actions.toLowerCase().split(ACTION_SEPARATOR);
-		Arrays.sort(groupActions, String.CASE_INSENSITIVE_ORDER);
-		setMask(createMask(actions));
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < groupActions.length; i++) {
-			buffer.append(groupActions[i]);
-			if (i < (groupActions.length - 1)) {
-				buffer.append(ACTION_SEPARATOR);
-			}
-		}
-		setActions(buffer.toString());
+		parseActions(actions);
 	}
 
 	/**
-	 * Two PagePermission objects are considered equal if their actions (after normalization), wiki and
-	 * target are equal.
+	 * Two PagePermission objects are considered equal if their actions (after
+	 * normalization), wiki and target are equal.
 	 * 
-	 * @param obj
-	 *            the object to compare
+	 * @param obj the object to compare
 	 * @return the result of the comparison
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -199,24 +193,26 @@ public final class GroupPermission extends APermission {
 
 	/**
 	 * <p>
-	 * GroupPermissions can only imply other GroupPermissions; no other permission types are implied.
-	 * One GroupPermission implies another if its actions if three conditions are met:
+	 * GroupPermissions can only imply other GroupPermissions; no other permission
+	 * types are implied. One GroupPermission implies another if its actions if
+	 * three conditions are met:
 	 * </p>
 	 * <ol>
-	 * <li>The other GroupPermission&#8217;s wiki is equal to, or a subset of, that of this permission.
-	 * This permission&#8217;s wiki is considered a superset of the other if it contains a matching
-	 * prefix plus a wildcard, or a wildcard followed by a matching suffix.</li>
-	 * <li>The other GroupPermission&#8217;s target is equal to, or a subset of, the target specified by
-	 * this permission. This permission&#8217;s target is considered a superset of the other if it
-	 * contains a matching prefix plus a wildcard, or a wildcard followed by a matching suffix.</li>
-	 * <li>All of other GroupPermission&#8217;s actions are equal to, or a subset of, those of this
-	 * permission</li>
+	 * <li>The other GroupPermission&#8217;s wiki is equal to, or a subset of, that
+	 * of this permission. This permission&#8217;s wiki is considered a superset of
+	 * the other if it contains a matching prefix plus a wildcard, or a wildcard
+	 * followed by a matching suffix.</li>
+	 * <li>The other GroupPermission&#8217;s target is equal to, or a subset of, the
+	 * target specified by this permission. This permission&#8217;s target is
+	 * considered a superset of the other if it contains a matching prefix plus a
+	 * wildcard, or a wildcard followed by a matching suffix.</li>
+	 * <li>All of other GroupPermission&#8217;s actions are equal to, or a subset
+	 * of, those of this permission</li>
 	 * </ol>
 	 * 
-	 * @param permission
-	 *            the Permission to examine
-	 * @return <code>true</code> if the GroupPermission implies the supplied Permission;
-	 *         <code>false</code> otherwise
+	 * @param permission the Permission to examine
+	 * @return <code>true</code> if the GroupPermission implies the supplied
+	 *         Permission; <code>false</code> otherwise
 	 * @see java.security.Permission#implies(java.security.Permission)
 	 */
 	@Override
@@ -268,11 +264,10 @@ public final class GroupPermission extends APermission {
 	}
 
 	/**
-	 * Creates an &#8220;implied mask&#8221; based on the actions originally assigned: for example,
-	 * delete implies edit; edit implies view.
+	 * Creates an &#8220;implied mask&#8221; based on the actions originally
+	 * assigned: for example, delete implies edit; edit implies view.
 	 * 
-	 * @param mask
-	 *            binary mask for actions
+	 * @param mask binary mask for actions
 	 * @return binary mask for implied actions
 	 */
 	protected static int impliedMask(int mask) {
@@ -288,60 +283,37 @@ public final class GroupPermission extends APermission {
 	}
 
 	/**
-	 * Protected method that creates a binary mask based on the actions specified. This is used by
-	 * {@link #implies(Permission)}.
-	 * 
-	 * @param actions
-	 *            the actions for this permission, separated by commas
-	 * @return the binary actions mask
-	 */
-	protected static int createMask(String actions) {
-		if (actions == null || actions.length() == 0) {
-			throw new IllegalArgumentException("Actions cannot be blank or null");
-		}
-		int mask = 0;
-		String[] actionList = actions.split(ACTION_SEPARATOR);
-		for (String action : actionList) {
-			if (action.equalsIgnoreCase(VIEW_ACTION)) {
-				mask |= VIEW_MASK;
-			} else if (action.equalsIgnoreCase(EDIT_ACTION)) {
-				mask |= EDIT_MASK;
-			} else if (action.equalsIgnoreCase(DELETE_ACTION)) {
-				mask |= DELETE_MASK;
-			} else {
-				throw new IllegalArgumentException("Unrecognized action: " + action);
-			}
-		}
-		return mask;
-	}
-
-	/**
 	 * <p>
 	 * Returns <code>true</code> if this GroupPermission was created with the token
-	 * <code>&lt;groupmember&gt;</code> <em>and</em> the current thread&#8217;s Subject is a member of
-	 * the Group indicated by the implied GroupPermission. Thus, a GroupPermission with the group
-	 * <code>&lt;groupmember&gt;</code> implies GroupPermission for group "TestGroup" only if the
-	 * Subject is a member of TestGroup.
+	 * <code>&lt;groupmember&gt;</code> <em>and</em> the current thread&#8217;s
+	 * Subject is a member of the Group indicated by the implied GroupPermission.
+	 * Thus, a GroupPermission with the group <code>&lt;groupmember&gt;</code>
+	 * implies GroupPermission for group "TestGroup" only if the Subject is a member
+	 * of TestGroup.
 	 * </p>
 	 * <p>
 	 * We make this determination by obtaining the current {@link Thread}&#8217;s
 	 * {@link java.security.AccessControlContext} and requesting the
-	 * {@link javax.security.auth.SubjectDomainCombiner}. If the combiner is not <code>null</code>, then
-	 * we know that the access check was requested using a {@link javax.security.auth.Subject}; that is,
-	 * that an upstream caller caused a Subject to be associated with the Thread&#8217;s
-	 * ProtectionDomain by executing a
-	 * {@link javax.security.auth.Subject#doAs(Subject, java.security.PrivilegedAction)} operation.
+	 * {@link javax.security.auth.SubjectDomainCombiner}. If the combiner is not
+	 * <code>null</code>, then we know that the access check was requested using a
+	 * {@link javax.security.auth.Subject}; that is, that an upstream caller caused
+	 * a Subject to be associated with the Thread&#8217;s ProtectionDomain by
+	 * executing a
+	 * {@link javax.security.auth.Subject#doAs(Subject, java.security.PrivilegedAction)}
+	 * operation.
 	 * </p>
 	 * <p>
-	 * If a SubjectDomainCombiner exists, determining group membership is simple: just iterate through
-	 * the Subject&#8217;s Principal set and look for all Principals of type
-	 * {@link org.elwiki.data.authorize.wiki.auth.GroupPrincipal}. If the name of any Principal matches
-	 * the value of the implied Permission&#8217;s {@link GroupPermission#getGroup()} value, then the
-	 * Subject is a member of this group -- and therefore this <code>impliesMember</code> call returns
+	 * If a SubjectDomainCombiner exists, determining group membership is simple:
+	 * just iterate through the Subject&#8217;s Principal set and look for all
+	 * Principals of type {@link org.elwiki.data.authorize.GroupPrincipal}. If the
+	 * name of any Principal matches the value of the implied Permission&#8217;s
+	 * {@link GroupPermission#getGroup()} value, then the Subject is a member of
+	 * this group -- and therefore this <code>impliesMember</code> call returns
 	 * <code>true</code>.
 	 * </p>
 	 * <p>
-	 * This may sound complicated, but it really isn&#8217;t. Consider the following examples:
+	 * This may sound complicated, but it really isn&#8217;t. Consider the following
+	 * examples:
 	 * </p>
 	 * <table border="1">
 	 * <thead>
@@ -361,14 +333,15 @@ public final class GroupPermission extends APermission {
 	 * <td><code>GroupPermission ("*:TestGroup")</code></td>
 	 * <td><code>GroupPermission ("*:TestGroup")</code></td>
 	 * <td><code>WikiPrincipal ("Biff"),<br/>GroupPrincipal ("TestGroup")</code></td>
-	 * <td><code>false</code> - this object does not contain <code>&lt;groupmember&gt;</code></td>
+	 * <td><code>false</code> - this object does not contain
+	 * <code>&lt;groupmember&gt;</code></td>
 	 * </tr>
 	 * <tr>
 	 * <td><code>GroupPermission ("&lt;groupmember&gt;")</code></td>
 	 * <td><code>GroupPermission ("*:TestGroup")</code></td>
 	 * <td><code>WikiPrincipal ("Biff"),<br/>GroupPrincipal ("FooGroup")</code></td>
-	 * <td><code>false</code> - Subject does not contain GroupPrincipal matching implied
-	 * Permission&#8217;s group (TestGroup)</td>
+	 * <td><code>false</code> - Subject does not contain GroupPrincipal matching
+	 * implied Permission&#8217;s group (TestGroup)</td>
 	 * </tr>
 	 * <tr>
 	 * <td><code>GroupPermission ("&lt;groupmember&gt;")</code></td>
@@ -386,14 +359,14 @@ public final class GroupPermission extends APermission {
 	 * <p>
 	 * Note that JSPWiki&#8217;s access control checks are made inside of
 	 * {@link org.apache.wiki.auth.AuthorizationManager#checkPermission(org.apache.wiki.WikiSession, Permission)},
-	 * which performs a <code>Subject.doAs()</code> call. Thus, this Permission functions exactly the
-	 * way it should during normal operations.
+	 * which performs a <code>Subject.doAs()</code> call. Thus, this Permission
+	 * functions exactly the way it should during normal operations.
 	 * </p>
 	 * 
-	 * @param permission
-	 *            the implied permission
-	 * @return <code>true</code> if the calling Thread&#8217;s Subject contains a GroupPrincipal
-	 *         matching the implied GroupPermission&#8217;s group; <code>false</code> otherwise
+	 * @param permission the implied permission
+	 * @return <code>true</code> if the calling Thread&#8217;s Subject contains a
+	 *         GroupPrincipal matching the implied GroupPermission&#8217;s group;
+	 *         <code>false</code> otherwise
 	 */
 	protected boolean impliesMember(Permission permission) {
 		if (!(permission instanceof GroupPermission)) {
@@ -421,4 +394,28 @@ public final class GroupPermission extends APermission {
 		}
 		return false;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected int createMask(String[] actions) {
+		if (actions == null || actions.length == 0) {
+			throw new IllegalArgumentException("Actions cannot be blank or null");
+		}
+		int mask = 0;
+		for (String action : actions) {
+			if (VIEW_ACTION.equalsIgnoreCase(action)) {
+				mask |= VIEW_MASK;
+			} else if (EDIT_ACTION.equalsIgnoreCase(action)) {
+				mask |= EDIT_MASK;
+			} else if (DELETE_ACTION.equalsIgnoreCase(action)) {
+				mask |= DELETE_MASK;
+			} else {
+				throw new IllegalArgumentException("Unrecognized action: " + action);
+			}
+		}
+		return mask;
+	}
+
 }

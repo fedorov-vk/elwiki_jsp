@@ -29,7 +29,6 @@ import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.acl.AclManager;
-import org.apache.wiki.auth.authorize.Role;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.services.ServicesRefs;

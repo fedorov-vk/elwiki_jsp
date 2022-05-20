@@ -25,6 +25,7 @@
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
+<%@ page import="org.elwiki.data.authorize.*" %>
 <%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.elwiki.permissions.GroupPermission" %>

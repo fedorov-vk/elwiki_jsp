@@ -35,6 +35,7 @@ import java.util.Arrays;
  * <code>createGroups</code> implies <code>createPages</code>. </p>
  * @since 2.3
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public final class WikiPermission extends Permission implements Serializable
 {
     private static final long          serialVersionUID        = 1L;

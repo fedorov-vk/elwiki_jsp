@@ -38,7 +38,6 @@ import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.RedirectCommand;
 import org.apache.wiki.api.ui.WikiCommand;
-import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.url0.URLConstructor;
@@ -46,6 +45,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;

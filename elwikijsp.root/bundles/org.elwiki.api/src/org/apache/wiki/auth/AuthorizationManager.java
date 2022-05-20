@@ -24,7 +24,7 @@ import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.Role;
 import org.elwiki.api.authorization.IAuthorizer;
 
 import javax.servlet.http.HttpServletResponse;
@@ -226,7 +226,7 @@ public interface AuthorizationManager extends Initializable {
      * <p>Given a supplied string representing a Principal's name from an Acl, this method resolves the correct type of Principal (role,
      * group, or user). This method is guaranteed to always return a Principal. The algorithm is straightforward:</p>
      * <ol>
-     * <li>If the name matches one of the built-in {@link org.apache.wiki.auth.authorize.Role} names, return that built-in Role</li>
+     * <li>If the name matches one of the built-in {@link org.elwiki.data.authorize.Role} names, return that built-in Role</li>
      * <li>If the name matches one supplied by the current {@link org.apache.wiki.auth.Authorizer}, return that Role</li>
      * <li>If the name matches a group managed by the current {@link org.apache.wiki.auth.authorize.GroupManager}, return that Group</li>
      * <li>Otherwise, assume that the name represents a user principal. Using the current {@link org.apache.wiki.auth.user.UserDatabase},

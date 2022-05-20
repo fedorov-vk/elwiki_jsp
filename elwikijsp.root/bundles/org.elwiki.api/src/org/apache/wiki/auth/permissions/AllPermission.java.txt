@@ -28,6 +28,7 @@ import java.security.PermissionCollection;
  * </p>
  * @since 2.3.80
  */
+@Deprecated :FVK: - перенесен в бандл org.elwiki.data
 public final class AllPermission extends Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;

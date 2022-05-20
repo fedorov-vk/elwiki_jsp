@@ -24,9 +24,9 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.GroupPrincipal;
 import org.apache.wiki.auth.UserManager;
-import org.apache.wiki.auth.authorize.Role;
+import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.data.authorize.Role;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
@@ -198,7 +198,7 @@ public class UserProfileTag extends WikiTagBase {
     }
 
     /**
-     * Returns a sorted list of the {@link org.apache.wiki.auth.authorize.Role} objects a user possesses
+     * Returns a sorted list of the {@link org.elwiki.data.authorize.Role} objects a user possesses
      * in his or her Session. The result is computed by consulting
      * {@link org.apache.wiki.api.core.Session#getRoles()}
      * and extracting those that are of type Role.

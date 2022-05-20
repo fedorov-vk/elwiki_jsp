@@ -193,13 +193,7 @@
 					-->
 					<useUIHarness>false</useUIHarness>
 					<appArgLine>-console 10008</appArgLine>
-					<argLine>
- -Dorg.osgi.service.http.port=8088
- -Delwiki.users.database=/home/vfedorov/dev/dev_wikijsp/WS/data/users.json
- -Delwiki.groups.database=/home/vfedorov/dev/dev_wikijsp/WS/data/groups.json
- -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
- -Dstorage.cdo.port=2039
-					</argLine>
+					<argLine>${tests-argLine}</argLine>
 <!-- см. внизу файла -->
 					<showEclipseLog>true</showEclipseLog>
 					<defaultStartLevel>

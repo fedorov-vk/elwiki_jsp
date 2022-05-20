@@ -82,8 +82,8 @@ public interface Session extends WikiEventListener {
     /**
      * <p>Determines whether the current session is anonymous. This will be true if any of these conditions are true:</p>
      * <ul>
-     *   <li>The session's Principal set contains {@link org.apache.wiki.auth.authorize.Role#ANONYMOUS}</li>
-     *   <li>The session's Principal set contains {@link org.apache.wiki.auth.WikiPrincipal#GUEST}</li>
+     *   <li>The session's Principal set contains {@link org.elwiki.data.authorize.Role#ANONYMOUS}</li>
+     *   <li>The session's Principal set contains {@link org.elwiki.data.authorize.WikiPrincipal#GUEST}</li>
      *   <li>The Principal returned by {@link #getUserPrincipal()} evaluates to an IP address.</li>
      * </ul>
      * <p>The criteria above are listed in the order in which they are evaluated.</p>

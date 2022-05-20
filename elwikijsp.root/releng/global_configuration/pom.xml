@@ -286,8 +286,19 @@
 				<target-os>linux</target-os>
 				<target-ws>gtk</target-ws>
 				<target-arch>x86_64</target-arch>
+				<tests-argLine>
+ -Dorg.osgi.service.http.port=8088
+ -Delwiki.users.database=/home/vfedorov/dev/dev_wikijsp/WS/data/users.json
+ -Delwiki.groups.database=/home/vfedorov/dev/dev_wikijsp/WS/data/groups.json
+ -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+ -Dstorage.cdo.port=2039
+				</tests-argLine>
 			</properties>
 		</profile>
+
+<!--
+ -Xdebug -Xrunjdwp:transport=dt_socket,address=8001,server=y,suspend=y
+-->
 
 		<profile>
 			<id>windows</id>
@@ -307,6 +318,13 @@
 				<target-os>win32</target-os>
 				<target-ws>win32</target-ws>
 				<target-arch>x86_64</target-arch>
+				<tests-argLine>
+ -Dorg.osgi.service.http.port=8088
+ -Delwiki.users.database=D:/devj/dev_wikijsp/WS/data/users.json
+ -Delwiki.groups.database=D:/devj/dev_wikijsp/WS/data/groups.json
+ -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+ -Dstorage.cdo.port=2039
+				</tests-argLine>
 			</properties>
 			<build></build>
 		</profile>

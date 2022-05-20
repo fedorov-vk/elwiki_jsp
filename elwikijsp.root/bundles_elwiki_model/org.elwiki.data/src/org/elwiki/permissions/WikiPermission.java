@@ -20,21 +20,22 @@ package org.elwiki.permissions;
 
 import java.security.Permission;
 import java.security.PermissionCollection;
-import java.util.Arrays;
 
 /**
  * <p>
- * Permission to perform an global wiki operation, such as self-registering or creating new pages.
- * Permission actions include: <code>createGroups</code>, <code>createPages</code>,
- * <code>editPreferences</code>, <code>editProfile</code> and <code>login</code>.
+ * Permission to perform an global wiki operation, such as self-registering or
+ * creating new pages. Permission actions include: <code>createGroups</code>,
+ * <code>createPages</code>, <code>editPreferences</code>,
+ * <code>editProfile</code> and <code>login</code>.
  * </p>
  * <p>
- * The target is a given wiki. The syntax for the target is the wiki name. "All wikis" can be
- * specified using a wildcard (*). Page collections may also be specified using a wildcard. For
- * pages, the wildcard may be a prefix, suffix, or all by itself.
+ * The target is a given wiki. The syntax for the target is the wiki name. "All
+ * wikis" can be specified using a wildcard (*). Page collections may also be
+ * specified using a wildcard. For pages, the wildcard may be a prefix, suffix,
+ * or all by itself.
  * <p>
- * Certain permissions imply others. Currently, <code>createGroups</code> implies
- * <code>createPages</code>.
+ * Certain permissions imply others. Currently, <code>createGroups</code>
+ * implies <code>createPages</code>.
  * </p>
  */
 public final class WikiPermission extends APermission {
@@ -55,9 +56,6 @@ public final class WikiPermission extends APermission {
 
 	/** Name of the action for editProfile permission. */
 	public static final String EDIT_PROFILE_ACTION = "editProfile";
-
-	/** Value for a generic wildcard. */
-	public static final String WILDCARD = "*";
 
 	protected static final int CREATE_GROUPS_MASK = 0x1;
 
@@ -87,33 +85,20 @@ public final class WikiPermission extends APermission {
 	/**
 	 * Creates a new WikiPermission for a specified set of actions.
 	 * 
-	 * @param actions
-	 *            the actions for this permission
-	 * @param wiki
-	 *            The name of the wiki the permission belongs to.
+	 * @param wiki    The name of the wiki the permission belongs to.
+	 * @param actions the actions for this permission
 	 */
 	public WikiPermission(String wiki, String actions) {
 		super(wiki);
-		String[] pageActions = actions.toLowerCase().split(",");
-		Arrays.sort(pageActions, String.CASE_INSENSITIVE_ORDER);
-		setMask(createMask(actions));
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < pageActions.length; i++) {
-			buffer.append(pageActions[i]);
-			if (i < (pageActions.length - 1)) {
-				buffer.append(",");
-			}
-		}
-		setActions(buffer.toString());
-		setWikiName((wiki == null) ? WILDCARD : wiki);
+		setWikiName((wiki == null || wiki.isEmpty() || wiki.isBlank()) ? WILDCARD : wiki);
+		parseActions(actions);
 	}
 
 	/**
-	 * Two WikiPermission objects are considered equal if their wikis and actions (after normalization)
-	 * are equal.
+	 * Two WikiPermission objects are considered equal if their wikis and actions
+	 * (after normalization) are equal.
 	 * 
-	 * @param obj
-	 *            the object to test
+	 * @param obj the object to test
 	 * @return the result
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -127,13 +112,15 @@ public final class WikiPermission extends APermission {
 	}
 
 	/**
-	 * WikiPermission can only imply other WikiPermissions; no other permission types are implied. One
-	 * WikiPermission implies another if all of the other WikiPermission's actions are equal to, or a
-	 * subset of, those for this permission.
+	 * WikiPermission can only imply other WikiPermissions; no other permission
+	 * types are implied. One WikiPermission implies another if all of the other
+	 * WikiPermission's actions are equal to, or a subset of, those for this
+	 * permission.
 	 * 
-	 * @param permission
-	 *            the permission which may (or may not) be implied by this instance
-	 * @return <code>true</code> if the permission is implied, <code>false</code> otherwise
+	 * @param permission the permission which may (or may not) be implied by this
+	 *                   instance
+	 * @return <code>true</code> if the permission is implied, <code>false</code>
+	 *         otherwise
 	 * @see java.security.Permission#implies(java.security.Permission)
 	 */
 	@Override
@@ -177,11 +164,10 @@ public final class WikiPermission extends APermission {
 	}
 
 	/**
-	 * Creates an "implied mask" based on the actions originally assigned: for example,
-	 * <code>createGroups</code> implies <code>createPages</code>.
+	 * Creates an "implied mask" based on the actions originally assigned: for
+	 * example, <code>createGroups</code> implies <code>createPages</code>.
 	 * 
-	 * @param resultMask
-	 *            the initial mask
+	 * @param resultMask the initial mask
 	 * @return the implied mask
 	 */
 	protected static int impliedMask(int mask1) {
@@ -193,30 +179,24 @@ public final class WikiPermission extends APermission {
 	}
 
 	/**
-	 * Private method that creates a binary mask based on the actions specified. This is used by
-	 * {@link #implies(Permission)}.
-	 * 
-	 * @param actions
-	 *            the permission actions, separated by commas
-	 * @return binary mask representing the permissions
+	 * {@inheritDoc}
 	 */
-	protected static int createMask(String actions) {
-		if (actions == null || actions.length() == 0) {
+	@Override
+	protected int createMask(String[] actions) {
+		if (actions == null || actions.length == 0) {
 			throw new IllegalArgumentException("Actions cannot be blank or null");
 		}
 		int mask = 0;
-		String[] actionList = actions.split(",");
-		for (int i = 0; i < actionList.length; i++) {
-			String action = actionList[i];
-			if (action.equalsIgnoreCase(CREATE_GROUPS_ACTION)) {
+		for (String action : actions) {
+			if (CREATE_GROUPS_ACTION.equalsIgnoreCase(action)) {
 				mask |= CREATE_GROUPS_MASK;
-			} else if (action.equalsIgnoreCase(CREATE_PAGES_ACTION)) {
+			} else if (CREATE_PAGES_ACTION.equalsIgnoreCase(action)) {
 				mask |= CREATE_PAGES_MASK;
-			} else if (action.equalsIgnoreCase(LOGIN_ACTION)) {
+			} else if (LOGIN_ACTION.equalsIgnoreCase(action)) {
 				mask |= LOGIN_MASK;
-			} else if (action.equalsIgnoreCase(EDIT_PREFERENCES_ACTION)) {
+			} else if (EDIT_PREFERENCES_ACTION.equalsIgnoreCase(action)) {
 				mask |= EDIT_PREFERENCES_MASK;
-			} else if (action.equalsIgnoreCase(EDIT_PROFILE_ACTION)) {
+			} else if (EDIT_PROFILE_ACTION.equalsIgnoreCase(action)) {
 				mask |= EDIT_PROFILE_MASK;
 			} else {
 				throw new IllegalArgumentException("Unrecognized action: " + action);
@@ -224,4 +204,5 @@ public final class WikiPermission extends APermission {
 		}
 		return mask;
 	}
+
 }
