@@ -184,8 +184,9 @@ public final class PagePermission extends APermission {
 			return false;
 		}
 		PagePermission p = (PagePermission) obj;
-		return p.getMask() == this.getMask() && p.m_page.equals(this.m_page) && p.getWikiName() != null
+		boolean equalsStatus = p.getMask() == this.getMask() && p.m_page.equals(this.m_page) && p.getWikiName() != null
 				&& p.getWikiName().equals(this.getWikiName());
+		return equalsStatus;
 	}
 
 	/**

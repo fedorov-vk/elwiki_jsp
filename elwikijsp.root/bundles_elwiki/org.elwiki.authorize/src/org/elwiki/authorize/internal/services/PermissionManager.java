@@ -9,7 +9,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.IPermissionManager;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.authorize.authenticated.AuthenticatedContextActivator;
-import org.elwiki.authorize.condition.SessionTypeCondition;
+
 import org.elwiki.authorize.context.anonymous.AnonymousContextActivator;
 import org.elwiki.authorize.context.asserted.AssertedContextActivator;
 import org.elwiki.configuration.IWikiConfiguration;
