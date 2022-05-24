@@ -1,0 +1,45 @@
+package org.elwiki.rap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.eclipse.rap.rwt.RWT;
+import org.eclipse.rap.rwt.application.AbstractEntryPoint;
+import org.eclipse.rap.rwt.internal.service.ContextProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.apache.log4j.Logger;
+
+public class BasicEntryPoint extends AbstractEntryPoint {
+
+	private static final long serialVersionUID = -5623563981336442570L;
+
+	private static final Logger log = Logger.getLogger(BasicEntryPoint.class);
+	
+    private String id;
+
+	@Override
+    protected void createContents(Composite parent) {
+		getId();
+
+        parent.setLayout(new GridLayout(2, false));
+        Button checkbox = new Button(parent, SWT.CHECK);
+        checkbox.setText("Hello: " + this.id);
+        Button button = new Button(parent, SWT.PUSH);
+        button.setText("World");
+    }
+    
+    protected void getId() {
+    	HttpSession session = RWT.getUISession().getHttpSession();
+    	this.id = session.getId();
+
+    	HttpServletRequest httpRequest = ContextProvider.getRequest();
+    	
+		log.debug("HttpSession ID: " + session.getId());
+		log.debug("    RequestURI: " + httpRequest.getRequestURI());
+    }
+
+}

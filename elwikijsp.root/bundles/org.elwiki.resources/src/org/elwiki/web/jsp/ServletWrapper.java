@@ -49,10 +49,10 @@ public abstract class ServletWrapper implements Servlet {
 			delegate.service(request, response);
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//:FVK: !!! -> e.printStackTrace();
 		} catch (IOException e) { // UTFDataFormatException
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
