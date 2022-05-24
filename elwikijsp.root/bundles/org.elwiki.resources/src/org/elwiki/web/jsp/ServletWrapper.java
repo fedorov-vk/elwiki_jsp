@@ -44,7 +44,16 @@ public abstract class ServletWrapper implements Servlet {
 	@Override
 	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		initializeDelegate();
-		delegate.service(request, response);
+
+		try {
+			delegate.service(request, response);
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) { // UTFDataFormatException
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

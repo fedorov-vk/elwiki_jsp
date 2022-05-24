@@ -22,6 +22,7 @@ import java.security.AllPermission;
 import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessControlContext;
@@ -29,6 +30,8 @@ import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.CodeSource;
 import java.security.Permission;
+import java.security.PermissionCollection;
+import java.security.Permissions;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
@@ -97,7 +100,7 @@ import org.elwiki.api.authorization.IAuthorizer;
 //import org.elwiki.api.exceptions.WikiSecurityException;
 import org.elwiki.authorize.authenticated.AuthenticatedContextActivator;
 import org.elwiki.authorize.check.AuthorizeCheckActivator;
-import org.elwiki.authorize.condition.SessionTypeCondition;
+
 //import org.elwiki.authorize.condition.SessionTypeCondition;
 //import org.elwiki.authorize.anonymous.AnonymousActivator;
 //import org.elwiki.authorize.asserted.AssertedActivator;
@@ -107,6 +110,7 @@ import org.elwiki.authorize.context.asserted.AssertedContextActivator;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.internal.check.PolicyControl;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.data.authorize.APrincipal;
 import org.elwiki.data.authorize.Role;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
@@ -203,17 +207,25 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	/** Name of the default security policy file, as bundle resource. */
 	protected static final String DEFAULT_POLICY = "jspwiki.policy";
 
+	private static final Class<?>[] permissionMethodArgs = new Class[] {String.class, String.class};
+	
 	private final Map<String, Class<? extends IAuthorizer>> authorizerClasses = new HashMap<>();
 
 	private IAuthorizer m_authorizer = null;
 
-	/** Cache for storing ProtectionDomains used to evaluate the local policy. */
-	private Map<Principal, ProtectionDomain> m_cachedPds = new WeakHashMap<Principal, ProtectionDomain>();
+	/** Cache for storing PermissionCollections used to evaluate the local policy. */
+	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
+	/** Cache for storing ProtectionDomains used to evaluate the local policy. */
+	@Deprecated
+	private Map<Principal, ProtectionDomain> m_cachedPds = new WeakHashMap<Principal, ProtectionDomain>();
+	
+	@Deprecated
 	private LocalPolicy m_localPolicy = null;
 
 	private Engine m_engine;
 
+	
 	// == CODE ================================================================
 
 	/**
@@ -470,34 +482,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	@Override
 	public boolean checkPermission(Session session, Permission permission) {
-		Boolean result = false;
-		Function<Permission, Boolean> function = this::test1;
-
-		if (2 == 1) {
-			test();
-			// return true;
-		}
-
-		if (session.isAnonymous()) {
-			result = AnonymousContextActivator.test2(function, permission);
-		}
-		if (session.isAsserted()) {
-			result = AssertedContextActivator.test2(function, permission);
-		}
-		if (session.isAuthenticated()) {
-			result = AuthenticatedContextActivator.test2(function, permission);
-		}
-
-		if (!result) {
-			// System.out.println("not enabled!");
-		}
-
-		if (1 == 1) {
-			return result;
-		}
-
-		// ##############################################################################
-
 		//
 		//  A slight sanity check.
 		//
@@ -505,13 +489,13 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			fireEvent(WikiSecurityEvent.ACCESS_DENIED, null, permission);
 			return false;
 		}
-
+		
 		Principal user = session.getLoginPrincipal();
 
 		// Always allow the action if user has AllPermission
 		Permission allPermission = new org.elwiki.permissions.AllPermission(
-				this.m_engine.getWikiConfiguration().getApplicationName());
-		boolean hasAllPermission = testPermission(session, allPermission);
+				this.wikiConfiguration.getApplicationName());
+		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
 			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
 			return true;
@@ -519,7 +503,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		// If the user doesn't have *at least* the permission
 		// granted by policy, return false.
-		boolean hasPolicyPermission = testPermission(session, permission);
+		boolean hasPolicyPermission = checkStaticPermission(session, permission);
 		if (!hasPolicyPermission) {
 			fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
 			return false;
@@ -541,6 +525,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
 			return true;
 		}
+		
 
 		//
 		//  Next, iterate through the Principal objects assigned
@@ -570,225 +555,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 				return true;
 			}
 		}
-		fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
-		return false;
-	}
 
-	private void test() {
-		Function<Permission, Boolean> function = this::test1;
-
-		log.info("--TEST-------------------------------------");
-
-		/* Anonymous Context
-		 */
-		Bundle bundle = AnonymousContextActivator.getDefault().getBundle();
-		@Nullable AccessControlContext acc = bundle.adapt(AccessControlContext.class);
-
-		/*
-		if (!testPermission(acc, new FilePermission("test", "write"), false)) {
-			System.out.println("01: File should not write.");
-		}
-		if(!testPermission(acc, new FilePermission("test", "read"), true)){
-			System.out.println("02: File should be read.");
-		}
-		 */
-		if (!testPermission(acc, new AllPermission(), false)) {
-			System.out.println("03: AllPermission should be disabled.");
-		}
-
-		System.out.println("::01::" + test1(new AllPermission()));
-		;
-		System.out.println("::02::" + AnonymousContextActivator.test1(new AllPermission()));
-
-		System.out.println("::03:: " + function.apply(new AllPermission()));
-		Boolean res = AnonymousContextActivator.test2(function, new AllPermission());
-		System.out.println("::04:: " + //
-				AnonymousContextActivator.test2(function, new AllPermission()));
-
-		//testPermission(acc, new PagePermission("page", "edit"), true);
-		//testPermission(acc, new PagePermission("_:page", "view"), true);
-
-		if (!testPermission(acc, new PagePermission("wiki:page", "edit"), false)) {
-			System.out.println("05: Page should not be edit.");
-		}
-		if (!testPermission(acc, new PagePermission("wiki:page", "delete"), false)) {
-			System.out.println("06: Page should not be deleted.");
-		}
-		if (!testPermission(acc, new PagePermission("wiki:page", "view"), true)) {
-			System.out.println("07: Page should be view.");
-		}
-		System.out.println("::05:: " + //
-				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "edit")));
-		System.out.println("::06:: " + //
-				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "delete")));
-		System.out.println("::07:: " + //
-				AnonymousContextActivator.test2(function, new PagePermission("wiki:page", "view")));
-
-		/* Asserted Context
-		 */
-		bundle = AssertedContextActivator.getDefault().getBundle();
-		acc = bundle.adapt(AccessControlContext.class);
-		PagePermission perm100 = new PagePermission("wiki:page", "edit");
-		if (!testPermission(acc, perm100, true)) {
-			System.out.println("100: Page should be edit.");
-		}
-		System.out.println("::100:: " + AssertedContextActivator.test2(function, perm100));
-		PagePermission perm101 = new PagePermission("elwiki:SandBox", "edit");
-		if (!testPermission(acc, perm101, true)) {
-			System.out.println("101: Page should be edit.");
-		}
-		System.out.println("::101:: " + AssertedContextActivator.test2(function, perm101));
-		
-
-		/* Authenticated Context
-		 */
-		bundle = AuthenticatedContextActivator.getDefault().getBundle();
-		acc = bundle.adapt(AccessControlContext.class);
-		if (!testPermission(acc, new GroupPermission("vfedorov:group", "view"), true)) {
-			System.out.println("200: Group should be viewed.");
-		}
-		if (!testPermission(acc, new GroupPermission("elwiki:<groupmember>", "edit"), true)) {
-			System.out.println("201: Group should be edited.");
-		}
-		System.out.println("::200:: " + //
-				AuthenticatedContextActivator.test2(function, new GroupPermission("vfedorov:group", "view")));
-		System.out.println("::201:: " + //
-				AuthenticatedContextActivator.test2(function, new GroupPermission("elwiki:<groupmember>", "edit")));
-	}
-
-	private Boolean test1(Permission permission1) {
-		try {
-			AccessController.checkPermission(permission1);
-			return Boolean.TRUE;
-		} catch (Exception e) {
-			return Boolean.FALSE;
-		}
-	}
-
-	/**
-	 * @param acc
-	 * @param permission
-	 * @param expectedToPass
-	 * @return статус проверки: true: условие верно; false: тест провален.
-	 */
-	private boolean testPermission(AccessControlContext acc, Permission permission, boolean expectedToPass) {
-		try {
-			SecurityManager sm = System.getSecurityManager();
-			if (sm == null) {
-				return true; //:FVK: workaround.
-			}
-			sm.checkPermission(permission, acc);
-			return expectedToPass;
-			//			if (!expectedToPass) {
-			//				System.err.println("FAIL: test should not have the permission " + permission); //$NON-NLS-1$
-			//			}
-		} catch (AccessControlException e) {
-			return !expectedToPass;
-			//			if (expectedToPass) {
-			//				System.err.println("FAIL: test should have the permission " + permission); //$NON-NLS-1$
-			//			}
-		}
-	}
-
-	/*
-	AccessControlContext accAuthenticated = FrameworkUtil.getBundle(AuthenticatedContextActivator.class).adapt(AccessControlContext.class);
-	AccessControlContext accAsserted = FrameworkUtil.getBundle(AssertedContextActivator.class).adapt(AccessControlContext.class);
-	*/
-	@Nullable
-	AccessControlContext accAnonymous = FrameworkUtil.getBundle(AnonymousContextActivator.class)
-			.adapt(AccessControlContext.class);
-
-	private boolean testPermission(Session session, Permission permission) {
-		try {
-			// Check the Bundle-wide security policy first
-			SecurityManager sm = System.getSecurityManager();
-			sm.checkPermission(permission, this.accAnonymous);
-			return true;
-		} catch (AccessControlException e) {
-			// Global policy denied the permission
-		}
-		// Try the local policy - check each Role/Group and User Principal
-		if (allowedByLocalPolicy(session.getRoles(), permission)
-				|| allowedByLocalPolicy(session.getPrincipals(), permission)) {
-			return true;
-		}
-		return false;
-	}
-
-	//@Override
-	public boolean checkPermission_(Session session, Permission permission) {
-		//
-		//  A slight sanity check.
-		//
-		if (session == null || permission == null) {
-			fireEvent(WikiSecurityEvent.ACCESS_DENIED, null, permission);
-			return false;
-		}
-
-		Principal user = session.getLoginPrincipal();
-
-		// Always allow the action if user has AllPermission
-		Permission allPermission = new org.elwiki.permissions.AllPermission(
-				this.m_engine.getWikiConfiguration().getApplicationName());
-		boolean hasAllPermission = checkStaticPermission(session, allPermission);
-		if (hasAllPermission) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
-			return true;
-		}
-
-		// If the user doesn't have *at least* the permission
-		// granted by policy, return false.
-		boolean hasPolicyPermission = checkStaticPermission(session, permission);
-		if (!hasPolicyPermission) {
-			fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
-			return false;
-		}
-
-		// If this isn't a PagePermission, it's allowed
-		if (!(permission instanceof PagePermission)) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
-			return true;
-		}
-
-		//
-		// If the page or ACL is null, it's allowed.
-		//
-		String pageName = ((PagePermission) permission).getPage();
-		WikiPage page = null; //:FVK: this.m_engine.getWikiEngine().getPage(pageName);
-		Acl acl = null;  //:FVK: (page == null) ? null : this.m_engine.getAclManager().getPermissions(page);
-		if (page == null || acl == null || acl.getAclEntries().isEmpty()) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
-			return true;
-		}
-
-		//
-		//  Next, iterate through the Principal objects assigned
-		//  this permission. If the context's subject possesses
-		//  any of these, the action is allowed.
-
-		Principal[] aclPrincipals = acl.findPrincipals(permission);
-
-		log.debug("Checking ACL entries...");
-		log.debug("Acl for this page is: " + acl);
-		log.debug("Checking for principal: " + Arrays.toString(aclPrincipals));
-		log.debug("Permission: " + permission);
-
-		for (Principal aclPrincipal : aclPrincipals) {
-			// If the ACL principal we're looking at is unresolved,
-			// try to resolve it here & correct the Acl
-			if (aclPrincipal instanceof UnresolvedPrincipal) {
-				AclEntry aclEntry = acl.getEntry(aclPrincipal);
-				aclPrincipal = resolvePrincipal(aclPrincipal.getName());
-				if (aclEntry != null && !(aclPrincipal instanceof UnresolvedPrincipal)) {
-					aclEntry.setPrincipal(aclPrincipal);
-				}
-			}
-
-			if (hasRoleOrPrincipal(session, aclPrincipal)) {
-				fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
-				return true;
-			}
-		}
 		fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
 		return false;
 	}
@@ -882,43 +649,16 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	/**
 	 * Determines whether a Subject possesses a given "static" Permission as defined in the security
-	 * policy file. This method uses standard Java 2 security calls to do its work. Note that the
-	 * current access control context's <code>codeBase</code> is effectively <em>this class</em>,
-	 * not that of the caller. Therefore, this method will work best when what matters in the policy
-	 * is <em>who</em> makes the permission check, not what the caller's code source is. Internally,
-	 * this method works by executing <code>Subject.doAsPrivileged</code> with a privileged action
-	 * that simply calls {@link java.security.AccessController#checkPermission(Permission)}.
+	 * policy file.
 	 * 
-	 * @see AccessController#checkPermission(java.security.Permission) . A caught exception (or lack
-	 *          thereof) determines whether the privilege is absent (or present).
-	 * @param session
-	 *                   the WikiSession whose permission status is being queried
-	 * @param permission
-	 *                   the Permission the Subject must possess
+	 * @param session    the WikiSession whose permission status is being queried
+	 * @param permission the Permission the Subject must possess
 	 * @return <code>true</code> if the Subject possesses the permission, <code>false</code>
-	 *             otherwise
+	 *         otherwise
 	 */
-	public boolean checkStaticPermission(final Session session, final Permission permission) {
-		Boolean allowed = (Boolean) Session.doPrivileged(session, new PrivilegedAction<Boolean>() {
-			@Override
-			public Boolean run() {
-				try {
-					// Check the JVM-wide security policy first
-					AccessController.checkPermission(permission);
-					return Boolean.TRUE;
-				} catch (AccessControlException e) {
-					// Global policy denied the permission
-				}
-
-				// Try the local policy - check each Role/Group and User Principal
-				if (allowedByLocalPolicy(session.getRoles(), permission)
-						|| allowedByLocalPolicy(session.getPrincipals(), permission)) {
-					return Boolean.TRUE;
-				}
-				return Boolean.FALSE;
-			}
-		});
-		return allowed.booleanValue();
+	public boolean checkStaticPermission(Session session, Permission permission) {
+		// Try the local policy - check each Role/Group and User Principal
+		return allowedByLocalPolicy(session.getRoles(), permission);
 	}
 
 	/**
@@ -927,28 +667,75 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * {@link #checkPermission(WikiSession, Permission)} instead.
 	 * 
 	 * @param principals
-	 *                   the Principals to check
+	 *                   the Principals to check. Only handles wiki's principals (Role, Group).
+	 *                   User principals can not has permission info - they can't be handled.   
 	 * @param permission
-	 *                   the Permission
+	 *                   the Permission.
 	 * @return the result
 	 */
 	public boolean allowedByLocalPolicy(Principal[] principals, Permission permission) {
 		for (Principal principal : principals) {
-			// Get ProtectionDomain for this Principal from cache, or create new one
-			ProtectionDomain pd = this.m_cachedPds.get(principal);
-			if (pd == null) {
-				ClassLoader cl = this.getClass().getClassLoader();
-				CodeSource cs = new CodeSource(null, (Certificate[]) null);
-				pd = new ProtectionDomain(cs, null, cl, new Principal[] { principal });
-				this.m_cachedPds.put(principal, pd);
-			}
+			if(principal instanceof APrincipal) {
+				String roleName = principal.getName();
+				PermissionCollection permCollection;
+				if( cachedPermissions.containsKey(roleName) ) {
+					permCollection = cachedPermissions.get(roleName);
+				} else {
+					// Instantiates permissions from groups configuration.
+					permCollection = new Permissions();
+					PermissionInfo[] permInfos = this.groupManager.getRolePermissionInfo(roleName);
+					for (PermissionInfo permInfo : permInfos) {
+						String typePermission = permInfo.getType();
+						String name = permInfo.getName();
+						String actions = permInfo.getActions();
 
-			// Consult the local policy and get the answer
-			if (this.m_localPolicy.implies(pd, permission)) {
-				return true;
+						// Create specified permission.
+						Class<?> clazz;
+						Permission perm = null;
+						try {
+							clazz = Class.forName(typePermission);
+							Constructor<?> constructor = getPermissionConstructor(clazz);
+							Object[] args = { name, actions };
+							perm = (Permission) constructor.newInstance(args);
+						} catch (Exception e) {
+							/* If the class isn't there,
+							 * or if the constructor isn't corrected - we fail. */
+							continue;
+						}
+						permCollection.add(perm);
+					}
+					this.cachedPermissions.put(roleName, permCollection);
+				}
+
+				// Check permissions of Role.
+				if (permCollection.implies(permission)) {
+		            return true;
+		        }
 			}
 		}
 		return false;
+	}	
+
+	private Constructor<?> getPermissionConstructor(Class<?> clazz) {
+		for (Constructor<?> checkConstructor : clazz.getConstructors()) {
+			if (checkParameterTypes(checkConstructor.getParameterTypes())) {
+				return checkConstructor;
+			}
+		}
+		return null;
+	}
+	
+	private boolean checkParameterTypes(Class<?>[] foundTypes) {
+		if (foundTypes.length != permissionMethodArgs.length) {
+			return false;
+		}
+
+		for (int i = 0; i < foundTypes.length; i++) {
+			if (!foundTypes[i].isAssignableFrom(permissionMethodArgs[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/* (non-Javadoc)

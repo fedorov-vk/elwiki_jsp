@@ -44,8 +44,8 @@ public class ContextHelperPart extends ServletContextHelper implements HttpConte
 
 	@Override
 	public URL getResource(String name) {
-		System.err.println("PageServletContextHelper: ");
-		System.out.println(" (1) before: " + name);
+//:FVK		System.err.println("PageServletContextHelper: ");
+//:FVK		System.out.println(" (1) before: " + name);
 		switch (name) {
 		case "/wiki/commonheader.jsp":
 			name = "/page/commonheader1.jsp";
@@ -66,9 +66,9 @@ public class ContextHelperPart extends ServletContextHelper implements HttpConte
 				name = name.replaceAll(".cmd$", ".jsp");
 			}
 		}
-		System.out.println(" (2)  after: " + name);
+//:FVK		System.out.println(" (2)  after: " + name);
 		URL url = defaultContext.getResource(name);
-		System.out.println(" (3) url: " + url);
+//:FVK		System.out.println(" (3) url: " + url);
 		return url;
 	}
 
