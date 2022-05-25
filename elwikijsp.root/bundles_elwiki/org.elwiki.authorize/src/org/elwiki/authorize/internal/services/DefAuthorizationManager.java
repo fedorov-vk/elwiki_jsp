@@ -98,17 +98,8 @@ import org.elwiki.api.authorization.IAuthorizer;
 //import org.elwiki.api.exceptions.NoSuchPrincipalException;
 //import org.elwiki.api.exceptions.WikiException;
 //import org.elwiki.api.exceptions.WikiSecurityException;
-import org.elwiki.authorize.authenticated.AuthenticatedContextActivator;
-import org.elwiki.authorize.check.AuthorizeCheckActivator;
 
-//import org.elwiki.authorize.condition.SessionTypeCondition;
-//import org.elwiki.authorize.anonymous.AnonymousActivator;
-//import org.elwiki.authorize.asserted.AssertedActivator;
-import org.elwiki.authorize.context.anonymous.AnonymousContextActivator;
-import org.elwiki.authorize.context.asserted.AssertedContextActivator;
-//import org.elwiki.authorize.authenticated.AuthenticatedActivator;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.elwiki.authorize.internal.check.PolicyControl;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.APrincipal;
 import org.elwiki.data.authorize.Role;
@@ -130,11 +121,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.condpermadmin.BundleLocationCondition;
-import org.osgi.service.condpermadmin.ConditionInfo;
-import org.osgi.service.condpermadmin.ConditionalPermissionAdmin;
-import org.osgi.service.condpermadmin.ConditionalPermissionInfo;
-import org.osgi.service.condpermadmin.ConditionalPermissionUpdate;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.event.Event;
@@ -236,9 +222,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	}
 
 	// -- service handling ---------------------------(start)--
-
-	@Reference
-	private ConditionalPermissionAdmin cpaService;
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)

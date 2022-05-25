@@ -16,11 +16,7 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  com.google.gson,
  org.jdom.2;bundle-version="2.0.6",
  org.elwiki.api,
- org.elwiki.data,
- org.elwiki.authorize.context.anonymous,
- org.elwiki.authorize.context.asserted,
- org.elwiki.authorize.context.authenticated,
- org.elwiki.authorize.check;bundle-version="0.0.1"
+ org.elwiki.data
 Import-Package: javax.mail;version="1.4.0",
  javax.mail.internet;version="1.4.0",
  javax.servlet;version="2.6.0",
@@ -34,7 +30,6 @@ Import-Package: javax.mail;version="1.4.0",
  org.apache.wiki.ui,
  org.apache.wiki.util,
  org.eclipse.jface.preference,
- org.elwiki.authorize.condition,
  org.elwiki.configuration,
  org.osgi.service.component.annotations;version="1.2.0"
 Export-Package: org.elwiki.authorize;

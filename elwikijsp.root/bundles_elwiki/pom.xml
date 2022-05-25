@@ -19,11 +19,6 @@
 		<module>com.opcoach.e4.preferences.mainmenu</module>
 -->
 		<module>org.elwiki.authorize</module>
-		<module>org.elwiki.authorize.check</module>
-		<module>org.elwiki.authorize.condition</module>
-		<module>org.elwiki.authorize.context.anonymous</module>
-		<module>org.elwiki.authorize.context.asserted</module>
-		<module>org.elwiki.authorize.context.authenticated</module>
 		<module>org.elwiki.provider.page.cdo</module>
 		<!-- <module>org.elwiki.storage.cdo</module> -->
 		<module>org.elwiki.data.persist</module>

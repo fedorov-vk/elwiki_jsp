@@ -219,10 +219,6 @@
 							<autoStart>false</autoStart>
 						</bundle>
 						<bundle>
-							<id>org.elwiki.authorize.condition</id>
-							<autoStart>false</autoStart>
-						</bundle>
-						<bundle>
 							<id>org.elwiki.log4.definition</id>
 							<autoStart>false</autoStart>
 						</bundle>

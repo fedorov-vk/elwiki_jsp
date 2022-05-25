@@ -32,42 +32,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.elwiki.authorize.check"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.elwiki.authorize.condition"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.elwiki.authorize.context.anonymous"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.elwiki.authorize.context.asserted"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.elwiki.authorize.context.authenticated"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.elwiki.commandresolver"
          download-size="0"
          install-size="0"
@@ -198,14 +162,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--
-   <plugin
-         id="org.elwiki.data.persist"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
+
    <plugin
          id="org.elwiki.log4.definition"
          download-size="0"
