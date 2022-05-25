@@ -4,7 +4,6 @@
       <provide interface="org.apache.wiki.auth.AuthorizationManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
-   <reference cardinality="1..1" field="cpaService" interface="org.osgi.service.condpermadmin.ConditionalPermissionAdmin" name="cpaService"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.authorize.internal.services.DefAuthorizationManager"/>
 </scr:component>

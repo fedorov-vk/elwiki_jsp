@@ -3,8 +3,6 @@ package org.elwiki.authorize.internal.bundle;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.condpermadmin.ConditionalPermissionAdmin;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -18,7 +16,6 @@ public class AuthorizePluginActivator extends Plugin {
 
 	// The shared instance
 	private static AuthorizePluginActivator pluginInstance;
-	private ServiceTracker<ConditionalPermissionAdmin, Object> cpaTracker;
 
 	/** :FVK: Old JSPwiki = "org.apache.wiki.auth.authorize" */
 	public static String AUTHORIZATION_PACKAGE = "org.elwiki.authorize";
