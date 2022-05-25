@@ -15,6 +15,16 @@ public interface ISessionMonitor {
 	String SESSION_MONITOR = "SESSION_MONITOR";
 
 	/**
+	 * Just looks for a WikiSession; does not create a new one.
+	 * This method may return <code>null</code>, <em>and
+	 * callers should check for this value</em>.
+	 *
+	 *  @param session the user's HTTP session
+	 *  @return the WikiSession, if found
+	 */
+	Session findSession(HttpSession session);
+	
+	/**
 	 * <p>
 	 * Looks up the wiki session associated with a user's Http session and adds it
 	 * to the session cache. This method will return the "guest session" as
@@ -105,4 +115,5 @@ public interface ISessionMonitor {
 	 * @return the guest wiki session
 	 */
 	Session createGuestSession(String sid);
+
 }

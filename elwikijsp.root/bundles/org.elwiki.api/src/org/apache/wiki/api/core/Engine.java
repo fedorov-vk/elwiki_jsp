@@ -341,8 +341,6 @@ public interface Engine {
 
 	IWikiConfiguration getWikiConfiguration();
 
-	ISessionMonitor getSessionMonitor();
-	
     /**
      *  :FVK: WORKAROUND.
      *

@@ -183,7 +183,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
     private boolean validatePermission( final HttpServletRequest req, final AjaxServletContainer container ) {
         boolean valid = false;
         if( container != null ) {
-        	Session wikiSession = m_engine.getSessionMonitor().getWikiSession(req);
+        	Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(req);
             valid = ServicesRefs.getAuthorizationManager().checkPermission(wikiSession, container.permission );
         }
         return valid;

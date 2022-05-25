@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.SessionMonitor;
 import org.elwiki.data.authorize.Role;
+import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -47,7 +48,7 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
         super( request );
 
         // Get and stash a reference to the current Session
-        m_session = engine.getSessionMonitor().getWikiSession(request);
+        m_session = ServicesRefs.getSessionMonitor().getWikiSession(request);
     }
 
     /**

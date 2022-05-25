@@ -265,7 +265,7 @@ public class ServicesRefs implements Engine {
 			initialize();
 			log.info("Root path for this Wiki is: '" + m_rootPath + "'");
 		} catch (final Exception e) {
-			final String msg = Release.APPNAME + ": Unable to load and setup properties from jspwiki.properties. "
+			final String msg = Release.APPNAME + ": Unable to initialise service. "
 					+ e.getMessage();
 			throw new WikiException(msg, e);
 		}
@@ -469,9 +469,8 @@ public class ServicesRefs implements Engine {
 		return rssGenerator;
 	}
 
-	@Override
-	public ISessionMonitor getSessionMonitor() {
-		return this.sessionMonitor;
+	public static ISessionMonitor getSessionMonitor() {
+		return sessionMonitor;
 	}
 	
 	// =========================================================================
@@ -992,6 +991,7 @@ public class ServicesRefs implements Engine {
 	 *
 	 * @return контекста Wiki для текущего процесса.
 	 */
+	@Deprecated //:FVK: - результат вполне может быть NULL. (в RAP)
 	public static Context getCurrentContext() {
 		return thWikiContext.get();
 	}
