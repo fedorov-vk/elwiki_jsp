@@ -7,7 +7,11 @@ Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.search
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/elwiki.DefaultSearchManager.xml
-Import-Package: org.elwiki.configuration,
+Import-Package: java.io;resolution:=optional,
+ java.lang.reflect;resolution:=optional,
+ java.util;resolution:=optional,
+ java.util.concurrent;resolution:=optional,
+ org.elwiki.configuration,
  org.elwiki.permissions,
  org.elwiki_data,
  org.osgi.framework;version="1.9.0",

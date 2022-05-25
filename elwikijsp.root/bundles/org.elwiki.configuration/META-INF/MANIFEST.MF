@@ -12,7 +12,12 @@ Require-Bundle: org.eclipse.core.resources,
  org.elwiki.configuration
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.core.commands.common,
+Import-Package: java.io;resolution:=optional,
+ java.net;resolution:=optional,
+ java.nio.charset;resolution:=optional,
+ java.nio.file;resolution:=optional,
+ java.util;resolution:=optional,
+ org.eclipse.core.commands.common,
  org.eclipse.core.runtime;version="3.5.0",
  org.eclipse.core.runtime.preferences;version="3.3.0",
  org.eclipse.jface.preference,

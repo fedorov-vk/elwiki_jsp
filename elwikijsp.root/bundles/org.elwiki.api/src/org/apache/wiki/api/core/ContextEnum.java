@@ -58,6 +58,7 @@ public enum ContextEnum {
     WIKI_LOGOUT( "logout", "%ulogout.cmd", null ),
     WIKI_MESSAGE( "message", "%uMessage.jsp", "DisplayMessage.jsp" ),
     WIKI_PREFS( "prefs", "%uprefs.cmd", "PreferencesContent.jsp" ),
+    WIKI_PREFS_RAP( "prefsRap", "%uprefsRap.cmd", "PreferencesContentRap.jsp" ),
     WIKI_WORKFLOW( "workflow", "%uWorkflow.jsp", "WorkflowContent.jsp" );
 	//@formatter:on
 
