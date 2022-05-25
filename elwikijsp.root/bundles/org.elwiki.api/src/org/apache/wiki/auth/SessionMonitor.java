@@ -113,7 +113,8 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      *  @param session the user's HTTP session
      *  @return the WikiSession, if found
      */
-    private Session findSession( final HttpSession session ) {
+	@Override
+    public Session findSession( final HttpSession session ) {
         Session wikiSession = null;
         final String sid = ( session == null ) ? "(null)" : session.getId();
         final Session storedSession = m_sessions.get( sid );

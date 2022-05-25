@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.PreferencesApplication">
+   <service>
+      <provide interface="org.eclipse.rap.rwt.application.ApplicationConfiguration"/>
+   </service>
+   <reference cardinality="1..1" field="engine" interface="org.apache.wiki.api.core.Engine" name="engine"/>
+   <implementation class="org.elwiki.rap.BasicApplication"/>
+</scr:component>

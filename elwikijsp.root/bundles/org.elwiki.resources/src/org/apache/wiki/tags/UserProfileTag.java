@@ -132,7 +132,7 @@ public class UserProfileTag extends WikiTagBase {
                 //  Default back to the declared user name
                 //
                 final Engine engine = this.m_wikiContext.getEngine();
-                final Session wikiSession = engine.getSessionMonitor().getWikiSession(( HttpServletRequest )pageContext.getRequest()); 
+                final Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(( HttpServletRequest )pageContext.getRequest()); 
                 final Principal user = wikiSession.getUserPrincipal();
 
                 if( user != null ) {

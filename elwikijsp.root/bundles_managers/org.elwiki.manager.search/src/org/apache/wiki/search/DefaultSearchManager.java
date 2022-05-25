@@ -54,6 +54,7 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
@@ -308,7 +309,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 
     private void loadSearchProvider() {
         // See if we're using Lucene, and if so, ensure that its index directory is up to date.
-        final String providerClassName = TextUtil.getStringProperty(this.wikiConfiguration.getWikiPreferences(), PROP_SEARCHPROVIDER, DEFAULT_SEARCHPROVIDER );
+    	IPreferenceStore prefStore = this.wikiConfiguration.getWikiPreferences();
+        final String providerClassName = TextUtil.getStringProperty(prefStore, PROP_SEARCHPROVIDER, DEFAULT_SEARCHPROVIDER );
 
         /*:FVK:*/
         try {

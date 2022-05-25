@@ -24,6 +24,7 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class SessionsPlugin implements Plugin {
         final String prop = params.get( PARAM_PROP );
 
         if( "users".equals( prop ) ) {
-            final Principal[] principals = engine.getSessionMonitor().userPrincipals();
+            final Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
             final StringBuilder s = new StringBuilder();
             for( final Principal principal : principals ) {
                 s.append( principal.getName() ).append( ", " );
@@ -68,7 +69,7 @@ public class SessionsPlugin implements Plugin {
 
         // show each user session only once (with a counter that indicates the number of sessions for each user)
         if( "distinctUsers".equals( prop ) ) {
-            final Principal[] principals = engine.getSessionMonitor().userPrincipals();
+            final Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
             // we do not assume that the principals are sorted, so first count them :
             final HashMap< String, Integer > distinctPrincipals = new HashMap<>();
             for( final Principal principal : principals ) {
@@ -94,6 +95,6 @@ public class SessionsPlugin implements Plugin {
 
         }
 
-        return String.valueOf( engine.getSessionMonitor().sessions() );
+        return String.valueOf( ServicesRefs.getSessionMonitor().sessions() );
     }
 }

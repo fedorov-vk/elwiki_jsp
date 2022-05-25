@@ -106,7 +106,6 @@
         <setEntry value="org.eclipse.jetty.util.ajax@default:default"/>
         <setEntry value="org.eclipse.jetty.util@default:default"/>
         <setEntry value="org.eclipse.jetty.xml@default:default"/>
-        <setEntry value="org.eclipse.jface@default:default"/>
         <setEntry value="org.eclipse.net4j.db.h2@default:default"/>
         <setEntry value="org.eclipse.net4j.db.jdbc@default:default"/>
         <setEntry value="org.eclipse.net4j.db@default:default"/>
@@ -120,6 +119,7 @@
         <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi.util@default:default"/>
         <setEntry value="org.eclipse.osgi@-1:true"/>
+        <setEntry value="org.eclipse.rap.jface@default:default"/>
         <setEntry value="org.eclipse.rap.rwt.osgi@default:default"/>
         <setEntry value="org.eclipse.rap.rwt@default:default"/>
         <setEntry value="org.eclipse.swt@default:default"/>
@@ -157,7 +157,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1637444649299"/>
+    <stringAttribute key="timestamp" value="1653512857066"/>
     <booleanAttribute key="tracing" value="false"/>
     <mapAttribute key="tracingOptions">
         <mapEntry key="com.ibm.datatools.core.ui/debug" value="true"/>
