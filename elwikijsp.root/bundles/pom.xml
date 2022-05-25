@@ -21,5 +21,6 @@
 		<module>org.elwiki.resources</module>
 		<module>org.elwiki.core.plugins</module>
 		<module>org.elwiki.main</module>
+		<module>org.elwiki.rap</module>
 	</modules>
 </project>

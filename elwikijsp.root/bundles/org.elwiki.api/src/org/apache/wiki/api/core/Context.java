@@ -163,6 +163,7 @@ public interface Context extends Cloneable, Command {
 		Map.entry("/logout.cmd", ContextEnum.WIKI_LOGOUT),
 		Map.entry("/edit.cmd", ContextEnum.PAGE_EDIT),
 		Map.entry("/prefs.cmd", ContextEnum.WIKI_PREFS),
+		Map.entry("/prefsRap.cmd", ContextEnum.WIKI_PREFS_RAP),
 		Map.entry("/info.cmd", ContextEnum.PAGE_INFO),
 		Map.entry("/rename.cmd", ContextEnum.PAGE_RENAME),
 		Map.entry("/diff.cmd", ContextEnum.PAGE_DIFF),
