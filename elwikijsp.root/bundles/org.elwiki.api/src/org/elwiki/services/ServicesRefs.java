@@ -1001,10 +1001,12 @@ public class ServicesRefs implements Engine {
 	 * :FVK: workaround.
 	 * @param wikiContext
 	 */
+	@Deprecated
 	public static void setCurrentContext(Context wikiContext) {
 		thWikiContext.set(wikiContext);
 	}
 
+	@Deprecated
 	public static void removeCurrentContext() {
 		thWikiContext.remove();
 	}

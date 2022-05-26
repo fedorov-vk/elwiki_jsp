@@ -22,6 +22,10 @@ public class ContextUtil {
 		return (Context) request.getAttribute(Context.ATTR_WIKI_CONTEXT);
 	}
 
+	public static Context findContext(HttpServletRequest request) {
+		return (Context) request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+	}
+
 	// (::FVK: from EditorManager)
 	/**
 	 * Convenience function which examines the current context and attempts to figure out whether

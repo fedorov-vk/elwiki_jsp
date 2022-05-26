@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Engine;
-
 import org.apache.log4j.*;
 import java.util.*;
 import org.elwiki_data.*;
@@ -32,9 +29,9 @@ import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.DecisionRequiredException;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.services.ServicesRefs;
-
 
 public class PrefsCmdCode extends CmdCode {
 
@@ -46,105 +43,103 @@ public class PrefsCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Engine wiki = ServicesRefs.Instance;
+		Engine wiki = getEngine();
 
-	    // Create wiki context and check for authorization
-	    Context wikiContext;
-	    wikiContext = ServicesRefs.getCurrentContext();
-	    /*:FVK:
-	    // = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
-	    if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
-	    */
+		// Create wiki context and check for authorization
+		Context wikiContext = ContextUtil.findContext(request);
 
-	    // Extract the user profile and action attributes
-	    UserManager userMgr = ServicesRefs.getUserManager();
-	    Session wikiSession = wikiContext.getWikiSession();
+		/*:FVK:
+		// = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
+		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+		*/
 
-	/* FIXME: Obsolete
-	    if( request.getParameter(EditorManager.PARA_EDITOR) != null )
-	    {
-	    	String editor = request.getParameter(EditorManager.PARA_EDITOR);
-	    	session.setAttribute(EditorManager.PARA_EDITOR,editor);
-	    }
-	*/
+		// Extract the user profile and action attributes
+		UserManager userMgr = ServicesRefs.getUserManager();
+		Session wikiSession = wikiContext.getWikiSession();
 
-	    // Are we saving the profile?
-	    if( "saveProfile".equals(request.getParameter("action")) )
-	    {
-	        UserProfile profile = userMgr.parseProfile( wikiContext );
-	         
-	        // Validate the profile
-	        userMgr.validateProfile( wikiContext, profile );
+		/* FIXME: Obsolete
+		if( request.getParameter(EditorManager.PARA_EDITOR) != null )
+		{
+			String editor = request.getParameter(EditorManager.PARA_EDITOR);
+			session.setAttribute(EditorManager.PARA_EDITOR,editor);
+		}
+		*/
 
-	        // If no errors, save the profile now & refresh the principal set!
-	        if ( wikiSession.getMessages( "profile" ).length == 0 )
-	        {
-	            try
-	            {
-	                userMgr.setUserProfile( wikiSession, profile );
-	                CookieAssertionLoginModule.setUserCookie( response, profile.getFullname() );
-	            }
-	            catch( DuplicateUserException due )
-	            {
-	                // User collision! (full name or wiki name already taken)
-	                wikiSession.addMessage( "profile", ServicesRefs.getInternationalizationManager()
-	                                                       .get( InternationalizationManager.CORE_BUNDLE,
-	                                                    		 Preferences.getLocale( wikiContext ), 
-	                                                             due.getMessage(), due.getArgs() ) );
-	            }
-	            catch( DecisionRequiredException e )
-	            {
-	                String redirect = wiki.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), "ApprovalRequiredForUserProfiles", null );
-	                response.sendRedirect( redirect );
-	                return;
-	            }
-	            catch( WikiSecurityException e )
-	            {
-	                // Something went horribly wrong! Maybe it's an I/O error...
-	                wikiSession.addMessage( "profile", e.getMessage() );
-	            }
-	        }
-	        if ( wikiSession.getMessages( "profile" ).length == 0 )
-	        {
-	            String redirectPage = request.getParameter( "redirect" );
+		// Are we saving the profile?
+		if ("saveProfile".equals(request.getParameter("action"))) {
+			UserProfile profile = userMgr.parseProfile(wikiContext);
 
-	            if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) )
-	            {
-	               redirectPage = wiki.getWikiConfiguration().getFrontPage();
-	            }
-	            
-	            String viewUrl = ( "UserPreferences".equals( redirectPage ) ) ? "Wiki.jsp" : wikiContext.getViewURL( redirectPage );
-	            log.info( "Redirecting user to " + viewUrl );
-	            response.sendRedirect( viewUrl );
-	            return;
-	        }
-	    }
-	    if( "setAssertedName".equals(request.getParameter("action")) )
-	    {
-	        //TODO: :FVK: Preferences.reloadPreferences(pageContext);
-	        
-	        String assertedName = request.getParameter("assertedName");
-	        CookieAssertionLoginModule.setUserCookie( response, assertedName );
+			// Validate the profile
+			userMgr.validateProfile(wikiContext, profile);
 
-	        String redirectPage = request.getParameter( "redirect" );
-	        if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) )
-	        {
-	          redirectPage = wiki.getWikiConfiguration().getFrontPage();
-	        }
-	        String viewUrl = ( "UserPreferences".equals( redirectPage ) ) ? "Wiki.jsp" : wikiContext.getViewURL( redirectPage );
+			// If no errors, save the profile now & refresh the principal set!
+			if (wikiSession.getMessages("profile").length == 0) {
+				try {
+					userMgr.setUserProfile(wikiSession, profile);
+					CookieAssertionLoginModule.setUserCookie(response, profile.getFullname());
+				} catch (DuplicateUserException due) {
+					// User collision! (full name or wiki name already taken)
+					@NonNull
+					InternationalizationManager im = wiki.getManager(InternationalizationManager.class);
+					String message = im.get(InternationalizationManager.CORE_BUNDLE, Preferences.getLocale(wikiContext),
+							due.getMessage(), due.getArgs());
+					wikiSession.addMessage("profile", message);
+				} catch (DecisionRequiredException e) {
+					String redirect = wiki.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
+							"ApprovalRequiredForUserProfiles", null);
+					response.sendRedirect(redirect);
+					return;
+				} catch (WikiSecurityException e) {
+					// Something went horribly wrong! Maybe it's an I/O error...
+					wikiSession.addMessage("profile", e.getMessage());
+				}
+			}
+			if (wikiSession.getMessages("profile").length == 0) {
+				String redirectPage = request.getParameter("redirect");
+				PageManager pm = wiki.getManager(PageManager.class);
+				if (!pm.wikiPageExists(redirectPage)) {
+					redirectPage = wiki.getWikiConfiguration().getFrontPage();
+				}
 
-	        log.info( "Redirecting user to " + viewUrl );
-	        response.sendRedirect( viewUrl );
-	        return;
-	    }
-	    if( "clearAssertedName".equals(request.getParameter("action")) )
-	    {
-	        CookieAssertionLoginModule.clearUserCookie( response );
-	        response.sendRedirect( wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(),"Logout.jsp") );
-	        return;
-	    }
-	    response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-	    //:FVK: String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+				String viewUrl = ("UserPreferences".equals(redirectPage)) ? "Wiki.jsp"
+						: wikiContext.getViewURL(redirectPage);
+				log.info("Redirecting user to " + viewUrl);
+				response.sendRedirect(viewUrl);
+
+				return;
+			}
+		}
+
+		// Are we saving the preferences?
+		if ("setAssertedName".equals(request.getParameter("action"))) {
+			Preferences.reloadPreferences(request);
+
+			String assertedName = request.getParameter("assertedName");
+			CookieAssertionLoginModule.setUserCookie(response, assertedName);
+
+			String redirectPage = request.getParameter("redirect");
+			if (!ServicesRefs.getPageManager().wikiPageExists(redirectPage)) {
+				redirectPage = wiki.getWikiConfiguration().getFrontPage();
+			}
+			String viewUrl = ("prefs.cmd".equals(redirectPage)) ? "view.cmd" : wikiContext.getViewURL(redirectPage);
+
+			log.info("Redirecting user to " + viewUrl);
+			response.sendRedirect(viewUrl);
+
+			return;
+		}
+
+		// Are we remove profile information?
+		if ("clearAssertedName".equals(request.getParameter("action"))) {
+			CookieAssertionLoginModule.clearUserCookie(response);
+			response.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "Logout.jsp"));
+
+			return;
+		}
+
+		response.setContentType("text/html; charset=" + wiki.getContentEncoding());
+		// :FVK: String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext,
+		// wikiContext.getTemplate(), "ViewTemplate.jsp" );
 	}
 
 }

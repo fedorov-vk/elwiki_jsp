@@ -72,7 +72,11 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 		case "find":
 			cmdCode = new FindCmdCode(command);
 			break;
-			
+
+		case "prefs":
+			cmdCode = new PrefsCmdCode(command);
+			break;
+
 		default:
 			break;
 		}

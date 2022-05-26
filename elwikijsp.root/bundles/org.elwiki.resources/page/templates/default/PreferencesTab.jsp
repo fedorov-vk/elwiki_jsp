@@ -45,7 +45,7 @@
 <c:set var="editors"     value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
 <c:set var="redirect"><wiki:Variable var='redirect' default='<%=prCtx.getConfiguration().getFrontPage() %>' /></c:set>
 
-<form action="<wiki:Link jsp='UserPreferences.jsp' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
+<form action="<wiki:Link jsp='prefs.cmd' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>
       method="post" accept-charset="<wiki:ContentEncoding />" >
 
