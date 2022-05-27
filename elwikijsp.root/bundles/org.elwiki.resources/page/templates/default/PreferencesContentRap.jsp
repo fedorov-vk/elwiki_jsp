@@ -29,11 +29,43 @@
 <fmt:setBundle basename="templates.default"/>
 <div class="page-content">
 
+<%
+Context ctx = ContextUtil.findContext( pageContext );
+String redir = request.getParameter("redirect");
+if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
+%>
+
+<script>
+    window.addEventListener('message', function(event) {
+      let pageId="<%=redir%>";
+      console.log(pageId);
+      alert(`Получено ${event.data} из ${event.origin}`);
+      window.location.replace('/view.cmd?pageId='+pageId);
+      
+    });
+</script>
+
 <%--
+      let xhr = new XMLHttpRequest();
+
+      var body = 'action=' + encodeURIComponent('setAssertedName') +
+      '&redirect=' + encodeURIComponent('39');
+      
+      xhr.open('POST', '/prefs.cmd', true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onload = function(){
+    	  console.log(xhr.response)
+    	  document.body.innerHTML = xhr.response
+      }
+      xhr.send(body);
+--%>
+  
+<%--
+
 <div style="position: absolute; width: 100%; height: 100%;">
  --%>
 <iframe src="/preferences" 
- style="border: dotted; position: absolute; width: 70%; height: 90%;">
+ style="border:thin; position: absolute; width: 70%; height: 90%;">
 <p>К сожалению, ваш браузер не поддерживает iframes.
 Sorry your browser does not support iframes.</p>
 </iframe>

@@ -1,4 +1,4 @@
-package org.elwiki.rap;
+package org.elwiki.preferences;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,22 +11,24 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(name = "elwiki.PreferencesApplication", service = ApplicationConfiguration.class)
-public class BasicApplication implements ApplicationConfiguration {
+public class PreferencesApplication implements ApplicationConfiguration {
 
 	@Reference
 	private Engine engine;
 
-	static BasicApplication instance;
+	static PreferencesApplication instance;
 	
     public void configure(Application application) {
-    	instance = this;
-
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(WebClient.PAGE_TITLE, "Hello RAP");
-        application.addEntryPoint("/preferences", BasicEntryPoint.class, properties);
+        properties.put(WebClient.PAGE_OVERFLOW, "scroll");
+        properties.put(WebClient.BODY_HTML, "<h1>Hi, Victor!</h1>"); //:FVK: workaround stub.
+        //TODO: properties.put(WebClient.THEME_ID, "foo");
+        application.addEntryPoint("/preferences", PreferencesEntryPoint.class, properties);
     }
 
+    //:FVK: workaround.
     public static Engine getEngine() {
     	return instance.engine;
     }
+    
 }

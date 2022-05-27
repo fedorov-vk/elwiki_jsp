@@ -172,7 +172,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.elwiki.rap"
+         id="org.elwiki.preferences"
          download-size="0"
          install-size="0"
          version="0.0.0"

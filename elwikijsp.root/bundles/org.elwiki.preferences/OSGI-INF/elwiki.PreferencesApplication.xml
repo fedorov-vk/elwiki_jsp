@@ -4,5 +4,5 @@
       <provide interface="org.eclipse.rap.rwt.application.ApplicationConfiguration"/>
    </service>
    <reference cardinality="1..1" field="engine" interface="org.apache.wiki.api.core.Engine" name="engine"/>
-   <implementation class="org.elwiki.rap.BasicApplication"/>
+   <implementation class="org.elwiki.preferences.PreferencesApplication"/>
 </scr:component>
