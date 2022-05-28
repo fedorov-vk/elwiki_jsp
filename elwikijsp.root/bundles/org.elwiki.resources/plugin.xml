@@ -126,6 +126,15 @@
       </resource>
    </extension>
 
+   <!-- :FVK: - workaround: прямая ссылка на ресурс. -->
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/templates/default/images/feather-small.png"
+            base-name="/templates/default/images/feather-small.png">
+      </resource>
+   </extension>
+
 <!-- JSPwiki
    <extension
          point="org.eclipse.equinox.http.registry.servlets">

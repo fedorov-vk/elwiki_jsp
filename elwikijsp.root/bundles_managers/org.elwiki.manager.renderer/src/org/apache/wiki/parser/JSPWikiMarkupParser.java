@@ -104,6 +104,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 	public enum LinkType {//@formatter:off
 		EMPTY(""), // Empty message
+		CMD(CLASS_WIKIPAGE),
 		READ(CLASS_WIKIPAGE),
 		//:FVK: READ_ID(CLASS_WIKIPAGE),
 		EDIT(CLASS_EDITPAGE),
@@ -337,7 +338,10 @@ public class JSPWikiMarkupParser extends MarkupParser {
         	/*:FVK: case READ_ID:
         		el = createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEWID.getRequestContext(), link), text, section );
         		break;*/
-        
+			case CMD:
+				el = createAnchor(LinkType.CMD, m_context.getURL(link, ""), text, section);
+				break;
+
             case READ:
                 el = createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), link), text, section );
                 break;
@@ -1279,7 +1283,14 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				callMutatorChain(this.m_localLinkMutatorChain, linkRef);
 
 				makeLink(linkType, linkRef, linkText, null, link.getAttributes());
-				
+			} else if (linkRef.matches("@cmd\\..+")) {
+				// Internal wiki link (by wiki command).
+				// Working up link of ElWiki format.
+
+				//LinkType linkType = LinkType.EMPTY;
+
+				String cmdName = linkRef.substring(5); // :FVK: Workaround - длина префикса.
+				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
 			} else {
                 final int hashMark;
 
