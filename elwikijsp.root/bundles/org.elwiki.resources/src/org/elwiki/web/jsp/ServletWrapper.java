@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.log4j.Logger;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
 import org.elwiki.resources.ResourcesActivator;
 import org.osgi.framework.Bundle;
@@ -21,6 +22,8 @@ import org.osgi.framework.Bundle;
  * @author v.fedorov
  */
 public abstract class ServletWrapper implements Servlet {
+
+	private static final Logger log = Logger.getLogger(ServletWrapper.class);
 
 	private boolean loadOnStartup = false;
 	private ServletConfig config;
@@ -47,12 +50,9 @@ public abstract class ServletWrapper implements Servlet {
 
 		try {
 			delegate.service(request, response);
-		} catch (ServletException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//:FVK: !!! -> e.printStackTrace();
-		} catch (IOException e) { // UTFDataFormatException
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			log.error("Ошибка delegate.service()", e);
 		}
 	}
 

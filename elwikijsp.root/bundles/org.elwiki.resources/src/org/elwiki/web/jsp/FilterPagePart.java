@@ -85,17 +85,19 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		log.debug("doFilter()");
 		// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 		// WatchDog.getCurrentWatchDog( m_engine );
 
 		// skip all, except *.cmd, *.jsp
 		String uri = httpRequest.getRequestURI();
+		log.debug("doFilter()");
 		if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
+			log.debug("URI isn't matched: " + uri);
 			// System.err.println("PFC original resource: " + uri);
 			super.doFilter(httpRequest, response, chain);
+		} else {
+			log.debug("URI is matched: " + uri);
 		}
-		log.debug("PageFilter, URI: " + uri);
 
 		/* Prepare Wiki context.
 		 */
