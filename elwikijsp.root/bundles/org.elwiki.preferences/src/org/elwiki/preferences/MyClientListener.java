@@ -3,6 +3,11 @@ package org.elwiki.preferences;
 import org.eclipse.rap.rwt.SingletonUtil;
 import org.eclipse.rap.rwt.scripting.ClientListener;
 
+/**
+ * Defines JS action, executed on RAP client.
+ * 
+ * @author vfedorov
+ */
 public class MyClientListener extends ClientListener {
 
 	private static final long serialVersionUID = 3179193035513048008L;
@@ -12,29 +17,11 @@ public class MyClientListener extends ClientListener {
 	}
 
 	public MyClientListener() {
-		super(getText());
+		//@formatter:off
+		super("var handleEvent = function( event ){\n"
+			+ " window.top.postMessage('hello', '*'); \n"
+			+ "};"
+		);
+		//@formatter:on
 	}
-
-	private static String getText() {
-		String script;
-		/*
-		script = "var handleEvent = function( event ){\n"
-				+ "  event.widget.setText( \"Hello World!\" );\n"
-		+ "  console.log( \"Hello World!\" );\n"
-				+ "};";
-		*/
-		
-		/* WORKS:
-		script = "var handleEvent = function( event ){\n"
-				+ " window.top.postMessage('hello', '*'); \n"
-				+ "};";
-		 */
-		
-		script = "var handleEvent = function( event ){\n"
-				+ " window.top.postMessage('hello', '*'); \n"
-				+ "};";
-		// :FVK: return ResourceLoaderUtil.readTextContent("MyScript.js");
-		return script;
-	}
-
 }

@@ -150,8 +150,8 @@
         <setEntry value="org.elwiki.manager.renderer@default:default"/>
         <setEntry value="org.elwiki.manager.search@default:default"/>
         <setEntry value="org.elwiki.manager.workflow@default:default"/>
+        <setEntry value="org.elwiki.preferences@default:default"/>
         <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
-        <setEntry value="org.elwiki.rap@default:default"/>
         <setEntry value="org.elwiki.resources@default:default"/>
         <setEntry value="org.elwiki.urlconstructor@default:default"/>
         <setEntry value="org.elwiki.util@default:default"/>
