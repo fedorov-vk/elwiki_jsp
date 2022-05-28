@@ -68,7 +68,7 @@
       --%>
       <wiki:CheckRequestContext context='!prefs'>
         <wiki:CheckRequestContext context='!preview'>
-          <wiki:Link cssClass="btn btn-default btn-block" jsp="prefsRap.cmd">
+          <wiki:Link cssClass="btn btn-default btn-block" jsp="prefs.cmd">
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
           </wiki:Link>

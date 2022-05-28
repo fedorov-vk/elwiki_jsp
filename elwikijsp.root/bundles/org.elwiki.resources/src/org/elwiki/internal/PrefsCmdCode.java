@@ -45,6 +45,23 @@ public class PrefsCmdCode extends CmdCode {
 	public void applyPrologue(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Engine wiki = getEngine();
 
+		/*
+		Enumeration<String> attrs = request.getAttributeNames();
+		Enumeration<String> params = request.getParameterNames();
+		Iterator<String> iter = attrs.asIterator();
+		while(iter.hasNext()) {
+			String param = iter.next();
+			String value = request.getParameter(param);
+			System.out.println("ATTR: " + param + " = " + value);
+		}
+		iter = params.asIterator();
+		while (iter.hasNext()) {
+			String param = iter.next();
+			String value = request.getParameter(param);
+			System.out.println("PARAM: " + param + " = " + value);
+		}
+		*/
+
 		// Create wiki context and check for authorization
 		Context wikiContext = ContextUtil.findContext(request);
 

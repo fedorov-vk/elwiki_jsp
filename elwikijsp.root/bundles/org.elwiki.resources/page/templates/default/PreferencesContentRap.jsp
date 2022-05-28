@@ -41,7 +41,6 @@ if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
       console.log(pageId);
       alert(`Получено ${event.data} из ${event.origin}`);
       window.location.replace('/view.cmd?pageId='+pageId);
-      
     });
 </script>
 
