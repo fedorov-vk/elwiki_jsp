@@ -1,3 +1,7 @@
+#
+# Creates a list of artifact specifications for creating a p2 repository.
+# This list for the file pom.xml in subdirectories.
+#
 while(<DATA>) {
     chomp;
     next if($_ eq '');

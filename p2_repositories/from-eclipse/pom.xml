@@ -2,17 +2,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>custom-p2-site</artifactId>
+	<artifactId>from-eclipse</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0</version>
-	<name>Custom p2 site</name>
-	<description>Custom p2 site.</description>
+	<name>From eclipse</name>
+	<description>From eclipse.</description>
 	<parent>
 		<groupId>p2.repositories</groupId>
 		<artifactId>p2.repositories.root</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../</relativePath>
 	</parent>
+
+	<repositories>
+		<repository>
+			<id>Repository</id>
+			<url>https://repo1.maven.org/maven2/</url>
+			<!-- <url>https://repo.spring.io/plugins-release</url> -->
+		</repository>
+		<!--
+   		<repository>
+   		<id>Mulesoft</id>
+   		<url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
+   		</repository>
+   		<url>https://mvnrepository.com/artifact/apache-oro/jakarta-oro</url>
+		-->
+	</repositories>
 
 	<build>
 		<plugins>
@@ -28,32 +42,12 @@
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>org.apache.felix:org.apache.felix.webconsole:4.3.16</id>
-									<source>false</source>
-								</artifact>
-								<artifact>
-									<id>antlr:antlr:2.7.2</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>commons-beanutils:commons-beanutils:1.7.0</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>commons-fileupload:commons-fileupload:1.0</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>commons-validator:commons-validator:1.1.4</id>
+									<id>oro:oro:2.0.8</id>
 									<source>true</source>
 								</artifact>
 								<!--
 								<artifact>
-									<id>org.apache.taglibs:taglibs-standard-impl:1.2.5</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>jakarta-oro:jakarta-oro:2.0.5</id>
+									<id>apache-oro:jakarta-oro:2.0.8</id>
 									<source>true</source>
 								</artifact>
 								-->

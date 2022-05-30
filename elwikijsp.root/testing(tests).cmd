@@ -1,7 +1,7 @@
 @echo off
 
-call repositories_list.cmd
-set MAVEN_SETTINGS=-s "D:\Program Files\apache-maven\conf\settings.xml"
+call %~dp0\repositories_list.cmd
+call %~dp0\..\maven_settings.cmd
 
 REM -Dmaven.test.skip=true
 mvn install %MAVEN_SETTINGS% ^

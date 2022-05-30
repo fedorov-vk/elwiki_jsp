@@ -1,6 +1,6 @@
 @echo off
 
-set MAVEN_SETTINGS=-s D:/PROGRA~2/apache-maven/conf/settings.xml
+call %~dp0\..\maven_settings.cmd
 
 mvn clean %MAVEN_SETTINGS% ^
  -Pwindows -Dmaven.test.skip=true  %* | tee Build.log
