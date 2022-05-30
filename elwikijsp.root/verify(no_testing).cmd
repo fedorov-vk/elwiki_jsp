@@ -1,7 +1,7 @@
 @echo off
 
-call repositories_list.cmd
-set MAVEN_SETTINGS=-s "D:\Program Files\apache-maven\conf\settings.xml"
+call %~dp0\repositories_list.cmd
+call %~dp0\..\maven_settings.cmd
 
 mvn verify %MAVEN_SETTINGS% ^
  -Pwindows -Dmaven.test.skip=true  %* | tee Build.log

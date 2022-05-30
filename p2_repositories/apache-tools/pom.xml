@@ -2,17 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>custom-p2-site</artifactId>
+	<artifactId>apache-tools</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0</version>
-	<name>Custom p2 site</name>
-	<description>Custom p2 site.</description>
+	<name>Apache tools</name>
+	<description>Apache tools.</description>
 	<parent>
 		<groupId>p2.repositories</groupId>
 		<artifactId>p2.repositories.root</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../</relativePath>
 	</parent>
+
+	<repositories>
+		<repository>
+			<id>JabylonRepository</id>
+			<url>https://www.jabylon.org/maven/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
@@ -32,28 +38,40 @@
 									<source>false</source>
 								</artifact>
 								<artifact>
-									<id>antlr:antlr:2.7.2</id>
+									<id>javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-beanutils:commons-beanutils:1.7.0</id>
+									<id>org.apache.taglibs.standard:glassfish:1.2.0</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-fileupload:commons-fileupload:1.0</id>
+									<id>org.apache.taglibs:taglibs-standard-impl:1.2.1</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-validator:commons-validator:1.1.4</id>
+									<id>org.apache.taglibs:taglibs-standard-compat:1.2.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.taglibs:taglibs-standard-spec:1.2.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.taglibs:taglibs-standard-jstlel:1.2.1</id>
 									<source>true</source>
 								</artifact>
 								<!--
 								<artifact>
-									<id>org.apache.taglibs:taglibs-standard-impl:1.2.5</id>
+									<id>org.apache:xalan:2.7.1</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>jakarta-oro:jakarta-oro:2.0.5</id>
+									<id>org.apache:serializer:2.7.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.taglibs:org.apache.taglibs.standard:1.2.1</id>
 									<source>true</source>
 								</artifact>
 								-->

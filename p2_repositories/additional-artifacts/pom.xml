@@ -2,11 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001 XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>custom-p2-site</artifactId>
+	<artifactId>additional-artifacts</artifactId>
 	<packaging>pom</packaging>
-	<version>2.0.0</version>
-	<name>Custom p2 site</name>
-	<description>Custom p2 site.</description>
+	<name>Additional artifacts</name>
+	<description>Additional artifacts.</description>
 	<parent>
 		<groupId>p2.repositories</groupId>
 		<artifactId>p2.repositories.root</artifactId>
@@ -14,12 +13,24 @@
 		<relativePath>../</relativePath>
 	</parent>
 
+	<repositories>
+		<repository>
+			<id>JabylonRepository</id>
+			<url>http://www.jabylon.org/maven</url>
+		</repository>
+		<!--
+    	<repository>
+    	<id>Mulesoft</id>
+    	<url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
+    	</repository>
+    	-->
+	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.reficio</groupId>
 				<artifactId>p2-maven-plugin</artifactId>
-				<version>1.3.0</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -28,35 +39,46 @@
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>org.apache.felix:org.apache.felix.webconsole:4.3.16</id>
-									<source>false</source>
-								</artifact>
-								<artifact>
-									<id>antlr:antlr:2.7.2</id>
+									<id>org.jdom:jdom2:2.0.6</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-beanutils:commons-beanutils:1.7.0</id>
+									<id>jaxen:jaxen:1.2.0</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-fileupload:commons-fileupload:1.0</id>
+									<id>net.sf.ehcache:ehcache:2.10.6</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>commons-validator:commons-validator:1.1.4</id>
-									<source>true</source>
-								</artifact>
-								<!--
-								<artifact>
-									<id>org.apache.taglibs:taglibs-standard-impl:1.2.5</id>
+									<id>net.sourceforge:akismet-java:1.02</id>
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>jakarta-oro:jakarta-oro:2.0.5</id>
+									<id>org.jvnet.hudson:org.suigeneris.jrcs.diff:0.4.2</id>
 									<source>true</source>
 								</artifact>
-								-->
+
+								<artifact>
+									<id>org.freshcookies:freshcookies-security:0.60</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.lucene:lucene-queryparser:8.5.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.lucene:lucene-highlighter:8.5.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.lucene:lucene-analyzers-common:8.5.1</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>net.sourceforge:sandler:0.5</id>
+									<source>true</source>
+								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>

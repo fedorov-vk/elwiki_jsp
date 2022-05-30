@@ -1,4 +1,4 @@
--- список артефактов, полученных с  'pom.xml.V1' --
+-- list of artifacts obtained with 'pom.xml.V1' --
 
 antlr_2.7.2.jar
 antlr.source_2.7.2.jar

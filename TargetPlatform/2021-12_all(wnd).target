@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="2021-09_all + My. (windows)">
+<target name="2021-12_all + p2 repos. (windows)">
 	<locations>
-		<location path="D:\devj\dev_wikijsp\2021-12\Repositories\apacheTools\target\repository" type="Directory"/>
-		<location path="D:\devj\dev_wikijsp\2021-12\Repositories\custom-p2-site\target\repository" type="Directory"/>
-		<location path="D:\devj\dev_wikijsp\Repository\additionalArtifacts\target\repository" type="Directory"/>
-		<location path="D:\devj\dev_wikijsp\Repository\fromEclipse\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\p2_repositories\apache-tools\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\p2_repositories\custom-p2-site\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\p2_repositories\additional-artifacts\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\p2_repositories\from-eclipse\target\repository" type="Directory"/>
 		<location path="D:\Repositories\p2\eclipse\releases\2021-12" type="Directory"/>
-		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\for-test-site\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\2021-12\GIT\elwiki+jsp_2021-12\p2_repositories\for-test-site\target\repository" type="Directory"/>
 	</locations>
 </target><!--
 	<location path="${eclipse_home}" type="Profile"/>

@@ -1,0 +1,25 @@
+--------------------------------------------------------------------------------
+This place is local p2 repositories built from maven artifacts.
+Required to include artifacts that are used in JPSwiki in the ElWiki build.
+(it is planned to switch to the eclipse codebase)
+
+additional-artifacts	-
+apache-tools			- repository with Apache artifacts.
+custom-p2-site
+for-test-site
+from-eclipse			- here the artifats of previous version of eclipse repository.
+
+--------------------------------------------------------------------------------
+Tool for making list of artifacts.
+"mk.pl"
+
+Scripts for creating p2 repositories, local and online, respectively. (linux, windows):
+"make_offline_repo.sh"
+"make_online_repo.sh"
+
+"make_offline_repo.cmd"
+"make_online_repo.cmd"
+
+NOTE: "make_online_repo.*" - work only for one repository.
+(required all reconfoguration for another purpose)
+--------------------------------------------------------------------------------
