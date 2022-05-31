@@ -32,14 +32,17 @@ import org.eclipse.net4j.util.security.IPasswordCredentialsProvider;
 import org.h2.jdbcx.JdbcDataSource;
 
 /**
- * Отвечает: за место размещения DB H2; за доступ к CDO репозиторию.
+ * Provides:</br>
+ * - location of DB H2</br>
+ * - access to the CDO repository
  * 
  * @author vfedorov
  */
 abstract class Repository implements IPasswordCredentialsProvider {
 
-	private static final String FOLDER_LINUX = "/home/vfedorov/dev/dev_wikijsp/WS/database_repository";
-	private static final String FOLDER_WINDOWS = "D:/devj/dev_wikijsp/WS/database_repository/";
+	//:FVK: workaround (is it temporary?)	
+	private static final String SYSPROP_H2_DATABASE_PLACE = "elwiki.h2.database.place";
+
 	private String name = "repo_elwiki";
 
 	private boolean tcpDisabled = false;
@@ -94,13 +97,8 @@ abstract class Repository implements IPasswordCredentialsProvider {
 	}
 
 	private String getFolder() {
-		//:FVK: workaround.
-		String os = org.eclipse.core.runtime.Platform.getOS();
-		if (org.eclipse.core.runtime.Platform.OS_LINUX.equals(os)) {
-			return FOLDER_LINUX;
-		}
-
-		return FOLDER_WINDOWS;
+		String path = System.getProperties().getProperty(SYSPROP_H2_DATABASE_PLACE, null);
+		return path;
 	}
 
 	/**

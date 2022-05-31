@@ -25,7 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 @SuppressWarnings("unused")
-@Deprecated //:FVK: -- старый код (чтение JSON файла из бандла...
+@Deprecated //:FVK: -- old code (reading a JSON file from a bundle...)
 public class UsersLoader {
 
 	static final Logger log = Logger.getLogger(UsersLoader.class);
@@ -64,9 +64,7 @@ public class UsersLoader {
 
 	}
 
-
-	static final String filePath = "/home/vfedorov/dev/dev_wikijsp/WS/data/users.json";
-
+	static final String filePath = "WS/data/users.json";
 
 	public void test() {
 		String response = "{\"name\":\"Ivan\",\"surname\":Petrov,\"age\":40}";

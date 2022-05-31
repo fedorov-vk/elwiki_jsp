@@ -20,7 +20,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console 10008"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.users.database=/home/vfedorov/dev/dev_wikijsp/WS/data/users.json&#10;-Delwiki.groups.database=/home/vfedorov/dev/dev_wikijsp/WS/data/groups.json&#10;&#10;-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.osgi.service.http.port=8088&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#10;&#10;-Dstorage.cdo.port=2039&#10;&#10;-D_java.security.debug=access,failure&#10;-Djava.security.auth.debug=failure&#10;&#10;-Declipse.security"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2021-12/database_repository/&#10;&#10;-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.osgi.service.http.port=8088&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#10;&#10;-Dstorage.cdo.port=2039"/>
     <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp(+plugins)(+emf)2021-12"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_target_bundles">

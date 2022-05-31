@@ -13,7 +13,7 @@
 	</appender>
 
 	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/home/vfedorov/dev/dev_wikijsp/WS/log/ElWiki.log" />
+		<param name="File" value="log/ElWiki.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Append" value="true" />
 		<param name="Encoding" value="UTF-8" />
