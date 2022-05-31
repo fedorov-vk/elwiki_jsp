@@ -1,0 +1,134 @@
+[
+  {
+    "name": "All",
+    "permissions": "(org.elwiki.permissions.PagePermission \"*:*\" \"view\")♦(org.elwiki.permissions.WikiPermission \"*\" \"editPreferences\")♦(org.elwiki.permissions.WikiPermission \"*\" \"editProfile\")♦(org.elwiki.permissions.WikiPermission \"*\" \"login\")",
+    "uid": "52218433-37d1-469d-8138-0d7fa13a2198",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Anonymous",
+    "permissions": "(org.elwiki.permissions.PagePermission \"*:*\" \"view\")♦(org.elwiki.permissions.WikiPermission \"*\" \"createPages\")",
+    "uid": "f1db412b-ad5f-4103-9e2b-c25aaecf7bdc",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Asserted",
+    "permissions": "(org.elwiki.permissions.PagePermission \"*:*\" \"modify\")♦(org.elwiki.permissions.WikiPermission \"*\" \"createPages\")♦(org.elwiki.permissions.GroupPermission \"*:*\" \"view\")",
+    "uid": "61d4412b-1def-5103-6e2b-ee5a4ecf7bde",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Authenticated",
+    "permissions": "(org.elwiki.permissions.PagePermission \"*:*\" \"modify,rename\")♦(org.elwiki.permissions.WikiPermission \"*\" \"createPages,createGroups\")♦(org.elwiki.permissions.GroupPermission \"*:*\" \"view\")♦(org.elwiki.permissions.GroupPermission \"*:*\" \"edit\")",
+    "uid": "71e5412b-6cef-7103-3ebb-135a4ecf7fec",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Admin",
+    "users": [
+      "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+    ],
+    "permissions": "(org.elwiki.permissions.AllPermission \"*\")",
+    "uid": "d1dbd10b-ad5f-4103-9e2b-c2caa5cf78dc",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Test",
+    "users": [
+      "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+      "fb22e5af-8515-41c4-92e8-947d97fc84fb",
+      "0cee5b97-1c69-40a5-b2f8-4a02256eccf7"
+    ],
+    "permissions": "()",
+    "uid": "9d918e6e-eadf-416c-8b30-7e6a8579260e",
+    "creator": "fb22e5af-8515-41c4-92e8-947d97fc84fb",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Test1",
+    "users": [
+      "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+      "0cee5b97-1c69-40a5-b2f8-4a02256eccf7",
+      "240a316d-ad76-4d38-9ab7-fc00dc27fe71"
+    ],
+    "permissions": "()",
+    "uid": "1dfefb5d-348f-43a9-a2dd-3d63f0191b9d",
+    "creator": "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Test2",
+    "users": [
+      "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+      "fb22e5af-8515-41c4-92e8-947d97fc84fb",
+      "0cee5b97-1c69-40a5-b2f8-4a02256eccf7"
+    ],
+    "permissions": "()",
+    "uid": "691c76fc-8314-4070-9f35-3941b5640e2e",
+    "creator": "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Test3",
+    "users": [
+      "beeb7b92-f126-4afb-90ac-efdff6610780"
+    ],
+    "permissions": "()",
+    "uid": "4ea72e51-1814-440a-aa14-fb10792d14fb",
+    "creator": "0cee5b97-1c69-40a5-b2f8-4a02256eccf7",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "TV",
+    "users": [
+      "fb22e5af-8515-41c4-92e8-947d97fc84fb",
+      "beeb7b92-f126-4afb-90ac-efdff6610780"
+    ],
+    "permissions": "()",
+    "uid": "90272295-fe4d-4006-bb9b-cc43fdee2fe8",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Literature",
+    "permissions": "()",
+    "uid": "4405516d-ad76-4d38-abc7-fc00dc27fe71",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+
+  },
+  {
+    "name": "Art",
+    "permissions": "()",
+    "uid": "d0a79fd6-688c-4856-b33c-d684264990a4",
+    "creator": "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Family",
+    "users": [
+      "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
+      "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+    ],
+    "permissions": "()",
+    "uid": "220d206c-e071-434e-bee1-a9b7ba903d56",
+    "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "Residents",
+    "users": [
+      "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
+      "240a316d-ad76-4d38-9ab7-fc00dc27fe71"
+    ],
+    "permissions": "()",
+    "uid": "d31c7acf-090f-4e00-bc71-d05efaa90c3e",
+    "creator": "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  }
+]

@@ -12,7 +12,7 @@ public class AuthorizePluginActivator extends Plugin {
 	private static final Logger log = Logger.getLogger(AuthorizePluginActivator.class);
 
 	// The plug-in ID
-	static final String PLIGIN_ID = "org.elwiki.authorize";
+	public static final String PLIGIN_ID = "org.elwiki.authorize";
 
 	// The shared instance
 	private static AuthorizePluginActivator pluginInstance;
