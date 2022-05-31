@@ -1,8 +1,10 @@
 package org.elwiki.authorize.user;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,10 +50,6 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 
 	private UserAdmin userAdmin;
 
-	/** System property for define custom file with user profiles list. Current value - {@value} */
-	private static final String SYSPROP_USERS_DATABASE = "elwiki.users.database";
-	private static final String SYSPROP_GROUPS_DATABASE = "elwiki.groups.database";
-
 	@Override
 	public void initialize(Engine engine, Properties props) throws NoRequiredPropertyException, WikiSecurityException {
 		BundleContext context = AuthorizePluginActivator.getDefault().getBundle().getBundleContext();
@@ -60,114 +58,23 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			this.userAdmin = (UserAdmin) context.getService(ref);
 		}
 
-		// Read customized user profiles. 
-		String path = System.getProperties().getProperty(SYSPROP_USERS_DATABASE, null);
-		if (path != null) {
-			loadUsersDataBase(path);
-		}
-		String pathGroups = System.getProperties().getProperty(SYSPROP_GROUPS_DATABASE, null);
-		if (pathGroups != null) {
-			loadGroupsDataBase(pathGroups);
-		}
-
-		// :FVK: WORKAROUND initialization of Groups.
-		/*
+		// Read customized user profiles. (:FVK: workaround.)
 		try {
-			User alice = this.userAdmin.getUser(LOGIN_NAME, "Alice");
-			User bob = this.userAdmin.getUser(LOGIN_NAME, "Bob");
-			User charlie = this.userAdmin.getUser(LOGIN_NAME, "Charlie");
-			User fred = this.userAdmin.getUser(LOGIN_NAME, "Fred");
-			User vfedorov = this.userAdmin.getUser(LOGIN_NAME, "vfedorov");
-			User admin = this.userAdmin.getUser(LOGIN_NAME, "admin");
-			User janne = this.userAdmin.getUser(LOGIN_NAME, "janne");
-
-			Group group;
-			String groupName;
-			
-			groupName = "Admin";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(admin);
-			}
-
-			groupName = "Test";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(bob);
-				group.addMember(alice);
-				group.addMember(charlie);
-			}
-
-			groupName = "Test1";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(bob);
-				group.addMember(charlie);
-				group.addMember(janne);
-			}
-
-			groupName = "Test2";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(bob);
-				group.addMember(alice);
-				group.addMember(charlie);
-			}
-			
-			groupName = "Test3";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(fred);
-			}
-
-			
-			groupName = "TV";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(alice);
-				group.addMember(fred);
-			}
-			
-			groupName = "Literature";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-			}
-
-			groupName = "Art";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-			}
-
-			// ------------------------------
-			groupName = "Family";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(vfedorov);
-				group.addMember(admin);
-			}
-
-			groupName = "Residents";
-			if ((group = (Group) this.userAdmin.getRole(groupName)) == null) {
-				group = (Group) this.userAdmin.createRole(groupName, Role.GROUP);
-				group.addMember(vfedorov);
-				group.addMember(janne);
-				group.addMember(vfedorov);
-			}
-
-//			if (this.userAdmin.getRole("AlarmSystemControl") == null) {
-//				Group alarmSystemControl = (Group) this.userAdmin.createRole("AlarmSystemControl", Role.GROUP);
-//				alarmSystemControl.addMember(group);
-//				alarmSystemControl.addRequiredMember(adults);
-//			}
+			loadUsersDataBase();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block -- e.printStackTrace();
-			log.error("Test Users List: " + e.getLocalizedMessage());
+			log.error("Could not load users JSON file from bundle.", e);
 		}
-		*/
+
+		// Read customized user's groups. (:FVK: workaround.)
+		try {
+			loadGroupsDataBase();
+		} catch (Exception e) {
+			log.error("Could not load groups JSON file from bundle.", e);
+		}
 	}
 
-	//TODO: - организовать загрузку профилей пользователей из Json файла (для Wiki...).
-	private void loadUsersDataBase(String path) {
+	//:FVK: workaround. (JSON loading from bundle's file)
+	private void loadUsersDataBase() throws Exception {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 
@@ -175,13 +82,11 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		}.getType();
 		List<DefaultUserProfile> data = null;
 
-		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(path))) {
+		URL url = new URL("platform:/plugin/" + AuthorizePluginActivator.PLIGIN_ID + "/users.json");
+		InputStream inputStream = url.openConnection().getInputStream();
+		try (InputStreamReader isr = new InputStreamReader(inputStream)) {
 			JsonReader reader = new JsonReader(isr);
 			data = gson.fromJson(reader, collectionType);
-		} catch (Exception e) {
-			log.error("Could not read configuration file [" + path + "].", e);
-			log.error("Ignoring configuration file [" + path + "].");
-			return;
 		}
 
 		for (DefaultUserProfile profile : data) {
@@ -196,21 +101,18 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		}
 	}
 
-	//TODO: - организовать загрузку групп из Json файла (для Wiki...).
-	private void loadGroupsDataBase(String filePath) {
+	//:FVK: workaround. (JSON loading from bundle's file)
+	private void loadGroupsDataBase()  throws Exception {
 		Type collectionType = new TypeToken<List<GroupContent>>() {
 		}.getType();
 		List<GroupContent> data = null;
 
-		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath))) {
+		URL url = new URL("platform:/plugin/" + AuthorizePluginActivator.PLIGIN_ID + "/groups.json");
+		InputStream inputStream = url.openConnection().getInputStream();
+		try (InputStreamReader isr = new InputStreamReader(inputStream)) {
 			JsonReader reader = new JsonReader(isr);
 			Gson gson = new GsonBuilder().create();
 			data = gson.fromJson(reader, collectionType);
-		} catch (Exception e) {
-			// TODO: :FVK: workaround.
-			System.out.println("Could not read configuration file [" + filePath + "].");
-			System.out.println("Ignoring configuration file [" + filePath + "].");
-			return;
 		}
 
 		for (GroupContent groupData : data) {
@@ -219,7 +121,6 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 			if ((group = (Group) this.userAdmin.getRole(groupUid)) == null) {
 				try {
 					group = (Group) this.userAdmin.createRole(groupUid, Role.GROUP);
-					@SuppressWarnings("unchecked")
 					Dictionary<String, Object> groupProps = group.getProperties();
 					groupProps.put(GROUP_NAME, groupData.name);
 					groupProps.put(GROUP_PERMISSIONS, groupData.permissions);

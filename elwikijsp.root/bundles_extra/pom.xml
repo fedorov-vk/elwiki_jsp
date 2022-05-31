@@ -5,7 +5,7 @@
 	<artifactId>bundles_extra</artifactId>
 	<packaging>pom</packaging>
 	<name>~~~ Bundles Extra ~~~</name>
-	<description>Bundles specifications.</description>
+	<description>Extra bundles.</description>
 	<parent>
 		<groupId>elwiki</groupId>
 		<artifactId>elwiki.root</artifactId>

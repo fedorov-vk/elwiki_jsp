@@ -1,0 +1,82 @@
+[
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "admin@mailinator.com",
+    "fullname": "Administrator",
+    "loginName": "admin",
+    "password": "admin",
+    "uid": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "wikiname": "Administrator"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "Alice@mailinator.com",
+    "fullname": "Alice",
+    "loginName": "Alice",
+    "password": "password",
+    "uid": "fb22e5af-8515-41c4-92e8-947d97fc84fb",
+    "wikiname": "Alice"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "Biff@mailinator.com",
+    "fullname": "Biff",
+    "loginName": "Biff",
+    "password": "password",
+    "uid": "2d855c83-6f9a-487e-abd4-d335476755d2",
+    "wikiname": "Biff"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "Bob@mailinator.com",
+    "fullname": "Bob",
+    "loginName": "Bob",
+    "password": "password",
+    "uid": "662682d0-d6b8-47dd-8e1e-fb779e9ef579",
+    "wikiname": "Bob"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "Charlie@mailinator.com",
+    "fullname": "Charlie",
+    "loginName": "Charlie",
+    "password": "password",
+    "uid": "0cee5b97-1c69-40a5-b2f8-4a02256eccf7",
+    "wikiname": "Charlie"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "Fred@mailinator.com",
+    "fullname": "Fred",
+    "loginName": "Fred",
+    "password": "password",
+    "uid": "beeb7b92-f126-4afb-90ac-efdff6610780",
+    "wikiname": "Fred"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "janne@mailinator.com",
+    "fullname": "Janne Jalkanen",
+    "loginName": "janne",
+    "password": "myP@5sw0rd",
+    "uid": "240a316d-ad76-4d38-9ab7-fc00dc27fe71",
+    "wikiname": "JanneJalkanen"
+  },
+  {
+    "attributes": {},
+    "created": "Feb 10, 2021 7:57:51 PM",
+    "email": "vfedorov@mailinator.com",
+    "fullname": "Victor Fedorov",
+    "loginName": "vfedorov",
+    "password": "password",
+    "uid": "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
+    "wikiname": "VictorFedorov"
+  }
+]
