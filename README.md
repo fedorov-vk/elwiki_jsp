@@ -12,7 +12,7 @@ ElWiki appears a complete application and works using the built-in [Jetty](https
 
 * links between pages are provided by the page index, not the page name
 * wiki data is implemented by the EMF model
-* Data storage management provides CDO
+* CDO provides data storage management
 
 
 ### These improvements allow
