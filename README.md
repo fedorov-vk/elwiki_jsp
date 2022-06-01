@@ -10,12 +10,12 @@ ElWiki appears a complete application and works using the built-in [Jetty](https
 
 ## The main differences
 
-* links between pages are provided by the page index, not the page name.
+* links between pages are provided by the page index, not the page name
 * wiki data is implemented by the EMF model
 * Data storage management provides CDO
 
 
-# This allows
+### These improvements allow
 
 * avoid scaning all pages, when changed the page name, to modify links to this page
 * to ensure data integrity, it is possible to repeatedly change the page name.
