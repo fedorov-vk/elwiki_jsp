@@ -1,6 +1,6 @@
 # elwiki_jsp
 
-ElWiki is clone of project [apache/jspwiki](https://github.com/apache/jspwiki)
+ElWiki (Enhanced Links wiki) is clone of project [apache/jspwiki](https://github.com/apache/jspwiki)
 > clone of v2.11.0-M7-git-19
 
 It is porting under Eclipse, using the following: Equinox OSGi, EMF, CDO and other required stuff.
