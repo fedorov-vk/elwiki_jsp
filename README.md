@@ -17,10 +17,11 @@ ElWiki appears a complete application and works using the built-in [Jetty](https
 
 ### These improvements allow
 
-* avoid scaning all pages, when changed the page name, to modify links to this page
+* to avoid scanning all pages at startup wiki
+* to avoid changing content of pages when changed the page name of targeted page
 * to ensure data integrity, it is possible to repeatedly change the page name.
-* simple implement a page hierarchy mechanism
-* the ability to separate topics == multiple Wikis. Switching between them, sharing multiple Wikis, for example for search.
+* adding simple implementation a page hierarchy mechanism (supported by data model)
+* the ability to separate topics (one topic - is another content, wiki); that is, there are several wikis under one control. Switching between them, sharing multiple Wikis, for example for search.
 
 ## Currently
 

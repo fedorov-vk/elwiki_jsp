@@ -1,4 +1,5 @@
 @echo off
+REM HOW-TO: https://wiki.eclipse.org/Equinox_p2_Repository_Mirroring
 REM Creates a local copy of the Eclipse p2 repository.
 REM The repository URL desines SRC, for example:
 REM   https://download.eclipse.org/releases/2019-03/201902081000/
