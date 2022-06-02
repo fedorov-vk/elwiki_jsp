@@ -1,4 +1,7 @@
 --------------------------------------------------------------------------------
+# Techinfo: Generate P2 Repository From Maven Artifacts In 2017
+# FROM: https://www.javacodegeeks.com/2017/09/generate-p2-repository-maven-artifacts-2017.html
+
 This place is local p2 repositories built from maven artifacts.
 Required to include artifacts that are used in JPSwiki in the ElWiki build.
 (it is planned to switch to the eclipse codebase)
