@@ -3,13 +3,6 @@
 	<classpathentry exported="true" kind="lib" path="akismet-java-1.02.jar"/>
 	<classpathentry exported="true" kind="lib" path="ehcache-2.10.6.jar" sourcepath="/Sources/net.sf.ehcache.source_2.10.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="freshcookies-security-0.60.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-analyzers-common-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-core-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-highlighter-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-memory-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-queries-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-queryparser-8.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lucene-sandbox-8.5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="org.suigeneris.jrcs.diff-0.4.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
