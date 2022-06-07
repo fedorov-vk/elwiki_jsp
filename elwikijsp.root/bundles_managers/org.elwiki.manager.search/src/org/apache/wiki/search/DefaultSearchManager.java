@@ -274,10 +274,9 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
         }
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public void initialize( final Engine engine ) throws WikiException {
+    public void initialize(Engine engine ) throws WikiException {
         super.initialize( engine );
         WikiEventManager.addWikiEventListener( this.pageManager, this );
 
@@ -312,13 +311,20 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     	IPreferenceStore prefStore = this.wikiConfiguration.getWikiPreferences();
         final String providerClassName = TextUtil.getStringProperty(prefStore, PROP_SEARCHPROVIDER, DEFAULT_SEARCHPROVIDER );
 
-        /*:FVK:*/
+        /*:FVK: - old code
         try {
             final Class<?> providerClass = findClass( "org.apache.wiki.search", providerClassName );
             m_searchProvider = ( SearchProvider )providerClass.newInstance();
         } catch( final ClassNotFoundException | InstantiationException | IllegalAccessException e ) {
             log.warn("Failed loading SearchProvider, will use BasicSearchProvider.", e);
         }
+        */
+        try {
+			m_searchProvider = new LuceneSearchProvider();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         if( null == m_searchProvider ) {
             // FIXME: Make a static with the default search provider

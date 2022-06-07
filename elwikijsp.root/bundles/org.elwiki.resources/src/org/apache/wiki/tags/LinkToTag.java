@@ -75,6 +75,7 @@ public class LinkToTag extends WikiLinkTag {
     @Override
     public int doWikiStartTag() throws IOException {
         String pageName = m_pageName;
+        String pageId = null;
         boolean isattachment = false;
 
         if( m_pageName == null ) {
@@ -82,6 +83,7 @@ public class LinkToTag extends WikiLinkTag {
 
             if( p != null ) {
                 pageName = p.getName();
+                pageId = p.getId();
 
                 isattachment = p instanceof PageAttachment;
             } else {
@@ -111,7 +113,7 @@ public class LinkToTag extends WikiLinkTag {
                 params.append( params.length() > 0 ? "&amp;" : "" ).append( "skin=" ).append( getTemplate() );
             }
 
-            url = m_wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), pageName, params.toString() );
+            url = m_wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString() );
             linkclass = "wikipage";
         }
 

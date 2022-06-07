@@ -63,6 +63,7 @@
 									<id>org.freshcookies:freshcookies-security:0.60</id>
 									<source>true</source>
 								</artifact>
+<!--
 								<artifact>
 									<id>org.apache.lucene:lucene-queryparser:8.5.1</id>
 									<source>true</source>
@@ -75,6 +76,7 @@
 									<id>org.apache.lucene:lucene-analyzers-common:8.5.1</id>
 									<source>true</source>
 								</artifact>
+-->
 								<artifact>
 									<id>net.sourceforge:sandler:0.5</id>
 									<source>true</source>

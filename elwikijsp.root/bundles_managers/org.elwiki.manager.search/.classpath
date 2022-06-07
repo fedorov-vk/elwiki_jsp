@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-analyzers-common-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-core-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-highlighter-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-memory-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-queries-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-queryparser-8.5.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/lucene-sandbox-8.5.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>

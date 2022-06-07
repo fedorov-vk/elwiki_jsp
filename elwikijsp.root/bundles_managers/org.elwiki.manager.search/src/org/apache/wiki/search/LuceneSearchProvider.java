@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.ClassicAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -176,7 +178,7 @@ public class LuceneSearchProvider implements SearchProvider {
         // for a little while before starting to go through
         // the Lucene "pages that need updating".
         final LuceneUpdater updater = new LuceneUpdater( m_engine, this, initialDelay, indexDelay );
-        //:FVK: --- updater.start();
+        updater.start();
     }
 
     /**
@@ -333,6 +335,11 @@ public class LuceneSearchProvider implements SearchProvider {
     }
 
     private Analyzer getLuceneAnalyzer() throws ProviderException {
+    	Analyzer analyser;
+    	analyser = new ClassicAnalyzer();
+    			// new StandardAnalyzer();
+    	
+    	/*{//:FVK: workaround - old code.
         try {
             final Class< ? > clazz = ClassUtil.findClass( "", m_analyzerClass );
             final Constructor< ? > constructor = clazz.getConstructor();
@@ -342,6 +349,8 @@ public class LuceneSearchProvider implements SearchProvider {
             log.error( msg, e );
             throw new ProviderException( msg + e );
         }
+	*/
+    	return analyser;
     }
 
     /**
