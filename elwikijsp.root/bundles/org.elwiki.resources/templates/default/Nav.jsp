@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Nav.jsp -->
+<!-- ~~ START ~~ Nav.jsp (templates/default) -->
 <%@ page import="java.util.StringTokenizer" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.attachment.*" %>
@@ -31,14 +31,14 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  Context ctx = ContextUtil.findContext( pageContext );
 
-  String text = ServicesRefs.getPageManager().getText( c.getPage() );
+  String text = ServicesRefs.getPageManager().getText( ctx.getPage() );
   StringTokenizer tokens = new StringTokenizer( text );
   //avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
 
 %>
-<c:set var="attachments" value="<%= ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size() %>" />
+<c:set var="attachments" value="<%= ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size() %>" />
 
 <c:set var="wordCount" value="<%= tokens.countTokens() %>" />
 <c:set var="readingTime" value="${wordCount / 228}" />
@@ -348,7 +348,7 @@
       <wiki:CheckRequestContext context='!creategroup' >
       <wiki:Permission permission="createGroups">
         <li>
-          <wiki:Link jsp="NewGroup.jsp" title="<fmt:message key='actions.creategroup.title'/>" >
+          <wiki:Link jsp="createGroup.cmd" title="<fmt:message key='actions.creategroup.title'/>" >
             <fmt:message key='actions.creategroup' />
           </wiki:Link>
         </li>
@@ -382,7 +382,7 @@
 
 </div>
 
-<%--
+<%-- :FVK:
   <wiki:PageExists>
   <wiki:PageType type="page">
   <wiki:Tab id="attach" title="<%= attTitle %>" accesskey="a">

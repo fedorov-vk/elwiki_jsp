@@ -1,4 +1,3 @@
-<%@page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
@@ -23,9 +22,9 @@
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.elwiki.data.authorize.*" %>
 <%@ page import="org.elwiki.api.authorization.WrapGroup" %>
 <%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.elwiki.permissions.GroupPermission" %>
@@ -40,11 +39,10 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
-
+  Context grCtx = ServicesRefs.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
   // Extract the group name and members
   //String name = request.getParameter( "group" );
-  //Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
+  //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
 
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
   IAuthorizer groupMgr = ServicesRefs.getGroupManager();
@@ -63,7 +61,7 @@
 
 <wiki:CheckRequestContext context="!createGroup"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
-  <form action="<wiki:Link format='url' jsp='NewGroup.jsp'/>"
+  <form action="<wiki:Link format='url' jsp='createGroup.cmd'/>"
          class="accordion${createFormClose}"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -91,7 +89,6 @@
 
     <input class="btn btn-success form-col-offset-20" type="submit" value="<fmt:message key='grp.savenewgroup'/>" />
 
-
   </form>
 </wiki:Permission>
 
@@ -100,7 +97,7 @@
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
 
-<form action="<wiki:Link format='url' jsp='DeleteGroup.jsp'/>"
+<form action="<wiki:Link format='url' jsp='deleteGroup.cmd'/>"
       class="hidden"
         name="deleteGroupForm" id="deleteGroupForm"
       method="POST" accept-charset="UTF-8">
@@ -169,16 +166,16 @@
       <%--
         We can't use wiki:Permission, cause we are in a loop; so let's just borrow some code from PermissionTag.java
       --%>
-      <c:if test='<%= authMgr.checkPermission( c.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
+      <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
       <%-- <wiki:Permission permission="editGroup"> --%>
         <a class="btn btn-xs btn-primary"
-            href="<wiki:Link format='url' jsp='EditGroup.jsp'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
+            href="<wiki:Link format='url' jsp='editGroup.cmd'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
           <fmt:message key="actions.editgroup" />
         </a>
       <%--</wiki:Permission>--%>
       </c:if>
 
-      <c:if test='<%= authMgr.checkPermission( c.getWikiSession(), new GroupPermission( name, "delete" ) ) %>'>
+      <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "delete" ) ) %>'>
       <%-- <wiki:Permission permission="deleteGroup"> --%>
         <button class="btn btn-xs btn-danger" type="button" onclick="document.deleteGroupForm.group.value ='${group.name}';document.deleteGroupForm.ok.click();">
           <fmt:message key="actions.deletegroup"/>

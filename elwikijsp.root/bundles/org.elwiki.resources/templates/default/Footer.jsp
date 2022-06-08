@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Footer.jsp --><%@
+<!-- ~~ START ~~ Footer.jsp (templates/default) --><%@
  page import="org.apache.wiki.api.Release" %><%@
  page import="javax.servlet.jsp.jstl.fmt.*" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@

@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ commonheader.jsp --><%@
+<!-- ~~ START ~~ commonheader.jsp (templates/default) --><%@
  page import="org.apache.wiki.api.core.*" %><%@
  page import="org.apache.wiki.ui.*" %><%@
  page import="org.apache.wiki.util.*" %><%@
@@ -28,13 +28,13 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/><%--
    This file provides a common header which includes the important JSPWiki scripts and other files.
-   You need to include this in your template, within <head> and </head>.  It is recommended that
-   you don't change this file in your own template, as it is likely to change quite a lot between
-   revisions.
+   You need to include this in your template, within <head> and </head>.
+   It is recommended that you don't change this file in your own template,
+   as it is likely to change quite a lot between revisions.
 
-   Any new functionality, scripts, etc, should be included using the TemplateManager resource
-   include scheme (look below at the <wiki:IncludeResources> tags to see what kind of things
-   can be included).
+   Any new functionality, scripts, etc,
+   should be included using the TemplateManager resource include scheme
+   (look below at the <wiki:IncludeResources> tags to see what kind of things can be included).
 --%><%-- CSS stylesheet --%><%--
 BOOTSTRAP, IE compatibility / http://getbootstrap.com/getting-started/#support-ie-compatibility-modes
 --%>
@@ -156,5 +156,7 @@ String.I18N.PREFIX = "javascript.";
          src="<wiki:Link format='url' templatefile='skins/' /><c:out value='${prefs.SkinName}/skin.js' />" ></script>
 </c:if>
 
+<%@ include file="/templates/default/localheader.jsp" %>
+<%-- :FVK:
 <wiki:Include page="localheader.jsp"/>
-<!-- ~~ END ~~ commonheader.jsp -->
+--%><!-- ~~ END ~~ commonheader.jsp -->

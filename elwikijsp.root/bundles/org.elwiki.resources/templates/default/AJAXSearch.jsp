@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<!-- ~~ START ~~ AJAXSearch.jsp -->
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
@@ -43,7 +43,7 @@
 <%!
   public void jspInit()
   {
-    wiki = Wiki.engine().find( getServletConfig() );
+    wiki = ServicesRefs.Instance; //:FVK: workaround.
   }
   Logger log = Logger.getLogger("JSPWikiSearch");
   Engine wiki;
@@ -178,3 +178,4 @@
     ${pagination}
 
    </wiki:SearchResults>
+<!-- ~~ END ~~ AJAXSearch.jsp -->

@@ -179,8 +179,8 @@ public class ContentTag extends WikiTagBase {
             //:FVK: workaround.
             //"/t#k/" + contentTemplate; 
 			//final String page = ServicesRefs.getTemplateManager().findJSP(pageContext, m_wikiContext.getTemplate(), contentTemplate);
-            contentTemplate = contentTemplate.replace(".jsp", ".cmd");
-			String page = "/page/templates/default/" + contentTemplate;
+            //contentTemplate = contentTemplate.replace(".jsp", ".cmd");
+			String page = "/templates/default/" + contentTemplate;
 
             pageContext.include( page );
         }

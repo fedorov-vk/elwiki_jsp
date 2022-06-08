@@ -39,9 +39,9 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext(pageContext);
-  WikiPage wikiPage = c.getPage();
-  int attCount = ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size();
+  Context ctx = ContextUtil.findContext(pageContext);
+  WikiPage wikiPage = ctx.getPage();
+  int attCount = ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";
 
@@ -59,7 +59,7 @@
     }
     else
     {
-      creationAuthor = Preferences.getBundle( c, InternationalizationManager.CORE_BUNDLE ).getString( "common.unknownauthor" );
+      creationAuthor = Preferences.getBundle( ctx, InternationalizationManager.CORE_BUNDLE ).getString( "common.unknownauthor" );
     }
   }
 
@@ -119,7 +119,7 @@
 
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
 
-    <form action="<wiki:Link format='url' jsp='Rename.jsp'/>"
+    <form action="<wiki:Link format='url' jsp='rename.cmd'/>"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -161,7 +161,7 @@
 
     <wiki:SetPagination start="<%=startitem%>" total="<%=itemcount%>" pagesize="<%=pagesize%>" maxlinks="9"
                        fmtkey="info.pagination"
-                         href='<%=c.getURL(ContextEnum.PAGE_INFO.getRequestContext(), wikiPage.getName(), "start=%s")%>' />
+                         href='<%=ctx.getURL(ContextEnum.PAGE_INFO.getRequestContext(), wikiPage.getName(), "start=%s")%>' />
 
     <c:set var="first" value="<%=startitem%>"/>
     <c:set var="last" value="<%=startitem + pagesize%>"/>
