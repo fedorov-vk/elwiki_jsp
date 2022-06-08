@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ UserBox.jsp  -->
+<!-- ~~ START ~~ UserBox.jsp (templates/default) -->
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
@@ -64,16 +64,16 @@
 
     <li class="dropdown-header">
       <%--
-           user preferences button
+           user preferences button: preferences; groups
       --%>
       <wiki:CheckRequestContext context='!prefs'>
         <wiki:CheckRequestContext context='!preview'>
-          <wiki:Link cssClass="btn btn-default btn-block" jsp="UserPreferences.jsp">
+          <wiki:Link cssClass="btn btn-default btn-block" jsp="prefs.cmd">
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
           </wiki:Link>
         <wiki:Permission permission="createGroups">
-          <wiki:Link cssClass="btn btn-default btn-block" jsp="UserPreferences.jsp">
+          <wiki:Link cssClass="btn btn-default btn-block" jsp="prefsRap.cmd">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='groups'/>
             <span class="icon-group"></span> <fmt:message key="actions.groups" />
@@ -87,13 +87,14 @@
       <wiki:UserCheck status="notAuthenticated">
         <wiki:CheckRequestContext context='!login'>
         <wiki:Permission permission="login">
-          <wiki:Link cssClass="btn btn-primary btn-block login" jsp="Login.jsp">
+          <wiki:Link cssClass="btn btn-primary btn-block login" jsp="login.cmd">
             <wiki:Param name='redirect' value='${redirect}'/>
-            <span class="icon-signin"></span> <fmt:message key="actions.login" />
-        </wiki:Link>
+            <span class="icon-signin"></span>
+            <fmt:message key="actions.login" />
+          </wiki:Link>
         </wiki:Permission>
         <wiki:Permission permission='editProfile'>
-          <wiki:Link cssClass="btn btn-link btn-block register" jsp="Login.jsp">
+          <wiki:Link cssClass="btn btn-link btn-block register" jsp="login.cmd">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='register'/>
             <fmt:message key="actions.registernow" />
@@ -105,12 +106,15 @@
            logout button
       --%>
       <wiki:UserCheck status="authenticated">
-        <div class="modal">
-        <a href="<wiki:Link jsp='Logout.jsp' format='url' />"
+        <div>
+        <%-- <div class="modal">  :FVK: - если задавать верно, <div class="modal"> - то кнопка не выводится. --%>
+        <a href="<wiki:Link jsp='logout.cmd' format='url' />"
           class="btn btn-default btn-block logout" data-modal=".modal">
-            <span class="icon-signout"></span> <fmt:message key="actions.logout"/>
+          <span class="icon-signout"></span>
+          <fmt:message key="actions.logout"/>
           <fmt:message key='actions.confirmlogout'/>
         </a>
+        <%-- </div>  --%>
         </div>
       </wiki:UserCheck>
     </li>

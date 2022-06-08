@@ -12,7 +12,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 @Component(
     service=Servlet.class,
     property= {
-    	"osgi.http.whiteboard.servlet.pattern=/*",
+    	HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/*",
     	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
     	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,

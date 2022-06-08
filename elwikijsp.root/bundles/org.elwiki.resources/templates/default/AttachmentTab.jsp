@@ -33,7 +33,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   int MAXATTACHNAMELENGTH = 30;
-  Context c = ContextUtil.findContext(pageContext);
+  Context ctx = ContextUtil.findContext(pageContext);
 %>
 <c:set var="progressId" value="<%= ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
 <div class="page-content">

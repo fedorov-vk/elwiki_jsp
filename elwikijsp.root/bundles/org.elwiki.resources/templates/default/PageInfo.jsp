@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ PageInfo.jsp --><%@
+<!-- ~~ START ~~ PageInfo.jsp (templates/default) --><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>

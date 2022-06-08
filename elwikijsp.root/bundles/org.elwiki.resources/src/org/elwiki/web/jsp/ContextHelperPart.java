@@ -45,30 +45,8 @@ public class ContextHelperPart extends ServletContextHelper implements HttpConte
 	@Override
 	public URL getResource(String name) {
 		//:FVK: System.out.println("---- PageServletContextHelper: ----");
-		//:FVK: System.out.println(" (1) before: " + name);
-		switch (name) {
-		case "/wiki/commonheader.jsp":
-			name = "/page/commonheader1.jsp";
-			Assert.isTrue(false, "Not implemented"); 
-			break;
-		case "/t#k/localheader1.jsp": //TODO: :FVK: это не требуется более.
-			name = "/page/localheader.jsp";
-			break;
-		default:
-			if (name.startsWith("/t#k/")) {
-				/* замена '/t#k/' на '/page/templates/default/' */
-				name = name.replaceAll("/t#k/", "/page/templates/default/");
-			} else { //:FVK: "/do/" - требуется для обращения к getRequestDispatcher(path).
-				name = name.replaceAll("/do/", "/page/");
-			}
-			
-			if(name.endsWith(".cmd")) { //:FVK: workaround.
-				name = name.replaceAll(".cmd$", ".jsp");
-			}
-		}
-		//:FVK: System.out.println(" (2)  after: " + name);
 		URL url = defaultContext.getResource(name);
-		//:FVK: System.out.println(" (3) url: " + url);
+		//:FVK: System.out.println("---- url: " + url);
 		return url;
 	}
 

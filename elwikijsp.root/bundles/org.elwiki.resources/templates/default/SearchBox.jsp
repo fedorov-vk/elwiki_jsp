@@ -16,14 +16,14 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ SearchBox.jsp --><%@
+<!-- ~~ START ~~ SearchBox.jsp (templates/default) --><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%-- Provides a simple searchbox --%>
 <%-- Powered by wiki/Findpages.js and wiki/Recents.js  --%>
-<form action="<wiki:Link jsp='Search.jsp' format='url'/>"
+<form action="<wiki:Link jsp='find.cmd' format='url'/>"
   class="form-inline searchbox pull-right"
   id="searchForm" tabindex="0" role="search"
   accept-charset="<wiki:ContentEncoding />">

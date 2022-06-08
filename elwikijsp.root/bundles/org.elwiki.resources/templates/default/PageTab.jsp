@@ -34,7 +34,7 @@
 <c:choose>
 
 <c:when test="${param.tab == 'attach'}">
-	<wiki:Include page="AttachmentTab.jsp" />
+	<%@ include file="/templates/default/AttachmentTab.jsp" %>
 </c:when>
 
 <c:otherwise>
@@ -42,10 +42,10 @@
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
 <wiki:CheckVersion mode="notlatest">
   <%
-    Context c = ContextUtil.findContext( pageContext );
+    Context ctx = ContextUtil.findContext( pageContext );
   %>
-  <c:set var="thisVersion" value="<%= c.getPage().getVersion() %>" />
-  <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
+  <c:set var="thisVersion" value="<%= ctx.getPage().getVersion() %>" />
+  <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( ctx.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
 
   <form action="<wiki:Link format='url' jsp='Wiki.jsp'/>"
         method="get" accept-charset='UTF-8'>

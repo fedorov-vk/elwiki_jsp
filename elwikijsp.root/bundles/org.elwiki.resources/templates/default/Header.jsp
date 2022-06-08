@@ -16,8 +16,9 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Header.jsp  --><%@
+<!-- ~~ START ~~ Header.jsp (templates/default) --><%@
  page import="org.apache.wiki.api.core.*" %><%@
+ page import="org.elwiki.services.ServicesRefs" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %><%@
@@ -25,19 +26,19 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
+<c:set var="frontpageId" value="<%=ServicesRefs.getPageManager().getMainPageId()%>" />
 
 <div class="header">
-<%-- :FVK: title часть страницы --%>
   <c:set var="titlebox"><wiki:InsertPage page="TitleBox" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
 
   <div class="topline">
-<%-- :FVK: эмблема-ссылка в верхнем-левом углу. --%>
     <div class="cage pull-left" tabindex="0">
-
         <a class="logo pull-left"
-           href="<wiki:Link page='${frontpage}' format='url' />"
-           title="<fmt:message key='actions.home.title' ><fmt:param>${frontpage}</fmt:param></fmt:message> ">apache<b>jsp&#x03C9;iki</b></a>
+           href="<wiki:Link page='${frontpageId}' format='url' />"
+           title="<fmt:message key='actions.home.title' ><fmt:param>${frontpageId}</fmt:param></fmt:message>">
+           apache<b>jsp&#x03C9;iki</b>
+        </a>
 
         <wiki:PageExists page="HomeMenu">
         <ul class="dropdown-menu" data-hover-parent=".cage">
@@ -46,8 +47,8 @@
         </wiki:PageExists>
     </div>
 
-    <wiki:Include page="UserBox.jsp" />
-    <wiki:Include page="SearchBox.jsp" />
+	<%@ include file="/templates/default/UserBox.jsp" %>
+	<%@ include file="/templates/default/SearchBox.jsp" %>
 
     <div class="pagename" title="<wiki:PageName />">
       <wiki:CheckRequestContext context='viewGroup|createGroup|editGroup'><span class="icon-group"></span></wiki:CheckRequestContext>
@@ -66,6 +67,6 @@
     </div>
 
   </div>
-  <wiki:Include page="Nav.jsp" />
+  <%@ include file="/templates/default/Nav.jsp" %>
 </div>
 <!-- ~~ END ~~ Header.jsp  -->

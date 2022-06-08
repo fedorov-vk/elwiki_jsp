@@ -258,7 +258,7 @@ public class Preferences extends HashMap<String, String> {
 			loc = (request != null) ? request.getLocale() : Locale.getDefault();
 		}
 
-		logger.debug("using locale " + loc.toString());
+		//:FVK: logger.debug("using locale " + loc.toString());
 		return loc;
 	}
 

@@ -56,7 +56,7 @@ public class EditorTag extends WikiBodyTag {
 
         //:FVK: - TemplateManager выдает неверный путь к "/editors/plain.jsp"
         try {
-            final String page = "/page/templates/default/editors/plain.cmd"; //:FVK: HACK: 
+            final String page = "/templates/default/editors/plain.jsp"; //:FVK: HACK: 
             		//ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
 
             

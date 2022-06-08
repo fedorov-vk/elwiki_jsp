@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Sidebar.jsp --><%@
+<!-- ~~ START ~~ Sidebar.jsp (templates/default) --><%@
  page import="javax.servlet.jsp.jstl.fmt.*" %><%@
  page import="org.apache.wiki.api.core.*" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@

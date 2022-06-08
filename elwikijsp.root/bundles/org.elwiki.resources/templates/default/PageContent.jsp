@@ -33,7 +33,7 @@
      but to be to the right of the nav on larger screens --%>
 <div class="page-content <wiki:Variable var='page-styles' default='' />">
 
-  <wiki:Include page="PageTab.jsp"/>
+  <%@ include file="/templates/default/PageTab.jsp" %>
 
   <wiki:PageType type="attachment">
     <div><%-- insert the actual attachement, image, etc... --%>

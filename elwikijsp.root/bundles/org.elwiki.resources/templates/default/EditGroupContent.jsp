@@ -1,3 +1,4 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -32,7 +33,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-Context c = ContextUtil.findContext( pageContext );
+Context grCtx = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );
@@ -58,7 +59,7 @@ Context c = ContextUtil.findContext( pageContext );
 
 <div class="page-content">
 
-  <form action="<wiki:Link format='url' jsp='EditGroup.jsp' />"
+  <form action="<wiki:Link format='url' jsp='editGroup.cmd' />"
             id="editGroup"
         method="POST" accept-charset="UTF-8">
 
@@ -68,7 +69,7 @@ Context c = ContextUtil.findContext( pageContext );
       <button class="btn btn-success" type="submit" name="action" value="save">
         <fmt:message key="editgroup.submit.save"/>
       </button>
-      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' jsp='Group.jsp'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
+      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' jsp='viewGroup.cmd'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
         <fmt:message key='editgroup.cancel.submit'/>
       </a>
     </div>

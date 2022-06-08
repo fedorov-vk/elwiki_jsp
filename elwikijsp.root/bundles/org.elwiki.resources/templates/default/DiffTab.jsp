@@ -30,12 +30,12 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  Context ctxDiff = ContextUtil.findContext( pageContext );
 %>
-<c:set var="history" value="<%= ServicesRefs.getPageManager().getVersionHistory(c.getPage().getName()) %>" />
-<c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(c,"jspwiki.diffProvider") %>' />
+<c:set var="history" value="<%= ServicesRefs.getPageManager().getVersionHistory(ctxDiff.getPage()) %>" />
+<c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(ctxDiff,"jspwiki.diffProvider") %>' />
 <wiki:PageExists>
-<form action="<wiki:Link jsp='Diff.jsp' format='url' />"
+<form action="<wiki:Link jsp='diff.cmd' format='url' />"
        class="diffbody form-inline"
       method="get" accept-charset="UTF-8">
   <input type="hidden" name="page" value="<wiki:PageName />" />

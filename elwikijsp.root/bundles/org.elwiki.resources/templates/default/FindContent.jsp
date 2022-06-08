@@ -16,6 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
+<!-- ~~ START ~~ FindContent.jsp -->
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
@@ -29,7 +30,7 @@
 <fmt:setBundle basename="templates.default"/>
 <div class="page-content">
 
-<form action="<wiki:Link format='url' jsp='Search.jsp'/>"
+<form action="<wiki:Link format='url' jsp='find.cmd'/>"
        class="form-frame"
           id="searchform2"
        accept-charset="<wiki:ContentEncoding/>">
@@ -81,3 +82,4 @@
 <div><wiki:Include page="AJAXSearch.jsp"/></div>
 
 </div>
+<!-- ~~ END ~~ FindContent.jsp -->

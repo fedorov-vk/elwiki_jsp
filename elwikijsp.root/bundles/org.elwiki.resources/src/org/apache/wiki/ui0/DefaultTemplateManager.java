@@ -76,7 +76,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	private static final String SKIN_DIRECTORY = "skins";
 
 	/** The default directory for the properties. Value is {@value}. */
-	private static final String DIRECTORY = "page/templates";
+	private static final String DIRECTORY = "templates";
 
 	/** The name of the default template. Value is {@value}. */
 	String DEFAULT_TEMPLATE = "default";
