@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="partErrorHandlingServlet">
+   <property name="osgi.http.whiteboard.servlet.errorPage">java.io.IOException
+500
+   </property>
+   <service scope="prototype">
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <implementation class="org.elwiki.web.support.ErrorHandlingServlet"/>
+</scr:component>
