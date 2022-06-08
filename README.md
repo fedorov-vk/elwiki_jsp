@@ -29,3 +29,5 @@ Now, JSPWiki functions are being ported.
 
 The project is being assembled, pages are being viewed, links are working.
 The project can be run only from the IDE, the installer has not yet been implemented.
+
+Preparing the environment for the build - on the wiki page: [How to set up development environment](https://github.com/fedorov-vk/elwiki_jsp/wiki/How-to-set-up-development-environment)
