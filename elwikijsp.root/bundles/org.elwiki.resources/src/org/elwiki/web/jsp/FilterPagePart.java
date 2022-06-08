@@ -54,9 +54,9 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 5461829698518145349L;
 	private static final Logger log = Logger.getLogger(FilterPagePart.class);
 
-	private static final String PATH_HEAD_PART = "/page/PageHead.jsp";
-	private static final String PATH_MIDDLE_PART = "/page/PageMiddle.jsp";
-	private static final String PATH_BOTTOM_PART = "/page/PageBottom.jsp";
+	private static final String PATH_HEAD_PART = "/templates/PageHead.jsp";
+	private static final String PATH_MIDDLE_PART = "/templates/PageMiddle.jsp";
+	private static final String PATH_BOTTOM_PART = "/templates/PageBottom.jsp";
 
 	@Reference
 	private Engine engine;
@@ -87,16 +87,21 @@ public class FilterPagePart extends HttpFilter implements Filter {
 			throws IOException, ServletException {
 		// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 		// WatchDog.getCurrentWatchDog( m_engine );
+		boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
 
 		// skip all, except *.cmd, *.jsp
 		String uri = httpRequest.getRequestURI();
 		log.debug("doFilter()");
-		if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
+		//if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
+		if (uri.matches(".+?(\\.cmd)$")) {
+			log.debug("URI is matched: " + uri);
+		} else if (uri.matches(".+?AJAX.+?$")) {
+			log.debug("URI is matched: " + uri);
+			isAjaxPage = true;
+		} else {
 			log.debug("URI isn't matched: " + uri);
 			// System.err.println("PFC original resource: " + uri);
 			super.doFilter(httpRequest, response, chain);
-		} else {
-			log.debug("URI is matched: " + uri);
 		}
 
 		/* Prepare Wiki context.
@@ -148,10 +153,12 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				}
 			}
 
-			// chain.doFilter(request, response);
-			httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
-			httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
-			httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
+			if (!isAjaxPage) {
+				// chain.doFilter(request, response);
+				httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
+				httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
+				httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
+			}
 
 			try {
 				// :FVK: w.enterState( "Delivering response", 30 );
