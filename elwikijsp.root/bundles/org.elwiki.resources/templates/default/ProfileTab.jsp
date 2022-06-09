@@ -40,7 +40,7 @@
       action="<wiki:CheckRequestContext
      context='login'><wiki:Link jsp='Login.jsp' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='!login'><wiki:Link jsp='prefs.cmd' format='url'><wiki:Param name='tab'
+     context='!login'><wiki:Link jsp='cmd.prefs' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext>"
        class=""
           id="editProfile">

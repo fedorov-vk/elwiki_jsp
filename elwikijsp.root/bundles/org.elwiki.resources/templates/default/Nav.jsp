@@ -348,7 +348,7 @@
       <wiki:CheckRequestContext context='!creategroup' >
       <wiki:Permission permission="createGroups">
         <li>
-          <wiki:Link jsp="createGroup.cmd" title="<fmt:message key='actions.creategroup.title'/>" >
+          <wiki:Link jsp="cmd.createGroup" title="<fmt:message key='actions.creategroup.title'/>" >
             <fmt:message key='actions.creategroup' />
           </wiki:Link>
         </li>

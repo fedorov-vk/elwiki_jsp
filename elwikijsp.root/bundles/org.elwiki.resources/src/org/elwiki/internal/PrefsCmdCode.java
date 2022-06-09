@@ -138,7 +138,7 @@ public class PrefsCmdCode extends CmdCode {
 			if (!ServicesRefs.getPageManager().wikiPageExists(redirectPage)) {
 				redirectPage = wiki.getWikiConfiguration().getFrontPage();
 			}
-			String viewUrl = ("prefs.cmd".equals(redirectPage)) ? "view.cmd" : wikiContext.getViewURL(redirectPage);
+			String viewUrl = ("cmd.prefs".equals(redirectPage)) ? "cmd.view" : wikiContext.getViewURL(redirectPage);
 
 			log.info("Redirecting user to " + viewUrl);
 			response.sendRedirect(viewUrl);

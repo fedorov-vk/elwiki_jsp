@@ -64,7 +64,7 @@ import java.util.Map;
 		factory = "elwiki.CommandResolver.factory")
 public final class DefaultCommandResolver implements CommandResolver, Initializable {
 
-	private static final String URL_CMD_SUFFIX = ".cmd";
+	private static final String URL_CMD_PREFIX = "cmd.";
 
 	/** Private map with request contexts as keys, Commands as values */
 	private static final Map<String, Command> CONTEXTS;
@@ -329,18 +329,18 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	 */
 	protected Command extractCommandFromPath(HttpServletRequest request) {
 		// Take everything between of initial left / and first right # or ?
-		String requestCtx = request.getRequestURI(); // takes, for example: "/view.cmd"
+		String requestCtx = request.getRequestURI(); // takes, for example: "/cmd.view"
 
 		if (requestCtx == null) {
 			return null;
 		}
 
-		// remove first '/' and last ".cmd"
+		// remove first '/' and first "cmd."
 		if (requestCtx.startsWith("/")) {
 			requestCtx = requestCtx.substring(1);
 		}
-		if (requestCtx.endsWith(URL_CMD_SUFFIX)) {
-			requestCtx = requestCtx.substring(0, requestCtx.length() - URL_CMD_SUFFIX.length());
+		if (requestCtx.startsWith(URL_CMD_PREFIX)) {
+			requestCtx = requestCtx.substring(URL_CMD_PREFIX.length());
 		}
 
 		if (requestCtx.length() == 0) {

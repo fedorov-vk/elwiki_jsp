@@ -21,8 +21,6 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.ui.TemplateManager;
-import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
@@ -176,10 +174,6 @@ public class ContentTag extends WikiTagBase {
                 throw new JspException( "This template uses <wiki:Content/> in an unsupported context: " + requestContext );
             }
 
-            //:FVK: workaround.
-            //"/t#k/" + contentTemplate; 
-			//final String page = ServicesRefs.getTemplateManager().findJSP(pageContext, m_wikiContext.getTemplate(), contentTemplate);
-            //contentTemplate = contentTemplate.replace(".jsp", ".cmd");
 			String page = "/templates/default/" + contentTemplate;
 
             pageContext.include( page );

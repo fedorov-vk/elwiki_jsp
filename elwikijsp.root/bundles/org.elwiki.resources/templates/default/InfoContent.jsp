@@ -119,7 +119,7 @@
 
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
 
-    <form action="<wiki:Link format='url' jsp='rename.cmd'/>"
+    <form action="<wiki:Link format='url' jsp='cmd.rename'/>"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >

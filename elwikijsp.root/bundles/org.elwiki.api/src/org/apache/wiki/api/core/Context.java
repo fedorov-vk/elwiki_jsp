@@ -158,18 +158,18 @@ public interface Context extends Cloneable, Command {
 
 	//@formatter:off
 	Map<String, ContextEnum> cmd2context = Map.ofEntries(
-		Map.entry("/view.cmd", ContextEnum.PAGE_VIEW),
-		Map.entry("/login.cmd", ContextEnum.WIKI_LOGIN),
-		Map.entry("/logout.cmd", ContextEnum.WIKI_LOGOUT),
-		Map.entry("/edit.cmd", ContextEnum.PAGE_EDIT),
-		Map.entry("/prefs.cmd", ContextEnum.WIKI_PREFS),
-		Map.entry("/prefsRap.cmd", ContextEnum.WIKI_PREFS_RAP),
-		Map.entry("/info.cmd", ContextEnum.PAGE_INFO),
-		Map.entry("/rename.cmd", ContextEnum.PAGE_RENAME),
-		Map.entry("/diff.cmd", ContextEnum.PAGE_DIFF),
-		Map.entry("/upload.cmd", ContextEnum.PAGE_DIFF),
-		Map.entry("/editGroup.cmd", ContextEnum.GROUP_EDIT),
-		Map.entry("/viewGroup.cmd", ContextEnum.GROUP_VIEW)
+		Map.entry("/cmd.view", ContextEnum.PAGE_VIEW),
+		Map.entry("/cmd.login", ContextEnum.WIKI_LOGIN),
+		Map.entry("/cmd.logout", ContextEnum.WIKI_LOGOUT),
+		Map.entry("/cmd.edit", ContextEnum.PAGE_EDIT),
+		Map.entry("/cmd.prefs", ContextEnum.WIKI_PREFS),
+		Map.entry("/cmd.prefsRap", ContextEnum.WIKI_PREFS_RAP),
+		Map.entry("/cmd.info", ContextEnum.PAGE_INFO),
+		Map.entry("/cmd.rename", ContextEnum.PAGE_RENAME),
+		Map.entry("/cmd.diff", ContextEnum.PAGE_DIFF),
+		Map.entry("/cmd.upload", ContextEnum.PAGE_DIFF),
+		Map.entry("/cmd.editGroup", ContextEnum.GROUP_EDIT),
+		Map.entry("/cmd.viewGroup", ContextEnum.GROUP_VIEW)
 	); //@formatter:on
     
     /**
