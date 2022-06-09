@@ -40,7 +40,7 @@ if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
       let pageId="<%=redir%>";
       console.log(pageId);
       alert(`Получено ${event.data} из ${event.origin}`);
-      window.location.replace('/view.cmd?pageId='+pageId);
+      window.location.replace('/cmd.view?pageId='+pageId);
     });
 </script>
 
@@ -50,7 +50,7 @@ if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
       var body = 'action=' + encodeURIComponent('setAssertedName') +
       '&redirect=' + encodeURIComponent('39');
       
-      xhr.open('POST', '/prefs.cmd', true);
+      xhr.open('POST', '/cmd.prefs', true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.onload = function(){
     	  console.log(xhr.response)

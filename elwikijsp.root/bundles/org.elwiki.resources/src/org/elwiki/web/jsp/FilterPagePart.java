@@ -93,8 +93,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		String uri = httpRequest.getRequestURI();
 		log.debug("doFilter()");
 		//if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
-		if (uri.matches(".+?(\\.cmd)$")) {
-			log.debug("URI is matched: " + uri);
+		if (uri.startsWith("/cmd.")) {
+			log.debug("URI is matched /cmd.: " + uri);
 		} else if (uri.matches(".+?AJAX.+?$")) {
 			log.debug("URI is matched: " + uri);
 			isAjaxPage = true;
@@ -119,7 +119,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 		/* Authorize.
 		 */
-		/*TODO: :FVK: для Wiki.jsp, т.е. view.cmd
+		/*TODO: :FVK: для Wiki.jsp, т.е. cmd.view
 		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ServicesRefs.getCurrentContext(), response)) {
 			return;
 		}

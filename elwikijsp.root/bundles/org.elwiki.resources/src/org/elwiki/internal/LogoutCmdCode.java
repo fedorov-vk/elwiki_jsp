@@ -31,7 +31,7 @@ public class LogoutCmdCode extends CmdCode {
 
 		// Redirect to the webroot
 		// TODO: Should redirect to a "goodbye" -page?
-		response.sendRedirect("/view.cmd");
+		response.sendRedirect("/cmd.view");
 	}
 
 }

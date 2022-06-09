@@ -19,46 +19,46 @@
 package org.apache.wiki.api.core;
 
 /**
- * Every enum contains 3 strings:
- * <ul>
+ * Every enumeration contains 3 strings:
+ * <ol>
  * <li>request context ID
  * <li>URL pattern
  * <li>JSP file name from the templates
- * </ul>
+ * </ol>
  */
 public enum ContextEnum {
 
 	//@formatter:off
-    GROUP_DELETE( "deleteGroup", "%udeleteGroup.cmd?group=%n", null ),
-    GROUP_EDIT( "editGroup", "%ueditGroup.cmd?group=%n", "EditGroupContent.jsp" ),
-    GROUP_VIEW( "viewGroup", "%uviewGroup.cmd?group=%n", "PreferencesContent.jsp" ),
+    GROUP_DELETE( "deleteGroup", "%ucmd.deleteGroup?group=%n", null ),
+    GROUP_EDIT( "editGroup", "%ucmd.editGroup?group=%n", "EditGroupContent.jsp" ),
+    GROUP_VIEW( "viewGroup", "%ucmd.viewGroup?group=%n", "PreferencesContent.jsp" ),
 
     PAGE_ATTACH( "att", "%uattach/%n", null ),
     PAGE_COMMENT( "comment", "%uComment.jsp?page=%n", "CommentContent.jsp" ),
     PAGE_CONFLICT ( "conflict", "%uPageModified.jsp?page=%n", "ConflictContent.jsp" ),
     PAGE_DELETE( "del", "%uDelete.jsp?page=%n", null ),
-    PAGE_DIFF( "diff", "%udiff.cmd?page=%n", "DiffContent.jsp" ),
-    PAGE_EDIT( "edit", "%uedit.cmd?page=%n", "EditContent.jsp" ),
-    PAGE_INFO( "info", "%uinfo.cmd?page=%n", "InfoContent.jsp" ),
+    PAGE_DIFF( "diff", "%ucmd.diff?page=%n", "DiffContent.jsp" ),
+    PAGE_EDIT( "edit", "%ucmd.edit?page=%n", "EditContent.jsp" ),
+    PAGE_INFO( "info", "%ucmd.info?page=%n", "InfoContent.jsp" ),
     PAGE_NONE( "", "%u%n", null ),
-    PAGE_PREVIEW( "preview", "%upreview.cmd?page=%n", "PreviewContent.jsp" ),
-    PAGE_RENAME( "rename", "%urename.cmd?page=%n", "InfoContent.jsp" ),
+    PAGE_PREVIEW( "preview", "%ucmd.preview?page=%n", "PreviewContent.jsp" ),
+    PAGE_RENAME( "rename", "%ucmd.rename?page=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss", "%urss.jsp", null ),
-    PAGE_UPLOAD( "upload", "%uupload.cmd?page=%n", "AttachmentTab.jsp" ),
-    PAGE_VIEW( "view", "%uview.cmd?pageId=%n", "PageContent.jsp" ),
+    PAGE_UPLOAD( "upload", "%ucmd.upload?page=%n", "AttachmentTab.jsp" ),
+    PAGE_VIEW( "view", "%ucmd.view?pageId=%n", "PageContent.jsp" ),
 
     REDIRECT( "", "%u%n", null ),
 
     WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),
-    WIKI_CREATE_GROUP( "createGroup", "%ucreateGroup.cmd", "NewGroupContent.jsp" ),
+    WIKI_CREATE_GROUP( "createGroup", "%ucmd.createGroup", "NewGroupContent.jsp" ),
     WIKI_ERROR( "error", "%uError.jsp", "DisplayMessage.jsp" ),
-    WIKI_FIND( "find", "%ufind.cmd", "FindContent.jsp" ),
+    WIKI_FIND( "find", "%ucmd.find", "FindContent.jsp" ),
     WIKI_INSTALL( "install", "%uInstall.jsp", null ),
-    WIKI_LOGIN( "login", "%ulogin.cmd?redirect=%n", "LoginContent.jsp" ),
-    WIKI_LOGOUT( "logout", "%ulogout.cmd", null ),
+    WIKI_LOGIN( "login", "%ucmd.login?redirect=%n", "LoginContent.jsp" ),
+    WIKI_LOGOUT( "logout", "%ucmd.logout", null ),
     WIKI_MESSAGE( "message", "%uMessage.jsp", "DisplayMessage.jsp" ),
-    WIKI_PREFS( "prefs", "%uprefs.cmd", "PreferencesContent.jsp" ),
-    WIKI_PREFS_RAP( "prefsRap", "%uprefsRap.cmd", "PreferencesContentRap.jsp" ),
+    WIKI_PREFS( "prefs", "%ucmd.prefs", "PreferencesContent.jsp" ),
+    WIKI_PREFS_RAP( "prefsRap", "%ucmd.prefsRap", "PreferencesContentRap.jsp" ),
     WIKI_WORKFLOW( "workflow", "%uWorkflow.jsp", "WorkflowContent.jsp" );
 	//@formatter:on
 

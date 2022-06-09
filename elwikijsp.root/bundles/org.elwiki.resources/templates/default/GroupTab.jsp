@@ -61,7 +61,7 @@
 
 <wiki:CheckRequestContext context="!createGroup"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
-  <form action="<wiki:Link format='url' jsp='createGroup.cmd'/>"
+  <form action="<wiki:Link format='url' jsp='cmd.createGroup'/>"
          class="accordion${createFormClose}"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -97,7 +97,7 @@
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
 
-<form action="<wiki:Link format='url' jsp='deleteGroup.cmd'/>"
+<form action="<wiki:Link format='url' jsp='cmd.deleteGroup'/>"
       class="hidden"
         name="deleteGroupForm" id="deleteGroupForm"
       method="POST" accept-charset="UTF-8">
@@ -169,7 +169,7 @@
       <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
       <%-- <wiki:Permission permission="editGroup"> --%>
         <a class="btn btn-xs btn-primary"
-            href="<wiki:Link format='url' jsp='editGroup.cmd'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
+            href="<wiki:Link format='url' jsp='cmd.editGroup'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
           <fmt:message key="actions.editgroup" />
         </a>
       <%--</wiki:Permission>--%>

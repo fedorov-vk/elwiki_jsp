@@ -23,7 +23,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%-- Provides a simple searchbox --%>
 <%-- Powered by wiki/Findpages.js and wiki/Recents.js  --%>
-<form action="<wiki:Link jsp='find.cmd' format='url'/>"
+<form action="<wiki:Link jsp='cmd.find' format='url'/>"
   class="form-inline searchbox pull-right"
   id="searchForm" tabindex="0" role="search"
   accept-charset="<wiki:ContentEncoding />">
