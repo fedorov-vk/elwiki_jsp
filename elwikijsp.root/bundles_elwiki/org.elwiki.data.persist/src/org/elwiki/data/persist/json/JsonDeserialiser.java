@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 
 public class JsonDeserialiser {
 
-	public static void LoadData() {
+	public static void LoadData() throws IOException {
 		Gson gson = new GsonBuilder()
 				.setPrettyPrinting() //@formatter:off
 				.registerTypeAdapter(PagesStore.class, new PagesStoreDeserializer())
@@ -34,9 +34,6 @@ public class JsonDeserialiser {
 
 		try (Reader input = new FileReader(JsonConstants.FILE_NAME)) {
 			gson.fromJson(input, PagesStore.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 

@@ -156,7 +156,7 @@ String.I18N.PREFIX = "javascript.";
          src="<wiki:Link format='url' templatefile='skins/' /><c:out value='${prefs.SkinName}/skin.js' />" ></script>
 </c:if>
 
-<%@ include file="/templates/default/localheader.jsp" %>
-<%-- :FVK:
 <wiki:Include page="localheader.jsp"/>
+<%-- :FVK:
+<%@ include file="/templates/default/localheader.jsp" %>
 --%><!-- ~~ END ~~ commonheader.jsp -->
