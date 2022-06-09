@@ -27,47 +27,58 @@ import org.elwiki.services.ServicesRefs;
 import java.io.IOException;
 
 /**
- *  Includes the body in case there is no such page available.
+ * Includes the body in case there is no such page available.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class NoSuchPageTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
-    
-    private String m_pageName;
+	private static final long serialVersionUID = 0L;
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_pageName = null;
-    }
+	private String m_pageName;
+	private String m_pageId;
 
-    public void setPage( final String name )
-    {
-        m_pageName = name;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_pageName = null;
+		m_pageId = null;
+	}
 
-    public String getPage()
-    {
-        return m_pageName;
-    }
+	public void setPage(final String name) {
+		m_pageName = name;
+	}
 
-    @Override
-    public int doWikiStartTag() throws IOException, ProviderException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page;
+	public String getPage() {
+		return m_pageName;
+	}
 
-        if( m_pageName == null ) {
-            page = m_wikiContext.getPage();
-        } else {
-            page = ServicesRefs.getPageManager().getPage( m_pageName );
-        }
+	public void setPageId(String pageId) {
+		m_pageId = pageId;
+	}
 
-        if( page != null && ServicesRefs.getPageManager().wikiPageExists( page.getName(), page.getVersion() ) ) {
-            return SKIP_BODY;
-        }
+	public String getPageId() {
+		return m_pageId;
+	}
 
-        return EVAL_BODY_INCLUDE;
-    }
+	@Override
+	public int doWikiStartTag() throws IOException, ProviderException {
+		final Engine engine = m_wikiContext.getEngine();
+		WikiPage page;
+
+		if (m_pageId != null) {
+			page = ServicesRefs.getPageManager().getPageById(m_pageId);
+		} else if (m_pageName != null) {
+			page = ServicesRefs.getPageManager().getPage(m_pageName);
+		} else {
+			page = m_wikiContext.getPage();
+		}
+
+		if (page != null && ServicesRefs.getPageManager().wikiPageExists(page.getName(), page.getVersion())) {
+			return SKIP_BODY;
+		}
+
+		return EVAL_BODY_INCLUDE;
+	}
+
 }

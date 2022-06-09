@@ -1,15 +1,18 @@
 package org.elwiki.data.persist.internal;
 
+import org.apache.wiki.api.IStorageCdo;
 import org.eclipse.core.runtime.jobs.Job;
 import org.elwiki.data.persist.IDataStore;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 public class PluginActivator implements BundleActivator {
 
 	private static PluginActivator instance;
 
-	private static BundleContext context;
+	private static BundleContext bundleContext;
 
 	private DataStore dataStore = new DataStore();
 
@@ -22,17 +25,17 @@ public class PluginActivator implements BundleActivator {
 	}
 
 	static BundleContext getContext() {
-		return context;
+		return bundleContext;
 	}
 
 	public void start(BundleContext bundleContext) throws Exception {
-		PluginActivator.context = bundleContext;
+		PluginActivator.bundleContext = bundleContext;
 		activateRepository();
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
 		deactivateRepository();
-		PluginActivator.context = null;
+		PluginActivator.bundleContext = null;
 	}
 
 	Job jobActivating;
@@ -49,11 +52,11 @@ public class PluginActivator implements BundleActivator {
 		jobActivating.schedule();
 		*/
 
-//		Thread thread = new Thread(() -> {
+		//		Thread thread = new Thread(() -> {
 		//PluginActivator.this.dataStore.doConnect();
 		//System.out.println("--- Repository Activated. ---");
-//		});
-//		thread.start();
+		//		});
+		//		thread.start();
 	}
 
 	private void deactivateRepository() {
@@ -94,7 +97,14 @@ public class PluginActivator implements BundleActivator {
 	}
 
 	public IDataStore getDataStore() {
-		return this.dataStore;
+		IStorageCdo dataStore1 = null;
+
+		ServiceReference<?> ref = bundleContext.getServiceReference(IStorageCdo.class.getName());
+		if (ref != null) {
+			dataStore1 = (IStorageCdo) bundleContext.getService(ref);
+		}
+
+		return (IDataStore) dataStore1;
 	}
 
 }

@@ -26,23 +26,25 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
-<c:set var="frontpageId" value="<%=ServicesRefs.getPageManager().getMainPageId()%>" />
+<% String pageId = ServicesRefs.getPageManager().getMainPageId(); %>
+<c:set var="frontpageId" value="<%=pageId%>" />
+<c:set var="frontpageName" value="<%=ServicesRefs.getPageManager().getPageById(pageId).getName()%>" />
 
 <div class="header">
-  <c:set var="titlebox"><wiki:InsertPage page="TitleBox" /></c:set>
+  <c:set var="titlebox"><wiki:InsertPage pageId="41" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
 
   <div class="topline">
     <div class="cage pull-left" tabindex="0">
         <a class="logo pull-left"
            href="<wiki:Link page='${frontpageId}' format='url' />"
-           title="<fmt:message key='actions.home.title' ><fmt:param>${frontpageId}</fmt:param></fmt:message>">
+           title="<fmt:message key='actions.home.title' ><fmt:param>${frontpageName}</fmt:param></fmt:message>">
            apache<b>jsp&#x03C9;iki</b>
         </a>
 
-        <wiki:PageExists page="HomeMenu">
+        <wiki:PageExists pageId="2">
         <ul class="dropdown-menu" data-hover-parent=".cage">
-          <li class="logo-menu"><wiki:InsertPage page="HomeMenu" /></li>
+          <li class="logo-menu"><wiki:InsertPage pageId="2" /></li>
         </ul>
         </wiki:PageExists>
     </div>

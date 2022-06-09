@@ -39,16 +39,17 @@ public class JsonSerialiser {
 		EList<WikiPage> pages = pagesStore.getWikipages();
 		// WikiPage wikiPage = pages.get(0);
 
-		Writer writer = new FileWriter(JsonConstants.FILE_NAME);
-		gson.toJson(pagesStore, PagesStore.class, writer);
-		writer.close();
+		try (Writer writer = new FileWriter(JsonConstants.FILE_NAME)) {
+			gson.toJson(pagesStore, PagesStore.class, writer);
+			writer.close();
+		}
 
 		/*
-		 * FileOutputStream outputStream; outputStream = new
-		 * FileOutputStream(FILE_NAME); BufferedWriter bufferedWriter = new
-		 * BufferedWriter( new OutputStreamWriter(outputStream,
-		 * StandardCharsets.UTF_8)); // "UTF-8" gson.toJson(wikiPage, bufferedWriter);
-		 * bufferedWriter.close();
-		 */
+		FileOutputStream outputStream;
+		outputStream = new FileOutputStream(FILE_NAME);
+		BufferedWriter bufferedWriter = new BufferedWriter(
+				new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)); // "UTF-8" gson.toJson(wikiPage, bufferedWriter);
+		bufferedWriter.close();
+		*/
 	}
 }

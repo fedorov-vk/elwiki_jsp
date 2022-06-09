@@ -44,33 +44,36 @@ import java.io.IOException;
  *  page, while the "page" will contain the actual page in which the rendering
  *  is being made.
  *   
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.
+ *  <p><b>Attributes</b></p>
+ *  <ul>
+ *    <li>page - Page name to refer to.  Default is the current page.
+ *    <li>pageId - Page Id to refer to.  Default is the current page.
  *    <li>mode - In which format to insert the page.  Can be either "plain" or "html".
- *  </UL>
+ *  </ul>
  *
  *  @since 2.0
  */
 public class InsertPageTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( InsertPageTag.class );
-    
-    public static final int HTML  = 0;
-    public static final int PLAIN = 1;
+	private static final long serialVersionUID = 0L;
+	private static final Logger log = Logger.getLogger(InsertPageTag.class);
 
-    protected String m_pageName = null;
-    private   int    m_mode = HTML;
+	public static final int HTML = 0;
+	public static final int PLAIN = 1;
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_pageName = null;
-        m_mode = HTML;
-    }
+	protected String m_pageName = null;
+	protected String m_pageId = null;
+	private int m_mode = HTML;
 
-    public void setPage( final String page )
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_pageName = null;
+		m_pageId = null;
+		m_mode = HTML;
+	}
+
+    public void setPage(String page )
     {
         m_pageName = page;
     }
@@ -80,7 +83,17 @@ public class InsertPageTag extends WikiTagBase {
         return m_pageName;
     }
 
-    public void setMode( final String arg ) {
+    public void setPageId(String pageId )
+    {
+        m_pageId = pageId;
+    }
+
+    public String getPageId()
+    {
+        return m_pageId;
+    }
+    
+    public void setMode(String arg ) {
         if( "plain".equals( arg ) ) {
             m_mode = PLAIN;
         } else {
@@ -91,7 +104,7 @@ public class InsertPageTag extends WikiTagBase {
     @Override
     public final int doWikiStartTag() throws IOException, ProviderException {
         final Engine engine = m_wikiContext.getEngine();
-        final WikiPage insertedPage;
+        WikiPage insertedPage;
 
         //
         //  NB: The page might not really exist if the user is currently
@@ -99,11 +112,15 @@ public class InsertPageTag extends WikiTagBase {
         //      AND we got the page from the wikiContext.
         //
 
-        if( m_pageName == null ) {
-            insertedPage = m_wikiContext.getPage();
-            if( !ServicesRefs.getPageManager().wikiPageExists(insertedPage) ) return SKIP_BODY;
-        } else {
-            insertedPage = ServicesRefs.getPageManager().getPage( m_pageName );
+		if (m_pageId != null) {
+			insertedPage = ServicesRefs.getPageManager().getPageById(m_pageId);
+		} else if (m_pageName != null) {
+			insertedPage = ServicesRefs.getPageManager().getPage(m_pageName);
+		} else {
+			insertedPage = m_wikiContext.getPage();
+			if (!ServicesRefs.getPageManager().wikiPageExists(insertedPage)) {
+				return SKIP_BODY;
+			}
         }
 
         if( insertedPage != null ) {
