@@ -85,6 +85,7 @@
       <wiki:PageType type="page"><wiki:PageName/></wiki:PageType>
       <wiki:PageType type="attachment"><wiki:ParentPageName/></wiki:PageType>
     </c:set>
+    <c:set var="pageId"><wiki:PageId/></c:set>
 
   <%-- view --%>
 
@@ -275,13 +276,13 @@
         <%-- VIEW RAW PAGE SOURCE --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="slimbox-link">
+            <wiki:Link cssClass="slimbox-link" page="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="slimbox-link" version='${param.version}'>
+            <wiki:Link cssClass="slimbox-link" version='${param.version}' page="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
@@ -291,13 +292,13 @@
         <%-- Show Reader View --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="interwiki">
+            <wiki:Link cssClass="interwiki" page="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="interwiki" version="${param.version}">
+            <wiki:Link cssClass="interwiki" version="${param.version}" page="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>

@@ -133,7 +133,7 @@ public interface PageManager extends WikiEventListener {
      *  @see PageManager#getPureText(WikiPage)
      */
     default String getText( final WikiPage page ) {
-        return ":FVK:"; //:FVK: getText( page.getName(), page.getVersion() );
+        return getText( page.getName(), page.getVersion() );
     }
 
     /**

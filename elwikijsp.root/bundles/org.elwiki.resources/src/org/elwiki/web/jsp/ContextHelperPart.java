@@ -44,7 +44,7 @@ public class ContextHelperPart extends ServletContextHelper implements HttpConte
 
 	@Override
 	public URL getResource(String name) {
-		//:FVK: System.out.println("---- PageServletContextHelper: ----");
+		//:FVK: System.out.println("---- PageServletContextHelper: ----\n----" + name);
 		URL url = defaultContext.getResource(name);
 		//:FVK: System.out.println("---- url: " + url);
 		return url;
