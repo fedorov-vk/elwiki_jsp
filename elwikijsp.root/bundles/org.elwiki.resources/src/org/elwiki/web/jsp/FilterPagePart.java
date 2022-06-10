@@ -89,7 +89,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		// WatchDog.getCurrentWatchDog( m_engine );
 		boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
 
-		// skip all, except *.cmd, *.jsp
+		// skip all, except *.cmd, AJAX.
 		String uri = httpRequest.getRequestURI();
 		log.debug("doFilter()");
 		//if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
@@ -154,10 +154,21 @@ public class FilterPagePart extends HttpFilter implements Filter {
 			}
 
 			if (!isAjaxPage) {
-				// chain.doFilter(request, response);
-				httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
-				httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
-				httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
+				String template = wikiContext.getTemplate();
+				if ("reader".equals(template)) {
+					//:FVK: - workaround. view only page, for skin=reader
+					httpRequest.getRequestDispatcher("/templates/reader/ViewTemplate.jsp").include(httpRequest,
+							responseWrapper);
+				} else if ("raw".equals(template)) {
+					//:FVK: - workaround. view only page, for skin=raw
+					httpRequest.getRequestDispatcher("/templates/raw/ViewTemplate.jsp").include(httpRequest,
+							responseWrapper);
+				} else {
+					// chain.doFilter(request, response);
+					httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
+					httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
+					httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
+				}
 			}
 
 			try {
