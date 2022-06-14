@@ -46,7 +46,7 @@ import java.io.IOException;
  *   
  *  <p><b>Attributes</b></p>
  *  <ul>
- *    <li>page - Page name to refer to.  Default is the current page.
+ *    <li>pageName - Page name to refer to.  Default is the current page.
  *    <li>pageId - Page Id to refer to.  Default is the current page.
  *    <li>mode - In which format to insert the page.  Can be either "plain" or "html".
  *  </ul>
@@ -73,12 +73,12 @@ public class InsertPageTag extends WikiTagBase {
 		m_mode = HTML;
 	}
 
-    public void setPage(String page )
+    public void setPageName(String page )
     {
         m_pageName = page;
     }
 
-    public String getPage()
+    public String getPageName()
     {
         return m_pageName;
     }

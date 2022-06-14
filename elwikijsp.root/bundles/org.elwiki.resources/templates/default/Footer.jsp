@@ -25,7 +25,7 @@
 <fmt:setBundle basename="templates.default"/>
 <div class="footer">
 
-  <wiki:InsertPage page="CopyrightNotice"/>
+  <wiki:InsertPage pageId="40"/>
 
   <div class="wiki-version"><%=Release.APPNAME%> v<%=Release.getVersionString()%>
     <wiki:RSSImageLink title="<fmt:message key='fav.aggregatewiki.title'/>" mode="full"/>

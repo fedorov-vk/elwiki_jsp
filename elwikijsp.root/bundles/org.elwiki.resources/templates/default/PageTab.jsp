@@ -125,7 +125,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
         <fmt:message key="blog.commenttitle" />
       </div>
       <div class="weblogcomments">
-        <wiki:InsertPage page="${blogcommentpage}" />
+        <wiki:InsertPage pageName="${blogcommentpage}" />
       </div>
     </wiki:PageExists>
   </c:if>
