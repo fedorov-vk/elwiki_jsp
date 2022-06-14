@@ -372,7 +372,7 @@
           </wiki:UserCheck>
         </wiki:CheckRequestContext>
 
-        <li class="more-menu"><wiki:InsertPage page="MoreMenu" /></li>
+        <li class="more-menu"><wiki:InsertPage pageId="3" /></li>
 
       </wiki:PageExists>
 

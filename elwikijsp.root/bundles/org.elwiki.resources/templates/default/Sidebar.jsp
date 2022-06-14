@@ -39,7 +39,7 @@
   <wiki:Permission permission="view">
 
   <div class="leftmenu">
-    <wiki:InsertPage page="LeftMenu" />
+    <wiki:InsertPage pageId="4" />
     <wiki:NoSuchPage page="LeftMenu">
       <div class="error">
         <wiki:EditLink page="LeftMenu">
@@ -50,7 +50,7 @@
   </div>
 
   <div class="leftmenufooter">
-    <wiki:InsertPage page="LeftMenuFooter" />
+    <wiki:InsertPage pageId="5" />
     <wiki:NoSuchPage page="LeftMenuFooter">
       <div class="error">
         <wiki:EditLink page="LeftMenuFooter">

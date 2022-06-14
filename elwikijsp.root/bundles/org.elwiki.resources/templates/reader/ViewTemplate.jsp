@@ -88,7 +88,7 @@ String.I18N.PREFIX = "javascript.";
   <div class="pagename"><wiki:Link><wiki:PageName/></wiki:Link></div>
 <%-- :FVK: <div class="page"><wiki:Include page="PageTab.jsp"/></div> --%>
 <wiki:InsertPage/>
-  <div class="copyright center"><wiki:InsertPage page="CopyrightNotice"/></div>
+  <div class="copyright center"><wiki:InsertPage pageId="40"/></div>
 
 </div>
 
