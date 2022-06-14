@@ -36,11 +36,12 @@
   UserManager manager = ServicesRefs.getUserManager();
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
+<!-- TODO: understand and release follow //wiki:Link path='Login.jsp'// :FVK:  -->
 <form method="post" accept-charset="UTF-8"
       action="<wiki:CheckRequestContext
-     context='login'><wiki:Link jsp='Login.jsp' format='url'><wiki:Param name='tab'
+     context='login'><wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='!login'><wiki:Link jsp='cmd.prefs' format='url'><wiki:Param name='tab'
+     context='!login'><wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext>"
        class=""
           id="editProfile">

@@ -61,7 +61,7 @@
 
 <wiki:CheckRequestContext context="!createGroup"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
-  <form action="<wiki:Link format='url' jsp='cmd.createGroup'/>"
+  <form action="<wiki:Link format='url' path='cmd.createGroup'/>"
          class="accordion${createFormClose}"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -97,7 +97,7 @@
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
 
-<form action="<wiki:Link format='url' jsp='cmd.deleteGroup'/>"
+<form action="<wiki:Link format='url' path='cmd.deleteGroup'/>"
       class="hidden"
         name="deleteGroupForm" id="deleteGroupForm"
       method="POST" accept-charset="UTF-8">
@@ -143,7 +143,7 @@
     
     <c:set var="group" value="<%= group %>" />
     <tr class="${param.group == group.name ? 'highlight' : ''}">
-      <%--<td><wiki:Link jsp='Group.jsp'><wiki:Param name='group' value='${group.name}'/>${group.name}</wiki:Link></td>--%>
+      <%--<td><wiki:Link path='Group.jsp'><wiki:Param name='group' value='${group.name}'/>${group.name}</wiki:Link></td>--%>
       <td><c:if test="${group.name =='Admin'}"><span class="icon-unlock-alt"></span> </c:if>${group.name}</td>
       <td>
         <c:forEach items="${members}" var="member" varStatus="iterator">
@@ -169,7 +169,7 @@
       <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
       <%-- <wiki:Permission permission="editGroup"> --%>
         <a class="btn btn-xs btn-primary"
-            href="<wiki:Link format='url' jsp='cmd.editGroup'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
+            href="<wiki:Link format='url' path='cmd.editGroup'><wiki:Param name='group' value='${group.name}' /></wiki:Link>" >
           <fmt:message key="actions.editgroup" />
         </a>
       <%--</wiki:Permission>--%>

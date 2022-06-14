@@ -30,7 +30,7 @@
 <fmt:setBundle basename="templates.default"/>
 <div class="page-content">
 
-<form action="<wiki:Link format='url' jsp='cmd.find'/>"
+<form action="<wiki:Link format='url' path='cmd.find'/>"
        class="form-frame"
           id="searchform2"
        accept-charset="<wiki:ContentEncoding/>">

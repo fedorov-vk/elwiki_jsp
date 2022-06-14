@@ -43,9 +43,9 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiContext" content='<wiki:Variable var="requestcontext" />' />
 <wiki:Permission permission="edit"><meta name="wikiEditPermission" content="true"/></wiki:Permission>
 <meta name="wikiBaseUrl" content='<wiki:BaseURL />' />
-<meta name="wikiPageUrl" content='<wiki:Link format="url"  page="#$%"/>' />
-<meta name="wikiEditUrl" content='<wiki:EditLink format="url" page="#$%"/>' />
-<meta name="wikiCloneUrl" content='<wiki:EditLink format="url" page="#$%"/>&clone=<wiki:Variable var="pagename" />' />
+<meta name="wikiPageUrl" content='<wiki:Link format="url"  pageName="#$%"/>' />
+<meta name="wikiEditUrl" content='<wiki:EditLink format="url" pageName="#$%"/>' />
+<meta name="wikiCloneUrl" content='<wiki:EditLink format="url" pageName="#$%"/>&clone=<wiki:Variable var="pagename" />' />
 <meta name="wikiJsonUrl" content='<%=  ContextUtil.findContext(pageContext).getURL( ContextEnum.PAGE_NONE.getRequestContext(), "ajax" ) %>' /><%--unusual pagename--%>
 <meta name="wikiPageName" content='<wiki:Variable var="pagename" />' /><%--pagename without blanks--%>
 <meta name="wikiUserName" content='<wiki:UserName />' />
@@ -92,6 +92,6 @@ String.I18N.PREFIX = "javascript.";
 
 </div>
 
-<script type="text/javascript" src="<wiki:Link format='url' jsp='scripts/haddock.js'/>"></script>
+<script type="text/javascript" src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
 </body>
 </html>

@@ -119,7 +119,7 @@
 
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
 
-    <form action="<wiki:Link format='url' jsp='cmd.rename'/>"
+    <form action="<wiki:Link format='url' path='cmd.rename'/>"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -259,7 +259,8 @@
 <c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
 <wiki:Permission permission="upload">
 
-  <form action="<wiki:Link jsp='attach' format='url'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"
+<!-- TODO: understand and release follow //wiki:Link path='attach'// :FVK:  -->
+  <form action="<wiki:Link path='attach' format='url'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"
          class="accordion-close"
             id="uploadform"
         method="post" accept-charset="<wiki:ContentEncoding/>"
@@ -309,7 +310,7 @@
 
 <%-- See Nav.jsp  "view" menu item
   <c:set var="parentPage"><wiki:ParentPageName/></c:set>
-  <a class="btn btn-primary" href="<wiki:Link page='${parentPage}' format='url' />" >
+  <a class="btn btn-primary" href="<wiki:Link pageName='${parentPage}' format='url' />" >
     <fmt:message key="info.backtoparentpage" >
       <fmt:param><span class="badge">${parentPage}</span></fmt:param>
     </fmt:message>

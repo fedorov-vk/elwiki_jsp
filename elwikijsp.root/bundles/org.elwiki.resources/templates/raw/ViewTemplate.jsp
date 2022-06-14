@@ -19,9 +19,9 @@
 
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <meta name="robots" content="noindex,nofollow" />
-<link rel="shortcut icon" type="image/x-icon" href="<wiki:Link format='url' jsp='images/favicon.ico'/>" />
+<link rel="shortcut icon" type="image/x-icon" href="<wiki:Link format='url' path='images/favicon.ico'/>" />
 <%-- ie6 needs next line --%>
-<link rel="icon" type="image/x-icon" href="<wiki:Link format='url' jsp='images/favicon.ico'/>" />
+<link rel="icon" type="image/x-icon" href="<wiki:Link format='url' path='images/favicon.ico'/>" />
 
 <% response.setContentType("text/plain; charset=UTF-8"); %>
 <pre>

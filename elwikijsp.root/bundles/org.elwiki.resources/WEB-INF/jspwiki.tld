@@ -132,7 +132,7 @@
 		<tag-class>org.apache.wiki.tags.CommentLinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -197,7 +197,7 @@
 		<tag-class>org.apache.wiki.tags.DiffLinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -218,7 +218,11 @@
 		<tag-class>org.apache.wiki.tags.EditLinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pageId</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -335,7 +339,11 @@
 		<tag-class>org.apache.wiki.tags.LinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>path</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -374,19 +382,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>jsp</name>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<name>ref</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>context</name>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>absolute</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -404,7 +404,11 @@
 		<tag-class>org.apache.wiki.tags.LinkToTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pageId</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -433,7 +437,7 @@
 		<tag-class>org.apache.wiki.tags.LinkToParentTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -506,7 +510,7 @@
 		<tag-class>org.apache.wiki.tags.PageInfoLinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -781,7 +785,7 @@
 		<tag-class>org.apache.wiki.tags.UploadLinkTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>page</name>
+			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

@@ -80,15 +80,15 @@
 //]]></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=<wiki:ContentEncoding />" />
-<link rel="search" href="<wiki:LinkTo format='url' page='Search'/>"
+<link rel="search" href="<wiki:LinkTo format='url' path='cmd.find'/>"
     title='Search <wiki:Variable var="ApplicationName" />' />
-<link rel="help"   href="<wiki:LinkTo format='url' page='TextFormattingRules'/>"
+<link rel="help"   href="<wiki:LinkTo format='url' pageName='TextFormattingRules'/>"
     title="Help" />
 <%
   Context c = ContextUtil.findContext( pageContext );
   String frontpage = c.getConfiguration().getFrontPage();
  %>
- <link rel="start"  href="<wiki:LinkTo format='url' page='<%=frontpage%>' />"
+ <link rel="start"  href="<wiki:LinkTo format='url' pageName='<%=frontpage%>' />"
     title="Front page" />
 <link rel="alternate stylesheet" type="text/css" href="<wiki:Link format='url' templatefile='jspwiki_print.css'/>"
     title="Print friendly" />

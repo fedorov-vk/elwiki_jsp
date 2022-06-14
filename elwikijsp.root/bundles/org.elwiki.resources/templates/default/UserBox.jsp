@@ -42,13 +42,13 @@
   <ul class="dropdown-menu pull-right" data-hover-parent=".userbox">
     <li>
       <wiki:UserCheck status="anonymous">
-        <wiki:LinkTo page="UserPreferences">
+        <wiki:LinkTo pageName="UserPreferences">
           <span class="icon-user"></span>
           <fmt:message key="fav.greet.anonymous"/>
         </wiki:LinkTo>
       </wiki:UserCheck>
       <wiki:UserCheck status="known"><%-- asserted or authenticated --%>
-        <wiki:LinkTo page="${username}">
+        <wiki:LinkTo pageName="${username}">
           <span class="icon-user" ></span>
           <wiki:UserCheck status="asserted">
             <fmt:message key="fav.greet.asserted"><fmt:param>${username}</fmt:param></fmt:message>
@@ -68,12 +68,12 @@
       --%>
       <wiki:CheckRequestContext context='!prefs'>
         <wiki:CheckRequestContext context='!preview'>
-          <wiki:Link cssClass="btn btn-default btn-block" jsp="cmd.prefs">
+          <wiki:Link cssClass="btn btn-default btn-block" path="cmd.prefs">
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
           </wiki:Link>
         <wiki:Permission permission="createGroups">
-          <wiki:Link cssClass="btn btn-default btn-block" jsp="cmd.prefsRap">
+          <wiki:Link cssClass="btn btn-default btn-block" path="cmd.prefsRap">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='groups'/>
             <span class="icon-group"></span> <fmt:message key="actions.groups" />
@@ -87,14 +87,14 @@
       <wiki:UserCheck status="notAuthenticated">
         <wiki:CheckRequestContext context='!login'>
         <wiki:Permission permission="login">
-          <wiki:Link cssClass="btn btn-primary btn-block login" jsp="cmd.login">
+          <wiki:Link cssClass="btn btn-primary btn-block login" path="cmd.login">
             <wiki:Param name='redirect' value='${redirect}'/>
             <span class="icon-signin"></span>
             <fmt:message key="actions.login" />
           </wiki:Link>
         </wiki:Permission>
         <wiki:Permission permission='editProfile'>
-          <wiki:Link cssClass="btn btn-link btn-block register" jsp="cmd.login">
+          <wiki:Link cssClass="btn btn-link btn-block register" path="cmd.login">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='register'/>
             <fmt:message key="actions.registernow" />
@@ -108,7 +108,7 @@
       <wiki:UserCheck status="authenticated">
         <div>
         <%-- <div class="modal">  :FVK: - если задавать верно, <div class="modal"> - то кнопка не выводится. --%>
-        <a href="<wiki:Link jsp='cmd.logout' format='url' />"
+        <a href="<wiki:Link path='cmd.logout' format='url' />"
           class="btn btn-default btn-block logout" data-modal=".modal">
           <span class="icon-signout"></span>
           <fmt:message key="actions.logout"/>

@@ -18,83 +18,82 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
-
-import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
+import javax.servlet.jsp.JspWriter;
+
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.providers.WikiProvider;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
+
 /**
- *  Writes a diff link.  Body of the link becomes the link text.
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.</LI>
- *    <LI>version - The older of these versions.  May be an integer to
- *        signify a version number, or the text "latest" to signify the latest version.
- *        If not specified, will default to "latest".  May also be "previous" to signify
- *        a version prior to this particular version.</LI>
- *    <LI>newVersion - The newer of these versions.  Can also be "latest", or "previous".  Defaults to "latest".</LI>
- *  </UL>
+ * Writes a diff link. Body of the link becomes the link text.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>pageName - Page name to refer to. Default is the current page.</li>
+ * <li>version - The older of these versions. May be an integer to signify a
+ * version number, or the text "latest" to signify the latest version. If not
+ * specified, will default to "latest". May also be "previous" to signify a
+ * version prior to this particular version.</li>
+ * <li>newVersion - The newer of these versions. Can also be "latest", or
+ * "previous". Defaults to "latest".</li>
+ * </ul>
  *
- *  If the page does not exist, this tag will fail silently, and not evaluate
- *  its body contents.
+ * If the page does not exist, this tag will fail silently, and not evaluate its
+ * body contents.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class DiffLinkTag extends WikiLinkTag {
 
-    private static final long serialVersionUID = 0L;
-    public static final String VER_LATEST   = "latest";
-    public static final String VER_PREVIOUS = "previous";
-    public static final String VER_CURRENT  = "current";
+	private static final long serialVersionUID = 4900799162029349581L;
+	public static final String VER_LATEST = "latest";
+	public static final String VER_PREVIOUS = "previous";
+	public static final String VER_CURRENT = "current";
 
-    private String m_version    = VER_LATEST;
-    private String m_newVersion = VER_LATEST;
+	private String m_version = VER_LATEST;
+	private String m_newVersion = VER_LATEST;
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_version = m_newVersion = VER_LATEST;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_version = m_newVersion = VER_LATEST;
+	}
 
-    public final String getVersion()
-    {
-        return m_version;
-    }
+	public final String getVersion() {
+		return m_version;
+	}
 
-    public void setVersion( final String arg )
-    {
-        m_version = arg;
-    }
+	public void setVersion(final String arg) {
+		m_version = arg;
+	}
 
-    public final String getNewVersion()
-    {
-        return m_newVersion;
-    }
+	public final String getNewVersion() {
+		return m_newVersion;
+	}
 
-    public void setNewVersion( final String arg )
-    {
-        m_newVersion = arg;
-    }
+	public void setNewVersion(final String arg) {
+		m_newVersion = arg;
+	}
 
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        String pageName = m_pageName;
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		String pageName = m_pageName;
 
-        if( m_pageName == null ) {
-            if( m_wikiContext.getPage() != null ) {
-                pageName = m_wikiContext.getPage().getName();
-            } else {
-                return SKIP_BODY;
-            }
-        }
+		if (m_pageName == null) {
+			if (m_wikiContext.getPage() != null) {
+				pageName = m_wikiContext.getPage().getName();
+			} else {
+				return SKIP_BODY;
+			}
+		}
 
-        final JspWriter out = pageContext.getOut();
+		final JspWriter out = pageContext.getOut();
 
 		int r1;
 		int r2;
@@ -132,17 +131,18 @@ public class DiffLinkTag extends WikiLinkTag {
 			r2 = Integer.parseInt(getNewVersion());
 		}
 
-        final String url = m_wikiContext.getURL( ContextEnum.PAGE_DIFF.getRequestContext(), pageName, "r1="+r1+"&amp;r2="+r2 );
-        switch( m_format ) {
-          case ANCHOR:
-            out.print("<a href=\""+url+"\">");
-            break;
-          case URL:
-            out.print( url );
-            break;
-        }
+		final String url = m_wikiContext.getURL(ContextEnum.PAGE_DIFF.getRequestContext(), pageName,
+				"r1=" + r1 + "&amp;r2=" + r2);
+		switch (m_format) {
+		case ANCHOR:
+			out.print("<a href=\"" + url + "\">");
+			break;
+		case URL:
+			out.print(url);
+			break;
+		}
 
-        return EVAL_BODY_INCLUDE;
-    }
+		return EVAL_BODY_INCLUDE;
+	}
 
 }

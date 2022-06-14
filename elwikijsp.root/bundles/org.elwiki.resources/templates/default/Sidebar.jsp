@@ -42,7 +42,7 @@
     <wiki:InsertPage pageId="4" />
     <wiki:NoSuchPage pageId="4">
       <div class="error">
-        <wiki:EditLink page="LeftMenu">
+        <wiki:EditLink pageId="4">
           <fmt:message key="fav.nomenu"><fmt:param>LeftMenu</fmt:param></fmt:message>
         </wiki:EditLink>
       </div>
@@ -53,7 +53,7 @@
     <wiki:InsertPage pageId="5" />
     <wiki:NoSuchPage pageId="5">
       <div class="error">
-        <wiki:EditLink page="LeftMenuFooter">
+        <wiki:EditLink pageId="5">
           <fmt:message key="fav.nomenu"><fmt:param>LeftMenuFooter</fmt:param></fmt:message>
         </wiki:EditLink>
       </div>
