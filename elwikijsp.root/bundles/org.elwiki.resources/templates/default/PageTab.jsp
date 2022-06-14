@@ -83,7 +83,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
 <%--  IF BLOCOMMENT PAGE:  insert back buttons to mainblog and blogentry permalink --%>
 <c:set var="mainblogpage" value="${fn:substringBefore(param.page,'_comments_')}" />
 <c:if test="${not empty mainblogpage}">
-<wiki:PageExists page="${mainblogpage}">
+<wiki:PageExists pageName="${mainblogpage}">
   <p></p>
   <c:set var="blogentrypage" value="${fn:replace(param.page,'_comments_','_blogentry_')}" />
   <div class="pull-right">
@@ -108,7 +108,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
 <%-- IF BLOGENTRY PAGE: insert blogcomment if appropriate. --%>
 <c:set var="mainblogpage" value="${fn:substringBefore(param.page,'_blogentry_')}" />
 <c:if test="${not empty mainblogpage}">
-<wiki:PageExists page="${mainblogpage}">
+<wiki:PageExists pageName="${mainblogpage}">
   <p></p>
   <c:set var="blogcommentpage" value="${fn:replace(param.page,'_blogentry_','_comments_')}" />
   <div class="pull-right">
@@ -120,7 +120,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
       </wiki:Link>
   </div>
   <c:if test="${not empty blogcommentpage}">
-    <wiki:PageExists page="${blogcommentpage}">
+    <wiki:PageExists pageName="${blogcommentpage}">
       <div class="weblogcommentstitle">
         <fmt:message key="blog.commenttitle" />
       </div>
