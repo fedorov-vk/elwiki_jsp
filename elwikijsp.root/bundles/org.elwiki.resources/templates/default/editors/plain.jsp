@@ -174,7 +174,7 @@
           <fmt:message key="edit.tab.help" />
         </a>
     <%--
-      <wiki:NoSuchPage page="EditPageHelp">
+      <wiki:NoSuchPage pageName="EditPageHelp">
         <div class="error">
         <fmt:message key="comment.edithelpmissing">
         <fmt:param><wiki:EditLink page="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>

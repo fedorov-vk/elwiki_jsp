@@ -232,7 +232,7 @@
       <span><fmt:message key="edit.tab.help" /></span>
     </a>
     <%--
-      <wiki:NoSuchPage page="EditPageHelp">
+      <wiki:NoSuchPage pageName="EditPageHelp">
         <div class="error">
         <fmt:message key="comment.edithelpmissing">
         <fmt:param><wiki:EditLink page="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
@@ -250,7 +250,7 @@
     </a>
   </li>
   <%--
-  <wiki:NoSuchPage page="LoginHelp">
+  <wiki:NoSuchPage pageName="LoginHelp">
   <div class="error">
     <fmt:message key="login.loginhelpmissing">
        <fmt:param><wiki:EditLink page="LoginHelp">LoginHelp</wiki:EditLink></fmt:param>
@@ -358,7 +358,7 @@
       --%>
 
       <%-- divider --%>
-      <wiki:PageExists page="MoreMenu">
+      <wiki:PageExists pageId="3">
 
         <wiki:CheckRequestContext context='view|info|diff|upload|createGroup'>
 	      <wiki:PageExists>

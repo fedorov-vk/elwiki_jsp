@@ -18,67 +18,25 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
-
 import java.io.IOException;
+
+import javax.servlet.jsp.tagext.Tag;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 
 /**
  * Includes the body in case there is no such page available.
  *
  * @since 2.0
  */
-public class NoSuchPageTag extends WikiTagBase {
+public class NoSuchPageTag extends PageExistsTag {
 
 	private static final long serialVersionUID = 0L;
 
-	private String m_pageName;
-	private String m_pageId;
-
-	@Override
-	public void initTag() {
-		super.initTag();
-		m_pageName = null;
-		m_pageId = null;
-	}
-
-	public void setPage(final String name) {
-		m_pageName = name;
-	}
-
-	public String getPage() {
-		return m_pageName;
-	}
-
-	public void setPageId(String pageId) {
-		m_pageId = pageId;
-	}
-
-	public String getPageId() {
-		return m_pageId;
-	}
-
 	@Override
 	public int doWikiStartTag() throws IOException, ProviderException {
-		final Engine engine = m_wikiContext.getEngine();
-		WikiPage page;
-
-		if (m_pageId != null) {
-			page = ServicesRefs.getPageManager().getPageById(m_pageId);
-		} else if (m_pageName != null) {
-			page = ServicesRefs.getPageManager().getPage(m_pageName);
-		} else {
-			page = m_wikiContext.getPage();
-		}
-
-		if (page != null && ServicesRefs.getPageManager().wikiPageExists(page.getName(), page.getVersion())) {
-			return SKIP_BODY;
-		}
-
-		return EVAL_BODY_INCLUDE;
+		int result = (super.doWikiStartTag() == SKIP_BODY) ? Tag.EVAL_BODY_INCLUDE : Tag.SKIP_BODY;
+		return result;
 	}
 
 }
