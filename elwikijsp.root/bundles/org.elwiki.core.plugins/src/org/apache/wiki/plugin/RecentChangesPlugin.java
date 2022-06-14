@@ -18,26 +18,6 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.plugin.Plugin;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
-import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.util.XHTML;
-import org.apache.wiki.util.XhtmlUtil;
-import org.elwiki.services.ServicesRefs;
-import org.jdom2.Element;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,6 +25,24 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.preferences.Preferences.TimeFormat;
+import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.util.XHTML;
+import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.jdom2.Element;
 
 
 /**
@@ -59,21 +57,20 @@ import java.util.Map;
  *  </ul>
  */
 public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugin {
-	
-    private static final Logger log = Logger.getLogger( RecentChangesPlugin.class );
-    
-    /** Parameter name for the separator format.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_FORMAT      = "format";
-    /** Parameter name for the separator timeFormat.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_TIME_FORMAT = "timeFormat";
-    /** Parameter name for the separator dateFormat.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_DATE_FORMAT = "dateFormat";
 
-    /** How many days we show by default. */
-    private static final int   DEFAULT_DAYS = 100*365;
-    public static final String DEFAULT_TIME_FORMAT ="HH:mm:ss";
-    public static final String DEFAULT_DATE_FORMAT ="dd.MM.yyyy";
+	private static final Logger log = Logger.getLogger(RecentChangesPlugin.class);
 
+	/** Parameter name for the separator format. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_FORMAT = "format";
+	/** Parameter name for the separator timeFormat. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_TIME_FORMAT = "timeFormat";
+	/** Parameter name for the separator dateFormat. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_DATE_FORMAT = "dateFormat";
+
+	/** How many days we show by default. */
+	private static final int DEFAULT_DAYS = 100 * 365;
+	public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+	public static final String DEFAULT_DATE_FORMAT = "dd.MM.yyyy";
 
     /**
      * {@inheritDoc}
@@ -118,8 +115,11 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
             rt.setAttribute( XHTML.ATTR_class, "recentchanges" );
             rt.setAttribute( XHTML.ATTR_cellpadding, spacing );
 
-            for( final WikiPage pageref : changes ) {
-                final Date lastmod = pageref.getLastModified();
+            for(WikiPage pageref : changes ) {
+                Date lastmod = pageref.getLastModified();
+				if (lastmod == null) {
+					lastmod = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
+				}
 
                 if( lastmod.before( sincedate.getTime() ) ) {
                     break;
@@ -137,8 +137,11 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     olddate = lastmod;
                 }
 
-                final String href = context.getURL( pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
-                                                                                  : ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getName() );
+                //TODO: разобраться с //pageref instanceof PageAttachment//
+
+				final String href = context
+						.getURL(pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
+								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
                 Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
                 final Element row = XhtmlUtil.element( XHTML.tr );
                 final Element col = XhtmlUtil.element( XHTML.td );

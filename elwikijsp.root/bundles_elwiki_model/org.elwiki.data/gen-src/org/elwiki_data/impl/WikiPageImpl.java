@@ -402,7 +402,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public Date getLastModified() {
 		EList<PageContent> pageContent = this.getPagecontents();
-		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
+		return (pageContent.isEmpty())? new GregorianCalendar(1972, 1, 12).getTime() :
 				pageContent.get(pageContent.size()-1).getLastModify();
 	}
 

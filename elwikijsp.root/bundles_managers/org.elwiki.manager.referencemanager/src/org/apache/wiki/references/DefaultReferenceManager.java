@@ -273,7 +273,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 							@Override
 							public Object execute(PageContent pc1, CDOTransaction transaction) {
 								PageContent pageContent = transaction.getObject(pc1);
-								pageContent.setLastModify(new GregorianCalendar(1972, 2, 12).getTime());
+								pageContent.setLastModify(new GregorianCalendar(1972, 1, 12).getTime());
 								return page;
 							}
 						});*/
