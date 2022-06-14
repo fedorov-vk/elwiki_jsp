@@ -59,7 +59,7 @@ Context grCtx = ContextUtil.findContext( pageContext );
 
 <div class="page-content">
 
-  <form action="<wiki:Link format='url' jsp='cmd.editGroup' />"
+  <form action="<wiki:Link format='url' path='cmd.editGroup' />"
             id="editGroup"
         method="POST" accept-charset="UTF-8">
 
@@ -69,7 +69,7 @@ Context grCtx = ContextUtil.findContext( pageContext );
       <button class="btn btn-success" type="submit" name="action" value="save">
         <fmt:message key="editgroup.submit.save"/>
       </button>
-      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' jsp='cmd.viewGroup'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
+      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' path='cmd.viewGroup'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
         <fmt:message key='editgroup.cancel.submit'/>
       </a>
     </div>

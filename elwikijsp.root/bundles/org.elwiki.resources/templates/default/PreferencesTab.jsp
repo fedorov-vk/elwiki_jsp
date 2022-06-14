@@ -45,7 +45,7 @@
 <c:set var="editors"     value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
 <c:set var="redirect"><wiki:Variable var='redirect' default='<%=prCtx.getConfiguration().getFrontPage() %>' /></c:set>
 
-<form action="<wiki:Link jsp='cmd.prefs' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
+<form action="<wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>
       method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -73,7 +73,7 @@
         </ul>
     </span>
 
-    <wiki:Link cssClass="btn btn-danger pull-right"  page="${redirect}" >
+    <wiki:Link cssClass="btn btn-danger pull-right"  pageName="${redirect}" >
       <fmt:message key='prefs.cancel.submit'/>
     </wiki:Link>
 
@@ -102,7 +102,8 @@
         <fmt:message key="prefs.assertedname.description">
           <fmt:param><wiki:Variable var="applicationname" /></fmt:param>
           <fmt:param>
-            <a href="<wiki:Link jsp='Login.jsp' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>">
+<!-- TODO: understand and release follow //wiki:Link path='Login.jsp'// :FVK:  -->          
+            <a href="<wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>">
             <fmt:message key="prefs.assertedname.create"/>
             </a>
           </fmt:param>
@@ -229,7 +230,7 @@
         <c:set var="cookiePage" value="${fn:replace(cookiePieces[2], '%20', ' ')}" />
         <tr>
           <td>${cookieType}</td>
-          <td><wiki:Link cssClass="slimbox" page="${cookiePage}">${cookiePage}</wiki:Link></td>
+          <td><wiki:Link cssClass="slimbox" pageName="${cookiePage}">${cookiePage}</wiki:Link></td>
           <td><div class="btn btn-xs btn-danger" data-delete-cookie="${aCookie.name}"><fmt:message key="prefs.user.pagecookie.delete"/></div></td>
         </tr>
       </c:if>

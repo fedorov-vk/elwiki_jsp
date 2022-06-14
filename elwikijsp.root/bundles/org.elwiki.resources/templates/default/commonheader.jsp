@@ -84,7 +84,7 @@ String.I18N.PREFIX = "javascript.";
 
 <%-- JAVASCRIPT --%>
 
-<script src="<wiki:Link format='url' jsp='scripts/haddock.js'/>"></script>
+<script src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
 
 <wiki:IncludeResources type="script"/>
 
@@ -92,9 +92,9 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiContext" content='<wiki:Variable var="requestcontext" />' />
 <wiki:Permission permission="edit"><meta name="wikiEditPermission" content="true"/></wiki:Permission>
 <meta name="wikiBaseUrl" content='<wiki:BaseURL />' />
-<meta name="wikiPageUrl" content='<wiki:Link format="url" page="#$%"/>' />
-<meta name="wikiEditUrl" content='<wiki:EditLink format="url" page="#$%"/>' />
-<meta name="wikiCloneUrl" content='<wiki:EditLink format="url" page="#$%"/>&clone=<wiki:Variable var="pagename" />' />
+<meta name="wikiPageUrl" content='<wiki:Link format="url" pageName="#$%"/>' />
+<meta name="wikiEditUrl" content='<wiki:EditLink format="url" pageName="#$%"/>' />
+<meta name="wikiCloneUrl" content='<wiki:EditLink format="url" pageName="#$%"/>&clone=<wiki:Variable var="pagename" />' />
 <meta name="wikiJsonUrl" content='<%= ContextUtil.findContext(pageContext).getURL( ContextEnum.PAGE_NONE.getRequestContext(), "ajax" ) %>' /><%--unusual pagename--%>
 <meta name="wikiPageName" content='<wiki:Variable var="pagename" />' /><%--pagename without blanks--%>
 <meta name="wikiUserName" content='<wiki:UserName />' />
@@ -108,19 +108,19 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiXHRSearch" content='<wiki:Link format="url" templatefile="../default/AJAXSearch.jsp" />' />
 <meta name="wikiXHRPreview" content='<wiki:Link format="url" templatefile="../default/AJAXPreview.jsp" />' />
 <meta name="wikiXHRCategories" content='<wiki:Link format="url" templatefile="../default/AJAXCategories.jsp" />' />
-<meta name="wikiXHRHtml2Markup" content='<wiki:Link format="url" jsp="XHRHtml2Markup.jsp" />' />
-<meta name="wikiXHRMarkup2Wysiwyg" content='<wiki:Link format="url" jsp="XHRMarkup2Wysiwyg.jsp" />' />
+<meta name="wikiXHRHtml2Markup" content='<wiki:Link format="url" path="XHRHtml2Markup.jsp" />' />
+<meta name="wikiXHRMarkup2Wysiwyg" content='<wiki:Link format="url" path="XHRMarkup2Wysiwyg.jsp" />' />
 
 <script type="text/javascript">//<![CDATA[
 <wiki:IncludeResources type="jsfunction"/>
 //]]></script>
 
-<link rel="search" href="<wiki:LinkTo format='url' page='Search'/>"
+<link rel="search" href="<wiki:LinkTo format='url' pageName='cmd.find'/>"
     title='Search <wiki:Variable var="ApplicationName" />' />
-<link rel="help"   href="<wiki:LinkTo format='url' page='TextFormattingRules'/>"
+<link rel="help"   href="<wiki:LinkTo format='url' pageName='TextFormattingRules'/>"
     title="Help" />
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
-<link rel="start"  href="<wiki:Link page='${frontpage}' format='url' />" title="Front page" />
+<link rel="start"  href="<wiki:Link pageName='${frontpage}' format='url' />" title="Front page" />
 <link rel="alternate stylesheet" type="text/css" href="<wiki:Link format='url' templatefile='haddock.css'/>"
     title="Standard" />
 

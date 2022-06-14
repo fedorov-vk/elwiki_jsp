@@ -18,35 +18,35 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.ContextEnum;
-import org.elwiki.services.ServicesRefs;
-import org.elwiki_data.WikiPage;
-
-import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
+import javax.servlet.jsp.JspWriter;
+
+import org.apache.wiki.api.core.ContextEnum;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 
 /**
- * Writes a link to a Wiki page.  Body of the link becomes the actual text.
+ * Writes a link to a Wiki page. Body of the link becomes the actual text.
  * The link is written regardless to whether the page exists or not.
- * <P><B>Attributes</B></P>
- * <UL>
- * <LI>page - Page name to refer to.  Default is the current page.
- * <LI>format - either "anchor" or "url" to output either an <A>... or just the HREF part of one.
- * <LI>template - Which template should we link to.
- * <LI>title - Is used in page actions to display hover text (tooltip)
- * <LI>accesskey - Set an accesskey (ALT+[Char])
- * </UL>
+ * <p><b>Attributes</b></p>
+ * <ul>
+ * <li>pageName - Page name to refer to.  Default is the current page.
+ * <li>pageId - Page Id to refer to. Default is the current page.
+ * <li>format - either "anchor" or "url" to output either an &lt;A&gt... or just the HREF part of one.
+ * <li>template - Which template should we link to.
+ * <li>title - Is used in page actions to display hover text (tooltip)
+ * <li>accesskey - Set an accesskey (ALT+[Char])
+ * </ul>
  *
  * @since 2.0
  */
 public class LinkToTag extends WikiLinkTag {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 4569694714427032140L;
 
-    private String m_version = null;
+	private String m_version = null;
     public String m_title = "";
     public String m_accesskey = "";
 
@@ -78,6 +78,7 @@ public class LinkToTag extends WikiLinkTag {
         String pageId = null;
         boolean isattachment = false;
 
+        //TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
         if( m_pageName == null ) {
             final WikiPage p = m_wikiContext.getPage();
 

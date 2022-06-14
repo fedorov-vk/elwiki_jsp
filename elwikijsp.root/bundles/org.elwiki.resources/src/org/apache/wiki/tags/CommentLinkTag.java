@@ -25,55 +25,60 @@ import org.elwiki_data.WikiPage;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
-
 /**
- *  Writes a comment link.  Body of the link becomes the link text.
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.
- *    <LI>format - Format, either "anchor" or "url".
- *  </UL>
+ * Writes a comment link. Body of the link becomes the link text.
+ * <P>
+ * <B>Attributes</B>
+ * </P>
+ * <UL>
+ * <LI>pageName - Page name to refer to. Default is the current page.
+ * <LI>format - Format, either "anchor" or "url".
+ * </UL>
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class CommentLinkTag
-    extends WikiLinkTag
-{
-    private static final long serialVersionUID = 0L;
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final WikiPage page;
-        final String pageName;
-        
-        //  Determine the page and the link.
-        if( m_pageName == null ) {
-            page = m_wikiContext.getPage();
-            if( page == null ) {
-                // You can't call this on the page itself anyways.
-                return SKIP_BODY;
-            }
-            pageName = page.getName();
-        } else {
-            pageName = m_pageName;
-        }
+public class CommentLinkTag extends WikiLinkTag {
 
-        //  Finally, print out the correct link, according to what user commanded.
-        final JspWriter out = pageContext.getOut();
-        switch( m_format ) {
-        case ANCHOR: out.print( "<a href=\"" + getCommentURL( pageName ) + "\">" ); break;
-        case URL: out.print( getCommentURL( pageName ) ); break;
-        default: throw new InternalWikiException( "Impossible format " + m_format );
-        }
+	private static final long serialVersionUID = -5213235463167155634L;
 
-        return EVAL_BODY_INCLUDE;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final WikiPage page;
+		final String pageName;
 
-    private String getCommentURL( final String pageName ) {
-        return m_wikiContext.getURL( ContextEnum.PAGE_COMMENT.getRequestContext(), pageName );
-    }
+		//  Determine the page and the link.
+		if (m_pageName == null) {
+			pageName = m_pageName;
+		} else {
+			page = m_wikiContext.getPage();
+			if (page == null) {
+				// You can't call this on the page itself anyways.
+				return SKIP_BODY;
+			}
+			pageName = page.getName();
+		}
+
+		//  Finally, print out the correct link, according to what user commanded.
+		final JspWriter out = pageContext.getOut();
+		switch (m_format) {
+		case ANCHOR:
+			out.print("<a href=\"" + getCommentURL(pageName) + "\">");
+			break;
+		case URL:
+			out.print(getCommentURL(pageName));
+			break;
+		default:
+			throw new InternalWikiException("Impossible format " + m_format);
+		}
+
+		return EVAL_BODY_INCLUDE;
+	}
+
+	private String getCommentURL(final String pageName) {
+		return m_wikiContext.getURL(ContextEnum.PAGE_COMMENT.getRequestContext(), pageName);
+	}
 
 }

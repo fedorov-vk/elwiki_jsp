@@ -109,7 +109,8 @@
 <div style="margin: 8px">
    <p><fmt:message key="captcha.description" /></p>
 
-   <form action="<wiki:Link jsp='Captcha.jsp' format='url'/>" method="post" id="mainForm" style="display: none;">
+<!-- TODO: understand and release follow //wiki:Link path='Captcha.jsp'// :FVK:  -->
+   <form action="<wiki:Link path='Captcha.jsp' format='url'/>" method="post" id="mainForm" style="display: none;">
       <input type="hidden" value="foo" name="text" />
       <input type="hidden" value='<%=reqPage%>' name='page'/>
       <script type="text/javascript" src="http://challenge.asirra.com/js/AsirraClientSide.js"></script>

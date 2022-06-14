@@ -170,14 +170,14 @@
       <ul class="dropdown-menu" data-hover-parent="div">
 
             <li>
-        <a class="slimbox-link" href="<wiki:Link format='url' page='EditPageHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
+        <a class="slimbox-link" href="<wiki:Link format='url' pageName='EditPageHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
           <fmt:message key="edit.tab.help" />
         </a>
     <%--
       <wiki:NoSuchPage pageName="EditPageHelp">
         <div class="error">
         <fmt:message key="comment.edithelpmissing">
-        <fmt:param><wiki:EditLink page="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
+        <fmt:param><wiki:EditLink pageName="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
         </fmt:message>
         </div>
       </wiki:NoSuchPage>

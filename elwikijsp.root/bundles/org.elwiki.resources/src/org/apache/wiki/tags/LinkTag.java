@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -45,18 +44,20 @@ import org.elwiki_data.WikiPage;
 /**
  * Provides a generic link tag for all kinds of linking purposes.
  * <p>
- * If parameter <i>jsp</i> is defined, constructs a URL pointing to the specified JSP page,
- * under the baseURL known by the Engine. Any ParamTag name-value pairs contained in the body
- * are added to this URL to provide support for arbitrary JSP calls.
+ * If parameter <i>path</i> is defined, constructs a URL pointing to the
+ * specified path of URL (command, file), under the baseURL known by the Engine. Any ParamTag
+ * name-value pairs contained in the body are added to this URL to provide
+ * support for arbitrary JSP calls.
  * <p>
  * 
  * @since 2.3.50
  */
 public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 
-	static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -1659028657261152566L;
 	private static final Logger log = Logger.getLogger(LinkTag.class);
 
+	private String m_path = null;
 	private String m_version = null;
 	private String m_cssClass = null;
 	private String m_style = null;
@@ -64,7 +65,6 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 	private String m_target = null;
 	private String m_compareToVersion = null;
 	private String m_rel = null;
-	private String m_jsp = null;
 	private String m_ref = null;
 	private String m_context = ContextEnum.PAGE_VIEW.getRequestContext();
 	private String m_accesskey = null;
@@ -79,10 +79,14 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 	public void initTag() {
 		super.initTag();
 		m_version = m_cssClass = m_style = m_title = m_target = null;
-		m_compareToVersion = m_rel = m_jsp = m_ref = m_accesskey = null;
+		m_compareToVersion = m_rel = m_path = m_ref = m_accesskey = null;
 		m_tabindex = m_templatefile = null;
 		m_context = ContextEnum.PAGE_VIEW.getRequestContext();
 		m_containedParams = new HashMap<>();
+	}
+
+	public void setPath(final String path) {
+		m_path = path;
 	}
 
 	public void setTemplatefile(final String key) {
@@ -133,10 +137,6 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 		m_ref = ref;
 	}
 
-	public void setJsp(final String jsp) {
-		m_jsp = jsp;
-	}
-
 	public void setContext(final String context) {
 		m_context = context;
 	}
@@ -155,8 +155,8 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 	}
 
 	/**
-	 * This method figures out what kind of an URL should be output. It mirrors heavily on
-	 * JSPWikiMarkupParser.handleHyperlinks();
+	 * This method figures out what kind of an URL should be output. It mirrors
+	 * heavily on JSPWikiMarkupParser.handleHyperlinks();
 	 *
 	 * @return the URL
 	 * @throws ProviderException
@@ -178,10 +178,10 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 			final String template = engine.getTemplateDir();
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(),
 					"templates/" + template + "/" + m_templatefile, params);
-		} else if (m_jsp != null) {
+		} else if (m_path != null) {
 			final String params = addParamsForRecipient(null, m_containedParams);
-			// url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
-			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params);
+			//:FVK: url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
+			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), m_path, params);
 		} else if (m_ref != null) {
 			final int interwikipoint;
 			if (new LinkParsingOperations(m_wikiContext).isExternalLink(m_ref)) {
@@ -198,7 +198,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				// Local link
 			} else if (TextUtil.isNumber(m_ref)) {
 				// Reference
-			} else {
+			} else { //TODO: review followed code. (:FVK: - при получении страницы, и обработки ее как присоединения - это устарело?) 
 				final int hashMark;
 
 				final String parms = (m_version != null) ? "version=" + getVersion() : null;
@@ -240,6 +240,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 
 			parms = addParamsForRecipient(parms, m_containedParams);
 
+			//TODO: review followed code. (:FVK: - при получении страницы, и обработки ее как присоединения - это устарело?)
 			if (p instanceof PageAttachment) {
 				String ctx = m_context;
 				// Switch context appropriately when attempting to view an
@@ -248,7 +249,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 					ctx = ContextEnum.PAGE_ATTACH.getRequestContext();
 				}
 				url = engine.getURL(ctx, m_pageName, parms);
-				// url = m_wikiContext.getURL( ctx, m_pageName, parms );
+				//:FVK: url = m_wikiContext.getURL( ctx, m_pageName, parms );
 			} else {
 				url = makeBasicURL(m_context, m_pageName, parms);
 			}
@@ -373,8 +374,9 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 			}
 
 			// Finish off by closing opened anchor
-			if (m_format == ANCHOR)
+			if (m_format == ANCHOR) {
 				out.print("</a>");
+			}
 		} catch (final Exception e) {
 			// Yes, we want to catch all exceptions here, including RuntimeExceptions
 			log.error("Tag failed", e);

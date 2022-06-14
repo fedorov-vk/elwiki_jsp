@@ -47,7 +47,8 @@
   <c:set var="thisVersion" value="<%= ctx.getPage().getVersion() %>" />
   <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( ctx.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
 
-  <form action="<wiki:Link format='url' jsp='Wiki.jsp'/>"
+<!-- TODO: understand and release follow //wiki:Link path='Wiki.jsp'// :FVK:  -->
+  <form action="<wiki:Link format='url' path='Wiki.jsp'/>"
         method="get" accept-charset='UTF-8'>
 
     <input type="hidden" name="page" value="${param.page}" />
@@ -87,12 +88,12 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <p></p>
   <c:set var="blogentrypage" value="${fn:replace(param.page,'_comments_','_blogentry_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default" page="${mainblogpage}">
+      <wiki:Link cssClass="btn btn-xs btn-default" pageName="${mainblogpage}">
          <fmt:message key="blog.backtomain">
            <fmt:param>${mainblogpage}</fmt:param>
          </fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-primary" page="${blogentrypage}">
+      <wiki:Link cssClass="btn btn-xs btn-primary" pageName="${blogentrypage}">
          <fmt:message key="blog.permalink" />
       </wiki:Link>
   </div>
@@ -112,10 +113,10 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <p></p>
   <c:set var="blogcommentpage" value="${fn:replace(param.page,'_blogentry_','_comments_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default" page="${mainblogpage}">
+      <wiki:Link cssClass="btn btn-xs btn-default" pageName="${mainblogpage}">
          <fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-default" context="comment" page="${blogcommentpage}">
+      <wiki:Link cssClass="btn btn-xs btn-default" context="comment" pageName="${blogcommentpage}">
         <span class="icon-plus"></span> <fmt:message key="blog.addcomments" />
       </wiki:Link>
   </div>

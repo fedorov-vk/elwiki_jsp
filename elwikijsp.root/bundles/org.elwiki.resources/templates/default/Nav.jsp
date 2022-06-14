@@ -93,7 +93,7 @@
   <%--
   <c:if test="${param.tab eq 'attach'}">
   <li id="view">
-    <wiki:Link page="${page}" >
+    <wiki:Link pageName="${page}" >
         <span class="icon-view-menu"></span>
         <span><fmt:message key="view.tab"/></span>
     </wiki:Link>
@@ -102,7 +102,7 @@
   --%>
   <wiki:CheckRequestContext context='info|diff|upload|rename|edit|comment|conflict'>
   <li id="view">
-    <wiki:Link page="${page}" >
+    <wiki:Link pageName="${page}" >
         <span class="icon-view-menu"></span>
         <span><fmt:message key="view.tab"/></span>
     </wiki:Link>
@@ -115,7 +115,7 @@
   <c:if test="${param.tab ne 'attach'}"><!-- context upload -> context view&tab=attach ... -- >
   <li id="attach"
    class="<wiki:Permission permission='!upload'>disabled</wiki:Permission>">
-    <wiki:Link page="${page}" context="upload" accessKey="a" >
+    <wiki:Link pageName="${page}" context="upload" accessKey="a" >
       <span class="icon-paper-clip"></span>
       <span><fmt:message key='attach.tab'/></span>
       <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -168,7 +168,7 @@
         <c:set var="disabledBtn" value=""/>
         <wiki:CheckRequestContext context='upload'><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
         <wiki:Permission permission='!upload'><c:set var="disabledBtn" value="disabled" /></wiki:Permission>
-        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}" page="${page}" context="upload" tabindex="0">
+        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}" pageName="${page}" context="upload" tabindex="0">
           <span class="icon-paper-clip"></span>
           <fmt:message key='edit.tab.attachments'/>
           <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -206,7 +206,7 @@
         </wiki:Link>
       </wiki:PageType>
       <wiki:PageType type="attachment">
-        <wiki:Link context="edit" page="<wiki:ParentPageName />" accessKey="e" >
+        <wiki:Link context="edit" pageName="<wiki:ParentPageName />" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
@@ -219,7 +219,7 @@
   <%-- help slimbox-link --%>
   <wiki:CheckRequestContext context='find'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' page='SearchPageHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='SearchPageHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="find.tab.help" /></span>
     </a>
@@ -227,7 +227,7 @@
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='edit|comment'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' page='EditPageHelp' ></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='EditPageHelp' ></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="edit.tab.help" /></span>
     </a>
@@ -235,7 +235,7 @@
       <wiki:NoSuchPage pageName="EditPageHelp">
         <div class="error">
         <fmt:message key="comment.edithelpmissing">
-        <fmt:param><wiki:EditLink page="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
+        <fmt:param><wiki:EditLink pageName="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
         </fmt:message>
         </div>
       </wiki:NoSuchPage>
@@ -244,7 +244,7 @@
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='login'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' page='LoginHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='LoginHelp' ><wiki:Param name='skin' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="login.tab.help" /></span>
     </a>
@@ -253,7 +253,7 @@
   <wiki:NoSuchPage pageName="LoginHelp">
   <div class="error">
     <fmt:message key="login.loginhelpmissing">
-       <fmt:param><wiki:EditLink page="LoginHelp">LoginHelp</wiki:EditLink></fmt:param>
+       <fmt:param><wiki:EditLink pageName="LoginHelp">LoginHelp</wiki:EditLink></fmt:param>
     </fmt:message>
   </div>
   </wiki:NoSuchPage>
@@ -276,13 +276,13 @@
         <%-- VIEW RAW PAGE SOURCE --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="slimbox-link" page="${pageId}">
+            <wiki:Link cssClass="slimbox-link" pageName="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="slimbox-link" version='${param.version}' page="${pageId}">
+            <wiki:Link cssClass="slimbox-link" version='${param.version}' pageName="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
@@ -292,13 +292,13 @@
         <%-- Show Reader View --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="interwiki" page="${pageId}">
+            <wiki:Link cssClass="interwiki" pageName="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="interwiki" version="${param.version}" page="${pageId}">
+            <wiki:Link cssClass="interwiki" version="${param.version}" pageName="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>
@@ -323,7 +323,7 @@
         <wiki:PageType type="attachment">
           <li>
             <%--
-            <wiki:Link page="<wiki:ParentPageName />" context="comment" title="<fmt:message key='actions.comment.title' />">
+            <wiki:Link pageName="<wiki:ParentPageName />" context="comment" title="<fmt:message key='actions.comment.title' />">
               <fmt:message key="actions.comment" />
             </wiki:Link>
             --%>
@@ -338,7 +338,7 @@
       <wiki:CheckRequestContext context='!workflow'>
       <wiki:UserCheck status="authenticated">
         <li>
-          <wiki:Link jsp="Workflow.jsp">
+          <wiki:Link path="Workflow.jsp">
             <fmt:message key='actions.workflow' />
           </wiki:Link>
         </li>
@@ -349,7 +349,7 @@
       <wiki:CheckRequestContext context='!creategroup' >
       <wiki:Permission permission="createGroups">
         <li>
-          <wiki:Link jsp="cmd.createGroup" title="<fmt:message key='actions.creategroup.title'/>" >
+          <wiki:Link path="cmd.createGroup" title="<fmt:message key='actions.creategroup.title'/>" >
             <fmt:message key='actions.creategroup' />
           </wiki:Link>
         </li>

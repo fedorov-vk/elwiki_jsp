@@ -35,7 +35,7 @@
 <c:set var="history" value="<%= ServicesRefs.getPageManager().getVersionHistory(ctxDiff.getPage()) %>" />
 <c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(ctxDiff,"jspwiki.diffProvider") %>' />
 <wiki:PageExists>
-<form action="<wiki:Link jsp='cmd.diff' format='url' />"
+<form action="<wiki:Link path='cmd.diff' format='url' />"
        class="diffbody form-inline"
       method="get" accept-charset="UTF-8">
   <input type="hidden" name="page" value="<wiki:PageName />" />

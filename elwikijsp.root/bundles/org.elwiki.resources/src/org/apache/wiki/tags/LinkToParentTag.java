@@ -24,43 +24,47 @@ import org.elwiki_data.WikiPage;
 import java.io.IOException;
 
 /**
- *  Writes a link to a parent of a Wiki page.
+ * Writes a link to a parent of a Wiki page.
  *
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.
- *    <LI>format - either "anchor" or "url" to output either an <A>... or just the HREF part of one.
- *  </UL>
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>pageName - Page name to refer to. Default is the current page.
+ * <li>format - either "anchor" or "url" to output either an &lt;A&gt;... or
+ * just the HREF part of one.
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class LinkToParentTag extends LinkToTag {
 
-    private static final long serialVersionUID = 0L;
-    
-    public int doWikiStartTag() throws IOException {
-        final WikiPage p = m_wikiContext.getPage();
+	private static final long serialVersionUID = -3221811690118879748L;
 
-        //  We just simply set the page to be our parent page and call the superclass.
-        if( p instanceof PageAttachment ) {
-        	 // :FVK: было -- page = ((PageAttachment)p).getParentName()
-        	PageAttachment pa = (PageAttachment)p;
-        	WikiPage page = pa.getWikipage();
-            setPage( page.getName() );
-        } else {
-            final String name = p.getName();
-            final int entrystart = name.indexOf( "_blogentry_" );
-            if( entrystart != -1 ) {
-                setPage( name.substring( 0, entrystart ) );
-            }
+	public int doWikiStartTag() throws IOException {
+		final WikiPage p = m_wikiContext.getPage();
 
-            final int commentstart = name.indexOf( "_comments_" );
-            if( commentstart != -1 ) {
-                setPage( name.substring( 0, commentstart ) );
-            }
-        }
+		//TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
+		//  We just simply set the page to be our parent page and call the superclass.
+		if (p instanceof PageAttachment) {
+			// :FVK: было -- page = ((PageAttachment)p).getParentName()
+			PageAttachment pa = (PageAttachment) p;
+			WikiPage page = pa.getWikipage();
+			setPageName(page.getName());
+		} else {
+			final String name = p.getName();
+			final int entrystart = name.indexOf("_blogentry_");
+			if (entrystart != -1) {
+				setPageName(name.substring(0, entrystart));
+			}
 
-        return super.doWikiStartTag();
-    }
+			final int commentstart = name.indexOf("_comments_");
+			if (commentstart != -1) {
+				setPageName(name.substring(0, commentstart));
+			}
+		}
+
+		return super.doWikiStartTag();
+	}
 
 }

@@ -28,58 +28,65 @@ import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
 /**
- *  Writes a link to the Wiki PageInfo.  Body of the link becomes the actual text.
+ * Writes a link to the Wiki PageInfo. Body of the link becomes the actual text.
  *
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.
- *    <LI>title - Is used in page actions to display hover text (tooltip)
- *    <LI>accesskey - Set an accesskey (ALT+[Char])
- *  </UL>
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>pageName - Page name to refer to. Default is the current page.
+ * <li>title - Is used in page actions to display hover text (tooltip)
+ * <li>accesskey - Set an accesskey (ALT+[Char])
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
 // FIXME: Refactor together with LinkToTag and EditLinkTag.
 public class PageInfoLinkTag extends WikiLinkTag {
 
-    private static final long serialVersionUID = 0L;
-    public String m_title = "";
-    public String m_accesskey = "";
-    
-    public void setTitle( final String title )
-    {
-        m_title = title;
-    }
+	private static final long serialVersionUID = 8852324545520143793L;
 
-    public void setAccesskey( final String access )
-    {
-        m_accesskey = access;
-    }
-    
-    @Override public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        String     pageName = m_pageName;
+	public String m_title = "";
+	public String m_accesskey = "";
 
-        if( m_pageName == null ) {
-            final WikiPage p = m_wikiContext.getPage();
-            if( p != null ) {
-                pageName = p.getName();
-            } else {
-                return SKIP_BODY;
-            }
-        }
+	public void setTitle(final String title) {
+		m_title = title;
+	}
 
-        if( ServicesRefs.getPageManager().wikiPageExists(pageName) ) {
-            final JspWriter out = pageContext.getOut();
-            final String url = m_wikiContext.getURL( ContextEnum.PAGE_INFO.getRequestContext(), pageName );
+	public void setAccesskey(final String access) {
+		m_accesskey = access;
+	}
 
-            switch( m_format ) {
-              case ANCHOR: out.print("<a class=\"pageinfo\" href=\""+url+"\" accesskey=\"" + m_accesskey + "\" title=\"" + m_title + "\">"); break;
-              case URL: out.print( url ); break;
-            }
-            return EVAL_BODY_INCLUDE;
-        }
-        return SKIP_BODY;
-    }
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		String pageName = m_pageName;
+
+		if (m_pageName == null) {
+			final WikiPage p = m_wikiContext.getPage();
+			if (p != null) {
+				pageName = p.getName();
+			} else {
+				return SKIP_BODY;
+			}
+		}
+
+		if (ServicesRefs.getPageManager().wikiPageExists(pageName)) {
+			final JspWriter out = pageContext.getOut();
+			final String url = m_wikiContext.getURL(ContextEnum.PAGE_INFO.getRequestContext(), pageName);
+
+			switch (m_format) {
+			case ANCHOR:
+				out.print("<a class=\"pageinfo\" href=\"" + url + "\" accesskey=\"" + m_accesskey + "\" title=\""
+						+ m_title + "\">");
+				break;
+			case URL:
+				out.print(url);
+				break;
+			}
+			return EVAL_BODY_INCLUDE;
+		}
+		return SKIP_BODY;
+	}
 
 }
