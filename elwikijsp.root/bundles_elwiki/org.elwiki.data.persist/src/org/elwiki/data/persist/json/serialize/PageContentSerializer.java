@@ -20,7 +20,7 @@ public class PageContentSerializer implements JsonSerializer<PageContent> {
 		result.addProperty("version", pageContent.getVersion());
 		Date lastModify = pageContent.getLastModify();
 		if (lastModify == null) {
-			lastModify = new GregorianCalendar(1972, 2, 12).getTime();
+			lastModify = new GregorianCalendar(1972, 1, 12).getTime();
 		}
 		result.addProperty("lastModify", lastModify.toString());
 		result.addProperty("author", pageContent.getAuthor());
