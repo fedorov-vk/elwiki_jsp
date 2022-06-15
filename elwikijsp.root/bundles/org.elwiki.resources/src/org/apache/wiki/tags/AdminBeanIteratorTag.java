@@ -18,14 +18,13 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Context;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.elwiki.services.ServicesRefs;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *  Provides an iterator for all AdminBeans of a given type.
