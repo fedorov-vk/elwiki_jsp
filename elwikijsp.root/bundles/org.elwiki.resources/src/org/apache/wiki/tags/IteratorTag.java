@@ -36,21 +36,21 @@ import java.util.Iterator;
 /**
  *  Iterates through tags.
  *
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>list - a collection.
- *  </UL>
+ *  <p><b>Attributes</b></p>
+ *  <ul>
+ *    <li>list - a collection.
+ *  </ul>
  *
  *  @since 2.0
  */
 public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchFinally {
 
 	private static final long serialVersionUID = 8945334759300595321L;
+	private static final Logger log = Logger.getLogger( IteratorTag.class );
+
 	protected String m_pageName;
     protected Iterator<T> m_iterator;
     protected Context m_wikiContext;
-
-    private static final Logger log = Logger.getLogger( IteratorTag.class );
 
     /**
      *  Sets the collection that is used to form the iteration.
@@ -68,9 +68,9 @@ public abstract class IteratorTag<T> extends BodyTagSupport implements TryCatchF
      *
      *  @param arg An array of objects which will be iterated.
      */
-    public void setList( final Object[] arg ) {
+    public void setList( final T[] arg ) {
         if( arg != null ) {
-            m_iterator = (Iterator<T>) Arrays.asList(arg).iterator();
+            m_iterator = Arrays.asList(arg).iterator();
         }
     }
 

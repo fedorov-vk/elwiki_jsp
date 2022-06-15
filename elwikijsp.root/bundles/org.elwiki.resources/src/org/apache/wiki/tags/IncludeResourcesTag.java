@@ -21,37 +21,37 @@ package org.apache.wiki.tags;
 import org.apache.wiki.ui.TemplateManager;
 
 /**
- *  This tag is used to include any programmatic includes into the
- *  output stream.  Actually, what it does is that it simply emits a
- *  tiny marker into the stream, and then a ServletFilter will take
- *  care of the actual inclusion.
- *  
+ * This tag is used to include any programmatic includes into the output stream.
+ * Actually, what it does is that it simply emits a tiny marker into the stream,
+ * and then a ServletFilter will take care of the actual inclusion.
  *
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>type - Name of the variable. Required.
+ * </ul>
  */
-public class IncludeResourcesTag extends WikiTagBase
-{
-    private static final long serialVersionUID = 0L;
-        
-    private String m_type;
+public class IncludeResourcesTag extends WikiTagBase {
+	private static final long serialVersionUID = 0L;
 
-    public void initTag()
-    {
-        super.initTag();
-        m_type = null;
-    }
-    
-    public void setType( String type )
-    {
-        m_type = type;
-    }
-    
-    public int doWikiStartTag() throws Exception
-    {
-        String marker = TemplateManager.getMarker(m_wikiContext, m_type);
+	private String m_type;
 
-        pageContext.getOut().println( marker );
-        
-        return SKIP_BODY;
-    }
+	public void initTag() {
+		super.initTag();
+		m_type = null;
+	}
+
+	public void setType(String type) {
+		m_type = type;
+	}
+
+	public int doWikiStartTag() throws Exception {
+		String marker = TemplateManager.getMarker(m_wikiContext, m_type);
+
+		pageContext.getOut().println(marker);
+
+		return SKIP_BODY;
+	}
 
 }

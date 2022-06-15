@@ -18,83 +18,84 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.exceptions.NoSuchVariableException;
-import org.apache.wiki.api.variables.VariableManager;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
+import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
+
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.services.ServicesRefs;
 
 /**
- *  Returns the value of an Wiki variable.
+ * Returns the value of an Wiki variable.
  *
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>var - Name of the variable.  Required.
- *    <LI>default - Revert to this value, if the value of "var" is null.
- *                  If left out, this tag will produce a concise error message
- *                  if the named variable is not found. Set to empty (default="")
- *                  to hide the message.
- *  </UL>
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>var - Name of the variable. Required.
+ * <li>default - Revert to this value, if the value of "var" is null. If left
+ * out, this tag will produce a concise error message if the named variable is
+ * not found. Set to empty (default="") to hide the message.
+ * </ul>
  *
- *  <P>A default value implies <I>failmode='quiet'</I>.
+ * <p>
+ * A default value implies <i>failmode='quiet'</i>.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class VariableTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -2120534004669429093L;
 
-    private String m_var      = null;
-    private String m_default  = null;
+	private String m_var = null;
+	private String m_default = null;
 
-    @Override public void initTag() {
-        super.initTag();
-        m_var = m_default = null;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_var = m_default = null;
+	}
 
-    public String getVar()
-    {
-        return m_var;
-    }
+	public String getVar() {
+		return m_var;
+	}
 
-    public void setVar( final String arg )
-    {
-        m_var = arg;
-    }
+	public void setVar(final String arg) {
+		m_var = arg;
+	}
 
-    public void setDefault( final String arg )
-    {
-        m_default = arg;
-    }
+	public void setDefault(final String arg) {
+		m_default = arg;
+	}
 
-    @Override
-    public final int doWikiStartTag() throws JspException, IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final JspWriter out = pageContext.getOut();
-        String msg = null;
-        String value = null;
+	@Override
+	public final int doWikiStartTag() throws JspException, IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		JspWriter out = pageContext.getOut();
+		String msg = null;
+		String value = null;
 
-        try {
-            value = ServicesRefs.getVariableManager().getValue( m_wikiContext, getVar() );
-        } catch( final NoSuchVariableException e ) {
-            msg = "No such variable: " + e.getMessage();
-        } catch( final IllegalArgumentException e ) {
-            msg = "Incorrect variable name: " + e.getMessage();
-        }
+		try {
+			value = ServicesRefs.getVariableManager().getValue(m_wikiContext, getVar());
+		} catch (final NoSuchVariableException e) {
+			msg = "No such variable: " + e.getMessage();
+		} catch (final IllegalArgumentException e) {
+			msg = "Incorrect variable name: " + e.getMessage();
+		}
 
-        if( value == null ) {
-            value = m_default;
-        }
+		if (value == null) {
+			value = m_default;
+		}
 
-        if( value == null ) {
-            value = msg;
-        }
-        out.write( TextUtil.replaceEntities(value) );
-        return SKIP_BODY;
-    }
+		if (value == null) {
+			value = msg;
+		}
+
+		out.write(TextUtil.replaceEntities(value));
+		return SKIP_BODY;
+	}
 
 }
