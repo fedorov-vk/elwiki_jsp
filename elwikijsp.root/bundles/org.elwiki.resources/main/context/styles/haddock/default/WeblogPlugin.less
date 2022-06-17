@@ -143,7 +143,7 @@ table.calendar
         td  a[href=<next-month>] >>
     tr
         td.weekdays  Mon,Tue ...  Sun
-    tr
+    tr.calendar1/2
         td.othermonth
         td.days
         td.link a[herf=<...startDate=ddmmyy>]
@@ -162,14 +162,22 @@ table.calendar {
         border-bottom:1px solid @silver;
         background-color:@white;
     }
+
+    .othermonth { color:@gray-light; /*disabled*/ }
+    //.days { }
+    .link a { .badge; }
+}
+tr.calendar1 { // for the week starting from Sunday
+    td:nth-child(1):not(.weekdays),
+    td:nth-child(7):not(.weekdays) {
+        background: @pre-bg;
+    }
+}
+tr.calendar2 { // for the week starting from Monday
     //td:nth-child(6){ border-left:1px dashed @silver; }   //divider for week and weekend days
     td:nth-child(6):not(.weekdays),
     td:nth-child(7):not(.weekdays) {
         background: @pre-bg;
     }
-
-    .othermonth { color:@gray-light; /*disabled*/ }
-    //.days { }
-    .link a { .badge; }
 }
 

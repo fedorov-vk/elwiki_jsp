@@ -43,7 +43,7 @@ import java.io.IOException;
  */
 public class CheckLockTag extends WikiTagBase {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2879188449549914568L;
 
 	private enum LockState {
 		LOCKED, NOTLOCKED, OWNED
