@@ -29,16 +29,17 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Checks whether the page is locked for editing. If the mode matches, the tag body is included.
- * The "mode" can be any of the following:
+ * Checks whether the page is locked for editing. If the mode matches, the tag
+ * body is included. The "mode" can be any of the following:
  * 
  * <ul>
- * <li><b>locked</b> - The page is currently locked, but the lock is owned by someone else.</li>
- * <li><b>owned</b> - The page is currently locked and the current user is the owner of the
- * lock.</li>
+ * <li><b>locked</b> - The page is currently locked, but the lock is owned by
+ * someone else.</li>
+ * <li><b>owned</b> - The page is currently locked and the current user is the
+ * owner of the lock.</li>
  * <li><b>unlocked</b> - Nobody has locked the page.</li>
  * </ul>
- * 
+ *
  * @since 2.0
  */
 public class CheckLockTag extends WikiTagBase {

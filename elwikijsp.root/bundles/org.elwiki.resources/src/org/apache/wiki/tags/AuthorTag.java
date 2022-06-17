@@ -18,61 +18,67 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
-
-import java.io.IOException;
+import org.elwiki_data.WikiPage;
 
 /**
- *  Writes the author name of the current page, including a link to that page, if that page exists.
+ * Writes the author name of the current page, including a link to that page, if
+ * that page exists.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>format - Format, either "plain" or empty.
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class AuthorTag extends WikiTagBase {
-    private static final long serialVersionUID = 0L;
 
-    public String m_format = "";
+	private static final long serialVersionUID = -5347299857056429136L;
 
-    public void setFormat( final String format )
-    {
-        m_format = format;  //empty or "plain"
-    }
+	public String m_format = "";
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
-        String author = page.getAuthor();
+	public void setFormat(final String format) {
+		m_format = format;
+	}
 
-        if( author != null && author.length() > 0 ) {
-            author = TextUtil.replaceEntities(author);
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
+		String author = page.getAuthor();
 
-            if( ServicesRefs.getPageManager().wikiPageExists(author) && !( "plain".equalsIgnoreCase( m_format ) ) ) {
-                // FIXME: It's very boring to have to do this.  Slow, too.
-                final RenderingManager mgr = ServicesRefs.getRenderingManager();
-                final MarkupParser p = mgr.getParser( m_wikiContext, "["+author+"|"+author+"]" );
-                final WikiDocument d = p.parse();
-                author = mgr.getHTML( m_wikiContext, d );
-            }
+		if (author != null && !author.isBlank()) {
+			author = TextUtil.replaceEntities(author);
 
-            pageContext.getOut().print( author );
-        } else {
-            pageContext.getOut().print( Preferences.getBundle( m_wikiContext, InternationalizationManager.CORE_BUNDLE )
-                                                   .getString( "common.unknownauthor" ) );
-        }
+			if (ServicesRefs.getPageManager().wikiPageExists(author) && !("plain".equalsIgnoreCase(m_format))) {
+				// FIXME: It's very boring to have to do this.  Slow, too.
+				final RenderingManager mgr = ServicesRefs.getRenderingManager();
+				final MarkupParser p = mgr.getParser(m_wikiContext, "[" + author + "|" + author + "]");
+				final WikiDocument d = p.parse();
+				author = mgr.getHTML(m_wikiContext, d);
+			}
 
-        return SKIP_BODY;
-    }
+			pageContext.getOut().print(author);
+		} else {
+			pageContext.getOut().print(Preferences.getBundle(m_wikiContext, InternationalizationManager.CORE_BUNDLE)
+					.getString("common.unknownauthor"));
+		}
+
+		return SKIP_BODY;
+	}
 
 }
