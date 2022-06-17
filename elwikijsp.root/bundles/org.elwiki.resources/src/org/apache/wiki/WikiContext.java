@@ -18,44 +18,34 @@
  */
 package org.apache.wiki;
 
+import java.security.Permission;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.PropertyPermission;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.UserManager;
-import org.elwiki.permissions.AllPermission;
 import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
-import org.elwiki.resources.ResourcesActivator;
+import org.elwiki.permissions.AllPermission;
 import org.elwiki.services.ServicesRefs;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
-import java.security.Permission;
-import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.PropertyPermission;
-import java.util.TimeZone;
+import org.elwiki_data.WikiPage;
 
 /*TODO: удалить engine в аргументах конструкоров и т.д. */
 
