@@ -20,25 +20,22 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
-
 /**
- *  Writes the jspwiki baseURL.
+ * Writes the ElWiki baseURL.
  *
- *  @since 2.2
+ * @since 2.2
  */
-public class BaseURLTag
-    extends WikiTagBase
-{
-    private static final long serialVersionUID = 0L;
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag()
-        throws IOException
-    {
-        pageContext.getOut().print( m_wikiContext.getConfiguration().getBaseURL() );
-        return SKIP_BODY;
-    }
+public class BaseURLTag extends WikiTagBase {
+
+	private static final long serialVersionUID = 7449347992987377569L;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		pageContext.getOut().print(m_wikiContext.getConfiguration().getBaseURL());
+		return SKIP_BODY;
+	}
+
 }
