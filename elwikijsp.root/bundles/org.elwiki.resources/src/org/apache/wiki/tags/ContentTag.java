@@ -35,7 +35,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
  *
  * @since 2.2
  */
-public class ContentTag extends WikiTagBase {
+public class ContentTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 165967960132792262L;
 	private static final Logger log = Logger.getLogger(ContentTag.class);

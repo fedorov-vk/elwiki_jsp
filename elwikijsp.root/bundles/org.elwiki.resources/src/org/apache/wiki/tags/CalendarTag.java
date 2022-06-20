@@ -55,7 +55,7 @@ import org.elwiki_data.WikiPage;
  */
 
 // FIXME: This class is extraordinarily lacking.
-public class CalendarTag extends WikiTagBase {
+public class CalendarTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -8833527745278305585L;
 	private static final Logger log = Logger.getLogger(CalendarTag.class);

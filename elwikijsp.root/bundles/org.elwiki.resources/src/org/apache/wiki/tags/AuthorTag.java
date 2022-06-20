@@ -42,7 +42,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class AuthorTag extends WikiTagBase {
+public class AuthorTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -5347299857056429136L;
 

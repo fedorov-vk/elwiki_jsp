@@ -20,24 +20,25 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 import java.util.Collection;
+
 import javax.servlet.jsp.PageContext;
 
-
 /**
- *  If there have been no search results, then outputs the body text.
+ * If there have been no search results, then outputs the body text.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class IfNoSearchResultsTag extends WikiTagBase {
-    private static final long serialVersionUID = 0L;
-    
-    public final int doWikiStartTag() throws IOException {
-        Collection< ? > list = (Collection< ? >)pageContext.getAttribute( "searchresults", PageContext.REQUEST_SCOPE );
-        if( list == null || list.size() == 0 ) {
-            return EVAL_BODY_INCLUDE;
-        }
+public class IfNoSearchResultsTag extends BaseWikiTag {
 
-        return SKIP_BODY;
-    }
-    
+	private static final long serialVersionUID = 903898694980325576L;
+
+	public final int doWikiStartTag() throws IOException {
+		Collection<?> list = (Collection<?>) pageContext.getAttribute("searchresults", PageContext.REQUEST_SCOPE);
+		if (list == null || list.size() == 0) {
+			return EVAL_BODY_INCLUDE;
+		}
+
+		return SKIP_BODY;
+	}
+
 }

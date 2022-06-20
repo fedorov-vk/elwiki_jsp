@@ -35,10 +35,10 @@ import org.apache.wiki.util.TextUtil;
  *
  *  @since 2.0
  */
-public abstract class WikiTagBase extends TagSupport implements TryCatchFinally {
+public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally {
 
     private static final long serialVersionUID = -1409836349293777141L;
-    private static final Logger log = Logger.getLogger( WikiTagBase.class );
+    private static final Logger log = Logger.getLogger( BaseWikiTag.class );
 
     protected Context m_wikiContext;
 

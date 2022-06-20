@@ -38,7 +38,7 @@ import java.io.IOException;
  *
  * @since 2.0
  */
-public class CommentLinkTag extends WikiLinkTag {
+public class CommentLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = -5213235463167155634L;
 

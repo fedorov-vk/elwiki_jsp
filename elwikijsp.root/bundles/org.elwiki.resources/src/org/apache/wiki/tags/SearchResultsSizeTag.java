@@ -20,25 +20,25 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 import java.util.Collection;
+
 import javax.servlet.jsp.PageContext;
 
 /**
- *  Outputs the size of the search results list, if it contains any items.
- *  Otherwise outputs an empty string.
+ * Outputs the size of the search results list, if it contains any items.
+ * Otherwise outputs an empty string.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class SearchResultsSizeTag
-    extends WikiTagBase
-{
-    private static final long serialVersionUID = 0L;
-    
-    public final int doWikiStartTag() throws IOException {
-        Collection< ? > list = ( Collection< ? > )pageContext.getAttribute( "searchresults", PageContext.REQUEST_SCOPE );
-        if( list != null ) {
-            pageContext.getOut().print( list.size() );
-        }
+public class SearchResultsSizeTag extends BaseWikiTag {
 
-        return SKIP_BODY;
-    }
+	private static final long serialVersionUID = -46567608695273363L;
+
+	public final int doWikiStartTag() throws IOException {
+		Collection<?> list = (Collection<?>) pageContext.getAttribute("searchresults", PageContext.REQUEST_SCOPE);
+		if (list != null) {
+			pageContext.getOut().print(list.size());
+		}
+
+		return SKIP_BODY;
+	}
 }

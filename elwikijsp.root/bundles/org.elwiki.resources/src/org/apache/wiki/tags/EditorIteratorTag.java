@@ -33,7 +33,7 @@ import org.elwiki.services.ServicesRefs;
  *  @since 2.4.12
  */
 
-public class EditorIteratorTag extends IteratorTag  {
+public class EditorIteratorTag extends BaseIteratorTag  {
 
 	private static final long serialVersionUID = -5067091242204416850L;
 

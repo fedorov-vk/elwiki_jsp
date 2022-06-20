@@ -50,7 +50,7 @@ import java.io.IOException;
  * 
  * @since 2.0
  */
-public class CheckLockTag extends WikiTagBase {
+public class CheckLockTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 2879188449549914568L;
 

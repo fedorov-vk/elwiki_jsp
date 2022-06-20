@@ -23,7 +23,7 @@ import org.apache.wiki.ui.TemplateManager;
 /**
  * This tag is used to include any programmatic includes into the output stream.
  * Actually, what it does is that it simply emits a tiny marker into the stream,
- * and then a ServletFilter will take care of the actual inclusion.
+ * and then a {@link org.elwiki.web.jsp.FilterPagePart} take care of the actual inclusion.
  *
  * <p>
  * <b>Attributes</b>
@@ -32,8 +32,9 @@ import org.apache.wiki.ui.TemplateManager;
  * <li>type - Name of the variable. Required.
  * </ul>
  */
-public class IncludeResourcesTag extends WikiTagBase {
-	private static final long serialVersionUID = 0L;
+public class IncludeResourcesTag extends BaseWikiTag {
+
+	private static final long serialVersionUID = -1551412771964050050L;
 
 	private String m_type;
 

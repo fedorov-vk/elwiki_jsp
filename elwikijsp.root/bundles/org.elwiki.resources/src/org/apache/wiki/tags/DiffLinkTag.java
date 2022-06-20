@@ -48,7 +48,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class DiffLinkTag extends WikiLinkTag {
+public class DiffLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 4900799162029349581L;
 	public static final String VER_LATEST = "latest";

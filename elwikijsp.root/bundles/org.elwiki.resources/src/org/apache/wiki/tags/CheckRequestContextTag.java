@@ -39,7 +39,7 @@ import java.io.IOException;
  * @since 2.0
  * @see org.apache.wiki.WikiContext
  */
-public class CheckRequestContextTag extends WikiTagBase {
+public class CheckRequestContextTag extends BaseWikiTag {
 
 	private static final Logger log = Logger.getLogger(CheckRequestContextTag.class);
 

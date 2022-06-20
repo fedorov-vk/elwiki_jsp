@@ -21,40 +21,38 @@ package org.apache.wiki.tags;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages0.PageManager;
 import org.elwiki.services.ServicesRefs;
-
+import org.elwiki_data.WikiPage;
 
 /**
- *  Includes body if page has attachments.
+ * Includes body if page has attachments.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class HasAttachmentsTag extends WikiTagBase {
+public class HasAttachmentsTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( HasAttachmentsTag.class );
-    
-    @Override
-    public final int doWikiStartTag() {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
-        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
+	private static final long serialVersionUID = 7907668402706865398L;
+	private static final Logger log = Logger.getLogger(HasAttachmentsTag.class);
 
-        try {
-            if( page != null && ServicesRefs.getPageManager().wikiPageExists(page) && mgr.attachmentsEnabled() ) {
-                if( mgr.hasAttachments(page) ) {
-                    return EVAL_BODY_INCLUDE;
-                }
-            }
-        } catch( final ProviderException e ) {
-            log.fatal("Provider failed while trying to check for attachements",e);
-            // FIXME: THrow something.
-        }
+	@Override
+	public final int doWikiStartTag() {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
+		final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
 
-        return SKIP_BODY;
-    }
+		try {
+			if (page != null && ServicesRefs.getPageManager().wikiPageExists(page) && mgr.attachmentsEnabled()) {
+				if (mgr.hasAttachments(page)) {
+					return EVAL_BODY_INCLUDE;
+				}
+			}
+		} catch (final ProviderException e) {
+			log.fatal("Provider failed while trying to check for attachements", e);
+			// FIXME: THrow something.
+		}
+
+		return SKIP_BODY;
+	}
 
 }

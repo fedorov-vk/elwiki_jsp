@@ -45,14 +45,14 @@ import org.elwiki_data.WikiPage;
  * Provides a generic link tag for all kinds of linking purposes.
  * <p>
  * If parameter <i>path</i> is defined, constructs a URL pointing to the
- * specified path of URL (command, file), under the baseURL known by the Engine. Any ParamTag
- * name-value pairs contained in the body are added to this URL to provide
- * support for arbitrary JSP calls.
+ * specified path of URL (command, file), under the baseURL known by the Engine.
+ * Any ParamTag name-value pairs contained in the body are added to this URL to
+ * provide support for arbitrary JSP calls.
  * <p>
  * 
  * @since 2.3.50
  */
-public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
+public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 	private static final long serialVersionUID = -1659028657261152566L;
 	private static final Logger log = Logger.getLogger(LinkTag.class);
@@ -165,9 +165,14 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 		String url = null;
 		final Engine engine = m_wikiContext.getEngine();
 		final IWikiConfiguration config = m_wikiContext.getConfiguration();
+		final WikiPage page;
 
-		if (m_pageName == null) {
-			final WikiPage page = m_wikiContext.getPage();
+		if (m_pageId != null) {
+			page = ServicesRefs.getPageManager().getPageById(m_pageId);
+		} else if (m_pageName != null) {
+			page = ServicesRefs.getPageManager().getPage(m_pageName);
+		} else {
+			page = m_wikiContext.getPage();
 			if (page != null) {
 				m_pageName = page.getName();
 			}
@@ -204,8 +209,7 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				final String parms = (m_version != null) ? "version=" + getVersion() : null;
 
 				// Internal wiki link, but is it an attachment link?
-				final WikiPage p = ServicesRefs.getPageManager().getPage(m_pageName);
-				if (p instanceof PageAttachment) {
+				if (page instanceof PageAttachment) {
 					url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), m_pageName);
 				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
 					// It's an internal Wiki link, but to a named section
@@ -233,15 +237,13 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 					url = makeBasicURL(m_context, reallink, parms);
 				}
 			}
-		} else if (m_pageName != null && m_pageName.length() > 0) {
-			final WikiPage p = ServicesRefs.getPageManager().getPage(m_pageName);
-
+		} else if (page != null) {
 			String parms = (m_version != null) ? "version=" + getVersion() : null;
 
 			parms = addParamsForRecipient(parms, m_containedParams);
 
 			//TODO: review followed code. (:FVK: - при получении страницы, и обработки ее как присоединения - это устарело?)
-			if (p instanceof PageAttachment) {
+			if (page instanceof PageAttachment) {
 				String ctx = m_context;
 				// Switch context appropriately when attempting to view an
 				// attachment, but don't override the context setting otherwise
@@ -254,8 +256,8 @@ public class LinkTag extends WikiLinkTag implements ParamHandler, BodyTag {
 				url = makeBasicURL(m_context, m_pageName, parms);
 			}
 		} else {
-			final String page = config.getFrontPage();
-			url = makeBasicURL(m_context, page, null);
+			final String frontPageName = config.getFrontPage();
+			url = makeBasicURL(m_context, frontPageName, null);
 		}
 
 		return url;

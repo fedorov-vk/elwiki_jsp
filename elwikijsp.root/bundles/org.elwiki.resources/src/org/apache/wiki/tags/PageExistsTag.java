@@ -30,8 +30,9 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class PageExistsTag extends WikiTagBase {
-	private static final long serialVersionUID = 0L;
+public class PageExistsTag extends BaseWikiTag {
+
+	private static final long serialVersionUID = -4687069201552542591L;
 
 	private String m_pageName;
 	private String m_pageId;

@@ -18,33 +18,32 @@
  */
 package org.apache.wiki.tags;
 
-import org.elwiki_data.WikiPage;
-
 import java.io.IOException;
 
+import org.elwiki_data.WikiPage;
 
 /**
- *  Outputs the version number of the previous version of this page.
+ * Outputs the version number of the previous version of this page.
  *
- *  @since 2.2
+ * @since 2.2
  */
-public class PreviousVersionTag extends WikiTagBase {
+public class PreviousVersionTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final WikiPage page = m_wikiContext.getPage();
-        int version = page.getVersion();
-        version--;
-        if( version > 0 ) {
-            pageContext.getOut().print( version );
-        }
+	private static final long serialVersionUID = -5856150442436141486L;
 
-        return SKIP_BODY;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final WikiPage page = m_wikiContext.getPage();
+		int version = page.getVersion();
+		version--;
+		if (version > 0) {
+			pageContext.getOut().print(version);
+		}
+
+		return SKIP_BODY;
+	}
 
 }

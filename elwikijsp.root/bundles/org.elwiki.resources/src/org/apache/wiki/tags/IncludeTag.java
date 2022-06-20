@@ -31,63 +31,71 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- *  Includes an another JSP page, making sure that we actually pass the WikiContext correctly.
+ * Includes an another JSP page, making sure that we actually pass the
+ * WikiContext correctly.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>page - file name of JSP page.
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
 // FIXME: Perhaps unnecessary?
-public class IncludeTag extends WikiTagBase {
+public class IncludeTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( IncludeTag.class );
-    
-    protected String m_page;
+	private static final long serialVersionUID = -4378925411011286L;
+	private static final Logger log = Logger.getLogger(IncludeTag.class);
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_page = null;
-    }
+	protected String m_page;
 
-    public void setPage( final String page )
-    {
-        m_page = page;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_page = null;
+	}
 
-    public String getPage()
-    {
-        return m_page;
-    }
+	public void setPage(final String page) {
+		m_page = page;
+	}
 
-    @Override
-    public final int doWikiStartTag() throws IOException, ProviderException {
-        return SKIP_BODY;
-    }
+	public String getPage() {
+		return m_page;
+	}
 
-    @Override
-    public final int doEndTag() throws JspException {
-        try {
-        	TemplateManager templateManager = ServicesRefs.getTemplateManager();
+	@Override
+	public final int doWikiStartTag() throws IOException, ProviderException {
+		return SKIP_BODY;
+	}
+
+	@Override
+	public final int doEndTag() throws JspException {
+		try {
+			TemplateManager templateManager = ServicesRefs.getTemplateManager();
 			final String page = templateManager.findJSP(pageContext, m_wikiContext.getTemplate(), m_page);
 
-            if( page == null ) {
-                pageContext.getOut().println( "No template file called '" + TextUtil.replaceEntities( m_page ) + "'" );
-            } else {
-                // URL url = MainActivator.getContext().getBundle().getEntry(page);
-            	URL url = templateManager.getResourceUrl(page);
-                URL res = FileLocator.resolve(url);
-                String pagePath = res.getPath();
-                pageContext.include( page );
-            }
-        } catch( final ServletException e ) {
-            log.warn( "Including failed, got a servlet exception from sub-page. Rethrowing the exception to the JSP engine.", e );
-            throw new JspException( e.getMessage() );
-        } catch( final IOException e ) {
-            log.warn( "I/O exception - probably the connection was broken. Rethrowing the exception to the JSP engine.", e );
-            throw new JspException( e.getMessage() );
-        }
+			if (page == null) {
+				pageContext.getOut().println("No template file called '" + TextUtil.replaceEntities(m_page) + "'");
+			} else {
+				// URL url = MainActivator.getContext().getBundle().getEntry(page);
+				URL url = templateManager.getResourceUrl(page);
+				URL res = FileLocator.resolve(url);
+				String pagePath = res.getPath();
+				pageContext.include(page);
+			}
+		} catch (final ServletException e) {
+			log.warn(
+					"Including failed, got a servlet exception from sub-page. Rethrowing the exception to the JSP engine.",
+					e);
+			throw new JspException(e.getMessage());
+		} catch (final IOException e) {
+			log.warn("I/O exception - probably the connection was broken. Rethrowing the exception to the JSP engine.",
+					e);
+			throw new JspException(e.getMessage());
+		}
 
-        return EVAL_PAGE;
-    }
+		return EVAL_PAGE;
+	}
 
 }

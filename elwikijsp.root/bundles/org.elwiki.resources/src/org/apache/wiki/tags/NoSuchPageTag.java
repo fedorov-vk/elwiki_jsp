@@ -31,7 +31,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
  */
 public class NoSuchPageTag extends PageExistsTag {
 
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -5846814974234845798L;
 
 	@Override
 	public int doWikiStartTag() throws IOException, ProviderException {

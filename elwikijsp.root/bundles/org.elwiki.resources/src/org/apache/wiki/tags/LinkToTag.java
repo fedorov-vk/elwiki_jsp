@@ -28,13 +28,16 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
 /**
- * Writes a link to a Wiki page. Body of the link becomes the actual text.
- * The link is written regardless to whether the page exists or not.
- * <p><b>Attributes</b></p>
+ * Writes a link to a Wiki page. Body of the link becomes the actual text. The
+ * link is written regardless to whether the page exists or not.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
  * <ul>
- * <li>pageName - Page name to refer to.  Default is the current page.
+ * <li>pageName - Page name to refer to. Default is the current page.
  * <li>pageId - Page Id to refer to. Default is the current page.
- * <li>format - either "anchor" or "url" to output either an &lt;A&gt... or just the HREF part of one.
+ * <li>format - either "anchor" or "url" to output either an &lt;A&gt... or just
+ * the HREF part of one.
  * <li>template - Which template should we link to.
  * <li>title - Is used in page actions to display hover text (tooltip)
  * <li>accesskey - Set an accesskey (ALT+[Char])
@@ -42,95 +45,102 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class LinkToTag extends WikiLinkTag {
+public class LinkToTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 4569694714427032140L;
 
 	private String m_version = null;
-    public String m_title = "";
-    public String m_accesskey = "";
+	public String m_title = "";
+	public String m_accesskey = "";
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_version = null;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_version = null;
+	}
 
-    public String getVersion() {
-        return m_version;
-    }
+	public String getVersion() {
+		return m_version;
+	}
 
-    public void setVersion( final String arg ) {
-        m_version = arg;
-    }
+	public void setVersion(final String arg) {
+		m_version = arg;
+	}
 
-    public void setTitle( final String title ) {
-        m_title = title;
-    }
+	public void setTitle(final String title) {
+		m_title = title;
+	}
 
-    public void setAccesskey( final String access ) {
-        m_accesskey = access;
-    }
+	public void setAccesskey(final String access) {
+		m_accesskey = access;
+	}
 
-    @Override
-    public int doWikiStartTag() throws IOException {
-        String pageName = m_pageName;
-        String pageId = null;
-        boolean isattachment = false;
+	@Override
+	public int doWikiStartTag() throws IOException {
+		String pageName = m_pageName;
+		String pageId = m_pageId;
+		boolean isattachment = false;
 
-        //TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
-        if( m_pageName == null ) {
-            final WikiPage p = m_wikiContext.getPage();
+		if (m_pageId != null) {
+			WikiPage page = ServicesRefs.getPageManager().getPageById(m_pageId);
+			pageName = m_pageName = page.getName();
+		} else if (m_pageName != null) {
+			WikiPage page = ServicesRefs.getPageManager().getPage(m_pageName);
+			pageId = m_pageId = page.getId();
+		}
 
-            if( p != null ) {
-                pageName = p.getName();
-                pageId = p.getId();
+		//TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
+		if (m_pageName == null) {
+			final WikiPage p = m_wikiContext.getPage();
 
-                isattachment = p instanceof PageAttachment;
-            } else {
-                return SKIP_BODY;
-            }
-        }
+			if (p != null) {
+				pageName = p.getName();
+				pageId = p.getId();
 
-        final JspWriter out = pageContext.getOut();
-        final String url;
-        final String linkclass;
-        String forceDownload = "";
+				isattachment = p instanceof PageAttachment;
+			} else {
+				return SKIP_BODY;
+			}
+		}
 
-        if( isattachment ) {
-            url = m_wikiContext.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), pageName, ( getVersion() != null ) ? "version=" + getVersion() : null );
-            linkclass = "attachment";
+		final JspWriter out = pageContext.getOut();
+		final String url;
+		final String linkclass;
+		String forceDownload = "";
 
-            if( ServicesRefs.getAttachmentManager().forceDownload( pageName ) ) {
-                forceDownload = "download ";
-            }
+		if (isattachment) {//TODO: разобраться с типом "присоединение"...
+			url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), pageName,
+					(getVersion() != null) ? "version=" + getVersion() : null);
+			linkclass = "attachment";
 
-        } else {
-            final StringBuilder params = new StringBuilder();
-            if( getVersion() != null ) {
-                params.append( "version=" ).append( getVersion() );
-            }
-            if( getTemplate() != null ) {
-                params.append( params.length() > 0 ? "&amp;" : "" ).append( "skin=" ).append( getTemplate() );
-            }
+			if (ServicesRefs.getAttachmentManager().forceDownload(pageName)) {
+				forceDownload = "download ";
+			}
 
-            url = m_wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString() );
-            linkclass = "wikipage";
-        }
+		} else {
+			final StringBuilder params = new StringBuilder();
+			if (getVersion() != null) {
+				params.append("version=").append(getVersion());
+			}
+			if (getTemplate() != null) {
+				params.append(params.length() > 0 ? "&amp;" : "").append("skin=").append(getTemplate());
+			}
 
-        switch( m_format ) {
-        case ANCHOR:
-            out.print( "<a class=\"" + linkclass +
-                       "\" href=\"" + url +
-                       "\" accesskey=\"" + m_accesskey +
-                       "\" title=\"" + m_title + "\" " + forceDownload + ">" );
-            break;
-        case URL:
-            out.print( url );
-            break;
-        }
+			url = m_wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString());
+			linkclass = "wikipage";
+		}
 
-        return EVAL_BODY_INCLUDE;
-    }
+		switch (m_format) {
+		case ANCHOR:
+			out.print("<a class=\"" + linkclass + "\" href=\"" + url + "\" accesskey=\"" + m_accesskey + "\" title=\""
+					+ m_title + "\" " + forceDownload + ">");
+			break;
+		case URL:
+			out.print(url);
+			break;
+		}
+
+		return EVAL_BODY_INCLUDE;
+	}
 
 }

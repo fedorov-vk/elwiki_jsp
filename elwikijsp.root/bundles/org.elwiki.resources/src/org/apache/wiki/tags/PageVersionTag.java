@@ -18,30 +18,31 @@
  */
 package org.apache.wiki.tags;
 
-import org.elwiki_data.WikiPage;
-
 import java.io.IOException;
 
+import org.elwiki_data.WikiPage;
 
 /**
- * Writes the version of the current page.  If this is marked as the current version, then includes body as text instead of version number.
+ * Writes the version of the current page. If this is marked as the current
+ * version, then includes body as text instead of version number.
  *
  * @since 2.0
  */
-public class PageVersionTag extends WikiTagBase {
+public class PageVersionTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 0L;
 
-    public final int doWikiStartTag() throws IOException {
-        final WikiPage page = m_wikiContext.getPage();
-        if( page != null ) {
-            final int version = page.getVersion();
-            if( version > 0 ) {
-                pageContext.getOut().print( Integer.toString( version ) );
-                return SKIP_BODY;
-            }
-        }
-        return EVAL_BODY_INCLUDE;
-    }
+	public final int doWikiStartTag() throws IOException {
+		final WikiPage page = m_wikiContext.getPage();
+		if (page != null) {
+			final int version = page.getVersion();
+			if (version > 0) {
+				pageContext.getOut().print(Integer.toString(version));
+				return SKIP_BODY;
+			}
+		}
+
+		return EVAL_BODY_INCLUDE;
+	}
 
 }

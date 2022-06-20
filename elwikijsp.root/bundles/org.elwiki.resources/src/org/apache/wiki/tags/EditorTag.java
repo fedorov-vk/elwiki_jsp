@@ -36,7 +36,7 @@ import org.elwiki.services.ServicesRefs;
  *
  * @since 2.2
  */
-public class EditorTag extends WikiBodyTag {
+public class EditorTag extends BaseWikiBodyTag {
 
 	private static final long serialVersionUID = -8740301007871109716L;
 	private static final Logger log = Logger.getLogger(EditorTag.class);

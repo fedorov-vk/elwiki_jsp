@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
-
-import java.io.IOException;
 
 /**
  * Writes a link to a parent of a Wiki page.

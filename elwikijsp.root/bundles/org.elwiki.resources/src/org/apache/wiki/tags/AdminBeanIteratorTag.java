@@ -27,42 +27,42 @@ import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.elwiki.services.ServicesRefs;
 
 /**
- *  Provides an iterator for all AdminBeans of a given type.
+ * Provides an iterator for all AdminBeans of a given type.
  *
  */
-public class AdminBeanIteratorTag extends IteratorTag {
-	
-    private static final long serialVersionUID = 1L;
+public class AdminBeanIteratorTag extends BaseIteratorTag {
 
-    private int m_type;
+	private static final long serialVersionUID = -2043505811106523815L;
 
-    /**
-     *  Set the type of the bean.
-     *  
-     *  @param type Type to set
-     */
-    public void setType( final String type ) {
-    	if (m_wikiContext == null) {
-    		m_wikiContext = ContextUtil.findContext(pageContext);
-    	}
-        m_type = ServicesRefs.getAdminBeanManager().getTypeFromString( type );
-    }
+	private int m_type;
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public void resetIterator() {
-        final AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
-        final Collection< AdminBean > beans = mgr.getAllBeans();
-        final ArrayList< AdminBean > typedBeans = new ArrayList<>();
-        for( final AdminBean ab : beans ) {
-            if( ab.getType() == m_type ) {
-                typedBeans.add( ab );
-            }
-        }
+	/**
+	 * Set the type of the bean.
+	 * 
+	 * @param type Type to set
+	 */
+	public void setType(final String type) {
+		if (m_wikiContext == null) {
+			m_wikiContext = ContextUtil.findContext(pageContext);
+		}
+		m_type = ServicesRefs.getAdminBeanManager().getTypeFromString(type);
+	}
 
-        setList( typedBeans );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void resetIterator() {
+		final AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
+		final Collection<AdminBean> beans = mgr.getAllBeans();
+		final ArrayList<AdminBean> typedBeans = new ArrayList<>();
+		for (final AdminBean ab : beans) {
+			if (ab.getType() == m_type) {
+				typedBeans.add(ab);
+			}
+		}
+
+		setList(typedBeans);
+	}
 
 }

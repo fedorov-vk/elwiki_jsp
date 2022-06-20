@@ -27,7 +27,7 @@ import org.elwiki.configuration.IWikiConfiguration;
  *
  * @since 2.0
  */
-public class ContentEncodingTag extends WikiTagBase {
+public class ContentEncodingTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -1564131389193986918L;
 

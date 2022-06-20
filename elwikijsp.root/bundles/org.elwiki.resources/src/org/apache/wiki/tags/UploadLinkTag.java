@@ -37,7 +37,7 @@ import java.io.IOException;
  *
  * @since 2.0
  */
-public class UploadLinkTag extends WikiLinkTag {
+public class UploadLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 593568457874198342L;
 

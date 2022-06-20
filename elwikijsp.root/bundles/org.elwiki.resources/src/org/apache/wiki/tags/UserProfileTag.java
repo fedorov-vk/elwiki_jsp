@@ -18,218 +18,229 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.UserManager;
-import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.data.authorize.Role;
-import org.apache.wiki.auth.user0.UserProfile;
-import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.data.authorize.Role;
+import org.elwiki.services.ServicesRefs;
+
 /**
  * <p>
  * Returns user profile attributes, or empty strings if the user has not been
- * validated. This tag has a single attribute, "property."
- * The <code>property</code> attribute may contain one of the following
+ * validated. This tag has a single attribute, "property." The
+ * <code>property</code> attribute may contain one of the following
  * case-insensitive values:
  * </p>
  * <ul>
- * <li><code>created</code> - creation date</li>
- * <li><code>email</code> - user's e-mail address</li>
- * <li><code>fullname</code> - user's full name</li>
- * <li><code>groups</code> - a sorted list of the groups a user belongs to</li>
- * <li><code>loginname</code> - user's login name. If the current user does not have a profile, the user's login principal (such as one
- * provided by a container login module, user cookie, or anonyous IP address), will supply the login name property</li>
- * <li><code>roles</code> - a sorted list of the roles a user possesses</li>
- * <li><code>wikiname</code> - user's wiki name</li>
- * <li><code>modified</code> - last modification date</li>
- * <li><code>exists</code> - evaluates the body of the tag if user's profile exists in the user database</li>
- * <li><code>new</code> - evaluates the body of the tag if user's profile does not exist in the user database</li>
- * <li><code>canChangeLoginName</code> - always true if custom auth used; also true for container auth and current
- * UserDatabase.isSharedWithContainer() is true.</li>
- * <li><code>canChangePassword</code> - always true if custom auth used; also true for container auth
- * and current UserDatabase.isSharedWithContainer() is true.</li>
+ * <li><code>created</code> - creation date
+ * <li><code>email</code> - user's e-mail address
+ * <li><code>fullname</code> - user's full name
+ * <li><code>groups</code> - a sorted list of the groups a user belongs to
+ * <li><code>loginname</code> - user's login name. If the current user does not
+ * have a profile, the user's login principal (such as one provided by a
+ * container login module, user cookie, or anonyous IP address), will supply the
+ * login name property
+ * <li><code>roles</code> - a sorted list of the roles a user possesses
+ * <li><code>wikiname</code> - user's wiki name
+ * <li><code>modified</code> - last modification date
+ * <li><code>exists</code> - evaluates the body of the tag if user's profile
+ * exists in the user database
+ * <li><code>new</code> - evaluates the body of the tag if user's profile does
+ * not exist in the user database
+ * <li><code>canChangeLoginName</code> - always true if custom auth used; also
+ * true for container auth and current UserDatabase.isSharedWithContainer() is
+ * true.
+ * <li><code>canChangePassword</code> - always true if custom auth used; also
+ * true for container auth and current UserDatabase.isSharedWithContainer() is
+ * true.
  * </ul>
- * <p>In addition, the values <code>exists</code>, <code>new</code>, <code>canChangeLoginName</code>
- * and <code>canChangeLoginName</code> can also be prefixed with <code>!</code> to indicate the
- * negative condition (for example, <code>!exists</code>).</p>
+ * <p>
+ * In addition, the values <code>exists</code>, <code>new</code>,
+ * <code>canChangeLoginName</code> and <code>canChangeLoginName</code> can also
+ * be prefixed with <code>!</code> to indicate the negative condition (for
+ * example, <code>!exists</code>).
+ * </p>
  *
  * @since 2.3
  */
-public class UserProfileTag extends WikiTagBase {
+public class UserProfileTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 3258410625431582003L;
+	private static final long serialVersionUID = 3258410625431582003L;
 
-    public  static final String BLANK = "(not set)";
+	public static final String BLANK = "(not set)";
 
-    private static final String CREATED   = "created";
-    private static final String EMAIL     = "email";
-    private static final String EXISTS    = "exists";
-    private static final String NOT_EXISTS= "!exists";
-    private static final String FULLNAME  = "fullname";
-    private static final String GROUPS    = "groups";
-    private static final String LOGINNAME = "loginname";
-    private static final String MODIFIED  = "modified";
-    private static final String NEW       = "new";
-    private static final String NOT_NEW   = "!new";
-    private static final String ROLES     = "roles";
-    private static final String WIKINAME  = "wikiname";
-    private static final String CHANGE_LOGIN_NAME     = "canchangeloginname";
-    private static final String NOT_CHANGE_LOGIN_NAME = "!canchangeloginname";
-    private static final String CHANGE_PASSWORD       = "canchangepassword";
-    private static final String NOT_CHANGE_PASSWORD   = "!canchangepassword";
+	private static final String CREATED = "created";
+	private static final String EMAIL = "email";
+	private static final String EXISTS = "exists";
+	private static final String NOT_EXISTS = "!exists";
+	private static final String FULLNAME = "fullname";
+	private static final String GROUPS = "groups";
+	private static final String LOGINNAME = "loginname";
+	private static final String MODIFIED = "modified";
+	private static final String NEW = "new";
+	private static final String NOT_NEW = "!new";
+	private static final String ROLES = "roles";
+	private static final String WIKINAME = "wikiname";
+	private static final String CHANGE_LOGIN_NAME = "canchangeloginname";
+	private static final String NOT_CHANGE_LOGIN_NAME = "!canchangeloginname";
+	private static final String CHANGE_PASSWORD = "canchangepassword";
+	private static final String NOT_CHANGE_PASSWORD = "!canchangepassword";
 
-    private String             m_prop;
+	private String m_prop;
 
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_prop = null;
-    }
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_prop = null;
+	}
 
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final UserManager manager = ServicesRefs.getUserManager();
-        final UserProfile profile = manager.getUserProfile( m_wikiContext.getWikiSession() );
-        String result = null;
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final UserManager manager = ServicesRefs.getUserManager();
+		final UserProfile profile = manager.getUserProfile(m_wikiContext.getWikiSession());
+		String result = null;
 
-        if( EXISTS.equals( m_prop ) || NOT_NEW.equals( m_prop ) ) {
-            return profile.isNew() ? SKIP_BODY : EVAL_BODY_INCLUDE;
-        } else if( NEW.equals( m_prop ) || NOT_EXISTS.equals( m_prop ) ) {
-            return profile.isNew() ? EVAL_BODY_INCLUDE : SKIP_BODY;
-        } else if( CREATED.equals( m_prop ) && profile.getCreated() != null ) {
-            result = profile.getCreated().toString();
-        } else if( EMAIL.equals( m_prop ) ) {
-            result = profile.getEmail();
-        } else if( FULLNAME.equals( m_prop ) ) {
-            result = profile.getFullname();
-        } else if( GROUPS.equals( m_prop ) ) {
-            result = printGroups( m_wikiContext );
-        } else if( LOGINNAME.equals( m_prop ) ) {
-            result = profile.getLoginName();
-        } else if( MODIFIED.equals( m_prop ) && profile.getLastModified() != null ) {
-            result = profile.getLastModified().toString();
-        } else if( ROLES.equals( m_prop ) ) {
-            result = printRoles( m_wikiContext );
-        } else if( WIKINAME.equals( m_prop ) ) {
-            result = profile.getWikiName();
+		if (EXISTS.equals(m_prop) || NOT_NEW.equals(m_prop)) {
+			return profile.isNew() ? SKIP_BODY : EVAL_BODY_INCLUDE;
+		} else if (NEW.equals(m_prop) || NOT_EXISTS.equals(m_prop)) {
+			return profile.isNew() ? EVAL_BODY_INCLUDE : SKIP_BODY;
+		} else if (CREATED.equals(m_prop) && profile.getCreated() != null) {
+			result = profile.getCreated().toString();
+		} else if (EMAIL.equals(m_prop)) {
+			result = profile.getEmail();
+		} else if (FULLNAME.equals(m_prop)) {
+			result = profile.getFullname();
+		} else if (GROUPS.equals(m_prop)) {
+			result = printGroups(m_wikiContext);
+		} else if (LOGINNAME.equals(m_prop)) {
+			result = profile.getLoginName();
+		} else if (MODIFIED.equals(m_prop) && profile.getLastModified() != null) {
+			result = profile.getLastModified().toString();
+		} else if (ROLES.equals(m_prop)) {
+			result = printRoles(m_wikiContext);
+		} else if (WIKINAME.equals(m_prop)) {
+			result = profile.getWikiName();
 
-            if( result == null ) {
-                //
-                //  Default back to the declared user name
-                //
-                final Engine engine = this.m_wikiContext.getEngine();
-                final Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(( HttpServletRequest )pageContext.getRequest()); 
-                final Principal user = wikiSession.getUserPrincipal();
+			if (result == null) {
+				//
+				//  Default back to the declared user name
+				//
+				final Engine engine = this.m_wikiContext.getEngine();
+				final Session wikiSession = ServicesRefs.getSessionMonitor()
+						.getWikiSession((HttpServletRequest) pageContext.getRequest());
+				final Principal user = wikiSession.getUserPrincipal();
 
-                if( user != null ) {
-                    result = user.getName();
-                }
-            }
-        } else if( CHANGE_PASSWORD.equals( m_prop ) || CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
-            if( !authMgr.isContainerAuthenticated() ) {
-                return EVAL_BODY_INCLUDE;
-            }
-        } else if( NOT_CHANGE_PASSWORD.equals( m_prop ) || NOT_CHANGE_LOGIN_NAME.equals( m_prop ) ) {
-            final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
-            if( authMgr.isContainerAuthenticated() ) {
-                return EVAL_BODY_INCLUDE;
-            }
-        }
+				if (user != null) {
+					result = user.getName();
+				}
+			}
+		} else if (CHANGE_PASSWORD.equals(m_prop) || CHANGE_LOGIN_NAME.equals(m_prop)) {
+			final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
+			if (!authMgr.isContainerAuthenticated()) {
+				return EVAL_BODY_INCLUDE;
+			}
+		} else if (NOT_CHANGE_PASSWORD.equals(m_prop) || NOT_CHANGE_LOGIN_NAME.equals(m_prop)) {
+			final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
+			if (authMgr.isContainerAuthenticated()) {
+				return EVAL_BODY_INCLUDE;
+			}
+		}
 
-        if( result != null ) {
-            pageContext.getOut().print( TextUtil.replaceEntities( result ) );
-        }
-        return SKIP_BODY;
-    }
+		if (result != null) {
+			pageContext.getOut().print(TextUtil.replaceEntities(result));
+		}
+		return SKIP_BODY;
+	}
 
-    public void setProperty( final String property )
-    {
-        m_prop = property.toLowerCase().trim();
-    }
+	public void setProperty(final String property) {
+		m_prop = property.toLowerCase().trim();
+	}
 
-    /**
-     * Returns a sorted list of the {@link org.elwiki.api.authorization.WrapGroup} objects a user possesses
-     * in his or her Session. The result is computed by consulting
-     * {@link org.apache.wiki.api.core.Session#getRoles()}
-     * and extracting those that are of type Group.
-     * @return the list of groups, sorted by name
-     */
-    public static String printGroups( final Context context ) {
-        final Principal[] roles = context.getWikiSession().getRoles();
-        final List< String > tempRoles = new ArrayList<>();
-        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
+	/**
+	 * Returns a sorted list of the {@link org.elwiki.api.authorization.WrapGroup}
+	 * objects a user possesses in his or her Session. The result is computed by
+	 * consulting {@link org.apache.wiki.api.core.Session#getRoles()} and extracting
+	 * those that are of type Group.
+	 * 
+	 * @return the list of groups, sorted by name
+	 */
+	public static String printGroups(final Context context) {
+		final Principal[] roles = context.getWikiSession().getRoles();
+		final List<String> tempRoles = new ArrayList<>();
+		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
 
-        for( final Principal role : roles ) {
-            if( role instanceof GroupPrincipal ) {
-                tempRoles.add( role.getName() );
-            }
-        }
-        if( tempRoles.size() == 0 ) {
-            return rb.getString( "userprofile.nogroups" );
-        }
+		for (final Principal role : roles) {
+			if (role instanceof GroupPrincipal) {
+				tempRoles.add(role.getName());
+			}
+		}
+		if (tempRoles.size() == 0) {
+			return rb.getString("userprofile.nogroups");
+		}
 
-        final StringBuilder sb = new StringBuilder();
-        for( int i = 0; i < tempRoles.size(); i++ ) {
-            final String name = tempRoles.get( i );
+		final StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < tempRoles.size(); i++) {
+			final String name = tempRoles.get(i);
 
-            sb.append( name );
-            if( i < ( tempRoles.size() - 1 ) ) {
-                sb.append( ',' );
-                sb.append( ' ' );
-            }
+			sb.append(name);
+			if (i < (tempRoles.size() - 1)) {
+				sb.append(',');
+				sb.append(' ');
+			}
 
-        }
-        return sb.toString();
-    }
+		}
+		return sb.toString();
+	}
 
-    /**
-     * Returns a sorted list of the {@link org.elwiki.data.authorize.Role} objects a user possesses
-     * in his or her Session. The result is computed by consulting
-     * {@link org.apache.wiki.api.core.Session#getRoles()}
-     * and extracting those that are of type Role.
-     * @return the list of roles, sorted by name
-     */
-    public static String printRoles( final Context context ) {
-        final Principal[] roles = context.getWikiSession().getRoles();
-        final List< String > tempRoles = new ArrayList<>();
-        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
+	/**
+	 * Returns a sorted list of the {@link org.elwiki.data.authorize.Role} objects a
+	 * user possesses in his or her Session. The result is computed by consulting
+	 * {@link org.apache.wiki.api.core.Session#getRoles()} and extracting those that
+	 * are of type Role.
+	 * 
+	 * @return the list of roles, sorted by name
+	 */
+	public static String printRoles(final Context context) {
+		final Principal[] roles = context.getWikiSession().getRoles();
+		final List<String> tempRoles = new ArrayList<>();
+		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
 
-        for( final Principal role : roles ) {
-            if( role instanceof Role ) {
-                tempRoles.add( role.getName() );
-            }
-        }
-        if( tempRoles.size() == 0 ) {
-            return rb.getString( "userprofile.noroles" );
-        }
+		for (final Principal role : roles) {
+			if (role instanceof Role) {
+				tempRoles.add(role.getName());
+			}
+		}
+		if (tempRoles.size() == 0) {
+			return rb.getString("userprofile.noroles");
+		}
 
-        final StringBuilder sb = new StringBuilder();
-        for( int i = 0; i < tempRoles.size(); i++ ) {
-            final String name = tempRoles.get( i );
+		final StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < tempRoles.size(); i++) {
+			final String name = tempRoles.get(i);
 
-            sb.append( name );
-            if( i < ( tempRoles.size() - 1 ) ) {
-                sb.append( ',' );
-                sb.append( ' ' );
-            }
+			sb.append(name);
+			if (i < (tempRoles.size() - 1)) {
+				sb.append(',');
+				sb.append(' ');
+			}
 
-        }
-        return sb.toString();
-    }
+		}
+		return sb.toString();
+	}
 
 }
