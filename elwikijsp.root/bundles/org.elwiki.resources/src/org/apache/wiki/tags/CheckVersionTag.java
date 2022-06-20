@@ -20,83 +20,98 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.pages0.PageManager;
 import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
 
 /**
- *  Does a version check on the page.  Mode is as follows:
- *  <UL>
- *   <LI><b>latest</b> - Include body, if the page is the latest version.</li>
- *   <LI><b>notlatest</b> - Include body, if the page is NOT the latest version.</li>
- *   <li><b>first</b> - Include body, if page is the first version (version 1)</li>
- *   <li><b>notfirst</b> - Include body, if page is NOT the first version (version 1)</li> 
- *  </UL>
- *  If the page does not exist, body content is never included.
+ * Does a version check on the page.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>The "<b>mode</b>" attribute can be any of the following:
+ * <ul>
+ * <li><i>latest</i> - Include body, if the page is the latest version.
+ * <li><i>notlatest</i> - Include body, if the page is NOT the latest version.
+ * <li><i>first</i> - Include body, if page is the first version (version 1)
+ * <li><i>notfirst</i> - Include body, if page is NOT the first version (version
+ * 1)
+ * </ul>
+ * </ul>
+ * If the page does not exist, body content is never included.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class CheckVersionTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
-    
-    private enum VersionMode {
-        LATEST, NOTLATEST, FIRST, NOTFIRST
-    }
+	private static final long serialVersionUID = 3269431461906269282L;
 
-    private VersionMode m_mode;
+	private enum VersionMode {
+		LATEST, NOTLATEST, FIRST, NOTFIRST
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initTag() {
-        super.initTag();
-        m_mode = VersionMode.LATEST;
-    }
+	private VersionMode m_mode;
 
-    /**
-     *  Sets the mode.
-     *  
-     *  @param arg The mode to set.
-     */
-    public void setMode( final String arg ) {
-        if( "latest".equals(arg) ) {
-            m_mode = VersionMode.LATEST;
-        } else if( "notfirst".equals(arg) ) {
-            m_mode = VersionMode.NOTFIRST;
-        } else if( "first".equals(arg) ) {
-            m_mode = VersionMode.FIRST;
-        } else {
-            m_mode = VersionMode.NOTLATEST;
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_mode = VersionMode.LATEST;
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
+	/**
+	 * Sets the mode.
+	 * 
+	 * @param arg The mode to set.
+	 */
+	public void setMode(final String arg) {
+		if ("latest".equals(arg)) {
+			m_mode = VersionMode.LATEST;
+		} else if ("notfirst".equals(arg)) {
+			m_mode = VersionMode.NOTFIRST;
+		} else if ("first".equals(arg)) {
+			m_mode = VersionMode.FIRST;
+		} else {
+			m_mode = VersionMode.NOTLATEST;
+		}
+	}
 
-        if( page != null && ServicesRefs.getPageManager().wikiPageExists( page.getName() ) ) {
-            final int version = page.getVersion();
-            final boolean include;
-            final WikiPage latest = ServicesRefs.getPageManager().getPage( page.getName() );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
 
-            switch( m_mode ) {
-                case LATEST    : include = ( version < 0 ) || ( latest.getVersion() == version ); break;
-                case NOTLATEST : include = ( version > 0 ) && ( latest.getVersion() != version ); break;
-                case FIRST     : include = ( version == 1 ) || ( version < 0 && latest.getVersion() == 1 ); break;
-                case NOTFIRST  : include = version > 1; break;
-                default: throw new InternalWikiException( "Mode which is not available!" );
-            }
-            if( include ) {
-                return EVAL_BODY_INCLUDE;
-            }
-        }
-        return SKIP_BODY;
-    }
+		if (page != null && ServicesRefs.getPageManager().wikiPageExists(page.getName())) {
+			final int version = page.getVersion();
+			final boolean include;
+			final WikiPage latest = ServicesRefs.getPageManager().getPage(page.getName());
+
+			switch (m_mode) {
+			case LATEST:
+				include = (version < 0) || (latest.getVersion() == version);
+				break;
+			case NOTLATEST:
+				include = (version > 0) && (latest.getVersion() != version);
+				break;
+			case FIRST:
+				include = (version == 1) || (version < 0 && latest.getVersion() == 1);
+				break;
+			case NOTFIRST:
+				include = version > 1;
+				break;
+			default:
+				throw new InternalWikiException("Mode which is not available!");
+			}
+			if (include) {
+				return EVAL_BODY_INCLUDE;
+			}
+		}
+		return SKIP_BODY;
+	}
 
 }

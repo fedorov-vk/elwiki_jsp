@@ -18,179 +18,163 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.exceptions.ProviderException;
-
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.jsp.JspException;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.exceptions.ProviderException;
 
 /**
- *  Is used as a "super include" tag, which can include the proper context
- *  based on the wikicontext.
+ * Is used as a "super include" tag, which can include the proper context based
+ * on the wikicontext.
  *
- *  @since 2.2
+ * @since 2.2
  */
 public class ContentTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( ContentTag.class );
-    
-    private Map<String, String> m_mappings = new HashMap<>();
+	private static final long serialVersionUID = 165967960132792262L;
+	private static final Logger log = Logger.getLogger(ContentTag.class);
 
-    /**
-     *  Set the template for the VIEW context.
-     *  
-     *  @param s The template name.
-     */
-    public void setView( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_VIEW.getRequestContext(), s );
-    }
+	private Map<String, String> m_mappings = new HashMap<>();
 
-    /**
-     *  Set the template for the DIFF context.
-     *  
-     *  @param s The template name.
-     */
-    public void setDiff( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_DIFF.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the VIEW context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setView(final String s) {
+		m_mappings.put(ContextEnum.PAGE_VIEW.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the INFO context.
-     *  
-     *  @param s The template name.
-     */
-    public void setInfo( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_INFO.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the DIFF context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setDiff(final String s) {
+		m_mappings.put(ContextEnum.PAGE_DIFF.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the PREVIEW context.
-     *  
-     *  @param s The template name.
-     */
-    public void setPreview( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_PREVIEW.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the INFO context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setInfo(final String s) {
+		m_mappings.put(ContextEnum.PAGE_INFO.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the CONFLICT context.
-     *  
-     *  @param s The template name.
-     */
-    public void setConflict( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_CONFLICT.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the PREVIEW context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setPreview(final String s) {
+		m_mappings.put(ContextEnum.PAGE_PREVIEW.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the FIND context.
-     *  
-     *  @param s The template name.
-     */
-    public void setFind( final String s )
-    {
-        m_mappings.put( ContextEnum.WIKI_FIND.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the CONFLICT context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setConflict(final String s) {
+		m_mappings.put(ContextEnum.PAGE_CONFLICT.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the PREFS context.
-     *  
-     *  @param s The template name.
-     */
-    public void setPrefs( final String s )
-    {
-        m_mappings.put( ContextEnum.WIKI_PREFS.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the FIND context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setFind(final String s) {
+		m_mappings.put(ContextEnum.WIKI_FIND.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the ERROR context.
-     *  
-     *  @param s The template name.
-     */
-    public void setError( final String s )
-    {
-        m_mappings.put( ContextEnum.WIKI_ERROR.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the PREFS context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setPrefs(final String s) {
+		m_mappings.put(ContextEnum.WIKI_PREFS.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the EDIT context.
-     *  
-     *  @param s The template name.
-     */
-    public void setEdit( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_EDIT.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the ERROR context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setError(final String s) {
+		m_mappings.put(ContextEnum.WIKI_ERROR.getRequestContext(), s);
+	}
 
-    /**
-     *  Set the template for the COMMENT context.
-     *  
-     *  @param s The template name.
-     */
-    public void setComment( final String s )
-    {
-        m_mappings.put( ContextEnum.PAGE_COMMENT.getRequestContext(), s );
-    }
+	/**
+	 * Set the template for the EDIT context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setEdit(final String s) {
+		m_mappings.put(ContextEnum.PAGE_EDIT.getRequestContext(), s);
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override public final int doWikiStartTag()
-        throws IOException,
-               ProviderException
-    {
-        return SKIP_BODY;
-    }
+	/**
+	 * Set the template for the COMMENT context.
+	 * 
+	 * @param s The template name.
+	 */
+	public void setComment(final String s) {
+		m_mappings.put(ContextEnum.PAGE_COMMENT.getRequestContext(), s);
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override public final int doEndTag()
-        throws JspException
-    {
-        try
-        {
-            // Check the overridden templates first
-            final String requestContext = m_wikiContext.getRequestContext();
-            String contentTemplate = m_mappings.get( requestContext );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException, ProviderException {
+		return SKIP_BODY;
+	}
 
-            // If not found, use the defaults
-            if( contentTemplate == null ) {
-                contentTemplate = m_wikiContext.getContentTemplate();
-            }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doEndTag() throws JspException {
+		try {
+			// Check the overridden templates first
+			final String requestContext = m_wikiContext.getRequestContext();
+			String contentTemplate = m_mappings.get(requestContext);
 
-            // If still no, something fishy is going on
-            if( contentTemplate == null ) {
-                throw new JspException( "This template uses <wiki:Content/> in an unsupported context: " + requestContext );
-            }
+			// If not found, use the defaults
+			if (contentTemplate == null) {
+				contentTemplate = m_wikiContext.getContentTemplate();
+			}
+
+			// If still no, something fishy is going on
+			if (contentTemplate == null) {
+				throw new JspException(
+						"This template uses <wiki:Content/> in an unsupported context: " + requestContext);
+			}
 
 			String page = "/templates/default/" + contentTemplate;
 
-            pageContext.include( page );
-        }
-        catch( final ServletException e )
-        {
-            log.warn( "Including failed, got a servlet exception from sub-page. "+
-                      "Rethrowing the exception to the JSP engine.", e );
-            throw new JspException( e.getMessage() );
-        }
-        catch( final IOException e )
-        {
-            log.warn( "I/O exception - probably the connection was broken. "+
-                      "Rethrowing the exception to the JSP engine.", e );
-            throw new JspException( e.getMessage() );
-        }
+			pageContext.include(page);
+		} catch (final ServletException e) {
+			log.warn("Including failed, got a servlet exception from sub-page. "
+					+ "Rethrowing the exception to the JSP engine.", e);
+			throw new JspException(e.getMessage());
+		} catch (final IOException e) {
+			log.warn("I/O exception - probably the connection was broken. "
+					+ "Rethrowing the exception to the JSP engine.", e);
+			throw new JspException(e.getMessage());
+		}
 
-        return EVAL_PAGE;
-    }
+		return EVAL_PAGE;
+	}
+
 }

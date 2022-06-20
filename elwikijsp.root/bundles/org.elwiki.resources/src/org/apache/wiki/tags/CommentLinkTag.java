@@ -27,13 +27,14 @@ import java.io.IOException;
 
 /**
  * Writes a comment link. Body of the link becomes the link text.
- * <P>
- * <B>Attributes</B>
- * </P>
- * <UL>
- * <LI>pageName - Page name to refer to. Default is the current page.
- * <LI>format - Format, either "anchor" or "url".
- * </UL>
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>pageName - Page name to refer to. Default is the current page.
+ * <li>pageId - Page Id to refer to. Default is the current page.
+ * <li>format - Format, either "anchor" or "url".
+ * </ul>
  *
  * @since 2.0
  */

@@ -18,15 +18,14 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Context;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.Editor;
 import org.elwiki.services.ServicesRefs;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *  Iterates through editors.
@@ -36,9 +35,9 @@ import java.util.Collection;
 
 public class EditorIteratorTag extends IteratorTag  {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -5067091242204416850L;
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
     @Override
     public final int doStartTag() {
         m_wikiContext = ContextUtil.findContext(pageContext);
