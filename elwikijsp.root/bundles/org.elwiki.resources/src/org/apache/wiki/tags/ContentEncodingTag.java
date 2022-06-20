@@ -18,27 +18,27 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Engine;
-import org.elwiki.configuration.IWikiConfiguration;
-
 import java.io.IOException;
 
+import org.elwiki.configuration.IWikiConfiguration;
+
 /**
- *  Returns the app name.
+ * Returns the IANA encoding name of the configured character set.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class ContentEncodingTag extends WikiTagBase {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -1564131389193986918L;
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override public final int doWikiStartTag() throws IOException {
-        final IWikiConfiguration config = m_wikiContext.getConfiguration();
-        pageContext.getOut().print( config.getContentEncodingCs() );
-        return SKIP_BODY;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final IWikiConfiguration config = m_wikiContext.getConfiguration();
+		pageContext.getOut().print(config.getContentEncodingCs());
+		return SKIP_BODY;
+	}
 
 }

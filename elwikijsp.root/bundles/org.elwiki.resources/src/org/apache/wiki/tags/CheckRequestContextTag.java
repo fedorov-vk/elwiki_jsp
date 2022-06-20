@@ -24,8 +24,17 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import java.io.IOException;
 
 /**
- * Includes body, if the request context matches. To understand more about RequestContexts,
- * please look at the WikiContext class.
+ * Includes body, if the request context matches. To understand more about
+ * RequestContexts, please look at the WikiContext class.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>context - Context to check. If the context matches, it includes the body.
+ * You can specify multiple contexts by separating them with the "|" symbol. The
+ * context can be specified with the NOT condition - to do this, you must
+ * specify the "!" symbol before the context.
+ * </ul>
  *
  * @since 2.0
  * @see org.apache.wiki.WikiContext
@@ -65,7 +74,6 @@ public class CheckRequestContextTag extends WikiTagBase {
 	 */
 	public void setContext(String arg) {
 		m_context = arg;
-
 		m_contextList = arg.split("\\|");
 	}
 

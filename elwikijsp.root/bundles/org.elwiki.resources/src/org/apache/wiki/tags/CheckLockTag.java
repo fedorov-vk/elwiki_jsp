@@ -30,16 +30,24 @@ import java.io.IOException;
 
 /**
  * Checks whether the page is locked for editing. If the mode matches, the tag
- * body is included. The "mode" can be any of the following:
- * 
+ * body is included.
+ * <p>
+ * <b>Attributes</b>
+ * </p>
  * <ul>
- * <li><b>locked</b> - The page is currently locked, but the lock is owned by
+ * <li>The "<b>mode</b>" attribute can be any of the following:
+ * <ul>
+ * <li><i>locked</i> - The page is currently locked, but the lock is owned by
  * someone else.</li>
- * <li><b>owned</b> - The page is currently locked and the current user is the
+ * <li><i>owned</i> - The page is currently locked and the current user is the
  * owner of the lock.</li>
- * <li><b>unlocked</b> - Nobody has locked the page.</li>
+ * <li><i>unlocked</i> - Nobody has locked the page.</li>
  * </ul>
- *
+ * </li>
+ * <li><b>id</b> - The value of the ID attribute is the identifier for the page
+ * scope attribute, and is set if the page is locked.
+ * </ul>
+ * 
  * @since 2.0
  */
 public class CheckLockTag extends WikiTagBase {
