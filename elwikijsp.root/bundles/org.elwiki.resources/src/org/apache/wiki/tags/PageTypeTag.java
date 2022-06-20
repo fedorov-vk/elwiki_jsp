@@ -24,46 +24,46 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
 /**
- *  Includes the body, if the current page is of proper type.
+ * Includes the body, if the current page is of proper type.
+ * <p>
+ * <b>Attributes</b>
+ * <ul>
+ * <li>type - either "page", "attachment" or "weblogentry"
+ * </ul>
  *
- *  <B>Attributes</B>
- *  <UL>
- *   <LI>type - either "page", "attachment" or "weblogentry"
- *  </UL>
- *
- *  @since 2.0
+ * @since 2.0
  */
-public class PageTypeTag extends WikiTagBase {
+public class PageTypeTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    
-    private String m_type;
+	private static final long serialVersionUID = 1594079364766711229L;
 
-    public void initTag() {
-        super.initTag();
-        m_type = null;
-    }
+	private String m_type;
 
-    public void setType( final String arg )
-    {
-        m_type = arg.toLowerCase();
-    }
+	public void initTag() {
+		super.initTag();
+		m_type = null;
+	}
 
-    public final int doWikiStartTag() throws IOException {
-        final WikiPage page = m_wikiContext.getPage();
-        if( page != null ) {
-            if( m_type.equals( "attachment" ) && page instanceof PageAttachment ) {
-                return EVAL_BODY_INCLUDE;
-            }
-            if( m_type.equals( "page" ) && ( page instanceof WikiPage ) ) {
-                return EVAL_BODY_INCLUDE;
-            }
-            if( m_type.equals( "weblogentry" ) && !( page instanceof PageAttachment ) && page.getName().contains( "_blogentry_" ) ) {
-                return EVAL_BODY_INCLUDE;
-            }
-        }
+	public void setType(final String arg) {
+		m_type = arg.toLowerCase();
+	}
 
-        return SKIP_BODY;
-    }
+	public final int doWikiStartTag() throws IOException {
+		final WikiPage page = m_wikiContext.getPage();
+		if (page != null) {
+			if (m_type.equals("attachment") && page instanceof PageAttachment) {
+				return EVAL_BODY_INCLUDE;
+			}
+			if (m_type.equals("page") && (page instanceof WikiPage)) {
+				return EVAL_BODY_INCLUDE;
+			}
+			if (m_type.equals("weblogentry") && !(page instanceof PageAttachment)
+					&& page.getName().contains("_blogentry_")) {
+				return EVAL_BODY_INCLUDE;
+			}
+		}
+
+		return SKIP_BODY;
+	}
 
 }

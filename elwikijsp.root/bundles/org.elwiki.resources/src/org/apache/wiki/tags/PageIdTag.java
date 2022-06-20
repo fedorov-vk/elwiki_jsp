@@ -27,7 +27,7 @@ import org.elwiki_data.WikiPage;
 /**
  * Returns the currently requested page id.
  */
-public class PageIdTag extends WikiTagBase {
+public class PageIdTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -2673698963275084292L;
 

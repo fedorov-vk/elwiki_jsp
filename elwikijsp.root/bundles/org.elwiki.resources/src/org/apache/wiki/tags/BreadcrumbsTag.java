@@ -47,7 +47,7 @@ import org.elwiki.services.ServicesRefs;
  * displayed as a series of links separated by a separator character.
  * </p>
  */
-public class BreadcrumbsTag extends WikiTagBase {
+public class BreadcrumbsTag extends BaseWikiTag {
 
 	/**
 	 * Extends the LinkedList class to provide a fixed-size queue implementation

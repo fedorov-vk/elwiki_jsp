@@ -21,23 +21,19 @@ package org.apache.wiki.tags;
 import java.io.IOException;
 
 /**
- *  Returns the currently used template.  For example
- *  "default"
+ * Returns the currently used template. For example "default".
  *
- *  @since 2.1.15.
+ * @since 2.1.15.
  */
-public class TemplateDirTag
-    extends WikiTagBase
-{
-    private static final long serialVersionUID = 0L;
-    
-    public final int doWikiStartTag()
-        throws IOException
-    {
-        String template = m_wikiContext.getTemplate();
+public class TemplateDirTag extends BaseWikiTag {
 
-        pageContext.getOut().print( template );
+	private static final long serialVersionUID = -5513899998046353340L;
 
-        return SKIP_BODY;
-    }
+	public final int doWikiStartTag() throws IOException {
+		String template = m_wikiContext.getTemplate();
+
+		pageContext.getOut().print(template);
+
+		return SKIP_BODY;
+	}
 }

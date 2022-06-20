@@ -42,7 +42,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class CheckVersionTag extends WikiTagBase {
+public class CheckVersionTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 3269431461906269282L;
 

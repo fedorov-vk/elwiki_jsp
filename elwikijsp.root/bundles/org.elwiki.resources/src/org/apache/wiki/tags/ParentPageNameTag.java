@@ -18,52 +18,52 @@
  */
 package org.apache.wiki.tags;
 
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.render0.RenderingManager;
-import org.elwiki.services.ServicesRefs;
-
 import java.io.IOException;
 
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+
 /**
- *  Returns the parent of the currently requested page.  Weblog entries are recognized as subpages of the weblog page.
+ * Returns the parent of the currently requested page. Weblog entries are
+ * recognized as subpages of the weblog page.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class ParentPageNameTag extends WikiTagBase {
+public class ParentPageNameTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
+	private static final long serialVersionUID = -5237880586223850672L;
 
-        if( page != null ) {
-            if( page instanceof PageAttachment ) {
-            	//:FVK: pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( ((PageAttachment)page).getParentName()) );
-            	// TODO: release ...
-            } else {
-                String name = page.getName();
-                final int entrystart = name.indexOf("_blogentry_");
-                if( entrystart != -1 ) {
-                    name = name.substring( 0, entrystart );
-                }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
 
-                final int commentstart = name.indexOf("_comments_");
-                if( commentstart != -1 ) {
-                    name = name.substring( 0, commentstart );
-                }
+		if (page != null) {
+			if (page instanceof PageAttachment) {
+				//:FVK: pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( ((PageAttachment)page).getParentName()) );
+				// TODO: release ...
+			} else {
+				String name = page.getName();
+				final int entrystart = name.indexOf("_blogentry_");
+				if (entrystart != -1) {
+					name = name.substring(0, entrystart);
+				}
 
-                pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle(name) );
-            }
-        }
+				final int commentstart = name.indexOf("_comments_");
+				if (commentstart != -1) {
+					name = name.substring(0, commentstart);
+				}
 
-        return SKIP_BODY;
-    }
+				pageContext.getOut().print(ServicesRefs.getRenderingManager().beautifyTitle(name));
+			}
+		}
+
+		return SKIP_BODY;
+	}
 
 }

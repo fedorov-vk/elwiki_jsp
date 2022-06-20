@@ -18,49 +18,58 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Context;
-import org.elwiki.services.ServicesRefs;
 
 /**
- * Converts the body text into HTML content.
- *
- * @since 2.0
+ * This is a class that provides the same services as the WikiTagBase, but this
+ * time it works for the BodyTagSupport base class.
  */
-public class TranslateTag extends BodyTagSupport {
+public abstract class BaseWikiBodyTag extends BodyTagSupport implements TryCatchFinally {
 
-	private static final long serialVersionUID = 5558995764665411022L;
-	private static final Logger log = Logger.getLogger(TranslateTag.class);
+	private static final long serialVersionUID = -6732266865112847897L;
+	private static final Logger log = Logger.getLogger(BaseWikiBodyTag.class);
 
-	@Override
-	public final int doAfterBody() throws JspException {
+	protected WikiContext m_wikiContext;
+
+	public int doStartTag() throws JspException {
 		try {
-			Context context = (Context) pageContext.getAttribute(Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
-
-			//  Because the TranslateTag should not affect any of the real page attributes we have to make a clone here.
-			context = context.deepClone();
-
-			//  Get the page data.
-			final BodyContent bc = getBodyContent();
-			String wikiText = bc.getString();
-			bc.clearBody();
-
-			if (wikiText != null) {
-				wikiText = wikiText.trim();
-				final String result = ServicesRefs.getRenderingManager().textToHTML(context, wikiText);
-				getPreviousOut().write(result);
+			m_wikiContext = (WikiContext) pageContext.getAttribute(Context.ATTR_WIKI_CONTEXT,
+					PageContext.REQUEST_SCOPE);
+			if (m_wikiContext == null) {
+				throw new JspException("WikiContext may not be NULL - serious internal problem!");
 			}
+
+			return doWikiStartTag();
 		} catch (final Exception e) {
 			log.error("Tag failed", e);
 			throw new JspException("Tag failed, check logs: " + e.getMessage());
 		}
+	}
 
-		return SKIP_BODY;
+	/**
+	 * A local stub for doing tags. This is just called after the local variables
+	 * have been set.
+	 * 
+	 * @return As doStartTag()
+	 * @throws JspException
+	 * @throws IOException
+	 */
+	public abstract int doWikiStartTag() throws JspException, IOException;
+
+	public void doCatch(final Throwable arg0) throws Throwable {
+	}
+
+	public void doFinally() {
+		m_wikiContext = null;
 	}
 
 }

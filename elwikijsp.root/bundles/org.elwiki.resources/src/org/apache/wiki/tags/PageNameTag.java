@@ -18,21 +18,19 @@
  */
 package org.apache.wiki.tags;
 
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
-
 import java.io.IOException;
+
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 
 /**
  *  Returns the currently requested page name.
  *
  *  @since 2.0
  */
-public class PageNameTag extends WikiTagBase {
+public class PageNameTag extends BaseWikiTag {
 
     private static final long serialVersionUID = 0L;
 

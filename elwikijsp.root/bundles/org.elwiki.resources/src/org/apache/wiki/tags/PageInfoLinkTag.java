@@ -18,14 +18,14 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
+import java.io.IOException;
 
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
+
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
 
 /**
  * Writes a link to the Wiki PageInfo. Body of the link becomes the actual text.
@@ -36,13 +36,14 @@ import java.io.IOException;
  * <ul>
  * <li>pageName - Page name to refer to. Default is the current page.
  * <li>title - Is used in page actions to display hover text (tooltip)
+ * <li>format - Either "url" or "anchor".
  * <li>accesskey - Set an accesskey (ALT+[Char])
  * </ul>
  *
  * @since 2.0
  */
 // FIXME: Refactor together with LinkToTag and EditLinkTag.
-public class PageInfoLinkTag extends WikiLinkTag {
+public class PageInfoLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 8852324545520143793L;
 

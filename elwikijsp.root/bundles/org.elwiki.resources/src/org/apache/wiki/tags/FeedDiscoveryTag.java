@@ -18,61 +18,69 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.rss.Feed;
-import org.apache.wiki.plugin.WeblogPlugin;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
-
-import java.io.IOException;
+import org.elwiki_data.WikiPage;
 
 /**
- *  Outputs links to all the site feeds and APIs this Wiki/blog supports.
+ * Outputs links to all the site feeds and APIs this Wiki/blog supports.
  *
- *  @since 2.2
+ * @since 2.2
  */
-public class FeedDiscoveryTag extends WikiTagBase {
+public class FeedDiscoveryTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final IWikiConfiguration config = m_wikiContext.getConfiguration();
-        final WikiPage page = m_wikiContext.getPage();
+	private static final long serialVersionUID = 6827322800489528947L;
 
-        final String encodedName = config.encodeName( page.getName() );
-        final String rssURL      = engine.getGlobalRSSURL();
-        final String rssFeedURL  = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp","page="+encodedName+"&amp;mode=wiki" );
-        
-        if( rssURL != null ) {
-            String siteName = Feed.getSiteName(m_wikiContext);
-            siteName = TextUtil.replaceEntities( siteName );
-            
-            pageContext.getOut().print("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS wiki feed for the entire site.\" href=\""+rssURL+"\" />\n");
-            pageContext.getOut().print("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS wiki feed for page "+siteName+".\" href=\""+rssFeedURL+"\" />\n");
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final IWikiConfiguration config = m_wikiContext.getConfiguration();
+		final WikiPage page = m_wikiContext.getPage();
 
-            // TODO: Enable this
-            /*
-            pageContext.getOut().print("<link rel=\"service.post\" type=\"application/atom+xml\" title=\""+
-                                       siteName+"\" href=\""+atomPostURL+"\" />\n");
-            */
-            // FIXME: This does not work always, as plugins are not initialized until the first fetch
-            if( page.isWebLog() ) {
-                final String blogFeedURL = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(),"rss.jsp","page="+encodedName );
-                final String atomFeedURL = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(),"rss.jsp","page="+encodedName+"&amp;type=atom" );
-        
-                pageContext.getOut().print("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS feed for weblog "+
-                                           siteName+".\" href=\""+blogFeedURL+"\" />\n");
+		final String encodedName = config.encodeName(page.getName());
+		final String rssURL = engine.getGlobalRSSURL();
+		final String rssFeedURL = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp",
+				"page=" + encodedName + "&amp;mode=wiki");
 
-                pageContext.getOut().print("<link rel=\"service.feed\" type=\"application/atom+xml\" title=\"Atom 1.0 weblog feed for "+
-                                           siteName+"\" href=\""+atomFeedURL+"\" />\n");
-            }
-        }
+		if (rssURL != null) {
+			String siteName = Feed.getSiteName(m_wikiContext);
+			siteName = TextUtil.replaceEntities(siteName);
 
-        return SKIP_BODY;
-    }
+			pageContext.getOut().print(
+					"<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS wiki feed for the entire site.\" href=\""
+							+ rssURL + "\" />\n");
+			pageContext.getOut()
+					.print("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS wiki feed for page "
+							+ siteName + ".\" href=\"" + rssFeedURL + "\" />\n");
+
+			// TODO: Enable this
+			/*
+			pageContext.getOut().print("<link rel=\"service.post\" type=\"application/atom+xml\" title=\""+
+			                           siteName+"\" href=\""+atomPostURL+"\" />\n");
+			*/
+			// FIXME: This does not work always, as plugins are not initialized until the first fetch
+			if (page.isWebLog()) {
+				final String blogFeedURL = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp",
+						"page=" + encodedName);
+				final String atomFeedURL = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp",
+						"page=" + encodedName + "&amp;type=atom");
+
+				pageContext.getOut()
+						.print("<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS feed for weblog "
+								+ siteName + ".\" href=\"" + blogFeedURL + "\" />\n");
+
+				pageContext.getOut().print(
+						"<link rel=\"service.feed\" type=\"application/atom+xml\" title=\"Atom 1.0 weblog feed for "
+								+ siteName + "\" href=\"" + atomFeedURL + "\" />\n");
+			}
+		}
+
+		return SKIP_BODY;
+	}
 
 }

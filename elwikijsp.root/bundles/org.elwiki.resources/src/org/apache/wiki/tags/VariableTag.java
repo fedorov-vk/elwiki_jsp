@@ -46,7 +46,7 @@ import org.elwiki.services.ServicesRefs;
  *
  * @since 2.0
  */
-public class VariableTag extends WikiTagBase {
+public class VariableTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -2120534004669429093L;
 

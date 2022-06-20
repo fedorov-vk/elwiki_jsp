@@ -18,7 +18,12 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.Wiki;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.i18n.InternationalizationManager;
@@ -26,43 +31,38 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.regex.Pattern;
-
-
 /**
- *  Returns the current user name, or empty, if the user has not been validated.
+ * Returns the current user name, or empty, if the user has not been validated.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class UserNameTag extends WikiTagBase {
+public class UserNameTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = -8915224033310536804L;
 
-    private static final String notStartWithBlankOrColon = "^[^( |:)]";
+	private static final String notStartWithBlankOrColon = "^[^( |:)]";
 
-    private static final String noColons = "[^:]*";
+	private static final String noColons = "[^:]*";
 
-    private static final Pattern VALID_USER_NAME_PATTERN = Pattern.compile(notStartWithBlankOrColon + noColons);
+	private static final Pattern VALID_USER_NAME_PATTERN = Pattern.compile(notStartWithBlankOrColon + noColons);
 
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(( HttpServletRequest )pageContext.getRequest()); 
-        final Principal user = wikiSession.getUserPrincipal();
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final Session wikiSession = ServicesRefs.getSessionMonitor()
+				.getWikiSession((HttpServletRequest) pageContext.getRequest());
+		final Principal user = wikiSession.getUserPrincipal();
 
-        if( user != null ) {
-            if( VALID_USER_NAME_PATTERN.matcher( user.getName() ).matches() ) {
-                pageContext.getOut().print( TextUtil.replaceEntities( user.getName() ) );
-            } else {
-                pageContext.getOut().print( Preferences.getBundle( m_wikiContext, InternationalizationManager.CORE_BUNDLE )
-                                                       .getString( "security.user.fullname.invalid" ) );
-            }
-        }
+		if (user != null) {
+			if (VALID_USER_NAME_PATTERN.matcher(user.getName()).matches()) {
+				pageContext.getOut().print(TextUtil.replaceEntities(user.getName()));
+			} else {
+				pageContext.getOut().print(Preferences.getBundle(m_wikiContext, InternationalizationManager.CORE_BUNDLE)
+						.getString("security.user.fullname.invalid"));
+			}
+		}
 
-        return SKIP_BODY;
-    }
+		return SKIP_BODY;
+	}
 
 }

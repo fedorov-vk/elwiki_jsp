@@ -18,47 +18,46 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
-
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
+
 /**
- *  Returns the currently requested page or attachment size.
+ * Returns the currently requested page or attachment size.
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class PageSizeTag extends WikiTagBase {
+public class PageSizeTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( PageSizeTag.class );
-    
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
+	private static final long serialVersionUID = 4194343181131621002L;
+	private static final Logger log = Logger.getLogger(PageSizeTag.class);
 
-        try {
-            if( page != null ) {
-                long size = 123; //:WORKAROUND. FVK: page.getSize();
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final WikiPage page = m_wikiContext.getPage();
 
-                if( size == -1 && ServicesRefs.getPageManager().wikiPageExists( page ) ) { // should never happen with attachments
-                	size = ServicesRefs.getPageManager().getPureText( page.getName(), page.getVersion() ).length();
-                	//:FVK: page.setSize( size );
-                }
+		try {
+			if (page != null) {
+				long size = 123; //:WORKAROUND. FVK: page.getSize();
 
-                pageContext.getOut().write( Long.toString(size) );
-            }
-        } catch( final ProviderException e ) {
-            log.warn("Providers did not work: ",e);
-            pageContext.getOut().write("Error determining page size: "+e.getMessage());
-        }
+				if (size == -1 && ServicesRefs.getPageManager().wikiPageExists(page)) { // should never happen with attachments
+					size = ServicesRefs.getPageManager().getPureText(page.getName(), page.getVersion()).length();
+					//:FVK: page.setSize( size );
+				}
 
-        return SKIP_BODY;
-    }
+				pageContext.getOut().write(Long.toString(size));
+			}
+		} catch (final ProviderException e) {
+			log.warn("Providers did not work: ", e);
+			pageContext.getOut().write("Error determining page size: " + e.getMessage());
+		}
+
+		return SKIP_BODY;
+	}
 
 }

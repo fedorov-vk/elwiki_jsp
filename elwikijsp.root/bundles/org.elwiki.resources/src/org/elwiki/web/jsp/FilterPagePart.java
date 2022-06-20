@@ -40,6 +40,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 //@formatter:off
+/**
+ * @author v.fedorov
+ *
+ */
 @Component(
 	property= {
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/*",

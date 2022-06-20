@@ -23,11 +23,11 @@ import javax.servlet.jsp.tagext.TagExtraInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.elwiki_data.PageContent;
-import org.elwiki_data.WikiPage;
 
 /**
  * Just provides the TEI data for HistoryIteratorTag. </br>
- * :FVK: - зачем этот класс (он используется при компиляции JSP -- для тега-цикла?).
+ * :FVK: - зачем этот класс (он используется при компиляции JSP -- для
+ * тега-цикла?).
  *
  * @since 2.0
  */

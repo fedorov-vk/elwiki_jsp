@@ -32,30 +32,33 @@ import javax.xml.crypto.dsig.keyinfo.PGPData;
 import java.io.IOException;
 
 /**
- *  Renders WikiPage content.  For InsertPage tag and the InsertPage plugin
- *  the difference is that the tag will always render in the context of the page
- *  which is referenced (i.e. a LeftMenu inserted on a JSP page with the InsertPage tag
- *  will always render in the context of the actual URL, e.g. Main.), whereas
- *  the InsertPage plugin always renders in local context.  This allows this like
- *  ReferringPagesPlugin to really refer to the Main page instead of having to
- *  resort to any trickery.
- *  <p>
- *  This tag sets the "realPage" field of the WikiContext to point at the inserted
- *  page, while the "page" will contain the actual page in which the rendering
- *  is being made.
- *   
- *  <p><b>Attributes</b></p>
- *  <ul>
- *    <li>pageName - Page name to refer to.  Default is the current page.
- *    <li>pageId - Page Id to refer to.  Default is the current page.
- *    <li>mode - In which format to insert the page.  Can be either "plain" or "html".
- *  </ul>
+ * Renders WikiPage content. For InsertPage tag and the InsertPage plugin the
+ * difference is that the tag will always render in the context of the page
+ * which is referenced (i.e. a LeftMenu inserted on a JSP page with the
+ * InsertPage tag will always render in the context of the actual URL, e.g.
+ * Main.), whereas the InsertPage plugin always renders in local context. This
+ * allows this like ReferringPagesPlugin to really refer to the Main page
+ * instead of having to resort to any trickery.
+ * <p>
+ * This tag sets the "realPage" field of the WikiContext to point at the
+ * inserted page, while the "page" will contain the actual page in which the
+ * rendering is being made.
+ * 
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>pageName - Page name to refer to. Default is the current page.
+ * <li>pageId - Page Id to refer to. Default is the current page.
+ * <li>mode - In which format to insert the page. Can be either "plain" or
+ * "html".
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class InsertPageTag extends WikiTagBase {
+public class InsertPageTag extends BaseWikiTag {
 
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1615720737028000289L;
 	private static final Logger log = Logger.getLogger(InsertPageTag.class);
 
 	public static final int HTML = 0;
@@ -73,44 +76,40 @@ public class InsertPageTag extends WikiTagBase {
 		m_mode = HTML;
 	}
 
-    public void setPageName(String page )
-    {
-        m_pageName = page;
-    }
+	public void setPageName(String page) {
+		m_pageName = page;
+	}
 
-    public String getPageName()
-    {
-        return m_pageName;
-    }
+	public String getPageName() {
+		return m_pageName;
+	}
 
-    public void setPageId(String pageId )
-    {
-        m_pageId = pageId;
-    }
+	public void setPageId(String pageId) {
+		m_pageId = pageId;
+	}
 
-    public String getPageId()
-    {
-        return m_pageId;
-    }
-    
-    public void setMode(String arg ) {
-        if( "plain".equals( arg ) ) {
-            m_mode = PLAIN;
-        } else {
-            m_mode = HTML;
-        }
-    }
+	public String getPageId() {
+		return m_pageId;
+	}
 
-    @Override
-    public final int doWikiStartTag() throws IOException, ProviderException {
-        final Engine engine = m_wikiContext.getEngine();
-        WikiPage insertedPage;
+	public void setMode(String arg) {
+		if ("plain".equals(arg)) {
+			m_mode = PLAIN;
+		} else {
+			m_mode = HTML;
+		}
+	}
 
-        //
-        //  NB: The page might not really exist if the user is currently
-        //      creating it (i.e. it is not yet in the cache or providers), 
-        //      AND we got the page from the wikiContext.
-        //
+	@Override
+	public final int doWikiStartTag() throws IOException, ProviderException {
+		final Engine engine = m_wikiContext.getEngine();
+		WikiPage insertedPage;
+
+		//
+		//  NB: The page might not really exist if the user is currently
+		//      creating it (i.e. it is not yet in the cache or providers), 
+		//      AND we got the page from the wikiContext.
+		//
 
 		if (m_pageId != null) {
 			insertedPage = ServicesRefs.getPageManager().getPageById(m_pageId);
@@ -121,26 +120,31 @@ public class InsertPageTag extends WikiTagBase {
 			if (!ServicesRefs.getPageManager().wikiPageExists(insertedPage)) {
 				return SKIP_BODY;
 			}
-        }
+		}
 
-        if( insertedPage != null ) {
-            // FIXME: Do version setting later.
-            // page.setVersion( WikiProvider.LATEST_VERSION );
+		if (insertedPage != null) {
+			// FIXME: Do version setting later.
+			// page.setVersion( WikiProvider.LATEST_VERSION );
 
-            log.debug("Inserting page " + insertedPage + ": \"" + insertedPage.getName() + "\" -- for " + this.pageContext.getPage());
-            
-            final JspWriter out = pageContext.getOut();
-            final WikiPage oldPage = m_wikiContext.setRealPage( insertedPage );
-            
-            switch( m_mode ) {
-              case HTML: out.print( ServicesRefs.getRenderingManager().getHTML( m_wikiContext, insertedPage ) ); break;
-              case PLAIN: out.print( ServicesRefs.getPageManager().getText( insertedPage ) ); break;
-            }
-            
-            m_wikiContext.setRealPage( oldPage );
-        }
+			log.debug("Inserting page " + insertedPage + ": \"" + insertedPage.getName() + "\" -- for "
+					+ this.pageContext.getPage());
 
-        return SKIP_BODY;
-    }
+			final JspWriter out = pageContext.getOut();
+			final WikiPage oldPage = m_wikiContext.setRealPage(insertedPage);
+
+			switch (m_mode) {
+			case HTML:
+				out.print(ServicesRefs.getRenderingManager().getHTML(m_wikiContext, insertedPage));
+				break;
+			case PLAIN:
+				out.print(ServicesRefs.getPageManager().getText(insertedPage));
+				break;
+			}
+
+			m_wikiContext.setRealPage(oldPage);
+		}
+
+		return SKIP_BODY;
+	}
 
 }

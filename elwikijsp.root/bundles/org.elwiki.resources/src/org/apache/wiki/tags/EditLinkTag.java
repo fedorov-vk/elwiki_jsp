@@ -45,7 +45,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
-public class EditLinkTag extends WikiLinkTag {
+public class EditLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 0L;
 
@@ -80,8 +80,7 @@ public class EditLinkTag extends WikiLinkTag {
 		//  Determine the page and the link.
 		if (m_pageId != null) {
 			page = ServicesRefs.getPageManager().getPageById(m_pageId);
-		}
-		if (m_pageName != null) {
+		} else if (m_pageName != null) {
 			page = ServicesRefs.getPageManager().getPage(m_pageName);
 		} else {
 			page = m_wikiContext.getPage();

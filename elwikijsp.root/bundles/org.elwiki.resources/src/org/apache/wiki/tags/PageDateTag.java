@@ -18,68 +18,67 @@
  */
 package org.apache.wiki.tags;
 
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.preferences.Preferences.TimeFormat;
+import org.elwiki_data.WikiPage;
 
 /**
- * Writes the modification date of the page, formatted
- * as specified in the attribute "format".
- * <UL>
- * <LI>format = A string describing which format you want to use.
- * This is exactly like in "java.text.SimpleDateFormat".
- * </UL>
+ * Writes the modification date of the page, formatted as specified in the
+ * attribute "format".
+ * <ul>
+ * <li>format = A string describing which format you want to use. This is
+ * exactly like in "java.text.SimpleDateFormat".
+ * </ul>
  *
  * @since 2.0
  */
 
 // FIXME: Should also take the current user TimeZone into account.
 
-public class PageDateTag extends WikiTagBase {
+public class PageDateTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 7959425620950194219L;
 
-    public static final String DEFAULT_FORMAT = "dd-MMM-yyyy HH:mm:ss zzz";
+	public static final String DEFAULT_FORMAT = "dd-MMM-yyyy HH:mm:ss zzz";
 
-    private String m_format = null;
+	private String m_format = null;
 
-    public void initTag() {
-        super.initTag();
-        m_format = null;
-    }
+	public void initTag() {
+		super.initTag();
+		m_format = null;
+	}
 
-    public String getFormat() {
-        return m_format;
-    }
+	public String getFormat() {
+		return m_format;
+	}
 
-    public void setFormat( final String arg ) {
-        m_format = arg;
-    }
+	public void setFormat(final String arg) {
+		m_format = arg;
+	}
 
-    public final int doWikiStartTag() throws IOException {
-        final WikiPage page = m_wikiContext.getPage();
-        if( page != null ) {
-            final Date d = page.getLastModified();
-            //  Date may be null if the page does not exist.
-            if( d != null ) {
-                final SimpleDateFormat fmt;
-                if( m_format == null ) {
-                    fmt = Preferences.getDateFormat( m_wikiContext, TimeFormat.DATETIME );
-                } else {
-                    fmt = new SimpleDateFormat( m_format );
-                }
+	public final int doWikiStartTag() throws IOException {
+		final WikiPage page = m_wikiContext.getPage();
+		if (page != null) {
+			final Date d = page.getLastModified();
+			//  Date may be null if the page does not exist.
+			if (d != null) {
+				final SimpleDateFormat fmt;
+				if (m_format == null) {
+					fmt = Preferences.getDateFormat(m_wikiContext, TimeFormat.DATETIME);
+				} else {
+					fmt = new SimpleDateFormat(m_format);
+				}
 
-                pageContext.getOut().write( fmt.format( d ) );
-            } else {
-                pageContext.getOut().write( "&lt;never&gt;" );
-            }
-        }
-        return SKIP_BODY;
-    }
+				pageContext.getOut().write(fmt.format(d));
+			} else {
+				pageContext.getOut().write("&lt;never&gt;");
+			}
+		}
+		return SKIP_BODY;
+	}
 
 }

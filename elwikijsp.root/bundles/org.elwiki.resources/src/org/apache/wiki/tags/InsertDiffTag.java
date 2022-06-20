@@ -18,96 +18,110 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.diff.DifferenceManager;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
+import java.io.IOException;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import java.io.IOException;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.services.ServicesRefs;
 
 /**
- *  Writes difference between two pages using a HTML table.  If there is
- *  no difference, includes the body.
+ * Writes difference between two pages using a HTML table. If there is no
+ * difference, includes the body.
  *
- *  <P><B>Attributes</B></P>
- *  <UL>
- *    <LI>page - Page name to refer to.  Default is the current page.
- *  </UL>
+ * <p>
+ * <b>Attributes</b>
+ * </p>
+ * <ul>
+ * <li>page - Page name to refer to. Default is the current page.
+ * </ul>
  *
- *  @since 2.0
+ * @since 2.0
  */
-public class InsertDiffTag extends WikiTagBase {
+public class InsertDiffTag extends BaseWikiTag {
 
-    private static final long serialVersionUID = 0L;
-    private static final Logger log = Logger.getLogger( InsertDiffTag.class );
-    
-    /** Attribute which is used to store the old page content to the Page Context */
-    public static final String ATTR_OLDVERSION = "olddiff";
+	private static final long serialVersionUID = 3396488560010158010L;
+	private static final Logger log = Logger.getLogger(InsertDiffTag.class);
 
-    /** Attribute which is used to store the new page content to the Page Context */
-    public static final String ATTR_NEWVERSION = "newdiff";
+	/** Attribute which is used to store the old page content to the Page Context */
+	public static final String ATTR_OLDVERSION = "olddiff";
 
-    protected String m_pageName;
+	/** Attribute which is used to store the new page content to the Page Context */
+	public static final String ATTR_NEWVERSION = "newdiff";
 
-    /** {@inheritDoc} */
-    @Override public void initTag() {
-        super.initTag();
-        m_pageName = null;
-    }
+	private String m_pageName;
+	private String m_pageId;
 
-    /**
-     *  Sets the page name.
-     *  @param page Page to get diff from.
-     */
-    public void setPage( final String page )
-    {
-        m_pageName = page;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public void initTag() {
+		super.initTag();
+		m_pageName = m_pageId = null;
+	}
 
-    /**
-     *  Gets the page name.
-     * @return The page name.
-     */
-    public String getPage()
-    {
-        return m_pageName;
-    }
+	/**
+	 * Sets the page name.
+	 * 
+	 * @param page Page to get diff from.
+	 */
+	public void setPageName(String pageName) {
+		m_pageName = pageName;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public final int doWikiStartTag() throws IOException {
-        final Engine engine = m_wikiContext.getEngine();
-        final Context ctx;
-        
-        if( m_pageName == null ) {
-            ctx = m_wikiContext;
-        } else {
-            ctx = m_wikiContext.clone();
-            ctx.setPage( ServicesRefs.getPageManager().getPage(m_pageName) );
-        }
+	/**
+	 * Sets the page ID.
+	 * 
+	 * @param pageId
+	 */
+	public void setPageId(String pageId) {
+		m_pageId = pageId;
+	}
 
-        final Integer vernew = ( Integer )pageContext.getAttribute( ATTR_NEWVERSION, PageContext.REQUEST_SCOPE );
-        final Integer verold = ( Integer )pageContext.getAttribute( ATTR_OLDVERSION, PageContext.REQUEST_SCOPE );
+	/**
+	 * Gets the page name.
+	 * 
+	 * @return The page name.
+	 */
+	public String getPage() {
+		return m_pageName;
+	}
 
-        log.debug("Request diff between version "+verold+" and "+vernew);
+	/** {@inheritDoc} */
+	@Override
+	public final int doWikiStartTag() throws IOException {
+		final Engine engine = m_wikiContext.getEngine();
+		final Context ctx;
 
-        if( ctx.getPage() != null ) {
-            final JspWriter out = pageContext.getOut();
-            final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx, vernew.intValue(), verold.intValue() );
+		if (m_pageId != null) {
+			ctx = m_wikiContext.clone();
+			ctx.setPage(ServicesRefs.getPageManager().getPageById(m_pageId));
+		} else if (m_pageName != null) {
+			ctx = m_wikiContext.clone();
+			ctx.setPage(ServicesRefs.getPageManager().getPage(m_pageName));
+		} else {
+			ctx = m_wikiContext;
+		}
 
-            if( diff.length() == 0 ) {
-                return EVAL_BODY_INCLUDE;
-            }
+		final Integer vernew = (Integer) pageContext.getAttribute(ATTR_NEWVERSION, PageContext.REQUEST_SCOPE);
+		final Integer verold = (Integer) pageContext.getAttribute(ATTR_OLDVERSION, PageContext.REQUEST_SCOPE);
 
-            out.write( diff );
-        }
+		log.debug("Request diff between version " + verold + " and " + vernew);
 
-        return SKIP_BODY;
-    }
+		if (ctx.getPage() != null) {
+			final JspWriter out = pageContext.getOut();
+			final String diff = ServicesRefs.getDifferenceManager().getDiff(ctx, vernew.intValue(), verold.intValue());
+
+			if (diff.length() == 0) {
+				return EVAL_BODY_INCLUDE;
+			}
+
+			out.write(diff);
+		}
+
+		return SKIP_BODY;
+	}
 
 }
-

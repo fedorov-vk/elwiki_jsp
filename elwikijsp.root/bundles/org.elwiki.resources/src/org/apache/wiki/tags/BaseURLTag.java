@@ -25,7 +25,7 @@ import java.io.IOException;
  *
  * @since 2.2
  */
-public class BaseURLTag extends WikiTagBase {
+public class BaseURLTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 7449347992987377569L;
 
