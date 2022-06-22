@@ -28,16 +28,16 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
 /**
- * Writes a link to a Wiki page. Body of the link becomes the actual text. The
- * link is written regardless to whether the page exists or not.
+ * Writes a link to a Wiki page. Body of the link becomes the actual text. The link is written
+ * regardless to whether the page exists or not.
  * <p>
  * <b>Attributes</b>
  * </p>
  * <ul>
  * <li>pageName - Page name to refer to. Default is the current page.
  * <li>pageId - Page Id to refer to. Default is the current page.
- * <li>format - either "anchor" or "url" to output either an &lt;A&gt... or just
- * the HREF part of one.
+ * <li>format - either "anchor" or "url" to output either an &lt;A&gt... or just the HREF part
+ * of one.
  * <li>template - Which template should we link to.
  * <li>title - Is used in page actions to display hover text (tooltip)
  * <li>accesskey - Set an accesskey (ALT+[Char])
@@ -83,13 +83,18 @@ public class LinkToTag extends BaseWikiLinkTag {
 
 		if (m_pageId != null) {
 			WikiPage page = ServicesRefs.getPageManager().getPageById(m_pageId);
-			pageName = m_pageName = page.getName();
+			if (page != null) {
+				pageName = m_pageName = page.getName();
+			}
 		} else if (m_pageName != null) {
 			WikiPage page = ServicesRefs.getPageManager().getPage(m_pageName);
-			pageId = m_pageId = page.getId();
+			if (page != null) {
+				pageId = m_pageId = page.getId();
+			}
 		}
 
-		//TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
+		/*TODO: :FVK:. разобраться, (рассмотреть, модифицировать весь код ниже...), 1я проблема: (p instanceof PageAttachment).
+		 * так же из-за закомментированого фрагмента - проблема для создания ссылки по pageId - не создается, для несуществующей страницы wiki.
 		if (m_pageName == null) {
 			final WikiPage p = m_wikiContext.getPage();
 
@@ -102,6 +107,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 				return SKIP_BODY;
 			}
 		}
+		*/
 
 		final JspWriter out = pageContext.getOut();
 		final String url;

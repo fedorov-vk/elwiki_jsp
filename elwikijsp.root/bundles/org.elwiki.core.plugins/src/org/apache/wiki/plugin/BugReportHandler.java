@@ -171,7 +171,7 @@ public class BugReportHandler implements Plugin {
 
         String pageName = basicPageName;
         long   lastbug  = 2;
-        while( ServicesRefs.getPageManager().wikiPageExists( pageName ) ) {
+        while( ServicesRefs.getPageManager().pageExistsByName( pageName ) ) {
             pageName = basicPageName + lastbug++;
         }
 

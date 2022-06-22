@@ -114,7 +114,7 @@ public class PrefsCmdCode extends CmdCode {
 			if (wikiSession.getMessages("profile").length == 0) {
 				String redirectPage = request.getParameter("redirect");
 				PageManager pm = wiki.getManager(PageManager.class);
-				if (!pm.wikiPageExists(redirectPage)) {
+				if (!pm.pageExistsByName(redirectPage)) {
 					redirectPage = wiki.getWikiConfiguration().getFrontPage();
 				}
 
@@ -135,7 +135,7 @@ public class PrefsCmdCode extends CmdCode {
 			CookieAssertionLoginModule.setUserCookie(response, assertedName);
 
 			String redirectPage = request.getParameter("redirect");
-			if (!ServicesRefs.getPageManager().wikiPageExists(redirectPage)) {
+			if (!ServicesRefs.getPageManager().pageExistsByName(redirectPage)) {
 				redirectPage = wiki.getWikiConfiguration().getFrontPage();
 			}
 			String viewUrl = ("cmd.prefs".equals(redirectPage)) ? "cmd.view" : wikiContext.getViewURL(redirectPage);

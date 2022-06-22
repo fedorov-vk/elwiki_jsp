@@ -248,7 +248,35 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public boolean pageExists(String pageName) {
+	public boolean pageExistsById(String pageId) {
+		if (pageId == null || pageId.isBlank()) {
+			return false;
+		}
+		boolean result = false;
+
+		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+		CDOQuery query = transaction.createQuery("ocl",
+				"WikiPage.allInstances()->select(p:WikiPage|p.id='" + pageId + "')", eClassWikiPage, false);
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+		try {
+			List<WikiPage> pages = query.getResult();
+			if (pages.size() > 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			//:FVK: page missed... // e.printStackTrace();
+		} finally {
+			if (!transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean pageExistsByName(String pageName) {
 		if (pageName == null) {
 			return false;
 		}
@@ -258,7 +286,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
 		CDOQuery query = transaction.createQuery("ocl",
 				"WikiPage.allInstances()->select(p:WikiPage|p.name='" + pageName + "')", eClassWikiPage, false);
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		try {
 			List<WikiPage> pages = query.getResult();
@@ -465,7 +493,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
 		query = transaction.createQuery("ocl", "WikiPage.allInstances()->select(p:WikiPage|p.name='" + pageName + "')",
 				eClassWikiPage, false);
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		WikiPage wikiPage = null;
 		try {
@@ -498,7 +526,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		query = transaction.createQuery("ocl",
 				"PageReference.allInstances()->select(p:PageReference|p.pageId='" + pageId + "')", eClassWikiPage,
 				false);
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		List<PageReference> references = new ArrayList<>();
 		try {
@@ -529,7 +557,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
 		query = transaction.createQuery("ocl", "WikiPage.allInstances()->select(p:WikiPage|p.id='" + pageId + "')",
 				eClassWikiPage, false);
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		WikiPage wikiPage = null;
 		try {
@@ -808,7 +836,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		CDOQuery query;
 		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
 		query = transaction.createQuery("ocl", "WikiPage.allInstances()", eClassWikiPage, false);
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		try {
 			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
@@ -846,7 +874,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			query = transaction.createQuery("ocl",
 					"WikiPage.allInstances()->select(p:WikiPage|p.wiki='" + wikiName + "')", eClassWikiPage, false);
 		}
-		query.setParameter("cdoLazyExtents", new Boolean(false));
+		query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
 		try {
 			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();

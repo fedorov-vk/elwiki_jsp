@@ -93,13 +93,12 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		// WatchDog.getCurrentWatchDog( m_engine );
 		boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
 
-		// skip all, except *.cmd, AJAX.
+		// skip all, except cmd.*, AJAX.
 		String uri = httpRequest.getRequestURI();
 		log.debug("doFilter()");
-		//if (false == uri.matches(".+?(\\.cmd|\\.jsp)$")) { // :FVK: uri.matches(".+?(\\.js|\\.css)$")
 		if (uri.startsWith("/cmd.")) {
 			log.debug("URI is matched /cmd.: " + uri);
-		} else if (uri.matches(".+?AJAX.+?$")) {
+		} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
 			log.debug("URI is matched: " + uri);
 			isAjaxPage = true;
 		} else {

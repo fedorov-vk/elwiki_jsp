@@ -309,6 +309,14 @@ public interface PageManager extends WikiEventListener {
         return false;
     }
 
+	/**
+	 * Returns true, if the requested page exists. Will consider any version as existing.
+	 * 
+	 * @param pageId ID of the page.
+	 * @return true, if page exists.
+	 */
+	boolean pageExistsById(String pageId);
+    
     /**
      *  Returns true, if the requested page (or an alias) exists.  Will consider any version as existing. Will check for all types of
      *  WikiPages: wiki pages themselves, attachments and special pages (non-existant references to other pages).
@@ -316,7 +324,7 @@ public interface PageManager extends WikiEventListener {
      *  @param page WikiName of the page.
      *  @return true, if page (or attachment) exists.
      */
-    boolean wikiPageExists( String page );
+    boolean pageExistsByName( String page );
 
     /**
      *  Returns true, if the requested page (or an alias) exists with the requested version. Will check for all types of

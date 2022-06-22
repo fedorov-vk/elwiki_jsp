@@ -152,7 +152,7 @@
 
         // If wiki page was "Login", redirect to main, otherwise use the page supplied
         String redirectPage = request.getParameter( "redirect" );
-        if( !ServicesRefs.getPageManager().wikiPageExists( redirectPage ) ) {
+        if( !ServicesRefs.getPageManager().pageExistsByName( redirectPage ) ) {
            redirectPage = wikiContext.getConfiguration().getFrontPage();
         }
         String viewUrl = ( "Login".equals( redirectPage ) ) ? "Wiki.jsp" : wikiContext.getViewURL( redirectPage );

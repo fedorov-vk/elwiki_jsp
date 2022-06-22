@@ -347,7 +347,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         String author = entry.getAuthor();
 
         if( author != null ) {
-            if( ServicesRefs.getPageManager().wikiPageExists(author) ) {
+            if( ServicesRefs.getPageManager().pageExistsByName(author) ) {
                 author = "<a href=\""+entryCtx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), author )+"\">"+ServicesRefs.getRenderingManager().beautifyTitle(author)+"</a>";
             }
         } else {

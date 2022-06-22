@@ -186,7 +186,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     authorinfo.setAttribute( XHTML.ATTR_class, "author" );
 
                     if( author != null ) {
-                        if( ServicesRefs.getPageManager().wikiPageExists( author ) ) {
+                        if( ServicesRefs.getPageManager().pageExistsByName( author ) ) {
                             authorinfo.addContent( XhtmlUtil.link( context.getURL( Context.VIEW, author ), author ) );
                         } else {
                             authorinfo.addContent( author );

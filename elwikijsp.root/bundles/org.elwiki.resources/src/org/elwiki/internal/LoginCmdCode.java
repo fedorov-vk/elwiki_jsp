@@ -45,14 +45,13 @@ public class LoginCmdCode extends CmdCode {
 		// httpRequest.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();
 		ResourceBundle rb = Preferences.getBundle(wikiContext, "CoreResources"); // :FVK: это ресурсы в заданном
-																					// каталоге...
 
-		// Set the redirect-page variable if one was passed as a parameter
+		// Set the redirect-page variable if one was passed as a parameter.
 		String requestRedirect = (httpRequest.getParameter("redirect") != null) ? //
 				httpRequest.getParameter("redirect") : wikiContext.getConfiguration().getFrontPage();
 		wikiContext.setVariable("redirect", requestRedirect);
 
-		// Are we saving the profile?
+		// Are we saving the profile? (:FVK: - зачем эта ветка?)
 		if ("saveProfile".equals(httpRequest.getParameter("action"))) {
 			UserManager userMgr = ServicesRefs.getUserManager();
 			UserProfile profile = userMgr.parseProfile(wikiContext);
@@ -114,11 +113,11 @@ public class LoginCmdCode extends CmdCode {
 					wikiSession.addMessage("login", rb.getString("login.error.password"));
 				}
 			}
-		} else {
+		} else { // using container for auth. (:FVK: - проверить, портировать функциональность...)
 			HttpSession session = httpRequest.getSession();
 			//
-			// Have we already been submitted? If yes, then we can assume that we have been logged in
-			// before.
+			// Have we already been submitted?
+			// If yes, then we can assume that we have been logged in before.
 			//
 			Object seen = session.getAttribute("_redirect");
 			if (seen != null) {
@@ -139,27 +138,27 @@ public class LoginCmdCode extends CmdCode {
 		}
 
 		// If user logged in, set the user cookie with the wiki principal's name.
-		// redirect to wherever we're supposed to go. If login.jsp
-		// was called without parameters, this will be the front page. Otherwise,
-		// there's probably a 'redirect' parameter telling us where to go.
+		// redirect to wherever we're supposed to go.
+		// If login.jsp was called without parameters, this will be the front page.
+		// Otherwise, there's probably a 'redirect' parameter telling us where to go.
 
 		if (wikiSession.isAuthenticated()) {
-			String rember = httpRequest.getParameter("j_remember");
+			String remember = httpRequest.getParameter("j_remember");
 
 			// Set user cookie
 			Principal principal = wikiSession.getUserPrincipal();
 			CookieAssertionLoginModule.setUserCookie(response, principal.getName());
 
-			if (rember != null) {
+			if (remember != null) {
 				CookieAuthenticationLoginModule.setLoginCookie(ServicesRefs.Instance, response, principal.getName());
 			}
 
 			// If wiki page was "Login", redirect to main, otherwise use the page supplied
-			String redirectPage = httpRequest.getParameter("redirect");
-			if (!ServicesRefs.getPageManager().wikiPageExists(redirectPage)) {
-				redirectPage = wikiContext.getConfiguration().getFrontPage();
+			String redirectPageId = httpRequest.getParameter("redirect");
+			if (!ServicesRefs.getPageManager().pageExistsById(redirectPageId)) {
+				redirectPageId = wikiContext.getConfiguration().getFrontPage();
 			}
-			String viewUrl = ("Login".equals(redirectPage)) ? "Wiki.jsp" : wikiContext.getViewURL(redirectPage);
+			String viewUrl = wikiContext.getViewURL(redirectPageId);
 
 			// Redirect!
 			log.info("Redirecting user to " + viewUrl);

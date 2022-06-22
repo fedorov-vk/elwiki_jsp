@@ -51,13 +51,21 @@ public interface PageProvider extends WikiProvider {
      */
     void putPageText( WikiPage page, String text, String author, String changenote ) throws ProviderException;
 
-    /**
-     *  Return true, if page exists.
-     *  
-     *  @param page The page name.
-     *  @return true, if the page exists; false otherwise.
-     */
-    boolean pageExists( String page );
+	/**
+	 * Return true, if page exists.
+	 * 
+	 * @param pageId ID of the page.
+	 * @return true, if page exists.
+	 */
+	boolean pageExistsById(String pageId);
+
+	/**
+	 * Return true, if page exists.
+	 * 
+	 * @param page The page name.
+	 * @return true, if the page exists; false otherwise.
+	 */
+	boolean pageExistsByName(String page);
 
     /**
      * Return true, if page with a particular version exists.

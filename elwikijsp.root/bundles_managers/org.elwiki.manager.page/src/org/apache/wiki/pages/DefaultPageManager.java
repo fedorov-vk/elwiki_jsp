@@ -676,7 +676,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             throw new ProviderException("Illegal page name");
         }
 
-        return m_provider.pageExists(pageName);
+        return m_provider.pageExistsByName(pageName);
     }
 
     /**
@@ -696,13 +696,18 @@ public class DefaultPageManager implements PageManager, Initializable {
         return m_provider.pageExists( pageName, version );
     }
 
+    @Override
+    public boolean pageExistsById(String pageId) {
+    	return this.m_provider.pageExistsById(pageId);
+    }
+
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.pages0.PageManager#wikiPageExists(java.lang.String)
+     * @see org.apache.wiki.pages0.PageManager#pageExistsByName(java.lang.String)
      */
     @Override
-    public boolean wikiPageExists( final String page ) {
-    	return this.m_provider.pageExists(page);
+    public boolean pageExistsByName( final String pageName ) {
+    	return this.m_provider.pageExistsByName(pageName);
     	/*:FVK: оригинальный код - громоздок.
     	 * Не будем проверять присоединения к странице, специальные страницы...
     	 * Будем проверять наличие страницы по её имени.

@@ -99,7 +99,7 @@ public class DiffLinkTag extends BaseWikiLinkTag {
 		int r2;
 
 		//  In case the page does not exist, we fail silently.
-		if (!ServicesRefs.getPageManager().wikiPageExists(pageName)) {
+		if (!ServicesRefs.getPageManager().pageExistsByName(pageName)) {
 			return SKIP_BODY;
 		}
 
