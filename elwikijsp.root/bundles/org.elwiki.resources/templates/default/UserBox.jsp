@@ -28,8 +28,9 @@
 <%
   Context c = ContextUtil.findContext(pageContext);
 %>
-<c:set var="redirect"><%= c.getConfiguration().encodeName(c.getName()) %></c:set>
+<c:set var="redirect"><%= c.getPageId() %></c:set>
 <c:set var="username"><wiki:UserName /></c:set>
+<c:set var="useruid"><wiki:UserProfile property='uid' /></c:set>
 <c:set var="loginstatus"><wiki:Variable var='loginstatus'/></c:set>
 
 <div class="cage pull-right userbox user-${loginstatus}" tabindex="0">
@@ -42,13 +43,13 @@
   <ul class="dropdown-menu pull-right" data-hover-parent=".userbox">
     <li>
       <wiki:UserCheck status="anonymous">
-        <wiki:LinkTo pageName="UserPreferences">
+        <wiki:Link path="cmd.prefs">
           <span class="icon-user"></span>
           <fmt:message key="fav.greet.anonymous"/>
-        </wiki:LinkTo>
+        </wiki:Link>
       </wiki:UserCheck>
       <wiki:UserCheck status="known"><%-- asserted or authenticated --%>
-        <wiki:LinkTo pageName="${username}">
+        <wiki:LinkTo pageId="${useruid}">
           <span class="icon-user" ></span>
           <wiki:UserCheck status="asserted">
             <fmt:message key="fav.greet.asserted"><fmt:param>${username}</fmt:param></fmt:message>

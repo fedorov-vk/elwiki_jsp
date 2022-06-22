@@ -65,7 +65,7 @@
         return;
     }
 
-    if( wikipage == null || !ServicesRefs.getPageManager().wikiPageExists( wikipage.getName() ) ) {
+    if( wikipage == null || !ServicesRefs.getPageManager().pageExistsByName( wikipage.getName() ) ) {
         response.sendError( 404, "No such page " + wikipage.getName() );
         return;
     }

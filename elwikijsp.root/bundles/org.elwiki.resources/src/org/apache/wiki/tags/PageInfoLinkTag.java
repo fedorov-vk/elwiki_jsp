@@ -72,7 +72,7 @@ public class PageInfoLinkTag extends BaseWikiLinkTag {
 			}
 		}
 
-		if (ServicesRefs.getPageManager().wikiPageExists(pageName)) {
+		if (ServicesRefs.getPageManager().pageExistsByName(pageName)) {
 			final JspWriter out = pageContext.getOut();
 			final String url = m_wikiContext.getURL(ContextEnum.PAGE_INFO.getRequestContext(), pageName);
 

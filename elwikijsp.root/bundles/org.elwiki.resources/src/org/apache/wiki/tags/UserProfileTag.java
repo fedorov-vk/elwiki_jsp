@@ -84,6 +84,7 @@ public class UserProfileTag extends BaseWikiTag {
 
 	public static final String BLANK = "(not set)";
 
+	private static final String UID = "uid";
 	private static final String CREATED = "created";
 	private static final String EMAIL = "email";
 	private static final String EXISTS = "exists";
@@ -121,6 +122,8 @@ public class UserProfileTag extends BaseWikiTag {
 			return profile.isNew() ? EVAL_BODY_INCLUDE : SKIP_BODY;
 		} else if (CREATED.equals(m_prop) && profile.getCreated() != null) {
 			result = profile.getCreated().toString();
+		} else if (UID.equals(m_prop)) {
+			result = profile.getUid();
 		} else if (EMAIL.equals(m_prop)) {
 			result = profile.getEmail();
 		} else if (FULLNAME.equals(m_prop)) {

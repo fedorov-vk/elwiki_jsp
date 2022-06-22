@@ -157,14 +157,14 @@ public class BreadcrumbsTag extends BaseWikiTag {
 		} else {
 			//  check if page still exists (could be deleted/renamed by another user)
 			for (int i = 0; i < trail.size(); i++) {
-				if (!ServicesRefs.getPageManager().wikiPageExists(trail.get(i))) {
+				if (!ServicesRefs.getPageManager().pageExistsByName(trail.get(i))) {
 					trail.remove(i);
 				}
 			}
 		}
 
 		if (m_wikiContext.getRequestContext().equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
-			if (ServicesRefs.getPageManager().wikiPageExists(page)) {
+			if (ServicesRefs.getPageManager().pageExistsByName(page)) {
 				if (trail.isEmpty()) {
 					trail.pushItem(page);
 				} else {

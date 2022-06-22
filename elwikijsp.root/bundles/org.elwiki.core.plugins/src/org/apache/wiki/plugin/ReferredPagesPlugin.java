@@ -189,7 +189,7 @@ public class ReferredPagesPlugin implements Plugin {
         if( pagename == null ) {
             return;
         }
-        if( !ServicesRefs.getPageManager().wikiPageExists(pagename) ) {
+        if( !ServicesRefs.getPageManager().pageExistsByName(pagename) ) {
             return;
         }
 
@@ -217,7 +217,7 @@ public class ReferredPagesPlugin implements Plugin {
             }
             localLinkSet.add( link );
 
-            if( !ServicesRefs.getPageManager().wikiPageExists( link ) ) {
+            if( !ServicesRefs.getPageManager().pageExistsByName( link ) ) {
                 continue; // hide links to non existing pages
             }
             if(  m_matcher.matches( link , m_excludePattern ) ) {

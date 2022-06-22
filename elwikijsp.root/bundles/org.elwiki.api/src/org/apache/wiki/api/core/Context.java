@@ -178,7 +178,16 @@ public interface Context extends Cloneable, Command {
      *  @return the WikiPage which was fetched.
      */
     WikiPage getPage();
-    
+
+	/**
+	 * Returns the ID of WikiPage that is being handled.
+	 *
+	 * @return the ID of WikiPage which was fetched. In case of a problem with the
+	 *         current page - returns or ID of 'main' page of wiki, or 'SystemInfo'
+	 *         page.
+	 */
+	String getPageId();
+
     /**
      *  Sets the WikiPage that is being handled.
      *

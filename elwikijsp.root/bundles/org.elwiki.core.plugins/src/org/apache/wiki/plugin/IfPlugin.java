@@ -199,7 +199,7 @@ public class IfPlugin implements Plugin {
         if( exists == null ) {
             return false;
         }
-        return !ServicesRefs.getPageManager().wikiPageExists( page ) ^ TextUtil.isPositive(exists);
+        return !ServicesRefs.getPageManager().pageExistsByName( page ) ^ TextUtil.isPositive(exists);
     }
 
     private static boolean checkVarExists( final String varContent, final String exists ) {

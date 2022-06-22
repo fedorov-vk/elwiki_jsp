@@ -81,7 +81,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-
 /**
  * Default implementation for {@link IIAuthenticationManager}
  *

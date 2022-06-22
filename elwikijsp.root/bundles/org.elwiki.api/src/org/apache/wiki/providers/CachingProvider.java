@@ -223,11 +223,18 @@ public class CachingProvider implements PageProvider {
         return false;
     }
 
+	@Override
+	public boolean pageExistsById(String pageId) {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return false;
+	}
+
     /**
      *  {@inheritDoc}
      */
     @Override
-    public boolean pageExists( final String pageName ) {
+    public boolean pageExistsByName( final String pageName ) {
         if( pageName == null ) {
             return false;
         }
@@ -253,7 +260,7 @@ public class CachingProvider implements PageProvider {
         //  We could add the page to the cache here as well, but in order to understand whether that is a good thing or not we would
         //  need to analyze the JSPWiki calling patterns extensively.  Presumably it would be a good thing if pageExists() is called
         //  many times before the first getPageText() is called, and the whole page is cached.
-        return m_provider.pageExists( pageName );
+        return m_provider.pageExistsByName( pageName );
     }
 
     /**
@@ -296,7 +303,7 @@ public class CachingProvider implements PageProvider {
             m_cacheHits++;
             return ( String )cacheElement.getObjectValue();
         }
-        if( pageExists( pageName ) ) {
+        if( pageExistsByName( pageName ) ) {
             text = m_provider.getPageText( pageName, PageProvider.LATEST_VERSION );
             m_textCache.put( new Element( pageName, text ) );
             m_cacheMisses++;

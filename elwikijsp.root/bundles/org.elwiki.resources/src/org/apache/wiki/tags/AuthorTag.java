@@ -64,7 +64,7 @@ public class AuthorTag extends BaseWikiTag {
 		if (author != null && !author.isBlank()) {
 			author = TextUtil.replaceEntities(author);
 
-			if (ServicesRefs.getPageManager().wikiPageExists(author) && !("plain".equalsIgnoreCase(m_format))) {
+			if (ServicesRefs.getPageManager().pageExistsByName(author) && !("plain".equalsIgnoreCase(m_format))) {
 				// FIXME: It's very boring to have to do this.  Slow, too.
 				final RenderingManager mgr = ServicesRefs.getRenderingManager();
 				final MarkupParser p = mgr.getParser(m_wikiContext, "[" + author + "|" + author + "]");

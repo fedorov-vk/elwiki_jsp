@@ -86,7 +86,7 @@ public class CheckVersionTag extends BaseWikiTag {
 		final Engine engine = m_wikiContext.getEngine();
 		final WikiPage page = m_wikiContext.getPage();
 
-		if (page != null && ServicesRefs.getPageManager().wikiPageExists(page.getName())) {
+		if (page != null && ServicesRefs.getPageManager().pageExistsByName(page.getName())) {
 			final int version = page.getVersion();
 			final boolean include;
 			final WikiPage latest = ServicesRefs.getPageManager().getPage(page.getName());
