@@ -39,7 +39,7 @@
         <a class="logo pull-left"
            href="<wiki:Link pageName='${frontpageId}' format='url' />"
            title="<fmt:message key='actions.home.title' ><fmt:param>${frontpageName}</fmt:param></fmt:message>">
-           apache<b>jsp&#x03C9;iki</b>
+           EL<b>&#x03C9;iki</b>           
         </a>
 
         <wiki:PageExists pageId="2">
