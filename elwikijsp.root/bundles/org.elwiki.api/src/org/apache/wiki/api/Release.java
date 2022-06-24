@@ -42,7 +42,7 @@ public final class Release {
     /**
      *  This is the default application name.
      */
-    public static final String     APPNAME       = "JSPWiki";
+    public static final String     APPNAME       = "ElWiki";
 
     /**
      *  This should be empty when doing a release - otherwise keep it as "cvs" so that whenever someone checks out the code, they know
@@ -50,13 +50,13 @@ public final class Release {
      *  <p>
      *  If the POSTFIX is empty, it is not added to the version string.
      */
-    private static final String    POSTFIX       = "M7";
+    private static final String    POSTFIX       = "porting";
 
     /** The JSPWiki major version. */
-    public static final int        VERSION       = 2;
+    public static final int        VERSION       = 1;
 
     /** The JSPWiki revision. */
-    public static final int        REVISION      = 11;
+    public static final int        REVISION      = 0;
 
     /** The minor revision.  */
     public static final int        MINORREVISION = 0;
@@ -69,7 +69,7 @@ public final class Release {
      *  <p>
      *  If the build identifier is empty, it is not added.
      */
-    public static final String     BUILD         = "git-19";
+    public static final String     BUILD         = "22-fvk";
 
     /**
      *  This is the generic version string you should use when printing out the version.  It is of

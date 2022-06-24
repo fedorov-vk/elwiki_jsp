@@ -446,7 +446,7 @@ Wiki.Snips = {
     variableDlg: {
         scope:{ '[{$':'}]'},
         suggest: "\\w+",
-        variableDlg: "applicationname|baseurl|encoding|inlinedimages|interwikilinks|jspwikiversion|loginstatus|uptime|pagename|pageprovider|pageproviderdescription|page-styles|requestcontext|totalpages|username"
+        variableDlg: "applicationname|baseurl|encoding|inlinedimages|interwikilinks|elwikiversion|loginstatus|uptime|pagename|pageprovider|pageproviderdescription|page-styles|requestcontext|totalpages|username"
     },
 
     // Page access rights

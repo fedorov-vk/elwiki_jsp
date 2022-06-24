@@ -305,7 +305,7 @@ public class DefaultVariableManager implements VariableManager {
             return wikiConfiguration.getApplicationName();
         }
 
-        public String getJspwikiversion()
+        public String getElwikiversion()
         {
             return Release.getVersionString();
         }
