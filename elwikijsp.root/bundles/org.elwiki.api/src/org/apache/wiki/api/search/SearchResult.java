@@ -26,21 +26,21 @@ import org.elwiki_data.WikiPage;
 public interface SearchResult {
 
 	/**
-	 * Return the page.
+	 * Returns the page.
 	 * 
 	 * @return the WikiPage object containing this result.
 	 */
 	WikiPage getPage();
 
 	/**
-	 * Return the ID of page.
+	 * Returns the ID of page.
 	 * 
 	 * @return the ID of WikiPage object containing this result.
 	 */
 	String getPageId();
 
 	/**
-	 * Returns the score.
+	 * Returns the score for this match.
 	 * 
 	 * @return A positive score value. Note that there is no upper limit for the score.
 	 */
