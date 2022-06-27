@@ -23,6 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
@@ -83,6 +84,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class, immediate = true)
 public class ServicesRefs implements Engine {
 
+	private static WikiAjaxDispatcher wikiAjaxDispatcher;
 	private static IPermissionManager permissionManager;
 	private static AclManager aclManager;
 	private static AttachmentManager attachmentManager;
@@ -126,6 +128,9 @@ public class ServicesRefs implements Engine {
 	
 	// -- start code block -- Services reference setters
 
+	@Reference(target = "(component.factory=" + WikiAjaxDispatcher.WIKI_AJAX_DISPATCHER_FACTORY + ")")
+	private ComponentFactory<WikiAjaxDispatcher> factoryWikiAjaxDispatcher;
+	
 	@Reference(target = "(component.factory=" + IPermissionManager.COMPONENT_FACTORY +")")
 	private ComponentFactory<IPermissionManager> factoryPermissionManager;
 
@@ -275,6 +280,8 @@ public class ServicesRefs implements Engine {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		properties.put(ENGINE_REFERENCE, this);
 
+		managers.put(WikiAjaxDispatcher.class,
+				ServicesRefs.wikiAjaxDispatcher = this.factoryWikiAjaxDispatcher.newInstance(properties).getInstance());
 		managers.put(IPermissionManager.class,
 				ServicesRefs.permissionManager = this.factoryPermissionManager.newInstance(properties).getInstance());
 		managers.put(PageRenamer.class,

@@ -30,7 +30,7 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.ajax.WikiAjaxDispatcherServlet;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -42,6 +42,7 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.plugin.PluginManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.ClassUtil;
@@ -51,6 +52,7 @@ import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.jdom2.Element;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -552,10 +554,11 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
                         ( ( InitializablePlugin )p ).initialize( engine );
                     }
                     if( p instanceof WikiAjaxServlet ) {
-                    	WikiAjaxDispatcherServlet.registerServlet( (WikiAjaxServlet) p );
+                    	WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
+                    	wikiAjaxDispatcher.registerServlet( (WikiAjaxServlet) p );
                     	final String ajaxAlias = info.getAjaxAlias();
                     	if (StringUtils.isNotBlank(ajaxAlias)) {
-                    		WikiAjaxDispatcherServlet.registerServlet( info.getAjaxAlias(), (WikiAjaxServlet) p );
+                    		wikiAjaxDispatcher.registerServlet( info.getAjaxAlias(), (WikiAjaxServlet) p );
                     	}
                     }
                 } catch( final Exception e ) {

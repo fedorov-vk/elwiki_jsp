@@ -62,9 +62,7 @@ Wiki.Findpages = new Class({
         self.element = element; //ul.dropdown menu
 
         self.element.addEvent("click:relay(#cloney)", function(e){
-
             this.getParent("a").href = self.toUrl(self.getValue(), true, this.checked);
-
         });
 
     },
@@ -132,7 +130,7 @@ Wiki.Findpages = new Class({
                 item = result.shift();
 
                 elements.push( "li.findpages", [
-                    "a", { href: self.toUrl( item.page ) }, [
+                    "a", { href: self.toUrl( item.id ) }, [
                         "span.badge.pull-right", { text: item.score },
                         "span", { text: item.page }
                     ]

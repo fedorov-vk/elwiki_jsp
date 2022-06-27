@@ -20,32 +20,39 @@ package org.apache.wiki.api.search;
 
 import org.elwiki_data.WikiPage;
 
-
 /**
- *  Defines a search result.
+ * Defines a search result.
  */
 public interface SearchResult {
-    
+
 	/**
-     *  Return the page.
-     *  
-     *  @return the WikiPage object containing this result
-     */
-    WikiPage getPage();
+	 * Return the page.
+	 * 
+	 * @return the WikiPage object containing this result.
+	 */
+	WikiPage getPage();
 
-    /**
-     *  Returns the score.
-     *  
-     *  @return A positive score value.  Note that there is no upper limit for the score.
-     */
-    int getScore();
+	/**
+	 * Return the ID of page.
+	 * 
+	 * @return the ID of WikiPage object containing this result.
+	 */
+	String getPageId();
 
-    /**
-     * Collection of XHTML fragments representing some contexts in which the match was made (a.k.a., "snippets").
-     *
-     * @return the search results
-     * @since 2.4
-     */
-    String[] getContexts();
+	/**
+	 * Returns the score.
+	 * 
+	 * @return A positive score value. Note that there is no upper limit for the score.
+	 */
+	int getScore();
+
+	/**
+	 * Collection of XHTML fragments representing some contexts in which the match was made (a.k.a.,
+	 * "snippets").
+	 *
+	 * @return the search results
+	 * @since 2.4
+	 */
+	String[] getContexts();
 
 }

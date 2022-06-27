@@ -35,7 +35,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.ajax.AjaxUtil;
-import org.apache.wiki.ajax.WikiAjaxDispatcherServlet;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -53,6 +53,7 @@ import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
+import org.apache.wiki.search.lucene.LuceneSearchProvider;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
@@ -97,6 +98,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	@WikiServiceReference
     private PageManager pageManager;
 
+    private WikiAjaxDispatcher wikiAjaxDispatcher;
+
     /**
      * This component activate routine. Does all the real initialization.
      * 
@@ -108,6 +111,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 		try {
 			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
 			if (engine instanceof Engine) {
+		        wikiAjaxDispatcher = ((Engine) engine).getManager(WikiAjaxDispatcher.class); 
 				initialize((Engine) engine);
 			}
 		} catch (WikiException e) {
@@ -118,23 +122,6 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 
 	// -- service handling -----------------------------(end)--
     
-	/**
-     *  Creates a new SearchManager.
-     *
-     *  @param engine The Engine that owns this SearchManager.
-     *  @param properties The list of Properties.
-     *  @throws FilterException If it cannot be instantiated.
-     */
-    /*:FVK:
-    public DefaultSearchManager( final Engine engine, final Properties properties ) throws FilterException {
-     
-        initialize( engine, properties );
-        WikiEventManager.addWikiEventListener( ServicesRefs.getPageManager(), this );
-
-        // TODO: Replace with custom annotations. See JSPWIKI-566
-        WikiAjaxDispatcherServlet.registerServlet( JSON_SEARCH, new JSONSearch() );
-    }*/
-
 	/**
      *  Provides a JSON AJAX API to the JSPWiki Search Engine.
      */
@@ -259,6 +246,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
                         final HashMap< String, Object > hm = new HashMap<>();
                         hm.put( "page", sr.getPage().getName() );
                         hm.put( "score", sr.getScore() );
+                        hm.put( "id", sr.getPage().getId() );
                         list.add( hm );
                     }
                 } catch( final Exception e ) {
@@ -281,7 +269,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
         WikiEventManager.addWikiEventListener( this.pageManager, this );
 
         // TODO: Replace with custom annotations. See JSPWIKI-566
-        WikiAjaxDispatcherServlet.registerServlet( JSON_SEARCH, new JSONSearch() );
+		wikiAjaxDispatcher.registerServlet(JSON_SEARCH, new JSONSearch());
 
         loadSearchProvider();
         try {

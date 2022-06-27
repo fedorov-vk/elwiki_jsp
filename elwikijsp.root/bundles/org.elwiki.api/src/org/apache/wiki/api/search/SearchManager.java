@@ -37,7 +37,7 @@ import java.util.Collection;
  */
 public interface SearchManager extends PageFilter, InternalModule, WikiEventListener {
 
-    String DEFAULT_SEARCHPROVIDER = "org.apache.wiki.search.LuceneSearchProvider";
+    String DEFAULT_SEARCHPROVIDER = "org.apache.wiki.search.lucene.LuceneSearchProvider";
 
     /** Property name for setting the search provider. Value is <tt>{@value}</tt>. */
     String PROP_SEARCHPROVIDER = "jspwiki.searchProvider";

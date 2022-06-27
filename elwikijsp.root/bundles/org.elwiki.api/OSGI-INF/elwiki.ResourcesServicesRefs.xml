@@ -29,6 +29,7 @@
    <reference cardinality="1..1" field="factoryUrlConstructor" interface="org.osgi.service.component.ComponentFactory" name="factoryUrlConstructor" target="(component.factory=elwiki.UrlConstructor.factory)"/>
    <reference cardinality="1..1" field="factoryUserManager" interface="org.osgi.service.component.ComponentFactory" name="factoryUserManager" target="(component.factory=elwiki.UserManager.factory)"/>
    <reference cardinality="1..1" field="factoryVariableManager" interface="org.osgi.service.component.ComponentFactory" name="factoryVariableManager" target="(component.factory=elwiki.VariableManager.factory)"/>
+   <reference cardinality="1..1" field="factoryWikiAjaxDispatcher" interface="org.osgi.service.component.ComponentFactory" name="factoryWikiAjaxDispatcher" target="(component.factory=elwiki.WikiAjaxDispatcher.factory)"/>
    <reference cardinality="1..1" field="factoryWorkflowManager" interface="org.osgi.service.component.ComponentFactory" name="factoryWorkflowManager" target="(component.factory=elwiki.WorkflowManager.factory)"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.services.ServicesRefs"/>
