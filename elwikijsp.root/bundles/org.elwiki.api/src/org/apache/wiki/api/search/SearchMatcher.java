@@ -146,15 +146,16 @@ public class SearchMatcher {
             m_score = score;
         }
 
-        /**
-         *  Returns Wikipage for this result.
-         *  @return WikiPage
-         */
         @Override
         public WikiPage getPage() {
             return ( WikiPage )m_page;
         }
 
+    	@Override
+    	public String getPageId() {
+    		return m_page.getId();
+    	}
+        
         /**
          *  Returns a score for this match.
          *  
