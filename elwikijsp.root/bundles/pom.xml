@@ -16,6 +16,7 @@
 	<modules>
 		<module>org.elwiki.configuration</module>
 		<module>org.elwiki.api</module>
+		<module>org.elwiki.ajax-dispatcher</module>
 		<module>org.elwiki.event</module>
 		<module>org.elwiki.util</module>
 		<module>org.elwiki.resources</module>

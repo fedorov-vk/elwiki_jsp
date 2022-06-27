@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.    
  */
-package org.apache.wiki.search;
+package org.apache.wiki.search.lucene;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -559,96 +559,6 @@ public class LuceneSearchProvider implements SearchProvider {
     public String getProviderInfo()
     {
         return "LuceneSearchProvider";
-    }
-
-    /**
-     * Updater thread that updates Lucene indexes.
-     */
-    private static final class LuceneUpdater extends WikiBackgroundThread {
-        protected static final int INDEX_DELAY    = 5;
-        protected static final int INITIAL_DELAY = 60;
-        private final LuceneSearchProvider m_provider;
-
-        private int m_initialDelay;
-
-        private WatchDog m_watchdog;
-
-        private LuceneUpdater( final Engine engine, final LuceneSearchProvider provider, final int initialDelay, final int indexDelay ) {
-            super( engine, indexDelay );
-            m_provider = provider;
-            m_initialDelay = initialDelay;
-            setName("JSPWiki Lucene Indexer");
-        }
-
-        @Override
-        public void startupTask() throws Exception {
-            m_watchdog = WatchDog.getCurrentWatchDog( getEngine() );
-
-            // Sleep initially...
-            try {
-                Thread.sleep( m_initialDelay * 1000L );
-            } catch( final InterruptedException e ) {
-                throw new InternalWikiException("Interrupted while waiting to start.", e);
-            }
-
-            m_watchdog.enterState( "Full reindex" );
-            // Reindex everything
-            m_provider.doFullLuceneReindex();
-            m_watchdog.exitState();
-        }
-
-        @Override
-        public void backgroundTask() {
-            m_watchdog.enterState("Emptying index queue", 60);
-
-            synchronized ( m_provider.m_updates ) {
-                while( m_provider.m_updates.size() > 0 ) {
-                    final Object[] pair = m_provider.m_updates.remove(0);
-                    final WikiPage page = ( WikiPage ) pair[0];
-                    final String text = ( String ) pair[1];
-                    m_provider.updateLuceneIndex(page, text);
-                }
-            }
-
-            m_watchdog.exitState();
-        }
-
-    }
-
-    // FIXME: This class is dumb; needs to have a better implementation
-    private static class SearchResultImpl implements SearchResult {
-
-        private WikiPage m_page;
-        private int      m_score;
-        private String[] m_contexts;
-
-        public SearchResultImpl( final WikiPage page, final int score, final String[] contexts ) {
-            m_page = page;
-            m_score = score;
-            m_contexts = contexts != null ? contexts.clone() : null;
-        }
-
-        @Override
-        public WikiPage getPage()
-        {
-            return m_page;
-        }
-
-        /* (non-Javadoc)
-         * @see org.apache.wiki.SearchResult#getScore()
-         */
-        @Override
-        public int getScore()
-        {
-            return m_score;
-        }
-
-
-        @Override
-        public String[] getContexts()
-        {
-            return m_contexts;
-        }
     }
 
 }

@@ -19,11 +19,14 @@
 package org.apache.wiki.ui.progress;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.ajax.WikiAjaxDispatcherServlet;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
-import org.apache.wiki.content0.PageRenamer;
+import org.elwiki.api.WikiServiceReference;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -48,23 +51,18 @@ import java.util.concurrent.ConcurrentHashMap;
 		factory = "elwiki.ProgressManager.factory")
 public class DefaultProgressManager implements ProgressManager {
 
-	private final Map<String, ProgressItem> m_progressingTasks = new ConcurrentHashMap<>();
-
 	private static final Logger log = Logger.getLogger(DefaultProgressManager.class);
 
-	/**
-	 * Creates a new ProgressManager.
-	 */
-	public DefaultProgressManager() {
-		// TODO: Replace with custom annotations. See JSPWIKI-566
-		WikiAjaxDispatcherServlet.registerServlet(JSON_PROGRESSTRACKER, new JSONTracker());
-	}
+	private final Map<String, ProgressItem> m_progressingTasks = new ConcurrentHashMap<>();
 
 	// -- service handling --------------------------< start --
 
-	@Activate
-	public void startup() {
-		//
+    @Activate
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (engine instanceof Engine) {
+			initialize((Engine) engine);
+		}
 	}
 
 	@Deactivate
@@ -74,6 +72,13 @@ public class DefaultProgressManager implements ProgressManager {
 
 	// -- service handling ---------------------------- end >--
 
+	private void initialize(Engine engine) {
+		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
+		//
+		// TODO: Replace with custom annotations. See JSPWIKI-566
+    	wikiAjaxDispatcher.registerServlet(JSON_PROGRESSTRACKER, new JSONTracker());
+	}
+	
 	/**
 	 * You can use this to get an unique process identifier.
 	 *

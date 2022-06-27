@@ -137,7 +137,7 @@
 
       <wiki:SearchResultIterator id="searchref" start="${param.start}" maxItems="<%=maxitems%>">
       <tr>
-        <td><wiki:LinkTo><wiki:PageName/></wiki:LinkTo></td>
+        <td><wiki:LinkTo pageId="<%= searchref.getPageId() %>"><wiki:PageName/></wiki:LinkTo></td>
         <td><span class="gBar"><%= searchref.getScore() %></span></td>
       </tr>
 

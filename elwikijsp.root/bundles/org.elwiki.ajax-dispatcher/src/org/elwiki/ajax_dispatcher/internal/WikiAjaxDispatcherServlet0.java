@@ -17,27 +17,8 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.ajax;
+package org.elwiki.ajax_dispatcher.internal;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.internal.ApiActivator;
-import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Permission;
 import java.util.ArrayList;
@@ -46,18 +27,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.wiki.ajax.AjaxUtil;
+import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.permissions.PagePermission;
+import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
 
 /**
  * This provides a simple ajax servlet for handling /ajax/<ClassName> requests. HttpServlet classes need to be registered using
- * {@link WikiAjaxDispatcherServlet#registerServlet(WikiAjaxServlet)}
+ * {@link WikiAjaxDispatcherServlet0#registerServlet(WikiAjaxServlet)}
  *
  * @since 2.10.2-svn12
  */
-public class WikiAjaxDispatcherServlet extends HttpServlet {
+public class WikiAjaxDispatcherServlet0 extends HttpServlet {
 
 	private static final long serialVersionUID = 2371163144047926990L;
     private static final Map< String, AjaxServletContainer > ajaxServlets = new ConcurrentHashMap<>();
-    private static final Logger log = Logger.getLogger( WikiAjaxDispatcherServlet.class.getName() );
+    private static final Logger log = Logger.getLogger( WikiAjaxDispatcherServlet0.class.getName() );
     final private Engine m_engine;
     private String PATH_AJAX = "/ajax/";
 	private IWikiConfiguration config;
@@ -65,9 +66,9 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
     /**
      * Creates a WikiAjaxDispatcherServlet.
      */
-    public WikiAjaxDispatcherServlet() {
+    public WikiAjaxDispatcherServlet0() {
 		super();
-		BundleContext context = ApiActivator.getContext();
+		BundleContext context = null; //ApiActivator.getContext();
 		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
 		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
 		if (m_engine == null) {
@@ -106,7 +107,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 
     /**
      * Regster a {@link WikiAjaxServlet} given an alias, the servlet, and the permission.
-     * This creates a temporary bundle object called {@link WikiAjaxDispatcherServlet.AjaxServletContainer}
+     * This creates a temporary bundle object called {@link WikiAjaxDispatcherServlet0.AjaxServletContainer}
      *
      * @param alias the uri link to this servlet
      * @param servlet the servlet being registered

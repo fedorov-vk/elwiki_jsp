@@ -119,6 +119,7 @@
         <setEntry value="oro@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="org.elwiki.ajax-dispatcher@default:default"/>
         <setEntry value="org.elwiki.api@default:default"/>
         <setEntry value="org.elwiki.authorize@default:default"/>
         <setEntry value="org.elwiki.commandresolver@default:default"/>
