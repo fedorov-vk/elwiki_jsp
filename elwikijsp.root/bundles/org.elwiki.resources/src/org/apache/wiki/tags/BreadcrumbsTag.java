@@ -21,6 +21,7 @@ package org.apache.wiki.tags;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
@@ -49,21 +50,56 @@ import org.elwiki.services.ServicesRefs;
  */
 public class BreadcrumbsTag extends BaseWikiTag {
 
+	public static class PageDescription {
+
+		public String name;
+		public String id;
+
+		public PageDescription(String name, String id) {
+			this.name = name;
+			this.id = id;
+		}
+
+		@Override
+		public String toString() {
+			return id + ": " + name;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(id, name);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			PageDescription other = (PageDescription) obj;
+			return Objects.equals(id, other.id) && Objects.equals(name, other.name);
+		}
+	}
+
 	/**
 	 * Extends the LinkedList class to provide a fixed-size queue implementation
 	 */
-	public static class FixedQueue extends LinkedList<String> implements Serializable {
+	public static class FixedQueue extends LinkedList<PageDescription> implements Serializable {
 
 		private static final long serialVersionUID = 7399763506436664635L;
 
 		private int m_size;
 
-		FixedQueue(final int size) {
+		FixedQueue(int size) {
 			m_size = size;
 		}
 
-		String pushItem(final String o) {
-			add(o);
+		PageDescription pushItem(PageDescription o) {
+			if (!super.contains(o)) {
+				add(o);
+			}
 			if (size() > m_size) {
 				return removeFirst();
 			}
@@ -74,9 +110,9 @@ public class BreadcrumbsTag extends BaseWikiTag {
 		/**
 		 * @param pageName the page to be deleted from the breadcrumb
 		 */
-		public void removeItem(final String pageName) {
+		public void removeItem(String pageName) {
 			for (int i = 0; i < size(); i++) {
-				final String page = get(i);
+				final PageDescription page = get(i);
 				if (page != null && page.equals(pageName)) {
 					remove(page);
 				}
@@ -150,31 +186,33 @@ public class BreadcrumbsTag extends BaseWikiTag {
 	public int doWikiStartTag() throws IOException {
 		final HttpSession session = pageContext.getSession();
 		FixedQueue trail = (FixedQueue) session.getAttribute(BREADCRUMBTRAIL_KEY);
-		final String page = m_wikiContext.getPage().getName();
+		final String pageName = m_wikiContext.getPage().getName();
+		final String pageId = m_wikiContext.getPage().getId();
 
 		if (trail == null) {
 			trail = new FixedQueue(m_maxQueueSize);
 		} else {
 			//  check if page still exists (could be deleted/renamed by another user)
 			for (int i = 0; i < trail.size(); i++) {
-				if (!ServicesRefs.getPageManager().pageExistsByName(trail.get(i))) {
+				String pageId1 = trail.get(i).id;
+				if (!ServicesRefs.getPageManager().pageExistsById(pageId1)) {
 					trail.remove(i);
 				}
 			}
 		}
 
 		if (m_wikiContext.getRequestContext().equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
-			if (ServicesRefs.getPageManager().pageExistsByName(page)) {
+			if (ServicesRefs.getPageManager().pageExistsById(pageId)) {
 				if (trail.isEmpty()) {
-					trail.pushItem(page);
+					trail.pushItem(new PageDescription(pageName, pageId));
 				} else {
 					// Don't add the page to the queue if the page was just refreshed
-					if (!trail.getLast().equals(page)) {
-						trail.pushItem(page);
+					if (!trail.getLast().equals(pageId)) {
+						trail.pushItem(new PageDescription(pageName, pageId));
 					}
 				}
 			} else {
-				log.debug("didn't add page because it doesn't exist: " + page);
+				log.debug("didn't add page because it doesn't exist: " + pageId);
 			}
 		}
 
@@ -183,22 +221,18 @@ public class BreadcrumbsTag extends BaseWikiTag {
 		//
 		//  Print out the breadcrumb trail
 		//
-
-		// FIXME: this code would be much simpler if we could just output the [pagename] and then use the
-		// wiki engine to output the appropriate wikilink
-
 		final JspWriter out = pageContext.getOut();
 		final int queueSize = trail.size();
 		final String linkclass = "wikipage";
-		String curPage = null;
 
-		for (int i = 0; i < queueSize - 1; i++) {
-			curPage = trail.get(i);
+		for (int i = queueSize - 2; i >= 0; i--) {
+			String pageName1 = trail.get(i).name;
+			String pageId1 = trail.get(i).id;
 
 			//FIXME: I can't figure out how to detect the appropriate jsp page to put here, so I hard coded Wiki.jsp
 			//This breaks when you view an attachment metadata page
-			out.print("<a class=\"" + linkclass + "\" href=\"" + m_wikiContext.getViewURL(curPage) + "\">"
-					+ TextUtil.replaceEntities(curPage) + "</a>");
+			out.print("<a class=\"" + linkclass + "\" href=\"" + m_wikiContext.getViewURL(pageId1) + "\">"
+					+ TextUtil.replaceEntities(pageName1) + "</a>");
 
 			if (i < queueSize - 2) {
 				out.print(m_separator);

@@ -65,13 +65,13 @@
       <li class="dropdown-header"><fmt:message key="header.yourtrail"/></li>
       <li class="divider"></li>
       --%>
-      <%--  FIXME: breadcrumbs tag returns items in wrong order: most recent item is at back of the list !!
-      <li><wiki:Breadcrumbs separator="</li><li>" /></li>
-      --%>
+      <li><wiki:Breadcrumbs separator="" /></li>
+      <%--:FVK: old code.
       <c:forEach items="${breadCrumbTrail}" varStatus="status" begin="2">
           <c:set var="crumb" value="${breadCrumbTrail[fn:length(breadCrumbTrail) - status.index]}" />
           <li><wiki:Translate>[${crumb}]</wiki:Translate></li>
       </c:forEach>
+       --%>
 
     </ul>
   </li>
