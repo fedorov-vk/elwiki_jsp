@@ -10,10 +10,10 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.WikiContext;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -32,15 +32,14 @@ public class LoginCmdCode extends CmdCode {
 
 	private static final Logger log = Logger.getLogger(LoginCmdCode.class);
 
-	public LoginCmdCode(Command command) {
-		super(command);
+	protected LoginCmdCode() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
-		Context wikiContext = ServicesRefs.getCurrentContext();
-		Wiki.context().create(ServicesRefs.Instance, httpRequest, ContextEnum.WIKI_LOGIN.getRequestContext());
+		Context wikiContext = ContextUtil.findContext(httpRequest);
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE
 		// httpRequest.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();

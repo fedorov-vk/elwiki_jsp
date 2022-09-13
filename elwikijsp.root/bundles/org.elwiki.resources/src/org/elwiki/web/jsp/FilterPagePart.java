@@ -107,12 +107,12 @@ public class FilterPagePart extends HttpFilter implements Filter {
 			super.doFilter(httpRequest, response, chain);
 		}
 
-		/* Prepare Wiki context.
+		/* Create Wiki context.
 		 */
-		ContextEnum context;
+		ContextEnum cmdContext;
 		Context wikiContext;
-		context = (Context.cmd2context.containsKey(uri)) ? Context.cmd2context.get(uri) : ContextEnum.PAGE_VIEW;
-		wikiContext = Wiki.context().create(engine, httpRequest, context.getRequestContext());
+		cmdContext = Platform.getAdapterManager().getAdapter(uri.substring(1), ContextEnum.class); // without first '/'.
+		wikiContext = Wiki.context().create(engine, httpRequest, cmdContext.getRequestContext());
 		ServicesRefs.setCurrentContext(wikiContext);
 		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 
@@ -144,8 +144,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				log.debug("    RequestURI: " + httpRequest.getRequestURI());
 			}
 
-			Command cmd = wikiContext.getCommand();
-			cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
+			cmdCode = Platform.getAdapterManager().getAdapter(wikiContext.getContextCmd(), CmdCode.class);
 			if (cmdCode != null) {
 				// Code for context`s command: execute prolog.
 				try {

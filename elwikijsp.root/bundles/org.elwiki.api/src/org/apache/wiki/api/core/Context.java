@@ -155,22 +155,6 @@ public interface Context extends Cloneable, Command {
 
     /** Name of the variable which is set to Boolean.TRUE or Boolean.FALSE depending on whether WYSIWYG is currently in effect. */
     String VAR_WYSIWYG_EDITOR_MODE = "WYSIWYG_EDITOR_MODE";
-
-	//@formatter:off
-	Map<String, ContextEnum> cmd2context = Map.ofEntries(
-		Map.entry("/cmd.view", ContextEnum.PAGE_VIEW),
-		Map.entry("/cmd.login", ContextEnum.WIKI_LOGIN),
-		Map.entry("/cmd.logout", ContextEnum.WIKI_LOGOUT),
-		Map.entry("/cmd.edit", ContextEnum.PAGE_EDIT),
-		Map.entry("/cmd.prefs", ContextEnum.WIKI_PREFS),
-		Map.entry("/cmd.prefsRap", ContextEnum.WIKI_PREFS_RAP),
-		Map.entry("/cmd.info", ContextEnum.PAGE_INFO),
-		Map.entry("/cmd.rename", ContextEnum.PAGE_RENAME),
-		Map.entry("/cmd.diff", ContextEnum.PAGE_DIFF),
-		Map.entry("/cmd.upload", ContextEnum.PAGE_DIFF),
-		Map.entry("/cmd.editGroup", ContextEnum.GROUP_EDIT),
-		Map.entry("/cmd.viewGroup", ContextEnum.GROUP_VIEW)
-	); //@formatter:on
     
     /**
      *  Returns the WikiPage that is being handled.

@@ -29,46 +29,48 @@ package org.apache.wiki.api.core;
 public enum ContextEnum {
 
 	//@formatter:off
-    GROUP_DELETE( "deleteGroup", "%ucmd.deleteGroup?group=%n", null ),
-    GROUP_EDIT( "editGroup", "%ucmd.editGroup?group=%n", "EditGroupContent.jsp" ),
-    GROUP_VIEW( "viewGroup", "%ucmd.viewGroup?group=%n", "PreferencesContent.jsp" ),
+    GROUP_DELETE( "deleteGroup", "cmd.deleteGroup", "%u", "?group=%n", null ),
+    GROUP_EDIT( "editGroup", "cmd.editGroup", "%u", "?group=%n", "EditGroupContent.jsp" ),
+    GROUP_VIEW( "viewGroup", "cmd.viewGroup", "%u", "?group=%n", "PreferencesContent.jsp" ),
 
-    PAGE_ATTACH( "att", "%uattach/%n", null ),
-    PAGE_COMMENT( "comment", "%uComment.jsp?page=%n", "CommentContent.jsp" ),
-    PAGE_CONFLICT ( "conflict", "%uPageModified.jsp?page=%n", "ConflictContent.jsp" ),
-    PAGE_DELETE( "del", "%uDelete.jsp?page=%n", null ),
-    PAGE_DIFF( "diff", "%ucmd.diff?page=%n", "DiffContent.jsp" ),
-    PAGE_EDIT( "edit", "%ucmd.edit?page=%n", "EditContent.jsp" ),
-    PAGE_INFO( "info", "%ucmd.info?page=%n", "InfoContent.jsp" ),
-    PAGE_NONE( "", "%u%n", null ),
-    PAGE_PREVIEW( "preview", "%ucmd.preview?page=%n", "PreviewContent.jsp" ),
-    PAGE_RENAME( "rename", "%ucmd.rename?page=%n", "InfoContent.jsp" ),
-    PAGE_RSS( "rss", "%urss.jsp", null ),
-    PAGE_UPLOAD( "upload", "%ucmd.upload?page=%n", "AttachmentTab.jsp" ),
-    PAGE_VIEW( "view", "%ucmd.view?pageId=%n", "PageContent.jsp" ),
+    PAGE_ATTACH( "att", "attach", "%u", "/%n", null ),
+    PAGE_COMMENT( "comment", "Comment.jsp", "%u", "?page=%n", "CommentContent.jsp" ),
+    PAGE_CONFLICT ( "conflict", "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
+    PAGE_DELETE( "del", "Delete.jsp", "%u", "?page=%n", null ),
+    PAGE_DIFF( "diff", "cmd.diff", "%u", "?page=%n", "DiffContent.jsp" ),
+    PAGE_EDIT( "edit", "cmd.edit", "%u", "?page=%n", "EditContent.jsp" ),
+    PAGE_INFO( "info", "cmd.info", "%u", "?page=%n", "InfoContent.jsp" ),
+    PAGE_NONE( "", "", "%u", "%n", null ),
+    PAGE_PREVIEW( "preview", "cmd.preview", "%u", "?page=%n", "PreviewContent.jsp" ),
+    PAGE_RENAME( "rename", "cmd.rename", "%u", "?page=%n", "InfoContent.jsp" ),
+    PAGE_RSS( "rss", "rss.jsp", "%u", "", null ),
+    PAGE_UPLOAD( "upload", "cmd.upload", "%u", "?page=%n", "AttachmentTab.jsp" ),
+    PAGE_VIEW( "view", "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
 
-    REDIRECT( "", "%u%n", null ),
+    REDIRECT( "", "", "%u", "%n", null ),
 
-    WIKI_ADMIN( "admin", "%uadmin/Admin.jsp", "AdminContent.jsp" ),
-    WIKI_CREATE_GROUP( "createGroup", "%ucmd.createGroup", "NewGroupContent.jsp" ),
-    WIKI_ERROR( "error", "%uError.jsp", "DisplayMessage.jsp" ),
-    WIKI_FIND( "find", "%ucmd.find", "FindContent.jsp" ),
-    WIKI_INSTALL( "install", "%uInstall.jsp", null ),
-    WIKI_LOGIN( "login", "%ucmd.login?redirect=%n", "LoginContent.jsp" ),
-    WIKI_LOGOUT( "logout", "%ucmd.logout", null ),
-    WIKI_MESSAGE( "message", "%uMessage.jsp", "DisplayMessage.jsp" ),
-    WIKI_PREFS( "prefs", "%ucmd.prefs", "PreferencesContent.jsp" ),
-    WIKI_PREFS_RAP( "prefsRap", "%ucmd.prefsRap", "PreferencesContentRap.jsp" ),
-    WIKI_WORKFLOW( "workflow", "%uWorkflow.jsp", "WorkflowContent.jsp" );
+    WIKI_ADMIN( "admin", "admin/Admin.jsp", "%u", "", "AdminContent.jsp" ),
+    WIKI_CREATE_GROUP( "createGroup", "cmd.createGroup", "%u", "", "NewGroupContent.jsp" ),
+    WIKI_ERROR( "error", "Error.jsp", "%u", "", "DisplayMessage.jsp" ),
+    WIKI_FIND( "find", "cmd.find", "%u", "", "FindContent.jsp" ),
+    WIKI_INSTALL( "install", "Install.jsp", "%u", "", null ),
+    WIKI_LOGIN( "login", "cmd.login", "%u", "?redirect=%n", "LoginContent.jsp" ),
+    WIKI_LOGOUT( "logout", "cmd.logout", "%u", "", null ),
+    WIKI_MESSAGE( "message", "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
+    WIKI_PREFS( "prefs", "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
+    WIKI_PREFS_RAP( "prefsRap", "cmd.prefsRap", "%u", "", "PreferencesContentRap.jsp" ),
+    WIKI_WORKFLOW( "workflow", "Workflow.jsp", "%u", "", "WorkflowContent.jsp" );
 	//@formatter:on
 
 	private final String requestContext;
 	private final String urlPattern;
+	private final String uri;
 	private final String contentTemplate;
 
-	ContextEnum(final String requestContext, final String urlPattern, final String contentTemplate) {
+	ContextEnum(String requestContext, String uri, String prefix, String postfix, String contentTemplate) {
 		this.requestContext = requestContext;
-		this.urlPattern = urlPattern;
+		this.urlPattern = prefix + uri + postfix;
+		this.uri = uri;
 		this.contentTemplate = contentTemplate;
 	}
 
@@ -80,6 +82,10 @@ public enum ContextEnum {
 		return urlPattern;
 	}
 
+	public String getUri() {
+		return uri;
+	}
+	
 	public String getContentTemplate() {
 		return contentTemplate;
 	}

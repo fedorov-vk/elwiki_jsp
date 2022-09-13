@@ -37,14 +37,12 @@ public class PrefsCmdCode extends CmdCode {
 
 	private static final Logger log = Logger.getLogger(PrefsCmdCode.class);
 
-	public PrefsCmdCode(Command command) {
-		super(command);
+	protected PrefsCmdCode() {
+		super();
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Engine wiki = getEngine();
-
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 		/*
 		Enumeration<String> attrs = request.getAttributeNames();
 		Enumeration<String> params = request.getParameterNames();
@@ -62,11 +60,10 @@ public class PrefsCmdCode extends CmdCode {
 		}
 		*/
 
-		// Create wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(request);
-
+		// Get wiki context and check for authorization
+		Context wikiContext = ContextUtil.findContext(httpRequest);
+		Engine wiki = wikiContext.getEngine();
 		/*:FVK:
-		// = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
 		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 		*/
 
@@ -83,7 +80,7 @@ public class PrefsCmdCode extends CmdCode {
 		*/
 
 		// Are we saving the profile?
-		if ("saveProfile".equals(request.getParameter("action"))) {
+		if ("saveProfile".equals(httpRequest.getParameter("action"))) {
 			UserProfile profile = userMgr.parseProfile(wikiContext);
 
 			// Validate the profile
@@ -112,7 +109,7 @@ public class PrefsCmdCode extends CmdCode {
 				}
 			}
 			if (wikiSession.getMessages("profile").length == 0) {
-				String redirectPage = request.getParameter("redirect");
+				String redirectPage = httpRequest.getParameter("redirect");
 				PageManager pm = wiki.getManager(PageManager.class);
 				if (!pm.pageExistsByName(redirectPage)) {
 					redirectPage = wiki.getWikiConfiguration().getFrontPage();
@@ -128,13 +125,13 @@ public class PrefsCmdCode extends CmdCode {
 		}
 
 		// Are we saving the preferences?
-		if ("setAssertedName".equals(request.getParameter("action"))) {
-			Preferences.reloadPreferences(request);
+		if ("setAssertedName".equals(httpRequest.getParameter("action"))) {
+			Preferences.reloadPreferences(httpRequest);
 
-			String assertedName = request.getParameter("assertedName");
+			String assertedName = httpRequest.getParameter("assertedName");
 			CookieAssertionLoginModule.setUserCookie(response, assertedName);
 
-			String redirectPage = request.getParameter("redirect");
+			String redirectPage = httpRequest.getParameter("redirect");
 			if (!ServicesRefs.getPageManager().pageExistsByName(redirectPage)) {
 				redirectPage = wiki.getWikiConfiguration().getFrontPage();
 			}
@@ -147,7 +144,7 @@ public class PrefsCmdCode extends CmdCode {
 		}
 
 		// Are we remove profile information?
-		if ("clearAssertedName".equals(request.getParameter("action"))) {
+		if ("clearAssertedName".equals(httpRequest.getParameter("action"))) {
 			CookieAssertionLoginModule.clearUserCookie(response);
 			response.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "Logout.jsp"));
 

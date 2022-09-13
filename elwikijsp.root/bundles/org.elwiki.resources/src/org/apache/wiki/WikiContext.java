@@ -785,9 +785,7 @@ public class WikiContext implements Context, Command {
 
 	@Override
 	public ContextEnum getContextCmd() {
-		Assert.isTrue(false, "Код не реализован.");
-		// TODO Auto-generated method stub
-		return null;
+		return this.m_command.getContextCmd();
 	}
 
 }

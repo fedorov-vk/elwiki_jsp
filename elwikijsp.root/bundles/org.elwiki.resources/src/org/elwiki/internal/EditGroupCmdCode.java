@@ -7,6 +7,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.WikiSecurityException;
@@ -16,16 +17,16 @@ import org.elwiki.services.ServicesRefs;
 
 public class EditGroupCmdCode extends CmdCode {
 
-	protected EditGroupCmdCode(Command command) {
-		super(command);
+	protected EditGroupCmdCode() {
+		super();
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
-		Engine wiki = ServicesRefs.Instance;
 
-		// Create wiki context and check for authorization
-		Context wikiContext = Wiki.context().create(wiki, httpRequest, ContextEnum.GROUP_EDIT.getRequestContext());
+		// Get wiki context and check for authorization
+		Context wikiContext = ContextUtil.findContext(httpRequest);
+		Engine wiki = wikiContext.getEngine();
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response)) {
 			return;
 		}

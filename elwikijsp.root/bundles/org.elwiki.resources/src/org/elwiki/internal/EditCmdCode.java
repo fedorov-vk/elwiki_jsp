@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Engine;
-
 import org.apache.log4j.*;
 
 import java.io.IOException;
@@ -40,17 +37,17 @@ public class EditCmdCode extends CmdCode {
 	 * Creates an instance of EditCmdCode. 
 	 * @param command
 	 */
-	public EditCmdCode(Command command) {
-		super(command);
+	protected EditCmdCode() {
+		super();
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 		HttpSession session = httpRequest.getSession();
 
-		Engine wiki = ServicesRefs.Instance;
-	    // Create wiki context and check for authorization
-	    Context wikiContext = Wiki.context().create( wiki, httpRequest, ContextEnum.PAGE_EDIT.getRequestContext() );
+	    // Get wiki context and check for authorization
+	    Context wikiContext = ContextUtil.findContext(httpRequest);
+	    Engine wiki = wikiContext.getEngine();
 	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
 	        return;
 	    }

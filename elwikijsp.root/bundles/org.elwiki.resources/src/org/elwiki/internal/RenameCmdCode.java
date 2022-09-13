@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.preferences.Preferences;
@@ -23,15 +24,15 @@ public class RenameCmdCode extends CmdCode {
 
 	private static final Logger log = Logger.getLogger(RenameCmdCode.class);
 
-	public RenameCmdCode(Command command) {
-		super(command);
+	protected RenameCmdCode() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
-		Context wikiContext = ServicesRefs.getCurrentContext();
-
+		// Get wiki context and check for authorization
+		Context wikiContext = ContextUtil.findContext(httpRequest);
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response))
 			return;
 

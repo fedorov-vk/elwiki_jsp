@@ -21,15 +21,15 @@ import org.osgi.service.useradmin.Group;
 
 public class CreateGroupCmdCode extends CmdCode {
 
-	protected CreateGroupCmdCode(Command command) {
-		super(command);
+	protected CreateGroupCmdCode() {
+		super();
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 		Engine wiki = ServicesRefs.Instance;
 
-		// Create wiki context and check for authorization
+		// Get wiki context and check for authorization
 		Context wikiContext = Wiki.context().create(wiki, httpRequest, ContextEnum.GROUP_EDIT.getRequestContext());
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response)) {
 			return;

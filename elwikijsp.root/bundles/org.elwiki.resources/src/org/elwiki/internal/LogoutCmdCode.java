@@ -13,8 +13,8 @@ public class LogoutCmdCode extends CmdCode {
 
 	//private static final Logger log = Logger.getLogger(LogoutCmdCode.class);
 
-	public LogoutCmdCode(Command command) {
-		super(command);
+	protected LogoutCmdCode() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 

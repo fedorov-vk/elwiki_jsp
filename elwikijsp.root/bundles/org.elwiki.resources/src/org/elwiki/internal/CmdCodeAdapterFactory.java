@@ -1,17 +1,42 @@
 package org.elwiki.internal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.wiki.api.core.Command;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.ui.AllCommands;
 import org.eclipse.core.runtime.IAdapterFactory;
 
 public class CmdCodeAdapterFactory implements IAdapterFactory {
 
-	// use a static final field so that the adapterList is only instanciated once.
+	// use a static final field so that the adapterList is only instantiated once.
 	private static final Class<?>[] adapterList = new Class<?>[] { CmdCode.class };
+
+	/** Private map with request CmdContexts as keys, Commands as values */
+	//@formatter:off
+	private final Map<ContextEnum, CmdCode> context2cmdCode = Map.ofEntries(
+			Map.entry(ContextEnum.WIKI_LOGIN, new LoginCmdCode()),
+			Map.entry(ContextEnum.WIKI_LOGOUT, new LogoutCmdCode()),
+			Map.entry(ContextEnum.PAGE_VIEW, new ViewCmdCode()),
+			Map.entry(ContextEnum.PAGE_EDIT, new EditCmdCode()),
+			Map.entry(ContextEnum.PAGE_DIFF, new DiffCmdCode()),
+			Map.entry(ContextEnum.PAGE_INFO, new InfoCmdCode()),
+			Map.entry(ContextEnum.PAGE_RENAME, new RenameCmdCode()),
+			Map.entry(ContextEnum.PAGE_UPLOAD, new UploadCmdCode()),
+			Map.entry(ContextEnum.GROUP_EDIT, new EditGroupCmdCode()),
+			//Map.entry(ContextEnum.GROUP_VIEW, )
+			//Map.entry(ContextEnum.GROUP_CREATE, )
+			Map.entry(ContextEnum.GROUP_DELETE, new DeleteGroupCmdCode()),
+			Map.entry(ContextEnum.WIKI_PREFS, new PrefsCmdCode()),
+			// Map.entry(ContextEnum.WIKI_PREFS_RAP),
+			Map.entry(ContextEnum.WIKI_FIND, new FindCmdCode()) 
+	); //@formatter:on	
 
 	@Override
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-		if (adapterType == CmdCode.class && adaptableObject instanceof Command) {
-			return adapterType.cast(getCommandCode((Command) adaptableObject));
+		if (adapterType == CmdCode.class && adaptableObject instanceof ContextEnum) {
+			return adapterType.cast(getCommandCode((ContextEnum) adaptableObject));
 		}
 		return null;
 	}
@@ -21,67 +46,8 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 		return adapterList;
 	}
 
-	private Object getCommandCode(Command command) {
-		CmdCode cmdCode = null;
-		String commandId = command.getRequestContext();
-		switch (commandId) {
-		case "view":
-			cmdCode = new ViewCmdCode(command);
-			break;
-
-		case "edit":
-			cmdCode = new EditCmdCode(command);
-			break;
-
-		case "login":
-			cmdCode = new LoginCmdCode(command);
-			break;
-
-		case "logout":
-			cmdCode = new LogoutCmdCode(command);
-			break;
-
-		case "rename":
-			cmdCode = new RenameCmdCode(command);
-			break;
-
-		case "diff":
-			cmdCode = new DiffCmdCode(command);
-			break;
-
-		case "upload":
-			cmdCode = new UploadCmdCode(command);
-			break;
-
-		case "editGroup":
-			cmdCode = new EditGroupCmdCode(command);
-			break;
-
-		/*case "viewGroup":
-			cmdCode = new EditGroupCmdCode(command);
-			break;*/
-
-		case "createGroup":
-			cmdCode = new CreateGroupCmdCode(command);
-			break;
-			
-		case "deleteGroup":
-			cmdCode = new DeleteGroupCmdCode(command);
-			break;
-
-		case "find":
-			cmdCode = new FindCmdCode(command);
-			break;
-
-		case "prefs":
-			cmdCode = new PrefsCmdCode(command);
-			break;
-
-		default:
-			break;
-		}
-
-		return cmdCode;
+	private Object getCommandCode(ContextEnum adaptableObject) {
+		return this.context2cmdCode.get(adaptableObject);
 	}
 
 }

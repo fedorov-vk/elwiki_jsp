@@ -16,8 +16,8 @@ import org.elwiki.services.ServicesRefs;
 
 public class DeleteGroupCmdCode extends CmdCode {
 
-	protected DeleteGroupCmdCode(Command command) {
-		super(command);
+	protected DeleteGroupCmdCode() {
+		super();
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
@@ -117,7 +118,9 @@ public class PageFilter extends HttpFilter {
 			}
 
 			{// Code for context`s command: get it, execute.
-				Command cmd = ServicesRefs.getCurrentContext().getCommand();
+				Assert.isTrue(false, "Old code commented :FVK:.");
+				Command cmd = null; //ServicesRefs.getCurrentContext().getCommand();
+				
 				cmdCode = Platform.getAdapterManager().getAdapter(cmd, CmdCode.class);
 				if (cmdCode != null) {
 					try {

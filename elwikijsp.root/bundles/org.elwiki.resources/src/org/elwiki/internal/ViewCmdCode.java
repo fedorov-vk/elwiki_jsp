@@ -7,19 +7,20 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.ContextUtil;
 import org.elwiki.services.ServicesRefs;
 
 public class ViewCmdCode extends CmdCode {
 
-	public ViewCmdCode(Command command) {
-		super(command);
+	protected ViewCmdCode() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response)
 			throws Exception {
-		Context wikiContext = ServicesRefs.getCurrentContext();
+		Context wikiContext = ContextUtil.findContext(httpRequest);
 		String pagereq = wikiContext.getName();
 
 	    // Redirect if request was for a special page

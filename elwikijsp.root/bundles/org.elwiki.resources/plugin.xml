@@ -6,7 +6,14 @@
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.apache.wiki.api.core.Command"
+            adaptableType="java.lang.String"
+            class="org.elwiki.internal.CmdContextAdapterFactory">
+         <adapter
+               type="org.apache.wiki.api.core.ContextEnum">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.apache.wiki.api.core.ContextEnum"
             class="org.elwiki.internal.CmdCodeAdapterFactory">
          <adapter
                type="org.elwiki.internal.CmdCode">
