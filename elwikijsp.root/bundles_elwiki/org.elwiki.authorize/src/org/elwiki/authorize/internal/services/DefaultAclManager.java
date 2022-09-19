@@ -176,7 +176,7 @@ public class DefaultAclManager implements AclManager {
 		//  Does the page already have cached ACLs?
 		//
 		Acl acl = page.getAcl();
-		log.debug("page=" + page.getName() + "\n" + acl);
+//:FVK:		log.debug("page=" + page.getName() + "\n" + acl);
 
 		if (acl == null) {
 			//

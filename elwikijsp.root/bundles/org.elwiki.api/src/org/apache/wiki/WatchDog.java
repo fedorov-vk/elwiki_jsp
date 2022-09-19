@@ -184,7 +184,7 @@ public final class WatchDog {
      */
     public void enterState( final String state, final int expectedCompletionTime ) {
         if( log.isDebugEnabled() ){
-        	log.debug( m_watchable.getName() + ":\n Entering state '" + state +
+        	log.debug( m_watchable.getName() + ": Entering state '" + state +
         			                           "', expected completion in " + expectedCompletionTime + " s");
         }
 
@@ -216,7 +216,7 @@ public final class WatchDog {
                     m_stateStack.pop();
 
                     if( log.isDebugEnabled() ) {
-                    	log.debug( m_watchable.getName() + ": Exiting state " + st.getState() );
+                    	log.debug(m_watchable.getName() + ": Exiting state '" + st.getState() + "'" );
                     }
                 } else {
                     // FIXME: should actually go and fix things for that
@@ -224,7 +224,7 @@ public final class WatchDog {
                 }
             }
         } else {
-            log.warn( "Stack for " + m_watchable.getName() + " is empty!" );
+            log.warn( "Stack for '" + m_watchable.getName() + "' is empty!" );
         }
     }
 
@@ -265,7 +265,7 @@ public final class WatchDog {
                     m_watchable.timeoutExceeded( st.getState() );
                 }
             } else {
-            	log.warn( "Stack for " + m_watchable.getName() + " is empty!" );
+            	log.warn( "Stack for '" + m_watchable.getName() + "' is empty!" );
             }
         }
     }

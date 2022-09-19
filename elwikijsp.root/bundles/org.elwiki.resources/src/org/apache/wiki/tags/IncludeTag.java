@@ -82,6 +82,7 @@ public class IncludeTag extends BaseWikiTag {
 				URL url = templateManager.getResourceUrl(page);
 				URL res = FileLocator.resolve(url);
 				String pagePath = res.getPath();
+				log.debug("include page " + page + " (URL: " + url.toString() + ")");
 				pageContext.include(page);
 			}
 		} catch (final ServletException e) {

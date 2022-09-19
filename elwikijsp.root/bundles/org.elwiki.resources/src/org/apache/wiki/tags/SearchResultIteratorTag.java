@@ -104,7 +104,7 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 			if (r == null)
 				return SKIP_BODY;
 
-			// Create a wiki context for the result
+			// Create a wiki context for the result (context represents the found page).
 			final Engine engine = m_wikiContext.getEngine();
 			final HttpServletRequest request = m_wikiContext.getHttpRequest();
 			final Command command = PageCommand.VIEW.targetedCommand(r.getPage());

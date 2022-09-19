@@ -196,7 +196,7 @@ public class WikiContext implements Context, Command {
 		if (log.isDebugEnabled()) {
 			final HttpSession session = (request == null) ? null : request.getSession(false);
 			final String sid = session == null ? "(null)" : session.getId();
-			log.debug("Creating WikiContext for session ID=" + sid + "; target=" + getName() + "; command="
+			log.debug("Creating WikiContext for\n session ID=" + sid + ";\n target=" + getName() + ";\n command="
 					+ getCommand());
 		}
 

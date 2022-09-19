@@ -1,11 +1,8 @@
 package org.elwiki.internal;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.ui.AllCommands;
 import org.eclipse.core.runtime.IAdapterFactory;
 
 public class CmdCodeAdapterFactory implements IAdapterFactory {

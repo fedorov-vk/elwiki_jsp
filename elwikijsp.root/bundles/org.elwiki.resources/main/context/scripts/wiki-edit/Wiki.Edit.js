@@ -39,7 +39,7 @@ wiki.add("textarea#editorarea", function( main ){
 
     var form = main.form, snipe, preview;
 
-    function getFormElem( selector ){  return form.getElement( selector );  }
+    function getFormElem( selector ){ return form.getElement( selector );  }
 
     onbeforeunload( window, main );
 

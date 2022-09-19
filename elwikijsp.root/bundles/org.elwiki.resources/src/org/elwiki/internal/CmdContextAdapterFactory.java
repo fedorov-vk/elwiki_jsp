@@ -21,6 +21,13 @@ public class CmdContextAdapterFactory implements IAdapterFactory {
 		return adapterList;
 	}
 
+	/**
+	 * Get WikiContext according given URI. If URI is not determined as known - then returns
+	 * default, ContextEnum.PAGE_VIEW.
+	 * 
+	 * @param adaptableObject
+	 * @return Wiki context.
+	 */
 	private Object getContext(String adaptableObject) {
 		for (ContextEnum context : ContextEnum.values()) {
 			if (adaptableObject.equals(context.getUri())) {

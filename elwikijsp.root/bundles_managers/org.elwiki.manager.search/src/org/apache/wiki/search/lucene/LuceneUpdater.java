@@ -44,7 +44,7 @@ final class LuceneUpdater extends WikiBackgroundThread {
 
     @Override
     public void backgroundTask() {
-        m_watchdog.enterState("Emptying index queue", 60);
+        //:FVK: m_watchdog.enterState("Emptying index queue", 60); //:FVK: TODO: remove constant '60'.
 
         synchronized ( m_provider.m_updates ) {
             while( m_provider.m_updates.size() > 0 ) {
@@ -55,7 +55,7 @@ final class LuceneUpdater extends WikiBackgroundThread {
             }
         }
 
-        m_watchdog.exitState();
+      //:FVK: m_watchdog.exitState();
     }
 
 }
