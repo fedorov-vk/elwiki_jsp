@@ -95,14 +95,14 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 		// skip all, except cmd.*, AJAX.
 		String uri = httpRequest.getRequestURI();
-		log.debug("doFilter()");
+		log.debug("doFilter()\n requested URI: " + httpRequest.getRequestURI());
 		if (uri.startsWith("/cmd.")) {
-			log.debug("URI is matched /cmd.: " + uri);
+			log.debug("Request URI starts with '/cmd.'");
 		} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
-			log.debug("URI is matched: " + uri);
+			log.debug("Request URI is matched '.+?AJAX.+?$'.");
 			isAjaxPage = true;
 		} else {
-			log.debug("URI isn't matched: " + uri);
+			log.debug("Request URI isn't matched anything.");
 			// System.err.println("PFC original resource: " + uri);
 			super.doFilter(httpRequest, response, chain);
 		}
@@ -171,6 +171,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 					httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
 					httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
 				}
+			} else {
+				httpRequest.getRequestDispatcher(uri).include(httpRequest, responseWrapper);
 			}
 
 			try {
@@ -248,8 +250,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Inserts whatever resources were requested by any plugins or other components
-	 * for this particular type.
+	 * Inserts whatever resources were requested by any plugins or other components for this
+	 * particular type.
 	 *
 	 * @param wikiContext The usual processing context
 	 * @param string      The source string
@@ -289,8 +291,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		private boolean useEncoding;
 
 		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a
-		 * balance in speed and memory consumption.
+		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
+		 * and memory consumption.
 		 */
 		private static final int INIT_BUFFER_SIZE = 0x8000;
 
@@ -306,8 +308,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		}
 
 		/**
-		 * Returns a writer for output; this wraps the internal buffer into a
-		 * PrintWriter.
+		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
 		 */
 		@Override
 		public PrintWriter getWriter() {
@@ -377,8 +378,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Simple response wrapper that just allows us to gobble through the entire
-	 * response before it's output.
+	 * Simple response wrapper that just allows us to gobble through the entire response before it's
+	 * output.
 	 */
 	private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
 
@@ -389,8 +390,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		private boolean useEncoding;
 
 		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a
-		 * balance in speed and memory consumption.
+		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
+		 * and memory consumption.
 		 */
 		private static final int INIT_BUFFER_SIZE = 0x8000;
 
@@ -406,8 +407,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		}
 
 		/**
-		 * Returns a writer for output; this wraps the internal buffer into a
-		 * PrintWriter.
+		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
 		 */
 		@Override
 		public PrintWriter getWriter() {

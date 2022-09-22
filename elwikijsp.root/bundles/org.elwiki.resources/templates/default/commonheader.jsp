@@ -105,7 +105,7 @@ String.I18N.PREFIX = "javascript.";
     EG when a templatefile is not present, the generated link should point to the default template.
     Solution for now: manually force the relevant links back to the default template
 --%>
-<meta name="wikiXHRSearch" content='<wiki:Link format="url" templatefile="../default/AJAXSearch.jsp" />' />
+<meta name="wikiXHRSearch" content='<wiki:Link format="url" templatefile="AJAXSearch.jsp" />' />
 <meta name="wikiXHRPreview" content='<wiki:Link format="url" templatefile="../default/AJAXPreview.jsp" />' />
 <meta name="wikiXHRCategories" content='<wiki:Link format="url" templatefile="../default/AJAXCategories.jsp" />' />
 <meta name="wikiXHRHtml2Markup" content='<wiki:Link format="url" path="XHRHtml2Markup.jsp" />' />

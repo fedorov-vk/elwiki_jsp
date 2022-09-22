@@ -17,10 +17,17 @@
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%! Logger log = Logger.getLogger("PageHead"); %>
+<%!
+  Logger log;
+  //Engine wiki;
+  public void jspInit()
+  {
+    //wiki = ServicesRefs.Instance; //:FVK: workaround.
+    log = Logger.getLogger("PageHead_jsp");
+  }
+%>
 <%
-   log.debug("PageHead.jsp");		
-	//Engine wiki = Wiki.engine().find( getServletConfig() );
+   log.debug("<start> PageHead.jsp");
 %>
 
 <!-- ******* ViewTemplate jsp ******* (START) -->
@@ -51,4 +58,7 @@
 <body class="context-<wiki:Variable var='requestcontext' default='' />">
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
 <%@ include file="/templates/default/Header.jsp" %>
+<%
+   log.debug("<end> PageHead.jsp");		
+%>
 <!-- ~~ END ~~ PageHead.jsp -->

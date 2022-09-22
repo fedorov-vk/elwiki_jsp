@@ -41,21 +41,27 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%!
+  Logger log;
+  Engine wiki;
   public void jspInit()
   {
+    log = Logger.getLogger("AJAXSearch_jsp");
     wiki = ServicesRefs.Instance; //:FVK: workaround.
   }
-  Logger log = Logger.getLogger("JSPWikiSearch");
-  Engine wiki;
 %>
 <%
+  Context wikiContext;
   /* ********************* actual start ********************* */
   /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
+  wikiContext = (Context)request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+  if( wikiContext==null )
+  {
+	  wikiContext = Wiki.context().create(wiki, request, ContextEnum.WIKI_FIND.getRequestContext());
+	  request.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+  }
+  if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
-  Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
-  if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
-
-  String query = request.getParameter( "query");
+  String query = request.getParameter( "query" );
 
   if( (query != null) && ( !query.trim().equals("") ) )
   {
