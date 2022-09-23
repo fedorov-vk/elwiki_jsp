@@ -16,21 +16,24 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<%@ page language="java" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%@ page import="java.util.Properties"%>
+<!-- ~~ START ~~ wysiwyg.jsp -->
+<%--
 <%@ page import="org.apache.commons.lang3.*" %>
+--%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
-<%@ page import="org.apache.wiki.filters.*" %>
+<%@ page import="org.apache.wiki.filters0.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.parser0.MarkupParser" %>
-<%@ page import="org.apache.wiki.render.*" %>
+<%@ page import="org.apache.wiki.render0.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -49,8 +52,8 @@
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
-    String originalCCLOption = (String)wikiPage.getAttributes( MarkupParser.PROP_CAMELCASELINKS );
-    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
+    String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
+//:FVK:    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
     String usertext = ContextUtil.getEditedText(pageContext);
 %>
@@ -109,7 +112,7 @@
    // after the XHTML for wysiwyg editor has been rendered.
    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
-   wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
+//:FVK:   wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
 
    /*not used
    String templateDir = (String)engine.getWikiProperties().get( Engine.PROP_TEMPLATEDIR );
@@ -318,3 +321,4 @@ Wiki.add("[name=htmlPageText]", function( element){
 
 //]]>
 </script>
+<!-- ~~ END ~~ wysiwyg.jsp -->

@@ -52,9 +52,6 @@
     </div>
   </wiki:CheckVersion>
 
-<!-- :FVK: workaround - замены тега на include.
-  < % @ include file="/templates/default/editors/plain.jsp" % >
- -->
   <wiki:Editor />
 
 </div>

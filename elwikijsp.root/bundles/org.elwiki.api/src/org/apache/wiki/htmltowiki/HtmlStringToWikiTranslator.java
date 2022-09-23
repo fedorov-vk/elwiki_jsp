@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.htmltowiki;
 
+import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -26,8 +27,14 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaderSAX2Factory;
 import org.jdom2.output.XMLOutputter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Converting Html to Wiki Markup with NekoHtml for converting html to xhtml and
@@ -36,6 +43,7 @@ import java.io.StringReader;
  */
 public class HtmlStringToWikiTranslator
 {
+	private static final Logger log = Logger.getLogger(HtmlStringToWikiTranslator.class);
 
     private static final String CYBERNEKO_PARSER = "org.cyberneko.html.parsers.SAXParser";
 
@@ -103,11 +111,25 @@ public class HtmlStringToWikiTranslator
      * @throws JDOMException
      * @throws IOException
      */
-    private Element htmlStringToElement( final String html ) throws JDOMException, IOException
+    private Element htmlStringToElement( final String draftHtml ) throws JDOMException, IOException
     {
-        final SAXBuilder builder = new SAXBuilder( new XMLReaderSAX2Factory( true, CYBERNEKO_PARSER), null, null );
-        final Document doc = builder.build( new StringReader( html ) );
-        final Element element = doc.getRootElement();
+        SAXBuilder builder;
+        //:FVK: old code:: builder = new SAXBuilder( new XMLReaderSAX2Factory( true, CYBERNEKO_PARSER), null, null );
+        builder = new SAXBuilder();
+        
+        String def1 = "<?xml version=\"1.0\"?>"
+        + "<!DOCTYPE some_name ["
+        + "<!ENTITY nbsp \"&#160;\">"
+        + "]>";
+        String html = def1 + "<div>" + draftHtml + "</div>"; 
+        
+        Document doc = null;
+        try {
+			doc = builder.build( new StringReader(html) );
+		} catch (JDOMException | IOException  e) {
+			log.error(e);
+		}
+        Element element = (doc != null)? doc.getRootElement() : null;
         return element;
     }
 

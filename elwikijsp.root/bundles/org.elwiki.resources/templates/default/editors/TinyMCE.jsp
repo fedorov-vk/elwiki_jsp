@@ -23,14 +23,15 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
-<%@ page import="org.apache.wiki.filters.*" %>
+<%@ page import="org.apache.wiki.filters0.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.parser0.MarkupParser" %>
-<%@ page import="org.apache.wiki.render.*" %>
+<%@ page import="org.apache.wiki.render0.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page import="org.elwiki_data.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -53,7 +54,7 @@
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
-    String originalCCLOption = (String)wikiPage.getAttributes( MarkupParser.PROP_CAMELCASELINKS );
+    String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
     wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
     String usertext = ContextUtil.getEditedText(pageContext);
