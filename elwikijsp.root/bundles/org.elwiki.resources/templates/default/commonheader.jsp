@@ -106,8 +106,8 @@ String.I18N.PREFIX = "javascript.";
     Solution for now: manually force the relevant links back to the default template
 --%>
 <meta name="wikiXHRSearch" content='<wiki:Link format="url" templatefile="AJAXSearch.jsp" />' />
-<meta name="wikiXHRPreview" content='<wiki:Link format="url" templatefile="../default/AJAXPreview.jsp" />' />
-<meta name="wikiXHRCategories" content='<wiki:Link format="url" templatefile="../default/AJAXCategories.jsp" />' />
+<meta name="wikiXHRPreview" content='<wiki:Link format="url" templatefile="AJAXPreview.jsp" />' />
+<meta name="wikiXHRCategories" content='<wiki:Link format="url" templatefile="AJAXCategories.jsp" />' />
 <meta name="wikiXHRHtml2Markup" content='<wiki:Link format="url" path="XHRHtml2Markup.jsp" />' />
 <meta name="wikiXHRMarkup2Wysiwyg" content='<wiki:Link format="url" path="XHRMarkup2Wysiwyg.jsp" />' />
 

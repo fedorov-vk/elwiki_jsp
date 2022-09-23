@@ -19,10 +19,12 @@
 package org.apache.wiki.api.core;
 
 /**
- * Every enumeration contains 3 strings:
+ * Every enumeration contains 5 strings:
  * <ol>
  * <li>request context ID
- * <li>URL pattern
+ * <li>request URI
+ * <li>prefix of URL pattern
+ * <li>postfix of URL pattern
  * <li>JSP file name from the templates
  * </ol>
  */

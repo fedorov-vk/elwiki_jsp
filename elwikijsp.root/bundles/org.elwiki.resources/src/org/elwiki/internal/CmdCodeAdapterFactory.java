@@ -5,6 +5,11 @@ import java.util.Map;
 import org.apache.wiki.api.core.ContextEnum;
 import org.eclipse.core.runtime.IAdapterFactory;
 
+/**
+ * Adapter factory converting ContextEnum to CmdCode.
+ *
+ * @author v.fedorov
+ */
 public class CmdCodeAdapterFactory implements IAdapterFactory {
 
 	// use a static final field so that the adapterList is only instantiated once.

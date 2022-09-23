@@ -3,6 +3,12 @@ package org.elwiki.internal;
 import org.apache.wiki.api.core.ContextEnum;
 import org.eclipse.core.runtime.IAdapterFactory;
 
+/**
+ * Adapter factory converting URI to ContextEnum.<br/>
+ * URI without a leading '/' is examined.
+ *
+ * @author v.fedorov
+ */
 public class CmdContextAdapterFactory implements IAdapterFactory {
 
 	// use a static final field so that the adapterList is only instantiated once.
