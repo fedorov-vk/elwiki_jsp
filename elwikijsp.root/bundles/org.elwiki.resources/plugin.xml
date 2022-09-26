@@ -20,61 +20,6 @@
          </adapter>
       </factory>
    </extension>
-<!-- ~~ :FVK: ~~ перенесено в @Component
-   <extension
-         id="filter.context"
-         point="org.eclipse.equinox.http.registry.filters">
-      <filter
-            alias="/*.cmd"
-            class="org.elwiki.web.PageFilterContext"
-            httpcontextId="org.elwiki.resources.httpcontext"
-            load-on-startup="true">
-      </filter>
-   </extension>
-   <extension
-         point="org.eclipse.equinox.http.registry.filters">
-      <filter
-            alias="/*.cmd"
-            class="org.elwiki.web.PageFilterAuthentication"
-            httpcontextId="org.elwiki.resources.httpcontext"
-            load-on-startup="true">
-      </filter>
-   </extension>
-   <extension
-         point="org.eclipse.equinox.http.registry.filters">
-      <filter
-            alias="/*.cmd"
-            class="org.elwiki.web.PageFilter"
-            httpcontextId="org.elwiki.resources.httpcontext"
-            load-on-startup="true">
-      </filter>
-   </extension>
-   <extension
-         point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-            alias="/*.cmd"
-            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory"
-            httpcontextId="org.elwiki.resources.httpcontext">
-      </servlet>
-   </extension>
-   <extension
-         id="pages"
-         point="org.eclipse.equinox.http.registry.httpcontexts">
-      <httpcontext
-            class="org.elwiki.web.PageServletContextHelper"
-            id="org.elwiki.resources.httpcontext">
-         <resource-mapping
-               path="/page">
-         </resource-mapping>
-      </httpcontext>
-   </extension>
--->
-
-<!--
-         <resource-mapping
-               path="/">
-         </resource-mapping>
--->
 
    <!-- END ~ ~~ :FVK: definitions ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -->
 
