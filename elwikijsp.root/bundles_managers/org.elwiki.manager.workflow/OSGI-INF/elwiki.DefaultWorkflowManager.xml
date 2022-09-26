@@ -4,4 +4,5 @@
       <provide interface="org.apache.wiki.workflow0.WorkflowManager"/>
    </service>
    <implementation class="org.apache.wiki.workflow.DefaultWorkflowManager"/>
+   <reference cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
 </scr:component>

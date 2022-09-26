@@ -68,6 +68,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.services.ServicesRefs;
@@ -144,7 +145,8 @@ public class LuceneSearchProvider implements SearchProvider {
         m_engine = engine;
         searchExecutor = Executors.newCachedThreadPool();
 
-        m_luceneDirectory = engine.getWorkDir()+File.separator+LUCENE_DIR;
+		IPath workDir = engine.getWikiConfiguration().getWorkDir();
+		m_luceneDirectory = workDir.append(LUCENE_DIR).toString();
 
         IPreferenceStore props = engine.getWikiPreferences();
 		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdater.INITIAL_DELAY );

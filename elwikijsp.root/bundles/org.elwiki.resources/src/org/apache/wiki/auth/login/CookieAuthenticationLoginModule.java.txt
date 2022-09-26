@@ -164,7 +164,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
      * @return A File handle, or null, if there was a problem.
      */
     private static File getCookieFile( final Engine engine, final String uid ) {
-        final File cookieDir = new File( engine.getWorkDir(), COOKIE_DIR );
+        final File cookieDir = new File( engine.getWikiConfiguration().getWorkDir().toString(), COOKIE_DIR );
 
         if( !cookieDir.exists() ) {
             cookieDir.mkdirs();

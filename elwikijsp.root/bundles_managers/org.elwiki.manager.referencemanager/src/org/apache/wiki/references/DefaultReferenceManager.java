@@ -184,6 +184,10 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
 	// -- service handling ---------------------------(start)--
 
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
+
     @WikiServiceReference
     private IStorageCdo storageCdo;
 
@@ -312,7 +316,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     private synchronized long unserializeFromDisk() throws IOException, ClassNotFoundException {
         final long saved;
 
-        final File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_FILE );
+		final File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE);
         try( final ObjectInputStream in = new ObjectInputStream( new BufferedInputStream( new FileInputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -341,7 +345,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  Serializes hashmaps to disk.  The format is private, don't touch it.
      */
     private synchronized void serializeToDisk() {
-        final File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_FILE );
+		final File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE);
         try( final ObjectOutputStream out = new ObjectOutputStream( new BufferedOutputStream( new FileOutputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -383,7 +387,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         //  Find attribute cache, and check if it exists
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
+			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
             f = new File( f, hashName );
             if( !f.exists() ) {
                 return 0L;
@@ -433,7 +437,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
+			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
             if( !f.exists() ) {
                 f.mkdirs();
             }
@@ -558,7 +562,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( pageName );
         if( hashName != null ) {
-        	File f = new File( ServicesRefs.Instance.getWorkDir(), SERIALIZATION_DIR );
+			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
             f = new File( f, getHashFileName( pageName ) );
             if( f.exists() ) {
                 f.delete();

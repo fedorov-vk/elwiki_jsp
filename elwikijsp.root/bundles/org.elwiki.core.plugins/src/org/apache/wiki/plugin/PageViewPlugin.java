@@ -206,7 +206,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          */
         public synchronized void initialize( final Engine engine ) {
             log.info( "initializing PageView Manager" );
-            m_workDir = engine.getWorkDir();
+            m_workDir = engine.getWikiConfiguration().getWorkDir().toString();
             engine.addWikiEventListener( this );
             if( m_counters == null ) {
                 // Load the counters into a collection

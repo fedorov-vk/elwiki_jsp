@@ -3,6 +3,8 @@ package org.elwiki.configuration.internal;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -40,6 +42,9 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	private static final Logger log = Logger.getLogger(WikiConfiguration.class);
 
+    /** The name used for the default template. The value is {@value}. */
+    private final String DEFAULT_TEMPLATE_NAME = "default";
+	
     /** Property for application name */
     String PROP_APPNAME = "jspwiki.applicationName";
 
@@ -62,7 +67,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** If true, all titles will be cleaned. */
 	private boolean m_beautifyTitle;
 
-	/** Stores the template path. This is relative to "templates". */
+	/** Stores the template path. This is relative to "templates". (:FVK: here  it is necessary to eliminate connection with resource plugin) */
 	private String m_templateDir;
 
 	/** The default front page name. Defaults to "Main". */
@@ -257,11 +262,50 @@ public class WikiConfiguration implements IWikiConfiguration {
 		this.m_beautifyTitle = this.prefs.getBoolean(IWikiPreferences.PROP_BEAUTIFYTITLE);
 
 		this.m_templateDir = this.prefs.getString(IWikiPreferences.PROP_TEMPLATEDIR);
-		if (m_templateDir.length() == 0) {
-			this.m_templateDir = "default";
-		}
+		enforceValidTemplateDirectory();
 
 		this.m_frontPage = TextUtil.getStringProperty(this.prefs, IWikiPreferences.PROP_FRONTPAGE, "Main" );
+	}
+
+	/**
+	 * Checks if the template directory specified in the wiki's properties actually exists. If it
+	 * doesn't, then {@code m_templateDir} is set to {@link #DEFAULT_TEMPLATE_NAME}.
+	 * <p>
+	 * This checks the existence of the <tt>ViewTemplate.jsp</tt> file, which exists in every
+	 * template using {@code m_servletContext.getRealPath("/")}.
+	 * <p>
+	 * {@code m_servletContext.getRealPath("/")} can return {@code null} on certain
+	 * servers/conditions (f.ex, packed wars), an extra check against
+	 * {@code m_servletContext.getResource} is made.
+	 */
+	void enforceValidTemplateDirectory() {
+		if (m_templateDir.length() == 0) {
+			this.m_templateDir = DEFAULT_TEMPLATE_NAME;
+		}
+
+		//TODO: перенести вычисление размещения JSP - относительно osgi-bundle, вместо данных из ServletContext. 
+		// Место размещения JSP файлов темплейта - определялось из ServletContext.
+		// Для ElWiki - это работает через bundle.
+		/*
+		if (m_servletContext != null) {
+			final String viewTemplate = "templates" + File.separator + getTemplateDir() + File.separator
+					+ "ViewTemplate.jsp";
+			boolean exists = new File(m_servletContext.getRealPath("/") + viewTemplate).exists();
+			if (!exists) {
+				try {
+					final URL url = m_servletContext.getResource(viewTemplate);
+					exists = url != null && !url.getFile().isEmpty();
+				} catch (final MalformedURLException e) {
+					log.warn("template not found with viewTemplate " + viewTemplate);
+				}
+			}
+			if (!exists) {
+				log.warn(getTemplateDir() + " template not found, updating WikiEngine's default template to "
+						+ DEFAULT_TEMPLATE_NAME);
+				m_templateDir = DEFAULT_TEMPLATE_NAME;
+			}
+		}
+		*/
 	}
 
 	/**
@@ -294,12 +338,11 @@ public class WikiConfiguration implements IWikiConfiguration {
 	 */
 	//TODO: - возвращаемый Exception трансформировать в ElWiki-ErrorException.
 	private IPath getDirectoryPlace(String preferenceKey) throws Exception {
-		IPath result;
+		IPath result = null;
 
 		String dir = prefs.getString(preferenceKey);
 		if (dir != null && dir.length()!=0 ) {
-			Path pathDir = new Path(dir);
-			File fileDir = pathDir.toFile();
+			File fileDir = new File(dir);
 			if (!fileDir.exists()) {
 				throw new AccessDeniedException("Directory does not exist: " + dir);
 			}
@@ -313,7 +356,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 				throw new NotDirectoryException(preferenceKey + " does not point to a directory: " + dir);
 			}
 
-			result = pathDir;
+			result = new Path(fileDir.getCanonicalPath());
 		} else {
 			throw new Exception("Directory does not defined, by " + preferenceKey + "=<directory>");
 		}

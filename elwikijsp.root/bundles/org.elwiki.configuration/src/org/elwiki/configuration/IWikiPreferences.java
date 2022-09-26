@@ -42,7 +42,7 @@ public interface IWikiPreferences {
 	/** Property name for the "spaces in titles" -hack. */
 	String PROP_BEAUTIFYTITLE = "jspwiki.breakTitleWithSpaces";
 
-	/** Property name for the template that is used. */
+	/** Property name for the template that is used. If not specified, sets to "default". */
 	String PROP_TEMPLATEDIR = "jspwiki.templateDir";
 
 	/** Property name for the default front page. */

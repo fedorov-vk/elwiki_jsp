@@ -35,7 +35,6 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -57,25 +56,15 @@ public interface Engine {
 	/** Reference identifier for Engine in the service activator parameters. */
 	String ENGINE_REFERENCE = "ENGINE_REFERENCE";
 
-    /** The name used for the default template. The value is {@value}. */
-    String DEFAULT_TEMPLATE_NAME = "default";
-
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
 
     /** The property name defining which packages will be searched for plugin classes. */
     String PROP_SEARCHPATH = "jspwiki.plugin.searchPath";
 
-    /** If true, then the user name will be stored with the page data.*/
-    String PROP_STOREUSERNAME= "jspwiki.storeUserName";
-
     /** Do not use encoding in WikiJSPFilter, default is false for most servers.
      Double negative, cause for most servers you don't need the property */
     String PROP_NO_FILTER_ENCODING = "jspwiki.nofilterencoding";
-
-    /** Property name for where the jspwiki work directory should be.
-     If not specified, reverts to ${java.tmpdir}. */
-    String PROP_WORKDIR = "elwiki.workDir";
 
     /** The name of the cookie that gets stored to the user browser. */
     String PREFS_COOKIE_NAME = "JSPWikiUserProfile";
@@ -140,22 +129,6 @@ public interface Engine {
      *  @return The wiki properties
      */
     IPreferenceStore getWikiPreferences();
-
-    /**
-     *  Returns the JSPWiki working directory set with "elwiki.workDir".
-     *
-     *  @since 2.1.100
-     *  @return The working directory.
-     */
-    String getWorkDir();
-
-    /**
-     *  Returns the current template directory.
-     *
-     *  @since 1.9.20
-     *  @return The template directory as initialized by the engine.
-     */
-    String getTemplateDir();
 
     /**
      * Returns plugins' search path.

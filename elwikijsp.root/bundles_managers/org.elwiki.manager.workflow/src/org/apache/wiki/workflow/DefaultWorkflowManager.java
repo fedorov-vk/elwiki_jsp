@@ -32,11 +32,13 @@ import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -89,6 +91,10 @@ public class DefaultWorkflowManager implements WorkflowManager {
     }
 
 	// -- service handling --------------------------< start --
+
+	/** Stores configuration. */
+	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -154,7 +160,8 @@ public class DefaultWorkflowManager implements WorkflowManager {
         }
         */
 
-        unserializeFromDisk( new File( m_engine.getWorkDir(), SERIALIZATION_FILE ) );
+		String workDir = engine.getWikiConfiguration().getWorkDir().toString();
+		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
     }
 
     /**
@@ -324,7 +331,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
                 default: break;
                 }
             }
-            serializeToDisk( new File( m_engine.getWorkDir(), SERIALIZATION_FILE ) );
+			serializeToDisk(new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE));
         }
     }
 

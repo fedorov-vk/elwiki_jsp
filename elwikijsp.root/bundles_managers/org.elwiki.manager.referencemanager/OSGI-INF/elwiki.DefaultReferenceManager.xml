@@ -4,4 +4,5 @@
       <provide interface="org.apache.wiki.api.references.ReferenceManager"/>
    </service>
    <implementation class="org.apache.wiki.references.DefaultReferenceManager"/>
+   <reference cardinality="1..1" interface="org.elwiki.configuration.IWikiConfiguration" name="IWikiConfiguration" policy="static"/>
 </scr:component>

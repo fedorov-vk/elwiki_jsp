@@ -18,7 +18,6 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
@@ -33,6 +32,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
@@ -65,7 +65,7 @@ public class Installer {
     public static final String STORAGE_DIR = AttachmentProvider.PROP_STORAGEDIR;
     @Deprecated
     public static final String PAGE_DIR = ""; //FileSystemProvider.PROP_PAGEDIR;
-    public static final String WORK_DIR = Engine.PROP_WORKDIR;
+    public static final String WORK_DIR = IWikiPreferences.PROP_WORKDIR;
     public static final String ADMIN_GROUP = "Admin";
     public static final String PROPFILENAME = "jspwiki-custom.properties" ;
     public static final String TMP_DIR = System.getProperty("java.io.tmpdir");

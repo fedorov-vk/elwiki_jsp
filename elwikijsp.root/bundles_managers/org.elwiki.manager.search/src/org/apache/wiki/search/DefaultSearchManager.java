@@ -58,7 +58,6 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;

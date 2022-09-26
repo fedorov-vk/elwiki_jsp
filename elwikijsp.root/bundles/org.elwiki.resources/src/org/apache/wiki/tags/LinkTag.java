@@ -180,7 +180,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 		if (m_templatefile != null) {
 			final String params = addParamsForRecipient(null, m_containedParams);
-			final String template = engine.getTemplateDir();
+			final String template = config.getTemplateDir();
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(),
 					"templates/" + template + "/" + m_templatefile, params);
 		} else if (m_path != null) {

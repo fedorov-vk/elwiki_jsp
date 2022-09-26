@@ -714,7 +714,7 @@ public class WikiContext implements Context, Command {
 	 * @param request the HTTP request
 	 */
 	protected void setDefaultTemplate(final HttpServletRequest request) {
-		final String defaultTemplate = m_engine.getTemplateDir();
+		final String defaultTemplate = wikiConfiguration.getTemplateDir();
 
 		//  Figure out which template we should be using for this page.
 		String template = null;
@@ -723,7 +723,6 @@ public class WikiContext implements Context, Command {
 			if (skin != null) {
 				template = skin.replaceAll("\\p{Punct}", "");
 			}
-
 		}
 
 		// If request doesn't supply the value, extract from wiki page

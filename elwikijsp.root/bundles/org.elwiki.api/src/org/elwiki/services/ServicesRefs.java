@@ -125,7 +125,7 @@ public class ServicesRefs implements Engine {
 	/** Stores configuration. */
 	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
-	
+
 	// -- start code block -- Services reference setters
 
 	@Reference(target = "(component.factory=" + WikiAjaxDispatcher.WIKI_AJAX_DISPATCHER_FACTORY + ")")
@@ -222,48 +222,10 @@ public class ServicesRefs implements Engine {
 		this.bundleContext = bc;
 		ServicesRefs.Instance = this;
 
-		/* Intialize this instance.
+		/* Initialize this instance.
 		 */
 		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
 
-		// Create and find the default working directory.
-		m_workDir = TextUtil.getStringProperty(preferences, PROP_WORKDIR, null);
-
-		if (m_workDir == null || m_workDir.length() == 0) {
-			m_workDir = System.getProperty("java.io.tmpdir", ".");
-			m_workDir += File.separator + Release.APPNAME + "-" + m_appid;
-		}
-
-		try {
-			final File f = new File(m_workDir);
-			f.mkdirs();
-
-			//
-			// A bunch of sanity checks
-			//
-			if (!f.exists()) {
-				throw new WikiException("Work directory does not exist: " + m_workDir);
-			}
-			if (!f.canRead()) {
-				throw new WikiException("No permission to read work directory: " + m_workDir);
-			}
-			if (!f.canWrite()) {
-				throw new WikiException("No permission to write to work directory: " + m_workDir);
-			}
-			if (!f.isDirectory()) {
-				throw new WikiException("elwiki.workDir does not point to a directory: " + m_workDir);
-			}
-		} catch (final SecurityException e) {
-			log.fatal("Unable to find or create the working directory: " + m_workDir, e);
-			throw new IllegalArgumentException("Unable to find or create the working dir: " + m_workDir, e);
-		}
-
-		log.info("JSPWiki working directory is '" + m_workDir + "'");
-
-		m_saveUserInfo = TextUtil.getBooleanProperty(preferences, PROP_STOREUSERNAME, m_saveUserInfo);
-		m_templateDir = TextUtil.getStringProperty(preferences, PROP_TEMPLATEDIR, "default");
-		enforceValidTemplateDirectory();
-		
 		try {
 			// Note: rootPath - may be null, if JSPWiki has been deployed in a WAR file.
 			servicesMaker();
@@ -484,9 +446,6 @@ public class ServicesRefs implements Engine {
 
 	private static final Logger log = Logger.getLogger(ServicesRefs.class);
 
-	/** Should the user info be saved with the page data as well? */
-	private boolean m_saveUserInfo = true;
-
 	/**
 	 * Store the file path to the basic URL. When we're not running as a servlet, it defaults to the
 	 * user's current directory.
@@ -500,14 +459,8 @@ public class ServicesRefs implements Engine {
 	//TODO: этот код устарел (в ElWiki инициализация относительно OSGi, а не сервлета. ServletContext==null).
 	private ServletContext m_servletContext = null;
 
-	/** Stores the template path. This is relative to "templates". */
-	private String m_templateDir;
-
 	/** The time when this engine was started. */
 	private Date m_startTime;
-
-	/** The location where the work directory is. */
-	private String m_workDir;
 
 	/** Each engine has their own application id. */
 	private String m_appid = "";
@@ -755,41 +708,6 @@ public class ServicesRefs implements Engine {
 	}
 
 	/**
-	 * Checks if the template directory specified in the wiki's properties actually exists. If it
-	 * doesn't, then {@code m_templateDir} is set to {@link #DEFAULT_TEMPLATE_NAME}.
-	 * <p>
-	 * This checks the existence of the <tt>ViewTemplate.jsp</tt> file, which exists in every
-	 * template using {@code m_servletContext.getRealPath("/")}.
-	 * <p>
-	 * {@code m_servletContext.getRealPath("/")} can return {@code null} on certain
-	 * servers/conditions (f.ex, packed wars), an extra check against
-	 * {@code m_servletContext.getResource} is made.
-	 */
-	void enforceValidTemplateDirectory() {
-		//TODO: перенести вычисление размещения JSP - относительно osgi-bundle, вместо данных из ServletContext. 
-		// Место размещения JSP файлов темплейта - определялось из ServletContext.
-		// Для ElWiki - это работает через bundle. 
-		if (m_servletContext != null) {
-			final String viewTemplate = "templates" + File.separator + getTemplateDir() + File.separator
-					+ "ViewTemplate.jsp";
-			boolean exists = new File(m_servletContext.getRealPath("/") + viewTemplate).exists();
-			if (!exists) {
-				try {
-					final URL url = m_servletContext.getResource(viewTemplate);
-					exists = url != null && !url.getFile().isEmpty();
-				} catch (final MalformedURLException e) {
-					log.warn("template not found with viewTemplate " + viewTemplate);
-				}
-			}
-			if (!exists) {
-				log.warn(getTemplateDir() + " template not found, updating WikiEngine's default template to "
-						+ DEFAULT_TEMPLATE_NAME);
-				m_templateDir = DEFAULT_TEMPLATE_NAME;
-			}
-		}
-	}
-
-	/**
 	 * Initializes the reference manager. Scans all existing WikiPages for internal links and adds
 	 * them to the ReferenceManager object.
 	 *
@@ -821,18 +739,6 @@ public class ServicesRefs implements Engine {
 	@Override
 	public IPreferenceStore getWikiPreferences() {
 		return this.wikiConfiguration.getWikiPreferences();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getWorkDir() {
-		return m_workDir;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getTemplateDir() {
-		return m_templateDir;
 	}
 
 	/** {@inheritDoc} */

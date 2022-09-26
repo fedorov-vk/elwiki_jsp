@@ -55,9 +55,9 @@ public interface IWikiConfiguration {
 	boolean isBeautifyTitle();
 
 	/**
-	 * Возвращает текущий каталог шаблонов.
+	 * Returns the current template directory.
 	 * 
-	 * @return Каталог шаблонов, инициализированный движком.
+	 * @return The template directory as initialized by the configuration.
 	 */
 	String getTemplateDir();
 

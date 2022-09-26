@@ -133,8 +133,9 @@ public class AttachmentServlet extends HttpServlet {
      */
     @Override
     public void init( final ServletConfig config ) throws ServletException {
+        String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
+        final String tmpDir = workDir + File.separator + "attach-tmp";
         final IPreferenceStore props = m_engine.getWikiPreferences();
-        final String tmpDir = m_engine.getWorkDir() + File.separator + "attach-tmp";
         final String allowed = TextUtil.getStringProperty( props, AttachmentManager.PROP_ALLOWEDEXTENSIONS, null );
         m_maxSize = TextUtil.getIntegerProperty( props, AttachmentManager.PROP_MAXSIZE, Integer.MAX_VALUE );
 

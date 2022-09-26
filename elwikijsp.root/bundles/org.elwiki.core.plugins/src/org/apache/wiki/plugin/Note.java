@@ -81,7 +81,8 @@ public class Note implements Plugin {
         String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE );
         commentImage = "images/" + commentImage;
         
-        String resource = ServicesRefs.getTemplateManager().findResource( ctx, engine.getTemplateDir(), commentImage );
+        String templateDir = engine.getWikiConfiguration().getTemplateDir();
+        String resource = ServicesRefs.getTemplateManager().findResource( ctx, templateDir, commentImage );
         
         // JSPWIKI-876 Fixed error with Note Plugin. Only one preceding "/" is needed.
         if( resource != null && resource.startsWith( "/" ) ) {
