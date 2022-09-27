@@ -23,7 +23,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
  * Generates tabbed page section: container for the Tab tag. Works together with
- * the tabbedSection javacript.
+ * the tabbedSection javascript.
  *
  * <p>
  * <b>Attributes</b>

@@ -104,7 +104,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	private IWikiConfiguration configuration;
+	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -239,7 +239,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 
 		// For PageCommand.VIEW, default to front page if a page wasn't supplied
 		if (PageCommand.VIEW.equals(command) && pageName == null) {
-			pageName = this.configuration.getFrontPage();
+			pageName = this.wikiConfiguration.getFrontPage();
 		}
 
 		// These next blocks handle targeting requirements
@@ -252,7 +252,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		}
 
 		// If "create group" command, target this wiki
-		final String wiki = this.configuration.getApplicationName();
+		final String wiki = this.wikiConfiguration.getApplicationName();
 		if (WikiCommand.CREATE_GROUP.equals(command)) {
 			return WikiCommand.CREATE_GROUP.targetedCommand(wiki);
 		}
@@ -368,7 +368,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		// Extract the page name/number from the URL directly
 		try {
 			String page = this.urlConstructor.parsePage(requestContext, request,
-					this.configuration.getContentEncodingCs());
+					this.wikiConfiguration.getContentEncodingCs());
 			if (page != null) {
 				try {
 					// Look for singular/plural variants; if one not found, take the one the user supplied

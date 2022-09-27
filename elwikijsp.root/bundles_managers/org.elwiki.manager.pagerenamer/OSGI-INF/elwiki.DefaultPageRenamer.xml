@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" deactivate="shutdown" factory="elwiki.PageRenamer.factory" name="elwiki.DefaultPageRenamer">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.PageRenamer.factory" name="elwiki.DefaultPageRenamer">
    <service>
       <provide interface="org.apache.wiki.content0.PageRenamer"/>
    </service>

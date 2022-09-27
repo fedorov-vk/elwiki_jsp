@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" deactivate="shutdown" factory="elwiki.WikiAjaxDispatcher.factory" name="elwiki.WikiAjaxDispatcher">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.WikiAjaxDispatcher.factory" name="elwiki.WikiAjaxDispatcher">
    <service>
       <provide interface="org.apache.wiki.ajax.WikiAjaxDispatcher"/>
    </service>
    <implementation class="org.elwiki.ajax_dispatcher.internal.WikiAjaxDispatcherService"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
 </scr:component>

@@ -35,6 +35,7 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * This provides service for registering HttpServlet classes. need to be registered using
@@ -52,7 +53,10 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 
 	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class.getName());
 
-	private IWikiConfiguration config;
+	/** Stores configuration. */
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private IWikiConfiguration wikiConfiguration;
+
 	private Engine m_engine;
 
 	private static final Map<String, AjaxServletContainer> ajaxServlets = new ConcurrentHashMap<>();
@@ -89,7 +93,6 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 	 */
 	private void initialize(Engine engine) throws WikiException {
 		this.m_engine = engine;
-		this.config = m_engine.getWikiConfiguration();
 		PATH_AJAX = "/" + TextUtil.getStringProperty(m_engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax")
 				+ "/";
 		log.info("WikiAjaxDispatcher initialized.");

@@ -3,6 +3,6 @@
    <service>
       <provide interface="org.apache.wiki.api.ui.CommandResolver"/>
    </service>
-   <reference cardinality="1..1" field="configuration" interface="org.elwiki.configuration.IWikiConfiguration" name="configuration"/>
    <implementation class="org.apache.wiki.ui.DefaultCommandResolver"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
 </scr:component>
