@@ -325,7 +325,13 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			parms = "r1=" + r1 + "&amp;r2=" + r2;
 		}
 
-		return engine.getURL(m_context, m_pageName, parms);
+		{//TODO: here should remove the addressing by the page name. The page ID should be used.
+			//:FVK: workaround - вообще, в результате портирования - работа с именем страницы, как с параметром адресации - будет исключена.
+			if (m_pageName != null) {
+				return engine.getURL(m_context, m_pageName, parms);
+			}
+			return engine.getURL(m_context, m_pageId, parms);
+		}
 	}
 
 	@Override

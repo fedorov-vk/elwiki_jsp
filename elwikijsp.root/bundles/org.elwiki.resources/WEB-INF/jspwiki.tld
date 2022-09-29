@@ -17,9 +17,9 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="2.0">
 
 	<tlib-version>2.11</tlib-version>
@@ -241,6 +241,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>pageId</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>format</name>
 		</attribute>
 		<attribute>
@@ -387,6 +391,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>pageId</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>path</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -485,6 +493,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>pageId</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>format</name>
 		</attribute>
 		<attribute>
@@ -555,6 +567,10 @@
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>pageName</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pageId</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
@@ -829,6 +845,10 @@
 		<body-content>JSP</body-content>
 		<attribute>
 			<name>pageName</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pageId</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

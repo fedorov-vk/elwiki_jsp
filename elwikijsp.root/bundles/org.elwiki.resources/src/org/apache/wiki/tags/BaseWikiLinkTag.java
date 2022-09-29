@@ -51,8 +51,6 @@ public abstract class BaseWikiLinkTag extends BaseWikiTag {
 
 	public void initTag() {
 		super.initTag();
-		m_pageName = m_template = null;
-		m_format = ANCHOR;
 	}
 
 	public void setPageName(String page) {

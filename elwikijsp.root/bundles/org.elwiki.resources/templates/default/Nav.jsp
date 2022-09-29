@@ -276,13 +276,13 @@
         <%-- VIEW RAW PAGE SOURCE --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="slimbox-link" pageName="${pageId}">
+            <wiki:Link cssClass="slimbox-link" pageId="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="slimbox-link" version='${param.version}' pageName="${pageId}">
+            <wiki:Link cssClass="slimbox-link" version='${param.version}' pageId="${pageId}">
               <wiki:Param name='skin' value='raw'/>
               <fmt:message key='actions.rawpage' />
             </wiki:Link>
@@ -292,13 +292,13 @@
         <%-- Show Reader View --%>
         <li>
           <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="interwiki" pageName="${pageId}">
+            <wiki:Link cssClass="interwiki" pageId="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>
           </wiki:CheckVersion>
           <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="interwiki" version="${param.version}" pageName="${pageId}">
+            <wiki:Link cssClass="interwiki" version="${param.version}" pageId="${pageId}">
               <wiki:Param name='skin' value='reader'/>
               <fmt:message key='actions.showreaderview' />
             </wiki:Link>
