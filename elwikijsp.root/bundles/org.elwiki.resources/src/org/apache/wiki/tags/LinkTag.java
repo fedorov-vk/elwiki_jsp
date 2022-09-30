@@ -360,7 +360,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			appender.accept("tabindex=", m_tabindex);
 
 			//TODO: пересмотреть код - страница не наследует Attach
-			if (ServicesRefs.getPageManager().getPage(m_pageName) instanceof PageAttachment) {
+			if (m_pageName != null && ServicesRefs.getPageManager().getPage(m_pageName) instanceof PageAttachment) {
 				sb.append(ServicesRefs.getAttachmentManager().forceDownload(m_pageName) ? "download " : "");
 			}
 
