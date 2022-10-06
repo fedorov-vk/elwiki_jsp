@@ -98,6 +98,14 @@ public interface PageProvider extends WikiProvider {
     WikiPage getPageInfo( String page, int version ) throws ProviderException;
 
     /**
+     * Returns only of upper level pages.
+     * 
+     * @return A collection of upper level WikiPages.
+     * @throws ProviderException If something goes wrong.
+     */
+    Collection< WikiPage > getUpperPages() throws ProviderException;
+
+    /**
      *  Returns all pages.  Each element in the returned Collection should be a WikiPage.
      *  
      *  @return A collection of WikiPages

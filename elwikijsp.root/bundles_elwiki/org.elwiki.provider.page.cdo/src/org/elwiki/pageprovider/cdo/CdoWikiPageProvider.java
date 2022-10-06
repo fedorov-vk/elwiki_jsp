@@ -335,6 +335,16 @@ public class CdoWikiPageProvider implements PageProvider {
 		return null;
 	}
 
+    /**
+     *  {@inheritDoc}
+     */
+	@Override
+	public Collection<WikiPage> getUpperPages() throws ProviderException {
+		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
+		EList<WikiPage> pages = pagesStore.getWikipages();
+		return pages;
+	}
+
 	@Override
 	public Collection<WikiPage> getAllPages() throws ProviderException {
 		// :FVK: workaround - возвращаются только 'корневые' страницы.

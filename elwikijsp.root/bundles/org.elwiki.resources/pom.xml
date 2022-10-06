@@ -157,7 +157,7 @@
 											tycho-compiler-plugin
 										</artifactId>
 										<versionRange>
-											[2.5.0,)
+											[2.7.1,)
 										</versionRange>
 										<goals>
 											<goal>compile</goal>

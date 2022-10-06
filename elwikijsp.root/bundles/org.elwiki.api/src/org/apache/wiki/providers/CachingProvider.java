@@ -334,6 +334,16 @@ public class CachingProvider implements PageProvider {
     /**
      *  {@inheritDoc}
      */
+	@Override
+	public Collection<WikiPage> getUpperPages() throws ProviderException {
+		// TODO Auto-generated method stub
+		Assert.isTrue(false, "code missed. :FVK:");
+		return null;
+	}
+
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     public Collection< WikiPage > getAllPages() throws ProviderException {
         final Collection< WikiPage > all;

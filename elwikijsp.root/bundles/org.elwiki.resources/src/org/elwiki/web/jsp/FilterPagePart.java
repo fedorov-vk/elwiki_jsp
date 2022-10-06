@@ -104,7 +104,15 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		} else {
 			log.debug("Request URI isn't matched anything.");
 			// System.err.println("PFC original resource: " + uri);
-			super.doFilter(httpRequest, response, chain);
+			try {
+				super.doFilter(httpRequest, response, chain);
+			} catch (IOException e) {
+				log.error("Error 1", e); //TODO: define message.
+			} catch (ServletException e) {
+				log.error("Error 2", e); //TODO: define message.
+			} catch (Exception e) {
+				log.error("Error 3", e); //TODO: define message.
+			}
 		}
 
 		/* Create Wiki context.

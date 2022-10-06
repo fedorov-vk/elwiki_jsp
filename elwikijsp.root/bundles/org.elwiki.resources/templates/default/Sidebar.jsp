@@ -38,6 +38,8 @@
 
   <wiki:Permission permission="view">
 
+<div class="tabbedSection">
+<div class="tab-Menu">
   <div class="leftmenu">
     <wiki:InsertPage pageId="4" />
     <wiki:NoSuchPage pageId="4">
@@ -59,6 +61,12 @@
       </div>
     </wiki:NoSuchPage>
   </div>
+</div>
+<div class="tab-Pages">
+<!-- container of tree viewer of pages -->
+<div id="SoftPagesContainer"></div>
+</div>
+</div>
 
   </wiki:Permission>
 

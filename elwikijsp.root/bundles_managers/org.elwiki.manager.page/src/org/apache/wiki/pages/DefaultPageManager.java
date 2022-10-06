@@ -36,6 +36,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
@@ -106,6 +107,8 @@ public class DefaultPageManager implements PageManager, Initializable {
 
     private static final Logger LOG = Logger.getLogger( DefaultPageManager.class );
 
+	static final String JSON_PAGESHIERARCHY = "pageshierarchyTracker";
+
 	private static String ID_EXTENSION_PAGEPROVIDER = "pageProvider";
 
     private PageProvider m_provider;
@@ -173,6 +176,9 @@ public class DefaultPageManager implements PageManager, Initializable {
         final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
 
         m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
+
+		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
+    	wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker());
 
         /*:FVK: - подключить CachingProvider
         final String classname;
@@ -326,6 +332,15 @@ public class DefaultPageManager implements PageManager, Initializable {
     @Override
     public PageProvider getProvider() {
         return m_provider;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see org.apache.wiki.pages0.PageManager#getUpperPages()
+     */
+    @Override
+    public Collection< WikiPage > getUpperPages() throws ProviderException {
+    	return m_provider.getUpperPages();
     }
 
     /**

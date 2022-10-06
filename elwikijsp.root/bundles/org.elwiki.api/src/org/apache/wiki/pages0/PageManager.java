@@ -47,6 +47,14 @@ public interface PageManager extends WikiEventListener {
      */
     PageProvider getProvider();
 
+	/**
+	 * Returns only of upper level pages.
+	 * 
+	 * @return A collection of upper level WikiPages.
+	 * @throws ProviderException
+	 */
+	Collection<WikiPage> getUpperPages() throws ProviderException;
+
     /**
      * Returns all pages in some random order.  If you need just the page names,
      * please see {@link org.apache.wiki.references.ReferenceManager#findCreated() ReferenceManager#findCreated()}, which is probably a lot

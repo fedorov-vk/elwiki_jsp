@@ -9,6 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.equinox.common;bundle-version="3.11.0",
  org.eclipse.equinox.useradmin;bundle-version="1.1.700",
+ jakarta.servlet-api;bundle-version="4.0.0",
  org.elwiki.api;bundle-version="0.0.1",
  org.elwiki.data,
  org.apache.log4j;bundle-version="1.2.15",
