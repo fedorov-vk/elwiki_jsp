@@ -20,6 +20,21 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
+/**
+ * Подготавливает иерархический JSON список страниц. Каждый элемент списка:
+ * 
+ * <pre>
+ * {
+ *   name: имя_страницы,
+ *   id: идентификатор_страницы
+ *   children : [список подчиненных страницы]
+ * }
+ * </pre>
+ * 
+ * Специальные страницы - включены в отдельную ветку.
+ * 
+ * @author v.fedorov
+ */
 public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 
 	private static final Logger log = Logger.getLogger(JSONPagesHierarchyTracker.class);
@@ -36,6 +51,8 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 		return DefaultPageManager.JSON_PAGESHIERARCHY;
 	}
 
+	private List<Map<String, Object>> listSpecialPages = new ArrayList<>();
+
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response, String actionName,
 			List<String> params) throws ServletException, IOException {
@@ -47,10 +64,23 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 			return;
 		}
 
+		Map<String, Object> specialPages = new HashMap<>(Map.of("name", "Special pages", "id", "0"));
+		listSpecialPages.clear();
+
 		List<Map<String, Object>> list = new ArrayList<>();
+		list.add(specialPages);
+		// adding hierarchy of all pages.
 		for (WikiPage page : upperPages) {
-			list.add(preparePage(page));
+			HashMap<String, Object> data = preparePage(page);
+			if (!page.isInternalPage()) {
+				list.add(data);
+			}
 		}
+		// here added list of special pages.
+		if (listSpecialPages.size() > 0) {
+			specialPages.put("children", listSpecialPages);
+		}
+
 		String result = AjaxUtil.toJson(list);
 		response.getWriter().print(result);
 	}
@@ -58,16 +88,27 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 	private HashMap<String, Object> preparePage(WikiPage page) {
 		HashMap<String, Object> hm = new HashMap<>();
 		String pageId = page.getId();
-		//:FVK: "<a href=\"http://localhost:8088/cmd.view?pageId=" + page.getId() + "\">" + page.getName() + "</a>";
-		String link = "<a href=\"" + engine.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, null) + "\">"
-				+ page.getName() + "</a>";
-		hm.put("name", link);
-		hm.put("id", pageId);
+		String pageName = page.getName();
+		if (page.isInternalPage()) {
+			hm.put("name", pageName);
+			hm.put("id", pageId);
+			listSpecialPages.add(hm);
+		} else {
+			//:FVK: "<a href=\"http://localhost:8088/cmd.view?pageId=" + page.getId() + "\">" + page.getName() + "</a>";
+			String link = "<a href=\"" + engine.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, null) + "\">"
+					+ pageName + "</a>";
+			hm.put("name", link);
+			hm.put("id", pageId);
+		}
 		List<Map<String, Object>> children = new ArrayList<>();
 		for (WikiPage childPage : page.getChildren()) {
 			HashMap<String, Object> pageMap = preparePage(childPage);
 			children.add(pageMap);
 		}
+		if (children.size() > 0) {
+			hm.put("children", children);
+		}
+
 		return hm;
 	}
 

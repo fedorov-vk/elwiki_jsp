@@ -50,6 +50,9 @@
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/name"/>
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/value"/>
       </genOperations>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getNumId" body="String pageId = this.getId();&#xA;long pageNumId;&#xA;try {&#xA;&#x9;pageNumId = Integer.parseInt(pageId);&#xA;} catch (NumberFormatException e) {&#xA;&#x9;pageNumId = 0;&#xA;}&#xA;return pageNumId;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/isInternalPage"
+          body="long pageNumId = this.getNumId();&#xA;return (pageNumId > 0 &amp;&amp; pageNumId &lt; 1000)? true : false;"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
-  <viewpoint:DAnalysis uid="_MickwG-QEeid6OKUsQuIXA" selectedViews="_NX9QcG-QEeid6OKUsQuIXA _NYUc0G-QEeid6OKUsQuIXA" version="14.6.0.202110251100">
+  <viewpoint:DAnalysis uid="_MickwG-QEeid6OKUsQuIXA" selectedViews="_NX9QcG-QEeid6OKUsQuIXA _NYUc0G-QEeid6OKUsQuIXA" version="15.0.0.202201261500">
     <semanticResources>elwiki_data.ecore</semanticResources>
     <semanticResources>http://www.eclipse.org/emf/2002/Ecore</semanticResources>
     <semanticResources>platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign</semanticResources>
@@ -49,7 +49,7 @@
     <semanticResources>../target/classes/org/elwiki_data/util/Elwiki_dataSwitch.class</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="fd7ce8fc-bf6d-428d-b582-ae3f33a7f3df">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="348e9524-a402-4c1b-b655-0ce54f8ecaf8">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -157,6 +157,14 @@
             <children xmi:type="notation:Node" xmi:id="_uCVhIGk2Eeu_v61mTuLrSw" type="3010" element="_uBvrQGk2Eeu_v61mTuLrSw">
               <styles xmi:type="notation:FontStyle" xmi:id="_uCVhIWk2Eeu_v61mTuLrSw" fontName="Ubuntu" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_uCVhImk2Eeu_v61mTuLrSw"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_tujVgEiWEe2uF9ccm9jdxQ" type="3010" element="_ttry0UiWEe2uF9ccm9jdxQ">
+              <styles xmi:type="notation:FontStyle" xmi:id="_tujVgUiWEe2uF9ccm9jdxQ" fontName="Segoe UI" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_tujVgkiWEe2uF9ccm9jdxQ"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_IDahsEidEe2uF9ccm9jdxQ" type="3010" element="_ICdfd0idEe2uF9ccm9jdxQ">
+              <styles xmi:type="notation:FontStyle" xmi:id="_IDahsUidEe2uF9ccm9jdxQ" fontName="Segoe UI" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_IDahskidEe2uF9ccm9jdxQ"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_aUDTcW-QEeid6OKUsQuIXA"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_aUDTcm-QEeid6OKUsQuIXA"/>
@@ -773,6 +781,22 @@
         <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//WikiPage/setAttribute/name"/>
         <semanticElements xmi:type="ecore:EParameter" href="elwiki_data.ecore#//WikiPage/setAttribute/value"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_uBwSUGk2Eeu_v61mTuLrSw" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_ttry0UiWEe2uF9ccm9jdxQ" name="getNumId() : ELong" tooltipText="getNumId() : ELong">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getNumId"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/getNumId"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_tttoAEiWEe2uF9ccm9jdxQ" labelAlignment="LEFT">
+          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>
+      </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_ICdfd0idEe2uF9ccm9jdxQ" name="isInternalPage() : EBoolean" tooltipText="isInternalPage() : EBoolean">
+        <target xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/isInternalPage"/>
+        <semanticElements xmi:type="ecore:EOperation" href="elwiki_data.ecore#//WikiPage/isInternalPage"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_ICdfeEidEe2uF9ccm9jdxQ" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='Operation']"/>

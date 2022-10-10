@@ -402,7 +402,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public Date getLastModified() {
 		EList<PageContent> pageContent = this.getPagecontents();
-		return (pageContent.isEmpty())? new GregorianCalendar(1972, 1, 12).getTime() :
+		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
 				pageContent.get(pageContent.size()-1).getLastModify();
 	}
 
@@ -466,6 +466,34 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public long getNumId() {
+		String pageId = this.getId();
+		long pageNumId;
+		try {
+			pageNumId = Integer.parseInt(pageId);
+		} catch (NumberFormatException e) {
+			pageNumId = 0;
+		}
+		return pageNumId;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isInternalPage() {
+		long pageNumId = this.getNumId();
+		return (pageNumId > 0 && pageNumId < 1000)? true : false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Comparable.class) {
 			switch (baseOperationID) {
@@ -507,6 +535,10 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 			case Elwiki_dataPackage.WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT:
 				setAttribute((String)arguments.get(0), arguments.get(1));
 				return null;
+			case Elwiki_dataPackage.WIKI_PAGE___GET_NUM_ID:
+				return getNumId();
+			case Elwiki_dataPackage.WIKI_PAGE___IS_INTERNAL_PAGE:
+				return isInternalPage();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -340,13 +340,31 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = COMPARABLE_OPERATION_COUNT + 8;
 
 	/**
+	 * The operation id for the '<em>Get Num Id</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___GET_NUM_ID = COMPARABLE_OPERATION_COUNT + 9;
+
+	/**
+	 * The operation id for the '<em>Is Internal Page</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___IS_INTERNAL_PAGE = COMPARABLE_OPERATION_COUNT + 10;
+
+	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 9;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -1316,6 +1334,26 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getWikiPage__SetAttribute__String_Object();
 
 	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getNumId() <em>Get Num Id</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Num Id</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getNumId()
+	 * @generated
+	 */
+	EOperation getWikiPage__GetNumId();
+
+	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#isInternalPage() <em>Is Internal Page</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Internal Page</em>' operation.
+	 * @see org.elwiki_data.WikiPage#isInternalPage()
+	 * @generated
+	 */
+	EOperation getWikiPage__IsInternalPage();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PagesStore <em>Pages Store</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2049,6 +2087,22 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT = eINSTANCE.getWikiPage__SetAttribute__String_Object();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Num Id</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___GET_NUM_ID = eINSTANCE.getWikiPage__GetNumId();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Internal Page</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___IS_INTERNAL_PAGE = eINSTANCE.getWikiPage__IsInternalPage();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.

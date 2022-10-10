@@ -52,6 +52,16 @@
       <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
     </eOperations>
+    <eOperations name="getNumId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="String pageId = this.getId();&#xA;long pageNumId;&#xA;try {&#xA;&#x9;pageNumId = Integer.parseInt(pageId);&#xA;} catch (NumberFormatException e) {&#xA;&#x9;pageNumId = 0;&#xA;}&#xA;return pageNumId;"/>
+      </eAnnotations>
+    </eOperations>
+    <eOperations name="isInternalPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="long pageNumId = this.getNumId();&#xA;return (pageNumId > 0 &amp;&amp; pageNumId &lt; 1000)? true : false;"/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

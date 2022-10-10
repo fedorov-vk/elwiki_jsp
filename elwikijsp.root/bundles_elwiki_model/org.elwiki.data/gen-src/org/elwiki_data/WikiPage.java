@@ -550,4 +550,20 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 */
 	void setAttribute(String name, Object value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	long getNumId();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	boolean isInternalPage();
+
 } // WikiPage
