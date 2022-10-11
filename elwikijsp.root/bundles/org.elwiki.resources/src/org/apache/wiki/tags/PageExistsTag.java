@@ -72,7 +72,7 @@ public class PageExistsTag extends BaseWikiTag {
 			page = m_wikiContext.getPage();
 		}
 
-		if (page != null && ServicesRefs.getPageManager().wikiPageExists(page.getName(), page.getVersion())) {
+		if (page != null && ServicesRefs.getPageManager().pageExistsById(page.getId())) {
 			return EVAL_BODY_INCLUDE;
 		}
 

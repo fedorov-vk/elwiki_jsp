@@ -117,9 +117,12 @@ public class InsertPageTag extends BaseWikiTag {
 			insertedPage = ServicesRefs.getPageManager().getPage(m_pageName);
 		} else {
 			insertedPage = m_wikiContext.getPage();
+			//:FVK: follow is old code - is this code required? since the page has already been got from the context.
+			/*
 			if (!ServicesRefs.getPageManager().wikiPageExists(insertedPage)) {
 				return SKIP_BODY;
 			}
+			*/
 		}
 
 		if (insertedPage != null) {
