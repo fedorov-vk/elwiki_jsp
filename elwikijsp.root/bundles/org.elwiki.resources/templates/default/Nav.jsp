@@ -48,8 +48,8 @@
 <div class="navigation" role="navigation">
 
 <ul class="nav nav-pills pull-left">
-  <%-- toggle sidebar --%>
-  <li id="menu"><a href="#"><!--&#x2261;-->&#9776;</a></li>
+  <%-- toggle sidebar &#x2630:☰ &#x2261:≡ --%>
+  <li id="menu"><a href="#">&#x2630;</a></li>
 
   <c:set var="refresh_breadCrumbTrail_attr"><wiki:Breadcrumbs /></c:set>
   <%-- don't show the breadcrumbs if it has none or only one item --%>

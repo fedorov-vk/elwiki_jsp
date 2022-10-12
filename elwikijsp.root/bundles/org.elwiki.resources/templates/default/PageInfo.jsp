@@ -23,7 +23,6 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 
-<%-- :FVK: -пока - комментарий... 
 <wiki:CheckRequestContext context='view|diff|edit|upload|info'>
 <div class="page-footer visible-print">
   <wiki:PageExists>
@@ -47,5 +46,4 @@
   <wiki:NoSuchPage><fmt:message key="actions.notcreated"/></wiki:NoSuchPage>
 </div>
 </wiki:CheckRequestContext>
---%>
 <!-- ~~ END ~~ PageInfo.jsp -->
