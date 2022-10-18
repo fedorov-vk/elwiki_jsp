@@ -48,8 +48,13 @@
 <div class="navigation" role="navigation">
 
 <ul class="nav nav-pills pull-left">
-  <%-- toggle sidebar &#x2630:☰ &#x2261:≡ --%>
+  <%-- toggle sidebar &#9776; - ☰ &#8801; - ≡ --%>
   <li id="menu"><a href="#">&#x2630;</a></li>
+
+  <%-- toggle search scope sidebar &#128269; - 🔍 &#128270; - 🔎 --%>
+  <%--
+  <li id="sscope"><a href="#">&#128269;</a></li>
+  --%>
 
   <c:set var="refresh_breadCrumbTrail_attr"><wiki:Breadcrumbs /></c:set>
   <%-- don't show the breadcrumbs if it has none or only one item --%>
