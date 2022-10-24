@@ -20,7 +20,7 @@
 		<tycho.version>2.7.1</tycho.version>
 		<!-- definitions of resources plugin build -->
 		<wro4j.version>1.10.1</wro4j.version>
-		<minimize>true</minimize> <!-- wro4j compression -->
+		<minimize>false</minimize> <!-- wro4j compression -->
 		<maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
 
 		<!-- JSPwiki

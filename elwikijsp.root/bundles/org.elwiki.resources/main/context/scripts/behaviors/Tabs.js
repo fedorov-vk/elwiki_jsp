@@ -162,24 +162,24 @@ var Tab = new Class({
         container - container DOM element
         isPane - (string) selector to match predefined tab container
     */
-    getPanes: function( container ){
+    getPanes: function( container ) {
 
-        var isPane = "[class^=tab-]",
-            first = container.getFirst(),
-            header = first && first.get("tag"),
-            hasPane = first && first.match(isPane);  //predefined tab-panel containers
+        let isPane = "[class^=tab-]";
+        let first = container.getFirst();
+        let header = first && first.nodeName.toLowerCase(); // tagName of DOM element.
+        let hasPane = first && first.match(isPane);  // Predefined tab-panel containers.
 
         //avoid double runs -- ok, covered by behavior
         //if( first.match("> .nav.nav-tabs") ) return null;
 
-        if( (!hasPane) && header && ( header.test(/h1|h2|h3|h4/) ) ){     //replace header by tab-panel containers
-
-            //first remove unwanted elements from the header
+        if((!hasPane) && header && (header.test(/h1|h2|h3|h4/))) {
+            /* Replace header by tab-panel containers. */
+            // First - remove unwanted elements from the header.
             container.getChildren(header).getElements(".hashlink,.editsection,.labels")
                 .each(function( el ){ el.destroy(); });
 
-            //then create div.tab-<pane-title> groups
-            container.groupChildren(header, "div", function(pane, caption){
+            // Then - create div.tab-<pane-title> groups.
+            container.groupChildren(first, "div", function(pane, caption){
                 pane.addClass( "tab-" + caption.textContent.trim().replace(/\s+/g, "-").camelCase() );
                 pane.set("data-pane", caption.get("html").stripScripts());
                 if( caption.match("[data-activePane]") ){ pane.addClass("active"); }

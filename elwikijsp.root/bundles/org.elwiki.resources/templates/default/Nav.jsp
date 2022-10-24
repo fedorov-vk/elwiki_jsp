@@ -49,7 +49,7 @@
 
 <ul class="nav nav-pills pull-left">
   <%-- toggle sidebar &#9776; - ☰ &#8801; - ≡ --%>
-  <li id="menu"><a href="#">&#x2630;</a></li>
+  <li id="menu"><a href="#">&#9776;</a></li>
 
   <%-- toggle search scope sidebar &#128269; - 🔍 &#128270; - 🔎 --%>
   <%--

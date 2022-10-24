@@ -1,4 +1,5 @@
 /favicons/
 /images/
-/scripts/
+/scripts/*.js
+/scripts/*.xml
 /templates/

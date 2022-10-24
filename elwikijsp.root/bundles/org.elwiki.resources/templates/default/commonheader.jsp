@@ -85,6 +85,11 @@ String.I18N.PREFIX = "javascript.";
 <%-- JAVASCRIPT --%>
 
 <script src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
+<!--  :FVK: workaround for debug: use pragma 'no-cache'.
+<meta http-equiv="pragma" content="no-cache" />
+-->
+<meta http-equiv="pragma" content="no-cache" />
+
 
 <wiki:IncludeResources type="script"/>
 

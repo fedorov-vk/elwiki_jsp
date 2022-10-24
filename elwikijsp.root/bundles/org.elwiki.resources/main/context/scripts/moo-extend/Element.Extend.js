@@ -449,29 +449,24 @@ Element.implement({
     */
     groupChildren: function(start, grab, replacesFn){
 
-        var next,
-            group = grab.slick().inject(this, "top"),
-            firstGroupDone = false;
+        let matchedTag = start.nodeName.toLowerCase();
+		let nextEl = start;
+		let groupDiv;
+        do {
+			const currentEl = nextEl;
+			if ((currentEl.nodeType == Node.ELEMENT_NODE) && currentEl.match(matchedTag)) {
+				// start a new group.
+				groupDiv = document.createElement(grab);
+				if( replacesFn ){ replacesFn(groupDiv, currentEl); }
+				currentEl.replaceWith(groupDiv);
+				nextEl = groupDiv.nextSibling;
+			} else {
+				// grab all other elements in the group.
+				nextEl = currentEl.nextSibling;
+				groupDiv.append(currentEl);
+			}
+		} while (nextEl);
 
-        //need at least one start element to get going
-        if( this.getElement(start) ){
-
-            while( (next = group.nextSibling) ){
-
-                if( ( next.nodeType == 1 ) && next.match(start) ){  //start a new group
-
-                    if( firstGroupDone ){ group = grab.slick(); } //make a new group
-                    if( replacesFn ){ replacesFn(group, next); }
-                    group.replaces( next );  //destroys the matched start element
-                    firstGroupDone = true;
-
-                } else {
-
-                    group.appendChild( next );  //grab all other elements in the group
-
-                }
-            }
-        }
         return this;
     },
 

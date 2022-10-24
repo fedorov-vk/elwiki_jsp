@@ -38,7 +38,7 @@ DOM structure:
     //accordion
     div.panel-group.accordion : panel headings are toggles
         div.panel.panel-default
-            div.panel-heading.actie
+            div.panel-heading.active
             div  => fx.accordion collapsible content
                 div.panel-body
         div.panel.panel-default
