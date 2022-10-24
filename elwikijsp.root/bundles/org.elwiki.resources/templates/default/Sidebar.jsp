@@ -66,6 +66,10 @@
 <!-- container of tree viewer of pages -->
 <div id="SoftPagesContainer"></div>
 </div>
+<div class="tab-Scope">
+<!-- container of scope viewer -->
+<div id="SoftScopeContainer"></div>
+</div>
 </div>
 
   </wiki:Permission>

@@ -84,6 +84,7 @@
     <js>/scripts/wiki/Wiki.Behaviors.js</js>
     <js>/scripts/wiki/Category.js</js>
     <js>/scripts/wiki/TreePages.js</js>
+    <js>/scripts/wiki/TreeScope.js</js>
 
     <css>/styles/haddock/default/build.less</css>
   </group>
