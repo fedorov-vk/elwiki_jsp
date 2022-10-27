@@ -677,7 +677,7 @@ var ScopeTreeCreator = {
 				ScopeTreeCreator.parseJsonObject(item, root);
 			}
 		}
-		new TreeScopeView(root, "#SoftScopeContainer", {show_root: false});
+		new TreeScopeView(root, "#SoftScopeContainerXX", {show_root: false});
 	},
 
 	parseJsonObject: function(obj, node) {

@@ -4,5 +4,6 @@
    <service scope="prototype">
       <provide interface="javax.servlet.Servlet"/>
    </service>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.ajax_dispatcher.internal.WikiAjaxDispatcherServlet"/>
 </scr:component>

@@ -68,7 +68,7 @@
 </div>
 <div class="tab-Scope">
 <!-- container of scope viewer -->
-<div id="SoftScopeContainer"></div>
+<div id="SoftScopeContainer" class="SoftScopeContainer"></div>
 </div>
 </div>
 

@@ -25,6 +25,7 @@
 		<module>org.elwiki.manager.renderer</module>
 		<module>org.elwiki.manager.search</module>
 		<module>org.elwiki.manager.workflow</module>
+		<module>org.elwiki.manager.wikiscope</module>
 		<module>org.elwiki.urlconstructor</module>
 	</modules>
 </project>

@@ -2,4 +2,9 @@
 /images/
 /scripts/*.js
 /scripts/*.xml
+!/scripts/ajax.js
+!/scripts/tree.js
+!/scripts/tree.js.map
+!/scripts/TreeScope.js
+!/scripts/tree.css
 /templates/

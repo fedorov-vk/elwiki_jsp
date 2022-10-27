@@ -1,4 +1,4 @@
-package org.apache.wiki.pages;
+package org.elwiki.manager.wikiscope;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,48 +13,33 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
-import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.eclipse.emf.common.util.EList;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
-/**
- * Подготавливает иерархический JSON список страниц. Каждый элемент списка:
- * 
- * <pre>
- * {
- *   name: имя_страницы,
- *   id: идентификатор_страницы
- *   children : [список подчиненных страницы]
- * }
- * </pre>
- * 
- * Специальные страницы - включены в отдельную ветку.
- * 
- * @author v.fedorov
- */
-public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
+public class JSONWikiScopeTracker implements WikiAjaxServlet {
 
-	private static final Logger log = Logger.getLogger(JSONPagesHierarchyTracker.class);
+	private static final Logger log = Logger.getLogger(JSONWikiScopeTracker.class);
 
 	ServicesRefs engine;
 
+	private List<Map<String, Object>> listSpecialPages = new ArrayList<>();
+
 	/**
-	 * Creates instance of JSONPagesHierarchyTracker.
+	 * Creates instance of JSONWikiScopeTracker.
 	 */
-	public JSONPagesHierarchyTracker() {
+	public JSONWikiScopeTracker() {
 		super();
 		engine = ServicesRefs.Instance; //:FVK: workaround - hard coding for getting engine.
 	}
-
+	
 	@Override
 	public String getServletMapping() {
-		return DefaultPageManager.JSON_PAGESHIERARCHY;
+		return WikiScopeManager.JSON_WIKISCOPE;
 	}
-
-	private List<Map<String, Object>> listSpecialPages = new ArrayList<>();
 
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response, String actionName,
@@ -67,21 +52,20 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 			return;
 		}
 
-		Map<String, Object> specialPages = new HashMap<>(Map.of("name", "Special pages", "id", "0"));
 		listSpecialPages.clear();
-
 		List<Map<String, Object>> list = new ArrayList<>();
-		list.add(specialPages);
 		// adding hierarchy of all pages.
 		for (WikiPage page : upperPages) {
-			HashMap<String, Object> data = preparePage(page);
+			HashMap<String, Object> treeNode = preparePage(page);
 			if (!page.isInternalPage()) {
-				list.add(data);
+				list.add(treeNode);
 			}
 		}
 		// here added list of special pages.
 		if (listSpecialPages.size() > 0) {
+			Map<String, Object> specialPages = new HashMap<>(Map.of("id", "0-x-0", "text", "Special pages"));
 			specialPages.put("children", listSpecialPages);
+			list.add(specialPages);
 		}
 
 		String result = AjaxUtil.toJson(list);
@@ -93,20 +77,18 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 		String pageId = page.getId();
 		String pageName = page.getName();
 		if (page.isInternalPage()) {
-			hm.put("name", pageName);
 			hm.put("id", pageId);
+			hm.put("text", pageName);
 			listSpecialPages.add(hm);
 		} else {
-			//:FVK: "<a href=\"http://localhost:8088/cmd.view?pageId=" + page.getId() + "\">" + page.getName() + "</a>";
-			String link = "<a href=\"" + engine.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, null) + "\">"
-					+ pageName + "</a>";
-			hm.put("name", link);
 			hm.put("id", pageId);
+			hm.put("text", pageName);
 		}
 		List<Map<String, Object>> children = new ArrayList<>();
-		for (WikiPage childPage : page.getChildren()) {
-			HashMap<String, Object> pageMap = preparePage(childPage);
-			children.add(pageMap);
+		List<WikiPage> childrenPages = page.getChildren();
+		for (WikiPage childPage : childrenPages) {
+			HashMap<String, Object> treeNode = preparePage(childPage);
+			children.add(treeNode);
 		}
 		if (children.size() > 0) {
 			hm.put("children", children);
