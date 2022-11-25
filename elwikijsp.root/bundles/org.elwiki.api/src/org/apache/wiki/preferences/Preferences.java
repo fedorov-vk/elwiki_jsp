@@ -134,6 +134,8 @@ public class Preferences extends HashMap<String, String> {
 		prefs.put("SectionEditing", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.sectionediting", "true"));
 		prefs.put("Appearance", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.appearance", "true"));
 
+		prefs.put("SidePanel", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.sidepanel", "menu"));
+
 		//editor cookies
 		prefs.put("autosuggest", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.autosuggest", "true"));
 		prefs.put("tabcompletion", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.tabcompletion", "true"));

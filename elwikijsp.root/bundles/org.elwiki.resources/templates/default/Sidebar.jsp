@@ -38,8 +38,7 @@
 
   <wiki:Permission permission="view">
 
-<div class="tabbedSection">
-<div class="tab-Menu">
+<div id="sidepanel-menu" class="stacked-sidemenu">
   <div class="leftmenu">
     <wiki:InsertPage pageId="4" />
     <wiki:NoSuchPage pageId="4">
@@ -62,14 +61,9 @@
     </wiki:NoSuchPage>
   </div>
 </div>
-<div class="tab-Pages">
+<div id="sidepanel-pages" class="stacked-pages">
 <!-- container of tree viewer of pages -->
 <div id="SoftPagesContainer"></div>
-</div>
-<div class="tab-Scope">
-<!-- container of scope viewer -->
-<div id="SoftScopeContainer" class="SoftScopeContainer"></div>
-</div>
 </div>
 
   </wiki:Permission>

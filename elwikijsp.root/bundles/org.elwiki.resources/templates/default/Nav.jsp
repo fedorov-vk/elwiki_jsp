@@ -51,10 +51,27 @@
   <%-- toggle sidebar &#9776; - ☰ &#8801; - ≡ --%>
   <li id="menu"><a href="#">&#9776;</a></li>
 
-  <%-- toggle search scope sidebar &#128269; - 🔍 &#128270; - 🔎 --%>
-  <%--
-  <li id="sscope"><a href="#">&#128269;</a></li>
-  --%>
+  <li id="selectorsidebar">
+    <a href="#">
+        <span>&hellip;</span>
+         <!-- &#9617; - ░ -->
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" data-hover-parent="li">
+    <li data-toggle="buttons" data-pref="SidePanel">
+      <label class="btn btn-default" data-toggle-target="sidepanel-menu" data-pref-value="menu">
+        <input type="radio" data-pref="SidePanel"
+               name="selectorSidePanel" ${prefs.SidePanel eq 'menu' ? "checked='checked'" : ""}>
+          Side menu
+      </label>
+      <label class="btn btn-default" data-toggle-target="sidepanel-pages" data-pref-value="hierarchy">
+        <input type="radio" data-pref="SidePanel"
+               name="selectorSidePanel" ${prefs.SidePanel eq 'hierarchy' ? "checked='checked'" : ""}>
+          Pages hierarchy
+      </label>
+    </li>
+    </ul>
+  </li>
 
   <c:set var="refresh_breadCrumbTrail_attr"><wiki:Breadcrumbs /></c:set>
   <%-- don't show the breadcrumbs if it has none or only one item --%>

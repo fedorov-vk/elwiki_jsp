@@ -215,9 +215,18 @@ Element.implement({
 
             toggle = function( /*event*/ ){
                 //FIXME: differentiate between radioboxes and checkboxes
-                element.getElements("." + active).removeClass(active);
+                let unchecked = element.getElements("." + active); 
+                unchecked.removeClass(active);
                 //console.log(element.getElements(":checked !>").length, element);
-                element.getElements(":checked !>").addClass(active);
+                let checked = element.getElements(":checked !>");
+                checked.addClass(active);
+
+                // Change 'active' class for targeted items. Save in prefs.
+                unchecked.each(function(item) { if(div = $(item.get('data-toggle-target'))) div.removeClass(active); });
+                if(checked[0] && (div = $(checked[0].get('data-toggle-target')))) {
+                    div.addClass(active);
+                    if (pref = element.get("data-pref")) Wiki.prefs(pref, checked[0].get('data-pref-value'));
+                }
             };
             toggle();
             element.addEvent("click", toggle);
