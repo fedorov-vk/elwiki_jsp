@@ -8,10 +8,10 @@ Automatic-Module-Name: org.elwiki.commandresolver
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Service-Component: OSGI-INF/elwiki.DefaultCommandResolver.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
- org.elwiki.api;bundle-version="0.0.1",
- org.elwiki.util;bundle-version="0.0.1",
- org.elwiki.data,
- jakarta.servlet-api;bundle-version="4.0.0"
+ jakarta.servlet-api;bundle-version="4.0.0",
+ org.elwiki.api,
+ org.elwiki.util,
+ org.elwiki.data
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration,

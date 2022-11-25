@@ -146,7 +146,7 @@ var Wiki = {
                 });
             })
 
-            //activate ajax search routines on Search.jsp
+            //activate ajax search routines on FindContent.jsp
             .add( "#searchform2", function(form){
 
                 wiki.search = new wiki.Search( form, {

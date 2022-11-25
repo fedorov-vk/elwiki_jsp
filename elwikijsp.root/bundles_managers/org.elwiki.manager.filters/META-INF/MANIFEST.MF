@@ -13,9 +13,9 @@ Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
  org.apache.commons.lang3;bundle-version="3.1.0",
  net.sourceforge.akismet-java;bundle-version="1.2.0",
  org.jdom.2;bundle-version="2.0.6",
- org.elwiki.data;bundle-version="0.0.1",
- org.elwiki.api;bundle-version="0.0.1",
- org.elwiki.util;bundle-version="0.0.1"
+ org.elwiki.data,
+ org.elwiki.api,
+ org.elwiki.util
 Import-Package: javax.servlet;version="3.1.0",
  javax.servlet.http;version="3.1.0",
  javax.servlet.jsp;version="2.2.0",

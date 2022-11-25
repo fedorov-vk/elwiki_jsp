@@ -10,8 +10,8 @@ Export-Package: org.apache.wiki.attachment,
  org.apache.wiki.providers
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  net.sf.ehcache;bundle-version="2.10.6",
- org.elwiki.api;bundle-version="0.0.1",
- org.elwiki.util;bundle-version="0.0.1",
+ org.elwiki.api,
+ org.elwiki.util,
  org.elwiki.data
 Service-Component: OSGI-INF/elwiki.DefaultAttachmentManager.xml
 Bundle-ActivationPolicy: lazy

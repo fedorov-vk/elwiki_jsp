@@ -8,9 +8,9 @@ Bundle-Activator: org.elwiki.pageprovider.cdo.internal.bundle.PageProviderCdoAct
 Bundle-Vendor: FVK
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.log4j;bundle-version="1.2.15",
- org.elwiki.data;bundle-version="0.0.1",
  org.eclipse.ocl;bundle-version="3.15.0",
- org.elwiki.util;bundle-version="0.0.1"
+ org.elwiki.data,
+ org.elwiki.util
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.wiki.api,

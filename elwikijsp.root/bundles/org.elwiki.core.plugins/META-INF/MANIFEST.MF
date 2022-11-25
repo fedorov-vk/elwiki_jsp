@@ -19,9 +19,9 @@ Require-Bundle: org.eclipse.osgi,
  com.google.gson;bundle-version="2.8.2",
  org.jdom.2;bundle-version="2.0.6",
  jaxen;bundle-version="1.2.0",
- org.elwiki.api;bundle-version="0.0.1",
- org.elwiki.event;bundle-version="0.0.1",
- org.elwiki.data;bundle-version="0.0.1"
+ org.elwiki.api,
+ org.elwiki.event,
+ org.elwiki.data
 Import-Package: javax.servlet;version="3.1.0",
  javax.servlet.http;version="3.1.0",
  org.apache.wiki.util,

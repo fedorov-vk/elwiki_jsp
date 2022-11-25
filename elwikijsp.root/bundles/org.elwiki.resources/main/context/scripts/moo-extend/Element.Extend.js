@@ -215,7 +215,7 @@ Element.implement({
 
             toggle = function( /*event*/ ){
                 //FIXME: differentiate between radioboxes and checkboxes
-                let unchecked = element.getElements("." + active); 
+                let unchecked = element.getElements("." + active);
                 unchecked.removeClass(active);
                 //console.log(element.getElements(":checked !>").length, element);
                 let checked = element.getElements(":checked !>");

@@ -20,9 +20,9 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",
  oro;bundle-version="2.0.8",
  com.google.gson;bundle-version="2.8.2",
- org.elwiki.api;bundle-version="0.0.1",
- org.elwiki.util;bundle-version="0.0.1",
- org.elwiki.event;bundle-version="0.0.1"
+ org.elwiki.api,
+ org.elwiki.util,
+ org.elwiki.event
 Export-Package: org.apache.wiki,
  org.apache.wiki.ajax,
  org.apache.wiki.attachment,

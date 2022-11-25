@@ -26,9 +26,9 @@ Require-Bundle: org.eclipse.rap.jface;bundle-version="3.19.0",
  org.jdom.2;bundle-version="2.0.6",
  net.sourceforge.akismet-java;bundle-version="1.2.0",
  org.jvnet.hudson.org.suigeneris.jrcs.diff;bundle-version="0.4.2",
- org.elwiki.util;bundle-version="0.0.1",
- org.elwiki.data,
- net.sf.ehcache
+ net.sf.ehcache,
+ org.elwiki.util,
+ org.elwiki.data
 Export-Package: org.apache.wiki,
  org.apache.wiki.ajax,
  org.apache.wiki.api,
