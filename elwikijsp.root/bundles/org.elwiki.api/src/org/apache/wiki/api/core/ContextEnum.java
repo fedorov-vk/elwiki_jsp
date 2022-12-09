@@ -60,7 +60,6 @@ public enum ContextEnum {
     WIKI_LOGOUT( "logout", "cmd.logout", "%u", "", null ),
     WIKI_MESSAGE( "message", "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
     WIKI_PREFS( "prefs", "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
-    WIKI_PREFS_RAP( "prefsRap", "cmd.prefsRap", "%u", "", "PreferencesContentRap.jsp" ),
     WIKI_WORKFLOW( "workflow", "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
     WIKI_SCOPE( "scope", "cmd.scope", "%u", "", "ScopeContent.jsp" );
 	//@formatter:on

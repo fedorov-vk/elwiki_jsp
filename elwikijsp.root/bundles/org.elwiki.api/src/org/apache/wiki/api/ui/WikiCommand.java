@@ -43,7 +43,6 @@ public final class WikiCommand extends AbstractCommand {
     public static final Command LOGOUT = new WikiCommand( ContextEnum.WIKI_LOGOUT, null, WikiPermission.LOGIN_ACTION );
     public static final Command MESSAGE = new WikiCommand( ContextEnum.WIKI_MESSAGE, null, null );
     public static final Command PREFS = new WikiCommand( ContextEnum.WIKI_PREFS, null, WikiPermission.EDIT_PROFILE_ACTION );
-    public static final Command PREFS_RAP = new WikiCommand( ContextEnum.WIKI_PREFS_RAP, null, WikiPermission.EDIT_PROFILE_ACTION );
     public static final Command WORKFLOW = new WikiCommand( ContextEnum.WIKI_WORKFLOW, null, null );
     public static final Command SCOPE = new WikiCommand( ContextEnum.WIKI_SCOPE, null, null );
 

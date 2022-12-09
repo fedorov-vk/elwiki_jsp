@@ -31,7 +31,6 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			//Map.entry(ContextEnum.GROUP_CREATE, )
 			Map.entry(ContextEnum.GROUP_DELETE, new DeleteGroupCmdCode()),
 			Map.entry(ContextEnum.WIKI_PREFS, new PrefsCmdCode()),
-			// Map.entry(ContextEnum.WIKI_PREFS_RAP),
 			Map.entry(ContextEnum.WIKI_FIND, new FindCmdCode()),
 			Map.entry(ContextEnum.WIKI_SCOPE, new ScopeCmdCode())
 	); //@formatter:on

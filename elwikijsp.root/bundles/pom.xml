@@ -22,6 +22,5 @@
 		<module>org.elwiki.resources</module>
 		<module>org.elwiki.core.plugins</module>
 		<module>org.elwiki.main</module>
-		<module>org.elwiki.preferences</module>
 	</modules>
 </project>

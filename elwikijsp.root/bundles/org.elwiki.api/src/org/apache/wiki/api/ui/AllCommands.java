@@ -59,7 +59,6 @@ public interface AllCommands {
             WikiCommand.LOGOUT,
             WikiCommand.MESSAGE,
             WikiCommand.PREFS,
-            WikiCommand.PREFS_RAP,
             WikiCommand.WORKFLOW,
             WikiCommand.ADMIN,
             WikiCommand.SCOPE
