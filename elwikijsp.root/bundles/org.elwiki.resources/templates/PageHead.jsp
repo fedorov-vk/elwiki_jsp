@@ -19,7 +19,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%!
   Logger log;
-  //Engine wiki;
+  //Engine wiki; 
   public void jspInit()
   {
     //wiki = ServicesRefs.Instance; //:FVK: workaround.
@@ -27,7 +27,7 @@
   }
 %>
 <%
-   log.debug("<start> PageHead.jsp");
+   log.debug("<-begin-> PageHead.jsp");
 %>
 
 <!-- ******* ViewTemplate jsp ******* (START) -->
@@ -59,6 +59,6 @@
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
 <%@ include file="/templates/default/Header.jsp" %>
 <%
-   log.debug("<end> PageHead.jsp");		
+   log.debug("<-end-> PageHead.jsp");		
 %>
 <!-- ~~ END ~~ PageHead.jsp -->
