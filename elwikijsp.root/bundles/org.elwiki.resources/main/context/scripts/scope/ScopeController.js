@@ -620,6 +620,8 @@ var ScopeContentController = {
 		if (previous) {
 			elmScopeName.set('value', previous);
 			elmScopeName.set('data-previous', previous);
+		} else {
+			elmScopeName.set('value', '');
 		}
 		self.checkEmptyScopeName();
 

@@ -157,7 +157,7 @@
         </wiki:Permission>
       </td>
 
-      <%-- :FVK: старое переписать, согласно функционалу
+      <%-- :FVK: rewrite the old, according to the functionality
 		<c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
       --%>	
       <c:set var="changenote" value=":FOO:" />

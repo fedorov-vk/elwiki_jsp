@@ -185,7 +185,7 @@
         </td>
 
         <td class="nowrap" data-sortvalue="${pageContent.lastModify.time}">
-<%-- TODO: :FVK: - задать формат вывода. При быстром исследовании - возможно строки pattern, timeZone ==null.
+<%-- TODO: :FVK: - you should specify the output format. After a short investigation, it was found that - the following lines are possible: pattern, timeZone ==null.
         <fmt:formatDate value="${pageContent.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
  --%>
         <fmt:formatDate value="${pageContent.lastModify}" />
@@ -345,7 +345,7 @@
     </tr>
 
 <!--
- :FVK: здесь должна быть история Attachment... - см. оригинал. 
+ :FVK: of Attachment history should be here... - see the original JSPWiki.
 
     <wiki:HistoryIterator id="att"><%-- <wiki:AttachmentsIterator id="att"> --%>
     <tr>
