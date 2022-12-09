@@ -89,11 +89,6 @@ String.I18N.PREFIX = "javascript.";
 <meta http-equiv="pragma" content="no-cache" />
 -->
 <meta http-equiv="pragma" content="no-cache" />
-<script src="<wiki:Link format='url' path='scripts/ajax.js'/>"></script>
-<script src="<wiki:Link format='url' path='scripts/tree.js'/>"></script>
-<script src="<wiki:Link format='url' path='scripts/TreeScope.js'/>"></script>
-<link rel="stylesheet" href="/scripts/tree.css" type="text/css" media="screen" />
-
 
 <wiki:IncludeResources type="script"/>
 

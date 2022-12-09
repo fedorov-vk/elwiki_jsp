@@ -232,7 +232,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			if (command == null) {
 				command = CONTEXTS.get(defaultContext);
 				if (command == null) {
-					throw new IllegalArgumentException("Wiki context " + defaultContext + " is illegal.");
+					throw new IllegalArgumentException("Wiki context '" + defaultContext + "' is illegal.");
 				}
 			}
 		}

@@ -790,6 +790,8 @@ var Wiki = {
     jsonrpc: function(method, params, callback){
 
         if( this.JsonUrl ){
+            let data = "";
+            if (arguments.length=4) data = arguments[3];
 
             //console.log(method, JSON.stringify(params) );
 
@@ -819,8 +821,7 @@ var Wiki = {
                     throw new Error("Wiki rpc error: " + error);
                 }
 
-            }).send( "params=" + params );
-
+            }).send( "params=" + params + "&" + "data=" + data );
         }
 
     },

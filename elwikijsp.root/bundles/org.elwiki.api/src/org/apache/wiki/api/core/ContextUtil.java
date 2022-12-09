@@ -17,7 +17,7 @@ public class ContextUtil {
 	 * @param pageContext the JSP page context
 	 * @return Current WikiContext, or null, of no context exists.
 	 */
-	public static Context findContext(final PageContext pageContext) {
+	public static Context findContext(PageContext pageContext) {
 		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		return (Context) request.getAttribute(Context.ATTR_WIKI_CONTEXT);
 	}
@@ -34,7 +34,7 @@ public class ContextUtil {
 	 * @param ctx the JSP page context
 	 * @return the edited text, if present in the session page context or as a parameter
 	 */
-	public static String getEditedText(final PageContext ctx) {
+	public static String getEditedText(PageContext ctx) {
 		ServletRequest servletRequest = ctx.getRequest();
 		String usertext = servletRequest.getParameter(EditorManager.REQ_EDITEDTEXT);
 		if (usertext == null) {

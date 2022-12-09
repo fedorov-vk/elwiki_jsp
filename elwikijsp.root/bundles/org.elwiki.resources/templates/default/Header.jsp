@@ -31,8 +31,10 @@
 <c:set var="frontpageName" value="<%=ServicesRefs.getPageManager().getPageById(pageId).getName()%>" />
 
 <div class="header">
+<!-- :FVK: title page
   <c:set var="titlebox"><wiki:InsertPage pageId="41" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
+-->
 
   <div class="topline">
     <div class="cage pull-left" tabindex="0">

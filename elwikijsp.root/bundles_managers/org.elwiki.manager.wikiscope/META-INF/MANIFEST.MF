@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.osgi;bundle-version="3.17.100",
  jakarta.servlet-api;bundle-version="4.0.0",
  org.eclipse.rap.jface,
  org.apache.log4j,
+ com.google.gson,
  org.elwiki.api,
  org.elwiki.data
 Export-Package: org.elwiki.manager.wikiscope

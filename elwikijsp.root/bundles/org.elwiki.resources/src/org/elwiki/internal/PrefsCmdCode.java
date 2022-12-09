@@ -33,6 +33,10 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.services.ServicesRefs;
 
+/**
+ * @author v.fedorov
+ * Code from webapp/UserPreferences.jsp (for ElWiki's PreferencesContent.jsp)
+ */
 public class PrefsCmdCode extends CmdCode {
 
 	private static final Logger log = Logger.getLogger(PrefsCmdCode.class);

@@ -84,11 +84,9 @@
     <js>/scripts/wiki/Wiki.Behaviors.js</js>
     <js>/scripts/wiki/Category.js</js>
     <js>/scripts/wiki/TreePages.js</js>
-<!--:FVK:
-    <js>/scripts/wiki/TreeScope.js</js>
--->
 
     <css>/styles/haddock/default/build.less</css>
+    <css>/styles/haddock/default/STreeViewer.less</css>
   </group>
 
   <group name="haddock-wysiwyg">
@@ -123,6 +121,10 @@
     <js>/scripts/wiki-edit/Wiki.Snips.js</js>
     <js>/scripts/wiki-edit/Wiki.Edit.js</js>
 
+  </group>
+
+  <group name="scope-controller">
+    <js>/scripts/scope/ScopeController.js</js>
   </group>
 
 </groups>

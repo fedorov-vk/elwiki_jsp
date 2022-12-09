@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,12 +18,15 @@ import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.WikiScopeManager;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 public class JSONWikiScopeTracker implements WikiAjaxServlet {
 
 	private static final Logger log = Logger.getLogger(JSONWikiScopeTracker.class);
+
+	static final String JSON_WIKISCOPE = "wikiscope";
 
 	ServicesRefs engine;
 
@@ -35,15 +39,27 @@ public class JSONWikiScopeTracker implements WikiAjaxServlet {
 		super();
 		engine = ServicesRefs.Instance; //:FVK: workaround - hard coding for getting engine.
 	}
-	
+
 	@Override
 	public String getServletMapping() {
-		return WikiScopeManager.JSON_WIKISCOPE;
+		return JSON_WIKISCOPE;
 	}
 
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response, String actionName,
 			List<String> params) throws ServletException, IOException {
+		switch (actionName) {
+		case "getpages":
+			getPagesScope(request, response);
+			break;
+		default: {
+			log.fatal("Unknown request.");
+		}
+		}
+	}
+
+	private void getPagesScope(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		Collection<WikiPage> upperPages = null;
 		try {
 			upperPages = ServicesRefs.getPageManager().getUpperPages();
@@ -63,7 +79,7 @@ public class JSONWikiScopeTracker implements WikiAjaxServlet {
 		}
 		// here added list of special pages.
 		if (listSpecialPages.size() > 0) {
-			Map<String, Object> specialPages = new HashMap<>(Map.of("id", "0-x-0", "text", "Special pages"));
+			Map<String, Object> specialPages = new HashMap<>(Map.of("id", "00000", "text", "Special pages"));
 			specialPages.put("children", listSpecialPages);
 			list.add(specialPages);
 		}

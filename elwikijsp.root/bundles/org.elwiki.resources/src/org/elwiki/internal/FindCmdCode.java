@@ -29,7 +29,7 @@ import org.osgi.service.useradmin.Group;
 /**
  * 
  * @author vfedorov
- * Code from Search.jsp
+ * Code from Search.jsp (for ElWiki's FindContent.jsp)
  */
 public class FindCmdCode extends CmdCode {
 

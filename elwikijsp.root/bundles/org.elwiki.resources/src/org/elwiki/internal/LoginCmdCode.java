@@ -28,6 +28,10 @@ import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
 import org.elwiki.services.ServicesRefs;
 
+/**
+ * @author v.fedorov
+ * Code from webapp/Login.jsp (for ElWiki's LoginContent.jsp)
+ */
 public class LoginCmdCode extends CmdCode {
 
 	private static final Logger log = Logger.getLogger(LoginCmdCode.class);

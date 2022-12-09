@@ -61,7 +61,8 @@ public interface AllCommands {
             WikiCommand.PREFS,
             WikiCommand.PREFS_RAP,
             WikiCommand.WORKFLOW,
-            WikiCommand.ADMIN
+            WikiCommand.ADMIN,
+            WikiCommand.SCOPE
         };
     }
 

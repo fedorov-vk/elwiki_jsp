@@ -68,7 +68,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.WikiScope;
+import org.elwiki.api.WikiScopeManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -114,7 +114,7 @@ public class ServicesRefs implements Engine {
 	private static TasksManager tasksManager;
 	private static IStorageCdo storageCdo;
 	private static ISessionMonitor sessionMonitor;
-	private static WikiScope wikiScopeManager; 
+	private static WikiScopeManager wikiScopeManager; 
 
 	public static ServicesRefs Instance;
 
@@ -215,7 +215,7 @@ public class ServicesRefs implements Engine {
 	private ComponentFactory<ISessionMonitor> factorySessionMonitor;
 
 	@Reference(target = "(component.factory=elwiki.WikiScopeManager.factory)")
-	private ComponentFactory<WikiScope> factoryWikiScopeManager;
+	private ComponentFactory<WikiScopeManager> factoryWikiScopeManager;
 
 	// :FVK:
 	public void setRssGenerator(RSSGenerator rssGenerator) {
@@ -305,7 +305,7 @@ public class ServicesRefs implements Engine {
 				ServicesRefs.storageCdo = this.factoryStorageCdo.newInstance(properties).getInstance());
 		managers.put(ISessionMonitor.class,
 				ServicesRefs.sessionMonitor = this.factorySessionMonitor.newInstance(properties).getInstance());
-		managers.put(WikiScope.class,
+		managers.put(WikiScopeManager.class,
 				ServicesRefs.wikiScopeManager = this.factoryWikiScopeManager.newInstance(properties).getInstance());
 
 		// Обработка аннотаций @WikiServiceReference.
@@ -447,6 +447,10 @@ public class ServicesRefs implements Engine {
 
 	public static ISessionMonitor getSessionMonitor() {
 		return sessionMonitor;
+	}
+
+	public static WikiScopeManager getScopeManager() {
+		return wikiScopeManager;
 	}
 	
 	// =========================================================================

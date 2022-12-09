@@ -73,6 +73,14 @@
     </ul>
   </li>
 
+  <li id="cmd_scope">
+    <wiki:Link path="cmd.scope" title="<fmt:message key='scope.cmd.title'/>" >
+      <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+      <fmt:message key='scope.cmd' />
+      ${empty prefs.scopearea ? "All" : prefs.scopearea}
+    </wiki:Link>
+  </li>
+
   <c:set var="refresh_breadCrumbTrail_attr"><wiki:Breadcrumbs /></c:set>
   <%-- don't show the breadcrumbs if it has none or only one item --%>
   <c:if test="${fn:length(breadCrumbTrail) gt 2}">

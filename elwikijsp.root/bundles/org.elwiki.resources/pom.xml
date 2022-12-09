@@ -46,7 +46,7 @@
 						<configuration>
 							<cssDestinationFolder>${project.basedir}/resources/templates/default/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro-haddock.xml</wroFile>
-							<targetGroups>haddock,haddock-wysiwyg,haddock-edit</targetGroups>
+							<targetGroups>haddock,haddock-wysiwyg,haddock-edit,scope-controller</targetGroups>
 						</configuration>
 					</execution>
 				</executions>

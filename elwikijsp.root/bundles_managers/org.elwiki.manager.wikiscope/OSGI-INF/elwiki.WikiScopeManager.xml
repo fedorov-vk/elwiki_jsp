@@ -3,5 +3,5 @@
    <service>
       <provide interface="org.elwiki.api.WikiScope"/>
    </service>
-   <implementation class="org.elwiki.manager.wikiscope.WikiScopeManager"/>
+   <implementation class="org.elwiki.manager.wikiscope.WikiScopeManagerImpl"/>
 </scr:component>
