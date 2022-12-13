@@ -45,6 +45,10 @@
 									<id>oro:oro:2.0.8</id>
 									<source>true</source>
 								</artifact>
+								<artifact>
+									<id>javax.el:javax.el-api:3.0.0</id>
+									<source>true</source>
+								</artifact>
 								<!--
 								<artifact>
 									<id>apache-oro:jakarta-oro:2.0.8</id>

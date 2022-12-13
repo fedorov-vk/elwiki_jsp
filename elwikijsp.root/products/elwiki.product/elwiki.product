@@ -30,7 +30,7 @@
    </features>
 
    <configurations>
-      <plugin id="javax.el" autoStart="false" startLevel="0" />
+      <plugin id="javax.el-api" autoStart="false" startLevel="0" />
       <plugin id="javax.servlet.jsp" autoStart="true" startLevel="2" />
       <plugin id="javax.xml" autoStart="false" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="false" startLevel="0" />

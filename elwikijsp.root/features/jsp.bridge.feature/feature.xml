@@ -18,28 +18,21 @@
    </license>
 
    <plugin
-         id="javax.servlet.jsp"
+         id="javax.el-api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="javax.el"
+         id="javax.servlet.jsp-api"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-<!--:FVK:
+
    <plugin
-         id="javax.xml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
--->
-   <plugin
-         id="org.apache.commons.fileupload"
+         id="org.apache.commons.commons-fileupload"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -68,13 +61,6 @@
 
    <plugin
          id="org.apache.felix.gogo.shell"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.felix.webconsole"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -21,7 +21,9 @@
 		<module>features</module>
 
 		<module>bundles_4tests</module>
+<!--
 		<module>tests</module>
+-->
 <!--
 		<module>products</module>
 -->

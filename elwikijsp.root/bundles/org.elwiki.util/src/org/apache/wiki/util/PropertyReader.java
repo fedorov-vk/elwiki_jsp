@@ -21,7 +21,6 @@ package org.apache.wiki.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
-import org.apache.log4j.chainsaw.Main;
 import org.apache.wiki.util.internal.UtilActivator;
 
 import javax.servlet.ServletContext;

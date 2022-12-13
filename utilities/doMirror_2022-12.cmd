@@ -7,10 +7,10 @@ REM The placement directory defines DST. (at running directory - will be created
 REM ECLIPSE - determines the placement of the starter of the installed Eclipse.
 REM OPTS - defines additional startup parameters.
  
-set ECLIPSE=D:\PROGRA~2\Eclipse\eclipse_rcp_2021-12-R\eclipse.exe
+set ECLIPSE=D:\PROGRA~2\Eclipse\2022-12\eclipse_rcp\eclipse.exe
 set OPTS=-nosplash -verbose
-set SRC=https://download.eclipse.org/releases/2021-12
-set DST=2021-12
+set SRC=https://download.eclipse.org/releases/2022-12
+set DST=2022-12
 
 echo Get from: %SRC%
 echo   Put to: %DST%
