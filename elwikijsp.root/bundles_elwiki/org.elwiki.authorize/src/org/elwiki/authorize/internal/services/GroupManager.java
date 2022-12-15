@@ -98,6 +98,8 @@ import org.osgi.service.useradmin.Authorization;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.UserAdmin;
 
+import com.google.gson.Gson;
+
 /**
  * <p>
  * Facade class for storing, retrieving and managing wiki groups on behalf of
@@ -710,7 +712,6 @@ public class GroupManager implements IAuthorizer {
 	(org.elwiki.permissions.PagePermission "*:*" "modify,rename")
 	(org.elwiki.permissions.WikiPermission "*" "createPages,createGroups")
 	(org.elwiki.permissions.GroupPermission "*:*" "view")
-	String chrLevel1 = "\u2666"; // \u2666 == '♦'
 	*/
 	@Override
 	public PermissionInfo[] getRolePermissionInfo(String roleName) throws IllegalArgumentException {
@@ -719,12 +720,10 @@ public class GroupManager implements IAuthorizer {
 			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not founded as group of UserAdmin service.");
 		}
 		Group group = (Group) role;
-
-		String permissions = (String) group.getProperties().get(UserDatabase.GROUP_PERMISSIONS);//:FVK: workaround
-		String splitChar = "\u2666"; // \u2666 == '♦'
-		Pattern pattern = Pattern.compile(splitChar);
+		String allPermissions = (String) group.getProperties().get(UserDatabase.GROUP_PERMISSIONS);
 		List<PermissionInfo> listPi = new ArrayList<>();
-		for (String encodedPermission : pattern.split(permissions)) {
+		String[] permissions = new Gson().fromJson(allPermissions, String[].class);
+		for(String encodedPermission : permissions) {
 			listPi.add(new PermissionInfo(encodedPermission));
 		}
 		return listPi.toArray(new PermissionInfo[listPi.size()]);

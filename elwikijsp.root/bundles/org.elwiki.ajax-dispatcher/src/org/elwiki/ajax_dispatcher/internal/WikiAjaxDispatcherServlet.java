@@ -40,6 +40,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
@@ -84,19 +85,9 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
 		super.init(config);
-
-		BundleContext context = WikiAjaxActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
-		Engine engine = (ref != null) ? (Engine) context.getService(ref) : null;
-		if (engine == null) {
-			//TODO: обработать аварию - нет сервиса Engine.
-			throw new NullPointerException("missed Engine service.");
-		}
-		wikiConfiguration = engine.getWikiConfiguration();
-
-		PATH_AJAX = "/" + TextUtil.getStringProperty(engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax")
-				+ "/";
-		log.info("WikiAjaxDispatcherServlet initialized.");
+		IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
+		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax") + "/";
+		log.info("WikiAjaxDispatcherServlet initialized. AJAX path: " + PATH_AJAX);
 	}
 
 	/**

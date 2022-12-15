@@ -43,42 +43,17 @@
 							<goal>materialize-products</goal>
 						</goals>
 					</execution>
+					<!-- create zip file with the installed product -->
+<!--
 					<execution>
-						<!-- create zip file with the installed product -->
 						<id>archive-products</id>
 						<goals>
 							<goal>archive-products</goal>
 						</goals>
 					</execution>
+-->
 				</executions>
 			</plugin>
-
-			<!-- Модификация config.ini -->
-			<!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<executions>
-					<execution>
-						<id>config.ini</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<workingDirectory>${project.build.directory}</workingDirectory>
-							<executable>${project.basedir}/hacking.sh</executable>
-							<arguments>
-								<argument>${project.basedir}</argument>
-								<argument>${project.build.directory}/${project.artifactId}.dependencies</argument>
-								<argument>project-in-question</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 		</plugins>
 	</build>
 </project>

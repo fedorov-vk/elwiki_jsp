@@ -27,10 +27,7 @@
     <setAttribute key="selected_target_bundles">
         <setEntry value="com.google.gson*2.9.1@default:default"/>
         <setEntry value="com.sun.el@default:default"/>
-        <setEntry value="jakarta.el@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
-        <setEntry value="jakarta.servlet.jsp@default:default"/>
-        <setEntry value="jakarta.servlet@default:default"/>
         <setEntry value="javax.activation*1.1.0.v201211130549@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.el-api@default:default"/>
@@ -65,7 +62,6 @@
         <setEntry value="org.eclipse.core.resources@default:default"/>
         <setEntry value="org.eclipse.core.runtime@default:true"/>
         <setEntry value="org.eclipse.emf.cdo.common@default:default"/>
-        <setEntry value="org.eclipse.emf.cdo.edit@default:default"/>
         <setEntry value="org.eclipse.emf.cdo.explorer@default:default"/>
         <setEntry value="org.eclipse.emf.cdo.net4j@default:default"/>
         <setEntry value="org.eclipse.emf.cdo.server.db@default:default"/>
@@ -76,10 +72,8 @@
         <setEntry value="org.eclipse.emf.cdo@default:default"/>
         <setEntry value="org.eclipse.emf.common@default:default"/>
         <setEntry value="org.eclipse.emf.ecore.change@default:default"/>
-        <setEntry value="org.eclipse.emf.ecore.edit@default:default"/>
         <setEntry value="org.eclipse.emf.ecore.xmi@default:default"/>
         <setEntry value="org.eclipse.emf.ecore@default:default"/>
-        <setEntry value="org.eclipse.emf.edit@default:default"/>
         <setEntry value="org.eclipse.equinox.app@default:default"/>
         <setEntry value="org.eclipse.equinox.common@2:true"/>
         <setEntry value="org.eclipse.equinox.console@default:default"/>
@@ -89,7 +83,6 @@
         <setEntry value="org.eclipse.equinox.http.servlet@default:default"/>
         <setEntry value="org.eclipse.equinox.jsp.jasper.registry@default:default"/>
         <setEntry value="org.eclipse.equinox.jsp.jasper@default:default"/>
-        <setEntry value="org.eclipse.equinox.launcher@default:default"/>
         <setEntry value="org.eclipse.equinox.preferences@default:default"/>
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
         <setEntry value="org.eclipse.equinox.security@default:default"/>

@@ -18,7 +18,10 @@
 	<modules>
 		<module>org.elwiki.feature</module>
 		<module>jsp.bridge.feature</module>
+		<module>org.elwiki.platform.feature</module>
+<!--
 		<module>elwiki.test.feature</module>
 		<module>elwiki.test_environment.feature</module>
+-->
 	</modules>
 </project>

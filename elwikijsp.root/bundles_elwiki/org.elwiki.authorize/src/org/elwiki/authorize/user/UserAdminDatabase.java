@@ -109,9 +109,9 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 
 		URL url = new URL("platform:/plugin/" + AuthorizePluginActivator.PLIGIN_ID + "/groups.json");
 		InputStream inputStream = url.openConnection().getInputStream();
+		Gson gson = new GsonBuilder().create();
 		try (InputStreamReader isr = new InputStreamReader(inputStream)) {
 			JsonReader reader = new JsonReader(isr);
-			Gson gson = new GsonBuilder().create();
 			data = gson.fromJson(reader, collectionType);
 		}
 
@@ -123,7 +123,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 					group = (Group) this.userAdmin.createRole(groupUid, Role.GROUP);
 					Dictionary<String, Object> groupProps = group.getProperties();
 					groupProps.put(GROUP_NAME, groupData.name);
-					groupProps.put(GROUP_PERMISSIONS, groupData.permissions);
+					groupProps.put(GROUP_PERMISSIONS, gson.toJson(groupData.permissions));
 					groupProps.put(GROUP_CREATOR, groupData.creator);
 					groupProps.put(GROUP_MODIFIER, groupData.modifier);
 					
