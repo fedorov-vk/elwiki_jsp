@@ -1,9 +1,11 @@
 package org.elwiki.web.jsp;
 
+import org.eclipse.equinox.http.servlet.internal.servlet.HttpServletResponseWrapperImpl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.Filter;
@@ -13,6 +15,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -290,101 +293,6 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		return TextUtil.replaceString(string, idx, idx + marker.length(), concat.toString());
 	}
 
-	private static class MyWikiServletResponseWrapper extends HttpServletResponseWrapper {
-
-		ByteArrayOutputStream m_output;
-		private ByteArrayServletOutputStream m_servletOut;
-		private PrintWriter m_writer;
-		private HttpServletResponse m_response;
-		private boolean useEncoding;
-
-		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
-		 * and memory consumption.
-		 */
-		private static final int INIT_BUFFER_SIZE = 0x8000;
-
-		public MyWikiServletResponseWrapper(final HttpServletResponse r, final String wikiEncoding,
-				final boolean useEncoding) throws UnsupportedEncodingException {
-			super(r);
-			m_output = new ByteArrayOutputStream(INIT_BUFFER_SIZE);
-			m_servletOut = new ByteArrayServletOutputStream(m_output);
-			m_writer = new PrintWriter(new OutputStreamWriter(m_servletOut, wikiEncoding), true);
-			this.useEncoding = useEncoding;
-
-			m_response = r;
-		}
-
-		/**
-		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
-		 */
-		@Override
-		public PrintWriter getWriter() {
-			return m_writer;
-		}
-
-		@Override
-		public ServletOutputStream getOutputStream() {
-			return m_servletOut;
-		}
-
-		@Override
-		public void flushBuffer() throws IOException {
-			m_writer.flush();
-			super.flushBuffer();
-		}
-
-		class ByteArrayServletOutputStream extends ServletOutputStream {
-
-			ByteArrayOutputStream m_buffer;
-
-			public ByteArrayServletOutputStream(final ByteArrayOutputStream byteArrayOutputStream) {
-				super();
-				m_buffer = byteArrayOutputStream;
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public void write(final int aInt) {
-				m_buffer.write(aInt);
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public boolean isReady() {
-				return false;
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public void setWriteListener(final WriteListener writeListener) {
-			}
-		}
-
-		/** Returns whatever was written so far into the Writer. */
-		@Override
-		public String toString() {
-			try {
-				flushBuffer();
-			} catch (final IOException e) {
-				// log.error( e );
-				return "";
-			}
-
-			try {
-				if (useEncoding) {
-					return m_output.toString(m_response.getCharacterEncoding());
-				}
-
-				return m_output.toString();
-			} catch (final UnsupportedEncodingException e) {
-				// log.error( e );
-				return "";
-			}
-		}
-
-	}
-
 	/**
 	 * Simple response wrapper that just allows us to gobble through the entire response before it's
 	 * output.
@@ -463,23 +371,21 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		/** Returns whatever was written so far into the Writer. */
 		@Override
 		public String toString() {
+			String result = "";
 			try {
 				flushBuffer();
-			} catch (final IOException e) {
-				log.error(e);
-				return "";
-			}
 
-			try {
 				if (useEncoding) {
-					return m_output.toString(m_response.getCharacterEncoding());
+					result = m_output.toString(getResponse().getCharacterEncoding());
+				} else {
+					result = m_output.toString();
 				}
-
-				return m_output.toString();
-			} catch (final UnsupportedEncodingException e) {
+			} catch (Exception e) {
 				log.error(e);
-				return "";
 			}
+
+			//:FVK: log.debug("Result: " + result);
+			return result;
 		}
 
 	}

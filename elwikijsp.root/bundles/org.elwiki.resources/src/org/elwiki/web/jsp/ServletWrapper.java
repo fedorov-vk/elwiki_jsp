@@ -30,7 +30,7 @@ public abstract class ServletWrapper implements Servlet {
 	private Servlet delegate;
 
 	abstract protected String getAlias();
-	
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		this.config = config;
@@ -51,8 +51,13 @@ public abstract class ServletWrapper implements Servlet {
 		try {
 			delegate.service(request, response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.error("Ошибка delegate.service()", e);
+			log.error("Error of delegate.service()", e);
+
+			// :FVK: TODO: review workaround.
+			Object obj = request.getAttribute("elwiki.jsp.error.exception");
+			if (obj == null) {
+				request.setAttribute("elwiki.jsp.error.exception", e);
+			}
 		}
 	}
 

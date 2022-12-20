@@ -59,6 +59,6 @@
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
 <%@ include file="/templates/default/Header.jsp" %>
 <%
-   log.debug("<-end-> PageHead.jsp");		
+   log.debug("<-end-> PageHead.jsp");
 %>
 <!-- ~~ END ~~ PageHead.jsp -->

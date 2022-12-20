@@ -34,6 +34,10 @@
             base-name="/resources/favicons">
       </resource>
       <resource
+            alias="/favicon.ico"
+            base-name="/resources/images/favicon.ico">
+      </resource>
+      <resource
             alias="/images/*"
             base-name="/resources/images">
       </resource>

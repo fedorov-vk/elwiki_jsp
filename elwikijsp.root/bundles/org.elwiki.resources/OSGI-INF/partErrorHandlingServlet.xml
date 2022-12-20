@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="partErrorHandlingServlet">
-   <property name="osgi.http.whiteboard.servlet.errorPage">java.io.IOException
+   <property name="osgi.http.whiteboard.servlet.errorPage">java.lang.Exception
 500
    </property>
+   <property name="osgi.http.whiteboard.context.select" type="String" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <service scope="prototype">
       <provide interface="javax.servlet.Servlet"/>
    </service>
