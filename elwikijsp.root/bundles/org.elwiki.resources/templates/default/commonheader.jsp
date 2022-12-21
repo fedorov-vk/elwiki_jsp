@@ -62,7 +62,6 @@ BOOTSTRAP, IE compatibility / http://getbootstrap.com/getting-started/#support-i
 <%
    Preferences.setupPreferences(pageContext);
 %>
-
 <%-- Localized JS; must come before any css, to avoid blocking immediate execution --%>
 <%-- var LocalizedStrings= { "javascript.<xx>":"...", etc. } --%>
 <script type="text/javascript">//<![CDATA[

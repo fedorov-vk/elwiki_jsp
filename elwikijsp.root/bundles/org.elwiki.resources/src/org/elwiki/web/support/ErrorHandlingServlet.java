@@ -32,6 +32,8 @@ public class ErrorHandlingServlet extends HttpServlet {
 	private static final long serialVersionUID = 2969542914627506516L;
 	private static final Logger log = Logger.getLogger(ErrorHandlingServlet.class);
 
+	public static String ATTR_ELWIKI_ERROR_EXCEPTION = "elwiki.jsp.error.exception"; 
+	
 	@Activate
 	protected void startup() {
 		log.debug("startup ErrorHandlingServlet.");
@@ -44,7 +46,7 @@ public class ErrorHandlingServlet extends HttpServlet {
 
 		log.debug("<-- ErrorHandlingServlet -->");
 		
-		Object obj = req.getAttribute("elwiki.jsp.error.exception");
+		Object obj = req.getAttribute(ATTR_ELWIKI_ERROR_EXCEPTION);
 		if( obj!=null && obj instanceof Exception) {
 			Exception ex = (Exception)obj;
 			StringWriter sw = new StringWriter();

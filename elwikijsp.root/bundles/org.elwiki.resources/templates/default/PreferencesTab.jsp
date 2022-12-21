@@ -18,7 +18,7 @@
     under the License.
 --%>
 <!-- ~~ START ~~ PreferencesTab.jsp -->
-<%@ page errorPage="/Error.jsp" %>
+<%@ page errorPage="/templates/Error.jsp" %>
 <%@ page import="java.io.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.jar.*" %>

@@ -11,10 +11,11 @@ import javax.servlet.ServletResponse;
 import org.apache.log4j.Logger;
 import org.eclipse.equinox.jsp.jasper.JspServlet;
 import org.elwiki.resources.ResourcesActivator;
+import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.framework.Bundle;
 
 /**
- * The idea was taken from code of Equinox: <a href=
+ * The idea of this code was taken from code of Equinox: <a href=
  * "http://kickjava.com/src/org/eclipse/equinox/http/registry/internal/ServletManager.java.htm">ServletManager</a>
  * and <a href=
  * "http://kickjava.com/src/org/eclipse/equinox/jsp/jasper/registry/JSPFactory.java.htm">JSPFactory</a>.
@@ -54,9 +55,9 @@ public abstract class ServletWrapper implements Servlet {
 			log.error("Error of delegate.service()", e);
 
 			// :FVK: TODO: review workaround.
-			Object obj = request.getAttribute("elwiki.jsp.error.exception");
+			Object obj = request.getAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION);
 			if (obj == null) {
-				request.setAttribute("elwiki.jsp.error.exception", e);
+				request.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, e);
 			}
 		}
 	}
@@ -79,7 +80,7 @@ public abstract class ServletWrapper implements Servlet {
 				JspServlet newDelegate = new JspServlet(b, bundleResourcePath, getAlias());
 				newDelegate.init(config);
 				delegate = newDelegate;
-			} catch (Exception e) {
+			} catch (Exception e) { //TODO: add support exception logging.
 				throw new ServletException(e);
 			}
 		}

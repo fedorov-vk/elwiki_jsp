@@ -17,13 +17,14 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<%@ page errorPage="/templates/Error.jsp" %>
+<%@ page import="org.apache.log4j.*" %>
+<%@ page import="org.apache.wiki.api.core.*" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ page import="org.apache.wiki.api.core.*" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="<c:out value='${prefs.Language}' default='en'/>" name="top">
   <head>
 

@@ -1,4 +1,4 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -16,15 +16,14 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-<!-- ~~ START ~~ Footer.jsp (templates/default) --><%@
- page import="org.apache.wiki.api.Release" %><%@
- page import="javax.servlet.jsp.jstl.fmt.*" %><%@
- taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
- taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!-- ~~ START ~~ Footer.jsp (templates/default) -->
+<%@ page import="org.apache.wiki.api.Release" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <div class="footer">
-
   <wiki:InsertPage pageId="40"/>
 
   <div class="wiki-version"><%=Release.APPNAME%> v<%=Release.getVersionString()%>

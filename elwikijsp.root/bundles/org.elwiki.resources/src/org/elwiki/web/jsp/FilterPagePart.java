@@ -1,32 +1,20 @@
 package org.elwiki.web.jsp;
 
-import org.eclipse.equinox.http.servlet.internal.servlet.HttpServletResponseWrapperImpl;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.WikiContext;
-import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -36,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.services.ServicesRefs;
+import org.elwiki.web.ElwikiServletResponseWrapper;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -61,9 +50,9 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 5461829698518145349L;
 	private static final Logger log = Logger.getLogger(FilterPagePart.class);
 
-	private static final String PATH_HEAD_PART = "/templates/PageHead.jsp";
-	private static final String PATH_MIDDLE_PART = "/templates/PageMiddle.jsp";
-	private static final String PATH_BOTTOM_PART = "/templates/PageBottom.jsp";
+	private static final String PATH_PAGE_VIEW = "/templates/PageViewTemplate.jsp";
+	private static final String PATH_READER_VIEW = "/templates/reader/ViewTemplate.jsp";
+	private static final String PATH_RAW_VIEW = "/templates/raw/ViewTemplate.jsp";
 
 	@Reference
 	private Engine engine;
@@ -141,13 +130,11 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 		/* Make content of page.
 		 */
-		final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper(response, m_wiki_encoding,
-				useEncoding);
+		ElwikiServletResponseWrapper responseWrapper = //
+				new ElwikiServletResponseWrapper(response, m_wiki_encoding, useEncoding);
 
 		CmdCode cmdCode = null;
 		try {
-			// final HttpServletResponseWrapper responseWrapper = new MyWikiServletResponseWrapper( (
-			// HttpServletResponse )response, "UTF-8", true );
 			{
 				HttpSession session = httpRequest.getSession();
 
@@ -168,19 +155,19 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 			if (!isAjaxPage) {
 				String template = wikiContext.getTemplate();
-				if ("reader".equals(template)) {
+				switch (template) {
+				case "reader":
 					//:FVK: - workaround. view only page, for skin=reader
-					httpRequest.getRequestDispatcher("/templates/reader/ViewTemplate.jsp").include(httpRequest,
-							responseWrapper);
-				} else if ("raw".equals(template)) {
+					httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, responseWrapper);
+					break;
+				case "raw":
 					//:FVK: - workaround. view only page, for skin=raw
-					httpRequest.getRequestDispatcher("/templates/raw/ViewTemplate.jsp").include(httpRequest,
-							responseWrapper);
-				} else {
+					httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, responseWrapper);
+					break;
+				default:
 					// chain.doFilter(request, response);
-					httpRequest.getRequestDispatcher(PATH_HEAD_PART).include(httpRequest, responseWrapper);
-					httpRequest.getRequestDispatcher(PATH_MIDDLE_PART).include(httpRequest, responseWrapper);
-					httpRequest.getRequestDispatcher(PATH_BOTTOM_PART).include(httpRequest, responseWrapper);
+					httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, response);
+					break;
 				}
 			} else {
 				httpRequest.getRequestDispatcher(uri).include(httpRequest, responseWrapper);
@@ -188,17 +175,21 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 			try {
 				// :FVK: w.enterState( "Delivering response", 30 );
-				final String r = filter(wikiContext, responseWrapper);
+				/*
+				String r = filter(wikiContext, responseWrapper);
 
-				if (useEncoding) {
-					final OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(),
-							response.getCharacterEncoding());
-					out.write(r);
-					out.flush();
-					out.close();
-				} else {
-					response.getWriter().write(r);
+				if (!isAjaxPage) {// :FVK: workaround. - avoid: java.lang.IllegalStateException: WRITER
+					if (useEncoding) {
+						final OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(),
+								response.getCharacterEncoding());
+						out.write(r);
+						out.flush();
+						out.close();
+					} else {
+						response.getWriter().write(r);
+					}
 				}
+				*/
 
 				// Clean up the UI messages and loggers
 				wikiContext.getWikiSession().clearMessages();
@@ -206,6 +197,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				// fire PAGE_DELIVERED event
 				// :FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
 
+			} catch (Exception ex) {
+				log.debug("internal fail", ex);
 			} finally {
 				// :FVK: w.exitState();
 			}
@@ -230,9 +223,10 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	 * @param wikiContext The usual processing context
 	 * @param response    The source string
 	 * @return The modified string with all the insertions in place.
+	 * @throws IOException
 	 */
-	private String filter(final Context wikiContext, final HttpServletResponse response) {
-		String string = response.toString();
+	private String filter(final Context wikiContext, ElwikiServletResponseWrapper response) throws IOException {
+		String string = response.getHtmlContent();
 
 		if (wikiContext != null) {
 			final String[] resourceTypes = TemplateManager.getResourceTypes(wikiContext);
@@ -261,8 +255,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Inserts whatever resources were requested by any plugins or other components for this
-	 * particular type.
+	 * Inserts whatever resources were requested by any plugins or other components
+	 * for this particular type.
 	 *
 	 * @param wikiContext The usual processing context
 	 * @param string      The source string
@@ -293,100 +287,4 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		return TextUtil.replaceString(string, idx, idx + marker.length(), concat.toString());
 	}
 
-	/**
-	 * Simple response wrapper that just allows us to gobble through the entire response before it's
-	 * output.
-	 */
-	private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
-
-		ByteArrayOutputStream m_output;
-		private ByteArrayServletOutputStream m_servletOut;
-		private PrintWriter m_writer;
-		private HttpServletResponse m_response;
-		private boolean useEncoding;
-
-		/**
-		 * How large the initial buffer should be. This should be tuned to achieve a balance in speed
-		 * and memory consumption.
-		 */
-		private static final int INIT_BUFFER_SIZE = 0x8000;
-
-		public JSPWikiServletResponseWrapper(final HttpServletResponse r, final String wikiEncoding,
-				final boolean useEncoding) throws UnsupportedEncodingException {
-			super(r);
-			m_output = new ByteArrayOutputStream(INIT_BUFFER_SIZE);
-			m_servletOut = new ByteArrayServletOutputStream(m_output);
-			m_writer = new PrintWriter(new OutputStreamWriter(m_servletOut, wikiEncoding), true);
-			this.useEncoding = useEncoding;
-
-			m_response = r;
-		}
-
-		/**
-		 * Returns a writer for output; this wraps the internal buffer into a PrintWriter.
-		 */
-		@Override
-		public PrintWriter getWriter() {
-			return m_writer;
-		}
-
-		@Override
-		public ServletOutputStream getOutputStream() {
-			return m_servletOut;
-		}
-
-		@Override
-		public void flushBuffer() throws IOException {
-			m_writer.flush();
-			super.flushBuffer();
-		}
-
-		class ByteArrayServletOutputStream extends ServletOutputStream {
-
-			ByteArrayOutputStream m_buffer;
-
-			public ByteArrayServletOutputStream(final ByteArrayOutputStream byteArrayOutputStream) {
-				super();
-				m_buffer = byteArrayOutputStream;
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public void write(final int aInt) {
-				m_buffer.write(aInt);
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public boolean isReady() {
-				return false;
-			}
-
-			/** {@inheritDoc} */
-			@Override
-			public void setWriteListener(final WriteListener writeListener) {
-			}
-		}
-
-		/** Returns whatever was written so far into the Writer. */
-		@Override
-		public String toString() {
-			String result = "";
-			try {
-				flushBuffer();
-
-				if (useEncoding) {
-					result = m_output.toString(getResponse().getCharacterEncoding());
-				} else {
-					result = m_output.toString();
-				}
-			} catch (Exception e) {
-				log.error(e);
-			}
-
-			//:FVK: log.debug("Result: " + result);
-			return result;
-		}
-
-	}
 }

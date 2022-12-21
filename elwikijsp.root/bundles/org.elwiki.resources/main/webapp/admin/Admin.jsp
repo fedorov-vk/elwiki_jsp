@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
+<%@ page errorPage="/templates/Error.jsp" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
@@ -28,7 +28,6 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.commons.lang3.time.StopWatch" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
-<%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
 <%!
