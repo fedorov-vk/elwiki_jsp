@@ -166,7 +166,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 					break;
 				default:
 					// chain.doFilter(request, response);
-					httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, response);
+					httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, responseWrapper);
 					break;
 				}
 			} else {

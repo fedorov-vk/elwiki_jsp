@@ -32,7 +32,7 @@ public class ElwikiServletResponseWrapper extends HttpServletResponseWrapper {
 	 * How large the initial buffer should be. This should be tuned to achieve a
 	 * balance in speed and memory consumption.
 	 */
-	private static final int INIT_BUFFER_SIZE = 0x7000;
+	private static final int INIT_BUFFER_SIZE = 0x8000;
 
 	private int status = -1;
 	private String message;
