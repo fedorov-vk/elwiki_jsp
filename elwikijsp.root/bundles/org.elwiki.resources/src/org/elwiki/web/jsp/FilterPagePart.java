@@ -1,16 +1,22 @@
 package org.elwiki.web.jsp;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -24,7 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.services.ServicesRefs;
-import org.elwiki.web.ElwikiServletResponseWrapper;
+import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -130,8 +136,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 		/* Make content of page.
 		 */
-		ElwikiServletResponseWrapper responseWrapper = //
-				new ElwikiServletResponseWrapper(response, m_wiki_encoding, useEncoding);
+		JSPWikiServletResponseWrapper responseWrapper = //
+				new JSPWikiServletResponseWrapper(response, m_wiki_encoding, useEncoding);
 
 		CmdCode cmdCode = null;
 		try {
@@ -153,6 +159,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				}
 			}
 
+			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, null);
+
 			if (!isAjaxPage) {
 				String template = wikiContext.getTemplate();
 				switch (template) {
@@ -173,10 +181,15 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				httpRequest.getRequestDispatcher(uri).include(httpRequest, responseWrapper);
 			}
 
+			/* TODO: check JSP error.
+			if (httpRequest.getAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION) != null) {
+				return;
+			}*/
+
 			try {
 				// :FVK: w.enterState( "Delivering response", 30 );
-				/*
-				String r = filter(wikiContext, responseWrapper);
+
+				String r = filtering(wikiContext, responseWrapper);
 
 				if (!isAjaxPage) {// :FVK: workaround. - avoid: java.lang.IllegalStateException: WRITER
 					if (useEncoding) {
@@ -189,7 +202,6 @@ public class FilterPagePart extends HttpFilter implements Filter {
 						response.getWriter().write(r);
 					}
 				}
-				*/
 
 				// Clean up the UI messages and loggers
 				wikiContext.getWikiSession().clearMessages();
@@ -202,6 +214,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 			} finally {
 				// :FVK: w.exitState();
 			}
+		} catch (Exception ex) {
+			log.debug("internal fail", ex);
 		} finally {
 			if (cmdCode != null) {
 				// Code for context`s command: execute epilogue.
@@ -225,8 +239,9 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	 * @return The modified string with all the insertions in place.
 	 * @throws IOException
 	 */
-	private String filter(final Context wikiContext, ElwikiServletResponseWrapper response) throws IOException {
+	private String filtering(final Context wikiContext, JSPWikiServletResponseWrapper response) throws IOException {
 		String string = response.getHtmlContent();
+		//:FVK:test -- Files.writeString(Path.of(DIR, getName("before")), string, StandardOpenOption.CREATE);
 
 		if (wikiContext != null) {
 			final String[] resourceTypes = TemplateManager.getResourceTypes(wikiContext);
@@ -250,6 +265,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				response.addHeader(key.trim(), value.trim());
 			}
 		}
+		//:FVK:test -- Files.writeString(Path.of(DIR, getName("after")), string, StandardOpenOption.CREATE);
 
 		return string;
 	}
@@ -287,4 +303,100 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		return TextUtil.replaceString(string, idx, idx + marker.length(), concat.toString());
 	}
 
+	/**
+	 * Simple response wrapper that just allows us to gobble through the entire
+	 * response before it's output.
+	 */
+	private static class JSPWikiServletResponseWrapper extends HttpServletResponseWrapper {
+
+		ByteArrayOutputStream m_output;
+		private ByteArrayServletOutputStream m_servletOut;
+		private PrintWriter m_writer;
+		private HttpServletResponse m_response;
+		private boolean useEncoding;
+
+		/**
+		 * How large the initial buffer should be. This should be tuned to achieve a
+		 * balance in speed and memory consumption.
+		 */
+		private static final int INIT_BUFFER_SIZE = 0x8000;
+
+		public JSPWikiServletResponseWrapper(final HttpServletResponse r, final String wikiEncoding,
+				final boolean useEncoding) throws UnsupportedEncodingException {
+			super(r);
+			m_output = new ByteArrayOutputStream(INIT_BUFFER_SIZE);
+			m_servletOut = new ByteArrayServletOutputStream(m_output);
+			m_writer = new PrintWriter(new OutputStreamWriter(m_servletOut, wikiEncoding), true);
+			this.useEncoding = useEncoding;
+
+			m_response = r;
+		}
+
+		/**
+		 * Returns a writer for output; this wraps the internal buffer into a
+		 * PrintWriter.
+		 */
+		@Override
+		public PrintWriter getWriter() {
+			return m_writer;
+		}
+
+		@Override
+		public ServletOutputStream getOutputStream() {
+			return m_servletOut;
+		}
+
+		@Override
+		public void flushBuffer() throws IOException {
+			m_writer.flush();
+			super.flushBuffer();
+		}
+
+		class ByteArrayServletOutputStream extends ServletOutputStream {
+
+			ByteArrayOutputStream m_buffer;
+
+			public ByteArrayServletOutputStream(final ByteArrayOutputStream byteArrayOutputStream) {
+				super();
+				m_buffer = byteArrayOutputStream;
+			}
+
+			/** {@inheritDoc} */
+			@Override
+			public void write(final int aInt) {
+				m_buffer.write(aInt);
+			}
+
+			/** {@inheritDoc} */
+			@Override
+			public boolean isReady() {
+				return false;
+			}
+
+			/** {@inheritDoc} */
+			@Override
+			public void setWriteListener(final WriteListener writeListener) {
+			}
+		}
+
+		/**
+		 * Returns whatever was written so far into the Writer.
+		 *
+		 * @return
+		 * @throws IOException
+		 */
+		public String getHtmlContent() throws IOException {
+			String result = "";
+
+			flushBuffer();
+
+			if (useEncoding) {
+				result = m_output.toString(m_response.getCharacterEncoding());
+			} else {
+				result = m_output.toString();
+			}
+
+			return result;
+		}
+	}
 }
