@@ -191,16 +191,14 @@ public class FilterPagePart extends HttpFilter implements Filter {
 
 				String r = filtering(wikiContext, responseWrapper);
 
-				if (!isAjaxPage) {// :FVK: workaround. - avoid: java.lang.IllegalStateException: WRITER
-					if (useEncoding) {
-						final OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(),
-								response.getCharacterEncoding());
-						out.write(r);
-						out.flush();
-						out.close();
-					} else {
-						response.getWriter().write(r);
-					}
+				if (useEncoding) {
+					final OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(),
+							response.getCharacterEncoding());
+					out.write(r);
+					out.flush();
+					out.close();
+				} else {
+					response.getWriter().write(r);
 				}
 
 				// Clean up the UI messages and loggers
