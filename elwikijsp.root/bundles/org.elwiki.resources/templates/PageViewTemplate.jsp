@@ -84,6 +84,16 @@
 <!-- ~~ PageBottom ~~ -->
   <%@ include file="/templates/default/Footer.jsp" %>
 </div>
+<!-- "stylesheet" -->
+<wiki:IncludeResources type="stylesheet"/>
+<!-- "inlinecss" -->
+<wiki:IncludeResources type="inlinecss" />
+<!-- "script" -->
+<wiki:IncludeResources type="script"/>
+<!-- "jsfunction" -->
+<script type="text/javascript">//<![CDATA[
+<wiki:IncludeResources type="jsfunction"/>
+//]]></script>
 </body>
 </html>
 <%

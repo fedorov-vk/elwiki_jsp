@@ -25,16 +25,14 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <!DOCTYPE html>
-<html lang="<c:out value='${prefs.Language}' default='en'/>" name="top">
+<html lang="<c:out value='${prefs.Language}' default='en'/>">
   <head>
-
   <title>
     <fmt:message key="view.title.view">
       <fmt:param><wiki:Variable var="ApplicationName" /></fmt:param>
       <fmt:param><wiki:PageName /></fmt:param>
     </fmt:message>
   </title>
-  <%--<wiki:Include page="commonheader.jsp"/>--%>
 <script type="text/javascript">//<![CDATA[
 /* Localized javascript strings: LocalizedStrings[] */
 <wiki:IncludeResources type="jslocalizedstrings"/>
@@ -80,7 +78,7 @@ String.I18N.PREFIX = "javascript.";
      <%-- :FVK: href="<wiki:Link format='url' templatefile='/template/haddock/haddock.css'/>" --%>
      href="/template/haddock/haddock.css"
      />
-
+<script type="text/javascript" src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
 </head>
 
 <body class="reader context-<wiki:Variable var='requestcontext' default='' />" >
@@ -94,6 +92,5 @@ String.I18N.PREFIX = "javascript.";
 
 </div>
 
-<script type="text/javascript" src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
 </body>
 </html>

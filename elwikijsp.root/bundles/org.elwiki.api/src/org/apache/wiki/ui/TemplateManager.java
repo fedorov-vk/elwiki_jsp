@@ -18,27 +18,23 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.modules.ModuleManager;
-import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.ClassUtil;
-
-import javax.servlet.jsp.PageContext;
-
 import java.net.URL;
-//:FVK: import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.Vector;
+
+import javax.servlet.jsp.PageContext;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.modules.ModuleManager;
+import org.apache.wiki.preferences.Preferences;
 
 
 /**
@@ -222,20 +218,24 @@ public interface TemplateManager extends ModuleManager {
     }
 
     /**
-     *  Returns the include resources marker for a given type.  This is in a
-     *  HTML or Javascript comment format.
+     *  Returns the include resources list for a given type.
      *
      *  @param context the wiki context
      *  @param type the marker
-     *  @return the generated marker comment
+     *  @return the generated resources list
      */
     static String getMarker( final Context context, final String type ) {
         if( type.equals( RESOURCE_JSLOCALIZEDSTRINGS ) ) {
             return getJSLocalizedStrings( context );
-        } else if( type.equals( RESOURCE_JSFUNCTION ) ) {
-            return "/* INCLUDERESOURCES ("+type+") */";
         }
-        return "<!-- INCLUDERESOURCES ("+type+") -->";
+        /* For RESOURCE_STYLESHEET, RESOURCE_INLINECSS, RESOURCE_SCRIPT, RESOURCE_JSFUNCTION:
+         * - make list of string 
+         */
+        String[] resources = getResourceRequests(context, type);
+		if (resources.length == 0) {
+			return "";
+		}
+		return String.join("\n", resources) + "\n";
     }
 
     /**

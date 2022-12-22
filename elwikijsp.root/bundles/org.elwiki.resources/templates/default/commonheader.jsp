@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -78,9 +79,6 @@ String.I18N.PREFIX = "javascript.";
      href="<wiki:Link format='url' templatefile='haddock-dark.css'/>"/>
 </c:if>
 
-<wiki:IncludeResources type="stylesheet"/>
-<wiki:IncludeResources type="inlinecss" />
-
 <%-- JAVASCRIPT --%>
 
 <script src="<wiki:Link format='url' path='scripts/haddock.js'/>"></script>
@@ -88,9 +86,6 @@ String.I18N.PREFIX = "javascript.";
 <meta http-equiv="pragma" content="no-cache" />
 -->
 <meta http-equiv="pragma" content="no-cache" />
-
-<wiki:IncludeResources type="script"/>
-
 
 <meta name="wikiContext" content='<wiki:Variable var="requestcontext" />' />
 <wiki:Permission permission="edit"><meta name="wikiEditPermission" content="true"/></wiki:Permission>
@@ -113,10 +108,6 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiXHRCategories" content='<wiki:Link format="url" templatefile="AJAXCategories.jsp" />' />
 <meta name="wikiXHRHtml2Markup" content='<wiki:Link format="url" path="templates/AJAXHtml2Markup.jsp" />' />
 <meta name="wikiXHRMarkup2Wysiwyg" content='<wiki:Link format="url" path="templates/XHRMarkup2Wysiwyg.jsp" />' />
-
-<script type="text/javascript">//<![CDATA[
-<wiki:IncludeResources type="jsfunction"/>
-//]]></script>
 
 <link rel="search" href="<wiki:LinkTo format='url' pageName='cmd.find'/>"
     title='Search <wiki:Variable var="ApplicationName" />' />
@@ -159,7 +150,5 @@ String.I18N.PREFIX = "javascript.";
          src="<wiki:Link format='url' templatefile='skins/' /><c:out value='${prefs.SkinName}/skin.js' />" ></script>
 </c:if>
 
-<wiki:Include page="localheader.jsp"/>
-<%-- :FVK:
 <%@ include file="/templates/default/localheader.jsp" %>
---%><!-- ~~ END ~~ commonheader.jsp -->
+<!-- ~~ END ~~ commonheader.jsp -->

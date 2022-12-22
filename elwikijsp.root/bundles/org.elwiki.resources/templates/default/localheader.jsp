@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%--
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -15,7 +16,7 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.  
---%><!-- ~~ START ~~ localheader.jsp (templates/default) -->
+--%>
 <%--
     This is a local JSP header file, which you can override in your own template
      if you want to put something in the head-section of the page.
@@ -28,4 +29,4 @@
 
     The safest trick would be to create your own template (say "sitetemplate") directory,  just put a new localheader.jsp in it.
     JSPWiki will always use the in the "default" template, if it cannot locate an equivalent file in defined template directory.
---%><!-- ~~ END ~~ localheader.jsp -->
+--%>
