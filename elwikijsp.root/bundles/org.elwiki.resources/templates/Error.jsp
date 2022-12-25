@@ -60,6 +60,7 @@ if (exception0 instanceof javax.servlet.jsp.JspException) {
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+  <div style="margin:10pt;">
 	<h3>ElWiki has detected an error</h3>
 
 	<table>
@@ -98,5 +99,6 @@ if (exception0 instanceof javax.servlet.jsp.JspException) {
 	<button onclick="history.back()"
 		style="border-radius: 4px; padding: 4px;">Back to Previous
 		Page</button>
+  </div>
 </body>
 </html>

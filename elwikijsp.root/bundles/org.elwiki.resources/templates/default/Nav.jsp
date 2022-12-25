@@ -227,10 +227,9 @@
   <%-- edit --%>
   <wiki:PageType type="page">
   <wiki:CheckRequestContext context='view|info|diff|upload|rename'>
-	<li id="edit"
-	  class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
+	<li id="edit" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="edit" accessKey="e" >
+        <wiki:Link context="edit" pageId="<%=ctx.getPageId()%>" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
@@ -291,7 +290,6 @@
   </wiki:CheckRequestContext>
 
 
-
   <%-- more menu --%>
   <li id="more" tabindex="0">
     <a href="#">
@@ -345,7 +343,7 @@
       <wiki:Permission permission="comment">
         <wiki:PageType type="page">
           <li>
-            <wiki:Link context="comment">
+            <wiki:Link context="comment" pageId="<%=ctx.getPageId()%>">
               <span class="icon-plus"></span> <fmt:message key="actions.comment" />
             </wiki:Link>
           </li>

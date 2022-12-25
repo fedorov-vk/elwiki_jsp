@@ -36,11 +36,11 @@ public enum ContextEnum {
     GROUP_VIEW( "viewGroup", "cmd.viewGroup", "%u", "?group=%n", "PreferencesContent.jsp" ),
 
     PAGE_ATTACH( "att", "attach", "%u", "/%n", null ),
-    PAGE_COMMENT( "comment", "Comment.jsp", "%u", "?page=%n", "CommentContent.jsp" ),
+    PAGE_COMMENT( "comment", "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
     PAGE_CONFLICT ( "conflict", "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
     PAGE_DELETE( "del", "Delete.jsp", "%u", "?page=%n", null ),
     PAGE_DIFF( "diff", "cmd.diff", "%u", "?page=%n", "DiffContent.jsp" ),
-    PAGE_EDIT( "edit", "cmd.edit", "%u", "?page=%n", "EditContent.jsp" ),
+    PAGE_EDIT( "edit", "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
     PAGE_INFO( "info", "cmd.info", "%u", "?page=%n", "InfoContent.jsp" ),
     PAGE_NONE( "", "", "%u", "%n", null ),
     PAGE_PREVIEW( "preview", "cmd.preview", "%u", "?page=%n", "PreviewContent.jsp" ),
