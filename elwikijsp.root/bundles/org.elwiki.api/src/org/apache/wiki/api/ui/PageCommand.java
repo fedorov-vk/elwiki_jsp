@@ -37,6 +37,7 @@ public final class PageCommand extends AbstractCommand {
     public static final Command ATTACH = new PageCommand( ContextEnum.PAGE_ATTACH, null, PagePermission.UPLOAD_ACTION );
     public static final Command COMMENT = new PageCommand( ContextEnum.PAGE_COMMENT, null, PagePermission.COMMENT_ACTION );
     public static final Command CONFLICT = new PageCommand( ContextEnum.PAGE_CONFLICT, null, PagePermission.VIEW_ACTION );
+    public static final Command CREATE = new PageCommand( ContextEnum.PAGE_CREATE, null, PagePermission.EDIT_ACTION );
     public static final Command DELETE = new PageCommand( ContextEnum.PAGE_DELETE, null, PagePermission.DELETE_ACTION );
     public static final Command DIFF = new PageCommand( ContextEnum.PAGE_DIFF, null, PagePermission.VIEW_ACTION );
     public static final Command EDIT = new PageCommand( ContextEnum.PAGE_EDIT, null, PagePermission.EDIT_ACTION );

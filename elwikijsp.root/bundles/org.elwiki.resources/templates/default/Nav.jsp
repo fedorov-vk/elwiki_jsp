@@ -244,6 +244,20 @@
   </wiki:CheckRequestContext>
   </wiki:PageType>
 
+  <%-- create page --%>
+  <wiki:PageType type="page">
+  <wiki:CheckRequestContext context='view|info|diff|upload|rename'>
+	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
+      <wiki:PageType type="page">
+        <wiki:Link context="createPage" pageId="<%=ctx.getPageId()%>" >
+          <span class="icon-pencil"></span>
+          <span>Create</span>
+        </wiki:Link>
+      </wiki:PageType>
+    </li>
+  </wiki:CheckRequestContext>
+  </wiki:PageType>
+
 
   <%-- help slimbox-link --%>
   <wiki:CheckRequestContext context='find'>

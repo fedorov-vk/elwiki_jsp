@@ -37,7 +37,8 @@ public enum ContextEnum {
 
     PAGE_ATTACH( "att", "attach", "%u", "/%n", null ),
     PAGE_COMMENT( "comment", "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
-    PAGE_CONFLICT ( "conflict", "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
+    PAGE_CONFLICT( "conflict", "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
+    PAGE_CREATE( "createPage", "cmd.createPage", "%u", "?pageId=%n", "CreatePageContent.jsp" ),
     PAGE_DELETE( "del", "Delete.jsp", "%u", "?page=%n", null ),
     PAGE_DIFF( "diff", "cmd.diff", "%u", "?page=%n", "DiffContent.jsp" ),
     PAGE_EDIT( "edit", "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),

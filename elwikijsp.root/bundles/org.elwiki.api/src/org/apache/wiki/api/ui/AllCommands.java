@@ -38,6 +38,7 @@ public interface AllCommands {
             PageCommand.ATTACH,
             PageCommand.COMMENT,
             PageCommand.CONFLICT,
+            PageCommand.CREATE,
             PageCommand.DELETE,
             PageCommand.DIFF,
             PageCommand.EDIT,
