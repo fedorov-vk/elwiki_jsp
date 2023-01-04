@@ -667,7 +667,7 @@ public class WikiContext implements Context, Command {
 			} catch (final NoSuchPrincipalException e) {
 				return DUMMY_PERMISSION;
 			}
-			return new AllPermission(wikiConfiguration.getApplicationName());
+			return new AllPermission(wikiConfiguration.getApplicationName(), null);
 		}
 
 		// TODO: we should really break the contract so that this
@@ -705,7 +705,7 @@ public class WikiContext implements Context, Command {
 	@Override
 	public boolean hasAdminPermissions() {
 		return ServicesRefs.getAuthorizationManager().checkPermission(getWikiSession(),
-				new AllPermission(wikiConfiguration.getApplicationName()));
+				new AllPermission(wikiConfiguration.getApplicationName(), null));
 	}
 
 	/**

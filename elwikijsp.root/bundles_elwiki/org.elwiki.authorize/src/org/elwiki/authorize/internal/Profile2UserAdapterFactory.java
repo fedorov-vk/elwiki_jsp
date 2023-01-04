@@ -1,4 +1,4 @@
-package org.elwiki.authorize.user;
+package org.elwiki.authorize.internal;
 
 import org.apache.wiki.auth.user0.UserProfile;
 import org.eclipse.core.runtime.IAdapterFactory;

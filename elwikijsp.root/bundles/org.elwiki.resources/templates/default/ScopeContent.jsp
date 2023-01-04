@@ -18,7 +18,6 @@
     under the License.
 --%>
 <!-- ~~ START ~~ ScopeContent.jsp -->
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="java.util.*" %>
@@ -33,7 +32,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
+  //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK:
   Context ctx = ContextUtil.findContext( pageContext );
   //String redir = (String)ctx.getVariable("redirect");
   //if( redir == null ) redir = ctx.getConfiguration().getFrontPage();

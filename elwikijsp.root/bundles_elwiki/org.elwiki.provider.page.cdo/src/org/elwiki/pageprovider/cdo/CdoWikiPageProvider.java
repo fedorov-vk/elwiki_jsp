@@ -915,7 +915,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		return mainPageId;
 	}
 
-	//:FVK: @Override
+	@Override
 	public WikiPage createPage(String name, String content, WikiPage parentPage) {
 		String wikiName = "ELwiki";
 		String pageAuthor = "Victor Fedorov"; // :FVK: WORKAROUND.

@@ -145,7 +145,7 @@ public final class SecurityVerifier {
 
     private static final String   BG_RED                       = "bgcolor=\"#ffc0c0\"";
 
-    private static final Logger LOG                          = Logger.getLogger( SecurityVerifier.class.getName() );
+    private static final Logger LOG                          = Logger.getLogger(SecurityVerifier.class);
 
     /**
      * Constructs a new SecurityVerifier for a supplied Engine and WikiSession.
@@ -285,7 +285,7 @@ public final class SecurityVerifier {
         s.append( "    <td>AllPermission \"" + wiki + "\"</td>\n" );
         for( final Principal role : roles )
         {
-            final Permission permission = new AllPermission( wiki );
+            final Permission permission = new AllPermission( wiki, null );
             s.append( printPermissionTest( permission, role, pageActions.length ) );
         }
         s.append( "  </tr>\n" );

@@ -25,11 +25,10 @@
     <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp_2022-12"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_target_bundles">
-        <setEntry value="com.google.gson*2.9.1@default:default"/>
+        <setEntry value="com.google.gson@default:default"/>
         <setEntry value="com.sun.el@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
-        <setEntry value="javax.activation*1.1.0.v201211130549@default:default"/>
-        <setEntry value="javax.annotation@default:default"/>
+        <setEntry value="javax.activation@default:default"/>
         <setEntry value="javax.el-api@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.mail@default:default"/>
@@ -44,9 +43,9 @@
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
-        <setEntry value="org.apache.felix.gogo.command*1.1.2.v20221112-0806@default:default"/>
+        <setEntry value="org.apache.felix.gogo.command@default:default"/>
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
-        <setEntry value="org.apache.felix.gogo.shell*1.1.4.v20221112-0806@default:default"/>
+        <setEntry value="org.apache.felix.gogo.shell*1.1.4@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
         <setEntry value="org.apache.jasper.glassfish@default:default"/>
         <setEntry value="org.apache.log4j@default:default"/>
@@ -87,7 +86,7 @@
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
         <setEntry value="org.eclipse.equinox.security@default:default"/>
         <setEntry value="org.eclipse.equinox.useradmin@default:default"/>
-        <setEntry value="org.eclipse.jdt.annotation*2.2.700.v20220826-1026@default:default"/>
+        <setEntry value="org.eclipse.jdt.annotation@default:default"/>
         <setEntry value="org.eclipse.jetty.http@default:default"/>
         <setEntry value="org.eclipse.jetty.io@default:default"/>
         <setEntry value="org.eclipse.jetty.security@default:default"/>

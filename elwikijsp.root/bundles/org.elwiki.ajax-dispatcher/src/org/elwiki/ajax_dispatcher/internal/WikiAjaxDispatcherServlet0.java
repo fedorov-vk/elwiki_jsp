@@ -58,7 +58,7 @@ public class WikiAjaxDispatcherServlet0 extends HttpServlet {
 
 	private static final long serialVersionUID = 2371163144047926990L;
     private static final Map< String, AjaxServletContainer > ajaxServlets = new ConcurrentHashMap<>();
-    private static final Logger log = Logger.getLogger( WikiAjaxDispatcherServlet0.class.getName() );
+    private static final Logger log = Logger.getLogger(WikiAjaxDispatcherServlet0.class);
     final private Engine m_engine;
     private String PATH_AJAX = "/ajax/";
 	private IWikiConfiguration config;

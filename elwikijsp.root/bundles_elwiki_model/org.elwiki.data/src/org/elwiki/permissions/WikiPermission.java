@@ -132,7 +132,7 @@ public final class WikiPermission extends APermission {
 		WikiPermission p = (WikiPermission) permission;
 
 		// See if the wiki is implied
-		boolean impliedWiki = PagePermission.isSubset(this.getWikiName(), p.getWikiName());
+		boolean impliedWiki = isSubset(this.getWikiName(), p.getWikiName());
 
 		// Build up an "implied mask" for actions
 		int impliedMask = impliedMask(this.getMask());

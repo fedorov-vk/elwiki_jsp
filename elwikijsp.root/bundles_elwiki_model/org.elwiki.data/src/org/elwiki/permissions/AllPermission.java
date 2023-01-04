@@ -34,7 +34,7 @@ public final class AllPermission extends APermission {
 
 	/** For serialization purposes. */
 	protected AllPermission() {
-		this(null);
+		this(null, null);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public final class AllPermission extends APermission {
 	 * @param wiki the wiki to which the permission should apply. If null, will
 	 *             apply to all wikis.
 	 */
-	public AllPermission(String wiki) {
+	public AllPermission(String wiki, String foo) {
 		super(wiki);
 		setWikiName((wiki == null || wiki.isEmpty() || wiki.isBlank()) ? WILDCARD : wiki);
 	}
@@ -108,7 +108,7 @@ public final class AllPermission extends APermission {
 			String wiki = ((APermission) permission).getWikiName();
 
 			// If the wiki is implied, it's allowed
-			return PagePermission.isSubset(this.getWikiName(), wiki);
+			return isSubset(this.getWikiName(), wiki);
 		}
 
 		return false;

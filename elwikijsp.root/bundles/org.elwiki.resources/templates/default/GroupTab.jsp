@@ -39,7 +39,8 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context grCtx = ServicesRefs.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
+  //Context grCtx = ThreadUtil.getCurrentContext(); //:FVK:
+  Context grCtx = ContextUtil.findContext( pageContext );
   // Extract the group name and members
   //String name = request.getParameter( "group" );
   //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);

@@ -33,9 +33,16 @@
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.apache.wiki.auth.user0.UserProfile"
-            class="org.elwiki.authorize.user.Profile2UserAdapterFactory">
+            class="org.elwiki.authorize.internal.Profile2UserAdapterFactory">
          <adapter
                type="org.osgi.service.useradmin.User">
+         </adapter>
+      </factory>
+      <factory
+            adaptableType="org.elwiki.permissions.GroupPermission"
+            class="org.elwiki.authorize.internal.IsGroupContainAdapterFactory">
+         <adapter
+               type="java.lang.Boolean">
          </adapter>
       </factory>
    </extension>

@@ -117,4 +117,44 @@ public abstract class APermission extends Permission implements Serializable {
 		return this.mask + ((13 * this.m_actionsSequence.hashCode()) * 23 * wiki.hashCode());
 	}
 
+
+	/**
+	 * Determines whether one target string is a logical subset of the other.
+	 * 
+	 * @param superSet the prospective superset
+	 * @param subSet   the prospective subset
+	 * @return the results of the test, where <code>true</code> indicates that
+	 *         <code>subSet</code> is a subset of <code>superSet</code>
+	 */
+	protected static boolean isSubset(String superSet, String subSet) {
+		// If either is null, return false
+		if (superSet == null || subSet == null) {
+			return false;
+		}
+
+		// If targets are identical, it's a subset
+		if (superSet.equals(subSet)) {
+			return true;
+		}
+
+		// If super is "*", it's a subset
+		if (superSet.equals(WILDCARD)) {
+			return true;
+		}
+
+		// If super starts with "*", sub must end with everything after the *
+		if (superSet.startsWith(WILDCARD)) {
+			String suffix = superSet.substring(1);
+			return subSet.endsWith(suffix);
+		}
+
+		// If super ends with "*", sub must start with everything before *
+		if (superSet.endsWith(WILDCARD)) {
+			String prefix = superSet.substring(0, superSet.length() - 1);
+			return subSet.startsWith(prefix);
+		}
+
+		return false;
+	}
+
 }

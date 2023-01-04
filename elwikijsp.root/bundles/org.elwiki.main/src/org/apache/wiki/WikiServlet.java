@@ -47,7 +47,7 @@ import java.io.IOException;
 public class WikiServlet extends HttpServlet {
 
     private static final long serialVersionUID = 3258410651167633973L;
-    private static final Logger log = Logger.getLogger( WikiServlet.class.getName() );
+    private static final Logger log = Logger.getLogger(WikiServlet.class);
 
     final private Engine m_engine;
     final private IWikiConfiguration wikiConfiguration;

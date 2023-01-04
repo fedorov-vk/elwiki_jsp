@@ -18,10 +18,10 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -83,7 +83,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		// WatchDog.getCurrentWatchDog( m_engine );
 		boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
 
-		// skip all, except cmd.*, AJAX.
+		// skip all URI, except /cmd.*, /*AJAX*.
 		String uri = httpRequest.getRequestURI();
 		log.debug("doFilter()\n requested URI: " + httpRequest.getRequestURI());
 		if (uri.startsWith("/cmd.")) {
@@ -111,8 +111,8 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		Context wikiContext;
 		cmdContext = Platform.getAdapterManager().getAdapter(uri.substring(1), ContextEnum.class); // without first '/'.
 		wikiContext = Wiki.context().create(engine, httpRequest, cmdContext.getRequestContext());
-		ServicesRefs.setCurrentContext(wikiContext);
 		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+		ThreadUtil.setCurrentRequest(httpRequest);
 
 		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
 
@@ -121,7 +121,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 		/* Authorize.
 		 */
 		/*TODO: :FVK: для Wiki.jsp, т.е. cmd.view
-		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ServicesRefs.getCurrentContext(), response)) {
+		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ThreadUtil.getCurrentRequest(), response)) {
 			return;
 		}
 		*/
@@ -204,7 +204,7 @@ public class FilterPagePart extends HttpFilter implements Filter {
 				}
 			}
 
-			ServicesRefs.removeCurrentContext();
+			ThreadUtil.removeCurrentRequest();
 		}
 	}
 

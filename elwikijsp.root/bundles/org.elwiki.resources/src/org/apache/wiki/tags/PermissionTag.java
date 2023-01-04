@@ -110,10 +110,17 @@ public class PermissionTag extends BaseWikiTag {
 		final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 		boolean gotPermission = false;
 
-		if (CREATE_GROUPS.equals(permission) || CREATE_PAGES.equals(permission) || EDIT_PREFERENCES.equals(permission)
-				|| EDIT_PROFILE.equals(permission) || LOGIN.equals(permission)) {
+		//@formatter:off
+		if (CREATE_GROUPS.equals(permission)
+		 || CREATE_PAGES.equals(permission)
+		 || EDIT_PREFERENCES.equals(permission)
+		 || EDIT_PROFILE.equals(permission)
+		 || LOGIN.equals(permission)) {
 			gotPermission = mgr.checkPermission(session, new WikiPermission(page.getWiki(), permission));
-		} else if (VIEW_GROUP.equals(permission) || EDIT_GROUP.equals(permission) || DELETE_GROUP.equals(permission)) {
+		} else if (
+			VIEW_GROUP.equals(permission)
+		 || EDIT_GROUP.equals(permission)
+		 || DELETE_GROUP.equals(permission)) {
 			final Command command = m_wikiContext.getCommand();
 			gotPermission = false;
 			if (command instanceof GroupCommand && command.getTarget() != null) {
@@ -129,7 +136,7 @@ public class PermissionTag extends BaseWikiTag {
 			}
 		} else if (ALL_PERMISSION.equals(permission)) {
 			gotPermission = mgr.checkPermission(session,
-					new AllPermission(m_wikiContext.getEngine().getWikiConfiguration().getApplicationName()));
+					new AllPermission(m_wikiContext.getEngine().getWikiConfiguration().getApplicationName(), null));
 		} else if (page != null) {
 			//
 			//  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.
@@ -144,6 +151,7 @@ public class PermissionTag extends BaseWikiTag {
 			final Permission p = PermissionFactory.getPagePermission(page, permission);
 			gotPermission = mgr.checkPermission(session, p);
 		}
+		//@formatter:off
 
 		return gotPermission;
 	}

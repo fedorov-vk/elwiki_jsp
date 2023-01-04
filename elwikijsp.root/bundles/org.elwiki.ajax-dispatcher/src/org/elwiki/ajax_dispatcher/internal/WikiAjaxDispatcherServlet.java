@@ -67,7 +67,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 public class WikiAjaxDispatcherServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6765508366678337861L;
-	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherServlet.class.getName());
+	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherServlet.class);
 
 	private String PATH_AJAX = "/ajax/";
 

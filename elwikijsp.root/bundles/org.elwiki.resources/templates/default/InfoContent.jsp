@@ -141,7 +141,7 @@
   <wiki:Permission permission="delete">
     <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' />"
            class="form-group"
-              id="deleteForm"
+              id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
       <input class="btn btn-danger" type="submit" name="delete-all" id="delete-all"
         data-modal="+ .modal"
@@ -305,7 +305,7 @@
 
 <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
            class="form-group"
-              id="deleteForm"
+              id="deletePageVersionForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
 
 <%-- See Nav.jsp  "view" menu item

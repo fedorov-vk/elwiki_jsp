@@ -320,7 +320,7 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 		} else if (className.equals(GroupPermission.class.getName())) {
 			return new GroupPermission(name, actions);
 		} else if (className.equals(AllPermission.class.getName())) {
-			return new AllPermission(name);
+			return new AllPermission(name, null);
 		}
 
 		return (Permission)super.createFromString(eDataType, initialValue);

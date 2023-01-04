@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
 //@formatter:on
 public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 
-	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class.getName());
+	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class);
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
