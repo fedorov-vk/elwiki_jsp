@@ -109,7 +109,7 @@ public final class WikiCommand extends AbstractCommand {
     private WikiCommand( ContextEnum context, String target ) {
         super( context, target );
         m_action = null;
-        m_permission = new AllPermission( target );
+        m_permission = new AllPermission( target, null );
     }
 
     /**

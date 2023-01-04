@@ -21,6 +21,7 @@ import org.osgi.service.event.EventHandler;
 	factory = IPermissionManager.COMPONENT_FACTORY,
 	property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
 //@formatter:on
+@Deprecated
 public class PermissionManager implements IPermissionManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(PermissionManager.class);

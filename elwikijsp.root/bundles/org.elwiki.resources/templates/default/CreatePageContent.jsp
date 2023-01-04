@@ -3,7 +3,6 @@
     Licensed to EPL 2.0
 --%>
 <!-- ~~ START ~~ ScopeContent.jsp -->
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="java.util.*" %>
@@ -18,7 +17,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
+  //Context prCtx = ThreadUtil.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
   Context ctx = ContextUtil.findContext( pageContext );
   //String redir = (String)ctx.getVariable("redirect");
   //if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
@@ -28,7 +27,7 @@
 
 <div class="page-content">
 
-<form id="idFormCreatePage" action="<wiki:Link path='createPage' format='url'/>"
+<form id="idFormCreatePage" action="<wiki:Link path='cmd.createPage' format='url'/>"
       class="form-frame"
       accept-charset="<wiki:ContentEncoding/>">
 
@@ -38,14 +37,14 @@
     <span class="form-col-20 control-label"></span>
 
     <span class="dropdown" style="display:inline-block" >
-      <button id="idBtnCreate" class="btn btn-success" type="submit" name="action" value="createpage">
+      <button id="idBtnCreate" class="btn btn-success" type="submit" name="action" value="create">
         Create
       </button>
     </span>
 
     &nbsp; &nbsp;
     <span class="dropdown" style="display:inline-block" >
-      <button id="idBtnCreateEdit" class="btn btn-success" type="submit" name="action" value="createeditpage">
+      <button id="idBtnCreateEdit" class="btn btn-success" type="submit" name="action" value="createedit">
         Create & Edit
       </button>
     </span>
@@ -57,8 +56,8 @@
 
   <div class="form-group">
     <label class="control-label form-col-20" for="idScopeName">Имя страницы</label>
-    <span class="control-label form-col-20">
-    <input id="idPageName" class="form-control" type="text" name="assertedName" size="20"
+    <span class="control-label form-col-50">
+    <input id="idPageName" class="form-control" type="text" name="pageName" size="20"
        autofocus="autofocus" value="" />
     </span>
   </div>

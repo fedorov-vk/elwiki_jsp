@@ -120,8 +120,6 @@ public class ServicesRefs implements Engine {
 
 	private BundleContext bundleContext;
 
-	private static ThreadLocal<Context> thWikiContext = new ThreadLocal<>();
-
 	// -- service handling ---------------------------(start)--
 
 	/** Stores configuration. */
@@ -908,31 +906,6 @@ public class ServicesRefs implements Engine {
 	public <T> List<T> getManagers(Class<T> manager) {
 		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
-	}
-
-	/**
-	 * Возвращает контекст Wiki для текущего процесса.
-	 *
-	 * @return контекста Wiki для текущего процесса.
-	 */
-	@Deprecated //:FVK: - результат вполне может быть NULL. (в RAP)
-	public static Context getCurrentContext() {
-		return thWikiContext.get();
-	}
-
-	/**
-	 * Сохранение контекста Wiki для текущего процесса.
-	 * :FVK: workaround.
-	 * @param wikiContext
-	 */
-	@Deprecated
-	public static void setCurrentContext(Context wikiContext) {
-		thWikiContext.set(wikiContext);
-	}
-
-	@Deprecated
-	public static void removeCurrentContext() {
-		thWikiContext.remove();
 	}
 
 }

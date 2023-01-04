@@ -477,7 +477,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		// Always allow the action if user has AllPermission
 		Permission allPermission = new org.elwiki.permissions.AllPermission(
-				this.wikiConfiguration.getApplicationName());
+				this.wikiConfiguration.getApplicationName(), null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
 			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
@@ -683,6 +683,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 						} catch (Exception e) {
 							/* If the class isn't there,
 							 * or if the constructor isn't corrected - we fail. */
+							e.printStackTrace();//:FVK:
 							continue;
 						}
 						permCollection.add(perm);
@@ -758,7 +759,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			// We couldn't find the user...
 		}
 		*/
-		
+
 		// Ok, no luck---mark this as unresolved and move on
 		return new UnresolvedPrincipal(name);
 	}

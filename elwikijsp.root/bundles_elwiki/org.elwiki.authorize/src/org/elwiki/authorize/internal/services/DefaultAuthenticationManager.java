@@ -20,12 +20,14 @@ package org.elwiki.authorize.internal.services;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -33,6 +35,8 @@ import org.apache.wiki.auth.Authorizer;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.TemplateManager;
 //import org.apache.wiki.auth.authorize.WebAuthorizer;
 import org.apache.wiki.util.TextUtil;
@@ -63,6 +67,14 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.service.useradmin.Authorization;
+import org.osgi.service.useradmin.Group;
+import org.osgi.service.useradmin.Role;
+import org.osgi.service.useradmin.User;
+import org.osgi.service.useradmin.UserAdmin;
+
+import com.google.gson.Gson;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -74,9 +86,11 @@ import javax.servlet.http.HttpSession;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -102,9 +116,6 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     private static final long MAX_LOGIN_DELAY = 20 * 1_000L; // 20 seconds
 
     private static final Logger log = Logger.getLogger( DefaultAuthenticationManager.class );
-
-    /** Empty Map passed to JAAS {@link #doJAASLogin(Class, CallbackHandler, Map)} method. */
-    protected static final Map< String, String > EMPTY_MAP = Collections.unmodifiableMap( new HashMap<>() );
 
     /** Class (of type LoginModule) to use for custom authentication. */
     protected Class< ? extends LoginModule > m_loginModuleClass = UserDatabaseLoginModule.class;
@@ -144,6 +155,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
 	// -- service handling ---------------------------(start)--
 
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private UserAdmin userAdminService;
+	
 	@Reference
     EventAdmin eventAdmin;
 
@@ -284,7 +298,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     @Override
 	public boolean login(final HttpServletRequest request, Session session) throws WikiSecurityException {
 		CallbackHandler handler = null;
-		final Map<String, String> options = EMPTY_MAP;
+		final Map<String, String> options = Collections.emptyMap();
 
 		// If user not authenticated, check if container logged them in,
 		// or if there's an authentication cookie
@@ -352,7 +366,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		return false;
 	}
 
-    /**
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -370,7 +384,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		final CallbackHandler handler = new WikiCallbackHandler(m_engine, null, username, password);
 
         // Execute the user's specified login module
-        final Set< Principal > principals = doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
+        final Set< Principal > principals = this.doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
         if( principals.size() > 0 ) {
 			eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
 					ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
@@ -479,7 +493,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 
         // Initialize the LoginModule
         final Subject subject = new Subject();
-        loginModule.initialize( subject, handler, EMPTY_MAP, options );
+        loginModule.initialize( subject, handler, Collections.emptyMap(), options );
 
         // Try to log in:
         boolean loginSucceeded = false;

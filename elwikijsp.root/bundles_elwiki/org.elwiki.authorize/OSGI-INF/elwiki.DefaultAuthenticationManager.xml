@@ -4,5 +4,6 @@
       <provide interface="org.apache.wiki.auth.IIAuthenticationManager"/>
    </service>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
+   <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService"/>
    <implementation class="org.elwiki.authorize.internal.services.DefaultAuthenticationManager"/>
 </scr:component>

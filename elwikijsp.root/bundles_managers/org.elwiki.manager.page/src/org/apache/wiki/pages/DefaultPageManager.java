@@ -1002,4 +1002,10 @@ public class DefaultPageManager implements PageManager, Initializable {
 		return mainPageId;
 	}
 
+	@Override
+	public WikiPage createPage(String pageName, String parentPageId) {
+		final WikiPage p = getPageById( parentPageId );
+		return m_provider.createPage( pageName, "", p );		
+	}
+
 }

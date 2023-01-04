@@ -570,4 +570,10 @@ public class CachingProvider implements PageProvider {
 		return null;
 	}
 
+	@Override
+	public WikiPage createPage(String name, String content, WikiPage parentPage) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

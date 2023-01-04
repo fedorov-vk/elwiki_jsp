@@ -5,7 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.ContextUtil;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.pages0.PageManager;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki_data.WikiPage;
 
 public class CreatePageCmdCode extends CmdCode {
 
@@ -18,21 +21,31 @@ public class CreatePageCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
-		Context wikiContext = ContextUtil.findContext(httpRequest);
-		/*
-		if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
-		if( wikiContext.getCommand().getTarget() == null ) {
-		    response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
-		    return;
-		}
-		*/
-		String pagereq = wikiContext.getName();
+		String pageName = (String) httpRequest.getParameter("pageName");
+		String targetPageId = httpRequest.getParameter("redirect");
+		String action = httpRequest.getParameter("action");
 
-		// Are we set selected scope?
-		if ("createpage".equals(httpRequest.getParameter("action"))) {
-			log.debug("create page.");
-		} else if("createeditpage".equals(httpRequest.getParameter("action"))) {
-			log.debug("create & edit page.");
+		// Are we create page?
+		if (action != null && (action.equals("create") || action.equals("createedit"))) {
+			Context m_wikiContext = (Context) httpRequest.getAttribute(Context.ATTR_WIKI_CONTEXT);
+			final Engine engine = m_wikiContext.getEngine();
+			@NonNull
+			PageManager pageManager = engine.getManager(PageManager.class);
+			WikiPage newPage = pageManager.createPage(pageName, targetPageId);
+
+			String redirectedUrl;
+			switch (action) {
+			case "create":
+				redirectedUrl = "cmd.view?pageId=" + newPage.getId();
+				break;
+			case "createedit":
+				redirectedUrl = "cmd.edit?pageId=" + newPage.getId();
+				break;
+			default: // :FVK: wrong case.
+				throw new Exception("Incorrect form action.");
+			}
+
+			response.sendRedirect(redirectedUrl);
 		}
 	}
 

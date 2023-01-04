@@ -184,8 +184,25 @@ public interface PageProvider extends WikiProvider {
      */
     void movePage( String from, String to ) throws ProviderException;
 
+	/**
+	 * Returns the page corresponding to the page ID.
+	 * 
+	 * @param pageId ID of the required page.
+	 * @return Wiki page or <code>null</code>.
+	 */
 	WikiPage getPageById(String pageId);
 
 	String getMainPageId();
+
+	/**
+	 * Creates new wiki page. <br/>
+	 * If the parent page is set to null, then the page is created in the wiki root.
+	 * 
+	 * @param name The name of page.
+	 * @param content The content of page.
+	 * @param parentPage Parent page of new page.
+	 * @return New wiki page.
+	 */
+	WikiPage createPage(String name, String content, WikiPage parentPage);
 
 }
