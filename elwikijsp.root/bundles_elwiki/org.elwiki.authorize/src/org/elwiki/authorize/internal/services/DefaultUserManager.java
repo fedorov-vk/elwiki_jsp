@@ -323,6 +323,7 @@ public class DefaultUserManager implements UserManager {
 		this.classUserDatabase = this.userDataBases.get(dbId);
 
 		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
+		getUserDatabase(); // :FVK: workaround - load Groups, Users from JSON.
 
 		// Attach the PageManager as a listener
 		// TODO: it would be better if we did this in PageManager directly

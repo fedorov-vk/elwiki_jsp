@@ -5,7 +5,7 @@
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editPreferences\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editProfile\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"login\")"],
-    "uid": "52218433-37d1-469d-8138-0d7fa13a2198",
+    "uid": "00E38123-3FF8-4C9E-BC30-19190A2D07DC",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
@@ -13,7 +13,7 @@
     "name": "Anonymous",
     "permissions": ["(org.elwiki.permissions.PagePermission \"*:*\" \"view\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"createPages\")"],
-    "uid": "f1db412b-ad5f-4103-9e2b-c25aaecf7bdc",
+    "uid": "322DC8D2-422F-488B-BCA3-F3117581D9FE",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
@@ -22,7 +22,7 @@
     "permissions": ["(org.elwiki.permissions.PagePermission \"*:*\" \"modify\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"createPages\")",
                     "(org.elwiki.permissions.GroupPermission \"*:*\" \"view\")"],
-    "uid": "61d4412b-1def-5103-6e2b-ee5a4ecf7bde",
+    "uid": "5ACBB1BB-393C-4DB1-B326-4CD299B92227",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
@@ -32,7 +32,7 @@
                     "(org.elwiki.permissions.WikiPermission \"*\" \"createPages,createGroups\")",
                     "(org.elwiki.permissions.GroupPermission \"*:*\" \"view\")",
                     "(org.elwiki.permissions.GroupPermission \"*:<groupmember>\" \"edit\")"],
-    "uid": "71e5412b-6cef-7103-3ebb-135a4ecf7fec",
+    "uid": "78FCF6AD-9A08-42F2-ADE8-8A895569B470",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
@@ -42,7 +42,7 @@
       "c7654a70-4451-4303-9a4b-7da13fddd1d5"
     ],
     "permissions": ["(org.elwiki.permissions.AllPermission \"*\" \"*\")"],
-    "uid": "d1dbd10b-ad5f-4103-9e2b-c2caa5cf78dc",
+    "uid": "80618E94-99F8-4BDA-9646-290EE539F874",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
@@ -124,9 +124,17 @@
       "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
       "c7654a70-4451-4303-9a4b-7da13fddd1d5"
     ],
-    "permissions": ["(org.elwiki.permissions.GroupPermission  \"*:<groupmember>\" \"edit\")"],
+    "permissions": ["(org.elwiki.permissions.GroupPermission \"*:<groupmember>\" \"edit\")"],
     "uid": "220d206c-e071-434e-bee1-a9b7ba903d56",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
+    "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
+  },
+  {
+    "name": "RoleGroupDelete",
+    "roles": ["220d206c-e071-434e-bee1-a9b7ba903d56"],
+    "permissions": ["(org.elwiki.permissions.GroupPermission \"Art:*\" \"delete\")"],
+    "uid": "acd79fd6-588c-3856-a33c-c68426432104",
+    "creator": "19b72ad6-f3ec-4cc5-9c1b-4f892582d980",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"
   },
   {

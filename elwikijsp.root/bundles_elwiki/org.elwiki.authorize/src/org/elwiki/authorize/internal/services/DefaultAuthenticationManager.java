@@ -38,7 +38,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.TemplateManager;
-//import org.apache.wiki.auth.authorize.WebAuthorizer;
+//:FVK: import org.apache.wiki.auth.authorize.WebAuthorizer;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.TimedCounterList;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -366,7 +366,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		return false;
 	}
 
-	/**
+    /**
      * {@inheritDoc}
      */
     @Override

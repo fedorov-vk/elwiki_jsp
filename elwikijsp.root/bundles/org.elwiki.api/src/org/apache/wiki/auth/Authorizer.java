@@ -28,7 +28,7 @@ import java.util.Properties;
 /**
  * Interface for service providers of authorization information. After a user successfully logs in, the
  * {@link org.apache.wiki.auth.IIAuthenticationManager} consults the configured Authorizer to determine which additional
- * {@link org.elwiki.data.authorize.Role} principals should be added to the user's Session. To determine which roles should be
+ * {@link org.elwiki.data.authorize.GroupPrincipal} principals should be added to the user's Session. To determine which roles should be
  * injected, the Authorizer is queried for the roles it knows about by calling {@link org.apache.wiki.auth.Authorizer#getRoles()}. Then,
  * each role returned by the Authorizer is tested by calling {@link org.apache.wiki.auth.Authorizer#isUserInRole(Session, Principal)}.
  * If this check fails, and the Authorizer is of type WebAuthorizer, AuthenticationManager checks the role again by calling

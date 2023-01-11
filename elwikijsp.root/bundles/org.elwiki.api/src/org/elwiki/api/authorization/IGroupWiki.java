@@ -1,7 +1,14 @@
 package org.elwiki.api.authorization;
 
+import java.lang.reflect.Constructor;
+import java.security.Permission;
+import java.security.Permissions;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.osgi.service.permissionadmin.PermissionInfo;
 
 public interface IGroupWiki {
 

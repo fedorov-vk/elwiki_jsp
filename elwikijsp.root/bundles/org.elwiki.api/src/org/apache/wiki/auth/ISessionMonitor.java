@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.elwiki.data.authorize.Role;
 
 public interface ISessionMonitor {
 

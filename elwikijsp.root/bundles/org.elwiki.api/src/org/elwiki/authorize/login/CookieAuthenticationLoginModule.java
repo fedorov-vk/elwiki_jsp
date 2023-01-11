@@ -126,14 +126,14 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 					try (Reader in = new BufferedReader(
 							new InputStreamReader(new FileInputStream(cookieFile), StandardCharsets.UTF_8));) {
 
-						String username = FileUtil.readContents(in);
+						String userUid = FileUtil.readContents(in);
 
 						if (log.isDebugEnabled()) {
-							log.debug("Logged in cookie authenticated name=" + username);
+							log.debug("Logged in cookie authenticated UID=" + userUid);
 						}
 
 						// If login succeeds, commit these principals/roles
-						this.m_principals.add(new WikiPrincipal(username, WikiPrincipal.LOGIN_NAME));
+						this.m_principals.add(new WikiPrincipal(userUid, WikiPrincipal.LOGIN_UID));
 
 						//
 						//  Tag the file so that we know that it has been accessed recently.

@@ -36,7 +36,6 @@ import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.data.authorize.Role;
 import org.elwiki.services.ServicesRefs;
 
 /**
@@ -211,7 +210,7 @@ public class UserProfileTag extends BaseWikiTag {
 	}
 
 	/**
-	 * Returns a sorted list of the {@link org.elwiki.data.authorize.Role} objects a
+	 * Returns a sorted list of the {@link org.elwiki.data.authorize.GroupPrincipal} objects a
 	 * user possesses in his or her Session. The result is computed by consulting
 	 * {@link org.apache.wiki.api.core.Session#getRoles()} and extracting those that
 	 * are of type Role.
@@ -224,7 +223,7 @@ public class UserProfileTag extends BaseWikiTag {
 		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
 
 		for (final Principal role : roles) {
-			if (role instanceof Role) {
+			if (role instanceof GroupPrincipal) {
 				tempRoles.add(role.getName());
 			}
 		}

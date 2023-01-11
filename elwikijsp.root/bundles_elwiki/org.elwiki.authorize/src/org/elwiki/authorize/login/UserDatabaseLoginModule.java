@@ -84,7 +84,7 @@ public class UserDatabaseLoginModule extends AbstractLoginModule {
 				}
 
 				// If login succeeds, commit these principals/roles
-				this.m_principals.add(new WikiPrincipal(username, WikiPrincipal.LOGIN_NAME));
+				this.m_principals.add(new WikiPrincipal(profile.getUid(), WikiPrincipal.LOGIN_UID));
 
 				return true;
 			}

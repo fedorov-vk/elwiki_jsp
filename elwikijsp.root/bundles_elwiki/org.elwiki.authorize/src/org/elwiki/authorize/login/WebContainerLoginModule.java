@@ -97,7 +97,7 @@ public class WebContainerLoginModule extends AbstractLoginModule {
 					}
 					throw new FailedLoginException("No remote user found");
 				}
-				principal = new WikiPrincipal(userId, WikiPrincipal.LOGIN_NAME);
+				principal = new WikiPrincipal(userId, WikiPrincipal.LOGIN_UID);
 			}
 			if (log.isDebugEnabled()) {
 				log.debug("Logged in container principal " + principal.getName() + ".");

@@ -23,6 +23,7 @@ import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.eclipse.jdt.annotation.NonNull;
 //import org.elwiki.api.IApplicationSession;
@@ -142,6 +143,14 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 					User user = this.userAdmin.getUser(UID, userGUID);
 					if (user != null) {
 						group.addMember(user);
+					}
+				}
+			}
+			if (groupData.roles != null) {
+				for (String roleGUID : groupData.roles) {
+					Role role = this.userAdmin.getRole(roleGUID);
+					if (role != null) {
+						group.addMember(role);
 					}
 				}
 			}
@@ -285,7 +294,9 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		Dictionary userProps = user.getProperties();
 		userProps.put(LOGIN_NAME, profile.getLoginName());
 		userProps.put(FULL_NAME, profile.getFullname());
-		userProps.put(EMAIL, profile.getEmail());
+		String email = profile.getEmail();
+		userProps.put(EMAIL, StringUtils.lowerCase(email));
+		userProps.put(EMAIL_HUMAN, email);
 		userProps.put(LAST_MODIFIED, c_format.format(modDate));
 		Date lockExpiry = profile.getLockExpiry();
 		userProps.put(LOCK_EXPIRY, lockExpiry == null ? "" : c_format.format(lockExpiry));
@@ -312,57 +323,40 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 	 * @throws NumberFormatException
 	 */
 	private UserProfile findByAttribute(String matchAttribute, String value) {
-		String expectedValue = value;
-
-		// check if we have to do a case insensitive compare
-		boolean caseSensitiveCompare = true;
-		if (matchAttribute.equals(EMAIL)) {
-			caseSensitiveCompare = false;
-		}
-
 		try {
-			for (Role role : this.userAdmin.getRoles(null)) {
-				if (role instanceof User && !(role instanceof Group)) {
-					User user = (User) role;
-					String userAttribute = (String) user.getProperties().get(matchAttribute);
-					if (userAttribute == null) {
-						break;
-					}
-					if (!caseSensitiveCompare) {
-						userAttribute = StringUtils.lowerCase(userAttribute);
-						expectedValue = StringUtils.lowerCase(expectedValue);
-					}
-					if (userAttribute.equals(expectedValue)) {
-						UserProfile profile = newProfile();
-						// Retrieve basic attributes
-						profile.setUid((String) user.getProperties().get(UID));
-						profile.setLoginName((String) user.getProperties().get(LOGIN_NAME));
-						profile.setFullname((String) user.getProperties().get(FULL_NAME));
-						profile.setPassword((String) user.getProperties().get(PASSWORD));
-						profile.setEmail((String) user.getProperties().get(EMAIL));
+			// convert to lower case if we have to do a case insensitive compare of email.
+			String checkedValue = (matchAttribute.equals(EMAIL)) ? StringUtils.lowerCase(value) : value;
+			User user = this.userAdmin.getUser(matchAttribute, checkedValue);
+			if (user != null) {
+				UserProfile profile = newProfile();
+				// Retrieve basic attributes
+				profile.setUid((String) user.getProperties().get(UID));
+				profile.setLoginName((String) user.getProperties().get(LOGIN_NAME));
+				profile.setFullname((String) user.getProperties().get(FULL_NAME));
+				profile.setPassword((String) user.getProperties().get(PASSWORD));
+				profile.setEmail((String) user.getProperties().get(EMAIL_HUMAN));
 
-						// Get created/modified timestamps
-						String created = (String) user.getProperties().get(CREATED);
-						String modified = (String) user.getProperties().get(LAST_MODIFIED);
-						profile.setCreated(parseDate(profile, created));
-						profile.setLastModified(parseDate(profile, modified));
+				// Get created/modified timestamps
+				String created = (String) user.getProperties().get(CREATED);
+				String modified = (String) user.getProperties().get(LAST_MODIFIED);
+				profile.setCreated(parseDate(profile, created));
+				profile.setLastModified(parseDate(profile, modified));
 
-						// Is the profile locked?
-						String lockExpiry = (String) user.getProperties().get(LOCK_EXPIRY);
-						if (lockExpiry == null || lockExpiry.length() == 0) {
-							profile.setLockExpiry(null);
-						} else {
-							profile.setLockExpiry(new Date(Long.parseLong(lockExpiry)));
-						}
-
-						return profile;
-					}
+				// Is the profile locked?
+				String lockExpiry = (String) user.getProperties().get(LOCK_EXPIRY);
+				if (lockExpiry == null || lockExpiry.length() == 0) {
+					profile.setLockExpiry(null);
+				} else {
+					profile.setLockExpiry(new Date(Long.parseLong(lockExpiry)));
 				}
+				
+				return profile;
 			}
-		} catch (NumberFormatException | InvalidSyntaxException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 

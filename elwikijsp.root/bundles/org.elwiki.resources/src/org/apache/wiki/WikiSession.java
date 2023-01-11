@@ -19,16 +19,21 @@
 package org.apache.wiki;
 
 import org.elwiki.IWikiConstants.AuthenticationStatus;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.services.ServicesRefs;
 
+import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiEvent;
@@ -51,10 +57,10 @@ import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.UserManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 //import org.apache.wiki.auth.authorize.GroupManager;
-import org.elwiki.data.authorize.Role;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.HttpUtil;
+import org.apache.wiki.util.ThreadUtil;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.ComponentInstance;
 import org.osgi.service.component.annotations.Activate;
@@ -63,7 +69,10 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.service.useradmin.Authorization;
 import org.osgi.service.useradmin.User;
+import org.osgi.service.useradmin.UserAdmin;
 import org.osgi.service.event.EventConstants;
 import org.apache.wiki.api.event.ElWikiEventsConstants;
 
@@ -126,6 +135,9 @@ public final class WikiSession implements Session, EventHandler {
     
     // -- service handling ---------------------------(start)--
 
+	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	private UserAdmin userAdminService;
+
 	private ISessionMonitor sessionMonitor;
 	
     /**
@@ -153,20 +165,21 @@ public final class WikiSession implements Session, EventHandler {
     /** {@inheritDoc} */
     @Override
     public boolean isAsserted() {
-        return m_subject.getPrincipals().contains( Role.ASSERTED );
+        return m_subject.getPrincipals().contains( GroupPrincipal.ASSERTED );
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isAuthenticated() {
+    	Set<Principal> principals = m_subject.getPrincipals();
         // If Role.AUTHENTICATED is in principals set, always return true.
-        if ( m_subject.getPrincipals().contains( Role.AUTHENTICATED ) ) {
+        if ( principals.contains( GroupPrincipal.AUTHENTICATED ) ) {
             return true;
         }
 
         // With non-JSPWiki LoginModules, the role may not be there, so we need to add it if the user really is authenticated.
         if ( !isAnonymous() && !isAsserted() ) { //:FVK: workaround? (from JSPwiki code)
-            m_subject.getPrincipals().add( Role.AUTHENTICATED );
+        	principals.add( GroupPrincipal.AUTHENTICATED );
             return true;
         }
 
@@ -177,7 +190,7 @@ public final class WikiSession implements Session, EventHandler {
     @Override
     public boolean isAnonymous() {
         final Set< Principal > principals = m_subject.getPrincipals();
-        boolean result = principals.contains( Role.ANONYMOUS ) ||
+        boolean result = principals.contains( GroupPrincipal.ANONYMOUS ) ||
                principals.contains( WikiPrincipal.GUEST ) ||
                HttpUtil.isIPV4Address( getUserPrincipal().getName() );
 
@@ -269,9 +282,6 @@ public final class WikiSession implements Session, EventHandler {
     public Principal[] getRoles() {
         final Set< Principal > roles = new HashSet<>();
 
-        // Add all of the Roles possessed by the Subject directly
-        roles.addAll( m_subject.getPrincipals( Role.class ) );
-
         // Add all of the GroupPrincipals possessed by the Subject directly
         roles.addAll( m_subject.getPrincipals( GroupPrincipal.class ) );
 
@@ -306,8 +316,8 @@ public final class WikiSession implements Session, EventHandler {
 			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
 			subjectPrincipals.clear();
 			subjectPrincipals.add(m_loginPrincipal);
-			subjectPrincipals.add(Role.ALL);
-			subjectPrincipals.add(Role.ANONYMOUS);
+			subjectPrincipals.add(GroupPrincipal.ALL);
+			subjectPrincipals.add(GroupPrincipal.ANONYMOUS);
 		}
 			break;
 		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
@@ -323,8 +333,8 @@ public final class WikiSession implements Session, EventHandler {
 			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
 			subjectPrincipals.clear();
 			subjectPrincipals.add(m_loginPrincipal);
-			subjectPrincipals.add(Role.ALL);
-			subjectPrincipals.add(Role.ASSERTED);
+			subjectPrincipals.add(GroupPrincipal.ALL);
+			subjectPrincipals.add(GroupPrincipal.ASSERTED);
 		}
 			break;
 		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED: {
@@ -340,8 +350,8 @@ public final class WikiSession implements Session, EventHandler {
 			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
 			subjectPrincipals.clear();
 			subjectPrincipals.addAll(eventPrincipals);
-			subjectPrincipals.add(Role.ALL);
-			subjectPrincipals.add(Role.AUTHENTICATED);
+			subjectPrincipals.add(GroupPrincipal.ALL);
+			subjectPrincipals.add(GroupPrincipal.AUTHENTICATED);
 
 			// Add the user and group principals
 			injectUserProfilePrincipals(); // Add principals for the user profile
@@ -389,8 +399,10 @@ public final class WikiSession implements Session, EventHandler {
                     final WikiSession targetPA = ( WikiSession )e.getTarget();
                     Principal principal = (Principal) e.getPrincipal();
                     // bypass wrong logging status - don't add ANONYMOUS, ASSERTED roles.
-					if (principal != null && !principal.equals(Role.ANONYMOUS) && !principal.equals(Role.ASSERTED)
-							&& this.equals(targetPA) && isAuthenticated()) {
+					if (principal != null
+					  && !principal.equals(GroupPrincipal.ANONYMOUS)
+					  && !principal.equals(GroupPrincipal.ASSERTED)
+					  && this.equals(targetPA) && isAuthenticated()) {
 						final Set<Principal> principals = m_subject.getPrincipals();
 						principals.add(principal);
 					}
@@ -408,9 +420,9 @@ public final class WikiSession implements Session, EventHandler {
                         
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
+                        principals.add( GroupPrincipal.ALL );
+                        principals.add( GroupPrincipal.ANONYMOUS );
                         principals.add( m_loginPrincipal );
-                        principals.add( Role.ALL );
-                        principals.add( Role.ANONYMOUS );
                     }
                     break;
                 case WikiSecurityEvent.LOGIN_ASSERTED:
@@ -426,9 +438,9 @@ public final class WikiSession implements Session, EventHandler {
                         
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
+                        principals.add( GroupPrincipal.ALL );
+                        principals.add( GroupPrincipal.ASSERTED );
                         principals.add( m_loginPrincipal );
-                        principals.add( Role.ALL );
-                        principals.add( Role.ASSERTED );
                     }
                     break;
                 case WikiSecurityEvent.LOGIN_AUTHENTICATED:
@@ -444,9 +456,9 @@ public final class WikiSession implements Session, EventHandler {
                         
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
+                        principals.add( GroupPrincipal.ALL );
+                        principals.add( GroupPrincipal.AUTHENTICATED );
                         principals.add( m_loginPrincipal );
-                        principals.add( Role.ALL );
-                        principals.add( Role.AUTHENTICATED );
 
                         // Add the user and group principals
                         injectUserProfilePrincipals();  // Add principals for the user profile
@@ -476,9 +488,9 @@ public final class WikiSession implements Session, EventHandler {
 
                         // Add the login principal to the Subject, and set the built-in roles
                         principals.clear();
+                        principals.add( GroupPrincipal.ALL );
+                        principals.add( GroupPrincipal.AUTHENTICATED );
                         principals.add( m_loginPrincipal );
-                        principals.add( Role.ALL );
-                        principals.add( Role.AUTHENTICATED );
 
                         // Add the user and group principals
                         injectUserProfilePrincipals();  // Add principals for the user profile
@@ -504,9 +516,9 @@ public final class WikiSession implements Session, EventHandler {
 
 		Set<Principal> principals = m_subject.getPrincipals();
 		principals.clear();
+		principals.add(GroupPrincipal.ALL);
+		principals.add(GroupPrincipal.ANONYMOUS);
 		principals.add(WikiPrincipal.GUEST);
-		principals.add(Role.ANONYMOUS);
-		principals.add(Role.ALL);
 		m_loginPrincipal = m_userPrincipal = WikiPrincipal.GUEST;
     }
 
@@ -518,20 +530,19 @@ public final class WikiSession implements Session, EventHandler {
      * This method should generally be called after a user's {@link org.apache.wiki.auth.user0.UserProfile} is saved. If the wiki session
      * is null, or there is no matching user profile, the method returns silently.
      */
-    protected void injectGroupPrincipals() {
-        // Flush the existing GroupPrincipals
-        m_subject.getPrincipals().removeAll( m_subject.getPrincipals(GroupPrincipal.class) );
+	protected void injectGroupPrincipals() {
+		// Flush the existing GroupPrincipals
+		m_subject.getPrincipals().removeAll(m_subject.getPrincipals(GroupPrincipal.class));
 
-        // Get the GroupManager and test for each Group
-        /*:FVK:
-        final IAuthorizer manager = ServicesRefs.getGroupManager(); // GroupManager
-        for( final Principal group : manager.getRoles() ) {
-            if ( manager.isUserInRole( this, group ) ) {
-                m_subject.getPrincipals().add( group );
-            }
-        }
-        */
-    }
+		// Get the groups of which the current user is a member.
+		for (String roleItem : userAdminService.getAuthorization(this.getUser()).getRoles()) {
+			org.osgi.service.useradmin.Role role = userAdminService.getRole(roleItem);
+			if (role != null && role.getType() == org.osgi.service.useradmin.Role.GROUP) {
+				GroupPrincipal group = new GroupPrincipal(role.getName());
+				m_subject.getPrincipals().add(group);
+			}
+		}
+	}
 
     /**
      * Adds Principal objects to the Subject that correspond to the logged-in user's profile attributes for the wiki name, full name
@@ -540,8 +551,8 @@ public final class WikiSession implements Session, EventHandler {
      */
     protected void injectUserProfilePrincipals() {
         // Search for the user profile
-        final String searchId = m_loginPrincipal.getName();
-        if ( searchId == null ) {
+        final String searchUid = m_loginPrincipal.getName();
+        if ( searchUid == null ) {
             // Oh dear, this wasn't an authenticated user after all
             log.info("Refresh principals failed because WikiSession had no user Principal; maybe not logged in?");
             return;
@@ -553,7 +564,7 @@ public final class WikiSession implements Session, EventHandler {
             throw new IllegalStateException( "User database cannot be null." );
         }
         try {
-            final UserProfile profile = database.find( searchId );
+            final UserProfile profile = database.find( searchUid );
             final Principal[] principals = database.getPrincipals( profile.getLoginName() );
             for( final Principal principal : principals ) {
                 // Add the Principal to the Subject
@@ -571,7 +582,7 @@ public final class WikiSession implements Session, EventHandler {
         } catch ( final NoSuchPrincipalException e ) {
             // We will get here if the user has a principal but not a profile
             // For example, it's a container-managed user who hasn't set up a profile yet
-            log.warn("User profile '" + searchId + "' not found. This is normal for container-auth users who haven't set up a profile yet.");
+            log.warn("User profile '" + searchUid + "' not found. This is normal for container-auth users who haven't set up a profile yet.");
         }
     }
 
@@ -607,13 +618,10 @@ public final class WikiSession implements Session, EventHandler {
 			throw new IllegalArgumentException("setUser: user principal cannot be null.");
 		}
 
-		try {
-			String userName = userPrincipal.getName();
-			UserProfile profile = ServicesRefs.getUserManager().getUserDatabase().find(userName);
-			this.user = profile.getAdapter(User.class);
-		} catch (NoSuchPrincipalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String userUid = userPrincipal.getName();
+		org.osgi.service.useradmin.Role userRole = userAdminService.getRole(userUid);
+		if (userRole != null && userRole.getType() == org.osgi.service.useradmin.Role.USER) {
+			this.user = (User) userRole;
 		}
 	}
 

@@ -25,7 +25,6 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.authorize.GroupDatabase;
 //import org.apache.wiki.auth.authorize.GroupManager;
-import org.elwiki.data.authorize.Role;
 //:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
@@ -36,6 +35,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.WikiPermission;
 import org.elwiki.services.ServicesRefs;
 import org.freshcookies.security.policy.PolicyReader;
@@ -451,11 +451,11 @@ public final class SecurityVerifier {
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
         {
-            if ( principal instanceof Role )
+            if ( principal instanceof GroupPrincipal )
             {
-                final Role role = (Role) principal;
+                final GroupPrincipal role = (GroupPrincipal) principal;
                 final boolean isContainerRole = ArrayUtils.contains( containerRoles, role );
-                if ( !Role.isBuiltInRole( role ) && !isContainerRole )
+                if ( !GroupPrincipal.isBuiltInGroup( role ) && !isContainerRole )
                 {
                     m_session.addMessage( ERROR_ROLES, "Role '" + role.getName() + "' is defined in security policy but not in web.xml." );
                     missing = true;
@@ -700,10 +700,10 @@ public final class SecurityVerifier {
             // Stash the unique principals mentioned in the file,
             // plus our standard roles.
             final Set<Principal> principals = new LinkedHashSet<>();
-            principals.add( Role.ALL );
-            principals.add( Role.ANONYMOUS );
-            principals.add( Role.ASSERTED );
-            principals.add( Role.AUTHENTICATED );
+            principals.add( GroupPrincipal.ALL );
+            principals.add( GroupPrincipal.ANONYMOUS );
+            principals.add( GroupPrincipal.ASSERTED );
+            principals.add( GroupPrincipal.AUTHENTICATED );
             final ProtectionDomain[] domains = policy.getProtectionDomains();
             for ( final ProtectionDomain domain : domains ) {
                 for( final Principal principal : domain.getPrincipals() ) {

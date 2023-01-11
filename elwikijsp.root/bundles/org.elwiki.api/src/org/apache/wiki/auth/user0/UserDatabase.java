@@ -48,6 +48,8 @@ public interface UserDatabase {
 
 	String EMAIL = "email";
 
+	String EMAIL_HUMAN = "emailHuman";
+
 	String LAST_MODIFIED = "lastModified";
 
 	String LOCK_EXPIRY = "lockExpiry";

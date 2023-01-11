@@ -715,7 +715,7 @@ public class GroupManager implements IAuthorizer {
 	*/
 	@Override
 	public PermissionInfo[] getRolePermissionInfo(String roleName) throws IllegalArgumentException {
-		Role role = userAdminService.getUser(UserDatabase.GROUP_NAME, roleName); //:FVK: workaround.
+		Role role = userAdminService.getRole(roleName);
 		if (!(role instanceof Group)) {
 			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not founded as group of UserAdmin service.");
 		}

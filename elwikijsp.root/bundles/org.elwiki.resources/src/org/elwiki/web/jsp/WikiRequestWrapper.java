@@ -20,8 +20,6 @@ package org.elwiki.web.jsp;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.auth.SessionMonitor;
-import org.elwiki.data.authorize.Role;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,12 +101,14 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
         // Iterate through all of the built-in roles and look for a match
         final Principal[] principals = m_session.getRoles();
         for( final Principal value : principals ) {
+        	/*:FVK: TODO: for later overview ...
             if( value instanceof Role ) {
                 final Role principal = ( Role )value;
                 if( Role.isBuiltInRole( principal ) && principal.getName().equals( role ) ) {
                     return true;
                 }
             }
+            */
         }
 
         // None of the built-in roles match, so no luck

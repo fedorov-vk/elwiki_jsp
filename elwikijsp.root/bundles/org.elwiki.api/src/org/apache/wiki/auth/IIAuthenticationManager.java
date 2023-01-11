@@ -24,7 +24,6 @@ import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.data.authorize.Role;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -163,17 +162,17 @@ public interface IIAuthenticationManager extends Initializable {
      * Determines whether the supplied Principal is a "role principal".
      *
      * @param principal the principal to test
-     * @return {@code true} if the Principal is of type {@link GroupPrincipal} or {@link Role}, {@code false} otherwise.
+     * @return {@code true} if the Principal is of type {@link GroupPrincipal}, {@code false} otherwise.
      */
     static boolean isRolePrincipal( final Principal principal ) {
-        return principal instanceof Role || principal instanceof GroupPrincipal;
+        return principal instanceof GroupPrincipal;
     }
 
     /**
      * Determines whether the supplied Principal is a "user principal".
      *
      * @param principal the principal to test
-     * @return {@code false} if the Principal is of type {@link GroupPrincipal} or {@link Role}, {@code true} otherwise.
+     * @return {@code false} if the Principal is of type {@link GroupPrincipal}, {@code true} otherwise.
      */
     static boolean isUserPrincipal( final Principal principal ) {
         return !isRolePrincipal( principal );

@@ -102,7 +102,7 @@ import org.elwiki.api.authorization.IAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.APrincipal;
-import org.elwiki.data.authorize.Role;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.GroupPermission;
@@ -553,7 +553,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		}
 
 		// Any type of user can possess a built-in role
-		if (principal instanceof Role && Role.isBuiltInRole((Role) principal)) {
+		if (principal instanceof GroupPrincipal && GroupPrincipal.isBuiltInGroup((GroupPrincipal) principal)) {
 			return session.hasPrincipal(principal);
 		}
 
@@ -645,9 +645,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	}
 
 	/**
-	 * Checks to see if the local security policy allows a particular static Permission. Do not use
+	 * Checks to see if the wiki security policy allows a particular static Permission. Do not use
 	 * this method for normal permission checks; use
-	 * {@link #checkPermission(WikiSession, Permission)} instead.
+	 * {@link #checkPermission(Session, Permission)} instead.
 	 * 
 	 * @param principals
 	 *                   the Principals to check. Only handles wiki's principals (Role, Group).
@@ -727,12 +727,12 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 */
 	@Override
 	public Principal resolvePrincipal(String name) {
-		Role role;
+		GroupPrincipal role;
 		Principal principal;
 
 		// Check built-in Roles first
-		role = new Role(name);
-		if (Role.isBuiltInRole(role)) {
+		role = new GroupPrincipal(name);
+		if (GroupPrincipal.isBuiltInGroup(role)) {
 			return role;
 		}
 

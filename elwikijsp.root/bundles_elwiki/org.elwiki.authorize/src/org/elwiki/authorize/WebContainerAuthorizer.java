@@ -61,7 +61,7 @@ import org.elwiki.api.authorization.authorize.IWebAuthorizer;
 //import org.elwiki.api.exceptions.WikiSecurityException;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.WebContainerLoginModule;
-import org.elwiki.data.authorize.Role;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -95,7 +95,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * for any reason, the role list will be empty. This is a hack designed to get around the fact that
 	 * we have no direct way of querying the web container about which roles it manages.
 	 */
-	protected Role[] m_containerRoles = new Role[0];
+	protected GroupPrincipal[] m_containerRoles = new GroupPrincipal[0];
 
 	/**
 	 * Lazily-initialized boolean flag indicating whether the web container protects JSPWiki resources.
@@ -219,7 +219,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 */
 	@Override
 	public Principal findRole(String role) {
-		for (Role containerRole : this.m_containerRoles) {
+		for (GroupPrincipal containerRole : this.m_containerRoles) {
 			if (containerRole.getName().equals(role)) {
 				return containerRole;
 			}
@@ -250,7 +250,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * @throws JDOMException
 	 *             if elements cannot be parsed correctly
 	 */
-	public boolean isConstrained(String url, Role role) throws JDOMException {
+	public boolean isConstrained(String url, GroupPrincipal role) throws JDOMException {
 		Element root = this.m_webxml.getRootElement();
 		XPath xpath;
 		String selector;
@@ -274,7 +274,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		}
 
 		// Shortcut: if the role is ALL, we are constrained
-		if (role.equals(Role.ALL)) {
+		if (role.equals(GroupPrincipal.ALL)) {
 			return true;
 		}
 
@@ -335,8 +335,8 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * @throws JDOMException
 	 *             if elements cannot be parsed correctly
 	 */
-	protected Role[] getRoles(Document webxml) throws JDOMException {
-		Set<Role> roles = new HashSet<Role>();
+	protected GroupPrincipal[] getRoles(Document webxml) throws JDOMException {
+		Set<GroupPrincipal> roles = new HashSet<>();
 		Element root = webxml.getRootElement();
 
 		// Get roles referred to by constraints
@@ -346,7 +346,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		List<?> nodes = xpath.selectNodes(root);
 		for (Iterator<?> it = nodes.iterator(); it.hasNext();) {
 			String role = ((Element) it.next()).getTextTrim();
-			roles.add(new Role(role));
+			roles.add(new GroupPrincipal(role));
 		}
 
 		// Get all defined roles
@@ -356,10 +356,10 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		nodes = xpath.selectNodes(root);
 		for (Iterator<?> it = nodes.iterator(); it.hasNext();) {
 			String role = ((Element) it.next()).getTextTrim();
-			roles.add(new Role(role));
+			roles.add(new GroupPrincipal(role));
 		}
 
-		return roles.toArray(new Role[roles.size()]);
+		return roles.toArray(new GroupPrincipal[roles.size()]);
 	}
 
 	/**

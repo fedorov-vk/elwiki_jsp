@@ -58,6 +58,15 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 	public UserProfile find(final String index) throws NoSuchPrincipalException {
 		UserProfile profile = null;
 
+        // Try finding by UID
+        try {
+            profile = findByUid( index );
+        } catch( final NoSuchPrincipalException e ) {
+        }
+        if( profile != null ) {
+            return profile;
+        }
+		
         // Try finding by full name
         try {
             profile = findByFullName( index );
@@ -153,7 +162,7 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 			UserProfile profile = findByLoginName(identifier);
 			ArrayList<Principal> principals = new ArrayList<>();
 			if (profile.getLoginName() != null && profile.getLoginName().length() > 0) {
-				principals.add(new WikiPrincipal(profile.getLoginName(), WikiPrincipal.LOGIN_NAME));
+				principals.add(new WikiPrincipal(profile.getLoginName(), WikiPrincipal.LOGIN_UID));
 			}
 			if (profile.getFullname() != null && profile.getFullname().length() > 0) {
 				principals.add(new WikiPrincipal(profile.getFullname(), WikiPrincipal.FULL_NAME));
