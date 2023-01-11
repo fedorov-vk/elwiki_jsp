@@ -544,6 +544,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	}
 
 	public String toString() {
-		return this.getName() + " / " + this.getId() + " : " + this.cdoID().toString();
+		String cdoId = (this.cdoID() != null)? this.cdoID().toString() : "noCDOid";
+		return this.getName() + " / " + this.getId() + " : " + cdoId;
 	}
 } //WikiPageImpl

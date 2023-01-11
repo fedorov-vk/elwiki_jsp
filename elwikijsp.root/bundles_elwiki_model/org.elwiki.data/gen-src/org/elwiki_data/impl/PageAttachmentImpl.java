@@ -71,7 +71,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public int getVersion() {
-		return (Integer)eGet(Elwiki_dataPackage.Literals.IMODIFY_INFO__VERSION, true);
+		return (Integer)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, true);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public void setVersion(int newVersion) {
-		eSet(Elwiki_dataPackage.Literals.IMODIFY_INFO__VERSION, newVersion);
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, newVersion);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public Date getLastModify() {
-		return (Date)eGet(Elwiki_dataPackage.Literals.IMODIFY_INFO__LAST_MODIFY, true);
+		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFY, true);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public void setLastModify(Date newLastModify) {
-		eSet(Elwiki_dataPackage.Literals.IMODIFY_INFO__LAST_MODIFY, newLastModify);
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFY, newLastModify);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public String getAuthor() {
-		return (String)eGet(Elwiki_dataPackage.Literals.IMODIFY_INFO__AUTHOR, true);
+		return (String)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__AUTHOR, true);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public void setAuthor(String newAuthor) {
-		eSet(Elwiki_dataPackage.Literals.IMODIFY_INFO__AUTHOR, newAuthor);
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__AUTHOR, newAuthor);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public String getChangeNote() {
-		return (String)eGet(Elwiki_dataPackage.Literals.IMODIFY_INFO__CHANGE_NOTE, true);
+		return (String)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CHANGE_NOTE, true);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 */
 	@Override
 	public void setChangeNote(String newChangeNote) {
-		eSet(Elwiki_dataPackage.Literals.IMODIFY_INFO__CHANGE_NOTE, newChangeNote);
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CHANGE_NOTE, newChangeNote);
 	}
 
 	/**

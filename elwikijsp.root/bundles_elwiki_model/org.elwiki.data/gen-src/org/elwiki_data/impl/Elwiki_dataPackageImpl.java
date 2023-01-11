@@ -92,7 +92,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass IHistoryInfoEClass = null;
+	private EClass iHistoryInfoEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -722,7 +722,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EClass getIHistoryInfo() {
-		return IHistoryInfoEClass;
+		return iHistoryInfoEClass;
 	}
 
 	/**
@@ -732,7 +732,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getIHistoryInfo_Version() {
-		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(0);
+		return (EAttribute)iHistoryInfoEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -742,7 +742,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getIHistoryInfo_LastModify() {
-		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)iHistoryInfoEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -752,7 +752,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getIHistoryInfo_Author() {
-		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)iHistoryInfoEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -762,7 +762,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getIHistoryInfo_ChangeNote() {
-		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)iHistoryInfoEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1060,11 +1060,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		cloneableEClass = createEClass(CLONEABLE);
 		createEOperation(cloneableEClass, CLONEABLE___CLONE);
 
-		IHistoryInfoEClass = createEClass(IMODIFY_INFO);
-		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__VERSION);
-		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__LAST_MODIFY);
-		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__AUTHOR);
-		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__CHANGE_NOTE);
+		iHistoryInfoEClass = createEClass(IHISTORY_INFO);
+		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__VERSION);
+		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__LAST_MODIFY);
+		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__AUTHOR);
+		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__CHANGE_NOTE);
 
 		pageReferenceEClass = createEClass(PAGE_REFERENCE);
 		createEAttribute(pageReferenceEClass, PAGE_REFERENCE__PAGE_ID);
@@ -1204,7 +1204,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		initEOperation(getCloneable__Clone(), this.getObject(), "clone", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEClass(IHistoryInfoEClass, IHistoryInfo.class, "IHistoryInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(iHistoryInfoEClass, IHistoryInfo.class, "IHistoryInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIHistoryInfo_Version(), ecorePackage.getEInt(), "version", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_LastModify(), ecorePackage.getEDate(), "lastModify", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_Author(), ecorePackage.getEString(), "author", "", 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

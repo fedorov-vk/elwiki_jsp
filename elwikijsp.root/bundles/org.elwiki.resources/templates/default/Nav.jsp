@@ -132,7 +132,7 @@
   --%>
   <wiki:CheckRequestContext context='info|diff|upload|rename|edit|comment|conflict'>
   <li id="view">
-    <wiki:Link pageName="${page}" >
+    <wiki:Link pageName="${pageId}" >
         <span class="icon-view-menu"></span>
         <span><fmt:message key="view.tab"/></span>
     </wiki:Link>
@@ -196,16 +196,23 @@
         </wiki:CheckRequestContext>
         <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
                     context="<%=ContextEnum.PAGE_INFO.getRequestContext()%>"
-                     pageId="<%=ctx.getPageId()%>"
+                     pageId="${pageId}"
                    tabindex="0">
           <fmt:message key="info.moreinfo"/>
         </wiki:Link>
       </li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context='upload'><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
-        <wiki:Permission permission='!upload'><c:set var="disabledBtn" value="disabled" /></wiki:Permission>
-        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}" pageName="${page}" context="upload" tabindex="0">
+        <wiki:CheckRequestContext context="<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>">
+          <c:set var="disabledBtn" value="disabled" />
+        </wiki:CheckRequestContext>
+        <wiki:Permission permission='!upload'>
+          <c:set var="disabledBtn" value="disabled" />
+        </wiki:Permission>
+        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
+                    context="<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>"
+                     pageId="${pageId}"
+                   tabindex="0">
           <span class="icon-paper-clip"></span>
           <fmt:message key='edit.tab.attachments'/>
           <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -236,7 +243,7 @@
   <wiki:CheckRequestContext context='view|info|diff|upload|rename'>
 	<li id="edit" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="edit" pageId="<%=ctx.getPageId()%>" accessKey="e" >
+        <wiki:Link context="edit" pageId="${pageId}" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
@@ -256,8 +263,8 @@
   <wiki:CheckRequestContext context='view|info|diff|upload|rename'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="createPage" pageId="<%=ctx.getPageId()%>" >
-          <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+        <wiki:Link context="createPage" pageId="${pageId}" >
+          <wiki:Param name="redirect" value="${pageId}"/>
           <span class="icon-pencil"></span>
           <span>Create</span>
         </wiki:Link>
@@ -381,7 +388,7 @@
       <wiki:Permission permission="comment">
         <wiki:PageType type="page">
           <li>
-            <wiki:Link context="comment" pageId="<%=ctx.getPageId()%>">
+            <wiki:Link context="comment" pageId="${pageId}">
               <span class="icon-plus"></span> <fmt:message key="actions.comment" />
             </wiki:Link>
           </li>

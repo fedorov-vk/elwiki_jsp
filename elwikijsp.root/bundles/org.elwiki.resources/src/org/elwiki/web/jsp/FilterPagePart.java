@@ -79,132 +79,117 @@ public class FilterPagePart extends HttpFilter implements Filter {
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
-		// WatchDog.getCurrentWatchDog( m_engine );
-		boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
-
-		// skip all URI, except /cmd.*, /*AJAX*.
-		String uri = httpRequest.getRequestURI();
-		log.debug("doFilter()\n requested URI: " + httpRequest.getRequestURI());
-		if (uri.startsWith("/cmd.")) {
-			log.debug("Request URI starts with '/cmd.'");
-		} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
-			log.debug("Request URI is matched '.+?AJAX.+?$'.");
-			isAjaxPage = true;
-		} else {
-			log.debug("Request URI isn't matched anything.");
-			// System.err.println("PFC original resource: " + uri);
-			try {
-				super.doFilter(httpRequest, response, chain);
-			} catch (IOException e) {
-				log.error("Error 1", e); //TODO: define message.
-			} catch (ServletException e) {
-				log.error("Error 2", e); //TODO: define message.
-			} catch (Exception e) {
-				log.error("Error 3", e); //TODO: define message.
-			}
-		}
-
-		/* Create Wiki context.
-		 */
-		ContextEnum cmdContext;
-		Context wikiContext;
-		cmdContext = Platform.getAdapterManager().getAdapter(uri.substring(1), ContextEnum.class); // without first '/'.
-		wikiContext = Wiki.context().create(engine, httpRequest, cmdContext.getRequestContext());
-		httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
-		ThreadUtil.setCurrentRequest(httpRequest);
-
-		log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
-
-		response.setContentType("text/html; charset=" + engine.getContentEncoding());
-
-		/* Authorize.
-		 */
-		/*TODO: :FVK: для Wiki.jsp, т.е. cmd.view
-		if (false == ServicesRefs.getAuthorizationManager().hasAccess(ThreadUtil.getCurrentRequest(), response)) {
-			return;
-		}
-		*/
-
-		/* Make content of page.
-		 */
-		CmdCode cmdCode = null;
 		try {
-			{
-				HttpSession session = httpRequest.getSession();
-
-				log.debug("HttpSession ID: " + session.getId());
-				log.debug("    RequestURI: " + httpRequest.getRequestURI());
-			}
-
-			cmdCode = Platform.getAdapterManager().getAdapter(wikiContext.getContextCmd(), CmdCode.class);
-			if (cmdCode != null) {
-				// Code for context`s command: execute prolog.
-				try {
-					cmdCode.applyPrologue(httpRequest, response);
-				} catch (Exception e) {
-					// TODO: Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
 			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, null);
+			
+			// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
+			// WatchDog.getCurrentWatchDog( m_engine );
+			boolean isAjaxPage = false; //:FVK: workaround flag, for avoid adding page layout for AJAX page.
 
-			if (!isAjaxPage) {
-				String template = wikiContext.getTemplate();
-				switch (template) {
-				case "reader":
-					//:FVK: - workaround. view only page, for skin=reader
-					httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, response);
-					break;
-				case "raw":
-					//:FVK: - workaround. view only page, for skin=raw
-					httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, response);
-					break;
-				default:
-					// chain.doFilter(request, response);
-					httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, response);
-					break;
-				}
+			
+			String uri = httpRequest.getRequestURI();
+			log.debug("doFilter()\n requested URI: " + httpRequest.getRequestURI());
+			if (uri.startsWith("/cmd.")) {
+				// catch URI "/cmd.*"
+				log.debug("Request URI starts with '/cmd.'");
+			} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
+				// catch URI "/*AJAX*"
+				log.debug("Request URI is matched '.+?AJAX.+?$'.");
+				isAjaxPage = true;
 			} else {
-				httpRequest.getRequestDispatcher(uri).include(httpRequest, response);
+				// skip all other URI. 
+				log.debug("Request URI isn't matched anything.");
+				super.doFilter(httpRequest, response, chain);
 			}
 
-			/* TODO: check JSP error.
-			if (httpRequest.getAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION) != null) {
+			/* Create Wiki context.
+			 */
+			ContextEnum cmdContext;
+			Context wikiContext;
+			cmdContext = Platform.getAdapterManager().getAdapter(uri.substring(1), ContextEnum.class); // without first '/'.
+			wikiContext = Wiki.context().create(engine, httpRequest, cmdContext.getRequestContext());
+			httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+			ThreadUtil.setCurrentRequest(httpRequest);
+
+			log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
+
+			response.setContentType("text/html; charset=" + engine.getContentEncoding());
+
+			/* Authorize.
+			 */
+			/*TODO: :FVK: для Wiki.jsp, т.е. cmd.view
+			if (false == ServicesRefs.getAuthorizationManager().hasAccess(ThreadUtil.getCurrentRequest(), response)) {
 				return;
-			}*/
+			}
+			*/
 
+			/* Make content of page.
+			 */
+			CmdCode cmdCode = null;
 			try {
-				// :FVK: w.enterState( "Delivering response", 30 );
+				{
+					HttpSession session = httpRequest.getSession();
 
-				// String r = filtering(wikiContext, responseWrapper); ... -- deprecated.
+					log.debug("HttpSession ID: " + session.getId());
+					log.debug("    RequestURI: " + httpRequest.getRequestURI());
+				}
 
-				// Clean up the UI messages and loggers
-				wikiContext.getWikiSession().clearMessages();
+				cmdCode = Platform.getAdapterManager().getAdapter(wikiContext.getContextCmd(), CmdCode.class);
+				if (cmdCode != null) {
+					// Code for context`s command: execute prolog.
+					cmdCode.applyPrologue(httpRequest, response);
+				}
 
-				// fire PAGE_DELIVERED event
-				// :FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
+				if (!isAjaxPage) {
+					String template = wikiContext.getTemplate();
+					switch (template) {
+					case "reader":
+						//:FVK: - workaround. view only page, for skin=reader
+						httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, response);
+						break;
+					case "raw":
+						//:FVK: - workaround. view only page, for skin=raw
+						httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, response);
+						break;
+					default:
+						// chain.doFilter(request, response);
+						httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, response);
+						break;
+					}
+				} else {
+					httpRequest.getRequestDispatcher(uri).include(httpRequest, response);
+				}
 
-			} catch (Exception ex) {
-				log.debug("internal fail", ex);
+				/* TODO: check JSP error.
+				if (httpRequest.getAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION) != null) {
+					return;
+				}*/
+
+				try {
+					// :FVK: w.enterState( "Delivering response", 30 );
+
+					// String r = filtering(wikiContext, responseWrapper); ... -- deprecated.
+
+					// Clean up the UI messages and loggers
+					wikiContext.getWikiSession().clearMessages();
+
+					// fire PAGE_DELIVERED event
+					// :FVK: fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
+				} finally {
+					// :FVK: w.exitState();
+				}
 			} finally {
-				// :FVK: w.exitState();
+				if (cmdCode != null) {
+					// Code for context`s command: execute epilogue.
+					cmdCode.applyEpilogue();
+				}
+
+				ThreadUtil.removeCurrentRequest();
 			}
 		} catch (Exception ex) {
-			log.debug("internal fail", ex);
-		} finally {
-			if (cmdCode != null) {
-				// Code for context`s command: execute epilogue.
-				try {
-					cmdCode.applyEpilogue();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-			ThreadUtil.removeCurrentRequest();
+			log.debug("!!! internal fail", ex);
+			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, ex);
+			throw new ServletException(ex);
 		}
 	}
 

@@ -47,7 +47,7 @@ public enum ContextEnum {
     PAGE_PREVIEW( "preview", "cmd.preview", "%u", "?pageId=%n", "PreviewContent.jsp" ),
     PAGE_RENAME( "rename", "cmd.rename", "%u", "?pageId=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss", "rss.jsp", "%u", "", null ),
-    PAGE_UPLOAD( "upload", "cmd.upload", "%u", "?page=%n", "AttachmentTab.jsp" ),
+    PAGE_UPLOAD( "upload", "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
     PAGE_VIEW( "view", "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
 
     REDIRECT( "", "", "%u", "%n", null ),

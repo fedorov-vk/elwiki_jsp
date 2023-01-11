@@ -124,9 +124,9 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Elwiki_dataPackage.IMODIFY_INFO: {
-				IHistoryInfo IHistoryInfo = (IHistoryInfo)theEObject;
-				T result = caseIHistoryInfo(IHistoryInfo);
+			case Elwiki_dataPackage.IHISTORY_INFO: {
+				IHistoryInfo iHistoryInfo = (IHistoryInfo)theEObject;
+				T result = caseIHistoryInfo(iHistoryInfo);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -270,13 +270,13 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>IModify Info</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>IHistory Info</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>IModify Info</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>IHistory Info</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */

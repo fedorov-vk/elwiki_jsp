@@ -42,10 +42,9 @@ public class ErrorHandlingServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html");
-		resp.getWriter().write("<html><body>:FVK: 23 You need to provide an input!</body></html>");
+		resp.getWriter().write("<html><body>ElWiki catch internal error. Here is exception backtrace:</body></html>");
 
 		log.debug("<-- ErrorHandlingServlet -->");
-		
 		Object obj = req.getAttribute(ATTR_ELWIKI_ERROR_EXCEPTION);
 		if( obj!=null && obj instanceof Exception) {
 			Exception ex = (Exception)obj;

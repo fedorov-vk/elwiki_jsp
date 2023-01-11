@@ -431,14 +431,14 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGES_STORE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}' class.
+	 * The meta object id for the '{@link org.elwiki_data.IHistoryInfo <em>IHistory Info</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.elwiki_data.IHistoryInfo
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIHistoryInfo()
 	 * @generated
 	 */
-	int IMODIFY_INFO = 7;
+	int IHISTORY_INFO = 7;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -447,7 +447,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO__VERSION = 0;
+	int IHISTORY_INFO__VERSION = 0;
 
 	/**
 	 * The feature id for the '<em><b>Last Modify</b></em>' attribute.
@@ -456,7 +456,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO__LAST_MODIFY = 1;
+	int IHISTORY_INFO__LAST_MODIFY = 1;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' attribute.
@@ -465,7 +465,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO__AUTHOR = 2;
+	int IHISTORY_INFO__AUTHOR = 2;
 
 	/**
 	 * The feature id for the '<em><b>Change Note</b></em>' attribute.
@@ -474,25 +474,25 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO__CHANGE_NOTE = 3;
+	int IHISTORY_INFO__CHANGE_NOTE = 3;
 
 	/**
-	 * The number of structural features of the '<em>IModify Info</em>' class.
+	 * The number of structural features of the '<em>IHistory Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO_FEATURE_COUNT = 4;
+	int IHISTORY_INFO_FEATURE_COUNT = 4;
 
 	/**
-	 * The number of operations of the '<em>IModify Info</em>' class.
+	 * The number of operations of the '<em>IHistory Info</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMODIFY_INFO_OPERATION_COUNT = 0;
+	int IHISTORY_INFO_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PageContentImpl <em>Page Content</em>}' class.
@@ -511,7 +511,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__VERSION = IMODIFY_INFO__VERSION;
+	int PAGE_CONTENT__VERSION = IHISTORY_INFO__VERSION;
 
 	/**
 	 * The feature id for the '<em><b>Last Modify</b></em>' attribute.
@@ -520,7 +520,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__LAST_MODIFY = IMODIFY_INFO__LAST_MODIFY;
+	int PAGE_CONTENT__LAST_MODIFY = IHISTORY_INFO__LAST_MODIFY;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' attribute.
@@ -529,7 +529,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__AUTHOR = IMODIFY_INFO__AUTHOR;
+	int PAGE_CONTENT__AUTHOR = IHISTORY_INFO__AUTHOR;
 
 	/**
 	 * The feature id for the '<em><b>Change Note</b></em>' attribute.
@@ -538,7 +538,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__CHANGE_NOTE = IMODIFY_INFO__CHANGE_NOTE;
+	int PAGE_CONTENT__CHANGE_NOTE = IHISTORY_INFO__CHANGE_NOTE;
 
 	/**
 	 * The feature id for the '<em><b>Content</b></em>' attribute.
@@ -547,7 +547,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__CONTENT = IMODIFY_INFO_FEATURE_COUNT + 0;
+	int PAGE_CONTENT__CONTENT = IHISTORY_INFO_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Wikipage</b></em>' container reference.
@@ -556,7 +556,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT__WIKIPAGE = IMODIFY_INFO_FEATURE_COUNT + 1;
+	int PAGE_CONTENT__WIKIPAGE = IHISTORY_INFO_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Page Content</em>' class.
@@ -565,7 +565,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT_FEATURE_COUNT = IMODIFY_INFO_FEATURE_COUNT + 2;
+	int PAGE_CONTENT_FEATURE_COUNT = IHISTORY_INFO_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Length</em>' operation.
@@ -574,7 +574,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT___GET_LENGTH = IMODIFY_INFO_OPERATION_COUNT + 0;
+	int PAGE_CONTENT___GET_LENGTH = IHISTORY_INFO_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Page Content</em>' class.
@@ -583,7 +583,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_CONTENT_OPERATION_COUNT = IMODIFY_INFO_OPERATION_COUNT + 1;
+	int PAGE_CONTENT_OPERATION_COUNT = IHISTORY_INFO_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PageAttachmentImpl <em>Page Attachment</em>}' class.
@@ -602,7 +602,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__VERSION = IMODIFY_INFO__VERSION;
+	int PAGE_ATTACHMENT__VERSION = IHISTORY_INFO__VERSION;
 
 	/**
 	 * The feature id for the '<em><b>Last Modify</b></em>' attribute.
@@ -611,7 +611,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__LAST_MODIFY = IMODIFY_INFO__LAST_MODIFY;
+	int PAGE_ATTACHMENT__LAST_MODIFY = IHISTORY_INFO__LAST_MODIFY;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' attribute.
@@ -620,7 +620,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__AUTHOR = IMODIFY_INFO__AUTHOR;
+	int PAGE_ATTACHMENT__AUTHOR = IHISTORY_INFO__AUTHOR;
 
 	/**
 	 * The feature id for the '<em><b>Change Note</b></em>' attribute.
@@ -629,7 +629,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__CHANGE_NOTE = IMODIFY_INFO__CHANGE_NOTE;
+	int PAGE_ATTACHMENT__CHANGE_NOTE = IHISTORY_INFO__CHANGE_NOTE;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -638,7 +638,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__ID = IMODIFY_INFO_FEATURE_COUNT + 0;
+	int PAGE_ATTACHMENT__ID = IHISTORY_INFO_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -647,7 +647,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__NAME = IMODIFY_INFO_FEATURE_COUNT + 1;
+	int PAGE_ATTACHMENT__NAME = IHISTORY_INFO_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Cacheable</b></em>' attribute.
@@ -656,7 +656,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__CACHEABLE = IMODIFY_INFO_FEATURE_COUNT + 2;
+	int PAGE_ATTACHMENT__CACHEABLE = IHISTORY_INFO_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Wikipage</b></em>' container reference.
@@ -665,7 +665,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__WIKIPAGE = IMODIFY_INFO_FEATURE_COUNT + 3;
+	int PAGE_ATTACHMENT__WIKIPAGE = IHISTORY_INFO_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Place</b></em>' attribute.
@@ -674,7 +674,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__PLACE = IMODIFY_INFO_FEATURE_COUNT + 4;
+	int PAGE_ATTACHMENT__PLACE = IHISTORY_INFO_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Size</b></em>' attribute.
@@ -683,7 +683,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT__SIZE = IMODIFY_INFO_FEATURE_COUNT + 5;
+	int PAGE_ATTACHMENT__SIZE = IHISTORY_INFO_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Page Attachment</em>' class.
@@ -692,7 +692,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT_FEATURE_COUNT = IMODIFY_INFO_FEATURE_COUNT + 6;
+	int PAGE_ATTACHMENT_FEATURE_COUNT = IHISTORY_INFO_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Page Attachment</em>' class.
@@ -701,7 +701,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT_OPERATION_COUNT = IMODIFY_INFO_OPERATION_COUNT + 0;
+	int PAGE_ATTACHMENT_OPERATION_COUNT = IHISTORY_INFO_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link java.lang.Object <em>Object</em>}' class.
@@ -1579,10 +1579,10 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getCloneable__Clone();
 
 	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}'.
+	 * Returns the meta object for class '{@link org.elwiki_data.IHistoryInfo <em>IHistory Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>IModify Info</em>'.
+	 * @return the meta object for class '<em>IHistory Info</em>'.
 	 * @see org.elwiki_data.IHistoryInfo
 	 * @generated
 	 */
@@ -2285,14 +2285,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EOperation CLONEABLE___CLONE = eINSTANCE.getCloneable__Clone();
 
 		/**
-		 * The meta object literal for the '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}' class.
+		 * The meta object literal for the '{@link org.elwiki_data.IHistoryInfo <em>IHistory Info</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @see org.elwiki_data.IHistoryInfo
 		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIHistoryInfo()
 		 * @generated
 		 */
-		EClass IMODIFY_INFO = eINSTANCE.getIHistoryInfo();
+		EClass IHISTORY_INFO = eINSTANCE.getIHistoryInfo();
 
 		/**
 		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
@@ -2300,7 +2300,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__VERSION = eINSTANCE.getIHistoryInfo_Version();
+		EAttribute IHISTORY_INFO__VERSION = eINSTANCE.getIHistoryInfo_Version();
 
 		/**
 		 * The meta object literal for the '<em><b>Last Modify</b></em>' attribute feature.
@@ -2308,7 +2308,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__LAST_MODIFY = eINSTANCE.getIHistoryInfo_LastModify();
+		EAttribute IHISTORY_INFO__LAST_MODIFY = eINSTANCE.getIHistoryInfo_LastModify();
 
 		/**
 		 * The meta object literal for the '<em><b>Author</b></em>' attribute feature.
@@ -2316,7 +2316,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__AUTHOR = eINSTANCE.getIHistoryInfo_Author();
+		EAttribute IHISTORY_INFO__AUTHOR = eINSTANCE.getIHistoryInfo_Author();
 
 		/**
 		 * The meta object literal for the '<em><b>Change Note</b></em>' attribute feature.
@@ -2324,7 +2324,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__CHANGE_NOTE = eINSTANCE.getIHistoryInfo_ChangeNote();
+		EAttribute IHISTORY_INFO__CHANGE_NOTE = eINSTANCE.getIHistoryInfo_ChangeNote();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PageReferenceImpl <em>Page Reference</em>}' class.

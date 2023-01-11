@@ -250,7 +250,7 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.elwiki_data.IHistoryInfo <em>IHistory Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
