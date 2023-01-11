@@ -116,10 +116,8 @@
   </wiki:CheckVersion>
 
   <wiki:Permission permission="rename">
-
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
-
-    <form action="<wiki:Link format='url' path='cmd.rename'/>"
+    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_RENAME.getRequestContext()%>' pageId='<%=ctx.getPageId()%>' />"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -139,13 +137,13 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' />"
+    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' pageId='<%=ctx.getPageId()%>' />"
            class="form-group"
               id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
-      <input class="btn btn-danger" type="submit" name="delete-all" id="delete-all"
+      <input class="btn btn-danger" type="submit" name="deletepage" id="idDeletePage"
         data-modal="+ .modal"
-            value="<fmt:message key='info.delete.submit'/>" />
+             value="<fmt:message key='info.delete.submit'/>" />
       <div class="modal"><fmt:message key='info.confirmdelete'/></div>
     </form>
   </wiki:Permission>

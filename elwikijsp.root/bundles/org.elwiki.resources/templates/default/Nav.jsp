@@ -191,8 +191,15 @@
       <li class="divider"></li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context='info'><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
-          <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}" context="info" tabindex="0"><fmt:message key='info.moreinfo'/></wiki:Link>
+        <wiki:CheckRequestContext context="<%=ContextEnum.PAGE_INFO.getRequestContext()%>">
+          <c:set var="disabledBtn" value="disabled" />
+        </wiki:CheckRequestContext>
+        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
+                    context="<%=ContextEnum.PAGE_INFO.getRequestContext()%>"
+                     pageId="<%=ctx.getPageId()%>"
+                   tabindex="0">
+          <fmt:message key="info.moreinfo"/>
+        </wiki:Link>
       </li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>

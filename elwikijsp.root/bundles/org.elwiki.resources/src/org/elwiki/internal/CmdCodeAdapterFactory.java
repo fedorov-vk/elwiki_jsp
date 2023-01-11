@@ -21,6 +21,7 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.WIKI_LOGIN, new LoginCmdCode()),
 			Map.entry(ContextEnum.WIKI_LOGOUT, new LogoutCmdCode()),
 			Map.entry(ContextEnum.PAGE_CREATE, new CreatePageCmdCode()),
+			Map.entry(ContextEnum.PAGE_DELETE, new DeletePageCmdCode()),
 			Map.entry(ContextEnum.PAGE_VIEW, new ViewCmdCode()),
 			Map.entry(ContextEnum.PAGE_EDIT, new EditCmdCode()),
 			Map.entry(ContextEnum.PAGE_DIFF, new DiffCmdCode()),

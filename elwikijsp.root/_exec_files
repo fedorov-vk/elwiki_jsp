@@ -1,4 +1,0 @@
-./build_resources(no_testing)_.sh
-./products/elwiki.product/publish_it.sh
-./products/elwiki.product/hacking.sh
-./build(no_testing).sh
