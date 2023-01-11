@@ -10,3 +10,4 @@ export CUSTOM_REPO01=$P2_REPO_PLACE/custom-p2-site/target/repository
 export CUSTOM_REPO02=$P2_REPO_PLACE/additional-artifacts/target/repository
 export CUSTOM_REPO03=$P2_REPO_PLACE/from-eclipse/target/repository
 export CUSTOM_REPO04=$P2_REPO_PLACE/for-test-site/target/repository
+export JAVADOC=$PWD/../javadoc/

@@ -127,33 +127,12 @@
 			<!-- Builds Java documenatation. -->
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.4.1</version>
 				<configuration>
-					<additionalparam>
-						-charset ${project.build.sourceEncoding}
-						-docencoding ${project.build.sourceEncoding}
-						-version
-						-author
-						-breakiterator
-						-linksource
-						-sourcetab 4
-						-windowtitle "${project.name}
-						${project.version}"
-						-bottom ""
-						-doctitle "${project.name}
-						${project.version}"
-						-link {project.organization.url}
-					</additionalparam>
-					<bottom>Copyright © {inceptionYear}-{currentYear}
-						${project.organization.name}. All rights reserved.</bottom>
-					<doclet>org.jboss.apiviz.APIviz</doclet>
-					<docletArtifact>
-						<groupId>org.jboss.apiviz</groupId>
-						<artifactId>apiviz</artifactId>
-						<version>1.3.2.GA</version>
-					</docletArtifact>
-					<encoding>${project.build.sourceEncoding}</encoding>
+					<reportOutputDirectory>${env.JAVADOC}</reportOutputDirectory>
+					<doclint>none</doclint>
 					<quiet>true</quiet>
+					<failOnError>false</failOnError>
 				</configuration>
 			</plugin>
 		</plugins>
