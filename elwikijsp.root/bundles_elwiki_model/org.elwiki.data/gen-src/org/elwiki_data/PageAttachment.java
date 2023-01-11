@@ -24,7 +24,7 @@ package org.elwiki_data;
  * @model
  * @generated
  */
-public interface PageAttachment extends IModifyInfo {
+public interface PageAttachment extends IHistoryInfo {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' attribute.
 	 * The default value is <code>""</code>.

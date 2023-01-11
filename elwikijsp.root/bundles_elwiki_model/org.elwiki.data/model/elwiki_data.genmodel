@@ -82,11 +82,11 @@
     <genClasses image="false" ecoreClass="elwiki_data.ecore#//Cloneable">
       <genOperations ecoreOperation="elwiki_data.ecore#//Cloneable/clone" body="Assert.isTrue(false, &quot;:FVK: Code of clone must be implemented.&quot;);&#xA;Object o = new Object();&#xA;return o;&#xA;"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="elwiki_data.ecore#//IModifyInfo">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IModifyInfo/version"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IModifyInfo/lastModify"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IModifyInfo/author"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IModifyInfo/changeNote"/>
+    <genClasses image="false" ecoreClass="elwiki_data.ecore#//IHistoryInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/lastModify"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/changeNote"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PageReference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageReference/pageId"/>

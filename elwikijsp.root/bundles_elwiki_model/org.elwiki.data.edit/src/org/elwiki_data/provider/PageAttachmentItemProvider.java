@@ -86,8 +86,8 @@ public class PageAttachmentItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IModifyInfo_version_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IModifyInfo_version_feature", "_UI_IModifyInfo_type"),
+				 getString("_UI_IHistoryInfo_version_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IHistoryInfo_version_feature", "_UI_IHistoryInfo_type"),
 				 Elwiki_dataPackage.Literals.IMODIFY_INFO__VERSION,
 				 true,
 				 false,
@@ -108,8 +108,8 @@ public class PageAttachmentItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IModifyInfo_lastModify_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IModifyInfo_lastModify_feature", "_UI_IModifyInfo_type"),
+				 getString("_UI_IHistoryInfo_lastModify_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IHistoryInfo_lastModify_feature", "_UI_IHistoryInfo_type"),
 				 Elwiki_dataPackage.Literals.IMODIFY_INFO__LAST_MODIFY,
 				 true,
 				 false,
@@ -130,8 +130,8 @@ public class PageAttachmentItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IModifyInfo_author_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IModifyInfo_author_feature", "_UI_IModifyInfo_type"),
+				 getString("_UI_IHistoryInfo_author_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IHistoryInfo_author_feature", "_UI_IHistoryInfo_type"),
 				 Elwiki_dataPackage.Literals.IMODIFY_INFO__AUTHOR,
 				 true,
 				 false,
@@ -152,8 +152,8 @@ public class PageAttachmentItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_IModifyInfo_changeNote_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_IModifyInfo_changeNote_feature", "_UI_IModifyInfo_type"),
+				 getString("_UI_IHistoryInfo_changeNote_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_IHistoryInfo_changeNote_feature", "_UI_IHistoryInfo_type"),
 				 Elwiki_dataPackage.Literals.IMODIFY_INFO__CHANGE_NOTE,
 				 true,
 				 false,

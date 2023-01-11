@@ -46,8 +46,8 @@ public final class WikiPrincipal extends APrincipal implements Comparable<Princi
 	/** WikiPrincipal type denoting a user's full name. */
 	public static final String FULL_NAME = "fullName";
 
-	/** WikiPrincipal type denoting a user's login name. */
-	public static final String LOGIN_NAME = "loginName";
+	/** Wiki Principal type denoting a user's login UID. */
+	public static final String LOGIN_UID = "loginUid";
 
 	/** WikiPrincipal type denoting a user's wiki name. */
 	public static final String WIKI_NAME = "wikiName";
@@ -61,7 +61,7 @@ public final class WikiPrincipal extends APrincipal implements Comparable<Princi
 	private static final String[] VALID_TYPES;
 
 	static {
-		VALID_TYPES = new String[] { USED_ID, FULL_NAME, LOGIN_NAME, WIKI_NAME, UNSPECIFIED };
+		VALID_TYPES = new String[] { USED_ID, FULL_NAME, LOGIN_UID, WIKI_NAME, UNSPECIFIED };
 		Arrays.sort(VALID_TYPES);
 	}
 
@@ -85,14 +85,14 @@ public final class WikiPrincipal extends APrincipal implements Comparable<Princi
 
 	/**
 	 * Constructs a new WikiPrincipal with a given name and optional type designator. If the
-	 * supplied <code>type</code> parameter is not {@link #LOGIN_NAME}, {@link #FULL_NAME},
+	 * supplied <code>type</code> parameter is not {@link #LOGIN_UID}, {@link #FULL_NAME},
 	 * {@link #WIKI_NAME} or {@link #WIKI_NAME}, this method throws an
 	 * {@link IllegalArgumentException}.
 	 * 
 	 * @param name
 	 *             the name of the Principal
 	 * @param type
-	 *             the type for this principal, which may be {@link #LOGIN_NAME},
+	 *             the type for this principal, which may be {@link #LOGIN_UID},
 	 *             {@link #FULL_NAME}, {@link #WIKI_NAME} or {@link #WIKI_NAME}.
 	 */
 	public WikiPrincipal(String name, String type) {
@@ -120,7 +120,7 @@ public final class WikiPrincipal extends APrincipal implements Comparable<Princi
 	}
 
 	/**
-	 * Returns the Principal "type": {@link #LOGIN_NAME}, {@link #FULL_NAME}, {@link #WIKI_NAME} or
+	 * Returns the Principal "type": {@link #LOGIN_UID}, {@link #FULL_NAME}, {@link #WIKI_NAME} or
 	 * {@link #WIKI_NAME}
 	 * 
 	 * @return the type

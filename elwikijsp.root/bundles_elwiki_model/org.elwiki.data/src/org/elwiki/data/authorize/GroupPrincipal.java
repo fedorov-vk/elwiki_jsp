@@ -34,6 +34,24 @@ public final class GroupPrincipal extends APrincipal {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String ALL_GROUP_UID = "00E38123-3FF8-4C9E-BC30-19190A2D07DC";
+	public static final String ANONYMOUS_GROUP_UID = "322DC8D2-422F-488B-BCA3-F3117581D9FE";
+	public static final String ASSERTED_GROUP_UID = "5ACBB1BB-393C-4DB1-B326-4CD299B92227";
+	public static final String AUTHENTICATED_GROUP_UID = "78FCF6AD-9A08-42F2-ADE8-8A895569B470";
+	public static final String ADMIN_GROUP_UID = "80618E94-99F8-4BDA-9646-290EE539F874";
+
+	/** All users, regardless of authentication status */
+	public static final GroupPrincipal ALL = new GroupPrincipal(ALL_GROUP_UID);
+
+	/** If the user hasn't supplied a name */
+	public static final GroupPrincipal ANONYMOUS = new GroupPrincipal(ANONYMOUS_GROUP_UID);
+
+	/** If the user has supplied a cookie with a user name */
+	public static final GroupPrincipal ASSERTED = new GroupPrincipal(ASSERTED_GROUP_UID);
+
+	/** If the user has authenticated with the Container or UserDatabase */
+	public static final GroupPrincipal AUTHENTICATED = new GroupPrincipal(AUTHENTICATED_GROUP_UID);
+
 	/**
 	 * Constructs a new GroupPrincipal object with a supplied name.
 	 *
@@ -47,10 +65,22 @@ public final class GroupPrincipal extends APrincipal {
 	}
 
 	/**
+	 * Returns <code>true</code> if a supplied Group is a built-in Group: {@link #ALL},
+	 * {@link #ANONYMOUS}, {@link #ASSERTED}, or {@link #AUTHENTICATED}.
+	 * 
+	 * @param group
+	 *             the role to check
+	 * @return the result of the check
+	 */
+	public static boolean isBuiltInGroup(GroupPrincipal group) {
+		return group.equals(ALL) || group.equals(ANONYMOUS) || group.equals(ASSERTED) || group.equals(AUTHENTICATED);
+	}
+
+	/**
 	 * Two GroupPrincipals are equal if their names are equal.
 	 * 
 	 * @param obj the object to compare
-	 * @return the result of the equality test
+	 * @return <code>true</code> if both objects are of type GroupPrincipal and have identical names
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

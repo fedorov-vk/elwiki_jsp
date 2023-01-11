@@ -20,7 +20,7 @@ package org.elwiki_data;
  * @model
  * @generated
  */
-public interface PageContent extends IModifyInfo {
+public interface PageContent extends IHistoryInfo {
 	/**
 	 * Returns the value of the '<em><b>Content</b></em>' attribute.
 	 * The default value is <code>""</code>.

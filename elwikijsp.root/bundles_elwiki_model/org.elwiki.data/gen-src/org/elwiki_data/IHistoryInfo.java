@@ -15,18 +15,18 @@ import org.eclipse.emf.cdo.CDOObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.IModifyInfo#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.IModifyInfo#getLastModify <em>Last Modify</em>}</li>
- *   <li>{@link org.elwiki_data.IModifyInfo#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.elwiki_data.IModifyInfo#getChangeNote <em>Change Note</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getLastModify <em>Last Modify</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getAuthor <em>Author</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getChangeNote <em>Change Note</em>}</li>
  * </ul>
  *
- * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo()
+ * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo()
  * @model interface="true" abstract="true"
  * @extends CDOObject
  * @generated
  */
-public interface IModifyInfo extends CDOObject {
+public interface IHistoryInfo extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Version</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -39,14 +39,14 @@ public interface IModifyInfo extends CDOObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Version</em>' attribute.
 	 * @see #setVersion(int)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_Version()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_Version()
 	 * @model
 	 * @generated
 	 */
 	int getVersion();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IModifyInfo#getVersion <em>Version</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Version</em>' attribute.
@@ -67,14 +67,14 @@ public interface IModifyInfo extends CDOObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Last Modify</em>' attribute.
 	 * @see #setLastModify(Date)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_LastModify()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_LastModify()
 	 * @model
 	 * @generated
 	 */
 	Date getLastModify();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IModifyInfo#getLastModify <em>Last Modify</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getLastModify <em>Last Modify</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Last Modify</em>' attribute.
@@ -96,14 +96,14 @@ public interface IModifyInfo extends CDOObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Author</em>' attribute.
 	 * @see #setAuthor(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_Author()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_Author()
 	 * @model default=""
 	 * @generated
 	 */
 	String getAuthor();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IModifyInfo#getAuthor <em>Author</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getAuthor <em>Author</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Author</em>' attribute.
@@ -124,14 +124,14 @@ public interface IModifyInfo extends CDOObject {
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Change Note</em>' attribute.
 	 * @see #setChangeNote(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIModifyInfo_ChangeNote()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_ChangeNote()
 	 * @model
 	 * @generated
 	 */
 	String getChangeNote();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IModifyInfo#getChangeNote <em>Change Note</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getChangeNote <em>Change Note</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Change Note</em>' attribute.
@@ -140,4 +140,4 @@ public interface IModifyInfo extends CDOObject {
 	 */
 	void setChangeNote(String value);
 
-} // IModifyInfo
+} // IHistoryInfo

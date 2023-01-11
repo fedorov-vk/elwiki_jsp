@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.util.Switch;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataPackage;
-import org.elwiki_data.IModifyInfo;
+import org.elwiki_data.IHistoryInfo;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -95,14 +95,14 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.PAGE_CONTENT: {
 				PageContent pageContent = (PageContent)theEObject;
 				T result = casePageContent(pageContent);
-				if (result == null) result = caseIModifyInfo(pageContent);
+				if (result == null) result = caseIHistoryInfo(pageContent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case Elwiki_dataPackage.PAGE_ATTACHMENT: {
 				PageAttachment pageAttachment = (PageAttachment)theEObject;
 				T result = casePageAttachment(pageAttachment);
-				if (result == null) result = caseIModifyInfo(pageAttachment);
+				if (result == null) result = caseIHistoryInfo(pageAttachment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -125,8 +125,8 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 				return result;
 			}
 			case Elwiki_dataPackage.IMODIFY_INFO: {
-				IModifyInfo iModifyInfo = (IModifyInfo)theEObject;
-				T result = caseIModifyInfo(iModifyInfo);
+				IHistoryInfo IHistoryInfo = (IHistoryInfo)theEObject;
+				T result = caseIHistoryInfo(IHistoryInfo);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -280,7 +280,7 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIModifyInfo(IModifyInfo object) {
+	public T caseIHistoryInfo(IHistoryInfo object) {
 		return null;
 	}
 

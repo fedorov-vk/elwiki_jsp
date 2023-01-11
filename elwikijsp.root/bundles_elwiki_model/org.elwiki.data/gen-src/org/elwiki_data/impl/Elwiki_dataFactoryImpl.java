@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.data.authorize.Role;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -349,8 +348,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 
 		if (className.equals(WikiPrincipal.class.getName())) {
 			return new WikiPrincipal(name, type);
-		} else if (className.equals(Role.class.getName())) {
-			return new Role(name);
 		} else if (className.equals(GroupPrincipal.class.getName())) {
 			return new GroupPrincipal(name);
 		} else if (className.equals(UnresolvedPrincipal.class.getName())) {

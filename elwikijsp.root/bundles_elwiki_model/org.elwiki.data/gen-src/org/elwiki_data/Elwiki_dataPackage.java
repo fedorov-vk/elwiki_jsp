@@ -431,11 +431,11 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGES_STORE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.elwiki_data.IModifyInfo <em>IModify Info</em>}' class.
+	 * The meta object id for the '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.IModifyInfo
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIModifyInfo()
+	 * @see org.elwiki_data.IHistoryInfo
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIHistoryInfo()
 	 * @generated
 	 */
 	int IMODIFY_INFO = 7;
@@ -1579,58 +1579,58 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getCloneable__Clone();
 
 	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.IModifyInfo <em>IModify Info</em>}'.
+	 * Returns the meta object for class '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>IModify Info</em>'.
-	 * @see org.elwiki_data.IModifyInfo
+	 * @see org.elwiki_data.IHistoryInfo
 	 * @generated
 	 */
-	EClass getIModifyInfo();
+	EClass getIHistoryInfo();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.IModifyInfo#getVersion <em>Version</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Version</em>'.
-	 * @see org.elwiki_data.IModifyInfo#getVersion()
-	 * @see #getIModifyInfo()
+	 * @see org.elwiki_data.IHistoryInfo#getVersion()
+	 * @see #getIHistoryInfo()
 	 * @generated
 	 */
-	EAttribute getIModifyInfo_Version();
+	EAttribute getIHistoryInfo_Version();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.IModifyInfo#getLastModify <em>Last Modify</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.IHistoryInfo#getLastModify <em>Last Modify</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Last Modify</em>'.
-	 * @see org.elwiki_data.IModifyInfo#getLastModify()
-	 * @see #getIModifyInfo()
+	 * @see org.elwiki_data.IHistoryInfo#getLastModify()
+	 * @see #getIHistoryInfo()
 	 * @generated
 	 */
-	EAttribute getIModifyInfo_LastModify();
+	EAttribute getIHistoryInfo_LastModify();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.IModifyInfo#getAuthor <em>Author</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.IHistoryInfo#getAuthor <em>Author</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Author</em>'.
-	 * @see org.elwiki_data.IModifyInfo#getAuthor()
-	 * @see #getIModifyInfo()
+	 * @see org.elwiki_data.IHistoryInfo#getAuthor()
+	 * @see #getIHistoryInfo()
 	 * @generated
 	 */
-	EAttribute getIModifyInfo_Author();
+	EAttribute getIHistoryInfo_Author();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.IModifyInfo#getChangeNote <em>Change Note</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.IHistoryInfo#getChangeNote <em>Change Note</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Change Note</em>'.
-	 * @see org.elwiki_data.IModifyInfo#getChangeNote()
-	 * @see #getIModifyInfo()
+	 * @see org.elwiki_data.IHistoryInfo#getChangeNote()
+	 * @see #getIHistoryInfo()
 	 * @generated
 	 */
-	EAttribute getIModifyInfo_ChangeNote();
+	EAttribute getIHistoryInfo_ChangeNote();
 
 	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PageReference <em>Page Reference</em>}'.
@@ -2285,14 +2285,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EOperation CLONEABLE___CLONE = eINSTANCE.getCloneable__Clone();
 
 		/**
-		 * The meta object literal for the '{@link org.elwiki_data.IModifyInfo <em>IModify Info</em>}' class.
+		 * The meta object literal for the '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.IModifyInfo
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIModifyInfo()
+		 * @see org.elwiki_data.IHistoryInfo
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIHistoryInfo()
 		 * @generated
 		 */
-		EClass IMODIFY_INFO = eINSTANCE.getIModifyInfo();
+		EClass IMODIFY_INFO = eINSTANCE.getIHistoryInfo();
 
 		/**
 		 * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
@@ -2300,7 +2300,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__VERSION = eINSTANCE.getIModifyInfo_Version();
+		EAttribute IMODIFY_INFO__VERSION = eINSTANCE.getIHistoryInfo_Version();
 
 		/**
 		 * The meta object literal for the '<em><b>Last Modify</b></em>' attribute feature.
@@ -2308,7 +2308,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__LAST_MODIFY = eINSTANCE.getIModifyInfo_LastModify();
+		EAttribute IMODIFY_INFO__LAST_MODIFY = eINSTANCE.getIHistoryInfo_LastModify();
 
 		/**
 		 * The meta object literal for the '<em><b>Author</b></em>' attribute feature.
@@ -2316,7 +2316,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__AUTHOR = eINSTANCE.getIModifyInfo_Author();
+		EAttribute IMODIFY_INFO__AUTHOR = eINSTANCE.getIHistoryInfo_Author();
 
 		/**
 		 * The meta object literal for the '<em><b>Change Note</b></em>' attribute feature.
@@ -2324,7 +2324,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMODIFY_INFO__CHANGE_NOTE = eINSTANCE.getIModifyInfo_ChangeNote();
+		EAttribute IMODIFY_INFO__CHANGE_NOTE = eINSTANCE.getIHistoryInfo_ChangeNote();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PageReferenceImpl <em>Page Reference</em>}' class.

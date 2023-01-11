@@ -24,7 +24,7 @@ import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
-import org.elwiki_data.IModifyInfo;
+import org.elwiki_data.IHistoryInfo;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -92,7 +92,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass iModifyInfoEClass = null;
+	private EClass IHistoryInfoEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -721,8 +721,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EClass getIModifyInfo() {
-		return iModifyInfoEClass;
+	public EClass getIHistoryInfo() {
+		return IHistoryInfoEClass;
 	}
 
 	/**
@@ -731,8 +731,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIModifyInfo_Version() {
-		return (EAttribute)iModifyInfoEClass.getEStructuralFeatures().get(0);
+	public EAttribute getIHistoryInfo_Version() {
+		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -741,8 +741,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIModifyInfo_LastModify() {
-		return (EAttribute)iModifyInfoEClass.getEStructuralFeatures().get(1);
+	public EAttribute getIHistoryInfo_LastModify() {
+		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -751,8 +751,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIModifyInfo_Author() {
-		return (EAttribute)iModifyInfoEClass.getEStructuralFeatures().get(2);
+	public EAttribute getIHistoryInfo_Author() {
+		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -761,8 +761,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIModifyInfo_ChangeNote() {
-		return (EAttribute)iModifyInfoEClass.getEStructuralFeatures().get(3);
+	public EAttribute getIHistoryInfo_ChangeNote() {
+		return (EAttribute)IHistoryInfoEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1060,11 +1060,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		cloneableEClass = createEClass(CLONEABLE);
 		createEOperation(cloneableEClass, CLONEABLE___CLONE);
 
-		iModifyInfoEClass = createEClass(IMODIFY_INFO);
-		createEAttribute(iModifyInfoEClass, IMODIFY_INFO__VERSION);
-		createEAttribute(iModifyInfoEClass, IMODIFY_INFO__LAST_MODIFY);
-		createEAttribute(iModifyInfoEClass, IMODIFY_INFO__AUTHOR);
-		createEAttribute(iModifyInfoEClass, IMODIFY_INFO__CHANGE_NOTE);
+		IHistoryInfoEClass = createEClass(IMODIFY_INFO);
+		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__VERSION);
+		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__LAST_MODIFY);
+		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__AUTHOR);
+		createEAttribute(IHistoryInfoEClass, IMODIFY_INFO__CHANGE_NOTE);
 
 		pageReferenceEClass = createEClass(PAGE_REFERENCE);
 		createEAttribute(pageReferenceEClass, PAGE_REFERENCE__PAGE_ID);
@@ -1125,8 +1125,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		// Add supertypes to classes
 		wikiPageEClass.getESuperTypes().add(this.getComparable());
 		wikiPageEClass.getESuperTypes().add(this.getCloneable());
-		pageContentEClass.getESuperTypes().add(this.getIModifyInfo());
-		pageAttachmentEClass.getESuperTypes().add(this.getIModifyInfo());
+		pageContentEClass.getESuperTypes().add(this.getIHistoryInfo());
+		pageAttachmentEClass.getESuperTypes().add(this.getIHistoryInfo());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(wikiPageEClass, WikiPage.class, "WikiPage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1204,11 +1204,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		initEOperation(getCloneable__Clone(), this.getObject(), "clone", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		initEClass(iModifyInfoEClass, IModifyInfo.class, "IModifyInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIModifyInfo_Version(), ecorePackage.getEInt(), "version", null, 0, 1, IModifyInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIModifyInfo_LastModify(), ecorePackage.getEDate(), "lastModify", null, 0, 1, IModifyInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIModifyInfo_Author(), ecorePackage.getEString(), "author", "", 0, 1, IModifyInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIModifyInfo_ChangeNote(), ecorePackage.getEString(), "changeNote", null, 0, 1, IModifyInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(IHistoryInfoEClass, IHistoryInfo.class, "IHistoryInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIHistoryInfo_Version(), ecorePackage.getEInt(), "version", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIHistoryInfo_LastModify(), ecorePackage.getEDate(), "lastModify", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIHistoryInfo_Author(), ecorePackage.getEString(), "author", "", 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIHistoryInfo_ChangeNote(), ecorePackage.getEString(), "changeNote", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pageReferenceEClass, PageReference.class, "PageReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPageReference_PageId(), ecorePackage.getEString(), "pageId", "", 0, 1, PageReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

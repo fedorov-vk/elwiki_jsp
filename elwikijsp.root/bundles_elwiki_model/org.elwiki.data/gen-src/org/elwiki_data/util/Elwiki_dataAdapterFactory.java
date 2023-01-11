@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataPackage;
-import org.elwiki_data.IModifyInfo;
+import org.elwiki_data.IHistoryInfo;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -108,8 +108,8 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 				return createCloneableAdapter();
 			}
 			@Override
-			public Adapter caseIModifyInfo(IModifyInfo object) {
-				return createIModifyInfoAdapter();
+			public Adapter caseIHistoryInfo(IHistoryInfo object) {
+				return createIHistoryInfoAdapter();
 			}
 			@Override
 			public Adapter casePageReference(PageReference object) {
@@ -250,16 +250,16 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.elwiki_data.IModifyInfo <em>IModify Info</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.elwiki_data.IHistoryInfo <em>IModify Info</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.elwiki_data.IModifyInfo
+	 * @see org.elwiki_data.IHistoryInfo
 	 * @generated
 	 */
-	public Adapter createIModifyInfoAdapter() {
+	public Adapter createIHistoryInfoAdapter() {
 		return null;
 	}
 
