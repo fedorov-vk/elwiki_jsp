@@ -30,8 +30,10 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiPreferences;
+import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
@@ -83,22 +85,28 @@ import java.nio.charset.Charset;
 	property = {
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/wiki/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
-		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)",
+		Constants.SERVICE_RANKING + "=1100"},
 //	scope=ServiceScope.PROTOTYPE,
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
+@Deprecated
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
+
+    @Reference
+    private Engine m_engine;
+
     private String m_wiki_encoding;
     private boolean useEncoding;
-  
+
 	@Activate
 	protected void startup() {
-		log.debug("startup WikiJSPFilter.");
+		log.debug("«startup» " + WikiJSPFilter.class.getSimpleName());
 	}
-    
+
     /** {@inheritDoc} */
     @Override
     public void init( final FilterConfig config ) throws ServletException {

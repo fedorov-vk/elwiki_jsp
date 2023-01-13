@@ -3,6 +3,7 @@ package org.elwiki.web.support;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.http.HttpHeaders;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -11,16 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.elwiki.web.jsp.WikiJSPFilter;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
+/**
+ * This servlet error output page is for future versions of ElWiki.<br/>
+ * Error page of Jetty is currently being used.
+ *
+ * @author v.fedorov
+ */
 //@formatter:off
 @Component(
 	service=Servlet.class,
 	property= {
-		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ERROR_PAGE + "=java.io.IOException",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ERROR_PAGE + "=java.lang.Exception",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ERROR_PAGE + "=500",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
@@ -36,7 +44,7 @@ public class ErrorHandlingServlet extends HttpServlet {
 	
 	@Activate
 	protected void startup() {
-		log.debug("startup ErrorHandlingServlet.");
+		log.debug("«startup» " + ErrorHandlingServlet.class.getSimpleName());
 	}
 
 	@Override

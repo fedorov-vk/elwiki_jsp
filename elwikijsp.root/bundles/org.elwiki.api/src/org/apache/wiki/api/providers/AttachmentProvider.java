@@ -44,13 +44,15 @@ public interface AttachmentProvider extends WikiProvider {
 
     /**
      *  Put new attachment data.
+     * @param wikiPage Wiki page is owned of specified attachment.
+     * @param att Attachment object to add new data to.
+     * @param data The stream from which the provider should read the data
      *  
-     *  @param att Attachment object to add new data to
-     *  @param data The stream from which the provider should read the data
+     *  @return TODO
      *  @throws IOException If writing fails
      *  @throws ProviderException If there are other errors.
      */
-    void putAttachmentData( PageAttachment att, InputStream data ) throws ProviderException, IOException;
+    PageAttachment putAttachmentData( WikiPage wikiPage, PageAttachment att, InputStream data ) throws ProviderException, IOException;
 
     /**
      *  Get attachment data.

@@ -70,6 +70,15 @@ public enum ContextEnum {
 	private final String uri;
 	private final String contentTemplate;
 
+	/**
+	 * Creates a variable that describes the context of ElWiki.
+	 *
+	 * @param requestContext this string represents the context identifier.
+	 * @param uri this string is the URI for activating this context from an HTTP request.
+	 * @param prefix this is the prefix for forming the request URI.
+	 * @param postfix this is the postfix for forming the request URI.
+	 * @param contentTemplate the name of the JSP page, for generating HTML content.
+	 */
 	ContextEnum(String requestContext, String uri, String prefix, String postfix, String contentTemplate) {
 		this.requestContext = requestContext;
 		this.urlPattern = prefix + uri + postfix;

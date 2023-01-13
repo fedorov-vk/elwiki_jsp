@@ -333,27 +333,23 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     */
 
     /** {@inheritDoc} */
-    /*:FVK:
     @Override
-    public void storeAttachment( final PageAttachment att, final InputStream in ) throws IOException, ProviderException {
-        if( m_provider == null ) {
-            return;
-        }
+	public void storeAttachment(WikiPage wikiPage, PageAttachment att, InputStream in)
+			throws IOException, ProviderException {
+		if (m_provider == null) {
+			return;
+		}
 
-        // Checks if the actual, real page exists without any modifications or aliases. We cannot store an attachment to a non-existent page.
-        if( !ServicesRefs.getPageManager().pageExists( att.getParentName() ) ) {
-            // the caller should catch the exception and use the exception text as an i18n key
-            throw new ProviderException( "attach.parent.not.exist" );
-        }
+		// Checks if the actual, real page exists without any modifications or aliases.
+		// We cannot store an attachment to a non-existent page.
+		if (wikiPage == null || !ServicesRefs.getPageManager().pageExists(wikiPage)) {
+			// the caller should catch the exception and use the exception text as an i18n key
+			throw new ProviderException("attach.parent.not.exist");
+		}
 
-        m_provider.putAttachmentData( att, in );
-        ServicesRefs.getReferenceManager().updateReferences( att.getName(), new ArrayList<>() );
-
-        final WikiPage parent = Wiki.contents().page( m_engine, att.getParentName() );
-        ServicesRefs.getReferenceManager().updateReferences( parent );
-        ServicesRefs.getSearchManager().reindexPage( att );
-    }
-    */
+		m_provider.putAttachmentData(wikiPage, att, in);
+		//:FVK: ServicesRefs.getReferenceManager().updateReferences(att.getName(), new ArrayList<>());
+	}
 
     /** {@inheritDoc} */
     @Override

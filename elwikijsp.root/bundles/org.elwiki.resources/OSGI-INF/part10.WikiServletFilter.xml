@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="part10.WikiServletFilter">
-   <property name="osgi.http.whiteboard.filter.pattern" value="/attach/*"/>
-   <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
+   <property name="osgi.http.whiteboard.filter.pattern" type="String" value="/attach/*"/>
+   <property name="osgi.http.whiteboard.context.select" type="String" value="(osgi.http.whiteboard.context.name=eclipse)"/>
+   <property name="service.ranking" type="Integer" value="1000"/>
    <service scope="prototype">
       <provide interface="javax.servlet.Filter"/>
    </service>

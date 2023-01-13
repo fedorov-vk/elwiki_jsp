@@ -19,6 +19,7 @@
 package org.apache.wiki.pages0;
 
 import org.apache.wiki.api.core.Context;
+import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.event.WikiEventListener;
@@ -310,12 +311,12 @@ public interface PageManager extends WikiEventListener {
      *  @throws ProviderException If something goes badly wrong.
      *  @since 2.0
      */
-    default boolean pageExists( final WikiPage page ) throws ProviderException {
-        if( page != null ) {
-            return false; //:FVK: pageExists( page.getName(), page.getVersion() );
-        }
-        return false;
-    }
+	default boolean pageExists(final WikiPage page) throws ProviderException {
+		if (page != null) {
+			return pageExistsById(page.getId());
+		}
+		return false;
+	}
 
 	/**
 	 * Returns true, if the requested page exists. Will consider any version as existing.
@@ -411,5 +412,14 @@ public interface PageManager extends WikiEventListener {
 	 * @return New wiki page.
 	 */
 	WikiPage createPage( String pageName, String parentPageId );
+
+	/**
+	 * Add attachment metadata for specisied wiki page.
+	 * 
+	 * @param wikiPage       specified page.
+	 * @param pageAttachment new metadata of attachment.
+	 * @return TODO
+	 */
+	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment);
 
 }

@@ -16,18 +16,18 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
     	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
     	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
     scope=ServiceScope.PROTOTYPE,
-    name="partJspServlet")
+    name="web.JspServlet")
 //@formatter:on
-public class JspServletPart extends ServletWrapper {
+public class JspServlet extends JspServletWrapper {
 
-	private static final Logger log = Logger.getLogger(JspServletPart.class);
+	private static final Logger log = Logger.getLogger(JspServlet.class);
 	private static String ALIAS = "/";
 
 	@Activate
 	protected void startup() {
-		log.debug("startup JspServletPart.");
+		log.debug("«startup» " + JspServlet.class.getSimpleName());
 	}
-	
+
 	@Override
 	protected String getAlias() {
 		return ALIAS;

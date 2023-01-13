@@ -35,6 +35,11 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
@@ -52,6 +57,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -82,6 +88,16 @@ import java.util.Properties;
  *
  *  @since 1.9.45.
  */
+//@formatter:off
+@Component(
+  service=Servlet.class,
+  property= {
+  	HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/attach/*",
+  	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+  	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
+  scope=ServiceScope.PROTOTYPE,
+  name="partAttachmentServlet")
+//@formatter:on
 public class AttachmentServlet extends HttpServlet {
 
 	private static final Logger log = Logger.getLogger( AttachmentServlet.class );
@@ -95,18 +111,16 @@ public class AttachmentServlet extends HttpServlet {
 
     /** Default expiry period is 1 day */
     protected static final long DEFAULT_EXPIRY = 1 * 24 * 60 * 60 * 1000;
+    
+    @Reference
+    private Engine m_engine;
 
-    final private Engine m_engine;
-
-    /**
-     *  The maximum size that an attachment can be.
-     */
+    /** The maximum size that an attachment can be. */
     private int   m_maxSize = Integer.MAX_VALUE;
-
-    /**
-     *  List of attachment types which are allowed
-     */
-
+    
+	private ServletConfig config;
+    
+    /** List of attachment types which are allowed */
     private String[] m_allowedPatterns;
 
     private String[] m_forbiddenPatterns;
@@ -116,6 +130,11 @@ public class AttachmentServlet extends HttpServlet {
     // Used to handle the RFC date format = Sat, 13 Apr 2002 13:23:01 GMT
     //
     //private final DateFormat rfcDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+
+	@Activate
+	protected void startup() {
+		log.debug("«startup» " + AttachmentServlet.class.getSimpleName());
+	}
 
     public AttachmentServlet() {
 		super();
@@ -132,7 +151,9 @@ public class AttachmentServlet extends HttpServlet {
      *  Initializes the servlet from Engine properties.
      */
     @Override
-    public void init( final ServletConfig config ) throws ServletException {
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+
         String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
         final String tmpDir = workDir + File.separator + "attach-tmp";
         final IPreferenceStore props = m_engine.getWikiPreferences();
@@ -435,36 +456,32 @@ public class AttachmentServlet extends HttpServlet {
             upload.setProgressListener( pl );
             final List<FileItem> items = upload.parseRequest( req );
 
-            String   wikipage   = null;
-            String   changeNote = null;
-            //FileItem actualFile = null;
-            final List<FileItem> fileItems = new ArrayList<>();
+			WikiPage wikipage = null;
+			String changeNote = null;
+			//FileItem actualFile = null;
+			final List<FileItem> fileItems = new ArrayList<>();
 
-            for( final FileItem item : items ) {
-                if( item.isFormField() ) {
-                    switch( item.getFieldName() ) {
-                    case "page":
-                        // FIXME: Kludge alert.  We must end up with the parent page name, if this is an upload of a new revision
-                        wikipage = item.getString( "UTF-8" );
-                        final int x = wikipage.indexOf( "/" );
-                        if( x != -1 ) {
-                            wikipage = wikipage.substring( 0, x );
-                        }
-                        break;
-                    case "changenote":
-                        changeNote = item.getString( "UTF-8" );
-                        if( changeNote != null ) {
-                            changeNote = TextUtil.replaceEntities( changeNote );
-                        }
-                        break;
-                    case "nextpage":
-                        nextPage = validateNextPage( item.getString( "UTF-8" ), errorPage );
-                        break;
-                    }
-                } else {
-                    fileItems.add( item );
-                }
-            }
+			for (final FileItem item : items) {
+				if (item.isFormField()) {
+					switch (item.getFieldName()) {
+					case "pageId":
+						String pageId = item.getString("UTF-8");
+						wikipage = ServicesRefs.getPageManager().getPageById(pageId);
+						break;
+					case "changenote":
+						changeNote = item.getString("UTF-8");
+						if (changeNote != null) {
+							changeNote = TextUtil.replaceEntities(changeNote);
+						}
+						break;
+					case "nextpage":
+						nextPage = validateNextPage(item.getString("UTF-8"), errorPage);
+						break;
+					}
+				} else {
+					fileItems.add(item);
+				}
+			}
 
             if( fileItems.size() == 0 ) {
                 throw new RedirectException( "Broken file upload", errorPage );
@@ -521,7 +538,7 @@ public class AttachmentServlet extends HttpServlet {
      */
     protected boolean executeUpload( final Context context, final InputStream data,
                                      String filename, final String errorPage,
-                                     final String parentPage, final String changenote,
+                                     WikiPage parentPage, final String changenote,
                                      final long contentLength )
             throws RedirectException, IOException, ProviderException {
         boolean created = false;
@@ -576,7 +593,7 @@ public class AttachmentServlet extends HttpServlet {
         att.setSize( contentLength );
 
         //  Check if we're allowed to do this?
-        final Permission permission = null; //:FVK: PermissionFactory.getPagePermission( att, "upload" );
+        final Permission permission = PermissionFactory.getPagePermission( parentPage, "upload" );
         if( ServicesRefs.getAuthorizationManager().checkPermission( context.getWikiSession(), permission ) ) {
             if( user != null ) {
                 att.setAuthor( user.getName() );
@@ -586,16 +603,16 @@ public class AttachmentServlet extends HttpServlet {
             	att.setChangeNote(changenote );
             }
 
-          /*:FVK: 
             try {
-                ResourcesRefs.getAttachmentManager().storeAttachment( att, data );
+                ServicesRefs.getAttachmentManager().storeAttachment( parentPage, att, data );
             } catch( final ProviderException pe ) {
                 // this is a kludge, the exception that is caught here contains the i18n key
                 // here we have the context available, so we can internationalize it properly :
-                throw new ProviderException( Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE ).getString( pe.getMessage() ) );
-            }*/
+				throw new ProviderException(Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE)
+						.getString(pe.getMessage()));
+            }
 
-            log.info( "User " + user + " uploaded attachment to " + parentPage + " called "+filename+", size " + att.getSize() );
+            log.info( "User " + user + " uploaded attachment to " + parentPage + " called "+filename+", size " + contentLength );
         } else {
             throw new RedirectException( "No permission to upload a file", errorPage );
         }

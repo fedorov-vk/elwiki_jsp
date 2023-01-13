@@ -95,7 +95,7 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 		this.m_engine = engine;
 		PATH_AJAX = "/" + TextUtil.getStringProperty(m_engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax")
 				+ "/";
-		log.info("WikiAjaxDispatcher initialized.");
+		log.debug("«initialized» " + WikiAjaxDispatcherService.class.getSimpleName());
 	}
 
 	@Override

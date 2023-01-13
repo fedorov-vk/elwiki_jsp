@@ -143,17 +143,19 @@ public class CachingAttachmentProvider implements AttachmentProvider {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void putAttachmentData( final PageAttachment att, final InputStream data )
-        throws ProviderException, IOException {
-        m_provider.putAttachmentData( att, data );
+	@Override
+	public PageAttachment putAttachmentData(WikiPage wikiPage, final PageAttachment att, final InputStream data)
+			throws ProviderException, IOException {
+		PageAttachment addedAttachment = m_provider.putAttachmentData(wikiPage, att, data);
 
-        /*:FVK:
-        m_cache.remove(att.getParentName());
-        att.setLastModified(new Date());
-        */
-        m_attCache.put(new Element(att.getName(), att));
-    }
+		/*:FVK:
+		m_cache.remove(att.getParentName());
+		att.setLastModified(new Date());
+		*/
+		m_attCache.put(new Element(addedAttachment.getName(), addedAttachment));
+
+		return addedAttachment;
+	}
 
     /**
      * {@inheritDoc}

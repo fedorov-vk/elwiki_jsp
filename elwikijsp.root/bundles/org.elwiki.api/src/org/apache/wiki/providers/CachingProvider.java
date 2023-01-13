@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -572,6 +573,14 @@ public class CachingProvider implements PageProvider {
 
 	@Override
 	public WikiPage createPage(String name, String content, WikiPage parentPage) {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
+		Assert.isTrue(false, "Код не реализован.");
 		// TODO Auto-generated method stub
 		return null;
 	}

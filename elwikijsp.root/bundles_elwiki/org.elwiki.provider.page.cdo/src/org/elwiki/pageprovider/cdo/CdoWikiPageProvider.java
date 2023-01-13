@@ -1420,5 +1420,27 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		return acl;
 	}
+
+	@Override
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
+		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+		WikiPage changedPage = transaction.getObject(wikiPage);
+		//:FVK: PageAttachment newAttachment = transaction.getObject(pageAttachment);
+		changedPage.getAttachments().add(pageAttachment);
+
+		try {
+			transaction.commit();
+		} catch (CommitException e) {
+			log.error("Ошибка", e);
+		} finally {
+			if (!transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+
+		CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+		Object item = view.getObject(pageAttachment.cdoID());
+		return (PageAttachment) item;
+	}
 	
 }

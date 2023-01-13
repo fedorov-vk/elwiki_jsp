@@ -83,6 +83,7 @@ import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
@@ -1008,4 +1009,9 @@ public class DefaultPageManager implements PageManager, Initializable {
 		return m_provider.createPage( pageName, "", p );		
 	}
 
+	@Override
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
+		return m_provider.addAttachment(wikiPage, pageAttachment);		
+	}
+	
 }

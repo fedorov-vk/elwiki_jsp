@@ -15,16 +15,16 @@ import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.framework.Bundle;
 
 /**
- * The idea of this code was taken from code of Equinox: <a href=
+ * Prototype of this class is code of Equinox: <a href=
  * "http://kickjava.com/src/org/eclipse/equinox/http/registry/internal/ServletManager.java.htm">ServletManager</a>
  * and <a href=
  * "http://kickjava.com/src/org/eclipse/equinox/jsp/jasper/registry/JSPFactory.java.htm">JSPFactory</a>.
- * 
+ *
  * @author v.fedorov
  */
-public abstract class ServletWrapper implements Servlet {
+public abstract class JspServletWrapper implements Servlet {
 
-	private static final Logger log = Logger.getLogger(ServletWrapper.class);
+	private static final Logger log = Logger.getLogger(JspServletWrapper.class);
 
 	private boolean loadOnStartup = false;
 	private ServletConfig config;
@@ -74,10 +74,10 @@ public abstract class ServletWrapper implements Servlet {
 
 	private synchronized void initializeDelegate() throws ServletException {
 		if (delegate == null) {
-			Bundle b = ResourcesActivator.getContext().getBundle();
+			Bundle bundle = ResourcesActivator.getContext().getBundle();
 			String bundleResourcePath = null;
 			try {
-				JspServlet newDelegate = new JspServlet(b, bundleResourcePath, getAlias());
+				JspServlet newDelegate = new JspServlet(bundle, bundleResourcePath, getAlias());
 				newDelegate.init(config);
 				delegate = newDelegate;
 			} catch (Exception e) { //TODO: add support exception logging.

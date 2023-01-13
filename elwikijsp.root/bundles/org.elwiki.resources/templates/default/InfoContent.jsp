@@ -345,7 +345,7 @@
 <!--
  :FVK: of Attachment history should be here... - see the original JSPWiki.
 
-    <wiki:HistoryIterator id="att"><%-- <wiki:AttachmentsIterator id="att"> --%>
+    <wiki:HistoryIterator id="hist"><%-- <wiki:AttachmentsIterator id="att"> --%>
     <tr>
 
       <td class="attach-name"><wiki:LinkTo version="${att.version}"><c:out value="${att.fileName}" /></wiki:LinkTo></td>

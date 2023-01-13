@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="partJspServlet">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="web.JspServlet">
    <property name="osgi.http.whiteboard.servlet.pattern" value="/*"/>
    <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <service scope="prototype">
       <provide interface="javax.servlet.Servlet"/>
    </service>
-   <implementation class="org.elwiki.web.jsp.JspServletPart"/>
+   <implementation class="org.elwiki.web.jsp.JspServlet"/>
 </scr:component>

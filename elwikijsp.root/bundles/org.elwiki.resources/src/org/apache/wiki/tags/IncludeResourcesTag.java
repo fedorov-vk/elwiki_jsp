@@ -23,7 +23,7 @@ import org.apache.wiki.ui.TemplateManager;
 /**
  * This tag is used to include any programmatic includes into the output stream.
  * Actually, what it does is that it simply emits a tiny marker into the stream,
- * and then a {@link org.elwiki.web.jsp.FilterPagePart} take care of the actual inclusion.
+ * and then a {@link org.elwiki.web.jsp.JspServletFilter} take care of the actual inclusion.
  *
  * <p>
  * <b>Attributes</b>

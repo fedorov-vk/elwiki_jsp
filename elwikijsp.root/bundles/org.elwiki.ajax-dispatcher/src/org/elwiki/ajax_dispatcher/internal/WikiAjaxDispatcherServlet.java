@@ -87,7 +87,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 		super.init(config);
 		IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
 		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax") + "/";
-		log.info("WikiAjaxDispatcherServlet initialized. AJAX path: " + PATH_AJAX);
+		log.debug("«initialized» " + WikiAjaxDispatcherServlet.class.getSimpleName() + " (AJAX path: " + PATH_AJAX + ")");
 	}
 
 	/**

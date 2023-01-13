@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.api.providers;
 
+import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -204,5 +205,14 @@ public interface PageProvider extends WikiProvider {
 	 * @return New wiki page.
 	 */
 	WikiPage createPage(String name, String content, WikiPage parentPage);
+
+	/**
+	 * Add attachment metadata for specisied wiki page.
+	 * 
+	 * @param wikiPage       specified page.
+	 * @param pageAttachment new metadata of attachment.
+	 * @return TODO
+	 */
+	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment);
 
 }

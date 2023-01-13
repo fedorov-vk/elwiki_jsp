@@ -231,13 +231,14 @@ public interface AttachmentManager {
     /**
      *  Stores an attachment directly from a stream. If the attachment did not exist previously, this method will create it.
      *  If it did exist, it stores a new version.
+     * @param wikiPage TODO
+     * @param att Attachment to store this under.
+     * @param in  InputStream from which the attachment contents will be read.
      *
-     *  @param att Attachment to store this under.
-     *  @param in  InputStream from which the attachment contents will be read.
      *  @throws IOException If writing the attachment failed.
      *  @throws ProviderException If something else went wrong.
      */
-    //:FVK: void storeAttachment( PageAttachment att, InputStream in ) throws IOException, ProviderException;
+    void storeAttachment( WikiPage wikiPage, PageAttachment att, InputStream in ) throws IOException, ProviderException;
 
     /**
      *  Returns a list of versions of the attachment.

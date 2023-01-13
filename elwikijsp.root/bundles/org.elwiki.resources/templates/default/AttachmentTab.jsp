@@ -47,7 +47,7 @@
 
     <h4><span class="icon-paper-clip"></span> <fmt:message key="attach.add"/></h4>
     <input type="hidden" name="nextpage" value="<wiki:Link context='upload' format='url'/>" />
-    <input type="hidden" name="page" value="<wiki:Variable var="pagename"/>" />
+    <input type="hidden" name="pageId" value="<%=ctx.getPageId()%>" />
     <input type="hidden" name="action" value="upload" />
 
     <wiki:Messages div="alert alert-danger" />

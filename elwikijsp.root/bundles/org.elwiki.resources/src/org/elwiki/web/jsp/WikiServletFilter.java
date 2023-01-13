@@ -32,6 +32,7 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -65,7 +66,8 @@ import java.io.PrintWriter;
 	property = {
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/attach/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
-		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
+		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)",
+		Constants.SERVICE_RANKING + "=1000"},
   scope=ServiceScope.PROTOTYPE,
   name = "part10.WikiServletFilter"
 )
@@ -73,14 +75,16 @@ import java.io.PrintWriter;
 public class WikiServletFilter implements Filter {
 
     private static final Logger log = Logger.getLogger( WikiServletFilter.class );
+
     @Reference
-    protected Engine m_engine;
+    private Engine m_engine;
+
     @Reference
     private IWikiConfiguration wikiConfiguration;
 
 	@Activate
 	protected void startup() {
-		log.debug("startup WikiServletFilter.");
+		log.debug("«startup» " + WikiServletFilter.class.getSimpleName());
 	}
     
     public IWikiConfiguration getWikiConfiguration() {
@@ -128,11 +132,17 @@ public class WikiServletFilter implements Filter {
     */
     @Override
     public void doFilter( final ServletRequest request, final ServletResponse response, final FilterChain chain ) throws IOException, ServletException {
+    	String uri = "unknown";
+    	if(request instanceof HttpServletRequest) {
+    		uri = ((HttpServletRequest)request).getRequestURI();
+    	}
+		log.debug("doFilter()\n requested URI: " + uri);    	
+
         //  Sanity check; it might be true in some conditions, but we need to know where.
         if( chain == null ) {
             throw new ServletException("FilterChain is null, even if it should not be.  Please report this to the jspwiki development team.");
         }
-        
+
         if( m_engine == null ) {
             final PrintWriter out = response.getWriter();
             out.print("<!DOCTYPE html><html lang=\"en\"><head><title>Fatal problem with JSPWiki</title></head>");
@@ -148,13 +158,15 @@ public class WikiServletFilter implements Filter {
             out.print("</body></html>");
             return;
         }   
-        
+        chain.doFilter(request, response);
+
+        /*:FVK:		
         // If we haven't done so, wrap the request
         HttpServletRequest httpRequest = ( HttpServletRequest )request;
         
         // Set the character encoding
         httpRequest.setCharacterEncoding( getWikiConfiguration().getContentEncodingCs().displayName() );
-        
+
         if ( !isWrapped( request ) ) {
             // Prepare the Session
             try {
@@ -176,7 +188,7 @@ public class WikiServletFilter implements Filter {
             NDC.pop();
             NDC.remove();
         }
-
+        */
     }
 
     /**

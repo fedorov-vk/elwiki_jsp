@@ -28,10 +28,16 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.search.QueryItem;
+import org.apache.wiki.auth.IPermissionManager;
 import org.elwiki_data.PageAttachment;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.emf.common.util.EList;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.configuration.IWikiPreferences;
+import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,14 +50,22 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  Provides basic, versioning attachments.
+ * Provides basic, versioning attachments.<br/>
+ * This class converted from version of JSPwiki - porting code based on
+ * attachment items of EMF model.<br/>
+ * Attachment files are stored in the location of attachment area (with random
+ * names). Metadata of attachment items are stored in the CDO repository, and
+ * are linked with corresponded wiki page.
  *
+ * Old format:
  *  <PRE>
  *   Structure is as follows:
  *      attachment_dir/
@@ -71,24 +85,23 @@ import java.util.regex.Pattern;
  *               1.png
  *             
  *  </PRE>
- *
- *  The names of the directories will be URLencoded.
- *  <p>
- *  "attachment.properties" consists of the following items:
- *  <UL>
- *   <LI>1.author = author name for version 1 (etc)
- *  </UL>
  */
 public class BasicAttachmentProvider implements AttachmentProvider {
 
+	private static final String ATTFILE_PREFIX = "att-";
+
+	private static final String ATTFILE_SUFFIX = ".dat";
+	
+	private IWikiConfiguration wikiconfiguration;
+	
     private Engine m_engine;
-    private String m_storageDir;
     
     /*
      * Disable client cache for files with patterns
      * since 2.5.96
      */
     private Pattern m_disableCache = null;
+
     
     /** The property name for specifying which attachments are not cached.  Value is <tt>{@value}</tt>. */
     public static final String PROP_DISABLECACHE = "jspwiki.basicAttachmentProvider.disableCache";
@@ -110,31 +123,11 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
         m_engine = engine;
-        m_storageDir = TextUtil.getCanonicalFilePathProperty( engine.getWikiPreferences(), PROP_STORAGEDIR,
-                                                       System.getProperty("user.home") + File.separator + "jspwiki-files");
+        wikiconfiguration = m_engine.getWikiConfiguration();
 
         final String patternString = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_DISABLECACHE, null );
         if ( patternString != null ) {
             m_disableCache = Pattern.compile(patternString);
-        }
-
-        //  Check if the directory exists - if it doesn't, create it.
-        final File f = new File( m_storageDir );
-        if( !f.exists() ) {
-            f.mkdirs();
-        }
-
-        // Some sanity checks
-        if( !f.exists() ) {
-            throw new IOException( "Could not find or create attachment storage directory '" + m_storageDir + "'" );
-        }
-
-        if( !f.canWrite() ) {
-            throw new IOException( "Cannot write to the attachment storage directory '" + m_storageDir + "'" );
-        }
-
-        if( !f.isDirectory() ) {
-            throw new IOException( "Your attachment storage points to a file, not a directory: '" + m_storageDir + "'" );
         }
     }
 
@@ -143,10 +136,11 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *
      *  @param wikipage Page to which this attachment is attached.
      */
+    @Deprecated
     private File findPageDir( String wikipage ) throws ProviderException {
         wikipage = mangleName( wikipage );
 
-        final File f = new File( m_storageDir, wikipage + DIR_EXTENSION );
+        final File f = wikiconfiguration.getAttachmentPath().append(wikipage + DIR_EXTENSION).toFile();
         if( f.exists() && !f.isDirectory() ) {
             throw new ProviderException( "Storage dir '" + f.getAbsolutePath() + "' is not a directory!" );
         }
@@ -167,7 +161,8 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  Finds the dir in which the attachment lives.
      */
     private File findAttachmentDir( final PageAttachment att ) throws ProviderException {
-    	File f = null;
+    	//:FVK: workaround. (here shoul added algotithm with hoerarhy of directories, for controling maximuum count of files in the one directory.)
+    	File f = this.wikiconfiguration.getAttachmentPath().toFile();
     	/*:FVK:
         File f = new File( findPageDir( att.getParentName() ), mangleName( att.getFileName() + ATTDIR_EXTENSION ) );
 
@@ -190,34 +185,22 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     }
 
     /**
-     * Goes through the repository and decides which version is the newest one in that directory.
+     * Goes through list of attachments of page and decides which attachment version is the newest in that page.
+     * @param page TODO
      *
      * @return Latest version number in the repository, or 0, if there is no page in the repository.
      */
-    private int findLatestVersion( final PageAttachment att ) throws ProviderException {
-        final File attDir  = findAttachmentDir( att );
-        final String[] pages = attDir.list( new AttachmentVersionFilter() );
-        if( pages == null ) {
-            return 0; // No such thing found.
-        }
+	private int findLatestVersion(WikiPage page, PageAttachment att) throws ProviderException {
+		String attName = att.getName();
+		int version = 0;
+		for (PageAttachment attachment : page.getAttachments()) {
+			if (attName.equals(attachment.getName()) && (version < attachment.getVersion())) {
+				version = attachment.getVersion();
+			}
+		}
 
-        int version = 0;
-        for( final String page : pages ) {
-            final int cutpoint = page.indexOf( '.' );
-            final String pageNum = ( cutpoint > 0 ) ? page.substring( 0, cutpoint ) : page;
-
-            try {
-                final int res = Integer.parseInt( pageNum );
-
-                if( res > version ) {
-                    version = res;
-                }
-            } catch( final NumberFormatException e ) {
-            } // It's okay to skip these.
-        }
-
-        return version;
-    }
+		return version;
+	}
 
     /**
      *  Returns the file extension.  For example "test.png" returns "png".
@@ -242,6 +225,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  Writes the page properties back to the file system.
      *  Note that it WILL overwrite any previous properties.
      */
+    @Deprecated
     private void putPageProperties( final PageAttachment att, final Properties properties ) throws IOException, ProviderException {
         final File attDir = findAttachmentDir( att );
         final File propertyFile = new File( attDir, PROPERTY_FILE );
@@ -268,43 +252,35 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     /**
      *  {@inheritDoc}
      */
-    @Override
-    public void putAttachmentData( final PageAttachment att, final InputStream data ) throws ProviderException, IOException {
-        final File attDir = findAttachmentDir( att );
+	@Override
+	public PageAttachment putAttachmentData(WikiPage wikiPage, PageAttachment att, InputStream data)
+			throws ProviderException, IOException {
+		PageAttachment result = null;
+		File attDir = findAttachmentDir(att);
 
-        if( !attDir.exists() ) {
-            attDir.mkdirs();
-        }
-        final int latestVersion = findLatestVersion( att );
-        final int versionNumber = latestVersion + 1;
+		if (!attDir.exists()) {
+			attDir.mkdirs();
+		}
 
-        /*:FVK:
-        final File newfile = new File( attDir, versionNumber + "." + getFileExtension( att.getFileName() ) );
-        try( final OutputStream out = new FileOutputStream( newfile ) ) {
-            log.info( "Uploading attachment " + att.getFileName() + " to page " + att.getParentName() );
-            log.info( "Saving attachment contents to " + newfile.getAbsolutePath() );
-            FileUtil.copyContents( data, out );
+		int latestVersion = findLatestVersion(wikiPage, att);
+		att.setVersion(latestVersion + 1);
+		File newfile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, attDir);
+		att.setPlace(newfile.getCanonicalPath());
 
-            final Properties props = getPageProperties( att );
+		try (final OutputStream out = new FileOutputStream(newfile)) {
+			log.info("Uploading attachment " + att.getName() + " to page " + wikiPage.getName());
+			log.info("Saving attachment contents to " + newfile.getAbsolutePath());
+			FileUtil.copyContents(data, out);
 
-            String author = att.getAuthor();
-            if( author == null ) {
-                author = "unknown"; // FIXME: Should be localized, but cannot due to missing WikiContext
-            }
-            props.setProperty( versionNumber + ".author", author );
+			PageManager pm = ServicesRefs.getPageManager();
+			result = pm.addAttachment(wikiPage, att);
+		} catch (final Exception ex) {
+			log.error("Could not save attachment data: ", ex);
+			throw new IOException(ex);
+		}
 
-            final String changeNote = att.getAttribute( WikiPage.CHANGENOTE );
-            if( changeNote != null ) {
-                props.setProperty( versionNumber + ".changenote", changeNote );
-            }
-            
-            putPageProperties( att, props );
-        } catch( final IOException e ) {
-            log.error( "Could not save attachment data: ", e );
-            throw (IOException) e.fillInStackTrace();
-        }
-        */
-    }
+		return result;
+	}
 
     /**
      *  {@inheritDoc}
@@ -317,7 +293,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     private File findFile( final File dir, final PageAttachment att ) throws FileNotFoundException, ProviderException {
         int version = att.getVersion();
         if( version == WikiProvider.LATEST_VERSION ) {
-            version = findLatestVersion( att );
+            version = findLatestVersion( null, att );
         }
 
         final String ext = getFileExtension( att.getName() );
@@ -358,7 +334,28 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
     @Override
     public List< PageAttachment > listAttachments( final WikiPage page ) throws ProviderException {
-        final List< PageAttachment > result = new ArrayList<>();
+		List<PageAttachment> result = new ArrayList<>();
+		
+		//TODO: inefficient loops.
+		Set<String> attNames = new HashSet<>();
+		for (PageAttachment attItem : page.getAttachments()) {
+			attNames.add(attItem.getName());
+		}
+		for (String attName : attNames) {
+			int version = 0;
+			PageAttachment lastAtt = null;
+			for (PageAttachment attachment : page.getAttachments()) {
+				if (attName.equals(attachment.getName()) && (version < attachment.getVersion())) {
+					version = attachment.getVersion();
+					lastAtt = attachment;
+				}
+			}
+			if (lastAtt != null) {
+				result.add(lastAtt);
+			}
+		}
+
+		/*:FVK:
         final File dir = findPageDir( page.getName() );
         final String[] attachments = dir.list();
         if( attachments != null ) {
@@ -392,6 +389,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
                 }
             }
         }
+        */
 
         return result;
     }
@@ -409,13 +407,17 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
     // FIXME: Very unoptimized.
     @Override
+    @Deprecated
     public List< PageAttachment > listAllChanged( final Date timestamp ) throws ProviderException {
+    	/*:FVK:
         final File attDir = new File( m_storageDir );
         if( !attDir.exists() ) {
             throw new ProviderException( "Specified attachment directory " + m_storageDir + " does not exist!" );
         }
+        */
 
         final ArrayList< PageAttachment > list = new ArrayList<>();
+        /*:FVK:
         final String[] pagesWithAttachments = attDir.list( new AttachmentFilter() );
 
         if( pagesWithAttachments != null ) {
@@ -431,6 +433,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
                 }
             }
         }
+        */
 
         //:FVK: list.sort( new PageTimeComparator() );
 
@@ -452,7 +455,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
         }
         
         if( version == WikiProvider.LATEST_VERSION ) {
-            version = findLatestVersion(att);
+            version = findLatestVersion(null, att);
         }
 
         att.setVersion( version );
@@ -496,7 +499,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     public List< PageAttachment > getVersionHistory( final PageAttachment att ) {
         final ArrayList< PageAttachment > list = new ArrayList<>();
         try {
-            final int latest = findLatestVersion( att );
+            final int latest = findLatestVersion( null, att );
             for( int i = latest; i >= 1; i-- ) {
             	/*:FVK:
                 final PageAttachment a = getAttachmentInfo( Wiki.contents().page( m_engine, att.getParentName() ), att.getFileName(), i );
