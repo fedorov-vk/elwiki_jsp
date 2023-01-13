@@ -25,7 +25,7 @@ public class JspServlet extends JspServletWrapper {
 
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + JspServlet.class.getSimpleName());
+		log.debug("«web» start " + JspServlet.class.getSimpleName());
 	}
 
 	@Override

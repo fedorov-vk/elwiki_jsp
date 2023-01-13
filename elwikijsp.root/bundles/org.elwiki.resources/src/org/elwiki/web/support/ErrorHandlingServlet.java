@@ -44,7 +44,7 @@ public class ErrorHandlingServlet extends HttpServlet {
 	
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + ErrorHandlingServlet.class.getSimpleName());
+		log.debug("«web» start " + ErrorHandlingServlet.class.getSimpleName());
 	}
 
 	@Override

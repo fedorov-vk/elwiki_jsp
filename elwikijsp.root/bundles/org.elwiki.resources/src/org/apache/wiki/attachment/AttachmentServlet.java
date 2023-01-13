@@ -96,7 +96,7 @@ import java.util.Properties;
   	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
   	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
   scope=ServiceScope.PROTOTYPE,
-  name="partAttachmentServlet")
+  name="web.AttachmentServlet")
 //@formatter:on
 public class AttachmentServlet extends HttpServlet {
 
@@ -118,8 +118,6 @@ public class AttachmentServlet extends HttpServlet {
     /** The maximum size that an attachment can be. */
     private int   m_maxSize = Integer.MAX_VALUE;
     
-	private ServletConfig config;
-    
     /** List of attachment types which are allowed */
     private String[] m_allowedPatterns;
 
@@ -133,18 +131,7 @@ public class AttachmentServlet extends HttpServlet {
 
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + AttachmentServlet.class.getSimpleName());
-	}
-
-    public AttachmentServlet() {
-		super();
-		BundleContext context = ResourcesActivator.getContext();
-		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
-		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
-		if (m_engine == null) {
-			//TODO: обработать аварию - нет сервиса Engine.
-			throw new NullPointerException("missed Engine service.");
-		}
+		log.debug("«web» start " + AttachmentServlet.class.getSimpleName());
 	}
 
     /**
@@ -153,9 +140,6 @@ public class AttachmentServlet extends HttpServlet {
     @Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-
-        String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
-        final String tmpDir = workDir + File.separator + "attach-tmp";
         final IPreferenceStore props = m_engine.getWikiPreferences();
         final String allowed = TextUtil.getStringProperty( props, AttachmentManager.PROP_ALLOWEDEXTENSIONS, null );
         m_maxSize = TextUtil.getIntegerProperty( props, AttachmentManager.PROP_MAXSIZE, Integer.MAX_VALUE );
@@ -172,15 +156,6 @@ public class AttachmentServlet extends HttpServlet {
         } else {
             m_forbiddenPatterns = new String[0];
         }
-
-        final File f = new File( tmpDir );
-        if( !f.exists() ) {
-            f.mkdirs();
-        } else if( !f.isDirectory() ) {
-            log.fatal( "A file already exists where the temporary dir is supposed to be: " + tmpDir + ".  Please remove it." );
-        }
-
-        log.debug( "UploadServlet initialized. Using " + tmpDir + " for temporary storage." );
     }
 
 	private boolean isTypeAllowed( String name )

@@ -108,7 +108,7 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 	}
 
 	public void registerServlet(final String alias, final WikiAjaxServlet servlet, final Permission perm) {
-		log.info("WikiAjaxDispatcherServlet registering:\n " + alias + " = " + servlet + "\n perm = " + perm);
+		log.info("WikiAjaxDispatcher registering:\n " + alias + " = " + servlet + "\n perm = " + perm);
 		ajaxServlets.put(alias, new AjaxServletContainer(alias, servlet, perm));
 	}
 

@@ -122,17 +122,17 @@
     <tr>
 
       <%-- see styles/fontjspwiki/icon.less : icon-file-<....>-o  --%>
-      <c:set var="parts" value="${fn:split(att.fileName, '.')}" />
+      <c:set var="parts" value="${fn:split(att.name, '.')}" />
       <c:set var="type" value="${ fn:length(parts)>1 ? fn:escapeXml(parts[fn:length(parts)-1]) : ''}" />
 
-      <td class="attach-name" title="${att.fileName}">
-        <wiki:LinkTo><c:out value="${att.fileName}" /></wiki:LinkTo>
+      <td class="attach-name" title="${att.name}">
+        <wiki:LinkTo><c:out value="${att.name}" /></wiki:LinkTo>
       </td>
 
       <td><wiki:PageVersion /></td>
 
-      <td class="nowrap" data-sortvalue="${att.lastModified.time}">
-        <fmt:formatDate value="${att.lastModified}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
+      <td class="nowrap" data-sortvalue="${att.lastModify.time}">
+        <fmt:formatDate value="${att.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
       </td>
 
       <td class="nowrap" title="${att.size} bytes" data-sortvalue="${att.size}">

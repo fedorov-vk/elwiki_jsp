@@ -36,15 +36,13 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -62,7 +60,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
   	HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/ajax/*",
   },
   scope=ServiceScope.PROTOTYPE,
-  name="WikiAjaxDispatcherServlet")
+  name="web.WikiAjaxDispatcherServlet")
 //@formatter:on
 public class WikiAjaxDispatcherServlet extends HttpServlet {
 
@@ -71,10 +69,13 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 
 	private String PATH_AJAX = "/ajax/";
 
-	//    @Reference
-	//    protected Engine m_engine;
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@Activate
+	protected void startup() {
+		log.debug("«web» start " + WikiAjaxDispatcherServlet.class.getSimpleName());
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -87,7 +88,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 		super.init(config);
 		IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
 		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax") + "/";
-		log.debug("«initialized» " + WikiAjaxDispatcherServlet.class.getSimpleName() + " (AJAX path: " + PATH_AJAX + ")");
+		log.debug("«web» init  " + WikiAjaxDispatcherServlet.class.getSimpleName() + " (AJAX path: " + PATH_AJAX + ")");
 	}
 
 	/**

@@ -191,28 +191,18 @@
       <li class="divider"></li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context="<%=ContextEnum.PAGE_INFO.getRequestContext()%>">
-          <c:set var="disabledBtn" value="disabled" />
-        </wiki:CheckRequestContext>
+        <wiki:CheckRequestContext context="<%=Context.INFO%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
         <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=ContextEnum.PAGE_INFO.getRequestContext()%>"
-                     pageId="${pageId}"
-                   tabindex="0">
+                    context="<%=Context.INFO%>" pageId="${pageId}" tabindex="0">
           <fmt:message key="info.moreinfo"/>
         </wiki:Link>
       </li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context="<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>">
-          <c:set var="disabledBtn" value="disabled" />
-        </wiki:CheckRequestContext>
-        <wiki:Permission permission='!upload'>
-          <c:set var="disabledBtn" value="disabled" />
-        </wiki:Permission>
+        <wiki:CheckRequestContext context="<%=Context.UPLOAD%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
+        <wiki:Permission permission='!upload'><c:set var="disabledBtn" value="disabled" /></wiki:Permission>
         <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>"
-                     pageId="${pageId}"
-                   tabindex="0">
+                    context="<%=Context.UPLOAD%>" pageId="${pageId}" tabindex="0">
           <span class="icon-paper-clip"></span>
           <fmt:message key='edit.tab.attachments'/>
           <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>

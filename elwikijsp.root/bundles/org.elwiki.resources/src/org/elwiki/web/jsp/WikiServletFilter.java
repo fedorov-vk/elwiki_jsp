@@ -84,7 +84,7 @@ public class WikiServletFilter implements Filter {
 
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + WikiServletFilter.class.getSimpleName());
+		log.debug("«web» start " + WikiServletFilter.class.getSimpleName());
 	}
     
     public IWikiConfiguration getWikiConfiguration() {
@@ -132,11 +132,11 @@ public class WikiServletFilter implements Filter {
     */
     @Override
     public void doFilter( final ServletRequest request, final ServletResponse response, final FilterChain chain ) throws IOException, ServletException {
-    	String uri = "unknown";
+    	String uri = "«unknown URL»";
     	if(request instanceof HttpServletRequest) {
     		uri = ((HttpServletRequest)request).getRequestURI();
     	}
-		log.debug("doFilter()\n requested URI: " + uri);    	
+		log.debug("◄►doFilter◄► " + uri);    	
 
         //  Sanity check; it might be true in some conditions, but we need to know where.
         if( chain == null ) {

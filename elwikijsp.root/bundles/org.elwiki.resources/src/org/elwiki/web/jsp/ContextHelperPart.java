@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Assert;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -22,7 +21,7 @@ import org.osgi.service.http.context.ServletContextHelper;
 	scope = ServiceScope.BUNDLE, property = {
 		"osgi.http.whiteboard.context.name=eclipse",
 		"osgi.http.whiteboard.context.path=/"},
-	name = "partContextHelper")
+	name = "web.ContextHelper")
 //@formatter:on
 public class ContextHelperPart extends ServletContextHelper implements HttpContext {
 

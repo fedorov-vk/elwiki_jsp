@@ -104,7 +104,7 @@ public class WikiJSPFilter extends WikiServletFilter {
 
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + WikiJSPFilter.class.getSimpleName());
+		log.debug("«web» start " + WikiJSPFilter.class.getSimpleName());
 	}
 
     /** {@inheritDoc} */

@@ -63,7 +63,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 	@Activate
 	protected void startup() {
-		log.debug("«startup» " + JspServletFilter.class.getSimpleName());
+		log.debug("«web» start " + JspServletFilter.class.getSimpleName());
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			boolean isAjaxPage = false;
 
 			String uri = httpRequest.getRequestURI();
-			log.debug("doFilter()\n requested URI: " + httpRequest.getRequestURI());
+			log.debug("◄►doFilter◄► " + uri);
 			if (uri.startsWith("/cmd.")) {
 				// catch URI "/cmd.*"
 				log.debug("Request URI starts with '/cmd.'");
