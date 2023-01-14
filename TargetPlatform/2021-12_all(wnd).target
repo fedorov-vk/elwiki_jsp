@@ -116,5 +116,11 @@
 		<plugin id="org.osgi.util.xml"/>
 		<plugin id="org.slf4j.api"/>
 		<plugin id="oro"/>
+		<plugin id="xmlrpc.source"/>
+		<plugin id="xmlrpc"/>
+		<plugin id="net.sourceforge.sandler"/>
+		<plugin id="net.sourceforge.sandler.source"/>
+		<plugin id="org.freshcookies.security.source"/>
+		<plugin id="org.freshcookies.security"/>
 	</includeBundles>
 </target>

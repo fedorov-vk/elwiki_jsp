@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="xmlrpc-2.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="freshcookies-security-0.60.jar"/>
-	<classpathentry exported="true" kind="lib" path="sandler-0.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>

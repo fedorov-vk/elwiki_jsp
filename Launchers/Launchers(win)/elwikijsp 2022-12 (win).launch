@@ -37,6 +37,7 @@
         <setEntry value="lpg.runtime.java@default:default"/>
         <setEntry value="net.sf.ehcache@default:default"/>
         <setEntry value="net.sourceforge.akismet-java@default:default"/>
+        <setEntry value="net.sourceforge.sandler@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.commons-fileupload@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
@@ -109,6 +110,7 @@
         <setEntry value="org.eclipse.osgi.util@default:default"/>
         <setEntry value="org.eclipse.osgi@-1:true"/>
         <setEntry value="org.eclipse.swt@default:default"/>
+        <setEntry value="org.freshcookies.security@default:default"/>
         <setEntry value="org.h2@default:default"/>
         <setEntry value="org.jdom.2@default:default"/>
         <setEntry value="org.jvnet.hudson.org.suigeneris.jrcs.diff@default:default"/>
@@ -129,6 +131,7 @@
         <setEntry value="org.osgi.util.xml@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
         <setEntry value="oro@default:default"/>
+        <setEntry value="xmlrpc@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="org.elwiki.ajax-dispatcher@default:default"/>
@@ -159,7 +162,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1670912798352"/>
+    <stringAttribute key="timestamp" value="1673660373237"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>

@@ -112,7 +112,6 @@ import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.WikiPage;
-import org.freshcookies.security.policy.LocalPolicy;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -202,13 +201,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
-	/** Cache for storing ProtectionDomains used to evaluate the local policy. */
-	@Deprecated
-	private Map<Principal, ProtectionDomain> m_cachedPds = new WeakHashMap<Principal, ProtectionDomain>();
-	
-	@Deprecated
-	private LocalPolicy m_localPolicy = null;
-
 	private Engine m_engine;
 
 	
@@ -242,81 +234,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 */
 	@Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
-		BundleContext bc = componentContext.getBundleContext();
-
-		/* TODO: place principals into file *.properties
-		//
-		// If preference data of InstantScope is empty - initialize it from resource. 
-		//
-		String[] prefsKeys;
-		try {
-			prefsKeys = this.preferences.keys();
-		} catch (BackingStoreException | IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			prefsKeys = new String[0];
-		}
-		if (prefsKeys.length == 0) {
-		}
-		*/
-
-		// Initialize security policy, from definitions in the resource file.
-		try {
-			String policyFileName = DEFAULT_POLICY;
-			URL policyURL = findConfigFile(policyFileName, bc);
-			if (policyURL != null) {
-				File policyFile = new File(policyURL.toURI().getPath());
-				log.debug("We found security policy URL:\n\t" + policyURL + "\n and transformed it to file name\n\t"
-						+ policyFile.getAbsolutePath());
-				String contentEncoding = this.wikiConfiguration.getContentEncoding();
-				this.m_localPolicy = new LocalPolicy(policyFile, contentEncoding);
-				this.m_localPolicy.refresh();
-				log.info("Initialized default security policy, from: " + policyFile.getAbsolutePath());
-			} else {
-				String msg = "ElWiki was unable to initialize the default security policy (jspwiki.policy) file.\nInternal error.";
-				WikiSecurityException wse = new WikiSecurityException(msg);
-				log.fatal(msg, wse);
-				throw wse;
-			}
-		} catch (Exception e) {
-			log.error("Could not initialize local security policy: " + e.getMessage());
-			throw new WikiException("Could not initialize local security policy: " + e.getMessage(), e);
-		}
-
-		/*
-		{ // WORKAROUND - :FVK: вывод считанных принциаплов, определителей доступа для них.
-			Class<? extends LocalPolicy> cl = this.m_localPolicy.getClass();
-			Object v = null;
-			try {
-				Field field = cl.getDeclaredField("pds");
-				field.setAccessible(true);
-				v = field.get(this.m_localPolicy);
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (v != null) {
-				Set<LocalProtectionDomain> pd = (Set<LocalProtectionDomain>) v;
-				for (LocalProtectionDomain lpd : pd) {
-					for (Principal principal : lpd.getPrincipals()) {
-						System.out.printf("%s \"%s\"\n", principal.getClass().getCanonicalName(), principal.getName());
-					}
-					PermissionCollection pc = lpd.getPermissions();
-					// System.out.println(pc);
-					Enumeration<Permission> permissions = pc.elements();
-					while (permissions.hasMoreElements()) {
-						Permission permission = permissions.nextElement();
-						if (permission instanceof UnresolvedPermission) {
-							UnresolvedPermission up = (UnresolvedPermission) permission;
-							System.out.printf("    %s %s %s\n", up.getUnresolvedType(), up.getUnresolvedName(),
-									up.getUnresolvedActions());
-						}
-					}
-				}
-			}
-		}
-		*/
-		
 		try {
 			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
 			if (engine instanceof Engine) {

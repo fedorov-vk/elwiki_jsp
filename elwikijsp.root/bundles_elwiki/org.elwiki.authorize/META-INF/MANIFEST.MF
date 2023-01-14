@@ -62,5 +62,4 @@ Service-Component: OSGI-INF/elwiki.DefaultAclManager.xml,
  OSGI-INF/elwiki.DefaultUserManager.xml,
  OSGI-INF/elwiki.GroupManager.xml,
  OSGI-INF/elwiki.PermissionManager.xml
-Bundle-ClassPath: freshcookies-security-0.60.jar,
- .
+Bundle-ClassPath: .

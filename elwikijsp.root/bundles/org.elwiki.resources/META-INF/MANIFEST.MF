@@ -10,10 +10,7 @@ Automatic-Module-Name: org.elwiki.resources
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  taglibs-standard-impl-1.2.5.fixed.jar,
- taglibs-standard-spec-1.2.5.jar,
- sandler-0.5.jar,
- freshcookies-security-0.60.jar,
- xmlrpc-2.0.1.jar
+ taglibs-standard-spec-1.2.5.jar
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.equinox.http.registry;bundle-version="1.1.700",
  org.eclipse.equinox.http.servlet;bundle-version="1.7.400",
@@ -50,6 +47,11 @@ Import-Package: org.apache.commons.io,
  org.elwiki.data.authorize,
  org.elwiki.permissions,
  org.elwiki_data,
+ org.freshcookies.security.policy,
+ org.intabulas.sandler,
+ org.intabulas.sandler.elements,
+ org.intabulas.sandler.elements.impl,
+ org.intabulas.sandler.exceptions,
  org.osgi.framework;version="1.3.0"
 Service-Component: OSGI-INF/elwiki.DefaultAdminBeanManager.xml,
  OSGI-INF/elwiki.DefaultProgressManager.xml,

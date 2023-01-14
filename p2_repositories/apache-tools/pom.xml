@@ -33,6 +33,7 @@
 							<artifacts>
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
+								<artifact><id>xmlrpc:xmlrpc:2.0.1</id><source>true</source></artifact>
 								<artifact>
 									<id>org.apache.felix:org.apache.felix.webconsole:4.3.16</id>
 									<source>false</source>
