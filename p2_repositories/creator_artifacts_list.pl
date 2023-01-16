@@ -3,6 +3,8 @@
 # Creates a list of artifact specifications for creating a p2 repository.
 # This list for the file pom.xml in subdirectories.
 #
+# @author V.Fedorov
+#
 use 5.30.0; use warnings;
 
 while(<DATA>) {
@@ -23,17 +25,14 @@ net.sourceforge:akismet-java:1.02
 net.sourceforge:sandler:0.5
 org.jvnet.hudson:org.suigeneris.jrcs.diff:0.4.2
 org.freshcookies:freshcookies-security:0.60		- not required?
+org.apache.lucene:lucene-analysis-common:9.4.2
+org.apache.lucene:lucene-queries:9.4.2
+org.apache.lucene.lucene-core:9.4.2
+org.apache.lucene:lucene-highlighter:9.4.2
+org.apache.lucene:lucene-queryparser:9.4.2
+org.apache.lucene:lucene-memory:9.4.2
+org.apache.lucene:lucene-sandbox:9.4.2
 EOT
-#org.apache.lucene:lucene-highlighter:8.5.1
-#org.apache.lucene:lucene-queryparser:8.5.1
-#org.apache.lucene:lucene-analyzers-common:8.5.1
-#org.apache.lucene.analyzers-common_8.5.1
-#org.apache.lucene.core_8.5.1
-#org.apache.lucene.highlighter_8.5.1
-#org.apache.lucene.memory_8.5.1
-#org.apache.lucene.queries_8.5.1
-#org.apache.lucene.queryparser_8.5.1
-#org.apache.lucene.sandbox_8.5.1
 
 my $apache_tools = << "TEXT";
 org.apache.felix:org.apache.felix.webconsole:4.3.16

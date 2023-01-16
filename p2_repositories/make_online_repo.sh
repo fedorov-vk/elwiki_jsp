@@ -1,2 +1,2 @@
 #!/bin/sh
-mvn jetty:run
+mvn jetty:run $* | tee Build.log

@@ -49,6 +49,12 @@
         <setEntry value="org.apache.felix.scr@1:true"/>
         <setEntry value="org.apache.jasper.glassfish@default:default"/>
         <setEntry value="org.apache.log4j@default:default"/>
+        <setEntry value="org.apache.lucene.analysis-common@default:default"/>
+        <setEntry value="org.apache.lucene.core@default:default"/>
+        <setEntry value="org.apache.lucene.highlighter@default:default"/>
+        <setEntry value="org.apache.lucene.memory@default:default"/>
+        <setEntry value="org.apache.lucene.queries@default:default"/>
+        <setEntry value="org.apache.lucene.queryparser@default:default"/>
         <setEntry value="org.apache.xalan@default:default"/>
         <setEntry value="org.apache.xerces@default:default"/>
         <setEntry value="org.apache.xml.resolver@default:default"/>
@@ -162,7 +168,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1673660373237"/>
+    <stringAttribute key="timestamp" value="1673899817192"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>

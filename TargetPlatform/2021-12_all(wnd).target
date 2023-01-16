@@ -122,5 +122,19 @@
 		<plugin id="net.sourceforge.sandler.source"/>
 		<plugin id="org.freshcookies.security.source"/>
 		<plugin id="org.freshcookies.security"/>
+		<plugin id="org.apache.lucene.core" version="9.4.2"/>
+		<plugin id="org.apache.lucene.core.source" version="9.4.2"/>
+		<plugin id="org.apache.lucene.highlighter"/>
+		<plugin id="org.apache.lucene.highlighter.source"/>
+		<plugin id="org.apache.lucene.queries"/>
+		<plugin id="org.apache.lucene.queries.source"/>
+		<plugin id="org.apache.lucene.queryparser" version="9.4.2"/>
+		<plugin id="org.apache.lucene.queryparser.source"/>
+		<plugin id="org.apache.lucene.memory"/>
+		<plugin id="org.apache.lucene.memory.source"/>
+		<plugin id="org.apache.lucene.sandbox"/>
+		<plugin id="org.apache.lucene.sandbox.source"/>
+		<plugin id="org.apache.lucene.analysis-common"/>
+		<plugin id="org.apache.lucene.analysis-common.source"/>
 	</includeBundles>
 </target>

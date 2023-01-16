@@ -11,27 +11,28 @@ Import-Package: java.io;resolution:=optional,
  java.lang.reflect;resolution:=optional,
  java.util;resolution:=optional,
  java.util.concurrent;resolution:=optional,
+ org.apache.lucene.analysis,
+ org.apache.lucene.analysis.classic,
+ org.apache.lucene.analysis.standard,
+ org.apache.lucene.document,
+ org.apache.lucene.index,
+ org.apache.lucene.queryparser.classic,
+ org.apache.lucene.search,
+ org.apache.lucene.search.highlight,
+ org.apache.lucene.store,
  org.eclipse.core.runtime;version="3.7.0",
  org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.elwiki.permissions,
- org.elwiki_data,
- org.osgi.framework;version="1.9.0",
- org.osgi.service.component;version="1.4.0",
- org.osgi.service.component.annotations;version="1.2.0"
-Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
+ org.elwiki_data
+Require-Bundle: org.eclipse.osgi.services;bundle-version="3.11.100",
+ org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",
  jakarta.servlet-api;bundle-version="4.0.0",
- org.eclipse.jface;bundle-version="3.24.0",
  org.elwiki.api,
- org.elwiki.util
+ org.elwiki.util,
+ org.apache.lucene.memory;bundle-version="9.4.2",
+ org.apache.lucene.queries;bundle-version="9.4.2"
 Export-Package: org.apache.wiki.search
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: jars/lucene-analyzers-common-8.5.1.jar,
- jars/lucene-core-8.5.1.jar,
- jars/lucene-highlighter-8.5.1.jar,
- jars/lucene-memory-8.5.1.jar,
- jars/lucene-queries-8.5.1.jar,
- jars/lucene-queryparser-8.5.1.jar,
- jars/lucene-sandbox-8.5.1.jar,
- .
+Bundle-ClassPath: .

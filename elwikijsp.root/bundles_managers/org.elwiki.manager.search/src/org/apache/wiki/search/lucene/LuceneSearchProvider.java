@@ -22,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.ClassicAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.classic.ClassicAnalyzer;
+//import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -47,7 +47,7 @@ import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLEncoder;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.Wiki;
@@ -110,7 +110,10 @@ public class LuceneSearchProvider implements SearchProvider {
     private static final String PROP_LUCENE_INDEXDELAY   = "jspwiki.lucene.indexdelay";
     private static final String PROP_LUCENE_INITIALDELAY = "jspwiki.lucene.initialdelay";
 
-    private String m_analyzerClass = "org.apache.lucene.analysis.standard.ClassicAnalyzer";
+    private String m_analyzerClass =
+    		"org.apache.lucene.analysis.classic.ClassicAnalyzer";
+    		//"org.apache.lucene.analysis.standard.StandardAnalyzer";
+    		//"org.apache.lucene.analysis.standard.ClassicAnalyzer"; // Lucene v8.11.2
 
     private static final String LUCENE_DIR = "lucene";
 
@@ -214,7 +217,7 @@ public class LuceneSearchProvider implements SearchProvider {
 
                 log.info("Starting Lucene reindexing, this can take a couple of minutes...");
 
-                final Directory luceneDir = new SimpleFSDirectory( dir.toPath() );
+                final Directory luceneDir = new NIOFSDirectory( dir.toPath() );
                 try( final IndexWriter writer = getIndexWriter( luceneDir ) ) {
                     final Collection< WikiPage > allPages = ServicesRefs.getPageManager().getAllPages();
                     for( final WikiPage page : allPages ) {
@@ -322,7 +325,7 @@ public class LuceneSearchProvider implements SearchProvider {
         pageRemoved( page );
 
         // Now add back the new version.
-        try( final Directory luceneDir = new SimpleFSDirectory( new File( m_luceneDirectory ).toPath() );
+        try( final Directory luceneDir = new NIOFSDirectory( new File( m_luceneDirectory ).toPath() );
              final IndexWriter writer = getIndexWriter( luceneDir ) ) {
             luceneIndexPage( page, text, writer );
         } catch( final IOException e ) {
@@ -338,9 +341,10 @@ public class LuceneSearchProvider implements SearchProvider {
 
     private Analyzer getLuceneAnalyzer() throws ProviderException {
     	Analyzer analyser;
-    	analyser = new ClassicAnalyzer();
+    	analyser =
+    			new ClassicAnalyzer();
     			// new StandardAnalyzer();
-    	
+
     	/*{//:FVK: workaround - old code.
         try {
             final Class< ? > clazz = ClassUtil.findClass( "", m_analyzerClass );
@@ -427,7 +431,7 @@ public class LuceneSearchProvider implements SearchProvider {
      */
     @Override
     public void pageRemoved( final WikiPage page ) {
-        try( final Directory luceneDir = new SimpleFSDirectory( new File( m_luceneDirectory ).toPath() );
+        try( final Directory luceneDir = new NIOFSDirectory( new File( m_luceneDirectory ).toPath() );
              final IndexWriter writer = getIndexWriter( luceneDir ) ) {
             final Query query = new TermQuery( new Term( LUCENE_ID, page.getName() ) );
             writer.deleteDocuments( query );
@@ -496,7 +500,7 @@ public class LuceneSearchProvider implements SearchProvider {
         ArrayList<SearchResult> list = null;
         Highlighter highlighter = null;
 
-        try( final Directory luceneDir = new SimpleFSDirectory( new File( m_luceneDirectory ).toPath() );
+        try( final Directory luceneDir = new NIOFSDirectory( new File( m_luceneDirectory ).toPath() );
              final IndexReader reader = DirectoryReader.open( luceneDir ) ) {
             final String[] queryfields = { LUCENE_PAGE_CONTENTS, LUCENE_PAGE_NAME, LUCENE_AUTHOR, LUCENE_ATTACHMENTS, LUCENE_PAGE_KEYWORDS };
             final QueryParser qp = new MultiFieldQueryParser( queryfields, getLuceneAnalyzer() );
