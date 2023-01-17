@@ -22,14 +22,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/alias"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/redirect"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/viewCount"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/pagecontents"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/pageContents"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attachments"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/wiki"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/children"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/parent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/oldParents"/>
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/pageReferences"/>
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/totalAttachment"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/lastVersion"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/acl"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/webLog"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attributes"/>
@@ -37,11 +37,11 @@
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
       </genOperations>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/clone" body="Object o = new Object(); // :FVK:&#xA;return o;&#xA;"/>
-      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastModified"
-          body="EList&lt;PageContent> pageContent = this.getPagecontents();&#xA;return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :&#xA;&#x9;&#x9;pageContent.get(pageContent.size()-1).getLastModify();"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastModifiedDate"
+          body="EList&lt;PageContent> pageContent = this.getPageContents();&#xA;return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :&#xA;&#x9;&#x9;pageContent.get(pageContent.size()-1).getLastModifiedDate();"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAuthor" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getAuthor() : &quot;&quot;;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastContent"
-          body="EList&lt;PageContent> pageContents = getPagecontents();&#xA;return (pageContents.isEmpty())? null :&#xA;&#x9;&#x9;pageContents.get(pageContents.size() - 1);"/>
+          body="PageContent result = null;&#xA;short version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;short contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getVersion" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAttribute" body="return getAttributes().get(name);">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/getAttribute/name"/>
@@ -50,15 +50,13 @@
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/name"/>
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/setAttribute/value"/>
       </genOperations>
-      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getNumId" body="String pageId = this.getId();&#xA;long pageNumId;&#xA;try {&#xA;&#x9;pageNumId = Integer.parseInt(pageId);&#xA;} catch (NumberFormatException e) {&#xA;&#x9;pageNumId = 0;&#xA;}&#xA;return pageNumId;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/isInternalPage"
-          body="long pageNumId = this.getNumId();&#xA;return (pageNumId > 0 &amp;&amp; pageNumId &lt; 1000)? true : false;"/>
+          body="String pageId = this.getId();&#xA;return (pageId.startsWith(&quot;w&quot;))? true : false;"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/mainPageId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/nextPageId"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/nextAttachId"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PageContent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageContent/content"/>
@@ -66,12 +64,17 @@
       <genOperations ecoreOperation="elwiki_data.ecore#//PageContent/getLength" body="return getContent().length();"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PageAttachment">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/cacheable"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageAttachment/wikipage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/place"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/size"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageAttachment/attachContents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAttachment/lastVersion"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageAttachment/attachmentContent"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//PageAttachment/forLastContent"
+          body="AttachmentContent result = null;&#xA;short version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;short contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//PageAttachment/forVersionContent"
+          body="AttachmentContent result = null;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;if (desiredVersion == attContent.getVersion()) {&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;&#x9;break;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;">
+        <genParameters ecoreParameter="elwiki_data.ecore#//PageAttachment/forVersionContent/desiredVersion"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="elwiki_data.ecore#//Object"/>
     <genClasses image="false" ecoreClass="elwiki_data.ecore#//Comparable">
@@ -84,7 +87,7 @@
     </genClasses>
     <genClasses image="false" ecoreClass="elwiki_data.ecore#//IHistoryInfo">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/version"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/lastModify"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/lastModifiedDate"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/author"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//IHistoryInfo/changeNote"/>
     </genClasses>
@@ -117,6 +120,11 @@
     <genClasses ecoreClass="elwiki_data.ecore#//StringToObjectMap">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/key"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="elwiki_data.ecore#//AttachmentContent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/place"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/size"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/cacheable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

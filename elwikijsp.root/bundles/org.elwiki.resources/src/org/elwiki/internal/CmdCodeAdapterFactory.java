@@ -35,7 +35,8 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.WIKI_PREFS, new PrefsCmdCode()),
 			Map.entry(ContextEnum.WIKI_FIND, new FindCmdCode()),
 			Map.entry(ContextEnum.WIKI_SCOPE, new ScopeCmdCode()),
-			Map.entry(ContextEnum.PAGE_COMMENT, new CommentCmdCode())
+			Map.entry(ContextEnum.PAGE_COMMENT, new CommentCmdCode()),
+			Map.entry(ContextEnum.WIKI_PERSIST_CONTENT, new PersistContentCmdCode())
 	); //@formatter:on
 
 	@Override

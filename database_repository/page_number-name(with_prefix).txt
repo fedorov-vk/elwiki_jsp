@@ -1,0 +1,47 @@
+Reserved page numbers.
+(wXXXXX - reserved pages)
+(XXXXXX - original pages)
+-----------------------------------------------
+page    page
+number  name
+------- ---------------------------------------
+w1      SystemInfo
+w2      HomeMenu
+w3      MoreMenu
+w4      LeftMenu
+w5      LeftMenuFooter
+w9      InstallationTips
+w10     RecentChanges
+w11     FullRecentChanges
+w12     UnusedPages
+w13     UndefinedPages
+w14     PageIndex
+w20     ApprovalRequiredForPageChanges
+w21     ApprovalRequiredForUserProfiles
+w22     RejectedMessage
+w33     PageAlias
+w40     CopyrightNotice
+w41     TitleBox
+w100    CSSBackgroundGradients
+w101    CSSBackgroundPatterns
+w102    CSSInstagramFilters
+w103    CSSPrettifyThemePrism
+w104    CSSPrettifyThemeTomorrowNightBlue
+w105    CSSRibbon
+w106    CSSStripedText
+w107    CSSThemeDark
+w108    CSSThemeCleanBlue
+1000    Main
+1002    EditPageHelp
+1003    TextFormattingRules
+1004    SearchPageHelp
+1005    EditFindAndReplaceHelp
+1006    LoginHelp
+1007    About
+1008    Community
+1009    OneMinuteWiki
+1010    WikiEtiquette
+1011    WikiName
+1012    WikiWiki
+1013    SandBox
+-----------------------------------------------

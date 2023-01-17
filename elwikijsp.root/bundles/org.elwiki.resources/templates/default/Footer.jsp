@@ -24,7 +24,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <div class="footer">
-  <wiki:InsertPage pageId="40"/>
+  <wiki:InsertPage pageId="w40"/>
 
   <div class="wiki-version"><%=Release.APPNAME%> v<%=Release.getVersionString()%>
     <wiki:RSSImageLink title="<fmt:message key='fav.aggregatewiki.title'/>" mode="full"/>

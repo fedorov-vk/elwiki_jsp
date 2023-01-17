@@ -123,7 +123,10 @@ public interface Context extends Cloneable, Command {
 
     /** User wants to view or administer workflows. */
     public static final String WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
-	
+
+    /** Persisting wiki content. */
+    public static final String PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();
+
     /**
      *  Is used to choose between the different date formats that JSPWiki supports.
      *  <ul>

@@ -63,7 +63,7 @@ public class PageDateTag extends BaseWikiTag {
 	public final int doWikiStartTag() throws IOException {
 		final WikiPage page = m_wikiContext.getPage();
 		if (page != null) {
-			final Date d = page.getLastModified();
+			final Date d = page.getLastModifiedDate();
 			//  Date may be null if the page does not exist.
 			if (d != null) {
 				final SimpleDateFormat fmt;

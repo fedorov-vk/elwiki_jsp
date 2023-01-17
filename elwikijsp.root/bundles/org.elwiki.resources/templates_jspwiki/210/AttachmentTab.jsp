@@ -127,7 +127,7 @@
       <td style="text-align:center;">
         <a href="<wiki:PageInfoLink format='url' />" title="<fmt:message key='attach.moreinfo.title'/>"><wiki:PageVersion /></a>
       </td>
-	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%= att.getLastModified().getTime() %>">
+	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%=att.getLastModifiedDate().getTime()%>">
 	  <fmt:formatDate value="<%= att.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
 	  </td>
       <td><wiki:Author /></td>

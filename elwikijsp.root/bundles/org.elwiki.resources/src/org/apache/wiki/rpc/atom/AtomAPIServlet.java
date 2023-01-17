@@ -216,8 +216,8 @@ public class AtomAPIServlet extends HttpServlet {
         }
 
         entry.setTitle( title );
-        entry.setCreated( firstVersion.getLastModified() );
-        entry.setModified( page.getLastModified() );
+        entry.setCreated( firstVersion.getLastModifiedDate() );
+        entry.setModified( page.getLastModifiedDate() );
         entry.setAuthor( SyndicationFactory.createPerson( page.getAuthor(), null, null ) );
         entry.addContent( SyndicationFactory.createEscapedContent(pageText) );
 

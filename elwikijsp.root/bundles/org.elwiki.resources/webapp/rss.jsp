@@ -46,7 +46,7 @@
 %>
 
 <%
-	if (m_cacheManager.cacheExists(cacheName)) {
+if (m_cacheManager.cacheExists(cacheName)) {
         m_rssCache = m_cacheManager.getCache(cacheName);
     } else {
         log.info("cache with name " + cacheName +  " not found in ehcache.xml, creating it with defaults.");
@@ -114,8 +114,8 @@
     for( Iterator< WikiPage > i = changed.iterator(); i.hasNext(); ) {
         WikiPage p = i.next();
 
-        if( !HttpUtil.checkFor304( request, p.getName(), p.getLastModified() ) ) hasChanged = true;
-        if( p.getLastModified().after( latest ) ) latest = p.getLastModified();
+        if( !HttpUtil.checkFor304( request, p.getName(), p.getLastModifiedDate() ) ) hasChanged = true;
+        if( p.getLastModifiedDate().after( latest ) ) latest = p.getLastModifiedDate();
     }
 
     if( !hasChanged && changed.size() > 0 ) {
@@ -125,7 +125,7 @@
     }
 
     response.addDateHeader("Last-Modified",latest.getTime());
-    response.addHeader("ETag", HttpUtil.createETag( wikipage.getName(), wikipage.getLastModified() ) );
+    response.addHeader("ETag", HttpUtil.createETag( wikipage.getName(), wikipage.getLastModifiedDate() ) );
     
     //
     //  Try to get the RSS XML from the cache.  We build the hashkey

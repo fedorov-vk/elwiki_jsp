@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.elwiki_data.PagesStore#getWikipages <em>Wikipages</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getMainPageId <em>Main Page Id</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getNextPageId <em>Next Page Id</em>}</li>
- *   <li>{@link org.elwiki_data.PagesStore#getNextAttachId <em>Next Attach Id</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore()
@@ -101,33 +100,5 @@ public interface PagesStore extends CDOObject {
 	 * @generated
 	 */
 	void setNextPageId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Next Attach Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Next Attach Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Next Attach Id</em>' attribute.
-	 * @see #setNextAttachId(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_NextAttachId()
-	 * @model
-	 * @generated
-	 */
-	String getNextAttachId();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PagesStore#getNextAttachId <em>Next Attach Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Next Attach Id</em>' attribute.
-	 * @see #getNextAttachId()
-	 * @generated
-	 */
-	void setNextAttachId(String value);
 
 } // PagesStore

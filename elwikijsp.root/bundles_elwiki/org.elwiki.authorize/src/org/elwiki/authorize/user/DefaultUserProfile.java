@@ -57,7 +57,7 @@ public final class DefaultUserProfile implements UserProfile {
 
 	private @NonNull String loginName = "";
 
-	private Date modified = null;
+	private Date modificationDate = null;
 
 	private @NonNull String password = "";
 
@@ -147,11 +147,11 @@ public final class DefaultUserProfile implements UserProfile {
 	 * Returns the last-modified date.
 	 * 
 	 * @return the last-modified date
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#getLastModified()
+	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#getLastModifiedDate()
 	 */
 	@Override
-	public Date getLastModified() {
-		return this.modified;
+	public Date getLastModifiedDate() {
+		return this.modificationDate;
 	}
 
 	/**
@@ -193,13 +193,13 @@ public final class DefaultUserProfile implements UserProfile {
 
 	/**
 	 * Returns <code>true</code> if the user profile is new. This implementation checks whether
-	 * {@link #getLastModified()} returns <code>null</code> to determine the status.
+	 * {@link #getLastModifiedDate()} returns <code>null</code> to determine the status.
 	 * 
 	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#isNew()
 	 */
 	@Override
 	public boolean isNew() {
-		return this.modified == null;
+		return this.modificationDate == null;
 	}
 
 	/**
@@ -243,7 +243,7 @@ public final class DefaultUserProfile implements UserProfile {
 	 */
 	@Override
 	public void setLastModified(Date date) {
-		this.modified = date;
+		this.modificationDate = date;
 	}
 
 	/**

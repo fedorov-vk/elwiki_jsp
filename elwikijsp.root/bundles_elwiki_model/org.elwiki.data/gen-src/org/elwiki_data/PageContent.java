@@ -53,7 +53,7 @@ public interface PageContent extends IHistoryInfo {
 
 	/**
 	 * Returns the value of the '<em><b>Wikipage</b></em>' container reference.
-	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getPagecontents <em>Pagecontents</em>}'.
+	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getPageContents <em>Page Contents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -65,8 +65,8 @@ public interface PageContent extends IHistoryInfo {
 	 * @return the value of the '<em>Wikipage</em>' container reference.
 	 * @see #setWikipage(WikiPage)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageContent_Wikipage()
-	 * @see org.elwiki_data.WikiPage#getPagecontents
-	 * @model opposite="pagecontents" transient="false"
+	 * @see org.elwiki_data.WikiPage#getPageContents
+	 * @model opposite="pageContents" transient="false"
 	 * @generated
 	 */
 	WikiPage getWikipage();

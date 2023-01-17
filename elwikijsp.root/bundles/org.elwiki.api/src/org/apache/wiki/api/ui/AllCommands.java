@@ -62,7 +62,8 @@ public interface AllCommands {
             WikiCommand.PREFS,
             WikiCommand.WORKFLOW,
             WikiCommand.ADMIN,
-            WikiCommand.SCOPE
+            WikiCommand.SCOPE,
+            WikiCommand.PERSIST_CONTENT,
         };
     }
 

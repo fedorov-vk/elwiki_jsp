@@ -1,5 +1,7 @@
 package org.elwiki.data.persist.internal;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.ui.TemplateManager;
@@ -13,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.net4j.util.WrappedException;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.persist.IDataStore;
+import org.elwiki.data.persist.json.JsonDeserialiser;
+import org.elwiki.data.persist.json.JsonSerialiser;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PagesStore;
 import org.osgi.service.component.annotations.Activate;
@@ -151,6 +155,18 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 		} finally {
 			transaction.close();
 		}
+	}
+
+	@Override
+	public void loadAllContent() throws IOException {
+		JsonDeserialiser jsonDeserialiser = new JsonDeserialiser(wikiConfiguration);
+		jsonDeserialiser.LoadData();
+	}
+
+	@Override
+	public void saveAllContent() throws IOException {
+		JsonSerialiser jsonSerialiser = new JsonSerialiser(wikiConfiguration);
+		jsonSerialiser.SaveData();
 	}
 	
 }

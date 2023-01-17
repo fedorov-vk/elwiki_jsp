@@ -24,6 +24,7 @@ import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.WikiPermission;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
@@ -86,6 +87,7 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.ACL_ENTRY: return (EObject)createAclEntry();
 			case Elwiki_dataPackage.ACL: return (EObject)createAcl();
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
+			case Elwiki_dataPackage.ATTACHMENT_CONTENT: return (EObject)createAttachmentContent();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -244,6 +246,17 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	public Map.Entry<String, Object> createStringToObjectMap() {
 		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
 		return stringToObjectMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AttachmentContent createAttachmentContent() {
+		AttachmentContentImpl attachmentContent = new AttachmentContentImpl();
+		return attachmentContent;
 	}
 
 	/**

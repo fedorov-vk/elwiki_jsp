@@ -8,7 +8,7 @@ import org.eclipse.emf.cdo.CDOObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>IModify Info</b></em>'.
+ * A representation of the model object '<em><b>IHistory Info</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
@@ -16,7 +16,7 @@ import org.eclipse.emf.cdo.CDOObject;
  * </p>
  * <ul>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.IHistoryInfo#getLastModify <em>Last Modify</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getLastModifiedDate <em>Last Modified Date</em>}</li>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getAuthor <em>Author</em>}</li>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getChangeNote <em>Change Note</em>}</li>
  * </ul>
@@ -38,12 +38,12 @@ public interface IHistoryInfo extends CDOObject {
 	 * </p>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Version</em>' attribute.
-	 * @see #setVersion(int)
+	 * @see #setVersion(short)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_Version()
 	 * @model
 	 * @generated
 	 */
-	int getVersion();
+	short getVersion();
 
 	/**
 	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}' attribute.
@@ -53,10 +53,10 @@ public interface IHistoryInfo extends CDOObject {
 	 * @see #getVersion()
 	 * @generated
 	 */
-	void setVersion(int value);
+	void setVersion(short value);
 
 	/**
-	 * Returns the value of the '<em><b>Last Modify</b></em>' attribute.
+	 * Returns the value of the '<em><b>Last Modified Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -65,23 +65,23 @@ public interface IHistoryInfo extends CDOObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Last Modify</em>' attribute.
-	 * @see #setLastModify(Date)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_LastModify()
+	 * @return the value of the '<em>Last Modified Date</em>' attribute.
+	 * @see #setLastModifiedDate(Date)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_LastModifiedDate()
 	 * @model
 	 * @generated
 	 */
-	Date getLastModify();
+	Date getLastModifiedDate();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getLastModify <em>Last Modify</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getLastModifiedDate <em>Last Modified Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Last Modify</em>' attribute.
-	 * @see #getLastModify()
+	 * @param value the new value of the '<em>Last Modified Date</em>' attribute.
+	 * @see #getLastModifiedDate()
 	 * @generated
 	 */
-	void setLastModify(Date value);
+	void setLastModifiedDate(Date value);
 
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' attribute.

@@ -20,6 +20,7 @@ package org.apache.wiki.providers;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -160,6 +161,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     /**
      *  Finds the dir in which the attachment lives.
      */
+    @Deprecated
     private File findAttachmentDir( final PageAttachment att ) throws ProviderException {
     	//:FVK: workaround. (here shoul added algotithm with hoerarhy of directories, for controling maximuum count of files in the one directory.)
     	File f = this.wikiconfiguration.getAttachmentPath().toFile();
@@ -183,24 +185,6 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 
         return f;
     }
-
-    /**
-     * Goes through list of attachments of page and decides which attachment version is the newest in that page.
-     * @param page TODO
-     *
-     * @return Latest version number in the repository, or 0, if there is no page in the repository.
-     */
-	private int findLatestVersion(WikiPage page, PageAttachment att) throws ProviderException {
-		String attName = att.getName();
-		int version = 0;
-		for (PageAttachment attachment : page.getAttachments()) {
-			if (attName.equals(attachment.getName()) && (version < attachment.getVersion())) {
-				version = attachment.getVersion();
-			}
-		}
-
-		return version;
-	}
 
     /**
      *  Returns the file extension.  For example "test.png" returns "png".
@@ -262,10 +246,8 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 			attDir.mkdirs();
 		}
 
-		int latestVersion = findLatestVersion(wikiPage, att);
-		att.setVersion(latestVersion + 1);
 		File newfile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, attDir);
-		att.setPlace(newfile.getCanonicalPath());
+		att.getAttachmentContent().setPlace(newfile.getCanonicalPath());
 
 		try (final OutputStream out = new FileOutputStream(newfile)) {
 			log.info("Uploading attachment " + att.getName() + " to page " + wikiPage.getName());
@@ -291,10 +273,8 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     }
 
     private File findFile( final File dir, final PageAttachment att ) throws FileNotFoundException, ProviderException {
-        int version = att.getVersion();
-        if( version == WikiProvider.LATEST_VERSION ) {
-            version = findLatestVersion( null, att );
-        }
+        AttachmentContent attContent = att.getAttachmentContent();
+		short version = (attContent != null) ? attContent.getVersion() : att.getLastVersion();
 
         final String ext = getFileExtension( att.getName() );
         File f = new File( dir, version + "." + ext );
@@ -338,21 +318,10 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 		
 		//TODO: inefficient loops.
 		Set<String> attNames = new HashSet<>();
-		for (PageAttachment attItem : page.getAttachments()) {
-			attNames.add(attItem.getName());
-		}
-		for (String attName : attNames) {
-			int version = 0;
-			PageAttachment lastAtt = null;
-			for (PageAttachment attachment : page.getAttachments()) {
-				if (attName.equals(attachment.getName()) && (version < attachment.getVersion())) {
-					version = attachment.getVersion();
-					lastAtt = attachment;
-				}
-			}
-			if (lastAtt != null) {
-				result.add(lastAtt);
-			}
+		for (PageAttachment pageAttachment : page.getAttachments()) {
+			attNames.add(pageAttachment.getName());
+			AttachmentContent attContent = pageAttachment.forLastContent();
+			result.add(pageAttachment);
 		}
 
 		/*:FVK:
@@ -427,7 +396,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 
                 final Collection< PageAttachment > c = listAttachments( Wiki.contents().page( pageId ) );
                 for( final PageAttachment att : c ) {
-                    if( att.getLastModify().after( timestamp ) ) {
+                    if( att.getLastModifiedDate().after( timestamp ) ) {
                         list.add( att );
                     }
                 }
@@ -444,22 +413,35 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  {@inheritDoc}
      */
     @Override
-    public PageAttachment getAttachmentInfo( final WikiPage page, final String name, int version ) throws ProviderException {
-        final PageAttachment att = page.getAttachments().get(0);
-        //:FVK:  = new Attachment( m_engine, page.getName(), name );
-        
-        final File dir = findAttachmentDir( att );
-        if( !dir.exists() ) {
-            // log.debug("Attachment dir not found - thus no attachment can exist.");
-            return null;
-        }
-        
-        if( version == WikiProvider.LATEST_VERSION ) {
-            version = findLatestVersion(null, att);
-        }
+    public PageAttachment getAttachmentInfo(WikiPage page, String name, short version ) throws ProviderException {
+		final PageAttachment att = page.getAttachments().get(0);
 
-        att.setVersion( version );
-        
+		PageAttachment attachment = null;
+		for (PageAttachment attachItem : page.getAttachments()) {
+			if (name.equals(attachItem.getName())) {
+				attachment = attachItem;
+				break;
+			}
+		}
+
+		if (attachment == null) {
+			log.debug("Attachment \"" + name + "\"not found - thus no attachment can exist.");
+			return null;
+		}
+
+		AttachmentContent attachmentContent = null;
+		if (version == WikiProvider.LATEST_VERSION) {
+			attachmentContent = attachment.forLastContent();
+		} else {
+			attachmentContent = attachment.forVersionContent(version);
+		}		
+
+		if (attachment.forLastContent() == null)
+			return null;
+
+		return attachment;
+
+        /*:FVK:
         // Should attachment be cachable by the client (browser)?
         if( m_disableCache != null ) {
             final Matcher matcher = m_disableCache.matcher( name );
@@ -487,30 +469,34 @@ public class BasicAttachmentProvider implements AttachmentProvider {
             log.error("Can't read page properties", e );
             throw new ProviderException("Cannot read page properties: "+e.getMessage());
         }
+     
         // FIXME: Check for existence of this particular version.
 
         return att;
+         */
     }
 
     /**
      *  {@inheritDoc}
      */
     @Override
-    public List< PageAttachment > getVersionHistory( final PageAttachment att ) {
-        final ArrayList< PageAttachment > list = new ArrayList<>();
+    public List<AttachmentContent> getVersionHistory( final PageAttachment att ) {
+    	final ArrayList< AttachmentContent > list = new ArrayList<>();
+    	/*:FVK:
         try {
             final int latest = findLatestVersion( null, att );
             for( int i = latest; i >= 1; i-- ) {
-            	/*:FVK:
+            	/ *:FVK:
                 final PageAttachment a = getAttachmentInfo( Wiki.contents().page( m_engine, att.getParentName() ), att.getFileName(), i );
                 if( a != null ) {
                     list.add( a );
-                }*/
+                }* /
             }
         } catch( final ProviderException e ) {
             log.error( "Getting version history failed for page: " + att, e );
             // FIXME: Should this fail?
         }
+        */
 
         return list;
     }

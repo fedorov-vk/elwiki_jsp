@@ -61,7 +61,7 @@ public interface IGroupWiki {
 	 * 
 	 * @return the date and time of last modification
 	 */
-	Date getLastModified();
+	Date getLastModifiedDate();
 
 	/**
 	 * Returns the name of the user who last modified this group.

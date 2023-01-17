@@ -393,7 +393,7 @@ public class XMLGroupDatabase implements GroupDatabase {
 				io.write(MODIFIER);
 				io.write("=\"" + group.getModifier() + "\" ");
 				io.write(LAST_MODIFIED);
-				io.write("=\"" + this.m_format.format(group.getLastModified()) + "\"");
+				io.write("=\"" + this.m_format.format(group.getLastModifiedDate()) + "\"");
 				io.write(">\n");
 
 				// Write each member as a <member> node

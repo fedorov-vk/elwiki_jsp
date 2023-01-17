@@ -40,10 +40,10 @@
 
 <div id="sidepanel-menu" class="stacked-sidemenu">
   <div class="leftmenu">
-    <wiki:InsertPage pageId="4" />
-    <wiki:NoSuchPage pageId="4">
+    <wiki:InsertPage pageId="w4" />
+    <wiki:NoSuchPage pageId="w4">
       <div class="error">
-        <wiki:EditLink pageId="4">
+        <wiki:EditLink pageId="w4">
           <fmt:message key="fav.nomenu"><fmt:param>LeftMenu</fmt:param></fmt:message>
         </wiki:EditLink>
       </div>
@@ -51,10 +51,10 @@
   </div>
 
   <div class="leftmenufooter">
-    <wiki:InsertPage pageId="5" />
-    <wiki:NoSuchPage pageId="5">
+    <wiki:InsertPage pageId="w5" />
+    <wiki:NoSuchPage pageId="w5">
       <div class="error">
-        <wiki:EditLink pageId="5">
+        <wiki:EditLink pageId="w5">
           <fmt:message key="fav.nomenu"><fmt:param>LeftMenuFooter</fmt:param></fmt:message>
         </wiki:EditLink>
       </div>

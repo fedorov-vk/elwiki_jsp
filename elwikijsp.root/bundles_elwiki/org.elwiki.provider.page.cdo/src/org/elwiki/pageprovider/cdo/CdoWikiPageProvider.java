@@ -69,6 +69,7 @@ import org.elwiki.services.ServicesRefs;
 //import org.elwiki.utils.FileUtil;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
@@ -131,7 +132,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	private PageContent getMaximalVersionContent(WikiPage page) {
 		PageContent result = null;
 		int currentVersion = -1;
-		for (PageContent pageContent : page.getPagecontents()) {
+		for (PageContent pageContent : page.getPageContents()) {
 			int contentVersion = pageContent.getVersion();
 			if (currentVersion < contentVersion) {
 				result = pageContent;
@@ -148,16 +149,16 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		// Записать данные (выполнить транзакцию).
 		PageContent pc = getMaximalVersionContent(page);
-		int version = (pc != null) ? pc.getVersion() + 1 : 1;
+		short version = (short) ((pc != null) ? pc.getVersion() + 1 : 1);
 		pc = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pc.setVersion(version);
 		pc.setAuthor(author);
 		pc.setChangeNote(changenote);
-		pc.setLastModify(new Date()); // TODO: :FVK: установить дату, возможно надо корректнее.
+		pc.setLastModifiedDate(new Date()); // TODO: :FVK: установить дату, возможно надо корректнее.
 		pc.setContent(text);
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		WikiPage page1 = transaction.getObject(page);
-		page1.getPagecontents().add(pc);
+		page1.getPageContents().add(pc);
 		try {
 			transaction.commit();
 		} catch (CommitException ex) {
@@ -316,7 +317,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				if (version == WikiProvider.LATEST_VERSION) {
 					return true;
 				}
-				for (PageContent pageContent : page.getPagecontents()) {
+				for (PageContent pageContent : page.getPageContents()) {
 					if (pageContent.getVersion() == version) {
 						return true;
 					}
@@ -401,7 +402,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				content = pc.getContent();
 			}
 		} else {
-			for (PageContent pageContent : page1.getPagecontents()) {
+			for (PageContent pageContent : page1.getPageContents()) {
 				if (pageContent.getVersion() == version) {
 					content = pageContent.getContent();
 					break;
@@ -424,12 +425,15 @@ public class CdoWikiPageProvider implements PageProvider {
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		WikiPage removedPage = transaction.getObject(wikiPage);
 
+		/* Remove attachment files. */
 		removedPage.getPageReferences().clear();
-		removedPage.getPagecontents().clear();
-		for (PageAttachment att : removedPage.getAttachments()) {
-			String fileName = att.getPlace();
-			File file = new File(fileName);
-			file.delete();
+		removedPage.getPageContents().clear();
+		for (PageAttachment attachment : removedPage.getAttachments()) {
+			for (AttachmentContent attachmentContent : attachment.getAttachContents()) {
+				String fileName = attachmentContent.getPlace();
+				File file = new File(fileName);
+				file.delete();
+			}
 		}
 
 		WikiPage parentPage = removedPage.getParent();
@@ -514,7 +518,8 @@ public class CdoWikiPageProvider implements PageProvider {
 				wikiPage = (WikiPage) view.getObject(wikiPage.cdoID());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.debug(e.getMessage());
+			//:FVK: e.printStackTrace();
 		}
 		if (!transaction.isClosed()) {
 			transaction.close();
@@ -578,7 +583,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				wikiPage = (WikiPage) view.getObject(wikiPage.cdoID());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.debug("Ошибка: " + e.getMessage());			
 		}
 		if (!transaction.isClosed()) {
 			transaction.close();
@@ -603,7 +608,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				if (version == WikiProvider.LATEST_VERSION) {
 					return page;
 				}
-				for (PageContent pageContent : page.getPagecontents()) {
+				for (PageContent pageContent : page.getPageContents()) {
 					if (pageContent != null && pageContent.getVersion() == version) {
 						String content = pageContent.getContent();
 						if (content != null) {
@@ -654,7 +659,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		wikiPage.setWiki("elwiki");
 		PageContent pageContent = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pageContent.setContent(content.toString());
-		pageContent.setLastModify(new Date());
+		pageContent.setLastModifiedDate(new Date());
 
 		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
@@ -662,7 +667,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		pagesStore = transaction.getObject(pagesStore);
 
 		pagesStore.getWikipages().add(wikiPage);
-		wikiPage.getPagecontents().add(pageContent);
+		wikiPage.getPageContents().add(pageContent);
 		try {
 			transaction.commit();
 		} catch (ConcurrentAccessException ex) {
@@ -723,7 +728,7 @@ public class CdoWikiPageProvider implements PageProvider {
 				continue;
 			}
 
-			EList<PageContent> pageContents = page.getPagecontents();
+			EList<PageContent> pageContents = page.getPageContents();
 			if (pageContents.size() == 0) { // Не обрабатывать страницы без содержимого.
 				continue;
 			}
@@ -793,7 +798,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			//			page = (WikiPage) eObj0;
 
 			// Сканируется для ссылок только самая последняя (максимальная) версия содержимого.
-			EList<PageContent> pageContents = page.getPagecontents();
+			EList<PageContent> pageContents = page.getPageContents();
 			PageContent pageContent = null;
 			int currentVer = -1;
 			for (PageContent pc : pageContents) { // Не обрабатывать страницы без содержимого.
@@ -940,7 +945,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		} else {
 			pagesStore.getWikipages().add(wikiPage);
 		}
-		wikiPage.getPagecontents().add(pageContent);
+		wikiPage.getPageContents().add(pageContent);
 
 		// задать 'уникальный' pageId.
 		String strPageId = pagesStore.getNextPageId();
@@ -1046,7 +1051,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			//			page = (WikiPage) eObj0;
 			
 			// Сканируется для ссылок только самая последняя (максимальная) версия содержимого.
-			EList<PageContent> pageContents = page.getPagecontents();
+			EList<PageContent> pageContents = page.getPageContents();
 			PageContent pageContent = null;
 			int currentVer = -1;
 			for (PageContent pc : pageContents) { // Не обрабатывать страницы без содержимого.
@@ -1095,7 +1100,7 @@ public class CdoWikiPageProvider implements PageProvider {
 			try {
 				//
 				// Сканируется для ссылок только самая последняя (максимальная) версия содержимого.
-				EList<PageContent> pageContents = thisWikiPage.getPagecontents();
+				EList<PageContent> pageContents = thisWikiPage.getPageContents();
 				PageContent pageContent = null;
 				int currentVer = -1;
 				for (PageContent pc : pageContents) { // Не обрабатывать страницы без содержимого. ?
@@ -1248,7 +1253,7 @@ public class CdoWikiPageProvider implements PageProvider {
 							.getAttribute(org.elwiki.pageprovider.jspwiki.JSPwikiPage.CHANGENOTE);
 					String author = page.getAuthor();
 					String pageText = jdbcPageProvider.getPageText(pageName, ver);
-					Date lastModified = page.getLastModified();
+					Date lastModified = page.getLastModifiedDate();
 					String descr = (String) page.getAttribute(org.elwiki.pageprovider.jspwiki.JSPwikiPage.DESCRIPTION);
 					if (descr != null && descr.trim().length() > 0) {
 						description.append(descr);
@@ -1261,7 +1266,7 @@ public class CdoWikiPageProvider implements PageProvider {
 					pageContent.setAuthor(author);
 					pageContent.setChangeNote(changenote);
 					pageContent.setContent(pageText);
-					wikiPage.getPagecontents().add(pageContent);
+					wikiPage.getPageContents().add(pageContent);
 				}
 				wikiPage.setDescription(description.toString());
 	
@@ -1276,7 +1281,7 @@ public class CdoWikiPageProvider implements PageProvider {
 					PageAttachment pageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
 					pageAttachment.setName(att.getFileName());
 					pageAttachment.setVersion(att.getVersion());
-					pageAttachment.setLastModify(att.getLastModified());
+					pageAttachment.setLastModify(att.getLastModifiedDate());
 					pageAttachment.setAuthor(att.getAuthor());
 					pageAttachment.setChangeNote("");
 	
@@ -1425,8 +1430,11 @@ public class CdoWikiPageProvider implements PageProvider {
 	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		WikiPage changedPage = transaction.getObject(wikiPage);
-		//:FVK: PageAttachment newAttachment = transaction.getObject(pageAttachment);
+		AttachmentContent attContent = pageAttachment.getAttachmentContent();
+
 		changedPage.getAttachments().add(pageAttachment);
+		pageAttachment.getAttachContents().add(attContent);
+		pageAttachment.setLastVersion(attContent.getVersion());
 
 		try {
 			transaction.commit();

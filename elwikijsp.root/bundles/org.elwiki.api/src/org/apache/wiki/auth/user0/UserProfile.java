@@ -66,7 +66,7 @@ public interface UserProfile extends IAdaptable, Serializable
      * Returns the last-modified date.
      * @return the date and time of last modification
      */
-    Date getLastModified();
+    Date getLastModifiedDate();
 
     /**
      * Returns the date/time of expiration of the profile's lock, if it has been

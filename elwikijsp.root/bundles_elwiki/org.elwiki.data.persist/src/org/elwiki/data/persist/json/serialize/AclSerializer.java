@@ -20,20 +20,20 @@ public class AclSerializer implements JsonSerializer<Acl> {
 
 		JsonArray entries = new JsonArray();
 		result.add("entries", entries);
-		for ( AclEntry aclEntry : acl.getAclEntries()) {
+		for (AclEntry aclEntry : acl.getAclEntries()) {
 			JsonObject jsonEntry = new JsonObject();
 			jsonEntry.addProperty("principal", aclEntry.getPrincipal().toString());
-			
+
 			JsonArray jsonPermissions = new JsonArray();
 			jsonEntry.add("permissions", jsonPermissions);
-			for(Permission permission : aclEntry.getPermission()) {
+			for (Permission permission : aclEntry.getPermission()) {
 				JsonObject jsonPermission = new JsonObject();
 				jsonPermission.addProperty("permission", permission.toString());
 				jsonPermissions.add(jsonPermission);
 			}
 			entries.add(jsonEntry);
 		}
-		
+
 		return result;
 	}
 

@@ -131,8 +131,8 @@ public class UserProfileTag extends BaseWikiTag {
 			result = printGroups(m_wikiContext);
 		} else if (LOGINNAME.equals(m_prop)) {
 			result = profile.getLoginName();
-		} else if (MODIFIED.equals(m_prop) && profile.getLastModified() != null) {
-			result = profile.getLastModified().toString();
+		} else if (MODIFIED.equals(m_prop) && profile.getLastModifiedDate() != null) {
+			result = profile.getLastModifiedDate().toString();
 		} else if (ROLES.equals(m_prop)) {
 			result = printRoles(m_wikiContext);
 		} else if (WIKINAME.equals(m_prop)) {

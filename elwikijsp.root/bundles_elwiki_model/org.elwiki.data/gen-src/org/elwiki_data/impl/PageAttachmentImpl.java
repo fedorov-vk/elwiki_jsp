@@ -2,12 +2,14 @@
  */
 package org.elwiki_data.impl;
 
-import java.util.Date;
+import java.lang.reflect.InvocationTargetException;
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -20,16 +22,11 @@ import org.elwiki_data.WikiPage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getLastModify <em>Last Modify</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getChangeNote <em>Change Note</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#isCacheable <em>Cacheable</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getWikipage <em>Wikipage</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getPlace <em>Place</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getSize <em>Size</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachContents <em>Attach Contents</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getLastVersion <em>Last Version</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
  * @generated
@@ -70,106 +67,6 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		return (Integer)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setVersion(int newVersion) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, newVersion);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Date getLastModify() {
-		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFY, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setLastModify(Date newLastModify) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFY, newLastModify);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getAuthor() {
-		return (String)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__AUTHOR, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAuthor(String newAuthor) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__AUTHOR, newAuthor);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getChangeNote() {
-		return (String)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CHANGE_NOTE, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setChangeNote(String newChangeNote) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CHANGE_NOTE, newChangeNote);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getId() {
-		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setId(String newId) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, newId);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String getName() {
 		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__NAME, true);
 	}
@@ -182,26 +79,6 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	@Override
 	public void setName(String newName) {
 		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__NAME, newName);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isCacheable() {
-		return (Boolean)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__CACHEABLE, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setCacheable(boolean newCacheable) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__CACHEABLE, newCacheable);
 	}
 
 	/**
@@ -229,9 +106,10 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public String getPlace() {
-		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__PLACE, true);
+	public EList<AttachmentContent> getAttachContents() {
+		return (EList<AttachmentContent>)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ATTACH_CONTENTS, true);
 	}
 
 	/**
@@ -240,8 +118,8 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public void setPlace(String newPlace) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__PLACE, newPlace);
+	public short getLastVersion() {
+		return (Short)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, true);
 	}
 
 	/**
@@ -250,8 +128,8 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public long getSize() {
-		return (Long)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__SIZE, true);
+	public void setLastVersion(short newLastVersion) {
+		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, newLastVersion);
 	}
 
 	/**
@@ -260,8 +138,78 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public void setSize(long newSize) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__SIZE, newSize);
+	public AttachmentContent getAttachmentContent() {
+		return (AttachmentContent)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ATTACHMENT_CONTENT, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAttachmentContent(AttachmentContent newAttachmentContent) {
+		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ATTACHMENT_CONTENT, newAttachmentContent);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AttachmentContent forLastContent() {
+		AttachmentContent result = null;
+		short version = 0;
+		EList<AttachmentContent> attachContents = getAttachContents();
+		for (AttachmentContent attContent : attachContents) {
+			short contentVersion = attContent.getVersion();
+			if (version < contentVersion) {
+				version = contentVersion;
+				result = attContent;
+			}
+		}
+		
+		setAttachmentContent(result);
+		
+		return result;
+	}
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AttachmentContent forVersionContent(final short desiredVersion) {
+		AttachmentContent result = null;
+		EList<AttachmentContent> attachContents = getAttachContents();
+		for (AttachmentContent attContent : attachContents) {
+			if (desiredVersion == attContent.getVersion()) {
+				result = attContent;
+				break;
+			}
+		}
+		
+		setAttachmentContent(result);
+		
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case Elwiki_dataPackage.PAGE_ATTACHMENT___FOR_LAST_CONTENT:
+				return forLastContent();
+			case Elwiki_dataPackage.PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT:
+				return forVersionContent((Short)arguments.get(0));
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //PageAttachmentImpl

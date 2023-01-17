@@ -1,5 +1,7 @@
 package org.apache.wiki.api;
 
+import java.io.IOException;
+
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.cdo.view.CDOView;
@@ -30,4 +32,8 @@ public interface IStorageCdo {
 	CDOTransaction getTransactionCDO();
 
 	PagesStore getPagesStore();
+
+	void loadAllContent() throws IOException;
+
+	void saveAllContent() throws IOException;
 }

@@ -18,6 +18,7 @@
 --%>
 <!-- ~~ START ~~ Header.jsp (templates/default) --><%@
  page import="org.apache.wiki.api.core.*" %><%@
+ page import="org.elwiki_data.WikiPage" %><%@
  page import="org.elwiki.services.ServicesRefs" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
@@ -26,13 +27,17 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
-<% String pageId = ServicesRefs.getPageManager().getMainPageId(); %>
-<c:set var="frontpageId" value="<%=pageId%>" />
-<c:set var="frontpageName" value="<%=ServicesRefs.getPageManager().getPageById(pageId).getName()%>" />
+<%
+String wikiPageId = ServicesRefs.getPageManager().getMainPageId();
+WikiPage wikiPage = ServicesRefs.getPageManager().getPageById(wikiPageId);
+String pageName = (wikiPage!=null)? wikiPage.getName() : "<nod defined>";
+%>
+<c:set var="frontpageId" value="<%=wikiPageId%>" />
+<c:set var="frontpageName" value="<%=pageName%>" />
 
 <div class="header">
 <!-- :FVK: title page
-  <c:set var="titlebox"><wiki:InsertPage pageId="41" /></c:set>
+  <c:set var="titlebox"><wiki:InsertPage pageId="w41" /></c:set>
   <c:if test="${!empty titlebox}"><div class="titlebox">${titlebox}</div></c:if>
 -->
 
@@ -44,9 +49,9 @@
            EL<b>&#x03C9;iki</b>           
         </a>
 
-        <wiki:PageExists pageId="2">
+        <wiki:PageExists pageId="w2">
         <ul class="dropdown-menu" data-hover-parent=".cage">
-          <li class="logo-menu"><wiki:InsertPage pageId="2" /></li>
+          <li class="logo-menu"><wiki:InsertPage pageId="w2" /></li>
         </ul>
         </wiki:PageExists>
     </div>

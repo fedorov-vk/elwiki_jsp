@@ -30,6 +30,7 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -213,7 +214,8 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public PageAttachment getAttachmentInfo( final Context context, String attachmentname, final int version ) throws ProviderException {
+	public PageAttachment getAttachmentInfo(Context context, String attachmentName, short version)
+			throws ProviderException {
         if( m_provider == null ) {
             return null;
         }
@@ -225,11 +227,11 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
 
         //  Figure out the parent page of this attachment.  If we can't find it, we'll assume this refers directly to the attachment.
-        final int cutpt = attachmentname.lastIndexOf( '/' );
+        final int cutpt = attachmentName.lastIndexOf( '/' );
         if( cutpt != -1 ) {
-            String parentPage = attachmentname.substring( 0, cutpt );
+            String parentPage = attachmentName.substring( 0, cutpt );
             parentPage = MarkupParser.cleanLink( parentPage );
-            attachmentname = attachmentname.substring( cutpt + 1 );
+            attachmentName = attachmentName.substring( cutpt + 1 );
 
             // If we for some reason have an empty parent page name; this can't be an attachment
             if( parentPage.length() == 0 ) {
@@ -255,7 +257,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         PageAttachment att = null;
         //:FVK:  PageAttachment att = getDynamicAttachment( currentPage.getName() + "/" + attachmentname );
         if( att == null ) {
-            att = m_provider.getAttachmentInfo( currentPage, attachmentname, version );
+            att = m_provider.getAttachmentInfo( currentPage, attachmentName, version );
         }
 
         return att;
@@ -353,7 +355,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public List< PageAttachment > getVersionHistory( final String attachmentName ) throws ProviderException {
+    public List<AttachmentContent> getVersionHistory( final String attachmentName ) throws ProviderException {
         if( m_provider == null ) {
             return null;
         }

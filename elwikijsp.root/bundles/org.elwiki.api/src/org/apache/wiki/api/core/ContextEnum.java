@@ -62,7 +62,8 @@ public enum ContextEnum {
     WIKI_MESSAGE( "message", "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
     WIKI_PREFS( "prefs", "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
     WIKI_WORKFLOW( "workflow", "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
-    WIKI_SCOPE( "scope", "cmd.scope", "%u", "", "ScopeContent.jsp" );
+    WIKI_SCOPE( "scope", "cmd.scope", "%u", "", "ScopeContent.jsp" ),
+	WIKI_PERSIST_CONTENT( "persistContent", "cmd.persistContent", "%u", "", null );
 	//@formatter:on
 
 	private final String requestContext;

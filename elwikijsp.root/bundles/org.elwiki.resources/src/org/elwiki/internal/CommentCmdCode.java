@@ -266,7 +266,7 @@ public class CommentCmdCode extends CmdCode {
 	    //
 	    long lastchange = 0;
 
-	    Date d = latestversion.getLastModified();
+	    Date d = latestversion.getLastModifiedDate();
 	    if( d != null ) lastchange = d.getTime();
 
 	    /*:FVK:

@@ -1263,7 +1263,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 						linkText = wikiPage.getName();
 					}
 					linkRef = pageId;
-					if (wikiPage.getPagecontents().size() > 0) {
+					if (wikiPage.getPageContents().size() > 0) {
 						linkType = LinkType.READ;
 					} else {
 						linkType = LinkType.EDIT; // :FVK: workaround?

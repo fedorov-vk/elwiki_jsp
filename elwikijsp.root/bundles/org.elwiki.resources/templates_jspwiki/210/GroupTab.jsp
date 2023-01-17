@@ -59,7 +59,7 @@
       ss.append( mf.format( args ) );
 
       mf = new MessageFormat(LocaleSupport.getLocalizedMessage(pageContext, "grp.lastmodified") );
-      args = new Object[]{(group.getLastModified()==null) ? "" : Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME), group.getModifier()};
+      args = new Object[]{(group.getLastModifiedDate()==null) ? "" : Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModifiedDate(),Preferences.TimeFormat.DATETIME), group.getModifier()};
       ss.append( mf.format( args ) );
 
       ss.append( "\", " );

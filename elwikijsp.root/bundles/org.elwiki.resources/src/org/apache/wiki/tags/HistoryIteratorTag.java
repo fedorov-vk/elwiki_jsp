@@ -61,7 +61,7 @@ public class HistoryIteratorTag extends BaseIteratorTag<PageContent> {
 		try {
 			if (page != null && ServicesRefs.getPageManager().wikiPageExists(page)) {
 				//:FVK: историю - просто извлечь из страницы.  final List< WikiPage > versions = ResourcesRefs.getPageManager().getVersionHistory( page );
-				List<PageContent> contents = new ArrayList<>(page.getPagecontents());
+				List<PageContent> contents = new ArrayList<>(page.getPageContents());
 				contents.sort((c1, c2) -> {
 					return c2.getVersion() - c1.getVersion();
 				});

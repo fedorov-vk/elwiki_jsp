@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.util.Switch;
 
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
 import org.elwiki_data.PageAttachment;
@@ -102,7 +103,6 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.PAGE_ATTACHMENT: {
 				PageAttachment pageAttachment = (PageAttachment)theEObject;
 				T result = casePageAttachment(pageAttachment);
-				if (result == null) result = caseIHistoryInfo(pageAttachment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -157,6 +157,13 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: {
 				@SuppressWarnings("unchecked") Map.Entry<String, Object> stringToObjectMap = (Map.Entry<String, Object>)theEObject;
 				T result = caseStringToObjectMap(stringToObjectMap);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Elwiki_dataPackage.ATTACHMENT_CONTENT: {
+				AttachmentContent attachmentContent = (AttachmentContent)theEObject;
+				T result = caseAttachmentContent(attachmentContent);
+				if (result == null) result = caseIHistoryInfo(attachmentContent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -356,6 +363,21 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStringToObjectMap(Map.Entry<String, Object> object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Attachment Content</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attachment Content</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAttachmentContent(AttachmentContent object) {
 		return null;
 	}
 

@@ -21,6 +21,7 @@ package org.apache.wiki.rss;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -95,7 +96,7 @@ public class AtomFeed extends Feed {
             //  Mandatory elements
             entryEl.addContent( getElement( "id" ).setText( getEntryID( e ) ) );
             entryEl.addContent( getElement( "title" ).setAttribute( "type", "html" ).setText( e.getTitle() ) );
-            entryEl.addContent( getElement( "updated" ).setText( DateFormatUtils.formatUTC( p.getLastModified(), RFC3339FORMAT ) ) );
+            entryEl.addContent( getElement( "updated" ).setText( DateFormatUtils.formatUTC( p.getLastModifiedDate(), RFC3339FORMAT ) ) );
 
             //  Optional elements
             entryEl.addContent( getElement( "author" ).addContent( getElement( "name" ).setText( e.getAuthor() ) ) );
@@ -110,8 +111,10 @@ public class AtomFeed extends Feed {
                         final Element attEl = getElement( "link" );
                         attEl.setAttribute( "rel", "enclosure" );
                         attEl.setAttribute( "href", engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null ) );
-                        attEl.setAttribute( "length", Long.toString( att.getSize() ) );
-                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
+						AttachmentContent attContent = att.forLastContent();
+						long size = (attContent != null) ? attContent.getSize() : -1;
+						attEl.setAttribute("length", Long.toString(size));
+	                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
 
                         entryEl.addContent( attEl );
                     }
@@ -138,8 +141,8 @@ public class AtomFeed extends Feed {
         Date lastModified = new Date(0L);
 
         for( final Entry e : m_entries ) {
-            if( e.getPage().getLastModified().after( lastModified ) ) {
-                lastModified = e.getPage().getLastModified();
+            if( e.getPage().getLastModifiedDate().after( lastModified ) ) {
+                lastModified = e.getPage().getLastModifiedDate();
             }
         }
 

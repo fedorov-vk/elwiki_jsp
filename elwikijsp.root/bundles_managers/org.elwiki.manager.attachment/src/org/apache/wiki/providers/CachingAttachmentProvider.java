@@ -23,6 +23,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -264,7 +265,7 @@ public class CachingAttachmentProvider implements AttachmentProvider {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public PageAttachment getAttachmentInfo( final WikiPage page, final String name, final int version) throws ProviderException {
+    public PageAttachment getAttachmentInfo( final WikiPage page, final String name, final short version) throws ProviderException {
         if( log.isDebugEnabled() ) {
             log.debug( "Getting attachments for " + page + ", name=" + name + ", version=" + version );
         }
@@ -297,7 +298,7 @@ public class CachingAttachmentProvider implements AttachmentProvider {
      * {@inheritDoc}
      */
     @Override
-    public List<PageAttachment> getVersionHistory( final PageAttachment att ) {
+    public List<AttachmentContent> getVersionHistory( final PageAttachment att ) {
         return m_provider.getVersionHistory( att );
     }
 

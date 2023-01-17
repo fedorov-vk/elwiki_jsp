@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.eclipse.core.runtime.IPath;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.persist.json.deserialize.AclDeserializer;
 import org.elwiki.data.persist.json.deserialize.PageAttachmentDeserializer;
 import org.elwiki.data.persist.json.deserialize.PageContentDeserializer;
@@ -20,7 +22,15 @@ import com.google.gson.GsonBuilder;
 
 public class JsonDeserialiser {
 
-	public static void LoadData() throws IOException {
+	private IWikiConfiguration wikiConfiguration;
+	private IPath workPath;
+
+	public JsonDeserialiser(IWikiConfiguration wikiConfiguration) {
+		this.wikiConfiguration = wikiConfiguration;
+		this.workPath = wikiConfiguration.getWorkDir();
+	}
+
+	public void LoadData() throws IOException {
 		Gson gson = new GsonBuilder()
 				.setPrettyPrinting() //@formatter:off
 				.registerTypeAdapter(PagesStore.class, new PagesStoreDeserializer())
@@ -32,7 +42,7 @@ public class JsonDeserialiser {
 
 		// Writer writer = new FileWriter(JsonConstants.FILE_NAME);
 
-		try (Reader input = new FileReader(JsonConstants.FILE_NAME)) {
+		try (Reader input = new FileReader(workPath.append(JsonConstants.FILE_NAME).toFile())) {
 			gson.fromJson(input, PagesStore.class);
 		}
 	}

@@ -267,11 +267,11 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
                     // Refresh with the latest copy
                     final WikiPage wp = ServicesRefs.getPageManager().getPage( page.getName() );
 
-                    if( wp.getLastModified() == null ) {
+                    if( wp.getLastModifiedDate() == null ) {
                         log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
                         
                         /*:FVK: workaround
-						EList<PageContent> pageContents = wp.getPagecontents();
+						EList<PageContent> pageContents = wp.getPageContents();
 						PageContent pageContent = pageContents.get(pageContents.size()-1);
                         this.storageCdo.modify(pageContent, new ITransactionalOperation<PageContent>() {
 							@Override
@@ -281,7 +281,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 								return page;
 							}
 						});*/
-                    } else if( wp.getLastModified().getTime() > saved ) {
+                    } else if( wp.getLastModifiedDate().getTime() > saved ) {
                         updatePageReferences( wp );
                     }
                 }

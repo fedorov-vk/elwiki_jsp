@@ -2,6 +2,7 @@ package org.elwiki.data.persist.json.deserialize;
 
 import java.lang.reflect.Type;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.cdo.util.CommitException;
 import org.eclipse.emf.cdo.util.ConcurrentAccessException;
@@ -18,6 +19,8 @@ import com.google.gson.JsonParseException;
 
 public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDeserializer<PagesStore> {
 
+	private static final Logger log = Logger.getLogger(PagesStoreDeserializer.class);
+	
 	@Override
 	public PagesStore deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
@@ -25,17 +28,14 @@ public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDese
 
 		String mainPageId = getString(jsonObject, "mainPageId");
 		String nextPageId = getString(jsonObject, "nextPageId");
-		String nextAttachId = getString(jsonObject, "nextAttachId");
 		JsonArray jsonPages = getArray(jsonObject, "pages");
 
-		//PagesStore pagesStore = Elwiki_dataFactory.eINSTANCE.createPagesStore();
 		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
 		CDOTransaction transaction = PluginActivator.getDefault().getDataStore().getTransactionCDO();
 		pagesStore = transaction.getObject(pagesStore);
-		
+
 		pagesStore.setMainPageId(mainPageId);
 		pagesStore.setNextPageId(nextPageId);
-		pagesStore.setNextAttachId(nextAttachId);
 
 		for (JsonElement page : jsonPages) {
 			WikiPage wikiPage = context.deserialize(page, WikiPage.class);
@@ -45,10 +45,10 @@ public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDese
 		try {
 			transaction.commit();
 		} catch (ConcurrentAccessException ex) {
-			//TODO: log.error("Конфликт данных транзакции (пересечение параллельных сессий) - операция отменяется.");
+			log.error("Transaction data conflict (intersection of parallel sessions) - the operation is canceled.");
 			transaction.rollback();
 		} catch (CommitException e) {
-			//TODO: log.error(e.getMessage());
+			log.error(e.getMessage());
 		} finally {
 			if (!transaction.isClosed()) {
 				transaction.close();

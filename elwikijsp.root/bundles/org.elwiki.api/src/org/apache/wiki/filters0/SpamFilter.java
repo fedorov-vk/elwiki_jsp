@@ -682,7 +682,7 @@ public class SpamFilter extends BasePageFilter {
             //  Rebuild, if the spam words page, the attachment or the IP ban page has changed since.
             final WikiPage sourceSpam = ServicesRefs.getPageManager().getPage( m_forbiddenWordsPage );
             if( sourceSpam != null ) {
-                if( m_spamPatterns == null || m_spamPatterns.isEmpty() || sourceSpam.getLastModified().after( m_lastRebuild ) ) {
+                if( m_spamPatterns == null || m_spamPatterns.isEmpty() || sourceSpam.getLastModifiedDate().after( m_lastRebuild ) ) {
                     rebuild = true;
                 }
             }
@@ -690,14 +690,14 @@ public class SpamFilter extends BasePageFilter {
             final PageAttachment att = ServicesRefs.getAttachmentManager().getAttachmentInfo( context, m_blacklist );
             if( att != null ) {
 				if (m_spamPatterns == null
-						|| m_spamPatterns.isEmpty() /*:FVK: || att.getLastModified().after( m_lastRebuild )*/ ) {
+						|| m_spamPatterns.isEmpty() /*:FVK: || att.getLastModifiedDate().after( m_lastRebuild )*/ ) {
                     rebuild = true;
                 }
             }
 
             final WikiPage sourceIPs = ServicesRefs.getPageManager().getPage( m_forbiddenIPsPage );
             if( sourceIPs != null ) {
-                if( m_IPPatterns == null || m_IPPatterns.isEmpty() || sourceIPs.getLastModified().after( m_lastRebuild ) ) {
+                if( m_IPPatterns == null || m_IPPatterns.isEmpty() || sourceIPs.getLastModifiedDate().after( m_lastRebuild ) ) {
                     rebuild = true;
                 }
             }
@@ -947,8 +947,8 @@ public class SpamFilter extends BasePageFilter {
     public static final String getSpamHash( final WikiPage page, final HttpServletRequest request ) {
         long lastModified = 0;
 
-        if( page.getLastModified() != null ) {
-            lastModified = page.getLastModified().getTime();
+        if( page.getLastModifiedDate() != null ) {
+            lastModified = page.getLastModifiedDate().getTime();
         }
         final long remote = HttpUtil.getRemoteAddress( request ).hashCode();
 

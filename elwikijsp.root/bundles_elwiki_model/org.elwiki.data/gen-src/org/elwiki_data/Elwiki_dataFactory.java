@@ -103,6 +103,15 @@ public interface Elwiki_dataFactory extends EFactory {
 	Acl createAcl();
 
 	/**
+	 * Returns a new object of class '<em>Attachment Content</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attachment Content</em>'.
+	 * @generated
+	 */
+	AttachmentContent createAttachmentContent();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

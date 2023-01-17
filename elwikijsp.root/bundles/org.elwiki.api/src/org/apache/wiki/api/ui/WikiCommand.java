@@ -45,6 +45,7 @@ public final class WikiCommand extends AbstractCommand {
     public static final Command PREFS = new WikiCommand( ContextEnum.WIKI_PREFS, null, WikiPermission.EDIT_PROFILE_ACTION );
     public static final Command WORKFLOW = new WikiCommand( ContextEnum.WIKI_WORKFLOW, null, null );
     public static final Command SCOPE = new WikiCommand( ContextEnum.WIKI_SCOPE, null, null );
+    public static final Command PERSIST_CONTENT = new WikiCommand( ContextEnum.WIKI_PERSIST_CONTENT, null, null );
 
     private final String m_action;
     

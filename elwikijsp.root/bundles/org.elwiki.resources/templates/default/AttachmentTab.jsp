@@ -136,7 +136,7 @@
       </td>
 
       <td class="nowrap" title="${att.size} bytes" data-sortvalue="${att.size}">
-        <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getSize() ) %>
+        <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getAttachmentContent().getSize() ) %>
       </td>
 
       <td class="attach-type"><span class="icon-file-${fn:toLowerCase(type)}-o"></span>${type}</td>

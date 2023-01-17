@@ -113,11 +113,13 @@ public class DefaultRSSGenerator implements RSSGenerator {
         final String author = ":FVK:"; //:FVK: getAuthor( att );
         final StringBuilder sb = new StringBuilder();
 
+        /*:FVK:
         if( att.getVersion() != 1 ) {
-        	//:FVK: sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModified() );
+        	//:FVK: sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModifiedDate() );
         } else {
-        	//:FVK: sb.append( author ).append( " created this attachment on " ).append( att.getLastModified() );
+        	//:FVK: sb.append( author ).append( " created this attachment on " ).append( att.getLastModifiedDate() );
         }
+        */
 
         sb.append( "<br /><hr /><br />" )
           .append( "Parent page: <a href=\"" )
@@ -134,16 +136,16 @@ public class DefaultRSSGenerator implements RSSGenerator {
         final StringBuilder buf = new StringBuilder();
         final String author = getAuthor( page );
         final Context ctx = Wiki.context().create( m_engine, page );
-      /*:FVK: 
+      /*:FVK:
         if( page.getVersion() > 1 ) {
             final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx,
                                                                 page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
                                                                          page.getVersion() );
 
-            buf.append( author ).append( " changed this page on " ).append( page.getLastModified() ).append( ":<br /><hr /><br />" );
+            buf.append( author ).append( " changed this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
             buf.append( diff );
         } else*/ {
-            buf.append( author ).append( " created this page on " ).append( page.getLastModified() ).append( ":<br /><hr /><br />" );
+            buf.append( author ).append( " created this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
             buf.append( ServicesRefs.getRenderingManager().getHTML( page.getName() ) );
         }
 

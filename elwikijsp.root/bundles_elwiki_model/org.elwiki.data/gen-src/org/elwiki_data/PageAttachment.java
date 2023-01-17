@@ -2,6 +2,9 @@
  */
 package org.elwiki_data;
 
+import org.eclipse.emf.cdo.CDOObject;
+
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -12,48 +15,19 @@ package org.elwiki_data;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getName <em>Name</em>}</li>
- *   <li>{@link org.elwiki_data.PageAttachment#isCacheable <em>Cacheable</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getWikipage <em>Wikipage</em>}</li>
- *   <li>{@link org.elwiki_data.PageAttachment#getPlace <em>Place</em>}</li>
- *   <li>{@link org.elwiki_data.PageAttachment#getSize <em>Size</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAttachment#getAttachContents <em>Attach Contents</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment()
  * @model
+ * @extends CDOObject
  * @generated
  */
-public interface PageAttachment extends IHistoryInfo {
-	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Id</em>' attribute.
-	 * @see #setId(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_Id()
-	 * @model default=""
-	 * @generated
-	 */
-	String getId();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
-	 * @see #getId()
-	 * @generated
-	 */
-	void setId(String value);
-
+public interface PageAttachment extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -81,34 +55,6 @@ public interface PageAttachment extends IHistoryInfo {
 	 * @generated
 	 */
 	void setName(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Cacheable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Cacheable</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Cacheable</em>' attribute.
-	 * @see #setCacheable(boolean)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_Cacheable()
-	 * @model
-	 * @generated
-	 */
-	boolean isCacheable();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#isCacheable <em>Cacheable</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Cacheable</em>' attribute.
-	 * @see #isCacheable()
-	 * @generated
-	 */
-	void setCacheable(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Wikipage</b></em>' container reference.
@@ -141,59 +87,82 @@ public interface PageAttachment extends IHistoryInfo {
 	void setWikipage(WikiPage value);
 
 	/**
-	 * Returns the value of the '<em><b>Place</b></em>' attribute.
+	 * Returns the value of the '<em><b>Attach Contents</b></em>' containment reference list.
+	 * The list contents are of type {@link org.elwiki_data.AttachmentContent}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attach Contents</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_AttachContents()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<AttachmentContent> getAttachContents();
+
+	/**
+	 * Returns the value of the '<em><b>Last Version</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Last Version</em>' attribute.
+	 * @see #setLastVersion(short)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_LastVersion()
+	 * @model default="0"
+	 * @generated
+	 */
+	short getLastVersion();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Version</em>' attribute.
+	 * @see #getLastVersion()
+	 * @generated
+	 */
+	void setLastVersion(short value);
+
+	/**
+	 * Returns the value of the '<em><b>Attachment Content</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Attachment Content</em>' reference.
+	 * @see #setAttachmentContent(AttachmentContent)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_AttachmentContent()
+	 * @model transient="true"
+	 * @generated
+	 */
+	AttachmentContent getAttachmentContent();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Attachment Content</em>' reference.
+	 * @see #getAttachmentContent()
+	 * @generated
+	 */
+	void setAttachmentContent(AttachmentContent value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Place</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	 * Returns last item of attachContents reference. And set reference of AttachmentContent.\n</br>Can be NULL.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Place</em>' attribute.
-	 * @see #setPlace(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_Place()
 	 * @model
 	 * @generated
 	 */
-	String getPlace();
+	AttachmentContent forLastContent();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getPlace <em>Place</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Place</em>' attribute.
-	 * @see #getPlace()
-	 * @generated
-	 */
-	void setPlace(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Size</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Size</em>' attribute isn't clear,
-	 *  there really should be more of a description here...
-	 * </p>
+	 * Returns item of attachContents reference for required version. And set reference of AttachmentContent.\n</br>Can be NULL.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Size</em>' attribute.
-	 * @see #setSize(long)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_Size()
 	 * @model
 	 * @generated
 	 */
-	long getSize();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getSize <em>Size</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Size</em>' attribute.
-	 * @see #getSize()
-	 * @generated
-	 */
-	void setSize(long value);
+	AttachmentContent forVersionContent(short desiredVersion);
 
 } // PageAttachment

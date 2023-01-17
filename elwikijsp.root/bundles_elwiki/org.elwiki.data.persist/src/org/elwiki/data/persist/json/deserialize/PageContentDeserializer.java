@@ -21,7 +21,7 @@ public class PageContentDeserializer extends DeserialiseStuff implements JsonDes
 
 		PageContent pageContent = Elwiki_dataFactory.eINSTANCE.createPageContent();
 
-		int version = getInt(jsonObject, "version");
+		short version = (short) getInt(jsonObject, "version");
 		String lastModify = getString(jsonObject, "lastModify");
 		String author = getString(jsonObject, "author");
 		String changeNote = getString(jsonObject, "changeNote");

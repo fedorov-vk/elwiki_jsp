@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
@@ -53,6 +54,7 @@ import org.elwiki.permissions.PermissionFactory;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
@@ -205,28 +207,28 @@ public class AttachmentServlet extends HttpServlet {
         final AuthorizationManager authmgr = ServicesRefs.getAuthorizationManager();
         final String version = req.getParameter( HDR_VERSION );
         final String nextPage = req.getParameter( "nextpage" );
-        final String page = context.getPage().getName();
-        int ver = WikiProvider.LATEST_VERSION;
+        final String attachmentName = context.getPage().getName();
+        short ver = WikiProvider.LATEST_VERSION;
 
-        if( page == null ) {
+        if( attachmentName == null ) {
             log.info( "Invalid attachment name." );
             res.sendError( HttpServletResponse.SC_BAD_REQUEST );
             return;
         }
 
         try( final OutputStream out = res.getOutputStream() ) {
-            log.debug("Attempting to download att "+page+", version "+version);
+            log.debug("Attempting to download att "+attachmentName+", version "+version);
             if( version != null ) {
-                ver = Integer.parseInt( version );
+                ver = Short.parseShort( version );
             }
 
-            final PageAttachment att = mgr.getAttachmentInfo( page, ver );
+            final PageAttachment att = mgr.getAttachmentInfo( attachmentName, ver );
             if( att != null ) {
                 //
                 //  Check if the user has permission for this attachment
                 //
 
-                final Permission permission = null; //:FVK: PermissionFactory.getPagePermission( att, "view" );
+                final Permission permission = null; //:FVK: TODO: was old code = PermissionFactory.getPagePermission( att, "view" );
                 if( !authmgr.checkPermission( context.getWikiSession(), permission ) ) {
                     log.debug("User does not have permission for this");
                     res.sendError( HttpServletResponse.SC_FORBIDDEN );
@@ -237,7 +239,7 @@ public class AttachmentServlet extends HttpServlet {
                 //  Check if the client already has a version of this attachment.
                 //
               /*:FVK: 
-                if( HttpUtil.checkFor304( req, att.getName(), att.getLastModified() ) ) {
+                if( HttpUtil.checkFor304( req, att.getName(), att.getLastModifiedDate() ) ) {
                     log.debug( "Client has latest version already, sending 304..." );
                     res.sendError( HttpServletResponse.SC_NOT_MODIFIED );
                     return;
@@ -247,22 +249,24 @@ public class AttachmentServlet extends HttpServlet {
                 final String mimetype = getMimeType( context, att.getFileName() );
                 res.setContentType( mimetype );*/
 
+                AttachmentContent attContent = att.getAttachmentContent();
+                
                 //
                 //  We use 'inline' instead of 'attachment' so that user agents
                 //  can try to automatically open the file.
                 //
                 res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getName() + "\";" );
-                res.addDateHeader("Last-Modified",att.getLastModify().getTime());
+                res.addDateHeader("Last-Modified",attContent.getLastModifiedDate().getTime());
 
-                if( !att.isCacheable() ) {
+                if( !attContent.isCacheable() ) {
                     res.addHeader( "Pragma", "no-cache" );
                     res.addHeader( "Cache-control", "no-cache" );
                 }
 
                 // If a size is provided by the provider, report it.
-                if( att.getSize() >= 0 ) {
+                if( attContent.getSize() >= 0 ) {
                     // log.info("size:"+att.getSize());
-                    res.setContentLength( (int)att.getSize() );
+                    res.setContentLength( (int)attContent.getSize() );
                 }
 
                 try( final InputStream  in = mgr.getAttachmentStream( context, att ) ) {
@@ -287,7 +291,7 @@ public class AttachmentServlet extends HttpServlet {
                 }
 
             } else {
-                final String msg = "Attachment '" + page + "', version " + ver + " does not exist.";
+                final String msg = "Attachment '" + attachmentName + "', version " + ver + " does not exist.";
                 log.info( msg );
                 res.sendError( HttpServletResponse.SC_NOT_FOUND, msg );
             }
@@ -554,28 +558,42 @@ public class AttachmentServlet extends HttpServlet {
             throw new RedirectException("File could not be opened.", errorPage);
         }
 
-        //  Check whether we already have this kind of a page. If the "page" parameter already defines an attachment
-        //  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
-        //  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
-        //  same name than some other previous attachment, then that attachment gains a new version.
-        PageAttachment att = mgr.getAttachmentInfo( context.getPage().getName() );
-        if( att == null ) {
-        	//:FVK: new Attachment( m_engine, parentPage, filename );
-            att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
-            att.setName(filename);
-            created = true;
-        }
-        att.setSize( contentLength );
+		//  Check whether we already have this kind of a page. If the "page" parameter already defines an attachment
+		//  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
+		//  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
+		//  same name than some other previous attachment, then that attachment gains a new version.
+		PageAttachment att = mgr.getAttachmentInfo(context.getPage().getName());
+		AttachmentContent attContent = null;
+		if (att == null) {
+			// Crate new PageAttachment.
+			att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+			att.setName(filename);
+			created = true;
+		} else {
+			attContent = att.forLastContent();
+		}
+
+		if (attContent == null) {
+			// Crate new AttachmentContent.
+			attContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
+			att.setAttachmentContent(attContent);
+		}
+
+		short latestVersion = (short) (att.getLastVersion() + 1);
+		att.setLastVersion(latestVersion);
+		attContent.setVersion(latestVersion);
+
+		attContent.setSize(contentLength);
 
         //  Check if we're allowed to do this?
         final Permission permission = PermissionFactory.getPagePermission( parentPage, "upload" );
         if( ServicesRefs.getAuthorizationManager().checkPermission( context.getWikiSession(), permission ) ) {
             if( user != null ) {
-                att.setAuthor( user.getName() );
+            	attContent.setAuthor( user.getName() );
             }
 
             if( changenote != null && changenote.length() > 0 ) {
-            	att.setChangeNote(changenote );
+            	attContent.setChangeNote(changenote );
             }
 
             try {

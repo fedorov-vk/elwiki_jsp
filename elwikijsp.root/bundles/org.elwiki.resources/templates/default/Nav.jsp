@@ -408,6 +408,25 @@
       </wiki:UserCheck>
       </wiki:CheckRequestContext>
 
+      <%-- Persisting wiki content --%>
+      <wiki:CheckRequestContext context="<%=Context.VIEW%>">      
+      <%-- <wiki:Permission permission="all"> --%>
+        <li class="divider"></li>
+        <li>
+          <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
+            <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+            <wiki:Param name='action' value='save'/>
+            Save wiki content
+          </wiki:Link>
+          <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
+            <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+            <wiki:Param name='action' value='load'/>
+            Load wiki content
+          </wiki:Link>
+        </li>
+      <%-- </wiki:Permission> --%>
+      </wiki:CheckRequestContext>
+
       <%-- GROUPS : moved to the UserBox.jsp
       <wiki:CheckRequestContext context='!creategroup' >
       <wiki:Permission permission="createGroups">
@@ -421,7 +440,7 @@
       --%>
 
       <%-- divider --%>
-      <wiki:PageExists pageId="3">
+      <wiki:PageExists pageId="w3">
 
         <wiki:CheckRequestContext context='view|info|diff|upload|createGroup'>
 	      <wiki:PageExists>
@@ -435,7 +454,7 @@
           </wiki:UserCheck>
         </wiki:CheckRequestContext>
 
-        <li class="more-menu"><wiki:InsertPage pageId="3" /></li>
+        <li class="more-menu"><wiki:InsertPage pageId="w3" /></li>
 
       </wiki:PageExists>
 

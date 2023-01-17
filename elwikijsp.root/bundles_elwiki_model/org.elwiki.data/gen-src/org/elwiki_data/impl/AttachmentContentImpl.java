@@ -2,45 +2,41 @@
  */
 package org.elwiki_data.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.Date;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
-import org.elwiki_data.PageContent;
-import org.elwiki_data.WikiPage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Page Content</b></em>'.
+ * An implementation of the model object '<em><b>Attachment Content</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getLastModifiedDate <em>Last Modified Date</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getChangeNote <em>Change Note</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getContent <em>Content</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getWikipage <em>Wikipage</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getVersion <em>Version</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getLastModifiedDate <em>Last Modified Date</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getAuthor <em>Author</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getChangeNote <em>Change Note</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getPlace <em>Place</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getSize <em>Size</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#isCacheable <em>Cacheable</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class PageContentImpl extends CDOObjectImpl implements PageContent {
+public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentContent {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PageContentImpl() {
+	protected AttachmentContentImpl() {
 		super();
 	}
 
@@ -51,7 +47,7 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Elwiki_dataPackage.Literals.PAGE_CONTENT;
+		return Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT;
 	}
 
 	/**
@@ -150,8 +146,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public String getContent() {
-		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_CONTENT__CONTENT, true);
+	public String getPlace() {
+		return (String)eGet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__PLACE, true);
 	}
 
 	/**
@@ -160,8 +156,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public void setContent(String newContent) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_CONTENT__CONTENT, newContent);
+	public void setPlace(String newPlace) {
+		eSet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__PLACE, newPlace);
 	}
 
 	/**
@@ -170,8 +166,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public WikiPage getWikipage() {
-		return (WikiPage)eGet(Elwiki_dataPackage.Literals.PAGE_CONTENT__WIKIPAGE, true);
+	public long getSize() {
+		return (Long)eGet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__SIZE, true);
 	}
 
 	/**
@@ -180,8 +176,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public void setWikipage(WikiPage newWikipage) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_CONTENT__WIKIPAGE, newWikipage);
+	public void setSize(long newSize) {
+		eSet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__SIZE, newSize);
 	}
 
 	/**
@@ -190,8 +186,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public Integer getLength() {
-		return getContent().length();
+	public boolean isCacheable() {
+		return (Boolean)eGet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__CACHEABLE, true);
 	}
 
 	/**
@@ -200,12 +196,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case Elwiki_dataPackage.PAGE_CONTENT___GET_LENGTH:
-				return getLength();
-		}
-		return super.eInvoke(operationID, arguments);
+	public void setCacheable(boolean newCacheable) {
+		eSet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__CACHEABLE, newCacheable);
 	}
 
-} //PageContentImpl
+} //AttachmentContentImpl

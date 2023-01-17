@@ -64,7 +64,7 @@
 %>
 
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_COMMENT.getRequestContext() );
     if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
@@ -273,7 +273,7 @@
     //
     long lastchange = 0;
 
-    Date d = latestversion.getLastModified();
+    Date d = latestversion.getLastModifiedDate();
     if( d != null ) lastchange = d.getTime();
 
     pageContext.setAttribute( "lastchange", Long.toString( lastchange ), PageContext.REQUEST_SCOPE );

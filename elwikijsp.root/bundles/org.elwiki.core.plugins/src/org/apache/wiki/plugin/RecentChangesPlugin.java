@@ -116,7 +116,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
             rt.setAttribute( XHTML.ATTR_cellpadding, spacing );
 
             for(WikiPage pageref : changes ) {
-                Date lastmod = pageref.getLastModified();
+                Date lastmod = pageref.getLastModifiedDate();
 				if (lastmod == null) {
 					lastmod = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
 				}

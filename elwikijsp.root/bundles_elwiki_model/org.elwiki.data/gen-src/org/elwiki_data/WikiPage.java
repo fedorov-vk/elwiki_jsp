@@ -28,14 +28,14 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getRedirect <em>Redirect</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getViewCount <em>View Count</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getPagecontents <em>Pagecontents</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getPageContents <em>Page Contents</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttachments <em>Attachments</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getWiki <em>Wiki</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getChildren <em>Children</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getTotalAttachment <em>Total Attachment</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
@@ -218,7 +218,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	void setViewCount(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Pagecontents</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Page Contents</b></em>' containment reference list.
 	 * The list contents are of type {@link org.elwiki_data.PageContent}.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.PageContent#getWikipage <em>Wikipage</em>}'.
 	 * <!-- begin-user-doc -->
@@ -229,13 +229,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Pagecontents</em>' containment reference list.
-	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Pagecontents()
+	 * @return the value of the '<em>Page Contents</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_PageContents()
 	 * @see org.elwiki_data.PageContent#getWikipage
 	 * @model opposite="wikipage" containment="true"
 	 * @generated
 	 */
-	EList<PageContent> getPagecontents();
+	EList<PageContent> getPageContents();
 
 	/**
 	 * Returns the value of the '<em><b>Attachments</b></em>' containment reference list.
@@ -385,7 +385,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	EList<PageReference> getPageReferences();
 
 	/**
-	 * Returns the value of the '<em><b>Total Attachment</b></em>' attribute.
+	 * Returns the value of the '<em><b>Last Version</b></em>' attribute.
 	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -395,12 +395,12 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Total Attachment</em>' attribute.
-	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_TotalAttachment()
+	 * @return the value of the '<em>Last Version</em>' attribute.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_LastVersion()
 	 * @model default="0" transient="true" changeable="false"
 	 * @generated
 	 */
-	int getTotalAttachment();
+	short getLastVersion();
 
 	/**
 	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.
@@ -491,7 +491,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @model kind="operation"
 	 * @generated
 	 */
-	Date getLastModified();
+	Date getLastModifiedDate();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -508,7 +508,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns last item of pagecontents reference.
+	 * Returns last item of pageContents reference.
 	 * </br>Can be NULL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation"
@@ -549,14 +549,6 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	void setAttribute(String name, Object value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation"
-	 * @generated
-	 */
-	long getNumId();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -52,9 +52,10 @@ public class WikiPageDeserializer extends DeserialiseStuff implements JsonDeseri
 			pageReferences.add(pageReference);
 		}
 
-		for (JsonElement child : getArray(jsonObject, "children")) {
-			String refId = child.getAsString();
-			//TODO: JSON restore children.
+		EList<WikiPage> children = wikiPage.getChildren();
+		for (JsonElement jsonPage : getArray(jsonObject, "children")) {
+			WikiPage childWikiPage = context.deserialize(jsonPage, WikiPage.class);
+			children.add(childWikiPage);
 		}
 
 		for (JsonElement jsonAttrib : getArray(jsonObject, "attributes")) {
@@ -64,14 +65,18 @@ public class WikiPageDeserializer extends DeserialiseStuff implements JsonDeseri
 			//TODO: JSON restore attributes.
 		}
 		
-		for (JsonElement jsonCintent : getArray(jsonObject, "contents")) {
-			PageContent pageContent = context.deserialize(jsonCintent, PageContent.class);
-			wikiPage.getPagecontents().add(pageContent);
+		EList<PageContent> contents = wikiPage.getPageContents();
+		for (JsonElement jsonContent : getArray(jsonObject, "contents")) {
+			PageContent pageContent = context.deserialize(jsonContent, PageContent.class);
+			contents.add(pageContent);
 		}
 
-		for (JsonElement jsonCintent : getArray(jsonObject, "attachments")) {
-			PageAttachment pageAttachment = context.deserialize(jsonCintent, PageAttachment.class);
-			wikiPage.getAttachments().add(pageAttachment);
+		EList<PageAttachment> attachments = wikiPage.getAttachments();
+		for (JsonElement jsonAttachment : getArray(jsonObject, "attachments")) {
+			PageAttachment pageAttachment = context.deserialize(jsonAttachment, PageAttachment.class);
+			if (pageAttachment != null) {
+				attachments.add(pageAttachment);
+			}
 		}
 
 		if(jsonObject.has("acl")) {

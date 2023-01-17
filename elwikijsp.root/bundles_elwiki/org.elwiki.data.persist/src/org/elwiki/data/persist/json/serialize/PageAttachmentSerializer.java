@@ -1,6 +1,8 @@
 package org.elwiki.data.persist.json.serialize;
 
 import java.lang.reflect.Type;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.elwiki_data.PageAttachment;
 
@@ -15,7 +17,12 @@ public class PageAttachmentSerializer implements JsonSerializer<PageAttachment> 
 	public JsonElement serialize(PageAttachment pageAttachment, Type arg1, JsonSerializationContext arg2) {
 		JsonObject result = new JsonObject();
 
+		/*
 		result.addProperty("version", pageAttachment.getVersion());
+		Date lastModification = pageAttachment.getLastModify();
+		if (lastModification == null) {
+			lastModification = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
+		}
 		result.addProperty("lastModify", pageAttachment.getLastModify().toString());
 		result.addProperty("author", pageAttachment.getAuthor());
 		result.addProperty("changeNote", pageAttachment.getChangeNote());
@@ -24,6 +31,7 @@ public class PageAttachmentSerializer implements JsonSerializer<PageAttachment> 
 		result.addProperty("cacheable", pageAttachment.isCacheable());
 		result.addProperty("place", pageAttachment.getPlace());
 		result.addProperty("size", pageAttachment.getSize());
+		*/
 
 		return null;
 	}

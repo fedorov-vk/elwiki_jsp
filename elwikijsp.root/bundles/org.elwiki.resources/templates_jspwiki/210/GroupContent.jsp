@@ -57,9 +57,9 @@ Context c = ContextUtil.findContext( pageContext );
       created = Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getCreated(),Preferences.TimeFormat.DATETIME);
     }
     modifier = group.getModifier();
-    if ( group.getLastModified() != null )
+    if ( group.getLastModifiedDate() != null )
     {
-      modified = Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModified(),Preferences.TimeFormat.DATETIME) ;
+      modified = Preferences.renderDate(ContextUtil.findContext( pageContext ), group.getLastModifiedDate(),Preferences.TimeFormat.DATETIME) ;
     }
   }
   name = TextUtil.replaceEntities(name);

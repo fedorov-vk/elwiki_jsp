@@ -39,7 +39,8 @@ public class WikiPageSerializer implements JsonSerializer<WikiPage> {
 		JsonArray children = new JsonArray();
 		result.add("children", children);
 		for (WikiPage child : wikiPage.getChildren()) {
-			children.add(new JsonPrimitive(child.getId()));
+			children.add(context.serialize(child, WikiPage.class));
+						//new JsonPrimitive(child.getId()));
 		}
 
 		JsonArray attributes = new JsonArray();
@@ -52,7 +53,7 @@ public class WikiPageSerializer implements JsonSerializer<WikiPage> {
 
 		JsonArray contents = new JsonArray();
 		result.add("contents", contents);
-		for (PageContent content : wikiPage.getPagecontents()) {
+		for (PageContent content : wikiPage.getPageContents()) {
 			contents.add(context.serialize(content, PageContent.class));
 		}
 

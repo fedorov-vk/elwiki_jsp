@@ -44,8 +44,8 @@ public class PageTimeComparator implements Comparator< WikiPage >, Serializable 
             return 0; // FIXME: Is this correct?
         }
 
-        final Date w1LastMod = p1.getLastModified();
-        final Date w2LastMod = p2.getLastModified();
+        final Date w1LastMod = p1.getLastModifiedDate();
+        final Date w2LastMod = p2.getLastModifiedDate();
 
         if( w1LastMod == null ) {
             log.error( "NULL MODIFY DATE WITH " + p1.getName() );

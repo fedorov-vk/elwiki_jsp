@@ -442,7 +442,7 @@ public class GroupManager implements IAuthorizer {
 			group.setCreator(oldGroup.getCreator());
 			group.setCreated(oldGroup.getCreated());
 			group.setModifier(oldGroup.getModifier());
-			group.setLastModified(oldGroup.getLastModified());
+			group.setLastModified(oldGroup.getLastModifiedDate());
 		}*/
 
 		// Add new group to cache; announce GROUP_ADD event

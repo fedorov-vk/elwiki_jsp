@@ -19,9 +19,9 @@ public class PageAttachmentDeserializer extends DeserialiseStuff implements Json
 			throws JsonParseException {
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-		PageAttachment ageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
-		
-		int version = getInt(jsonObject, "version");
+		PageAttachment pageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+
+		short version = (short) getInt(jsonObject, "version");
 		String lastModify = getString(jsonObject, "lastModify");
 		String author = getString(jsonObject, "author");
 		String changeNote = getString(jsonObject, "changeNote");
@@ -31,17 +31,19 @@ public class PageAttachmentDeserializer extends DeserialiseStuff implements Json
 		String place = getString(jsonObject, "place");
 		long size = getLong(jsonObject, "size");
 
-		ageAttachment.setVersion(version);
+		/*:FVK:
+		pageAttachment.setVersion(version);
 		//TODO: pageContent.setLastModify(lastModify);
-		ageAttachment.setAuthor(author);
-		ageAttachment.setChangeNote(changeNote);
-		ageAttachment.setId(id);
-		ageAttachment.setName(name);
-		ageAttachment.setCacheable(cacheable);
-		ageAttachment.setPlace(place);
-		ageAttachment.setSize(size);
+		pageAttachment.setAuthor(author);
+		pageAttachment.setChangeNote(changeNote);
+		pageAttachment.setId(id);
+		pageAttachment.setName(name);
+		pageAttachment.setCacheable(cacheable);
+		pageAttachment.setPlace(place);
+		pageAttachment.setSize(size);
+		*/
 		
-		return ageAttachment;
+		return pageAttachment;
 	}
 
 }

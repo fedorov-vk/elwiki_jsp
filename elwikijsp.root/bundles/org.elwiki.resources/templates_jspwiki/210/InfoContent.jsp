@@ -211,12 +211,12 @@
         <th class="changenote" scope="col"><fmt:message key="info.changenote"/></th>
       </tr>
 
-      <wiki:HistoryIterator id="currentPage">
+      org.elwiki_data.PageContent currentPage = (org.elwiki_data.PageContent) pageContext.getAttribute("currentPage");
       <%
-      	if( ( startitem == -1 ) ||
-                   (  ( currentPage.getVersion() > startitem )
-                   && ( currentPage.getVersion() <= startitem + pagesize ) ) )
-               {
+      if( ( startitem == -1 ) ||
+                               (  ( currentPage.getVersion() > startitem )
+                               && ( currentPage.getVersion() <= startitem + pagesize ) ) )
+                           {
       %>
       <tr>
         <td>
@@ -225,7 +225,7 @@
           </wiki:LinkTo>
         </td>
 
-	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%=currentPage.getLastModified().getTime()%>">
+	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%=currentPage.getLastModifiedDate().getTime()%>">
         <fmt:formatDate value="<%= currentPage.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </td>
         <td style="white-space:nowrap;text-align:right;">
@@ -247,14 +247,14 @@
 
          <td class="changenote">
            <%
-           	String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
+           String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
            %>
 		   <%=(changenote==null) ? "" : changenote%>
          </td>
 
       </tr>
       <%
-      	}
+      }
       %>
       </wiki:HistoryIterator>
 
@@ -272,7 +272,7 @@
 <%-- part 2 : attachments --%>
 <wiki:PageType type="attachment">
 <%
-	int MAXATTACHNAMELENGTH = 30;
+int MAXATTACHNAMELENGTH = 30;
   String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
 %>
 
@@ -363,14 +363,14 @@
       <th  class="changenote" scope="col"><fmt:message key="info.changenote"/></th>
     </tr>
 
-    <wiki:HistoryIterator id="att"><%-- <wiki:AttachmentsIterator id="att"> --%>
+    org.elwiki_data.PageContent att = (org.elwiki_data.PageContent) pageContext.getAttribute("att");<%-- <wiki:AttachmentsIterator id="att"> --%>
     <%
-    	String name = att.getName(); //att.getFileName();
-          int dot = name.lastIndexOf(".");
-          String attachtype = ( dot != -1 ) ? name.substring(dot+1) : "&nbsp;";
+    String name = att.getName(); //att.getFileName();
+                      int dot = name.lastIndexOf(".");
+                      String attachtype = ( dot != -1 ) ? name.substring(dot+1) : "&nbsp;";
 
-          String sname = name;
-          if( sname.length() > MAXATTACHNAMELENGTH ) sname = sname.substring(0,MAXATTACHNAMELENGTH) + "...";
+                      String sname = name;
+                      if( sname.length() > MAXATTACHNAMELENGTH ) sname = sname.substring(0,MAXATTACHNAMELENGTH) + "...";
     %>
 
     <tr>
@@ -387,7 +387,7 @@
       <td style="white-space:nowrap;text-align:right;">
         <fmt:formatNumber value='<%=Double.toString(att.getSize()/1000.0)%>' groupingUsed='false' maxFractionDigits='1' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/>
       </td>
-	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%=att.getLastModified().getTime()%>">
+	  <td style="white-space:nowrap;" jspwiki:sortvalue="<%=att.getLastModifiedDate().getTime()%>">
 	  <fmt:formatDate value="<%= att.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
 	  </td>
       <td><wiki:Author /></td>

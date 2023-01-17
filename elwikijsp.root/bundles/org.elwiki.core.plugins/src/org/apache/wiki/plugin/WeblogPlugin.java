@@ -283,7 +283,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         //
         buffer.append("<div class=\"weblogentryheading\">\n");
 
-        final Date entryDate = entry.getLastModified();
+        final Date entryDate = entry.getLastModifiedDate();
         buffer.append( entryFormat != null ? entryFormat.format(entryDate) : entryDate );
         buffer.append("</div>\n");
 
@@ -410,7 +410,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
             if( pageName.startsWith( baseName ) ) {
                 try {
                     final WikiPage firstVersion = mgr.getPageInfo( pageName, 1 );
-                    final Date d = firstVersion.getLastModified();
+                    final Date d = firstVersion.getLastModifiedDate();
 
                     if( d.after( start ) && d.before( end ) ) {
                         result.add( firstVersion );
@@ -435,7 +435,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
             if( page1 == null || page2 == null ) {
                 return 0;
             }
-            return page2.getLastModified().compareTo( page1.getLastModified() );
+            return page2.getLastModifiedDate().compareTo( page1.getLastModifiedDate() );
         }
 
     }

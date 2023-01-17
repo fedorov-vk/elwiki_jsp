@@ -98,10 +98,10 @@ public class RSS10Feed extends Feed {
             //
             //  Modification date.
             final Calendar cal = Calendar.getInstance();
-            cal.setTime(p.getLastModified());
+            cal.setTime(p.getLastModifiedDate());
             cal.add( Calendar.MILLISECOND,
                     - ( cal.get( Calendar.ZONE_OFFSET ) +
-                             ( cal.getTimeZone().inDaylightTime( p.getLastModified() ) ? cal.get( Calendar.DST_OFFSET )
+                             ( cal.getTimeZone().inDaylightTime( p.getLastModifiedDate() ) ? cal.get( Calendar.DST_OFFSET )
                                                                                        : 0 ) ) );
 
             item.addContent( new Element( "date", NS_DC ).addContent( iso8601fmt.format( cal.getTime() ) ) );

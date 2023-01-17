@@ -229,7 +229,7 @@ public class WrapGroup {
 	 *
 	 * @return the date and time of last modification
 	 */
-	public synchronized Date getLastModified() {
+	public synchronized Date getLastModifiedDate() {
 		Dictionary<String, Object> properties = this.group.getProperties();
 		String modified = (String) properties.get(UserDatabase.LAST_MODIFIED);
 

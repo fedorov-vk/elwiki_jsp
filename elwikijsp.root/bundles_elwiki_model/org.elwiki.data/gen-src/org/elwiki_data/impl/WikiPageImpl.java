@@ -37,14 +37,14 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getRedirect <em>Redirect</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getViewCount <em>View Count</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPagecontents <em>Pagecontents</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageContents <em>Page Contents</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttachments <em>Attachments</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getWiki <em>Wiki</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTotalAttachment <em>Total Attachment</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
@@ -199,8 +199,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public EList<PageContent> getPagecontents() {
-		return (EList<PageContent>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGECONTENTS, true);
+	public EList<PageContent> getPageContents() {
+		return (EList<PageContent>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGE_CONTENTS, true);
 	}
 
 	/**
@@ -299,12 +299,11 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
-	public int getTotalAttachment() {
-		EList<PageAttachment> attachments = getAttachments();
-		return attachments.size();
+	public short getLastVersion() {
+		return (Short)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
 	}
 
 	/**
@@ -400,10 +399,10 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public Date getLastModified() {
-		EList<PageContent> pageContent = this.getPagecontents();
+	public Date getLastModifiedDate() {
+		EList<PageContent> pageContent = this.getPageContents();
 		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
-				pageContent.get(pageContent.size()-1).getLastModify();
+				pageContent.get(pageContent.size()-1).getLastModifiedDate();
 	}
 
 	/**
@@ -424,9 +423,18 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public PageContent getLastContent() {
-		EList<PageContent> pageContents = getPagecontents();
-		return (pageContents.isEmpty())? null :
-				pageContents.get(pageContents.size() - 1);
+		PageContent result = null;
+		short version = 0;
+		EList<PageContent> attachContents = getPageContents();
+		for (PageContent pageContent : attachContents) {
+			short contentVersion = pageContent.getVersion();
+			if (version < contentVersion) {
+				version = contentVersion;
+				result = pageContent;
+			}
+		}
+		
+		return result;
 	}
 
 	/**
@@ -466,26 +474,9 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public long getNumId() {
-		String pageId = this.getId();
-		long pageNumId;
-		try {
-			pageNumId = Integer.parseInt(pageId);
-		} catch (NumberFormatException e) {
-			pageNumId = 0;
-		}
-		return pageNumId;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isInternalPage() {
-		long pageNumId = this.getNumId();
-		return (pageNumId > 0 && pageNumId < 1000)? true : false;
+		String pageId = this.getId();
+		return (pageId.startsWith("w"))? true : false;
 	}
 
 	/**
@@ -522,8 +513,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return compareTo((Object)arguments.get(0));
 			case Elwiki_dataPackage.WIKI_PAGE___CLONE:
 				return clone();
-			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_MODIFIED:
-				return getLastModified();
+			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_MODIFIED_DATE:
+				return getLastModifiedDate();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_AUTHOR:
 				return getAuthor();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_CONTENT:
@@ -535,8 +526,6 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 			case Elwiki_dataPackage.WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT:
 				setAttribute((String)arguments.get(0), arguments.get(1));
 				return null;
-			case Elwiki_dataPackage.WIKI_PAGE___GET_NUM_ID:
-				return getNumId();
 			case Elwiki_dataPackage.WIKI_PAGE___IS_INTERNAL_PAGE:
 				return isInternalPage();
 		}

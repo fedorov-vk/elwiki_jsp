@@ -110,7 +110,7 @@ public class WeblogArchivePlugin implements Plugin {
 
         for( final WikiPage p : blogEntries ) {
             // FIXME: Not correct, should parse page creation time.
-            final Date d = p.getLastModified();
+            final Date d = p.getLastModifiedDate();
             final Calendar cal = Calendar.getInstance();
             cal.setTime( d );
             res.add( cal );

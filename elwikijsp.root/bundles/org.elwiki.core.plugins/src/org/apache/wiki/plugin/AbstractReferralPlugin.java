@@ -309,7 +309,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 if( m_lastModified ) {
                     page = ServicesRefs.getPageManager().getPage( pageName );
                     if( page != null ) {
-                        final Date lastModPage = page.getLastModified();
+                        final Date lastModPage = page.getLastModifiedDate();
                         if( log.isDebugEnabled() ) {
                             log.debug( "lastModified Date of page " + pageName + " : " + m_dateLastModified );
                         }

@@ -20,6 +20,7 @@ package org.apache.wiki.api.attachment;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.elwiki_data.WikiPage;
@@ -94,7 +95,7 @@ public interface AttachmentManager {
      *  @throws ProviderException If something goes wrong.
      */
 
-    default PageAttachment getAttachmentInfo( final String name, final int version ) throws ProviderException {
+    default PageAttachment getAttachmentInfo( final String name, final short version ) throws ProviderException {
         if( name == null ) {
             return null;
         }
@@ -123,7 +124,7 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment or version exists.
      *  @throws ProviderException If something goes wrong.
      */
-    PageAttachment getAttachmentInfo( Context context, String attachmentname, int version ) throws ProviderException;
+    PageAttachment getAttachmentInfo( Context context, String attachmentname, short version ) throws ProviderException;
 
     /**
      *  Figures out the full attachment name from the context and attachment name.
@@ -249,7 +250,7 @@ public interface AttachmentManager {
      *          disabled.
      *  @throws ProviderException If the provider fails for some reason.
      */
-    List< PageAttachment > getVersionHistory( String attachmentName ) throws ProviderException;
+    List<AttachmentContent> getVersionHistory( String attachmentName ) throws ProviderException;
 
     /**
      *  Returns a collection of Attachments, containing each and every attachment that is in this Wiki.

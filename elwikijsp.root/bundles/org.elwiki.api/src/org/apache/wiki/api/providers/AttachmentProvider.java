@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.api.providers;
 
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -47,8 +48,7 @@ public interface AttachmentProvider extends WikiProvider {
      * @param wikiPage Wiki page is owned of specified attachment.
      * @param att Attachment object to add new data to.
      * @param data The stream from which the provider should read the data
-     *  
-     *  @return TODO
+     * @return TODO
      *  @throws IOException If writing fails
      *  @throws ProviderException If there are other errors.
      */
@@ -105,7 +105,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return An attachment object
      *  @throws ProviderException If the attachment cannot be found or some other error occurs.
      */
-    PageAttachment getAttachmentInfo( WikiPage page, String name, int version ) throws ProviderException;
+    PageAttachment getAttachmentInfo( WikiPage page, String name, short version ) throws ProviderException;
 
     /**
      *  Returns version history.  Each element should be an Attachment.
@@ -113,7 +113,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @param att The attachment for which to find the version history for.
      *  @return A List of Attachment objects.
      */
-    List< PageAttachment > getVersionHistory( PageAttachment att );
+    List<AttachmentContent> getVersionHistory( PageAttachment att );
 
     /**
      *  Removes a specific version from the repository.  The implementations should really do no more security checks, since that is the

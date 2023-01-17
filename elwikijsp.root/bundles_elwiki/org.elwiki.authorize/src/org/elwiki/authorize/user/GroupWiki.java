@@ -184,7 +184,7 @@ public class GroupWiki implements IGroupWiki {
 	 * @return the date and time of last modification
 	 */
 	@Override
-	public synchronized Date getLastModified() {
+	public synchronized Date getLastModifiedDate() {
 		return this.m_modified;
 	}
 

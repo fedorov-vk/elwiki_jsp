@@ -20,6 +20,7 @@ package org.apache.wiki.rss;
 
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -87,10 +88,13 @@ public class RSS20Feed extends Feed
                 try {
                     final List< PageAttachment > c = ServicesRefs.getAttachmentManager().listAttachments( p );
                     for( final PageAttachment att : c ) {
-                        final Element attEl = new Element( "enclosure" );
-                        attEl.setAttribute( "url", engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null ) );
-                        attEl.setAttribute( "length", Long.toString( att.getSize() ) );
-                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
+						final Element attEl = new Element("enclosure");
+						attEl.setAttribute("url",
+								engine.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null));
+						AttachmentContent attachmentContent = att.forLastContent();
+						long size = (attachmentContent != null) ? attachmentContent.getSize() : -1;
+						attEl.setAttribute("length", Long.toString(size));
+	                      //:FVK: attEl.setAttribute( "type", getMimeType( servletContext, att.getFileName() ) );
 
                         item.addContent( attEl );
                     }
@@ -103,8 +107,8 @@ public class RSS20Feed extends Feed
             //  Modification date.
             //
             final Calendar cal = Calendar.getInstance();
-            cal.setTime( p.getLastModified() );
-            cal.add( Calendar.MILLISECOND, -( cal.get( Calendar.ZONE_OFFSET ) + ( cal.getTimeZone().inDaylightTime( p.getLastModified() ) ?
+            cal.setTime( p.getLastModifiedDate() );
+            cal.add( Calendar.MILLISECOND, -( cal.get( Calendar.ZONE_OFFSET ) + ( cal.getTimeZone().inDaylightTime( p.getLastModifiedDate() ) ?
                     cal.get( Calendar.DST_OFFSET ) :
                     0 ) ) );
 
