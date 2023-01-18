@@ -30,7 +30,7 @@ package org.elwiki.data.authorize;
  * @see org.elwiki.api.authorization.Group
  * @since 2.3.79
  */
-public final class GroupPrincipal extends APrincipal {
+public final class GroupPrincipal extends Aprincipal {
 
 	private static final long serialVersionUID = 1L;
 

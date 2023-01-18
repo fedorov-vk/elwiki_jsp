@@ -30,7 +30,7 @@ import java.util.Comparator;
  * logical equality or hash code; two WikiPrincipals with the same name but different types are
  * still considered equal.
  */
-public final class WikiPrincipal extends APrincipal implements Comparable<Principal> {
+public final class WikiPrincipal extends Aprincipal implements Comparable<Principal> {
 
 	private static final long serialVersionUID = 1L;
 

@@ -25,7 +25,7 @@ package org.elwiki.data.authorize;
  * resolved lazily during a later access control check. Conceptuallly, UnresolvedPrincipal
  * performs a function similar to {@link java.security.UnresolvedPermission}.
  */
-public final class UnresolvedPrincipal extends APrincipal {
+public final class UnresolvedPrincipal extends Aprincipal {
 
 	private static final long serialVersionUID = 1L;
 

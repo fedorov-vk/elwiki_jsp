@@ -28,7 +28,7 @@ import java.security.PermissionCollection;
  * 
  * @since 2.3.80
  */
-public final class AllPermission extends APermission {
+public final class AllPermission extends Apermission {
 
 	private static final long serialVersionUID = 4520283353774198171L;
 
@@ -40,12 +40,14 @@ public final class AllPermission extends APermission {
 	/**
 	 * Creates a new AllPermission for the given wikis.
 	 * 
-	 * @param wiki the wiki to which the permission should apply. If null, will
-	 *             apply to all wikis.
+	 * @param wikiName the wiki to which the permission should apply. If null, will
+	 *                 apply to all wikis.
+	 * @param foo      this is the 'holder parameter' so that the constructor
+	 *                 matches the Wiki's Permissions constructor pattern.
 	 */
-	public AllPermission(String wiki, String foo) {
-		super(wiki);
-		setWikiName((wiki == null || wiki.isEmpty() || wiki.isBlank()) ? WILDCARD : wiki);
+	public AllPermission(String wikiName, String foo) {
+		super(wikiName);
+		setWikiName(wikiName);
 	}
 
 	/**
@@ -104,8 +106,8 @@ public final class AllPermission extends APermission {
 	@Override
 	public boolean implies(Permission permission) {
 		// Permission must be of ElWiki permissions.
-		if (permission instanceof APermission) {
-			String wiki = ((APermission) permission).getWikiName();
+		if (permission instanceof Apermission) {
+			String wiki = ((Apermission) permission).getWikiName();
 
 			// If the wiki is implied, it's allowed
 			return isSubset(this.getWikiName(), wiki);

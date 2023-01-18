@@ -8,13 +8,13 @@
     <semanticResources>http://www.eclipse.org/emf/2002/GenModel</semanticResources>
     <semanticResources>../target/classes/org/elwiki/IWikiConstants$AuthenticationStatus.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/IWikiConstants.class</semanticResources>
-    <semanticResources>../target/classes/org/elwiki/data/authorize/APrincipal.class</semanticResources>
+    <semanticResources>../target/classes/org/elwiki/data/authorize/Aprincipal.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/data/authorize/GroupPrincipal.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/data/authorize/PrincipalComparator.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/data/authorize/Role.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/data/authorize/UnresolvedPrincipal.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/data/authorize/WikiPrincipal.class</semanticResources>
-    <semanticResources>../target/classes/org/elwiki/permissions/APermission.class</semanticResources>
+    <semanticResources>../target/classes/org/elwiki/permissions/Apermission.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/permissions/AllPermission.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/permissions/AllPermissionCollection.class</semanticResources>
     <semanticResources>../target/classes/org/elwiki/permissions/GroupPermission.class</semanticResources>

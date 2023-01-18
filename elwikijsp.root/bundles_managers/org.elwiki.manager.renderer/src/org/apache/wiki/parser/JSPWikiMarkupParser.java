@@ -1248,7 +1248,15 @@ public class JSPWikiMarkupParser extends MarkupParser {
             } else if( TextUtil.isNumber( linkRef ) ) {
                 // It defines a reference to a local footnote
                 makeLink( LinkType.LOCALREF, linkRef, linkText, null, link.getAttributes() );
-			} else if (linkRef.matches("@\\d+")) {
+			} else if (linkRef.matches("@cmd\\..+")) {
+				// Internal wiki link (by wiki command).
+				// Working up link of ElWiki format.
+
+				//LinkType linkType = LinkType.EMPTY;
+
+				String cmdName = linkRef.substring(5); // :FVK: Workaround - длина префикса.
+				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
+			} else if (linkRef.matches("@.+")) {
 				// Internal wiki link (by page.id).
 				// Working up link of ElWiki format.
 
@@ -1283,14 +1291,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				callMutatorChain(this.m_localLinkMutatorChain, linkRef);
 
 				makeLink(linkType, linkRef, linkText, null, link.getAttributes());
-			} else if (linkRef.matches("@cmd\\..+")) {
-				// Internal wiki link (by wiki command).
-				// Working up link of ElWiki format.
-
-				//LinkType linkType = LinkType.EMPTY;
-
-				String cmdName = linkRef.substring(5); // :FVK: Workaround - длина префикса.
-				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
 			} else {
                 final int hashMark;
 

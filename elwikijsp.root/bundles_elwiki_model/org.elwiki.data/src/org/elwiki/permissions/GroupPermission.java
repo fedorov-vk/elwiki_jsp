@@ -70,7 +70,7 @@ import org.eclipse.core.runtime.Platform;
  * of.&#8221; The wildcard target (*) does <em>not</em> imply
  * <code>&lt;groupmember&gt;</code>; it must be granted explicitly.
  */
-public final class GroupPermission extends APermission {
+public final class GroupPermission extends Apermission {
 
 	private static final long serialVersionUID = 347330660713847609L;
 	private static final Logger log = Logger.getLogger(GroupPermission.class);
@@ -128,7 +128,7 @@ public final class GroupPermission extends APermission {
 	 * @param actions
 	 */
 	private GroupPermission(String actions) {
-		this(WILDCARD + APermission.WIKI_SEPARATOR + WILDCARD, actions);
+		this(WILDCARD + WIKI_SEPARATOR + WILDCARD, actions);
 	}
 
 	/**
@@ -147,7 +147,7 @@ public final class GroupPermission extends APermission {
 		String[] pathParams = group.split(WIKI_SEPARATOR);
 		String groupName;
 		if (pathParams.length >= 2) {
-			setWikiName(pathParams[0].length() > 0 ? pathParams[0] : null);
+			setWikiName(pathParams[0]);
 			groupName = pathParams[1];
 		} else {
 			setWikiName(WILDCARD);
@@ -239,10 +239,10 @@ public final class GroupPermission extends APermission {
 
 		// See if this permission is <groupmember> and Subject possesses
 		// User matching the implied GroupPermission's group.
-		boolean impliedMember = MEMBER_TOKEN.equals(this.m_group)
+		boolean isImpliedMember = MEMBER_TOKEN.equals(this.m_group)
 				&& Platform.getAdapterManager().getAdapter(permission, Boolean.class);
 
-		return impliedWiki && (impliedGroup || impliedMember);
+		return impliedWiki && (impliedGroup || isImpliedMember);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public final class GroupPermission extends APermission {
 	@Override
 	public String toString() {
 		String wiki = (this.getWikiName() == null) ? "" : this.getWikiName();
-		// :FVK: return "(\"" + this.getClass().getName() + "\",\"" + wiki + WIKI_SEPARATOR + this.m_group + "\",\"" + getActions() + "\")";
+		// :FVK: original code: return "(\"" + this.getClass().getName() + "\",\"" + wiki + WIKI_SEPARATOR + this.m_group + "\",\"" + getActions() + "\")";
 		return this.getClass().getName() + "|" + wiki + WIKI_SEPARATOR + this.m_group + "|" + getActions();
 	}
 

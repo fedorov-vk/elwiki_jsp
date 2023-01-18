@@ -47,7 +47,7 @@ public class AllPermissionCollection extends PermissionCollection {
 	 */
 	@Override
 	public void add(Permission permission) {
-		if (!(permission instanceof APermission)) {
+		if (!(permission instanceof Apermission)) {
 			throw new IllegalArgumentException("Permission must be of type org.elwiki.auth.permissions.*Permission.");
 		}
 
@@ -100,7 +100,7 @@ public class AllPermissionCollection extends PermissionCollection {
 		}
 
 		// If not one of our permission types, it's not implied
-		if (!(permission instanceof APermission)) {
+		if (!(permission instanceof Apermission)) {
 			return false;
 		}
 

@@ -3,13 +3,13 @@ package org.elwiki.data.authorize;
 import java.io.Serializable;
 import java.security.Principal;
 
-abstract public class APrincipal implements Principal, Serializable {
+abstract public class Aprincipal implements Principal, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private final String principalName;
 
-	protected APrincipal(String name) {
+	protected Aprincipal(String name) {
 		this.principalName = name;
 	}
 

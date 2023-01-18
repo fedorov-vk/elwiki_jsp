@@ -38,7 +38,7 @@ import java.security.PermissionCollection;
  * implies <code>createPages</code>.
  * </p>
  */
-public final class WikiPermission extends APermission {
+public final class WikiPermission extends Apermission {
 
 	private static final long serialVersionUID = -7293877464652228726L;
 
@@ -90,7 +90,7 @@ public final class WikiPermission extends APermission {
 	 */
 	public WikiPermission(String wiki, String actions) {
 		super(wiki);
-		setWikiName((wiki == null || wiki.isEmpty() || wiki.isBlank()) ? WILDCARD : wiki);
+		setWikiName(wiki);
 		parseActions(actions);
 	}
 

@@ -101,7 +101,7 @@ import org.elwiki.api.authorization.IAuthorizer;
 
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.data.authorize.APrincipal;
+import org.elwiki.data.authorize.Aprincipal;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
@@ -575,7 +575,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 */
 	public boolean allowedByLocalPolicy(Principal[] principals, Permission permission) {
 		for (Principal principal : principals) {
-			if(principal instanceof APrincipal) {
+			if(principal instanceof Aprincipal) {
 				String roleName = principal.getName();
 				PermissionCollection permCollection;
 				if( cachedPermissions.containsKey(roleName) ) {

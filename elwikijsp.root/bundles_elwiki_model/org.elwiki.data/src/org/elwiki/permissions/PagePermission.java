@@ -57,7 +57,7 @@ import org.elwiki_data.WikiPage;
  * Targets that do not include a wiki prefix <i>never </i> imply others.
  * </ul>
  */
-public final class PagePermission extends APermission {
+public final class PagePermission extends Apermission {
 
 	private static final long serialVersionUID = 5211426500968895383L;
 
@@ -86,9 +86,9 @@ public final class PagePermission extends APermission {
 	protected static final int EDIT_MASK = 0x02;
 	protected static final int COMMENT_MASK = 0x04;
 	protected static final int UPLOAD_MASK = 0x08;
+	protected static final int DELETE_MASK = 0x10;
 	protected static final int RENAME_MASK = 0x20;
 	protected static final int MODIFY_MASK = 0x40;
-	protected static final int DELETE_MASK = 0x10;
 
 	/** A static instance of the comment permission. */
 	public static final PagePermission COMMENT = new PagePermission(COMMENT_ACTION);
@@ -149,7 +149,7 @@ public final class PagePermission extends APermission {
 		String[] pathParams = page.split(WIKI_SEPARATOR);
 		String pageName;
 		if (pathParams.length >= 2) {
-			setWikiName(pathParams[0].length() > 0 ? pathParams[0] : null);
+			setWikiName(pathParams[0]);
 			pageName = pathParams[1];
 		} else {
 			setWikiName(null);
@@ -277,7 +277,7 @@ public final class PagePermission extends APermission {
 	 * Creates an "implied mask" based on the actions originally assigned: for
 	 * example, delete implies modify, comment, upload and view.
 	 * 
-	 * @param resultMask binary mask for actions
+	 * @param mask binary mask for actions
 	 * @return binary mask for implied actions
 	 */
 	protected static int impliedMask(int mask) {

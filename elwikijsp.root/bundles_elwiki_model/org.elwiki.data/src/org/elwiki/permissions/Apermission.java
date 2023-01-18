@@ -5,7 +5,7 @@ import java.security.Permission;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public abstract class APermission extends Permission implements Serializable {
+public abstract class Apermission extends Permission implements Serializable {
 
 	private static final long serialVersionUID = -6232332910696496522L;
 
@@ -27,12 +27,12 @@ public abstract class APermission extends Permission implements Serializable {
 	 * 
 	 * @param name
 	 */
-	protected APermission(String name) {
+	protected Apermission(String name) {
 		super(name);
 	}
 
 	/**
-	 * Returns the name of the wiki containing the page represented by permission;
+	 * Returns the name of the wiki, represented by this permission;
 	 * may return the wildcard string.
 	 * 
 	 * @return wiki name.
@@ -41,25 +41,24 @@ public abstract class APermission extends Permission implements Serializable {
 		return this.wikiName;
 	}
 
+	/**
+	 * Sets the wiki name to be used for this permission.<br/>
+	 * If the wiki name is empty or null, the wildcard is accepted.
+	 * 
+	 * @param wikiName
+	 */
 	public void setWikiName(String wikiName) {
-		this.wikiName = wikiName;
+		String wikiName1 = (wikiName == null || wikiName.isEmpty() || wikiName.isBlank()) ? WILDCARD : wikiName;
+		this.wikiName = wikiName1;
 	}
 
 	/**
-	 * WikiPermission</br>
-	 * Returns the actions for this permission: "createGroups", "createPages",
-	 * "editPreferences", "editProfile", or "login". The actions will always be
-	 * sorted in alphabetic order, and will always appear in lower case.
-	 * 
-	 * PagePermission</br>
-	 * Returns the actions for this permission: "view", "edit", "comment", "modify",
-	 * "upload" or "delete". The actions will always be sorted in alphabetic order,
-	 * and will always appear in lower case.
-	 * 
-	 * GroupPermission</br>
-	 * Returns the actions for this permission: &#8220;view&#8221;,
-	 * &#8220;edit&#8221;, or &#8220;delete&#8221;. The actions will always be
-	 * sorted in alphabetic order, and will always appear in lower case.
+	 * Returns the actions for this permission. Actions depends on permission and can be follows:
+	 * <ul>
+	 * <li> "createGroups", "createPages", "editPreferences", "editProfile", "login"</li>
+	 * <li> "view", "edit", "comment", "modify", "upload", "delete"</li>
+	 * </ul
+	 * The actions will always be sorted in alphabetic order, and will always appear in lower case.
 	 *
 	 * @return the actions
 	 * @see java.security.Permission#getActions()
@@ -68,6 +67,11 @@ public abstract class APermission extends Permission implements Serializable {
 		return this.m_actionsSequence;
 	}
 
+	/**
+	 * Sets the actions to be used for this permission.
+	 * 
+	 * @param actions
+	 */
 	public void setActions(String actions) {
 		this.m_actionsSequence = actions;
 	}
@@ -76,6 +80,11 @@ public abstract class APermission extends Permission implements Serializable {
 		return this.mask;
 	}
 
+	/**
+	 * Sets the mask to be used for this permission.
+	 * 
+	 * @param mask
+	 */
 	public void setMask(int mask) {
 		this.mask = mask;
 	}
@@ -116,7 +125,6 @@ public abstract class APermission extends Permission implements Serializable {
 		String wiki = this.wikiName != null ? this.wikiName : "dummy_value";
 		return this.mask + ((13 * this.m_actionsSequence.hashCode()) * 23 * wiki.hashCode());
 	}
-
 
 	/**
 	 * Determines whether one target string is a logical subset of the other.

@@ -79,8 +79,7 @@ public final class PermissionFactory {
 	 *            A list of actions.
 	 * @return A PagePermission object.
 	 */
-	private static PagePermission getPagePermission(String wiki, String page1, String actions) {
-		String page = page1;
+	private static PagePermission getPagePermission(String wiki, String page, String actions) {
 		PagePermission perm;
 		//
 		//  Since this is pretty speed-critical, we try to avoid the StringBuffer creation
@@ -102,10 +101,7 @@ public final class PermissionFactory {
 		}
 
 		if (perm == null) {
-			if (wiki.length() > 0) {
-				page = wiki + ":" + page;
-			}
-			perm = new PagePermission(page, actions);
+			perm = new PagePermission((wiki.length() > 0) ? wiki + ":" + page : page, actions);
 
 			synchronized (c_cache) {
 				c_cache.put(key, perm);
