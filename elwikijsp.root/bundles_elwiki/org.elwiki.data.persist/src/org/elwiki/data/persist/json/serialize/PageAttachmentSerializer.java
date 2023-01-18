@@ -1,11 +1,12 @@
 package org.elwiki.data.persist.json.serialize;
 
 import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
+import org.elwiki.data.persist.json.PageAttachmentAttributes;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -14,26 +15,19 @@ import com.google.gson.JsonSerializer;
 public class PageAttachmentSerializer implements JsonSerializer<PageAttachment> {
 
 	@Override
-	public JsonElement serialize(PageAttachment pageAttachment, Type arg1, JsonSerializationContext arg2) {
+	public JsonElement serialize(PageAttachment pageAttachment, Type arg1, JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
 
-		/*
-		result.addProperty("version", pageAttachment.getVersion());
-		Date lastModification = pageAttachment.getLastModify();
-		if (lastModification == null) {
-			lastModification = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
-		}
-		result.addProperty("lastModify", pageAttachment.getLastModify().toString());
-		result.addProperty("author", pageAttachment.getAuthor());
-		result.addProperty("changeNote", pageAttachment.getChangeNote());
-		result.addProperty("id", pageAttachment.getId());
-		result.addProperty("name", pageAttachment.getName());
-		result.addProperty("cacheable", pageAttachment.isCacheable());
-		result.addProperty("place", pageAttachment.getPlace());
-		result.addProperty("size", pageAttachment.getSize());
-		*/
+		result.addProperty(PageAttachmentAttributes.NAME, pageAttachment.getName());
+		result.addProperty(PageAttachmentAttributes.LAST_VERSION, pageAttachment.getLastVersion());
 
-		return null;
+		JsonArray references = new JsonArray();
+		result.add(PageAttachmentAttributes.ATTACH_CONTENTS, references);
+		for (AttachmentContent attchmentContent : pageAttachment.getAttachContents()) {
+			references.add(context.serialize(attchmentContent, AttachmentContent.class));
+		}
+
+		return result;
 	}
 
 }

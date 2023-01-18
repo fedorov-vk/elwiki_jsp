@@ -14,7 +14,7 @@ package org.elwiki_data;
  * <ul>
  *   <li>{@link org.elwiki_data.AttachmentContent#getPlace <em>Place</em>}</li>
  *   <li>{@link org.elwiki_data.AttachmentContent#getSize <em>Size</em>}</li>
- *   <li>{@link org.elwiki_data.AttachmentContent#isCacheable <em>Cacheable</em>}</li>
+ *   <li>{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getAttachmentContent()
@@ -79,31 +79,27 @@ public interface AttachmentContent extends IHistoryInfo {
 	void setSize(long value);
 
 	/**
-	 * Returns the value of the '<em><b>Cacheable</b></em>' attribute.
+	 * Returns the value of the '<em><b>Page Attachment</b></em>' container reference.
+	 * It is bidirectional and its opposite is '{@link org.elwiki_data.PageAttachment#getAttachContents <em>Attach Contents</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Cacheable</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Cacheable</em>' attribute.
-	 * @see #setCacheable(boolean)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getAttachmentContent_Cacheable()
-	 * @model
+	 * @return the value of the '<em>Page Attachment</em>' container reference.
+	 * @see #setPageAttachment(PageAttachment)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getAttachmentContent_PageAttachment()
+	 * @see org.elwiki_data.PageAttachment#getAttachContents
+	 * @model opposite="attachContents" transient="false"
 	 * @generated
 	 */
-	boolean isCacheable();
+	PageAttachment getPageAttachment();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.AttachmentContent#isCacheable <em>Cacheable</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Cacheable</em>' attribute.
-	 * @see #isCacheable()
+	 * @param value the new value of the '<em>Page Attachment</em>' container reference.
+	 * @see #getPageAttachment()
 	 * @generated
 	 */
-	void setCacheable(boolean value);
+	void setPageAttachment(PageAttachment value);
 
 } // AttachmentContent

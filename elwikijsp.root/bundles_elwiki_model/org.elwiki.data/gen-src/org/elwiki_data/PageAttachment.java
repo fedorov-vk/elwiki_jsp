@@ -89,11 +89,13 @@ public interface PageAttachment extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Attach Contents</b></em>' containment reference list.
 	 * The list contents are of type {@link org.elwiki_data.AttachmentContent}.
+	 * It is bidirectional and its opposite is '{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attach Contents</em>' containment reference list.
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_AttachContents()
-	 * @model containment="true"
+	 * @see org.elwiki_data.AttachmentContent#getPageAttachment
+	 * @model opposite="pageAttachment" containment="true"
 	 * @generated
 	 */
 	EList<AttachmentContent> getAttachContents();

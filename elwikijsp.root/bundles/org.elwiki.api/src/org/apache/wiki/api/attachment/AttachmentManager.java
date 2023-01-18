@@ -18,23 +18,21 @@
  */
 package org.apache.wiki.api.attachment;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.elwiki_data.AttachmentContent;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.providers.AttachmentProvider;
-import org.apache.wiki.api.providers.WikiProvider;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.providers.AttachmentProvider;
+import org.apache.wiki.api.providers.WikiProvider;
+import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
 
 
 /**
@@ -58,9 +56,6 @@ public interface AttachmentManager {
 
     /** A space-separated list of attachment types which cannot be uploaded */
     String PROP_FORBIDDENEXTENSIONS = "jspwiki.attachment.forbidden";
-
-    /** A space-separated list of attachment types which never will open in the browser. */
-    String PROP_FORCEDOWNLOAD = "jspwiki.attachment.forceDownload";
 
     /** Name of the page cache. */
     String CACHE_NAME = "jspwiki.dynamicAttachmentCache";

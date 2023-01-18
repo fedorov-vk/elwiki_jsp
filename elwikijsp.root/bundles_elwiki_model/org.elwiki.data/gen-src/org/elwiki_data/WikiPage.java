@@ -396,11 +396,22 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * </p>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Last Version</em>' attribute.
+	 * @see #setLastVersion(short)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_LastVersion()
-	 * @model default="0" transient="true" changeable="false"
+	 * @model default="0"
 	 * @generated
 	 */
 	short getLastVersion();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Version</em>' attribute.
+	 * @see #getLastVersion()
+	 * @generated
+	 */
+	void setLastVersion(short value);
 
 	/**
 	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.

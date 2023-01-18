@@ -174,7 +174,6 @@ public class DefaultPageManager implements PageManager, Initializable {
 	public void initialize(Engine engine) throws WikiException {
         m_engine = engine;
         IPreferenceStore props = engine.getWikiPreferences();
-        final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
 
         m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
 
@@ -288,7 +287,9 @@ public class DefaultPageManager implements PageManager, Initializable {
         m_engine = engine;
         IPreferenceStore props = engine.getWikiPreferences();
         final String classname;
-        final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
+        
+        @Deprecated
+        final boolean useCache = false; //:FVK: TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
         m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
 
         //  If user wants to use a cache, then we'll use the CachingProvider.

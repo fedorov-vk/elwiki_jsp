@@ -2,6 +2,7 @@ package org.elwiki.data.persist.json.serialize;
 
 import java.lang.reflect.Type;
 
+import org.elwiki.data.persist.json.PagesStoreAttributes;
 import org.elwiki_data.PagesStore;
 import org.elwiki_data.WikiPage;
 
@@ -17,11 +18,11 @@ public class PagesStoreSerializer implements JsonSerializer<PagesStore> {
 	public JsonElement serialize(PagesStore pagesStore, Type typeOfSrc, JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
 
-		result.addProperty("mainPageId", pagesStore.getMainPageId());
-		result.addProperty("nextPageId", pagesStore.getNextPageId());
+		result.addProperty(PagesStoreAttributes.MAIN_PAGE_ID, pagesStore.getMainPageId());
+		result.addProperty(PagesStoreAttributes.NEXT_PAGE_ID, pagesStore.getNextPageId());
 
 		JsonArray pages = new JsonArray();
-		result.add("pages", pages);
+		result.add(PagesStoreAttributes.PAGES, pages);
 		for (WikiPage page : pagesStore.getWikipages()) {
 			pages.add(context.serialize(page, WikiPage.class));
 		}

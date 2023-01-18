@@ -124,7 +124,7 @@
     <genClasses ecoreClass="elwiki_data.ecore#//AttachmentContent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/place"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/size"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AttachmentContent/cacheable"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//AttachmentContent/pageAttachment"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

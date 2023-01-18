@@ -312,6 +312,16 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public void setLastVersion(short newLastVersion) {
+		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, newLastVersion);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Acl getAcl() {
 		return (Acl)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL, true);
 	}

@@ -72,11 +72,11 @@
     <div class="page">
 </wiki:CheckRequestContext>
 
-      <%-- <wiki:Content/>
+      <wiki:Content/>
+      <%--
       <%@ include file="/templates/default/${PageContent.jsp" %>
       <%@ include file="/templates/default/PageContent.jsp" %>
        --%>
-      <wiki:Content/>
       <%@ include file="/templates/default/PageInfo.jsp" %>
     </div>
     <%@ include file="/templates/default/Sidebar.jsp" %>

@@ -9,14 +9,18 @@ import org.eclipse.emf.common.util.EList;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.persist.internal.PluginActivator;
 import org.elwiki.data.persist.json.serialize.AclSerializer;
+import org.elwiki.data.persist.json.serialize.AttachmentContentSerializer;
 import org.elwiki.data.persist.json.serialize.PageAttachmentSerializer;
 import org.elwiki.data.persist.json.serialize.PageContentSerializer;
+import org.elwiki.data.persist.json.serialize.PageReferenceSerializer;
 import org.elwiki.data.persist.json.serialize.PagesStoreSerializer;
 import org.elwiki.data.persist.json.serialize.WikiPageSerializer;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
+import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
 import org.elwiki_data.WikiPage;
 
@@ -25,6 +29,7 @@ import com.google.gson.GsonBuilder;
 
 public class JsonSerialiser {
 
+	@SuppressWarnings("unused")
 	private IWikiConfiguration wikiConfiguration;
 	private IPath workPath;
 
@@ -34,32 +39,25 @@ public class JsonSerialiser {
 	}
 
 	public void SaveData() throws IOException {
-		// Gson gson = new
-		// GsonBuilder().enableComplexMapKeySerialization().setPrettyPrinting().create();
+		// Gson gson = new GsonBuilder().enableComplexMapKeySerialization().setPrettyPrinting().create();
 		Gson gson = new GsonBuilder()
 				.setPrettyPrinting() //@formatter:off
 				.registerTypeAdapter(PagesStore.class, new PagesStoreSerializer())
 				.registerTypeAdapter(WikiPage.class, new WikiPageSerializer())
+				.registerTypeAdapter(PageReference.class, new PageReferenceSerializer())
 				.registerTypeAdapter(PageContent.class, new PageContentSerializer())
 				.registerTypeAdapter(PageAttachment.class, new PageAttachmentSerializer())
+				.registerTypeAdapter(AttachmentContent.class, new AttachmentContentSerializer())
 				.registerTypeAdapter(Acl.class, new AclSerializer())
 				.create(); //@formatter:on
 
 		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
+		@SuppressWarnings("unused")
 		EList<WikiPage> pages = pagesStore.getWikipages();
-		// WikiPage wikiPage = pages.get(0);
 
-		try (Writer writer = new FileWriter(workPath.append(JsonConstants.FILE_NAME).toFile())) {
+		try (Writer writer = new FileWriter(workPath.append(PersistConstants.FILE_NAME).toFile())) {
 			gson.toJson(pagesStore, PagesStore.class, writer);
 			writer.close();
 		}
-
-		/*
-		FileOutputStream outputStream;
-		outputStream = new FileOutputStream(FILE_NAME);
-		BufferedWriter bufferedWriter = new BufferedWriter(
-				new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)); // "UTF-8" gson.toJson(wikiPage, bufferedWriter);
-		bufferedWriter.close();
-		*/
 	}
 }

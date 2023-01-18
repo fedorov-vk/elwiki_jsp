@@ -74,14 +74,6 @@ public interface AttachmentProvider extends WikiProvider {
     List< PageAttachment > listAttachments( WikiPage page ) throws ProviderException;
 
     /**
-     * Finds attachments based on the query.
-     *
-     * @param query An array of QueryItem objects to search for
-     * @return A Collection of Attachment objects.  May be empty, but never null.
-     */
-    Collection< PageAttachment > findAttachments( QueryItem[] query );
-
-    /**
      *  Lists changed attachments since given date.  Can also be used to fetch a list of all pages.
      *  <P>
      *  This is different from WikiPageProvider, where you basically get a list of all pages, then sort them locally.  However, since some

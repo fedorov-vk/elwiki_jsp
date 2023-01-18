@@ -63,7 +63,13 @@ public enum ContextEnum {
     WIKI_PREFS( "prefs", "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
     WIKI_WORKFLOW( "workflow", "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
     WIKI_SCOPE( "scope", "cmd.scope", "%u", "", "ScopeContent.jsp" ),
-	WIKI_PERSIST_CONTENT( "persistContent", "cmd.persistContent", "%u", "", null );
+	WIKI_PERSIST_CONTENT( "persistContent", "cmd.persistContent", "%u", "",
+			// :FVK: workaround, this contentTemplate should be null,
+			// but error expected:
+			//   at org.apache.wiki.tags.ContentTag.doEndTag(ContentTag.java:160)
+			// when saved wiki content under admin.
+			// Using "PageContent.jsp" - temporary fiction
+			"PageContent.jsp" ); 
 	//@formatter:on
 
 	private final String requestContext;

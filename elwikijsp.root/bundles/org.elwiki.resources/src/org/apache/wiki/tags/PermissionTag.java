@@ -67,16 +67,16 @@ public class PermissionTag extends BaseWikiTag {
 	private static final long serialVersionUID = 3761412993048982325L;
 	private static final Logger log = Logger.getLogger(BaseWikiTag.class);
 
-	private static final String ALL_PERMISSION = "allPermission";
-	private static final String CREATE_GROUPS = "createGroups";
-	private static final String CREATE_PAGES = "createPages";
-	private static final String DELETE_GROUP = "deleteGroup";
-	private static final String EDIT = "edit";
-	private static final String EDIT_GROUP = "editGroup";
-	private static final String EDIT_PREFERENCES = "editPreferences";
-	private static final String EDIT_PROFILE = "editProfile";
-	private static final String LOGIN = "login";
-	private static final String VIEW_GROUP = "viewGroup";
+	public static final String ALL_PERMISSION = "allPermission";
+	public static final String CREATE_GROUPS = "createGroups";
+	public static final String CREATE_PAGES = "createPages";
+	public static final String DELETE_GROUP = "deleteGroup";
+	public static final String EDIT = "edit";
+	public static final String EDIT_GROUP = "editGroup";
+	public static final String EDIT_PREFERENCES = "editPreferences";
+	public static final String EDIT_PROFILE = "editProfile";
+	public static final String LOGIN = "login";
+	public static final String VIEW_GROUP = "viewGroup";
 
 	private String[] m_permissionList;
 

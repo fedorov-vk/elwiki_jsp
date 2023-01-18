@@ -30,6 +30,7 @@ import java.util.Date;
  *  <p>
  *  If the lastModified date is the same, then the next key is the page name. If the page name is also equal, then returns 0 for equality.
  */
+@Deprecated
 public class PageTimeComparator implements Comparator< WikiPage >, Serializable {
 	
     private static final long serialVersionUID = 0L;

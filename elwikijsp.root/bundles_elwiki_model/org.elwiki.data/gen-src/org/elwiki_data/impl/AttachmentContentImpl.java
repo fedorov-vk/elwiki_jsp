@@ -10,6 +10,7 @@ import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
+import org.elwiki_data.PageAttachment;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +26,7 @@ import org.elwiki_data.Elwiki_dataPackage;
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getChangeNote <em>Change Note</em>}</li>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getPlace <em>Place</em>}</li>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getSize <em>Size</em>}</li>
- *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#isCacheable <em>Cacheable</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getPageAttachment <em>Page Attachment</em>}</li>
  * </ul>
  *
  * @generated
@@ -186,8 +187,8 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public boolean isCacheable() {
-		return (Boolean)eGet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__CACHEABLE, true);
+	public PageAttachment getPageAttachment() {
+		return (PageAttachment)eGet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__PAGE_ATTACHMENT, true);
 	}
 
 	/**
@@ -196,8 +197,8 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public void setCacheable(boolean newCacheable) {
-		eSet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__CACHEABLE, newCacheable);
+	public void setPageAttachment(PageAttachment newPageAttachment) {
+		eSet(Elwiki_dataPackage.Literals.ATTACHMENT_CONTENT__PAGE_ATTACHMENT, newPageAttachment);
 	}
 
 } //AttachmentContentImpl

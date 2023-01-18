@@ -1027,13 +1027,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ATTACHMENT_CONTENT__SIZE = IHISTORY_INFO_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Cacheable</b></em>' attribute.
+	 * The feature id for the '<em><b>Page Attachment</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTACHMENT_CONTENT__CACHEABLE = IHISTORY_INFO_FEATURE_COUNT + 2;
+	int ATTACHMENT_CONTENT__PAGE_ATTACHMENT = IHISTORY_INFO_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Attachment Content</em>' class.
@@ -1869,15 +1869,15 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getAttachmentContent_Size();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AttachmentContent#isCacheable <em>Cacheable</em>}'.
+	 * Returns the meta object for the container reference '{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Cacheable</em>'.
-	 * @see org.elwiki_data.AttachmentContent#isCacheable()
+	 * @return the meta object for the container reference '<em>Page Attachment</em>'.
+	 * @see org.elwiki_data.AttachmentContent#getPageAttachment()
 	 * @see #getAttachmentContent()
 	 * @generated
 	 */
-	EAttribute getAttachmentContent_Cacheable();
+	EReference getAttachmentContent_PageAttachment();
 
 	/**
 	 * Returns the meta object for data type '<em>Array String</em>'.
@@ -2560,12 +2560,12 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute ATTACHMENT_CONTENT__SIZE = eINSTANCE.getAttachmentContent_Size();
 
 		/**
-		 * The meta object literal for the '<em><b>Cacheable</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Page Attachment</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ATTACHMENT_CONTENT__CACHEABLE = eINSTANCE.getAttachmentContent_Cacheable();
+		EReference ATTACHMENT_CONTENT__PAGE_ATTACHMENT = eINSTANCE.getAttachmentContent_PageAttachment();
 
 		/**
 		 * The meta object literal for the '<em>Array String</em>' data type.

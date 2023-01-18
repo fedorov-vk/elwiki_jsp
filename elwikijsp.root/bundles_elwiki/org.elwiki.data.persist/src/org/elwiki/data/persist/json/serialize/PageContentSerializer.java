@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.elwiki.data.persist.json.PageContentAttributes;
 import org.elwiki_data.PageContent;
 
 import com.google.gson.JsonElement;
@@ -17,15 +18,15 @@ public class PageContentSerializer implements JsonSerializer<PageContent> {
 	public JsonElement serialize(PageContent pageContent, Type typeOfSrc, JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
 
-		result.addProperty("version", pageContent.getVersion());
+		result.addProperty(PageContentAttributes.VERSION, pageContent.getVersion());
 		Date lastModification = pageContent.getLastModifiedDate();
 		if (lastModification == null) {
 			lastModification = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
 		}
-		result.addProperty("lastModify", lastModification.toString());
-		result.addProperty("author", pageContent.getAuthor());
-		result.addProperty("changeNote", pageContent.getChangeNote());
-		result.addProperty("content", pageContent.getContent());
+		result.addProperty(PageContentAttributes.LAST_MODIFIED_DATE, lastModification.toString());
+		result.addProperty(PageContentAttributes.AUTHOR, pageContent.getAuthor());
+		result.addProperty(PageContentAttributes.CHANGE_NOTE, pageContent.getChangeNote());
+		result.addProperty(PageContentAttributes.CONTENT, pageContent.getContent());
 
 		return result;
 	}

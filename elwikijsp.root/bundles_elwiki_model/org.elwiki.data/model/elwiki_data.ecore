@@ -131,7 +131,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
-        changeable="false" transient="true" defaultValueLiteral="0">
+        defaultValueLiteral="0">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Total Attachment&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
@@ -215,7 +215,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachContents" upperBound="-1"
-        eType="#//AttachmentContent" containment="true"/>
+        eType="#//AttachmentContent" containment="true" eOpposite="#//AttachmentContent/pageAttachment"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
         defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachmentContent" eType="#//AttachmentContent"
@@ -345,10 +345,7 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Size&lt;/em>' attribute isn't clear,&#xA; there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cacheable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Cacheable&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageAttachment" eType="#//PageAttachment"
+        eOpposite="#//PageAttachment/attachContents"/>
   </eClassifiers>
 </ecore:EPackage>

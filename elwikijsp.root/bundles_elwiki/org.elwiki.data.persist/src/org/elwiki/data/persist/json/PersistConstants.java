@@ -1,6 +1,6 @@
 package org.elwiki.data.persist.json;
 
-public interface JsonConstants {
+public interface PersistConstants {
 
 	String FILE_NAME = "WikiData.json";
 

@@ -17,6 +17,11 @@ public class DeserialiseStuff {
 		return opt.map(j -> j.getAsString()).orElse("");
 	}
 
+	protected short getShort(JsonObject jsonObject, String optionName) {
+		Optional<JsonElement> opt = Optional.ofNullable(jsonObject.get(optionName));
+		return opt.map(j -> j.getAsShort()).orElse((short) 0);
+	}
+
 	protected int getInt(JsonObject jsonObject, String optionName) {
 		Optional<JsonElement> opt = Optional.ofNullable(jsonObject.get(optionName));
 		return opt.map(j -> j.getAsInt()).orElse(0);

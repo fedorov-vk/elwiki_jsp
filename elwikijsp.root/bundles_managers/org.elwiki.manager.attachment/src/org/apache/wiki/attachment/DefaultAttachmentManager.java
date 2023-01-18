@@ -44,7 +44,7 @@ import org.apache.wiki.api.search.SearchManager;
 //:FVK:import org.apache.wiki.attachment0.DynamicAttachment;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
-import org.apache.wiki.providers.CachingAttachmentProvider;
+import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
@@ -73,12 +73,15 @@ import java.util.Properties;
 public class DefaultAttachmentManager implements AttachmentManager, Initializable {
 
     /** List of attachment types which are forced to be downloaded */
+	@Deprecated
     private String[] m_forceDownloadPatterns;
 
     private static final Logger log = Logger.getLogger( DefaultAttachmentManager.class );
     private AttachmentProvider m_provider;
     private Engine m_engine;
+    @Deprecated
     private CacheManager m_cacheManager = CacheManager.getInstance();
+    @Deprecated
     private Cache m_dynamicAttachments;
 
 	/**
@@ -132,58 +135,18 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     //public DefaultAttachmentManager( final Engine engine, final Properties props ) {
         m_engine = engine;
 
-        //  If user wants to use a cache, then we'll use the CachingProvider.
-        final boolean useCache = TextUtil.getBooleanProperty(engine.getWikiPreferences(), PageManager.PROP_USECACHE, true); 
-
-        final String classname;
-        if( useCache ) {
-            classname = "org.apache.wiki.providers.CachingAttachmentProvider";
-        } else {
-            classname = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_PROVIDER, null); 
-        }
-
-        //  If no class defined, then will just simply fail.
-        if( classname == null ) {
-            log.info( "No attachment provider defined - disabling attachment support." );
-            return;
-        }
-
-        //  Create and initialize the provider.
-        final String cacheName = engine.getWikiConfiguration().getApplicationName() + "." + CACHE_NAME;
         try {
-            if( m_cacheManager.cacheExists( cacheName ) ) {
-                m_dynamicAttachments = m_cacheManager.getCache( cacheName );
-            } else {
-                log.info( "cache with name " + cacheName + " not found in ehcache.xml, creating it with defaults." );
-                m_dynamicAttachments = new Cache( cacheName, DEFAULT_CACHECAPACITY, false, false, 0, 0 );
-                m_cacheManager.addCache( m_dynamicAttachments );
-            }
-
-            /*:FVK:
-            final Class< ? > providerclass = ClassUtil.findClass( "org.apache.wiki.providers", classname );
-            m_provider = ( AttachmentProvider )providerclass.newInstance();*/
-            m_provider = ( AttachmentProvider )new CachingAttachmentProvider(); 
-            m_provider.initialize( m_engine );
-//        } catch( final ClassNotFoundException e ) {
-//            log.error( "Attachment provider class not found",e);
-//        } catch( final InstantiationException e ) {
-//            log.error( "Attachment provider could not be created", e );
-//        } catch( final IllegalAccessException e ) {
-//            log.error( "You may not access the attachment provider class", e );
-        } catch( final NoRequiredPropertyException e ) {
-            log.error( "Attachment provider did not find a property that it needed: " + e.getMessage(), e );
+			m_provider = new BasicAttachmentProvider(); 
+			m_provider.initialize( m_engine );
+		} catch (NoRequiredPropertyException e1) {
+            log.error( "Attachment provider did not find a property that it needed: " + e1.getMessage(), e1 );
             m_provider = null; // No, it did not work.
-        } catch( final IOException e ) {
-            log.error( "Attachment provider reports IO error", e );
+		} catch (IOException e1) {
+            log.error( "Attachment provider reports IO error", e1 );
             m_provider = null;
-        }
+		}
 
-        final String forceDownload = TextUtil.getStringProperty( engine.getWikiPreferences(), PROP_FORCEDOWNLOAD, null );
-        if( forceDownload != null && forceDownload.length() > 0 ) {
-            m_forceDownloadPatterns = forceDownload.toLowerCase().split( "\\s" );
-        } else {
-            m_forceDownloadPatterns = new String[ 0 ];
-        }
+		m_forceDownloadPatterns = new String[0];
     }
 
 	/** {@inheritDoc} */

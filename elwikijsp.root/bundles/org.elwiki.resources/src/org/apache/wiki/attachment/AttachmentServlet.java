@@ -258,11 +258,6 @@ public class AttachmentServlet extends HttpServlet {
                 res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getName() + "\";" );
                 res.addDateHeader("Last-Modified",attContent.getLastModifiedDate().getTime());
 
-                if( !attContent.isCacheable() ) {
-                    res.addHeader( "Pragma", "no-cache" );
-                    res.addHeader( "Cache-control", "no-cache" );
-                }
-
                 // If a size is provided by the provider, report it.
                 if( attContent.getSize() >= 0 ) {
                     // log.info("size:"+att.getSize());

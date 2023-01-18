@@ -22,6 +22,7 @@
 <%@ page import="org.apache.wiki.attachment.*" %>
 <%@ page import="org.apache.wiki.api.attachment.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
+<%@ page import="org.apache.wiki.tags.*" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
@@ -410,7 +411,7 @@
 
       <%-- Persisting wiki content --%>
       <wiki:CheckRequestContext context="<%=Context.VIEW%>">      
-      <%-- <wiki:Permission permission="all"> --%>
+      <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
         <li class="divider"></li>
         <li>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
@@ -424,7 +425,7 @@
             Load wiki content
           </wiki:Link>
         </li>
-      <%-- </wiki:Permission> --%>
+      </wiki:Permission>
       </wiki:CheckRequestContext>
 
       <%-- GROUPS : moved to the UserBox.jsp

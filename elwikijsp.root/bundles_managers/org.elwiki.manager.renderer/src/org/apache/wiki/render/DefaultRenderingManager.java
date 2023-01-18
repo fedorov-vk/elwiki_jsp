@@ -167,7 +167,7 @@ public class DefaultRenderingManager implements RenderingManager {
         log.info( "Using " + m_markupParserClass + " as markup parser." );
 
         m_beautifyTitle  = TextUtil.getBooleanProperty( properties, PROP_BEAUTIFYTITLE, m_beautifyTitle );
-        m_useCache = TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
+        m_useCache = true; //:FVK: - removed option: TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
         if( m_useCache ) {
             final String documentCacheName = engine.getWikiConfiguration().getApplicationName() + "." + DOCUMENTCACHE_NAME;
             if (m_cacheManager.cacheExists(documentCacheName)) {
