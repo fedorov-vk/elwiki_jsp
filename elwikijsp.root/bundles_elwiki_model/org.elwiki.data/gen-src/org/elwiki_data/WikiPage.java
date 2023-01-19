@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EMap;
  * <ul>
  *   <li>{@link org.elwiki_data.WikiPage#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getName <em>Name</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getDescription <em>Description</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getRedirect <em>Redirect</em>}</li>
@@ -35,7 +36,6 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>

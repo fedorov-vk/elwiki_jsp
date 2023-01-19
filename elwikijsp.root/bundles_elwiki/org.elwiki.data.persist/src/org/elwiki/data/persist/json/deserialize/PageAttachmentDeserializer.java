@@ -22,9 +22,11 @@ public class PageAttachmentDeserializer extends DeserialiseStuff implements Json
 
 		PageAttachment pageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
 
+		String id = getString(jsonObject, PageAttachmentAttributes.ID);
 		String name = getString(jsonObject, PageAttachmentAttributes.NAME);
 		short lastVersion = getShort(jsonObject, PageAttachmentAttributes.LAST_VERSION);
 
+		pageAttachment.setId(id);
 		pageAttachment.setName(name);
 		pageAttachment.setLastVersion(lastVersion);
 

@@ -46,7 +46,7 @@ public class PrefsCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		/*
 		Enumeration<String> attrs = request.getAttributeNames();
 		Enumeration<String> params = request.getParameterNames();
@@ -94,7 +94,7 @@ public class PrefsCmdCode extends CmdCode {
 			if (wikiSession.getMessages("profile").length == 0) {
 				try {
 					userMgr.setUserProfile(wikiSession, profile);
-					CookieAssertionLoginModule.setUserCookie(response, profile.getFullname());
+					CookieAssertionLoginModule.setUserCookie(httpResponse, profile.getFullname());
 				} catch (DuplicateUserException due) {
 					// User collision! (full name or wiki name already taken)
 					@NonNull
@@ -105,7 +105,7 @@ public class PrefsCmdCode extends CmdCode {
 				} catch (DecisionRequiredException e) {
 					String redirect = wiki.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
 							"ApprovalRequiredForUserProfiles", null);
-					response.sendRedirect(redirect);
+					httpResponse.sendRedirect(redirect);
 					return;
 				} catch (WikiSecurityException e) {
 					// Something went horribly wrong! Maybe it's an I/O error...
@@ -122,7 +122,7 @@ public class PrefsCmdCode extends CmdCode {
 				String viewUrl = ("UserPreferences".equals(redirectPage)) ? "Wiki.jsp"
 						: wikiContext.getViewURL(redirectPage);
 				log.info("Redirecting user to " + viewUrl);
-				response.sendRedirect(viewUrl);
+				httpResponse.sendRedirect(viewUrl);
 
 				return;
 			}
@@ -133,7 +133,7 @@ public class PrefsCmdCode extends CmdCode {
 			Preferences.reloadPreferences(httpRequest);
 
 			String assertedName = httpRequest.getParameter("assertedName");
-			CookieAssertionLoginModule.setUserCookie(response, assertedName);
+			CookieAssertionLoginModule.setUserCookie(httpResponse, assertedName);
 
 			String redirectPage = httpRequest.getParameter("redirect");
 			if (!ServicesRefs.getPageManager().pageExistsByName(redirectPage)) {
@@ -142,20 +142,20 @@ public class PrefsCmdCode extends CmdCode {
 			String viewUrl = ("cmd.prefs".equals(redirectPage)) ? "cmd.view" : wikiContext.getViewURL(redirectPage);
 
 			log.info("Redirecting user to " + viewUrl);
-			response.sendRedirect(viewUrl);
+			httpResponse.sendRedirect(viewUrl);
 
 			return;
 		}
 
 		// Are we remove profile information?
 		if ("clearAssertedName".equals(httpRequest.getParameter("action"))) {
-			CookieAssertionLoginModule.clearUserCookie(response);
-			response.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "Logout.jsp"));
+			CookieAssertionLoginModule.clearUserCookie(httpResponse);
+			httpResponse.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "Logout.jsp"));
 
 			return;
 		}
 
-		response.setContentType("text/html; charset=" + wiki.getContentEncoding());
+		httpResponse.setContentType("text/html; charset=" + wiki.getContentEncoding());
 		// :FVK: String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext,
 		// wikiContext.getTemplate(), "ViewTemplate.jsp" );
 	}

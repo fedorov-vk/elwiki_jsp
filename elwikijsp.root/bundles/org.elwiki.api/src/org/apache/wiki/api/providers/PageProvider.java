@@ -25,6 +25,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -207,12 +208,23 @@ public interface PageProvider extends WikiProvider {
 	WikiPage createPage(String name, String content, WikiPage parentPage);
 
 	/**
-	 * Add attachment metadata for specisied wiki page.
+	 * Add attachment metadata for specisied wiki page.<br/>
+	 * If the operation is successful, also increases the attachments ID of data model.
 	 * 
 	 * @param wikiPage       specified page.
 	 * @param pageAttachment new metadata of attachment.
-	 * @return TODO
+	 * @return added instance of page attachment.
+	 * @throws Exception in case of an error, an exception is thrown.
 	 */
-	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment);
+	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws Exception;
+
+	/**
+	 * Returns the PageAttachment corresponding to the page attachment ID.
+	 * 
+	 * @param pageAttachmentId page attachment ID.
+	 * @return
+	 * @throws Exception TODO
+	 */
+	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
 
 }

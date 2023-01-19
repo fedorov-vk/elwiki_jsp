@@ -30,14 +30,14 @@ public class RenameCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		// Get wiki context and check for authorization
 		Context wikiContext = ContextUtil.findContext(httpRequest);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response))
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;
 
 		if (wikiContext.getCommand().getTarget() == null) {
-			response.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
+			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;
 		}
 
@@ -70,7 +70,7 @@ public class RenameCmdCode extends CmdCode {
 
 				log.info("Page successfully renamed to '" + renamedTo + "'");
 
-				response.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), renamedTo));
+				httpResponse.sendRedirect(wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), renamedTo));
 				return;
 			}
 			wikiSession.addMessage("rename", rb.getString("rename.empty"));

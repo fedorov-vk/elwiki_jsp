@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.elwiki_data.PagesStore#getWikipages <em>Wikipages</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getMainPageId <em>Main Page Id</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getNextPageId <em>Next Page Id</em>}</li>
+ *   <li>{@link org.elwiki_data.PagesStore#getNextAttachmentId <em>Next Attachment Id</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore()
@@ -74,7 +75,7 @@ public interface PagesStore extends CDOObject {
 
 	/**
 	 * Returns the value of the '<em><b>Next Page Id</b></em>' attribute.
-	 * The default value is <code>""</code>.
+	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -86,7 +87,7 @@ public interface PagesStore extends CDOObject {
 	 * @return the value of the '<em>Next Page Id</em>' attribute.
 	 * @see #setNextPageId(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_NextPageId()
-	 * @model default=""
+	 * @model default="0"
 	 * @generated
 	 */
 	String getNextPageId();
@@ -100,5 +101,28 @@ public interface PagesStore extends CDOObject {
 	 * @generated
 	 */
 	void setNextPageId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Next Attachment Id</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Next Attachment Id</em>' attribute.
+	 * @see #setNextAttachmentId(String)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_NextAttachmentId()
+	 * @model default="0"
+	 * @generated
+	 */
+	String getNextAttachmentId();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.PagesStore#getNextAttachmentId <em>Next Attachment Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Next Attachment Id</em>' attribute.
+	 * @see #getNextAttachmentId()
+	 * @generated
+	 */
+	void setNextAttachmentId(String value);
 
 } // PagesStore

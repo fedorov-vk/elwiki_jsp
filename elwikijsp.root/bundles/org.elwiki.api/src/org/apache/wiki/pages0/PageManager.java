@@ -418,7 +418,17 @@ public interface PageManager extends WikiEventListener {
 	 * @param wikiPage       specified page.
 	 * @param pageAttachment new metadata of attachment.
 	 * @return TODO
+	 * @throws Exception TODO
 	 */
-	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment);
+	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws Exception;
+
+	/**
+	 * Returns the PageAttachment corresponding to the page attachment ID.
+	 * 
+	 * @param pageAttachmentId page attachment ID.
+	 * @return
+	 * @throws Exception TODO
+	 */
+	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
 
 }

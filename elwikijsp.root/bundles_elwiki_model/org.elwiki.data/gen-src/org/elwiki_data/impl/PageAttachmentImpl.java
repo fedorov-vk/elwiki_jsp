@@ -22,10 +22,11 @@ import org.elwiki_data.WikiPage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getWikipage <em>Wikipage</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachContents <em>Attach Contents</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
@@ -59,6 +60,26 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	@Override
 	protected int eStaticFeatureCount() {
 		return 0;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getId() {
+		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setId(String newId) {
+		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ID, newId);
 	}
 
 	/**

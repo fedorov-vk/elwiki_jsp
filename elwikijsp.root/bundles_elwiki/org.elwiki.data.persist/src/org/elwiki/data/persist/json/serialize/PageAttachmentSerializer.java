@@ -18,6 +18,7 @@ public class PageAttachmentSerializer implements JsonSerializer<PageAttachment> 
 	public JsonElement serialize(PageAttachment pageAttachment, Type arg1, JsonSerializationContext context) {
 		JsonObject result = new JsonObject();
 
+		result.addProperty(PageAttachmentAttributes.ID, pageAttachment.getId());
 		result.addProperty(PageAttachmentAttributes.NAME, pageAttachment.getName());
 		result.addProperty(PageAttachmentAttributes.LAST_VERSION, pageAttachment.getLastVersion());
 

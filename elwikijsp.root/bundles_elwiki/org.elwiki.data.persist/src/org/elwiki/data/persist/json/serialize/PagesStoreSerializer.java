@@ -20,6 +20,7 @@ public class PagesStoreSerializer implements JsonSerializer<PagesStore> {
 
 		result.addProperty(PagesStoreAttributes.MAIN_PAGE_ID, pagesStore.getMainPageId());
 		result.addProperty(PagesStoreAttributes.NEXT_PAGE_ID, pagesStore.getNextPageId());
+		result.addProperty(PagesStoreAttributes.NEXT_ATTACHMENT_ID, pagesStore.getNextAttachmentId());
 
 		JsonArray pages = new JsonArray();
 		result.add(PagesStoreAttributes.PAGES, pages);

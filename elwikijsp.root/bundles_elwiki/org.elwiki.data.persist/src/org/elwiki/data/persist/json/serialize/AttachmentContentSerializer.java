@@ -20,11 +20,11 @@ public class AttachmentContentSerializer implements JsonSerializer<AttachmentCon
 		JsonObject result = new JsonObject();
 
 		result.addProperty(AttachmentContentAttributes.VERSION, attachmentContent.getVersion());
-		Date lastModification = attachmentContent.getLastModifiedDate();
-		if (lastModification == null) {
-			lastModification = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
+		Date creationDate = attachmentContent.getCreationDate();
+		if (creationDate == null) {
+			creationDate = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
 		}
-		result.addProperty(AttachmentContentAttributes.LAST_MODIFIED_DATE, lastModification.toString());
+		result.addProperty(AttachmentContentAttributes.CREATION_DATE, creationDate.toString());
 		result.addProperty(AttachmentContentAttributes.AUTHOR, attachmentContent.getAuthor());
 		result.addProperty(AttachmentContentAttributes.CHANGE_NOTE, attachmentContent.getChangeNote());
 		result.addProperty(AttachmentContentAttributes.PLACE, attachmentContent.getPlace());

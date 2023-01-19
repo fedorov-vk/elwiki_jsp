@@ -154,7 +154,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		pc.setVersion(version);
 		pc.setAuthor(author);
 		pc.setChangeNote(changenote);
-		pc.setLastModifiedDate(new Date()); // TODO: :FVK: установить дату, возможно надо корректнее.
+		pc.setCreationDate(new Date()); // TODO: :FVK: установить дату, возможно надо корректней.
 		pc.setContent(text);
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
 		WikiPage page1 = transaction.getObject(page);
@@ -659,7 +659,7 @@ public class CdoWikiPageProvider implements PageProvider {
 		wikiPage.setWiki("elwiki");
 		PageContent pageContent = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pageContent.setContent(content.toString());
-		pageContent.setLastModifiedDate(new Date());
+		pageContent.setCreationDate(new Date());
 
 		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
 		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
@@ -1427,28 +1427,70 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
-		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-		WikiPage changedPage = transaction.getObject(wikiPage);
-		AttachmentContent attContent = pageAttachment.getAttachmentContent();
-
-		changedPage.getAttachments().add(pageAttachment);
-		pageAttachment.getAttachContents().add(attContent);
-		pageAttachment.setLastVersion(attContent.getVersion());
-
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment attachment) throws Exception {
+		CDOTransaction transaction = null;
 		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			PagesStore pagesStore = transaction.getObject(PageProviderCdoActivator.getStorageCdo().getPagesStore());
+			WikiPage changedPage = transaction.getObject(wikiPage);
+			AttachmentContent attContent = attachment.getAttachmentContent();
+
+			changedPage.getAttachments().add(attachment);
+			attachment.getAttachContents().add(attContent);
+			attachment.setLastVersion(attContent.getVersion());
+
+			// setup id of attachment, increase ID counter.
+			String id = pagesStore.getNextAttachmentId();
+			attachment.setId(id);
+			long newId = Long.parseLong(id) + 1;
+			pagesStore.setNextAttachmentId(Long.toString(newId));
+
 			transaction.commit();
-		} catch (CommitException e) {
-			log.error("Ошибка", e);
+
+			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+			PageAttachment result = (PageAttachment)view.getObject(attachment.cdoID());
+			attContent = (AttachmentContent)view.getObject(attContent.cdoID());
+			result.setAttachmentContent(attContent);
+
+			return result;
 		} finally {
-			if (!transaction.isClosed()) {
+			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();
 			}
 		}
+	}
 
-		CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
-		Object item = view.getObject(pageAttachment.cdoID());
-		return (PageAttachment) item;
+	@Override
+	public PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception {
+		if (pageAttachmentId == null) {
+			return null;
+		}
+
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl",
+					"PageAttachment.allInstances()->select(p:PageAttachment|p.id='" + pageAttachmentId + "')",
+					eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			PageAttachment pageAttachment = null;
+
+			List<PageAttachment> items = query.getResult();
+			if (items.size() > 0) {
+				pageAttachment = items.get(0);
+				CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+				pageAttachment = (PageAttachment) view.getObject(pageAttachment.cdoID());
+			}
+
+			return pageAttachment;
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
 	}
 	
 }

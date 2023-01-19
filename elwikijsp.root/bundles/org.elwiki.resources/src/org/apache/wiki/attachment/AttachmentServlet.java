@@ -74,6 +74,7 @@ import java.net.SocketException;
 import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -256,7 +257,7 @@ public class AttachmentServlet extends HttpServlet {
                 //  can try to automatically open the file.
                 //
                 res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getName() + "\";" );
-                res.addDateHeader("Last-Modified",attContent.getLastModifiedDate().getTime());
+                res.addDateHeader("Last-Modified",attContent.getCreationDate().getTime());
 
                 // If a size is provided by the provider, report it.
                 if( attContent.getSize() >= 0 ) {
@@ -510,100 +511,102 @@ public class AttachmentServlet extends HttpServlet {
      * @throws IOException       If there is a problem in the upload.
      * @throws ProviderException If there is a problem in the backend.
      */
-    protected boolean executeUpload( final Context context, final InputStream data,
-                                     String filename, final String errorPage,
-                                     WikiPage parentPage, final String changenote,
-                                     final long contentLength )
-            throws RedirectException, IOException, ProviderException {
-        boolean created = false;
+	protected boolean executeUpload(final Context context, final InputStream data, String filename,
+			final String errorPage, WikiPage parentPage, final String changenote, final long contentLength)
+			throws RedirectException, IOException, ProviderException {
+		boolean created = false;
 
-        try {
-            filename = AttachmentManager.validateFileName( filename );
-        } catch( final WikiException e ) {
-            // this is a kludge, the exception that is caught here contains the i18n key
-            // here we have the context available, so we can internationalize it properly :
-            throw new RedirectException (Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE )
-                    .getString( e.getMessage() ), errorPage );
-        }
-
-        //
-        //  FIXME: This has the unfortunate side effect that it will receive the
-        //  contents.  But we can't figure out the page to redirect to
-        //  before we receive the file, due to the stupid constructor of MultipartRequest.
-        //
-
-        if( !context.hasAdminPermissions() ) {
-            if( contentLength > m_maxSize ) {
-                // FIXME: Does not delete the received files.
-                throw new RedirectException( "File exceeds maximum size ("+m_maxSize+" bytes)", errorPage );
-            }
-
-            if( !isTypeAllowed(filename) ) {
-                throw new RedirectException( "Files of this type may not be uploaded to this wiki", errorPage );
-            }
-        }
-
-        final Principal user    = context.getCurrentUser();
-        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
-
-        log.debug("file="+filename);
-
-        if( data == null ) {
-            log.error("File could not be opened.");
-            throw new RedirectException("File could not be opened.", errorPage);
-        }
-
-		//  Check whether we already have this kind of a page. If the "page" parameter already defines an attachment
-		//  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
-		//  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
-		//  same name than some other previous attachment, then that attachment gains a new version.
-		PageAttachment att = mgr.getAttachmentInfo(context.getPage().getName());
-		AttachmentContent attContent = null;
-		if (att == null) {
-			// Crate new PageAttachment.
-			att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
-			att.setName(filename);
-			created = true;
-		} else {
-			attContent = att.forLastContent();
+		try {
+			filename = AttachmentManager.validateFileName(filename);
+		} catch (final WikiException e) {
+			// this is a kludge, the exception that is caught here contains the i18n key
+			// here we have the context available, so we can internationalize it properly :
+			throw new RedirectException(
+					Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE).getString(e.getMessage()),
+					errorPage);
 		}
 
-		if (attContent == null) {
-			// Crate new AttachmentContent.
-			attContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
-			att.setAttachmentContent(attContent);
+		//
+		//  FIXME: This has the unfortunate side effect that it will receive the
+		//  contents.  But we can't figure out the page to redirect to
+		//  before we receive the file, due to the stupid constructor of MultipartRequest.
+		//
+
+		if (!context.hasAdminPermissions()) {
+			if (contentLength > m_maxSize) {
+				// FIXME: Does not delete the received files.
+				throw new RedirectException("File exceeds maximum size (" + m_maxSize + " bytes)", errorPage);
+			}
+
+			if (!isTypeAllowed(filename)) {
+				throw new RedirectException("Files of this type may not be uploaded to this wiki", errorPage);
+			}
 		}
 
-		short latestVersion = (short) (att.getLastVersion() + 1);
-		att.setLastVersion(latestVersion);
-		attContent.setVersion(latestVersion);
+		final Principal user = context.getCurrentUser();
+		final AttachmentManager attachmentManager = ServicesRefs.getAttachmentManager();
 
-		attContent.setSize(contentLength);
+		log.debug("file=" + filename);
 
-        //  Check if we're allowed to do this?
-        final Permission permission = PermissionFactory.getPagePermission( parentPage, "upload" );
-        if( ServicesRefs.getAuthorizationManager().checkPermission( context.getWikiSession(), permission ) ) {
-            if( user != null ) {
-            	attContent.setAuthor( user.getName() );
-            }
+		if (data == null) {
+			log.error("File could not be opened.");
+			throw new RedirectException("File could not be opened.", errorPage);
+		}
 
-            if( changenote != null && changenote.length() > 0 ) {
-            	attContent.setChangeNote(changenote );
-            }
+		//  Check if we're allowed to do this?
+		final Permission permission = PermissionFactory.getPagePermission(parentPage, "upload");
+		if (ServicesRefs.getAuthorizationManager().checkPermission(context.getWikiSession(), permission)) {
 
-            try {
-                ServicesRefs.getAttachmentManager().storeAttachment( parentPage, att, data );
-            } catch( final ProviderException pe ) {
-                // this is a kludge, the exception that is caught here contains the i18n key
-                // here we have the context available, so we can internationalize it properly :
+			//  Check whether we already have this kind of a page. If the "page" parameter already defines an attachment
+			//  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
+			//  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
+			//  same name than some other previous attachment, then that attachment gains a new version.
+			PageAttachment att = attachmentManager.getAttachmentInfo(context.getPage().getName());
+			AttachmentContent attContent = null;
+			if (att == null) {
+				// Crate new PageAttachment.
+				att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+				att.setName(filename);
+				created = true;
+			} else {
+				attContent = att.forLastContent();
+			}
+
+			if (attContent == null) {
+				// Crate new AttachmentContent.
+				attContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
+				att.setAttachmentContent(attContent);
+			}
+
+			short latestVersion = (short) (att.getLastVersion() + 1);
+			att.setLastVersion(latestVersion);
+			attContent.setVersion(latestVersion);
+			
+			attContent.setCreationDate(new Date());
+			attContent.setSize(contentLength);
+
+			if (user != null) {
+				attContent.setAuthor(user.getName());
+			}
+
+			if (changenote != null && changenote.length() > 0) {
+				attContent.setChangeNote(changenote);
+			}
+
+			try {
+				attachmentManager.storeAttachment(parentPage, att, data);
+			} catch (final ProviderException pe) {
+				// this is a kludge, the exception that is caught here contains the i18n key
+				// here we have the context available, so we can internationalize it properly :
 				throw new ProviderException(Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE)
 						.getString(pe.getMessage()));
-            }
+			}
 
-            log.info( "User " + user + " uploaded attachment to " + parentPage + " called "+filename+", size " + contentLength );
-        } else {
-            throw new RedirectException( "No permission to upload a file", errorPage );
-        }
+			log.info("User " + user + " uploaded attachment to " + parentPage + " called " + filename + ", size "
+					+ contentLength);
+		} else {
+			throw new RedirectException("No permission to upload a file", errorPage);
+		}
 
         return created;
     }

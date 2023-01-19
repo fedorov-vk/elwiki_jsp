@@ -50,6 +50,9 @@ public enum ContextEnum {
     PAGE_UPLOAD( "upload", "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
     PAGE_VIEW( "view", "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
 
+    ATTACHMENT_DELETE( "deleteAttachment", "cmd.deleteAttachment", "%u", "?pageId=%n", null ),
+    ATTACHMENT_INFO( "infoAttachment", "cmd.infoAttachment", "%u", "?id=%n", "InfoAttachmentContent.jsp" ),
+
     REDIRECT( "", "", "%u", "%n", null ),
 
     WIKI_ADMIN( "admin", "admin/Admin.jsp", "%u", "", "AdminContent.jsp" ),

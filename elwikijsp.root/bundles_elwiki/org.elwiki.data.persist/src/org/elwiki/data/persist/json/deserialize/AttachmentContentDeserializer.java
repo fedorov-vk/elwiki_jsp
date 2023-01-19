@@ -23,7 +23,7 @@ public class AttachmentContentDeserializer extends DeserialiseStuff implements J
 		AttachmentContent attachmentContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
 
 		short version = getShort(jsonObject, AttachmentContentAttributes.VERSION);
-		String lastModify = getString(jsonObject, AttachmentContentAttributes.LAST_MODIFIED_DATE);
+		String creationDate = getString(jsonObject, AttachmentContentAttributes.CREATION_DATE);
 		String author = getString(jsonObject, AttachmentContentAttributes.AUTHOR);
 		String changeNote = getString(jsonObject, AttachmentContentAttributes.CHANGE_NOTE);
 		String content = getString(jsonObject, AttachmentContentAttributes.PLACE);

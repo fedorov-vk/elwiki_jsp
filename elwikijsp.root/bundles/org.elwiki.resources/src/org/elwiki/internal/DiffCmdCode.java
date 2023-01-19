@@ -36,13 +36,13 @@ public class DiffCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response))
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;
 		if (wikiContext.getCommand().getTarget() == null) {
-			response.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
+			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;
 		}
 		String pagereq = wikiContext.getName();

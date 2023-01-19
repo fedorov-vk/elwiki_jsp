@@ -19,19 +19,19 @@ public class LogoutCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
 		mgr.logout(httpRequest);
 
 		// Clear the user cookie
-		CookieAssertionLoginModule.clearUserCookie(response);
+		CookieAssertionLoginModule.clearUserCookie(httpResponse);
 
 		// Delete the login cookie
-		CookieAuthenticationLoginModule.clearLoginCookie(ServicesRefs.Instance, httpRequest, response);
+		CookieAuthenticationLoginModule.clearLoginCookie(ServicesRefs.Instance, httpRequest, httpResponse);
 
 		// Redirect to the webroot
 		// TODO: Should redirect to a "goodbye" -page?
-		response.sendRedirect("/cmd.view");
+		httpResponse.sendRedirect("/cmd.view");
 	}
 
 }

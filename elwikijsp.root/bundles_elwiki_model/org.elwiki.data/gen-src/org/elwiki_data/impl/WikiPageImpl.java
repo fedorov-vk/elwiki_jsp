@@ -33,6 +33,7 @@ import org.elwiki_data.WikiPage;
  * <ul>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getRedirect <em>Redirect</em>}</li>
@@ -44,7 +45,6 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
@@ -412,7 +412,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	public Date getLastModifiedDate() {
 		EList<PageContent> pageContent = this.getPageContents();
 		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
-				pageContent.get(pageContent.size()-1).getLastModifiedDate();
+				pageContent.get(pageContent.size()-1).getCreationDate();
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class CreatePageCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		String pageName = (String) httpRequest.getParameter("pageName");
 		String targetPageId = httpRequest.getParameter("redirect");
 		String action = httpRequest.getParameter("action");
@@ -45,7 +45,7 @@ public class CreatePageCmdCode extends CmdCode {
 				throw new Exception("Incorrect form action.");
 			}
 
-			response.sendRedirect(redirectedUrl);
+			httpResponse.sendRedirect(redirectedUrl);
 		}
 	}
 

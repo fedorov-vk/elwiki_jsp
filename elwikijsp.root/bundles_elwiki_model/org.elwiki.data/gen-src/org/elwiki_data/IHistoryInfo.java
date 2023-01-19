@@ -16,7 +16,7 @@ import org.eclipse.emf.cdo.CDOObject;
  * </p>
  * <ul>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.IHistoryInfo#getLastModifiedDate <em>Last Modified Date</em>}</li>
+ *   <li>{@link org.elwiki_data.IHistoryInfo#getCreationDate <em>Creation Date</em>}</li>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getAuthor <em>Author</em>}</li>
  *   <li>{@link org.elwiki_data.IHistoryInfo#getChangeNote <em>Change Note</em>}</li>
  * </ul>
@@ -56,7 +56,7 @@ public interface IHistoryInfo extends CDOObject {
 	void setVersion(short value);
 
 	/**
-	 * Returns the value of the '<em><b>Last Modified Date</b></em>' attribute.
+	 * Returns the value of the '<em><b>Creation Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -65,23 +65,23 @@ public interface IHistoryInfo extends CDOObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Last Modified Date</em>' attribute.
-	 * @see #setLastModifiedDate(Date)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_LastModifiedDate()
+	 * @return the value of the '<em>Creation Date</em>' attribute.
+	 * @see #setCreationDate(Date)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_CreationDate()
 	 * @model
 	 * @generated
 	 */
-	Date getLastModifiedDate();
+	Date getCreationDate();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getLastModifiedDate <em>Last Modified Date</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getCreationDate <em>Creation Date</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Last Modified Date</em>' attribute.
-	 * @see #getLastModifiedDate()
+	 * @param value the new value of the '<em>Creation Date</em>' attribute.
+	 * @see #getCreationDate()
 	 * @generated
 	 */
-	void setLastModifiedDate(Date value);
+	void setCreationDate(Date value);
 
 	/**
 	 * Returns the value of the '<em><b>Author</b></em>' attribute.

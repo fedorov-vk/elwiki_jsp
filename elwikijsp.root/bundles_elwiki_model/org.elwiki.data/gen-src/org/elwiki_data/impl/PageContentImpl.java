@@ -25,7 +25,7 @@ import org.elwiki_data.WikiPage;
  * </p>
  * <ul>
  *   <li>{@link org.elwiki_data.impl.PageContentImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageContentImpl#getLastModifiedDate <em>Last Modified Date</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageContentImpl#getCreationDate <em>Creation Date</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageContentImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageContentImpl#getChangeNote <em>Change Note</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageContentImpl#getContent <em>Content</em>}</li>
@@ -90,8 +90,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public Date getLastModifiedDate() {
-		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFIED_DATE, true);
+	public Date getCreationDate() {
+		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CREATION_DATE, true);
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class PageContentImpl extends CDOObjectImpl implements PageContent {
 	 * @generated
 	 */
 	@Override
-	public void setLastModifiedDate(Date newLastModifiedDate) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFIED_DATE, newLastModifiedDate);
+	public void setCreationDate(Date newCreationDate) {
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CREATION_DATE, newCreationDate);
 	}
 
 	/**

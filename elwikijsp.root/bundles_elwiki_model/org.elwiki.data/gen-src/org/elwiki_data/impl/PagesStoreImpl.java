@@ -23,6 +23,7 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.PagesStoreImpl#getWikipages <em>Wikipages</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PagesStoreImpl#getMainPageId <em>Main Page Id</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PagesStoreImpl#getNextPageId <em>Next Page Id</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PagesStoreImpl#getNextAttachmentId <em>Next Attachment Id</em>}</li>
  * </ul>
  *
  * @generated
@@ -106,6 +107,26 @@ public class PagesStoreImpl extends CDOObjectImpl implements PagesStore {
 	@Override
 	public void setNextPageId(String newNextPageId) {
 		eSet(Elwiki_dataPackage.Literals.PAGES_STORE__NEXT_PAGE_ID, newNextPageId);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getNextAttachmentId() {
+		return (String)eGet(Elwiki_dataPackage.Literals.PAGES_STORE__NEXT_ATTACHMENT_ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setNextAttachmentId(String newNextAttachmentId) {
+		eSet(Elwiki_dataPackage.Literals.PAGES_STORE__NEXT_ATTACHMENT_ID, newNextAttachmentId);
 	}
 
 } //PagesStoreImpl

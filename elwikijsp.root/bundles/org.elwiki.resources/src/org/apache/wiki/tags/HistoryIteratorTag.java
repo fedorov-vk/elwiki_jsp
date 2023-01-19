@@ -46,6 +46,7 @@ import org.elwiki_data.WikiPage;
  * @since 2.0
  */
 // FIXME: Too much in common with IteratorTag - REFACTOR
+// TODO: - remove it, and HistoryIteratorInfo - because loop is possibly make with Java do-while as follow: <% do{ %> JSP lines <% } while(); %> 
 public class HistoryIteratorTag extends BaseIteratorTag<PageContent> {
 
 	private static final long serialVersionUID = 7176074423129405610L;

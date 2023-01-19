@@ -26,12 +26,12 @@ public class CreateGroupCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Engine wiki = ServicesRefs.Instance;
 
 		// Get wiki context and check for authorization
 		Context wikiContext = Wiki.context().create(wiki, httpRequest, ContextEnum.GROUP_EDIT.getRequestContext());
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response)) {
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 
@@ -51,7 +51,7 @@ public class CreateGroupCmdCode extends CmdCode {
 			httpRequest.setAttribute("Group", group); //HACK: вместо pageContext.setAttribute() 
 		} catch (WikiSecurityException e) {
 			wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
-			response.sendRedirect("Group.jsp");
+			httpResponse.sendRedirect("Group.jsp");
 		}
 
 		// Are we saving the group?
@@ -80,7 +80,7 @@ public class CreateGroupCmdCode extends CmdCode {
 				}
 			}
 			if (wikiSession.getMessages(IAuthorizer.MESSAGES_KEY).length == 0) {
-				response.sendRedirect("Group.jsp?group=" + group.getName());
+				httpResponse.sendRedirect("Group.jsp?group=" + group.getName());
 				return;
 			}
 		}

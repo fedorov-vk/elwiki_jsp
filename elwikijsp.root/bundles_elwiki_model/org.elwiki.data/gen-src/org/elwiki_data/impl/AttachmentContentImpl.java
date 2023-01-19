@@ -21,7 +21,7 @@ import org.elwiki_data.PageAttachment;
  * </p>
  * <ul>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getLastModifiedDate <em>Last Modified Date</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getCreationDate <em>Creation Date</em>}</li>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getChangeNote <em>Change Note</em>}</li>
  *   <li>{@link org.elwiki_data.impl.AttachmentContentImpl#getPlace <em>Place</em>}</li>
@@ -87,8 +87,8 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public Date getLastModifiedDate() {
-		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFIED_DATE, true);
+	public Date getCreationDate() {
+		return (Date)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CREATION_DATE, true);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public void setLastModifiedDate(Date newLastModifiedDate) {
-		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__LAST_MODIFIED_DATE, newLastModifiedDate);
+	public void setCreationDate(Date newCreationDate) {
+		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__CREATION_DATE, newCreationDate);
 	}
 
 	/**

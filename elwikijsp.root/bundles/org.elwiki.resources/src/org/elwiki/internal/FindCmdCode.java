@@ -40,12 +40,12 @@ public class FindCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Engine wiki = ServicesRefs.Instance;
 
 		// Get wiki context and check for authorization
 		Context wikiContext = ContextUtil.findContext(httpRequest);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response)) {
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 
@@ -76,7 +76,7 @@ public class FindCmdCode extends CmdCode {
 	                SearchResult sr = list.iterator().next();
 	                WikiPage wikiPage = sr.getPage();
 	                String url = wikiContext.getViewURL( wikiPage.getName() );
-	                response.sendRedirect( url );
+	                httpResponse.sendRedirect( url );
 	                return;
 	            }
 	        }

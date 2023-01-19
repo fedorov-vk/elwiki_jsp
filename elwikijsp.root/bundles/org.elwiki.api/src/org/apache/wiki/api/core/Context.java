@@ -127,6 +127,12 @@ public interface Context extends Cloneable, Command {
     /** Persisting wiki content. */
     public static final String PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();
 
+    /** Delete all version of attached file. */
+    public static final String ATTACHMENT_DELETE = ContextEnum.ATTACHMENT_DELETE.getRequestContext();
+
+    /** Inspect all versions of attached file. */
+    public static final String ATTACHMENT_INFO = ContextEnum.ATTACHMENT_INFO.getRequestContext();
+
     /**
      *  Is used to choose between the different date formats that JSPWiki supports.
      *  <ul>

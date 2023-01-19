@@ -80,7 +80,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	}
 
 	@Override
-	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse response, FilterChain chain)
+	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
 			throws IOException, ServletException {
 		try {
 			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, null);
@@ -101,7 +101,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			} else {
 				// skip all other URI. 
 				log.debug("Request URI isn't matched anything.");
-				super.doFilter(httpRequest, response, chain);
+				super.doFilter(httpRequest, httpResponse, chain);
 				return;
 			}
 
@@ -116,7 +116,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 			log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));
 
-			response.setContentType("text/html; charset=" + engine.getContentEncoding());
+			httpResponse.setContentType("text/html; charset=" + engine.getContentEncoding());
 
 			/* Authorize. (following code from prolog of JSPwiki JSP pages)
 			 */
@@ -139,8 +139,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 				cmdCode = Platform.getAdapterManager().getAdapter(wikiContext.getContextCmd(), CmdCode.class);
 				if (cmdCode != null) {
-					// Code for context`s command: execute prolog.
-					cmdCode.applyPrologue(httpRequest, response);
+					cmdCode.applyPrologue(httpRequest, httpResponse);
 				}
 
 				if (!isAjaxPage) {
@@ -148,19 +147,19 @@ public class JspServletFilter extends HttpFilter implements Filter {
 					switch (template) {
 					case "reader":
 						//:FVK: - workaround. view only page, for skin=reader
-						httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, response);
+						httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, httpResponse);
 						break;
 					case "raw":
 						//:FVK: - workaround. view only page, for skin=raw
-						httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, response);
+						httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, httpResponse);
 						break;
 					default:
 						// chain.doFilter(request, response);
-						httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, response);
+						httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, httpResponse);
 						break;
 					}
 				} else {
-					httpRequest.getRequestDispatcher(uri).include(httpRequest, response);
+					httpRequest.getRequestDispatcher(uri).include(httpRequest, httpResponse);
 				}
 
 				/* TODO: check JSP error.
@@ -183,7 +182,6 @@ public class JspServletFilter extends HttpFilter implements Filter {
 				}
 			} finally {
 				if (cmdCode != null) {
-					// Code for context`s command: execute epilogue.
 					cmdCode.applyEpilogue();
 				}
 

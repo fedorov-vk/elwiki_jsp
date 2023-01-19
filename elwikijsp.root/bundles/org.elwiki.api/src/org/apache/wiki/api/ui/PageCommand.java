@@ -48,6 +48,8 @@ public final class PageCommand extends AbstractCommand {
     public static final Command UPLOAD = new PageCommand( ContextEnum.PAGE_UPLOAD, null, PagePermission.UPLOAD_ACTION );
     public static final Command VIEW = new PageCommand( ContextEnum.PAGE_VIEW, null, PagePermission.VIEW_ACTION );
     //:FVK: public static final Command VIEWID = new PageCommand( ContextEnum.PAGE_VIEWID, null, PagePermission.VIEW_ACTION );
+    public static final Command DELETE_ATTACHMENT = new PageCommand( ContextEnum.ATTACHMENT_DELETE, null, PagePermission.DELETE_ACTION );
+    public static final Command INFO_ATTACHMENT = new PageCommand( ContextEnum.ATTACHMENT_INFO, null, PagePermission.VIEW_ACTION );
     public static final Command NONE = new PageCommand( ContextEnum.PAGE_NONE, null, null );
     public static final Command OTHER = NONE;
 
@@ -64,7 +66,7 @@ public final class PageCommand extends AbstractCommand {
      * @param action the action used to construct a suitable PagePermission
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-/*    private PageCommand( final ContextEnum currentContext, final WikiPage target, final String action ) {
+/*:FVK:    private PageCommand( final ContextEnum currentContext, final WikiPage target, final String action ) {
         this( currentContext, target, action );
     }
 */

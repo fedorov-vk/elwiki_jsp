@@ -15,10 +15,11 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getName <em>Name</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getWikipage <em>Wikipage</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getAttachContents <em>Attach Contents</em>}</li>
- *   <li>{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
@@ -28,6 +29,34 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface PageAttachment extends CDOObject {
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_Id()
+	 * @model
+	 * @generated
+	 */
+	String getId();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

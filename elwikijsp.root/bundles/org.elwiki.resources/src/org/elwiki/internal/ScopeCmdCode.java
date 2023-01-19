@@ -29,7 +29,7 @@ public class ScopeCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		// Get wiki context and check for authorization
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
@@ -69,7 +69,7 @@ public class ScopeCmdCode extends CmdCode {
 
 			String targetPageId = httpRequest.getParameter("redirect");
 			String redirectedUrl = "cmd.view?pageId=" + targetPageId;
-			response.sendRedirect(redirectedUrl);
+			httpResponse.sendRedirect(redirectedUrl);
 		}
 	}
 

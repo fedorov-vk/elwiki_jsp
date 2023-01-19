@@ -122,6 +122,7 @@
     <tr>
 
       <%-- see styles/fontjspwiki/icon.less : icon-file-<....>-o  --%>
+      <c:set var="attContent" value="${att.attachmentContent}" />
       <c:set var="parts" value="${fn:split(att.name, '.')}" />
       <c:set var="type" value="${ fn:length(parts)>1 ? fn:escapeXml(parts[fn:length(parts)-1]) : ''}" />
 
@@ -129,38 +130,36 @@
         <wiki:LinkTo><c:out value="${att.name}" /></wiki:LinkTo>
       </td>
 
-      <td><wiki:PageVersion /></td>
+      <td><c:out value="${attContent.version}"/></td>
 
-      <td class="nowrap" data-sortvalue="${att.lastModify.time}">
-        <fmt:formatDate value="${att.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
+      <td class="nowrap" data-sortvalue="${attContent.creationDate.time}">
+        <fmt:formatDate value="${attContent.creationDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
       </td>
 
-      <td class="nowrap" title="${att.size} bytes" data-sortvalue="${att.size}">
-        <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getAttachmentContent().getSize() ) %>
+      <td class="nowrap" title="${attContent.size} bytes" data-sortvalue="${attContent.size}">
+        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getAttachmentContent().getSize() )%>
       </td>
 
       <td class="attach-type"><span class="icon-file-${fn:toLowerCase(type)}-o"></span>${type}</td>
 
-      <td><wiki:Author /></td>
+      <td><c:out value="${fn:escapeXml(attContent.author)}"/></td>
 
       <td class="nowrap">
-        <a class="btn btn-primary btn-xs" href="<wiki:Link context='info' format='url'/>" title="<fmt:message key='attach.moreinfo.title'/>">
+        <a class="btn btn-primary btn-xs"
+           href="<wiki:Link format='url' context='<%=Context.ATTACHMENT_INFO%>' pageId='${att.id}'/>"
+           title="<fmt:message key='attach.moreinfo.title'/>">
           <fmt:message key="attach.moreinfo"/>
         </a>
         <wiki:Permission permission="delete">
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
+                  src="<wiki:Link format='url' context='<%=Context.ATTACHMENT_DELETE%>' pageId='${att.id}' />"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>
 
-      <%-- :FVK: rewrite the old, according to the functionality
-		<c:set var="changenote" value="<%=(String)att.getAttribute( WikiPage.CHANGENOTE )%>" />
-      --%>	
-      <c:set var="changenote" value=":FOO:" />
-      <td class="changenote"><c:out value="${changenote}"/></td>
+      <td class="changenote"><c:out value="${attContent.changeNote}"/></td>
 
     </tr>
     </wiki:AttachmentsIterator>

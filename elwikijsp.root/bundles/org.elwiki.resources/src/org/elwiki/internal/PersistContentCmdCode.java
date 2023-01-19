@@ -11,7 +11,7 @@ import org.apache.wiki.api.core.Engine;
 public class PersistContentCmdCode extends CmdCode {
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		IStorageCdo storageCdo = wiki.getManager(IStorageCdo.class);
@@ -27,7 +27,7 @@ public class PersistContentCmdCode extends CmdCode {
 		}
 
 		String redirectPageId = httpRequest.getParameter("redirect");
-		response.sendRedirect(wikiContext.getViewURL(redirectPageId));	
+		httpResponse.sendRedirect(wikiContext.getViewURL(redirectPageId));	
 	}
 
 }

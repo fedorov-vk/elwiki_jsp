@@ -42,7 +42,7 @@ public class LoginCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE
 		// httpRequest.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
@@ -66,7 +66,7 @@ public class LoginCmdCode extends CmdCode {
 			if (wikiSession.getMessages("profile").length == 0) {
 				try {
 					userMgr.setUserProfile(wikiSession, profile);
-					CookieAssertionLoginModule.setUserCookie(response, profile.getFullname());
+					CookieAssertionLoginModule.setUserCookie(httpResponse, profile.getFullname());
 				} catch (DuplicateUserException due) {
 					// User collision! (full name or wiki name already taken)
 					wikiSession.addMessage("profile",
@@ -75,7 +75,7 @@ public class LoginCmdCode extends CmdCode {
 				} catch (DecisionRequiredException e) {
 					String redirect = ServicesRefs.Instance.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
 							"ApprovalRequiredForUserProfiles", null);
-					response.sendRedirect(redirect);
+					httpResponse.sendRedirect(redirect);
 					return;
 				} catch (WikiSecurityException e) {
 					// Something went horribly wrong! Maybe it's an I/O error...
@@ -84,7 +84,7 @@ public class LoginCmdCode extends CmdCode {
 			}
 			if (wikiSession.getMessages("profile").length == 0) {
 				String redirectPage = httpRequest.getParameter("redirect");
-				response.sendRedirect(wikiContext.getViewURL(redirectPage));
+				httpResponse.sendRedirect(wikiContext.getViewURL(redirectPage));
 				return;
 			}
 		}
@@ -96,7 +96,7 @@ public class LoginCmdCode extends CmdCode {
 			// If user got here and is already authenticated, it means they just aren't allowed
 			// access to what they asked for. Weepy tears and hankies all 'round.
 			if (wikiSession.isAuthenticated()) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, rb.getString("login.error.noaccess"));
+				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, rb.getString("login.error.noaccess"));
 				return;
 			}
 
@@ -124,7 +124,7 @@ public class LoginCmdCode extends CmdCode {
 			//
 			Object seen = session.getAttribute("_redirect");
 			if (seen != null) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, rb.getString("login.error.noaccess"));
+				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, rb.getString("login.error.noaccess"));
 				session.removeAttribute("_redirect");
 				return;
 			}
@@ -150,10 +150,10 @@ public class LoginCmdCode extends CmdCode {
 
 			// Set user cookie
 			Principal principal = wikiSession.getUserPrincipal();
-			CookieAssertionLoginModule.setUserCookie(response, principal.getName());
+			CookieAssertionLoginModule.setUserCookie(httpResponse, principal.getName());
 
 			if (remember != null) {
-				CookieAuthenticationLoginModule.setLoginCookie(ServicesRefs.Instance, response, principal.getName());
+				CookieAuthenticationLoginModule.setLoginCookie(ServicesRefs.Instance, httpResponse, principal.getName());
 			}
 
 			// If wiki page was "Login", redirect to main, otherwise use the page supplied
@@ -165,7 +165,7 @@ public class LoginCmdCode extends CmdCode {
 
 			// Redirect!
 			log.info("Redirecting user to " + viewUrl);
-			response.sendRedirect(viewUrl);
+			httpResponse.sendRedirect(viewUrl);
 			return;
 		}
 	}

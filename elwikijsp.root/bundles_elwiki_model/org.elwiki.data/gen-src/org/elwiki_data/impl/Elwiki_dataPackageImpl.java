@@ -269,16 +269,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getWikiPage_Description() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getWikiPage_Alias() {
 		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -288,7 +278,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getWikiPage_Redirect() {
+	public EAttribute getWikiPage_Alias() {
 		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -298,7 +288,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getWikiPage_ViewCount() {
+	public EAttribute getWikiPage_Redirect() {
 		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -308,8 +298,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EReference getWikiPage_PageContents() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(6);
+	public EAttribute getWikiPage_ViewCount() {
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -318,7 +308,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EReference getWikiPage_Attachments() {
+	public EReference getWikiPage_PageContents() {
 		return (EReference)wikiPageEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -328,8 +318,18 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EReference getWikiPage_Attachments() {
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getWikiPage_Wiki() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -339,16 +339,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getWikiPage_Children() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getWikiPage_Parent() {
 		return (EReference)wikiPageEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -358,8 +348,18 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EReference getWikiPage_Parent() {
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getWikiPage_OldParents() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(11);
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getWikiPage_PageReferences() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(12);
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getWikiPage_LastVersion() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(13);
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -548,6 +548,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getPagesStore_NextAttachmentId() {
+		return (EAttribute)pagesStoreEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPageContent() {
 		return pageContentEClass;
 	}
@@ -598,7 +608,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPageAttachment_Name() {
+	public EAttribute getPageAttachment_Id() {
 		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -608,8 +618,18 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getPageAttachment_Name() {
+		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getPageAttachment_Wikipage() {
-		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(1);
+		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -619,7 +639,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getPageAttachment_AttachContents() {
-		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(2);
+		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -629,7 +649,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getPageAttachment_LastVersion() {
-		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -639,7 +659,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getPageAttachment_AttachmentContent() {
-		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(4);
+		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -738,7 +758,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getIHistoryInfo_LastModifiedDate() {
+	public EAttribute getIHistoryInfo_CreationDate() {
 		return (EAttribute)iHistoryInfoEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1044,6 +1064,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		wikiPageEClass = createEClass(WIKI_PAGE);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__ID);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__NAME);
+		createEAttribute(wikiPageEClass, WIKI_PAGE__LAST_VERSION);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__DESCRIPTION);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__ALIAS);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__REDIRECT);
@@ -1055,7 +1076,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(wikiPageEClass, WIKI_PAGE__PARENT);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__OLD_PARENTS);
 		createEReference(wikiPageEClass, WIKI_PAGE__PAGE_REFERENCES);
-		createEAttribute(wikiPageEClass, WIKI_PAGE__LAST_VERSION);
 		createEReference(wikiPageEClass, WIKI_PAGE__ACL);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__WEB_LOG);
 		createEReference(wikiPageEClass, WIKI_PAGE__ATTRIBUTES);
@@ -1073,6 +1093,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(pagesStoreEClass, PAGES_STORE__WIKIPAGES);
 		createEAttribute(pagesStoreEClass, PAGES_STORE__MAIN_PAGE_ID);
 		createEAttribute(pagesStoreEClass, PAGES_STORE__NEXT_PAGE_ID);
+		createEAttribute(pagesStoreEClass, PAGES_STORE__NEXT_ATTACHMENT_ID);
 
 		pageContentEClass = createEClass(PAGE_CONTENT);
 		createEAttribute(pageContentEClass, PAGE_CONTENT__CONTENT);
@@ -1080,10 +1101,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEOperation(pageContentEClass, PAGE_CONTENT___GET_LENGTH);
 
 		pageAttachmentEClass = createEClass(PAGE_ATTACHMENT);
+		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__ID);
 		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__NAME);
+		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__LAST_VERSION);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__WIKIPAGE);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACH_CONTENTS);
-		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__LAST_VERSION);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACHMENT_CONTENT);
 		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_LAST_CONTENT);
 		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT);
@@ -1098,7 +1120,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		iHistoryInfoEClass = createEClass(IHISTORY_INFO);
 		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__VERSION);
-		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__LAST_MODIFIED_DATE);
+		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__CREATION_DATE);
 		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__AUTHOR);
 		createEAttribute(iHistoryInfoEClass, IHISTORY_INFO__CHANGE_NOTE);
 
@@ -1173,6 +1195,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(wikiPageEClass, WikiPage.class, "WikiPage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getWikiPage_Id(), ecorePackage.getEString(), "id", "", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Name(), ecorePackage.getEString(), "name", "", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWikiPage_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Description(), ecorePackage.getEString(), "description", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Alias(), ecorePackage.getEString(), "alias", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Redirect(), ecorePackage.getEString(), "redirect", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1184,7 +1207,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEReference(getWikiPage_Parent(), this.getWikiPage(), this.getWikiPage_Children(), "parent", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_OldParents(), this.getArrayString(), "oldParents", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_PageReferences(), this.getPageReference(), this.getPageReference_Wikipage(), "pageReferences", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getWikiPage_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_Acl(), this.getAcl(), null, "acl", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_WebLog(), ecorePackage.getEBoolean(), "webLog", "false", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_Attributes(), this.getStringToObjectMap(), null, "attributes", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1215,7 +1237,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(pagesStoreEClass, PagesStore.class, "PagesStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPagesStore_Wikipages(), this.getWikiPage(), null, "wikipages", null, 0, -1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPagesStore_MainPageId(), ecorePackage.getEString(), "mainPageId", null, 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPagesStore_NextPageId(), ecorePackage.getEString(), "nextPageId", "", 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPagesStore_NextPageId(), ecorePackage.getEString(), "nextPageId", "0", 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPagesStore_NextAttachmentId(), ecorePackage.getEString(), "nextAttachmentId", "0", 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(pageContentEClass, PageContent.class, "PageContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPageContent_Content(), ecorePackage.getEString(), "content", "", 0, 1, PageContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1224,10 +1247,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEOperation(getPageContent__GetLength(), ecorePackage.getEIntegerObject(), "getLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(pageAttachmentEClass, PageAttachment.class, "PageAttachment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPageAttachment_Id(), ecorePackage.getEString(), "id", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPageAttachment_Name(), ecorePackage.getEString(), "name", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPageAttachment_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_Wikipage(), this.getWikiPage(), this.getWikiPage_Attachments(), "wikipage", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_AttachContents(), this.getAttachmentContent(), this.getAttachmentContent_PageAttachment(), "attachContents", null, 0, -1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPageAttachment_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_AttachmentContent(), this.getAttachmentContent(), null, "attachmentContent", null, 0, 1, PageAttachment.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getPageAttachment__ForLastContent(), this.getAttachmentContent(), "forLastContent", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -1248,7 +1272,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		initEClass(iHistoryInfoEClass, IHistoryInfo.class, "IHistoryInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIHistoryInfo_Version(), ecorePackage.getEShort(), "version", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getIHistoryInfo_LastModifiedDate(), ecorePackage.getEDate(), "lastModifiedDate", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIHistoryInfo_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_Author(), ecorePackage.getEString(), "author", "", 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_ChangeNote(), ecorePackage.getEString(), "changeNote", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

@@ -19,11 +19,11 @@ public class PageContentSerializer implements JsonSerializer<PageContent> {
 		JsonObject result = new JsonObject();
 
 		result.addProperty(PageContentAttributes.VERSION, pageContent.getVersion());
-		Date lastModification = pageContent.getLastModifiedDate();
-		if (lastModification == null) {
-			lastModification = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
+		Date creationDate = pageContent.getCreationDate();
+		if (creationDate == null) {
+			creationDate = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
 		}
-		result.addProperty(PageContentAttributes.LAST_MODIFIED_DATE, lastModification.toString());
+		result.addProperty(PageContentAttributes.CREATION_DATE, creationDate.toString());
 		result.addProperty(PageContentAttributes.AUTHOR, pageContent.getAuthor());
 		result.addProperty(PageContentAttributes.CHANGE_NOTE, pageContent.getChangeNote());
 		result.addProperty(PageContentAttributes.CONTENT, pageContent.getContent());

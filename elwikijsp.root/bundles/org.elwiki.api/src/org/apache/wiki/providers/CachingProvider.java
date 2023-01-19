@@ -579,7 +579,14 @@ public class CachingProvider implements PageProvider {
 	}
 
 	@Override
-	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws IOException, Exception {
+		Assert.isTrue(false, "Код не реализован.");
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception {
 		Assert.isTrue(false, "Код не реализован.");
 		// TODO Auto-generated method stub
 		return null;

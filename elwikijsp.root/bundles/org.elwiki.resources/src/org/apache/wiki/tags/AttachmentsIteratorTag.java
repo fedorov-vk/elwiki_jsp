@@ -30,6 +30,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -46,7 +47,7 @@ import org.elwiki_data.WikiPage;
  * @since 2.0
  */
 // FIXME: Too much in common with IteratorTag - REFACTOR
-public class AttachmentsIteratorTag extends BaseIteratorTag {
+public class AttachmentsIteratorTag extends BaseIteratorTag<PageAttachment> {
 
 	private static final long serialVersionUID = -6348093527562836028L;
 	private static final Logger log = Logger.getLogger(AttachmentsIteratorTag.class);
@@ -81,10 +82,12 @@ public class AttachmentsIteratorTag extends BaseIteratorTag {
 
 				if (m_iterator.hasNext()) {
 					final PageAttachment att = (PageAttachment) m_iterator.next();
+					att.forLastContent(); // workaround.
 					final Context context = m_wikiContext.clone();
 					//:FVK: context.setPage( att );
 					pageContext.setAttribute(Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);
-					pageContext.setAttribute(getId(), att);
+					String attrId = getId();
+					pageContext.setAttribute(attrId, att);
 				} else {
 					return SKIP_BODY;
 				}

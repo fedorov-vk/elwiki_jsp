@@ -46,15 +46,15 @@ public class CommentCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession();
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		HttpSession session = httpRequest.getSession();
 
 		// Create wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(request);
+		Context wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
-	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) return;
 	    if( wikiContext.getCommand().getTarget() == null ) {
-	        response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
+	        httpResponse.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
 	        return;
 	    }
 	    String pagereq = wikiContext.getName();
@@ -64,16 +64,16 @@ public class CommentCmdCode extends CmdCode {
 	    String storedUser = wikiSession.getUserPrincipal().getName();
 
 	    if( wikiSession.isAnonymous() ) {
-	        storedUser  = TextUtil.replaceEntities( request.getParameter( "author" ) );
+	        storedUser  = TextUtil.replaceEntities( httpRequest.getParameter( "author" ) );
 	    }
 
-	    String ok      = request.getParameter("ok");
-	    String preview = request.getParameter("preview");
-	    String cancel  = request.getParameter("cancel");
-	    String author  = TextUtil.replaceEntities( request.getParameter("author") );
-	    String link    = TextUtil.replaceEntities( request.getParameter("link") );
-	    String remember = TextUtil.replaceEntities( request.getParameter("remember") );
-	    String changenote = TextUtil.replaceEntities( request.getParameter( "changenote" ) );
+	    String ok      = httpRequest.getParameter("ok");
+	    String preview = httpRequest.getParameter("preview");
+	    String cancel  = httpRequest.getParameter("cancel");
+	    String author  = TextUtil.replaceEntities( httpRequest.getParameter("author") );
+	    String link    = TextUtil.replaceEntities( httpRequest.getParameter("link") );
+	    String remember = TextUtil.replaceEntities( httpRequest.getParameter("remember") );
+	    String changenote = TextUtil.replaceEntities( httpRequest.getParameter( "changenote" ) );
 
 	    WikiPage wikipage = wikiContext.getPage();
 	    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
@@ -110,7 +110,7 @@ public class CommentCmdCode extends CmdCode {
 	    session.setAttribute("author",author);
 
 	    if( link == null ) {
-	        link = HttpUtil.retrieveCookieValue( request, "link" );
+	        link = HttpUtil.retrieveCookieValue( httpRequest, "link" );
 	        if( link == null ) link = "";
 	        link = TextUtil.urlDecodeUTF8(link);
 	    }
@@ -127,7 +127,7 @@ public class CommentCmdCode extends CmdCode {
 	    log.debug("preview="+preview+", ok="+ok);
 
 	    if( ok != null ) {
-	        log.info("Saving page "+pagereq+". User="+storedUser+", host="+HttpUtil.getRemoteAddress(request) );
+	        log.info("Saving page "+pagereq+". User="+storedUser+", host="+HttpUtil.getRemoteAddress(httpRequest) );
 
 	        //  Modifications are written here before actual saving
 
@@ -138,7 +138,7 @@ public class CommentCmdCode extends CmdCode {
 	        //  best place to check for concurrent changes.  It certainly
 	        //  is the best place to show errors, though.
 
-	        String spamhash = request.getParameter( SpamFilter.getHashFieldName(request) );
+	        String spamhash = httpRequest.getParameter( SpamFilter.getHashFieldName(httpRequest) );
 
 	        /*:FVK: workaround - commented
 	        if( !SpamFilter.checkHash(wikiContext,pageContext) ) {
@@ -180,7 +180,7 @@ public class CommentCmdCode extends CmdCode {
 	            pageText.append( "\n\n----\n\n" );
 	        }
 
-	        String commentText = request.getParameter(EditorManager.REQ_EDITEDTEXT); 
+	        String commentText = httpRequest.getParameter(EditorManager.REQ_EDITEDTEXT); 
 	        		//:FVK: workaround - commented: ContextUtil.getEditedText(pageContext);
 	        //log.info("comment text"+commentText);
 
@@ -215,10 +215,10 @@ public class CommentCmdCode extends CmdCode {
 	            if( link != null ) {
 	                Cookie linkcookie = new Cookie("link", TextUtil.urlEncodeUTF8(link) );
 	                linkcookie.setMaxAge(1001*24*60*60);
-	                response.addCookie( linkcookie );
+	                httpResponse.addCookie( linkcookie );
 	            }
 
-	            CookieAssertionLoginModule.setUserCookie( response, author );
+	            CookieAssertionLoginModule.setUserCookie( httpResponse, author );
 	        } else {
 	            session.removeAttribute("link");
 	            session.removeAttribute("author");
@@ -230,21 +230,21 @@ public class CommentCmdCode extends CmdCode {
 	            pageManager.saveText( wikiContext, pageText.toString(), storedUser, "" ); //:FVK: workaround: changenote == ""
 	        } catch( DecisionRequiredException e ) {
 	        	String redirect = wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), "ApprovalRequiredForPageChanges" );
-	            response.sendRedirect( redirect );
+	            httpResponse.sendRedirect( redirect );
 	            return;
 	        } catch( RedirectException e ) {
 	            session.setAttribute( VariableManager.VAR_MSG, e.getMessage() );
-	            response.sendRedirect( e.getRedirect() );
+	            httpResponse.sendRedirect( e.getRedirect() );
 	            return;
 	        }
-	        response.sendRedirect(wikiContext.getViewURL(pagereq));
+	        httpResponse.sendRedirect(wikiContext.getViewURL(pagereq));
 	        return;
 	    } else if( preview != null ) {
 	        log.debug("Previewing "+pagereq);
-	        String editedText = request.getParameter(EditorManager.REQ_EDITEDTEXT);
+	        String editedText = httpRequest.getParameter(EditorManager.REQ_EDITEDTEXT);
 	        //session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
 	        
-	        response.sendRedirect( TextUtil.replaceString( wiki.getURL( ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, "action=comment"),"&amp;","&") );
+	        httpResponse.sendRedirect( TextUtil.replaceString( wiki.getURL( ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, "action=comment"),"&amp;","&") );
 	        return;
 	    } else if( cancel != null ) {
 	        log.debug("Cancelled editing "+pagereq);
@@ -254,11 +254,11 @@ public class CommentCmdCode extends CmdCode {
 	            ServicesRefs.getPageManager().unlockPage( lock );
 	            session.removeAttribute( "lock-"+pagereq );
 	        }
-	        response.sendRedirect( wikiContext.getViewURL(pagereq) );
+	        httpResponse.sendRedirect( wikiContext.getViewURL(pagereq) );
 	        return;
 	    }
 
-	    log.info("Commenting page "+pagereq+". User="+request.getRemoteUser()+", host="+HttpUtil.getRemoteAddress(request) );
+	    log.info("Commenting page "+pagereq+". User="+httpRequest.getRemoteUser()+", host="+HttpUtil.getRemoteAddress(httpRequest) );
 
 	    //
 	    //  Determine and store the date the latest version was changed.  Since the newest version is the one that is changed,
@@ -286,10 +286,10 @@ public class CommentCmdCode extends CmdCode {
 	    }
 
 	    // Set the content type and include the response content
-	    response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-	    response.setHeader( "Cache-control", "max-age=0" );
-	    response.setDateHeader( "Expires", new Date().getTime() );
-	    response.setDateHeader( "Last-Modified", new Date().getTime() );
+	    httpResponse.setContentType("text/html; charset="+wiki.getContentEncoding() );
+	    httpResponse.setHeader( "Cache-control", "max-age=0" );
+	    httpResponse.setDateHeader( "Expires", new Date().getTime() );
+	    httpResponse.setDateHeader( "Last-Modified", new Date().getTime() );
 	}
 
 }

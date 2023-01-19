@@ -42,17 +42,17 @@ public class EditCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		HttpSession session = httpRequest.getSession();
 
 	    // Get wiki context and check for authorization
 	    Context wikiContext = ContextUtil.findContext(httpRequest);
 	    Engine wiki = wikiContext.getEngine();
-	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
+	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) {
 	        return;
 	    }
 	    if( wikiContext.getCommand().getTarget() == null ) {
-	        response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
+	        httpResponse.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
 	        return;
 	    }
 
@@ -104,10 +104,10 @@ public class EditCmdCode extends CmdCode {
 	    //  Set the response type before we branch.
 	    //
 
-	    response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-	    response.setHeader( "Cache-control", "max-age=0" );
-	    response.setDateHeader( "Expires", new Date().getTime() );
-	    response.setDateHeader( "Last-Modified", new Date().getTime() );
+	    httpResponse.setContentType("text/html; charset="+wiki.getContentEncoding() );
+	    httpResponse.setHeader( "Cache-control", "max-age=0" );
+	    httpResponse.setDateHeader( "Expires", new Date().getTime() );
+	    httpResponse.setDateHeader( "Last-Modified", new Date().getTime() );
 
 	    //log.debug("Request character encoding="+request.getCharacterEncoding());
 	    //log.debug("Request content type+"+request.getContentType());
@@ -186,7 +186,7 @@ public class EditCmdCode extends CmdCode {
 	    		} catch (DecisionRequiredException ex) {
 	    	    	String redirect = wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
 	    	    			"ApprovalRequiredForPageChanges");
-	    	    	response.sendRedirect(redirect);
+	    	    	httpResponse.sendRedirect(redirect);
 	    	    	return;
 	    		} catch (RedirectException ex) {
 	    	    	// FIXME: Cut-n-paste code.
@@ -204,11 +204,11 @@ public class EditCmdCode extends CmdCode {
 
 	    	    	session.setAttribute("changenote", changenote != null ? changenote : "");
 	    	    	session.setAttribute(SpamFilter.getHashFieldName(httpRequest), spamhash);
-	    	    	response.sendRedirect(ex.getRedirect());
+	    	    	httpResponse.sendRedirect(ex.getRedirect());
 	    	    	return;
 	    		}
 
-	    		response.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
+	    		httpResponse.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
 	    		return;
 	        } finally {
 	        }
@@ -227,7 +227,7 @@ public class EditCmdCode extends CmdCode {
 			}
 
 			session.setAttribute("changenote", changenote != null ? changenote : "");
-			response.sendRedirect(wiki.getURL(ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, null));
+			httpResponse.sendRedirect(wiki.getURL(ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, null));
 			return;
 		} else if (cancel != null) {
 			log.debug("Cancelled editing " + pagereq);
@@ -236,7 +236,7 @@ public class EditCmdCode extends CmdCode {
 				ServicesRefs.getPageManager().unlockPage(lock);
 				session.removeAttribute("lock-" + pagereq);
 			}
-			response.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
+			httpResponse.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
 			return;
 		}
 

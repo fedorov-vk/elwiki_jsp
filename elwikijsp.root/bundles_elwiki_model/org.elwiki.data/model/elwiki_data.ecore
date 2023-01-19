@@ -15,7 +15,7 @@
     </eOperations>
     <eOperations name="getLastModifiedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="EList&lt;PageContent> pageContent = this.getPageContents();&#xA;return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :&#xA;&#x9;&#x9;pageContent.get(pageContent.size()-1).getLastModifiedDate();"/>
+        <details key="body" value="EList&lt;PageContent> pageContent = this.getPageContents();&#xA;return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :&#xA;&#x9;&#x9;pageContent.get(pageContent.size()-1).getCreationDate();"/>
         <details key="documentation" value="Returns: modify date of last item of pagecontents reference, or 12.02.1972."/>
       </eAnnotations>
     </eOperations>
@@ -67,6 +67,12 @@
         defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Name&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+        defaultValueLiteral="0">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Total Attachment&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -130,12 +136,6 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Page References&lt;/em>' containment reference list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
-        defaultValueLiteral="0">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Total Attachment&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="acl" eType="#//Acl" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Acl&lt;/em>' containment reference list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
@@ -159,11 +159,13 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextPageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral="">
+        defaultValueLiteral="0">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Next Page Id&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextAttachmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="0"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageContent" eSuperTypes="#//IHistoryInfo">
     <eOperations name="getLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
@@ -203,11 +205,18 @@
       </eAnnotations>
       <eParameters name="desiredVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
     </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Id&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Name&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+        defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
         eOpposite="#//WikiPage/attachments">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -216,8 +225,6 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachContents" upperBound="-1"
         eType="#//AttachmentContent" containment="true" eOpposite="#//AttachmentContent/pageAttachment"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
-        defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attachmentContent" eType="#//AttachmentContent"
         transient="true"/>
   </eClassifiers>
@@ -244,7 +251,7 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Version&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModifiedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Last Modify&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>

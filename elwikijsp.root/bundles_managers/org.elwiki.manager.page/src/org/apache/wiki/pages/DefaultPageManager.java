@@ -1011,8 +1011,15 @@ public class DefaultPageManager implements PageManager, Initializable {
 	}
 
 	@Override
-	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) {
+	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws Exception {
 		return m_provider.addAttachment(wikiPage, pageAttachment);		
 	}
 	
+	@Override
+	public PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception {
+		PageAttachment pageAttachment = null;
+		pageAttachment = this.m_provider.getPageAttachmentById(pageAttachmentId);
+		return pageAttachment;
+	}
+
 }

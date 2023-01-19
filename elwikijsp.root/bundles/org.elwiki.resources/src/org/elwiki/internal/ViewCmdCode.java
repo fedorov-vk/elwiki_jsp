@@ -18,7 +18,7 @@ public class ViewCmdCode extends CmdCode {
 	}
 
 	@Override
-	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse response)
+	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
 			throws Exception {
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 		String pagereq = wikiContext.getName();
@@ -27,7 +27,7 @@ public class ViewCmdCode extends CmdCode {
 	    String redirect = wikiContext.getRedirectURL();
 	    if( redirect != null )
 	    {
-	        response.sendRedirect( redirect );
+	        httpResponse.sendRedirect( redirect );
 	        return;
 	    }
 /*

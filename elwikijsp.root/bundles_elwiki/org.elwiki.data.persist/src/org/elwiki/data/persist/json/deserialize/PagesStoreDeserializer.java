@@ -29,6 +29,7 @@ public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDese
 
 		String mainPageId = getString(jsonObject, PagesStoreAttributes.MAIN_PAGE_ID);
 		String nextPageId = getString(jsonObject, PagesStoreAttributes.NEXT_PAGE_ID);
+		String nextAttachmentId = getString(jsonObject, PagesStoreAttributes.NEXT_ATTACHMENT_ID);
 		JsonArray jsonPages = getArray(jsonObject, PagesStoreAttributes.PAGES);
 
 		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
@@ -37,6 +38,7 @@ public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDese
 
 		pagesStore.setMainPageId(mainPageId);
 		pagesStore.setNextPageId(nextPageId);
+		pagesStore.setNextAttachmentId(nextAttachmentId);
 
 		for (JsonElement page : jsonPages) {
 			WikiPage wikiPage = context.deserialize(page, WikiPage.class);

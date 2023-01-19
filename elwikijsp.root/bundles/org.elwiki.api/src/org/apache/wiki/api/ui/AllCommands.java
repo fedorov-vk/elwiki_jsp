@@ -50,6 +50,8 @@ public interface AllCommands {
             PageCommand.RSS,
             PageCommand.UPLOAD,
             PageCommand.VIEW,
+            PageCommand.DELETE_ATTACHMENT,
+            PageCommand.INFO_ATTACHMENT,
             //:FVK: PageCommand.VIEWID,
             RedirectCommand.REDIRECT,
             WikiCommand.CREATE_GROUP,
