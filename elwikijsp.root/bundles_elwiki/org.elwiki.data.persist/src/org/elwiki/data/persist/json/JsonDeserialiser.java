@@ -3,16 +3,18 @@ package org.elwiki.data.persist.json;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IPath;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.data.persist.json.deserialize.AclDeserializer;
-import org.elwiki.data.persist.json.deserialize.AttachmentContentDeserializer;
-import org.elwiki.data.persist.json.deserialize.PageAttachmentDeserializer;
-import org.elwiki.data.persist.json.deserialize.PageContentDeserializer;
-import org.elwiki.data.persist.json.deserialize.PageReferenceDeserializer;
-import org.elwiki.data.persist.json.deserialize.PagesStoreDeserializer;
-import org.elwiki.data.persist.json.deserialize.WikiPageDeserializer;
+import org.elwiki.data.persist.json.converters.AclConverter;
+import org.elwiki.data.persist.json.converters.AttachmentContentConverter;
+import org.elwiki.data.persist.json.converters.DateConverter;
+import org.elwiki.data.persist.json.converters.PageAttachmentConverter;
+import org.elwiki.data.persist.json.converters.PageContentConverter;
+import org.elwiki.data.persist.json.converters.PageReferenceConverter;
+import org.elwiki.data.persist.json.converters.PagesStoreConverter;
+import org.elwiki.data.persist.json.converters.WikiPageConverter;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -38,13 +40,15 @@ public class JsonDeserialiser {
 	public void LoadData() throws IOException {
 		Gson gson = new GsonBuilder()
 				.setPrettyPrinting() //@formatter:off
-				.registerTypeAdapter(PagesStore.class, new PagesStoreDeserializer())
-				.registerTypeAdapter(WikiPage.class, new WikiPageDeserializer())
-				.registerTypeAdapter(PageReference.class, new PageReferenceDeserializer())
-				.registerTypeAdapter(PageContent.class, new PageContentDeserializer())
-				.registerTypeAdapter(PageAttachment.class, new PageAttachmentDeserializer())
-				.registerTypeAdapter(AttachmentContent.class, new AttachmentContentDeserializer())
-				.registerTypeAdapter(Acl.class, new AclDeserializer())
+				//.setVersion(1.0)
+				.registerTypeAdapter(PagesStore.class, new PagesStoreConverter())
+				.registerTypeAdapter(WikiPage.class, new WikiPageConverter())
+				.registerTypeAdapter(PageReference.class, new PageReferenceConverter())
+				.registerTypeAdapter(PageContent.class, new PageContentConverter())
+				.registerTypeAdapter(PageAttachment.class, new PageAttachmentConverter())
+				.registerTypeAdapter(AttachmentContent.class, new AttachmentContentConverter())
+				.registerTypeAdapter(Acl.class, new AclConverter())
+				.registerTypeAdapter(Date.class, new DateConverter())
 				.create(); //@formatter:on
 
 		// Writer writer = new FileWriter(JsonConstants.FILE_NAME);

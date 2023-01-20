@@ -7,9 +7,11 @@ import java.lang.Comparable;
 import java.lang.Object;
 
 import java.lang.reflect.InvocationTargetException;
-
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
@@ -410,9 +412,30 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@Override
 	public Date getLastModifiedDate() {
-		EList<PageContent> pageContent = this.getPageContents();
-		return (pageContent.isEmpty())? new GregorianCalendar(1972, 2, 12).getTime() :
-				pageContent.get(pageContent.size()-1).getCreationDate();
+		Date lastModifiedDate;
+		
+		List<PageContent> contents = new ArrayList<>(this.getPageContents());
+		if (contents.size() > 0) {
+			contents.sort(new Comparator<PageContent>() {
+				@Override
+				public int compare(PageContent o1, PageContent o2) {
+					Date date1 = o1.getCreationDate();
+					Date date2 = o2.getCreationDate();
+					if (date1 != null) {
+						return date1.compareTo(date2);
+					} else if (date2 != null) {
+						return -1;
+					}
+		
+					return 0;
+				}
+			});
+			lastModifiedDate = contents.get(contents.size() - 1).getCreationDate();
+		} else {
+			lastModifiedDate = new GregorianCalendar(1972, 2, 12).getTime(); //:FVK: workaround.
+		}
+		
+		return lastModifiedDate;
 	}
 
 	/**

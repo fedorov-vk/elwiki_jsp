@@ -1,4 +1,4 @@
-package org.elwiki.data.persist.json.deserialize;
+package org.elwiki.data.persist.json.converters;
 
 import java.lang.reflect.Type;
 
@@ -7,7 +7,6 @@ import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.cdo.util.CommitException;
 import org.eclipse.emf.cdo.util.ConcurrentAccessException;
 import org.elwiki.data.persist.internal.PluginActivator;
-import org.elwiki.data.persist.json.PagesStoreAttributes;
 import org.elwiki_data.PagesStore;
 import org.elwiki_data.WikiPage;
 
@@ -17,20 +16,45 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
-public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDeserializer<PagesStore> {
+public class PagesStoreConverter extends DeserialiseStuff
+		implements JsonSerializer<PagesStore>, JsonDeserializer<PagesStore> {
 
-	private static final Logger log = Logger.getLogger(PagesStoreDeserializer.class);
+	private static final Logger log = Logger.getLogger(PagesStoreConverter.class);
+
+	private static String MAIN_PAGE_ID = "mainPageId";
+	private static String NEXT_PAGE_ID = "nextPageId";
+	private static String PAGES = "pages";
+	private static String NEXT_ATTACHMENT_ID = "nextAttachmentId";
+	
+	@Override
+	public JsonElement serialize(PagesStore pagesStore, Type typeOfSrc, JsonSerializationContext context) {
+		JsonObject result = new JsonObject();
+
+		result.addProperty(MAIN_PAGE_ID, pagesStore.getMainPageId());
+		result.addProperty(NEXT_PAGE_ID, pagesStore.getNextPageId());
+		result.addProperty(NEXT_ATTACHMENT_ID, pagesStore.getNextAttachmentId());
+
+		JsonArray pages = new JsonArray();
+		result.add(PAGES, pages);
+		for (WikiPage page : pagesStore.getWikipages()) {
+			pages.add(context.serialize(page, WikiPage.class));
+		}
+
+		return result;
+	}
 
 	@Override
 	public PagesStore deserialize(JsonElement jsonElement, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-		String mainPageId = getString(jsonObject, PagesStoreAttributes.MAIN_PAGE_ID);
-		String nextPageId = getString(jsonObject, PagesStoreAttributes.NEXT_PAGE_ID);
-		String nextAttachmentId = getString(jsonObject, PagesStoreAttributes.NEXT_ATTACHMENT_ID);
-		JsonArray jsonPages = getArray(jsonObject, PagesStoreAttributes.PAGES);
+		String mainPageId = getString(jsonObject, MAIN_PAGE_ID);
+		String nextPageId = getString(jsonObject, NEXT_PAGE_ID);
+		String nextAttachmentId = getString(jsonObject, NEXT_ATTACHMENT_ID);
+		JsonArray jsonPages = getArray(jsonObject, PAGES);
 
 		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
 		CDOTransaction transaction = PluginActivator.getDefault().getDataStore().getTransactionCDO();
@@ -60,5 +84,4 @@ public class PagesStoreDeserializer extends DeserialiseStuff implements JsonDese
 
 		return pagesStore;
 	}
-
 }

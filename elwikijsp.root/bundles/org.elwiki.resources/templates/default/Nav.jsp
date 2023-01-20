@@ -465,15 +465,4 @@
 </ul>
 
 </div>
-
-<%-- :FVK:
-  <wiki:PageExists>
-  <wiki:PageType type="page">
-  <wiki:Tab id="attach" title="<%= attTitle %>" accesskey="a">
-    <wiki:Include page="AttachmentTab.jsp"/>
-  </wiki:Tab>
-  </wiki:PageType>
-
-  </wiki:PageExists>
---%>
 <!-- ~~ END ~~ Nav.jsp -->

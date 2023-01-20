@@ -1,10 +1,13 @@
-package org.elwiki.data.persist.json.deserialize;
+package org.elwiki.data.persist.json.converters;
 
+import java.util.Date;
 import java.util.Optional;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class DeserialiseStuff {
 
@@ -16,6 +19,12 @@ public class DeserialiseStuff {
 		Optional<JsonElement> opt = Optional.ofNullable(jsonObject.get(optionName));
 		return opt.map(j -> j.getAsString()).orElse("");
 	}
+	
+	protected Date getDate(JsonObject jsonObject, String optionName, JsonDeserializationContext context) {
+		JsonPrimitive jsonPrimitive = new JsonPrimitive(getString(jsonObject,optionName));
+		return context.deserialize(jsonPrimitive, Date.class);
+	}
+	
 
 	protected short getShort(JsonObject jsonObject, String optionName) {
 		Optional<JsonElement> opt = Optional.ofNullable(jsonObject.get(optionName));
