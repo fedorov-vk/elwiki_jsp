@@ -16,6 +16,8 @@
     specific language governing permissions and limitations
     under the License.
 --%><!-- ~~ START ~~ InfoContent.jsp -->
+<%@ page import="java.util.Iterator"%>
+<%@ page import="org.eclipse.emf.common.util.EList" %>
 <%@ page import="org.apache.wiki.api.core.*"%>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.tags.HistoryIteratorTag" %>
@@ -175,25 +177,38 @@
         <th scope="col"><fmt:message key="info.changenote"/></th>
       </tr>
 
+<%--
       <wiki:HistoryIterator id="pageContent">
       <c:if test="${ first == -1 || ((pageContent.version > first ) && (pageContent.version <= last )) }">
+--%>
+<%
+	int first = startitem;
+	int last = startitem + pagesize;
+	EList<PageContent> contents = wikiPage.getPageContents();
+	Iterator<PageContent> iter = contents.iterator();
+	while (iter.hasNext()) {
+		PageContent pageContent = iter.next();
+		int ver = pageContent.getVersion();
+		String version = String.valueOf(ver);
+		if (first == -1 || ((ver > first) && (ver <= last )) ) {
+%>
+	  <c:set var="pageContent" value="<%=pageContent%>" />
       <tr>
         <td>
-          <wiki:Link version="${pageContent.version}">${pageContent.version}</wiki:Link>
+          <wiki:Link version="<%=version%>"><%=version%></wiki:Link>
         </td>
 
-        <td class="nowrap" data-sortvalue="${pageContent.lastModify.time}">
+        <td class="nowrap" data-sortvalue="${pageContent.creationDate.time}">
 <%-- TODO: :FVK: - you should specify the output format. After a short investigation, it was found that - the following lines are possible: pattern, timeZone ==null.
         <fmt:formatDate value="${pageContent.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
  --%>
-        <fmt:formatDate value="${pageContent.lastModify}" />
+        <fmt:formatDate value="${pageContent.creationDate}" />
         </td>
 
-        <c:set var="pageSize">"${pageContent.length} bytes"</c:set>
+        <c:set var="pageSize">"${pageContent.length}"</c:set>
         <td class="nowrap" title="${pageSize} bytes">
           <%-- <fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/> --%>
-          <%-- org.apache.commons.io.FileUtils.byteCountToDisplaySize( pageContent.getLastContent().getContent().length() ) --%>
-          ${pageContent.length} bytes
+          <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( pageContent.getLength() ) %>
         </td>
         <td><wiki:Author /></td>
 
@@ -210,8 +225,11 @@
         <td class="changenote">${pageContent.changeNote}</td>
 
       </tr>
-      </c:if>
-      </wiki:HistoryIterator>
+<% }}%>
+<%-- 
+    </c:if>
+    </wiki:HistoryIterator>
+--%>
 
     </table>
     </div>
