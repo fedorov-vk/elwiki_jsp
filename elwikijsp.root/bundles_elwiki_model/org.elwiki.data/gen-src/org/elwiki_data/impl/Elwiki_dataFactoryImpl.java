@@ -5,6 +5,7 @@ package org.elwiki_data.impl;
 import java.security.Permission;
 import java.security.Principal;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
@@ -105,12 +106,14 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 				return createArrayStringFromString(eDataType, initialValue);
 			case Elwiki_dataPackage.ACCESS_LIST:
 				return createAccessListFromString(eDataType, initialValue);
+			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
+				return createPrincipalObjectFromString(eDataType, initialValue);
 			case Elwiki_dataPackage.ARRAY_PRINCIPAL:
 				return createArrayPrincipalFromString(eDataType, initialValue);
 			case Elwiki_dataPackage.PERMISSION_OBJECT:
 				return createPermissionObjectFromString(eDataType, initialValue);
-			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
-				return createPrincipalObjectFromString(eDataType, initialValue);
+			case Elwiki_dataPackage.LIST_PAGE_CONTENT:
+				return createListPageContentFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -128,12 +131,14 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 				return convertArrayStringToString(eDataType, instanceValue);
 			case Elwiki_dataPackage.ACCESS_LIST:
 				return convertAccessListToString(eDataType, instanceValue);
+			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
+				return convertPrincipalObjectToString(eDataType, instanceValue);
 			case Elwiki_dataPackage.ARRAY_PRINCIPAL:
 				return convertArrayPrincipalToString(eDataType, instanceValue);
 			case Elwiki_dataPackage.PERMISSION_OBJECT:
 				return convertPermissionObjectToString(eDataType, instanceValue);
-			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
-				return convertPrincipalObjectToString(eDataType, instanceValue);
+			case Elwiki_dataPackage.LIST_PAGE_CONTENT:
+				return convertListPageContentToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -345,6 +350,25 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 */
 	public String convertPermissionObjectToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PageContent> createListPageContentFromString(EDataType eDataType, String initialValue) {
+		return (List<PageContent>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertListPageContentToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

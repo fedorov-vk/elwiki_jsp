@@ -49,7 +49,7 @@ public class PageAttachmentConverter extends DeserialiseStuff
 
 		String id = getString(jsonObject, ID);
 		String name = getString(jsonObject, NAME);
-		short lastVersion = getShort(jsonObject, LAST_VERSION);
+		int lastVersion = getInt(jsonObject, LAST_VERSION);
 
 		pageAttachment.setId(id);
 		pageAttachment.setName(name);

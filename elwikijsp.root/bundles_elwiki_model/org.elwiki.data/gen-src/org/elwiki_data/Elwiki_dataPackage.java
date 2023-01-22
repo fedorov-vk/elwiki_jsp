@@ -349,13 +349,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___IS_INTERNAL_PAGE = COMPARABLE_OPERATION_COUNT + 9;
 
 	/**
+	 * The operation id for the '<em>Get Page Contents Reversed</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED = COMPARABLE_OPERATION_COUNT + 10;
+
+	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 10;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -665,7 +674,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT = 1;
+	int PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT = 1;
 
 	/**
 	 * The number of operations of the '<em>Page Attachment</em>' class.
@@ -1097,7 +1106,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
 	 * @generated
 	 */
-	int ARRAY_PRINCIPAL = 16;
+	int ARRAY_PRINCIPAL = 17;
 
 	/**
 	 * The meta object id for the '<em>Permission Object</em>' data type.
@@ -1107,7 +1116,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
 	 * @generated
 	 */
-	int PERMISSION_OBJECT = 17;
+	int PERMISSION_OBJECT = 18;
+
+	/**
+	 * The meta object id for the '<em>List Page Content</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.util.List
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getListPageContent()
+	 * @generated
+	 */
+	int LIST_PAGE_CONTENT = 19;
 
 	/**
 	 * The meta object id for the '<em>Principal Object</em>' data type.
@@ -1117,7 +1136,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
 	 * @generated
 	 */
-	int PRINCIPAL_OBJECT = 18;
+	int PRINCIPAL_OBJECT = 16;
 
 
 	/**
@@ -1408,6 +1427,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getWikiPage__IsInternalPage();
 
 	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getPageContentsReversed() <em>Get Page Contents Reversed</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Page Contents Reversed</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getPageContentsReversed()
+	 * @generated
+	 */
+	EOperation getWikiPage__GetPageContentsReversed();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PagesStore <em>Pages Store</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1590,14 +1619,14 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getPageAttachment__ForLastContent();
 
 	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.PageAttachment#forVersionContent(short) <em>For Version Content</em>}' operation.
+	 * Returns the meta object for the '{@link org.elwiki_data.PageAttachment#forVersionContent(int) <em>For Version Content</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>For Version Content</em>' operation.
-	 * @see org.elwiki_data.PageAttachment#forVersionContent(short)
+	 * @see org.elwiki_data.PageAttachment#forVersionContent(int)
 	 * @generated
 	 */
-	EOperation getPageAttachment__ForVersionContent__short();
+	EOperation getPageAttachment__ForVersionContent__int();
 
 	/**
 	 * Returns the meta object for class '{@link java.lang.Object <em>Object</em>}'.
@@ -1962,6 +1991,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EDataType getPermissionObject();
 
 	/**
+	 * Returns the meta object for data type '{@link java.util.List <em>List Page Content</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>List Page Content</em>'.
+	 * @see java.util.List
+	 * @model instanceClass="java.util.List&lt;org.elwiki_data.PageContent&gt;"
+	 * @generated
+	 */
+	EDataType getListPageContent();
+
+	/**
 	 * Returns the meta object for data type '{@link java.security.Principal <em>Principal Object</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2214,6 +2254,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EOperation WIKI_PAGE___IS_INTERNAL_PAGE = eINSTANCE.getWikiPage__IsInternalPage();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Page Contents Reversed</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED = eINSTANCE.getWikiPage__GetPageContentsReversed();
+
+		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2361,7 +2409,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT = eINSTANCE.getPageAttachment__ForVersionContent__short();
+		EOperation PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT = eINSTANCE.getPageAttachment__ForVersionContent__int();
 
 		/**
 		 * The meta object literal for the '{@link java.lang.Object <em>Object</em>}' class.
@@ -2660,6 +2708,16 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType PERMISSION_OBJECT = eINSTANCE.getPermissionObject();
+
+		/**
+		 * The meta object literal for the '<em>List Page Content</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.util.List
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getListPageContent()
+		 * @generated
+		 */
+		EDataType LIST_PAGE_CONTENT = eINSTANCE.getListPageContent();
 
 		/**
 		 * The meta object literal for the '<em>Principal Object</em>' data type.

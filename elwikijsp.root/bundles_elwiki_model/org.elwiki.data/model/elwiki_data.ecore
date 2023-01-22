@@ -27,7 +27,7 @@
     </eOperations>
     <eOperations name="getLastContent" eType="#//PageContent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="PageContent result = null;&#xA;short version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;short contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
+        <details key="body" value="PageContent result = null;&#xA;int version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
         <details key="documentation" value="Returns last item of pageContents reference.&#xA;&lt;/br>Can be NULL."/>
       </eAnnotations>
     </eOperations>
@@ -57,6 +57,12 @@
         <details key="body" value="String pageId = this.getId();&#xA;return (pageId.startsWith(&quot;w&quot;))? true : false;"/>
       </eAnnotations>
     </eOperations>
+    <eOperations name="getPageContentsReversed" eType="#//ListPageContent">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="List&lt;PageContent> contents = new ArrayList&lt;>(this.getPageContents());&#xA;contents.sort(Comparator.comparing(PageContent::getVersion, Comparator.reverseOrder()));&#xA;&#xA;return contents;"/>
+        <details key="documentation" value="PageContents are reversy sorted by version."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -69,7 +75,7 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Name&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="0">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Total Attachment&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
@@ -194,7 +200,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="PageAttachment">
     <eOperations name="forLastContent" eType="#//AttachmentContent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="AttachmentContent result = null;&#xA;short version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;short contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
+        <details key="body" value="AttachmentContent result = null;&#xA;int version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;int contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
         <details key="documentation" value="Returns last item of attachContents reference. And set reference of AttachmentContent.\n&lt;/br>Can be NULL."/>
       </eAnnotations>
     </eOperations>
@@ -203,7 +209,7 @@
         <details key="body" value="AttachmentContent result = null;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;if (desiredVersion == attContent.getVersion()) {&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;&#x9;break;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
         <details key="documentation" value="Returns item of attachContents reference for required version. And set reference of AttachmentContent.\n&lt;/br>Can be NULL."/>
       </eAnnotations>
-      <eParameters name="desiredVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
+      <eParameters name="desiredVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -215,7 +221,7 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Name&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
         eOpposite="#//WikiPage/attachments">
@@ -246,7 +252,7 @@
     </eOperations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IHistoryInfo" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Version&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
@@ -268,7 +274,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="ArrayString" instanceClassName="java.lang.String[]"/>
   <eClassifiers xsi:type="ecore:EClass" name="PageReference">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="">
@@ -311,7 +316,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="AccessList" instanceTypeName="newDataType3"/>
   <eClassifiers xsi:type="ecore:EClass" name="Principal" instanceClassName="java.security.Principal"
       abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Acl">
@@ -334,9 +338,6 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="ArrayPrincipal" instanceClassName="java.security.Principal[]"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="PermissionObject" instanceClassName="java.security.Permission"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="PrincipalObject" instanceClassName="java.security.Principal"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringToObjectMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
@@ -355,4 +356,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageAttachment" eType="#//PageAttachment"
         eOpposite="#//PageAttachment/attachContents"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArrayString" instanceClassName="java.lang.String[]"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="AccessList" instanceTypeName="newDataType3"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="PrincipalObject" instanceClassName="java.security.Principal"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArrayPrincipal" instanceClassName="java.security.Principal[]"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="PermissionObject" instanceClassName="java.security.Permission"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="ListPageContent" instanceTypeName="java.util.List&lt;org.elwiki_data.PageContent>"/>
 </ecore:EPackage>

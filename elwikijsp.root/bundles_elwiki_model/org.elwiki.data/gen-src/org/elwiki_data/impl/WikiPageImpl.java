@@ -304,8 +304,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public short getLastVersion() {
-		return (Short)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
+	public int getLastVersion() {
+		return (Integer)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public void setLastVersion(short newLastVersion) {
+	public void setLastVersion(int newLastVersion) {
 		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, newLastVersion);
 	}
 
@@ -457,10 +457,10 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public PageContent getLastContent() {
 		PageContent result = null;
-		short version = 0;
+		int version = 0;
 		EList<PageContent> attachContents = getPageContents();
 		for (PageContent pageContent : attachContents) {
-			short contentVersion = pageContent.getVersion();
+			int contentVersion = pageContent.getVersion();
 			if (version < contentVersion) {
 				version = contentVersion;
 				result = pageContent;
@@ -518,6 +518,19 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public List<PageContent> getPageContentsReversed() {
+		List<PageContent> contents = new ArrayList<>(this.getPageContents());
+		contents.sort(Comparator.comparing(PageContent::getVersion, Comparator.reverseOrder()));
+		
+		return contents;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Comparable.class) {
 			switch (baseOperationID) {
@@ -561,6 +574,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return null;
 			case Elwiki_dataPackage.WIKI_PAGE___IS_INTERNAL_PAGE:
 				return isInternalPage();
+			case Elwiki_dataPackage.WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED:
+				return getPageContentsReversed();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%><!-- ~~ START ~~ InfoContent.jsp -->
-<%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.*"%>
 <%@ page import="org.eclipse.emf.common.util.EList" %>
 <%@ page import="org.apache.wiki.api.core.*"%>
 <%@ page import="org.apache.wiki.auth.*" %>
@@ -155,8 +155,8 @@
 
   </div>
 
-
   <div class="tabs">
+    <%-- Page versions history section --%>
     <h4 id="history"><fmt:message key="info.history"/></h4>
 
     <wiki:SetPagination start="<%=startitem%>" total="<%=itemcount%>" pagesize="<%=pagesize%>" maxlinks="9"
@@ -177,64 +177,47 @@
         <th scope="col"><fmt:message key="info.changenote"/></th>
       </tr>
 
-<%--
-      <wiki:HistoryIterator id="pageContent">
-      <c:if test="${ first == -1 || ((pageContent.version > first ) && (pageContent.version <= last )) }">
---%>
-<%
-	int first = startitem;
-	int last = startitem + pagesize;
-	EList<PageContent> contents = wikiPage.getPageContents();
-	Iterator<PageContent> iter = contents.iterator();
-	while (iter.hasNext()) {
-		PageContent pageContent = iter.next();
-		int ver = pageContent.getVersion();
-		String version = String.valueOf(ver);
-		if (first == -1 || ((ver > first) && (ver <= last )) ) {
-%>
-	  <c:set var="pageContent" value="<%=pageContent%>" />
+    <c:set var="pageContents" value="<%=wikiPage.getPageContentsReversed()%>"/>
+    <c:set var="maxVersion" value="${pageContents[0].version}"/>
+	<c:forEach var="pageContent" items="${pageContents}" varStatus="status">
+    <c:set var="version" value="${pageContent.version}"/>
+    <c:if test="${ first == -1 || ((version > first ) && (version <= last )) }">
       <tr>
-        <td>
-          <wiki:Link version="<%=version%>"><%=version%></wiki:Link>
-        </td>
+        <td><wiki:Link version="${version}"><c:out value="${version}"/></wiki:Link></td>
 
         <td class="nowrap" data-sortvalue="${pageContent.creationDate.time}">
-<%-- TODO: :FVK: - you should specify the output format. After a short investigation, it was found that - the following lines are possible: pattern, timeZone ==null.
-        <fmt:formatDate value="${pageContent.lastModify}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
- --%>
-        <fmt:formatDate value="${pageContent.creationDate}" />
+          <fmt:formatDate value="${pageContent.creationDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </td>
 
-        <c:set var="pageSize">"${pageContent.length}"</c:set>
-        <td class="nowrap" title="${pageSize} bytes">
-          <%-- <fmt:formatNumber value='${pageSize/1000}' maxFractionDigits='3' minFractionDigits='1'/>&nbsp;<fmt:message key="info.kilobytes"/> --%>
-          <%= org.apache.commons.io.FileUtils.byteCountToDisplaySize( pageContent.getLength() ) %>
+        <c:set var="pageLength" value="${pageContent.length}"/>
+        <td class="nowrap" title="${pageLength} bytes">
+          <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize((Integer)pageContext.getAttribute("pageLength"))%>
         </td>
-        <td><wiki:Author /></td>
+
+        <td><c:out value="${fn:escapeXml(pageContent.author)}"/></td>
 
         <td class="nowrap">
-          <wiki:CheckVersion mode="notfirst">
-            <wiki:DiffLink version="current" newVersion="previous"><fmt:message key="info.difftoprev"/></wiki:DiffLink>
-            <wiki:CheckVersion mode="notlatest"> | </wiki:CheckVersion>
-          </wiki:CheckVersion>
-          <wiki:CheckVersion mode="notlatest">
-            <wiki:DiffLink version="latest" newVersion="current"><fmt:message key="info.difftolast"/></wiki:DiffLink>
-          </wiki:CheckVersion>
+          <c:if test="${not status.last}">
+            <c:set var="nextVersion" value="${pageContents[status.index+1].version}" />
+            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=Context.DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
+          </c:if>
+          ${not status.last && not status.first? '|' : ''}
+          <c:if test="${not status.first}">
+            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=Context.DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
+          </c:if>
         </td>
 
         <td class="changenote">${pageContent.changeNote}</td>
 
       </tr>
-<% }}%>
-<%-- 
     </c:if>
-    </wiki:HistoryIterator>
---%>
-
+    </c:forEach>    
     </table>
+
     </div>
     ${pagination}
 
+    <%-- Page references section --%>
     <h4 id="page-refs"><fmt:message key="info.tab.links" /></h4>
     <table class="table" aria-describedby="page-refs">
       <tr>
@@ -256,10 +239,48 @@
       </tr>
     </table>
 
-    <%-- DIFF section --%>
+    <%-- Page versions difference section --%>
     <wiki:CheckRequestContext context='diff'>
       <h4 data-activePane id="diff"><fmt:message key="diff.tab" /></h4>
-      <wiki:Include page="DiffTab.jsp"/>
+      <c:set var="olddiff" value="${param.r1}" />
+      <c:set var="newdiff" value="${param.r2}" />
+      <c:set var="pageContents" value="<%=wikiPage.getPageContentsReversed()%>"/>
+      <c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(ctx,"jspwiki.diffProvider") %>' />
+      <form action="<wiki:Link path='cmd.diff' format='url' />"
+             class="diffbody form-inline"
+            method="get" accept-charset="UTF-8">
+        <input type="hidden" name="page" value="<wiki:PageName />" />
+
+        <p class="btn btn-default btn-block">
+          <fmt:message key="diff.difference">
+            <fmt:param>
+              <select class="form-control" id="r1" name="r1" onchange="this.form.submit();" >
+              <c:forEach items="${pageContents}" var="i">
+                <option value="${i.version}" ${i.version == olddiff ? 'selected="selected"' : ''} >${i.version}</option>
+              </c:forEach>
+              </select>
+            </fmt:param>
+            <fmt:param>
+              <select class="form-control" id="r2" name="r2" onchange="this.form.submit();" >
+              <c:forEach items="${pageContents}" var="i">
+                <option value="${i.version}" ${i.version == newdiff ? 'selected="selected"' : ''} >${i.version}</option>
+              </c:forEach>
+              </select>
+            </fmt:param>
+          </fmt:message>
+        </p>
+
+        <c:if test='${diffprovider eq "ContextualDiffProvider"}' >     
+          <div class="diffnote">     
+            <a href="#change-1" title="<fmt:message key='diff.gotofirst.title'/>" class="diff-nextprev" >     
+              <fmt:message key="diff.gotofirst"/>     
+            </a>     
+          </div>     
+        </c:if>     
+
+        <wiki:InsertDiff><p></p><p class="warning"><fmt:message key="diff.nodiff"/></p></wiki:InsertDiff>     
+
+      </form>     
     </wiki:CheckRequestContext>
 
   </div>

@@ -267,7 +267,7 @@ public class LuceneSearchProvider implements SearchProvider {
      *  
      *  @return the content of the Attachment as a String.
      */
-    protected String getAttachmentContent( final String attachmentName, final short version ) {
+    protected String getAttachmentContent( final String attachmentName, final int version ) {
         final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         try {
             final PageAttachment att = mgr.getAttachmentInfo( attachmentName, version );

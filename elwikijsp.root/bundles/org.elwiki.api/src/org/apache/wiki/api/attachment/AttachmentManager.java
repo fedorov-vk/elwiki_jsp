@@ -90,7 +90,7 @@ public interface AttachmentManager {
      *  @throws ProviderException If something goes wrong.
      */
 
-    default PageAttachment getAttachmentInfo( final String name, final short version ) throws ProviderException {
+    default PageAttachment getAttachmentInfo( final String name, final int version ) throws ProviderException {
         if( name == null ) {
             return null;
         }
@@ -119,7 +119,7 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment or version exists.
      *  @throws ProviderException If something goes wrong.
      */
-    PageAttachment getAttachmentInfo( Context context, String attachmentname, short version ) throws ProviderException;
+    PageAttachment getAttachmentInfo( Context context, String attachmentname, int version ) throws ProviderException;
 
     /**
      *  Figures out the full attachment name from the context and attachment name.

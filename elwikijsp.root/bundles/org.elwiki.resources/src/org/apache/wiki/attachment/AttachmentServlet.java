@@ -209,7 +209,7 @@ public class AttachmentServlet extends HttpServlet {
         final String version = req.getParameter( HDR_VERSION );
         final String nextPage = req.getParameter( "nextpage" );
         final String attachmentName = context.getPage().getName();
-        short ver = WikiProvider.LATEST_VERSION;
+        int ver = WikiProvider.LATEST_VERSION;
 
         if( attachmentName == null ) {
             log.info( "Invalid attachment name." );
@@ -578,7 +578,7 @@ public class AttachmentServlet extends HttpServlet {
 				att.setAttachmentContent(attContent);
 			}
 
-			short latestVersion = (short) (att.getLastVersion() + 1);
+			int latestVersion = att.getLastVersion() + 1;
 			att.setLastVersion(latestVersion);
 			attContent.setVersion(latestVersion);
 			

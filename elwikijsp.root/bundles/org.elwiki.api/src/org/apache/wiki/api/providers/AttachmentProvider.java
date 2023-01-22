@@ -97,7 +97,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return An attachment object
      *  @throws ProviderException If the attachment cannot be found or some other error occurs.
      */
-    PageAttachment getAttachmentInfo( WikiPage page, String name, short version ) throws ProviderException;
+    PageAttachment getAttachmentInfo( WikiPage page, String name, int version ) throws ProviderException;
 
     /**
      *  Returns version history.  Each element should be an Attachment.

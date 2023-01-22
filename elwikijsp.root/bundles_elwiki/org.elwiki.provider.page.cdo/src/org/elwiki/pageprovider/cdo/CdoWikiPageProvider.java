@@ -149,7 +149,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		// Записать данные (выполнить транзакцию).
 		PageContent pc = getMaximalVersionContent(page);
-		short version = (short) ((pc != null) ? pc.getVersion() + 1 : 1);
+		int version = (pc != null) ? pc.getVersion() + 1 : 1;
 		pc = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pc.setVersion(version);
 		pc.setAuthor(author);

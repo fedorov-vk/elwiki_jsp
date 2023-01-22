@@ -38,12 +38,12 @@ public interface IHistoryInfo extends CDOObject {
 	 * </p>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Version</em>' attribute.
-	 * @see #setVersion(short)
+	 * @see #setVersion(int)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getIHistoryInfo_Version()
 	 * @model
 	 * @generated
 	 */
-	short getVersion();
+	int getVersion();
 
 	/**
 	 * Sets the value of the '{@link org.elwiki_data.IHistoryInfo#getVersion <em>Version</em>}' attribute.
@@ -53,7 +53,7 @@ public interface IHistoryInfo extends CDOObject {
 	 * @see #getVersion()
 	 * @generated
 	 */
-	void setVersion(short value);
+	void setVersion(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Creation Date</b></em>' attribute.

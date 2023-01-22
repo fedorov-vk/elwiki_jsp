@@ -33,7 +33,7 @@ import java.util.Properties;
 public interface WikiProvider {
 
     /** Passing this to any method should get the latest version */
-	short LATEST_VERSION = -1;
+	int LATEST_VERSION = -1;
 
     /**
      *  Initializes the page provider.

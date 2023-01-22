@@ -97,7 +97,7 @@ public class WikiPageConverter extends DeserialiseStuff
 		WikiPage wikiPage = Elwiki_dataFactory.eINSTANCE.createWikiPage();
 
 		String id = getString(jsonObject, ID);
-		short lastVersion = getShort(jsonObject, LAST_VERSION);
+		int lastVersion = getInt(jsonObject, LAST_VERSION);
 		String name = getString(jsonObject, NAME);
 		String description = getString(jsonObject, DESCRIPTION);
 		String alias = getString(jsonObject, ALIAS);

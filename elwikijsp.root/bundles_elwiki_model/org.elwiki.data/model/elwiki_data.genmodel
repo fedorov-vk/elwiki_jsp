@@ -12,9 +12,10 @@
       ecorePackage="elwiki_data.ecore#/">
     <genDataTypes ecoreDataType="elwiki_data.ecore#//ArrayString"/>
     <genDataTypes ecoreDataType="elwiki_data.ecore#//AccessList"/>
+    <genDataTypes ecoreDataType="elwiki_data.ecore#//PrincipalObject"/>
     <genDataTypes ecoreDataType="elwiki_data.ecore#//ArrayPrincipal"/>
     <genDataTypes ecoreDataType="elwiki_data.ecore#//PermissionObject"/>
-    <genDataTypes ecoreDataType="elwiki_data.ecore#//PrincipalObject"/>
+    <genDataTypes ecoreDataType="elwiki_data.ecore#//ListPageContent"/>
     <genClasses ecoreClass="elwiki_data.ecore#//WikiPage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/name"/>
@@ -41,7 +42,7 @@
           body="Date lastModifiedDate;&#xA;&#xA;List&lt;PageContent> contents = new ArrayList&lt;>(this.getPageContents());&#xA;if (contents.size() > 0) {&#xA;&#x9;contents.sort(new Comparator&lt;PageContent>() {&#xA;&#x9;&#x9;@Override&#xA;&#x9;&#x9;public int compare(PageContent o1, PageContent o2) {&#xA;&#x9;&#x9;&#x9;Date date1 = o1.getCreationDate();&#xA;&#x9;&#x9;&#x9;Date date2 = o2.getCreationDate();&#xA;&#x9;&#x9;&#x9;if (date1 != null) {&#xA;&#x9;&#x9;&#x9;&#x9;return date1.compareTo(date2);&#xA;&#x9;&#x9;&#x9;} else if (date2 != null) {&#xA;&#x9;&#x9;&#x9;&#x9;return -1;&#xA;&#x9;&#x9;&#x9;}&#xA;&#xA;&#x9;&#x9;&#x9;return 0;&#xA;&#x9;&#x9;}&#xA;&#x9;});&#xA;&#x9;lastModifiedDate = contents.get(contents.size() - 1).getCreationDate();&#xA;} else {&#xA;&#x9;lastModifiedDate = new GregorianCalendar(1972, 2, 12).getTime(); //:FVK: workaround.&#xA;}&#xA;&#xA;return lastModifiedDate;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAuthor" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getAuthor() : &quot;&quot;;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastContent"
-          body="PageContent result = null;&#xA;short version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;short contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
+          body="PageContent result = null;&#xA;int version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getVersion" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAttribute" body="return getAttributes().get(name);">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/getAttribute/name"/>
@@ -52,6 +53,8 @@
       </genOperations>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/isInternalPage"
           body="String pageId = this.getId();&#xA;return (pageId.startsWith(&quot;w&quot;))? true : false;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getPageContentsReversed"
+          body="List&lt;PageContent> contents = new ArrayList&lt;>(this.getPageContents());&#xA;contents.sort(Comparator.comparing(PageContent::getVersion, Comparator.reverseOrder()));&#xA;&#xA;return contents;"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>
@@ -72,7 +75,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageAttachment/attachContents"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageAttachment/attachmentContent"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//PageAttachment/forLastContent"
-          body="AttachmentContent result = null;&#xA;short version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;short contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
+          body="AttachmentContent result = null;&#xA;int version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;int contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//PageAttachment/forVersionContent"
           body="AttachmentContent result = null;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;if (desiredVersion == attContent.getVersion()) {&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;&#x9;break;&#xA;&#x9;}&#xA;}&#xA;&#xA;setAttachmentContent(result);&#xA;&#xA;return result;">
         <genParameters ecoreParameter="elwiki_data.ecore#//PageAttachment/forVersionContent/desiredVersion"/>

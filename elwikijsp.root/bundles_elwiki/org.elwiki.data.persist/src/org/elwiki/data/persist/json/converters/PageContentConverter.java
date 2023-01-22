@@ -48,7 +48,7 @@ public class PageContentConverter extends DeserialiseStuff
 
 		PageContent pageContent = Elwiki_dataFactory.eINSTANCE.createPageContent();
 
-		short version = getShort(jsonObject, VERSION);
+		int version = getInt(jsonObject, VERSION);
 		Date creationDate = getDate(jsonObject, CREATION_DATE, context);
 		String author = getString(jsonObject, AUTHOR);
 		String changeNote = getString(jsonObject, CHANGE_NOTE);

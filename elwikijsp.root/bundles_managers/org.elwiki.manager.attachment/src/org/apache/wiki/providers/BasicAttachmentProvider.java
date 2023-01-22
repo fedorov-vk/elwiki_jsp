@@ -241,7 +241,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  {@inheritDoc}
      */
     @Override
-    public PageAttachment getAttachmentInfo(WikiPage page, String name, short version ) throws ProviderException {
+    public PageAttachment getAttachmentInfo(WikiPage page, String name, int version ) throws ProviderException {
         log.debug( "Getting attachment, name=\" + name + \", version=" + version + " for page" + page);
 
 		PageAttachment attachment = null;

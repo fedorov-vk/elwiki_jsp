@@ -8,6 +8,7 @@ import java.lang.Object;
 
 import java.util.Date;
 
+import java.util.List;
 import org.eclipse.emf.cdo.CDOObject;
 
 import org.eclipse.emf.common.util.EList;
@@ -396,12 +397,12 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * </p>
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Last Version</em>' attribute.
-	 * @see #setLastVersion(short)
+	 * @see #setLastVersion(int)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_LastVersion()
 	 * @model default="0"
 	 * @generated
 	 */
-	short getLastVersion();
+	int getLastVersion();
 
 	/**
 	 * Sets the value of the '{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}' attribute.
@@ -411,7 +412,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @see #getLastVersion()
 	 * @generated
 	 */
-	void setLastVersion(short value);
+	void setLastVersion(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.
@@ -568,5 +569,16 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	boolean isInternalPage();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * PageContents are reversy sorted by version.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.elwiki_data.ListPageContent"
+	 * @generated
+	 */
+	List<PageContent> getPageContentsReversed();
 
 } // WikiPage

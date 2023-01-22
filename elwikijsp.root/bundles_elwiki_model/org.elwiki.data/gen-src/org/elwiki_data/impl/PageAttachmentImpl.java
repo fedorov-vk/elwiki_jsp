@@ -139,8 +139,8 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public short getLastVersion() {
-		return (Short)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, true);
+	public int getLastVersion() {
+		return (Integer)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, true);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public void setLastVersion(short newLastVersion) {
+	public void setLastVersion(int newLastVersion) {
 		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, newLastVersion);
 	}
 
@@ -181,10 +181,10 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	@Override
 	public AttachmentContent forLastContent() {
 		AttachmentContent result = null;
-		short version = 0;
+		int version = 0;
 		EList<AttachmentContent> attachContents = getAttachContents();
 		for (AttachmentContent attContent : attachContents) {
-			short contentVersion = attContent.getVersion();
+			int contentVersion = attContent.getVersion();
 			if (version < contentVersion) {
 				version = contentVersion;
 				result = attContent;
@@ -202,7 +202,7 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public AttachmentContent forVersionContent(final short desiredVersion) {
+	public AttachmentContent forVersionContent(final int desiredVersion) {
 		AttachmentContent result = null;
 		EList<AttachmentContent> attachContents = getAttachContents();
 		for (AttachmentContent attContent : attachContents) {
@@ -227,8 +227,8 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 		switch (operationID) {
 			case Elwiki_dataPackage.PAGE_ATTACHMENT___FOR_LAST_CONTENT:
 				return forLastContent();
-			case Elwiki_dataPackage.PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT:
-				return forVersionContent((Short)arguments.get(0));
+			case Elwiki_dataPackage.PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT:
+				return forVersionContent((Integer)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

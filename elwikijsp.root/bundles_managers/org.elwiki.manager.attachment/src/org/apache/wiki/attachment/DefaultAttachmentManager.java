@@ -177,7 +177,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-	public PageAttachment getAttachmentInfo(Context context, String attachmentName, short version)
+	public PageAttachment getAttachmentInfo(Context context, String attachmentName, int version)
 			throws ProviderException {
         if( m_provider == null ) {
             return null;

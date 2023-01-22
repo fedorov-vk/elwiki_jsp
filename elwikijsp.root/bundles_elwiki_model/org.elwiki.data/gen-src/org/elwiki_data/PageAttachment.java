@@ -135,12 +135,12 @@ public interface PageAttachment extends CDOObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Last Version</em>' attribute.
-	 * @see #setLastVersion(short)
+	 * @see #setLastVersion(int)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_LastVersion()
 	 * @model default="0"
 	 * @generated
 	 */
-	short getLastVersion();
+	int getLastVersion();
 
 	/**
 	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}' attribute.
@@ -150,7 +150,7 @@ public interface PageAttachment extends CDOObject {
 	 * @see #getLastVersion()
 	 * @generated
 	 */
-	void setLastVersion(short value);
+	void setLastVersion(int value);
 
 	/**
 	 * Returns the value of the '<em><b>Attachment Content</b></em>' reference.
@@ -194,6 +194,6 @@ public interface PageAttachment extends CDOObject {
 	 * @model
 	 * @generated
 	 */
-	AttachmentContent forVersionContent(short desiredVersion);
+	AttachmentContent forVersionContent(int desiredVersion);
 
 } // PageAttachment

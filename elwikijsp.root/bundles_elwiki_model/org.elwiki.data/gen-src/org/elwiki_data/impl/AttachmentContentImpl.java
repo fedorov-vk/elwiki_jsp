@@ -67,8 +67,8 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public short getVersion() {
-		return (Short)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, true);
+	public int getVersion() {
+		return (Integer)eGet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, true);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class AttachmentContentImpl extends CDOObjectImpl implements AttachmentCo
 	 * @generated
 	 */
 	@Override
-	public void setVersion(short newVersion) {
+	public void setVersion(int newVersion) {
 		eSet(Elwiki_dataPackage.Literals.IHISTORY_INFO__VERSION, newVersion);
 	}
 

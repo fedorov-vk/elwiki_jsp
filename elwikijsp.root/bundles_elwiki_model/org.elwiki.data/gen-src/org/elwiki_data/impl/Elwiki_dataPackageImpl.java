@@ -9,6 +9,7 @@ import java.lang.Object;
 import java.security.Permission;
 import java.security.Principal;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -164,6 +165,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EDataType permissionObjectEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType listPageContentEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -508,6 +516,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EOperation getWikiPage__GetPageContentsReversed() {
+		return wikiPageEClass.getEOperations().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPagesStore() {
 		return pagesStoreEClass;
 	}
@@ -678,7 +696,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EOperation getPageAttachment__ForVersionContent__short() {
+	public EOperation getPageAttachment__ForVersionContent__int() {
 		return pageAttachmentEClass.getEOperations().get(1);
 	}
 
@@ -1028,6 +1046,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EDataType getListPageContent() {
+		return listPageContentEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getPrincipalObject() {
 		return principalObjectEDataType;
 	}
@@ -1088,6 +1116,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_ATTRIBUTE__STRING);
 		createEOperation(wikiPageEClass, WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___IS_INTERNAL_PAGE);
+		createEOperation(wikiPageEClass, WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED);
 
 		pagesStoreEClass = createEClass(PAGES_STORE);
 		createEReference(pagesStoreEClass, PAGES_STORE__WIKIPAGES);
@@ -1108,7 +1137,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACH_CONTENTS);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACHMENT_CONTENT);
 		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_LAST_CONTENT);
-		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_VERSION_CONTENT__SHORT);
+		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT);
 
 		objectEClass = createEClass(OBJECT);
 
@@ -1153,9 +1182,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		// Create data types
 		arrayStringEDataType = createEDataType(ARRAY_STRING);
 		accessListEDataType = createEDataType(ACCESS_LIST);
+		principalObjectEDataType = createEDataType(PRINCIPAL_OBJECT);
 		arrayPrincipalEDataType = createEDataType(ARRAY_PRINCIPAL);
 		permissionObjectEDataType = createEDataType(PERMISSION_OBJECT);
-		principalObjectEDataType = createEDataType(PRINCIPAL_OBJECT);
+		listPageContentEDataType = createEDataType(LIST_PAGE_CONTENT);
 	}
 
 	/**
@@ -1195,7 +1225,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(wikiPageEClass, WikiPage.class, "WikiPage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getWikiPage_Id(), ecorePackage.getEString(), "id", "", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Name(), ecorePackage.getEString(), "name", "", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getWikiPage_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWikiPage_LastVersion(), ecorePackage.getEInt(), "lastVersion", "0", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Description(), ecorePackage.getEString(), "description", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Alias(), ecorePackage.getEString(), "alias", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Redirect(), ecorePackage.getEString(), "redirect", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1234,6 +1264,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 
 		initEOperation(getWikiPage__IsInternalPage(), ecorePackage.getEBoolean(), "isInternalPage", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getWikiPage__GetPageContentsReversed(), this.getListPageContent(), "getPageContentsReversed", 0, 1, IS_UNIQUE, IS_ORDERED);
+
 		initEClass(pagesStoreEClass, PagesStore.class, "PagesStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPagesStore_Wikipages(), this.getWikiPage(), null, "wikipages", null, 0, -1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPagesStore_MainPageId(), ecorePackage.getEString(), "mainPageId", null, 0, 1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1249,15 +1281,15 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(pageAttachmentEClass, PageAttachment.class, "PageAttachment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPageAttachment_Id(), ecorePackage.getEString(), "id", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPageAttachment_Name(), ecorePackage.getEString(), "name", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPageAttachment_LastVersion(), ecorePackage.getEShort(), "lastVersion", "0", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPageAttachment_LastVersion(), ecorePackage.getEInt(), "lastVersion", "0", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_Wikipage(), this.getWikiPage(), this.getWikiPage_Attachments(), "wikipage", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_AttachContents(), this.getAttachmentContent(), this.getAttachmentContent_PageAttachment(), "attachContents", null, 0, -1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_AttachmentContent(), this.getAttachmentContent(), null, "attachmentContent", null, 0, 1, PageAttachment.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getPageAttachment__ForLastContent(), this.getAttachmentContent(), "forLastContent", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-		op = initEOperation(getPageAttachment__ForVersionContent__short(), this.getAttachmentContent(), "forVersionContent", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, ecorePackage.getEShort(), "desiredVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getPageAttachment__ForVersionContent__int(), this.getAttachmentContent(), "forVersionContent", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEInt(), "desiredVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(objectEClass, Object.class, "Object", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
@@ -1271,7 +1303,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEOperation(getCloneable__Clone(), this.getObject(), "clone", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(iHistoryInfoEClass, IHistoryInfo.class, "IHistoryInfo", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIHistoryInfo_Version(), ecorePackage.getEShort(), "version", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getIHistoryInfo_Version(), ecorePackage.getEInt(), "version", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_Author(), ecorePackage.getEString(), "author", "", 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getIHistoryInfo_ChangeNote(), ecorePackage.getEString(), "changeNote", null, 0, 1, IHistoryInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1313,9 +1345,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		// Initialize data types
 		initEDataType(arrayStringEDataType, String[].class, "ArrayString", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(accessListEDataType, Object.class, "AccessList", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(principalObjectEDataType, Principal.class, "PrincipalObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(arrayPrincipalEDataType, Principal[].class, "ArrayPrincipal", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(permissionObjectEDataType, Permission.class, "PermissionObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(principalObjectEDataType, Principal.class, "PrincipalObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(listPageContentEDataType, List.class, "ListPageContent", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<org.elwiki_data.PageContent>");
 
 		// Create resource
 		createResource(eNS_URI);
