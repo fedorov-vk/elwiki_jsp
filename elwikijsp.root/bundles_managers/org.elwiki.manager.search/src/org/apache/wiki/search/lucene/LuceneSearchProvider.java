@@ -53,6 +53,7 @@ import org.apache.wiki.WatchDog;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -270,7 +271,7 @@ public class LuceneSearchProvider implements SearchProvider {
     protected String getAttachmentContent( final String attachmentName, final int version ) {
         final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         try {
-            final PageAttachment att = mgr.getAttachmentInfo( attachmentName, version );
+            final AttachmentContent att = mgr.getAttachmentContent( attachmentName, version );
             //FIXME: Find out why sometimes att is null
             if( att != null ) {
                 return getAttachmentContent( att );
@@ -287,11 +288,11 @@ public class LuceneSearchProvider implements SearchProvider {
      * FIXME This is a very simple implementation of some text-based attachment, mainly used for testing.
      * This should be replaced /moved to Attachment search providers or some other 'pluggable' way to search attachments
      */
-    protected String getAttachmentContent( final PageAttachment att ) {
+    protected String getAttachmentContent( final AttachmentContent att ) {
         final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         //FIXME: Add attachment plugin structure
 
-        final String filename = att.getName();
+        final String filename = att.getPageAttachment().getName();
 
         boolean searchSuffix = false;
         for( final String suffix : SEARCHABLE_FILE_SUFFIXES ) {
@@ -457,9 +458,10 @@ public class LuceneSearchProvider implements SearchProvider {
             final String text;
 
             // TODO: Think if this was better done in the thread itself?
-            if( page instanceof PageAttachment ) {
-                text = getAttachmentContent( ( PageAttachment )page );
-            } else {
+			/*comment:FVK:  if( page instanceof PageAttachment ) {
+				//FIXME: :FVK:
+			    //OLD CODE: text = getAttachmentContent( ( PageAttachment )page );
+			} else*/ {
                 text = ServicesRefs.getPageManager().getPureText( page );
             }
 

@@ -30,6 +30,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
+import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -223,8 +224,8 @@ public class AttachmentServlet extends HttpServlet {
                 ver = Short.parseShort( version );
             }
 
-            final PageAttachment att = mgr.getAttachmentInfo( attachmentName, ver );
-            if( att != null ) {
+            final AttachmentContent attContent = mgr.getAttachmentContent( attachmentName, ver );
+            if( attContent != null ) {
                 //
                 //  Check if the user has permission for this attachment
                 //
@@ -250,13 +251,11 @@ public class AttachmentServlet extends HttpServlet {
                 final String mimetype = getMimeType( context, att.getFileName() );
                 res.setContentType( mimetype );*/
 
-                AttachmentContent attContent = att.getAttachmentContent();
-                
                 //
                 //  We use 'inline' instead of 'attachment' so that user agents
                 //  can try to automatically open the file.
                 //
-                res.addHeader( "Content-Disposition", "inline; filename=\"" + att.getName() + "\";" );
+                res.addHeader( "Content-Disposition", "inline; filename=\"" + attContent.getPageAttachment().getName() + "\";" );
                 res.addDateHeader("Last-Modified",attContent.getCreationDate().getTime());
 
                 // If a size is provided by the provider, report it.
@@ -265,7 +264,7 @@ public class AttachmentServlet extends HttpServlet {
                     res.setContentLength( (int)attContent.getSize() );
                 }
 
-                try( final InputStream  in = mgr.getAttachmentStream( context, att ) ) {
+                try( final InputStream  in = mgr.getAttachmentStream( context, attContent ) ) {
                     int read;
                     final byte[] buffer = new byte[ BUFFER_SIZE ];
 
@@ -275,7 +274,7 @@ public class AttachmentServlet extends HttpServlet {
                 }
 
                 if( log.isDebugEnabled() ) {
-                    log.debug( "Attachment "+att.getName()+" sent to "+req.getRemoteUser()+" on "+HttpUtil.getRemoteAddress(req) );
+                    log.debug( "Attachment "+attContent.getPageAttachment().getName()+" sent to "+req.getRemoteUser()+" on "+HttpUtil.getRemoteAddress(req) );
                 }
                 if( nextPage != null ) {
                     res.sendRedirect(
@@ -431,7 +430,8 @@ public class AttachmentServlet extends HttpServlet {
             upload.setProgressListener( pl );
             final List<FileItem> items = upload.parseRequest( req );
 
-			WikiPage wikipage = null;
+			WikiPage wikiPage = null;
+
 			String changeNote = null;
 			//FileItem actualFile = null;
 			final List<FileItem> fileItems = new ArrayList<>();
@@ -441,7 +441,7 @@ public class AttachmentServlet extends HttpServlet {
 					switch (item.getFieldName()) {
 					case "pageId":
 						String pageId = item.getString("UTF-8");
-						wikipage = ServicesRefs.getPageManager().getPageById(pageId);
+						wikiPage = ServicesRefs.getPageManager().getPageById(pageId);
 						break;
 					case "changenote":
 						changeNote = item.getString("UTF-8");
@@ -466,7 +466,7 @@ public class AttachmentServlet extends HttpServlet {
                     final String filename = actualFile.getName();
                     final long   fileSize = actualFile.getSize();
                     try( final InputStream in  = actualFile.getInputStream() ) {
-                        executeUpload( context, in, filename, nextPage, wikipage, changeNote, fileSize );
+                        executeUpload( context, in, filename, nextPage, wikiPage, changeNote, fileSize );
                     }
                 }
             }
@@ -505,17 +505,13 @@ public class AttachmentServlet extends HttpServlet {
      * @param parentPage the page to which the file should be attached
      * @param changenote The change note
      * @param contentLength The content length
-     * @return <code>true</code> if upload results in the creation of a new page;
-     * <code>false</code> otherwise
      * @throws RedirectException If the content needs to be redirected
      * @throws IOException       If there is a problem in the upload.
      * @throws ProviderException If there is a problem in the backend.
      */
-	protected boolean executeUpload(final Context context, final InputStream data, String filename,
+	protected void executeUpload(final Context context, final InputStream data, String filename,
 			final String errorPage, WikiPage parentPage, final String changenote, final long contentLength)
 			throws RedirectException, IOException, ProviderException {
-		boolean created = false;
-
 		try {
 			filename = AttachmentManager.validateFileName(filename);
 		} catch (final WikiException e) {
@@ -557,34 +553,9 @@ public class AttachmentServlet extends HttpServlet {
 		final Permission permission = PermissionFactory.getPagePermission(parentPage, "upload");
 		if (ServicesRefs.getAuthorizationManager().checkPermission(context.getWikiSession(), permission)) {
 
-			//  Check whether we already have this kind of a page. If the "page" parameter already defines an attachment
-			//  name for an update, then we just use that file. Otherwise we create a new attachment, and use the
-			//  filename given.  Incidentally, this will also mean that if the user uploads a file with the exact
-			//  same name than some other previous attachment, then that attachment gains a new version.
-			PageAttachment att = attachmentManager.getAttachmentInfo(context.getPage().getName());
-			AttachmentContent attContent = null;
-			if (att == null) {
-				// Crate new PageAttachment.
-				att = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
-				att.setName(filename);
-				created = true;
-			} else {
-				attContent = att.forLastContent();
-			}
-
-			if (attContent == null) {
-				// Crate new AttachmentContent.
-				attContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
-				att.setAttachmentContent(attContent);
-			}
-
-			int latestVersion = att.getLastVersion() + 1;
-			att.setLastVersion(latestVersion);
-			attContent.setVersion(latestVersion);
-			
+			AttachmentContent attContent = Elwiki_dataFactory.eINSTANCE.createAttachmentContent();
 			attContent.setCreationDate(new Date());
 			attContent.setSize(contentLength);
-
 			if (user != null) {
 				attContent.setAuthor(user.getName());
 			}
@@ -593,22 +564,13 @@ public class AttachmentServlet extends HttpServlet {
 				attContent.setChangeNote(changenote);
 			}
 
-			try {
-				attachmentManager.storeAttachment(parentPage, att, data);
-			} catch (final ProviderException pe) {
-				// this is a kludge, the exception that is caught here contains the i18n key
-				// here we have the context available, so we can internationalize it properly :
-				throw new ProviderException(Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE)
-						.getString(pe.getMessage()));
-			}
+			attachmentManager.storeAttachment(parentPage, attContent, filename, data);
 
 			log.info("User " + user + " uploaded attachment to " + parentPage + " called " + filename + ", size "
 					+ contentLength);
 		} else {
 			throw new RedirectException("No permission to upload a file", errorPage);
 		}
-
-        return created;
     }
 
     /**

@@ -106,6 +106,13 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Elwiki_dataPackage.ATTACHMENT_CONTENT: {
+				AttachmentContent attachmentContent = (AttachmentContent)theEObject;
+				T result = caseAttachmentContent(attachmentContent);
+				if (result == null) result = caseIHistoryInfo(attachmentContent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case Elwiki_dataPackage.OBJECT: {
 				Object object = (Object)theEObject;
 				T result = caseObject(object);
@@ -157,13 +164,6 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: {
 				@SuppressWarnings("unchecked") Map.Entry<String, Object> stringToObjectMap = (Map.Entry<String, Object>)theEObject;
 				T result = caseStringToObjectMap(stringToObjectMap);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Elwiki_dataPackage.ATTACHMENT_CONTENT: {
-				AttachmentContent attachmentContent = (AttachmentContent)theEObject;
-				T result = caseAttachmentContent(attachmentContent);
-				if (result == null) result = caseIHistoryInfo(attachmentContent);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

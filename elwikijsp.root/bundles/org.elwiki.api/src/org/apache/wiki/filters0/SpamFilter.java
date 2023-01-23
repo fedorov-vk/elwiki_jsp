@@ -30,6 +30,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -687,7 +688,7 @@ public class SpamFilter extends BasePageFilter {
                 }
             }
 
-            final PageAttachment att = ServicesRefs.getAttachmentManager().getAttachmentInfo( context, m_blacklist );
+            final AttachmentContent att = ServicesRefs.getAttachmentManager().getAttachmentContent( context, m_blacklist );
             if( att != null ) {
 				if (m_spamPatterns == null
 						|| m_spamPatterns.isEmpty() /*:FVK: || att.getLastModifiedDate().after( m_lastRebuild )*/ ) {

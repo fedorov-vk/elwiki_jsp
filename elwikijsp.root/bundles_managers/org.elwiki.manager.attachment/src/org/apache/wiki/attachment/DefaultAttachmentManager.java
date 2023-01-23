@@ -31,6 +31,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -157,17 +158,17 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public String getAttachmentInfoName( final Context context, final String attachmentname ) {
-        final PageAttachment att;
+    public String getAttachmentName( final Context context, final String attachmentname ) {
+        final AttachmentContent att;
         try {
-            att = getAttachmentInfo( context, attachmentname );
+            att = getAttachmentContent( context, attachmentname );
         } catch( final ProviderException e ) {
             log.warn( "Finding attachments failed: ", e );
             return null;
         }
 
         if( att != null ) {
-            return att.getName();
+            return att.getPageAttachment().getName();
         } else if( attachmentname.indexOf( '/' ) != -1 ) {
             return attachmentname;
         }
@@ -175,9 +176,19 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         return null;
     }
 
+    /** {@inheritDoc} 
+     * @throws ProviderException */
+	@Override
+	public AttachmentContent getAttachmentContent(WikiPage wikiPage, String attachmentName, int... version)
+			throws ProviderException {
+		AttachmentContent attachmentInfo = m_provider.getAttachmentContent(wikiPage, attachmentName, version);
+
+		return attachmentInfo;
+	}
+
     /** {@inheritDoc} */
     @Override
-	public PageAttachment getAttachmentInfo(Context context, String attachmentName, int version)
+	public AttachmentContent getAttachmentContent(Context context, String attachmentName, int version)
 			throws ProviderException {
         if( m_provider == null ) {
             return null;
@@ -189,41 +200,14 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
             currentPage = context.getPage();
         }
 
-        //  Figure out the parent page of this attachment.  If we can't find it, we'll assume this refers directly to the attachment.
-        final int cutpt = attachmentName.lastIndexOf( '/' );
-        if( cutpt != -1 ) {
-            String parentPage = attachmentName.substring( 0, cutpt );
-            parentPage = MarkupParser.cleanLink( parentPage );
-            attachmentName = attachmentName.substring( cutpt + 1 );
-
-            // If we for some reason have an empty parent page name; this can't be an attachment
-            if( parentPage.length() == 0 ) {
-                return null;
-            }
-
-            currentPage = this.pageManager.getPage( parentPage );
-
-            // Go check for legacy name
-            // FIXME: This should be resolved using CommandResolver, not this adhoc way.  This also assumes that the
-            //        legacy charset is a subset of the full allowed set.
-            if( currentPage == null ) {
-                currentPage = this.pageManager.getPage( MarkupParser.wikifyLink( parentPage ) );
-            }
-        }
-
-        //  If the page cannot be determined, we cannot possibly find the attachments.
-        if( currentPage == null || currentPage.getName().length() == 0 ) {
+        // If the page cannot be determined, we cannot possibly find the attachments.
+        if(currentPage == null) {
             return null;
         }
 
-        //  Finally, figure out whether this is a real attachment or a generated attachment.
-        PageAttachment att = null;
-        //:FVK:  PageAttachment att = getDynamicAttachment( currentPage.getName() + "/" + attachmentname );
-        if( att == null ) {
-            att = m_provider.getAttachmentInfo( currentPage, attachmentName, version );
-        }
+        AttachmentContent attachmentContent = m_provider.getAttachmentContent(currentPage, attachmentName, version);
 
-        return att;
+        return attachmentContent;
     }
 
     /** {@inheritDoc} */
@@ -262,7 +246,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public InputStream getAttachmentStream( final Context ctx, final PageAttachment att ) throws ProviderException, IOException {
+    public InputStream getAttachmentStream( final Context ctx, final AttachmentContent att ) throws ProviderException, IOException {
         if( m_provider == null ) {
             return null;
         }
@@ -297,9 +281,9 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     }
     */
 
-    /** {@inheritDoc} */
-    @Override
-	public void storeAttachment(WikiPage wikiPage, PageAttachment att, InputStream in)
+
+	@Override
+	public void storeAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName, InputStream data)
 			throws IOException, ProviderException {
 		if (m_provider == null) {
 			return;
@@ -311,9 +295,8 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 			// the caller should catch the exception and use the exception text as an i18n key
 			throw new ProviderException("attach.parent.not.exist");
 		}
-
-		m_provider.putAttachmentData(wikiPage, att, in);
-		//:FVK: ServicesRefs.getReferenceManager().updateReferences(att.getName(), new ArrayList<>());
+		
+		m_provider.putAttachmentData(wikiPage, attContent, attName, data);
 	}
 
     /** {@inheritDoc} */
@@ -323,9 +306,9 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
             return null;
         }
 
-        final PageAttachment att = getAttachmentInfo( null, attachmentName );
+        final AttachmentContent att = getAttachmentContent( (Context)null, attachmentName );
         if( att != null ) {
-            return m_provider.getVersionHistory( att );
+            return m_provider.getVersionHistory( att.getPageAttachment() );
         }
 
         return null;
@@ -360,14 +343,14 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
     /** {@inheritDoc} */
     @Override
     // FIXME: Should also use events!
-    public void deleteAttachment( final PageAttachment att ) throws ProviderException {
+    public void deleteAttachment( final AttachmentContent att ) throws ProviderException {
         if( m_provider == null ) {
             return;
         }
 
         m_provider.deleteAttachment( att );
      // :FVK: ServicesRefs.getSearchManager().pageRemoved( att );
-        this.referenceManager.clearPageEntries( att.getName() );
+        this.referenceManager.clearPageEntries( att.getPageAttachment().getName() );
     }
 
 }

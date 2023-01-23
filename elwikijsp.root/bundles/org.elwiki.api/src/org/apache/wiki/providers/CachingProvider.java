@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
@@ -579,17 +580,16 @@ public class CachingProvider implements PageProvider {
 	}
 
 	@Override
-	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws IOException, Exception {
+	public PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception {
 		Assert.isTrue(false, "Код не реализован.");
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception {
+	public void addAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName) throws Exception {
 		Assert.isTrue(false, "Код не реализован.");
-		// TODO Auto-generated method stub
-		return null;
+		// TODO Auto-generated method stub		
 	}
 
 }

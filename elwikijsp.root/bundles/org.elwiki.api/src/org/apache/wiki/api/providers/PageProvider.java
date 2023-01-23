@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.api.providers;
 
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
@@ -211,12 +212,11 @@ public interface PageProvider extends WikiProvider {
 	 * Add attachment metadata for specisied wiki page.<br/>
 	 * If the operation is successful, also increases the attachments ID of data model.
 	 * 
-	 * @param wikiPage       specified page.
-	 * @param pageAttachment new metadata of attachment.
-	 * @return added instance of page attachment.
-	 * @throws Exception in case of an error, an exception is thrown.
+	 * @param wikiPage   specified page.
+	 * @param attContent new metadata of attachment.
+	 * @param attName    name of attachment.
 	 */
-	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws Exception;
+	void addAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName) throws Exception;
 
 	/**
 	 * Returns the PageAttachment corresponding to the page attachment ID.

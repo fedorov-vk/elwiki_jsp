@@ -20,7 +20,6 @@
 <%@ page import="org.eclipse.emf.common.util.EList" %>
 <%@ page import="org.apache.wiki.api.core.*"%>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.apache.wiki.tags.HistoryIteratorTag" %>
 <%@ page import="org.elwiki.authorize.login.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.attachment.*" %>

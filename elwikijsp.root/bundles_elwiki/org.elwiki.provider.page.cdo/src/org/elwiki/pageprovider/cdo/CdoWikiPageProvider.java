@@ -1427,37 +1427,50 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public PageAttachment addAttachment(WikiPage wikiPage, PageAttachment attachment) throws Exception {
+	public void addAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName) throws Exception {
 		CDOTransaction transaction = null;
 		try {
 			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-			PagesStore pagesStore = transaction.getObject(PageProviderCdoActivator.getStorageCdo().getPagesStore());
-			WikiPage changedPage = transaction.getObject(wikiPage);
-			AttachmentContent attContent = attachment.getAttachmentContent();
 
-			changedPage.getAttachments().add(attachment);
-			attachment.getAttachContents().add(attContent);
-			attachment.setLastVersion(attContent.getVersion());
+			PageAttachment pageAttachment = null;
+			for (PageAttachment attachItem : wikiPage.getAttachments()) {
+				if (attachItem.getName().equals(attName)) {
+					pageAttachment = attachItem;
+					break;
+				}
+			}
+			
+			if (pageAttachment == null) {
+				pageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+				//pageAttachment = transaction.getObject(pageAttachment);
+				pageAttachment.setName(attName);
 
-			// setup id of attachment, increase ID counter.
-			String id = pagesStore.getNextAttachmentId();
-			attachment.setId(id);
-			long newId = Long.parseLong(id) + 1;
-			pagesStore.setNextAttachmentId(Long.toString(newId));
+				PagesStore pagesStore = transaction.getObject(PageProviderCdoActivator.getStorageCdo().getPagesStore());
+				// setup id of attachment, increase ID counter.
+				String id = pagesStore.getNextAttachmentId();
+				pageAttachment.setId(id);
+				long newId = Long.parseLong(id) + 1;
+				pagesStore.setNextAttachmentId(Long.toString(newId));
 
+				WikiPage changedPage = transaction.getObject(wikiPage);
+				// Add first PageAttachment for WikiPage. 
+				changedPage.getAttachments().add(pageAttachment);
+			}
+			pageAttachment = transaction.getObject(pageAttachment);
+
+			int latestVersion = pageAttachment.getLastVersion() + 1;
+			pageAttachment.setLastVersion(latestVersion);
+
+			attContent.setVersion(latestVersion);
+
+			pageAttachment.getAttachContents().add(attContent);
+			
 			transaction.commit();
-
-			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
-			PageAttachment result = (PageAttachment)view.getObject(attachment.cdoID());
-			attContent = (AttachmentContent)view.getObject(attContent.cdoID());
-			result.setAttachmentContent(attContent);
-
-			return result;
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();
 			}
-		}
+		}		
 	}
 
 	@Override
@@ -1492,5 +1505,5 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 		}
 	}
-	
+
 }

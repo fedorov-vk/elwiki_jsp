@@ -3,6 +3,7 @@
 package org.elwiki_data.impl;
 
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -27,7 +28,6 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getWikipage <em>Wikipage</em>}</li>
  *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachContents <em>Attach Contents</em>}</li>
- *   <li>{@link org.elwiki_data.impl.PageAttachmentImpl#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
  * @generated
@@ -108,6 +108,26 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
+	public int getLastVersion() {
+		return (Integer)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setLastVersion(int newLastVersion) {
+		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, newLastVersion);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public WikiPage getWikipage() {
 		return (WikiPage)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__WIKIPAGE, true);
 	}
@@ -139,46 +159,6 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 	 * @generated
 	 */
 	@Override
-	public int getLastVersion() {
-		return (Integer)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setLastVersion(int newLastVersion) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__LAST_VERSION, newLastVersion);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public AttachmentContent getAttachmentContent() {
-		return (AttachmentContent)eGet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ATTACHMENT_CONTENT, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAttachmentContent(AttachmentContent newAttachmentContent) {
-		eSet(Elwiki_dataPackage.Literals.PAGE_ATTACHMENT__ATTACHMENT_CONTENT, newAttachmentContent);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public AttachmentContent forLastContent() {
 		AttachmentContent result = null;
 		int version = 0;
@@ -191,11 +171,9 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 			}
 		}
 		
-		setAttachmentContent(result);
-		
 		return result;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -211,8 +189,6 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 				break;
 			}
 		}
-		
-		setAttachmentContent(result);
 		
 		return result;
 	}

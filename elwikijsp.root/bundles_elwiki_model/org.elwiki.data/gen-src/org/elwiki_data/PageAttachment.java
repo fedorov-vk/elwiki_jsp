@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getWikipage <em>Wikipage</em>}</li>
  *   <li>{@link org.elwiki_data.PageAttachment#getAttachContents <em>Attach Contents</em>}</li>
- *   <li>{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment()
@@ -151,28 +150,6 @@ public interface PageAttachment extends CDOObject {
 	 * @generated
 	 */
 	void setLastVersion(int value);
-
-	/**
-	 * Returns the value of the '<em><b>Attachment Content</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Attachment Content</em>' reference.
-	 * @see #setAttachmentContent(AttachmentContent)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_AttachmentContent()
-	 * @model transient="true"
-	 * @generated
-	 */
-	AttachmentContent getAttachmentContent();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Attachment Content</em>' reference.
-	 * @see #getAttachmentContent()
-	 * @generated
-	 */
-	void setAttachmentContent(AttachmentContent value);
 
 	/**
 	 * <!-- begin-user-doc -->

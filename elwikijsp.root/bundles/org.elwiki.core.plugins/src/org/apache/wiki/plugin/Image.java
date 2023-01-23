@@ -19,6 +19,7 @@
 package org.apache.wiki.plugin;
 
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -123,10 +124,10 @@ public class Image implements Plugin {
 
         try {
             final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
-            final PageAttachment att = mgr.getAttachmentInfo( context, src );
+            final AttachmentContent att = mgr.getAttachmentContent( context, src );
 
             if( att != null ) {
-                src = context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName() );
+                src = context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getPageAttachment().getName() );
             }
         } catch( final ProviderException e ) {
             throw new PluginException( "Attachment info failed: " + e.getMessage() );

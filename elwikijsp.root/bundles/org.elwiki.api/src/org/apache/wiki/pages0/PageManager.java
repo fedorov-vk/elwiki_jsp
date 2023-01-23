@@ -19,6 +19,7 @@
 package org.apache.wiki.pages0;
 
 import org.apache.wiki.api.core.Context;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
@@ -414,13 +415,13 @@ public interface PageManager extends WikiEventListener {
 
 	/**
 	 * Add attachment metadata for specisied wiki page.
-	 * 
-	 * @param wikiPage       specified page.
-	 * @param pageAttachment new metadata of attachment.
-	 * @return TODO
+	 *
+	 * @param wikiPage   specified page.
+	 * @param attContent new metadata of attachment.
+	 * @param attName    name of attachment.
 	 * @throws Exception TODO
 	 */
-	PageAttachment addAttachment(WikiPage wikiPage, PageAttachment pageAttachment) throws Exception;
+	void addAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName) throws Exception;
 
 	/**
 	 * Returns the PageAttachment corresponding to the page attachment ID.

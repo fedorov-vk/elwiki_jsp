@@ -73,12 +73,12 @@ public interface AttachmentManager {
     /**
      *  Gets info on a particular attachment, latest version.
      *
-     *  @param name A full attachment name.
+     *  @param name Attachment name.
      *  @return Attachment, or null, if no such attachment exists.
      *  @throws ProviderException If something goes wrong.
      */
-    default PageAttachment getAttachmentInfo( final String name ) throws ProviderException {
-        return getAttachmentInfo( name, WikiProvider.LATEST_VERSION );
+    default AttachmentContent getAttachmentContent( final String name ) throws ProviderException {
+        return getAttachmentContent( name, WikiProvider.LATEST_VERSION );
     }
 
     /**
@@ -90,14 +90,25 @@ public interface AttachmentManager {
      *  @throws ProviderException If something goes wrong.
      */
 
-    default PageAttachment getAttachmentInfo( final String name, final int version ) throws ProviderException {
+    default AttachmentContent getAttachmentContent( final String name, final int version ) throws ProviderException {
         if( name == null ) {
             return null;
         }
 
-        return getAttachmentInfo( null, name, version );
+        return getAttachmentContent( null, name, version );
     }
 
+	/**
+	 * Figures out the full attachment name from the page and attachment name.
+	 * 
+	 * @param wikiPage The wiki page.
+	 * @param attachmentname The file name of the attachment.
+	 * @param version TODO
+	 * @return
+	 * @throws ProviderException TODO
+	 */
+	AttachmentContent getAttachmentContent(WikiPage wikiPage, String attachmentName, int... version) throws ProviderException;
+    
     /**
      *  Figures out the full attachment name from the context and attachment name.
      *
@@ -106,12 +117,12 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment exists.
      *  @throws ProviderException If something goes wrong.
      */
-    default PageAttachment getAttachmentInfo( final Context context, final String attachmentname ) throws ProviderException {
-        return getAttachmentInfo( context, attachmentname, WikiProvider.LATEST_VERSION );
+    default AttachmentContent getAttachmentContent( final Context context, final String attachmentname ) throws ProviderException {
+        return getAttachmentContent( context, attachmentname, WikiProvider.LATEST_VERSION );
     }
 
     /**
-     *  Figures out the full attachment name from the context and attachment name.
+     *  Figures out the attachment metadata from the context and attachment name.
      *
      *  @param context The current WikiContext
      *  @param attachmentname The file name of the attachment.
@@ -119,7 +130,7 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment or version exists.
      *  @throws ProviderException If something goes wrong.
      */
-    PageAttachment getAttachmentInfo( Context context, String attachmentname, int version ) throws ProviderException;
+    AttachmentContent getAttachmentContent( Context context, String attachmentname, int version ) throws ProviderException;
 
     /**
      *  Figures out the full attachment name from the context and attachment name.
@@ -128,7 +139,7 @@ public interface AttachmentManager {
      *  @param attachmentname The file name of the attachment.
      *  @return Attachment, or null, if no such attachment exists.
      */
-    String getAttachmentInfoName( Context context, String attachmentname );
+    String getAttachmentName( Context context, String attachmentname );
 
     /**
      *  Returns the list of attachments associated with a given wiki page. If there are no attachments, returns an empty Collection.
@@ -172,13 +183,13 @@ public interface AttachmentManager {
      *  @throws IOException If the stream cannot be opened
      *  @throws ProviderException If the backend fails due to some other reason.
      */
-    default InputStream getAttachmentStream( final PageAttachment att ) throws IOException, ProviderException {
+    default InputStream getAttachmentStream( final AttachmentContent att ) throws IOException, ProviderException {
         return getAttachmentStream( null, att );
     }
 
     /**
      *  Returns an attachment stream using the particular WikiContext. This method should be used instead of
-     *  {@link #getAttachmentStream(PageAttachment)}, since it also allows the DynamicAttachments to function.
+     *  {@link #getAttachmentStream(AttachmentContent)}, since it also allows the DynamicAttachments to function.
      *
      *  @param ctx The Wiki Context
      *  @param att The Attachment to find
@@ -186,7 +197,7 @@ public interface AttachmentManager {
      *  @throws ProviderException If the backend fails due to some reason
      *  @throws IOException If the stream cannot be opened
      */
-    InputStream getAttachmentStream( Context ctx, PageAttachment att ) throws ProviderException, IOException;
+    InputStream getAttachmentStream( Context ctx, AttachmentContent att ) throws ProviderException, IOException;
 
     /**
      *  Stores a dynamic attachment.  Unlike storeAttachment(), this just stores the attachment in the memory.
@@ -224,17 +235,18 @@ public interface AttachmentManager {
     }
     */
 
-    /**
-     *  Stores an attachment directly from a stream. If the attachment did not exist previously, this method will create it.
+	/**
+	 *  Stores an attachment directly from a stream. If the attachment did not exist previously, this method will create it.
      *  If it did exist, it stores a new version.
-     * @param wikiPage TODO
-     * @param att Attachment to store this under.
-     * @param in  InputStream from which the attachment contents will be read.
-     *
-     *  @throws IOException If writing the attachment failed.
-     *  @throws ProviderException If something else went wrong.
-     */
-    void storeAttachment( WikiPage wikiPage, PageAttachment att, InputStream in ) throws IOException, ProviderException;
+     *  
+	 * @param wikiPage
+	 * @param attContent
+	 * @param attName 
+	 * @param data
+	 * @throws IOException TODO
+	 * @throws ProviderException TODO
+	 */
+	void storeAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName, InputStream data) throws IOException, ProviderException;
 
     /**
      *  Returns a list of versions of the attachment.
@@ -276,7 +288,7 @@ public interface AttachmentManager {
      *  @param att The Attachment to delete.
      *  @throws ProviderException if something goes wrong with the backend.
      */
-    void deleteAttachment( PageAttachment att ) throws ProviderException;
+    void deleteAttachment( AttachmentContent att ) throws ProviderException;
 
     /**
      *  Validates the filename and makes sure it is legal.  It trims and splits and replaces bad characters.
@@ -300,16 +312,6 @@ public interface AttachmentManager {
 
         // Should help with IE 5.22 on OSX
         filename = filename.trim();
-
-        // If file name ends with .jsp or .jspf, the user is being naughty!
-        if( filename.toLowerCase().endsWith( ".jsp" ) || filename.toLowerCase().endsWith( ".jspf" ) ) {
-            Logger.getLogger( AttachmentManager.class )
-                  .info( "Attempt to upload a file with a .jsp/.jspf extension.  In certain cases this " +
-                         "can trigger unwanted security side effects, so we're preventing it." );
-
-            // the caller should catch the exception and use the exception text as an i18n key
-            throw new WikiException(  "attach.unwanted.file"  );
-        }
 
         //  Remove any characters that might be a problem. Most importantly - characters that might stop processing of the URL.
         return StringUtils.replaceChars( filename, "#?\"'", "____" );

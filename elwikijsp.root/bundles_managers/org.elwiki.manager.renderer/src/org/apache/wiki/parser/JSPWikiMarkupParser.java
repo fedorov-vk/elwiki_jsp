@@ -1295,7 +1295,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 final int hashMark;
 
                 // Internal wiki link, but is it an attachment link?
-                String attachment = ServicesRefs.getAttachmentManager().getAttachmentInfoName( m_context, linkRef );
+                String attachment = ServicesRefs.getAttachmentManager().getAttachmentName( m_context, linkRef );
                 if( attachment != null ) {
                     callMutatorChain( m_attachmentLinkMutatorChain, attachment );
 

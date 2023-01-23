@@ -17,6 +17,7 @@
     under the License.
 --%>
 <!-- ~~ START ~~ AttachmentTab.jsp -->
+<%@ page import="java.util.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.ui.progress.*" %>
@@ -33,6 +34,7 @@
 <%
   int MAXATTACHNAMELENGTH = 30;
   Context ctx = ContextUtil.findContext(pageContext);
+  WikiPage wikiPage = ctx.getPage();
 %>
 <c:set var="progressId" value="<%= ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
 <div class="page-content">
@@ -106,6 +108,7 @@
 
   <h4 id="attach-list"><fmt:message key='attach.list'/></h4>
   <div class="slimbox-attachments table-filter-striped-sort-condensed">
+
   <table class="table" aria-describedby="attach-list">
     <tr>
       <th scope="col"><fmt:message key="info.attachment.name"/></th>
@@ -118,16 +121,25 @@
       <th scope="col"><fmt:message key="info.changenote"/></th>
     </tr>
 
-    <wiki:AttachmentsIterator id="att">
+    <%--
+      --%>
+
+    <c:forEach var="pageAttachment" items="<%=wikiPage.getAttachments()%>" varStatus="status">
     <tr>
 
       <%-- see styles/fontjspwiki/icon.less : icon-file-<....>-o  --%>
-      <c:set var="attContent" value="${att.attachmentContent}" />
-      <c:set var="parts" value="${fn:split(att.name, '.')}" />
+      <%
+      	PageAttachment pageAttachment = (PageAttachment)pageContext.getAttribute("pageAttachment");
+      	AttachmentContent attContent = pageAttachment.forLastContent();
+      %>
+      <c:set var="attContent" value="<%=attContent%>" />
+      <c:set var="size" value="${attContent.size}" />
+      <c:set var="parts" value="${fn:split(pageAttachment.name, '.')}" />
       <c:set var="type" value="${ fn:length(parts)>1 ? fn:escapeXml(parts[fn:length(parts)-1]) : ''}" />
 
-      <td class="attach-name" title="${att.name}">
-        <wiki:LinkTo><c:out value="${att.name}" /></wiki:LinkTo>
+      <td class="attach-name" title="${pageAttachment.name}">
+      	<c:out value="${status.index} " />
+        <wiki:LinkTo><c:out value="${pageAttachment.name}" /></wiki:LinkTo>
       </td>
 
       <td><c:out value="${attContent.version}"/></td>
@@ -136,8 +148,8 @@
         <fmt:formatDate value="${attContent.creationDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
       </td>
 
-      <td class="nowrap" title="${attContent.size} bytes" data-sortvalue="${attContent.size}">
-        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( att.getAttachmentContent().getSize() )%>
+      <td class="nowrap" title="${size} bytes" data-sortvalue="${size}">
+        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( attContent.getSize() ) %>
       </td>
 
       <td class="attach-type"><span class="icon-file-${fn:toLowerCase(type)}-o"></span>${type}</td>
@@ -146,7 +158,7 @@
 
       <td class="nowrap">
         <a class="btn btn-primary btn-xs"
-           href="<wiki:Link format='url' context='<%=Context.ATTACHMENT_INFO%>' pageId='${att.id}'/>"
+           href="<wiki:Link format='url' context='<%=Context.ATTACHMENT_INFO%>' pageId='${pageAttachment.id}'/>"
            title="<fmt:message key='attach.moreinfo.title'/>">
           <fmt:message key="attach.moreinfo"/>
         </a>
@@ -154,7 +166,7 @@
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=Context.ATTACHMENT_DELETE%>' pageId='${att.id}' />"
+                  src="<wiki:Link format='url' context='<%=Context.ATTACHMENT_DELETE%>' pageId='${pageAttachment.id}' />"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>
@@ -162,7 +174,9 @@
       <td class="changenote"><c:out value="${attContent.changeNote}"/></td>
 
     </tr>
-    </wiki:AttachmentsIterator>
+    </c:forEach>
+    <%--
+     --%>
 
   </table>
   </div>

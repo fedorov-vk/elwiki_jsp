@@ -21,6 +21,7 @@ package org.apache.wiki.providers;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -136,7 +137,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 	 * minimize the number of files per directory containing attachments
 	 */
     @Deprecated
-    private File findAttachmentDir( final PageAttachment att ) throws ProviderException {
+    private File findAttachmentDir( final AttachmentContent att ) throws ProviderException {
     	//:FVK: workaround. (here shoul added algotithm with hoerarhy of directories, for controling maximuum count of files in the one directory.)
     	File f = this.wikiconfiguration.getAttachmentPath().toFile();
     	/*:FVK:
@@ -164,41 +165,38 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  {@inheritDoc}
      */
 	@Override
-	public PageAttachment putAttachmentData(WikiPage wikiPage, PageAttachment att, InputStream data)
-			throws ProviderException, IOException {
-		PageAttachment result = null;
-		File attDir = findAttachmentDir(att);
+	public void putAttachmentData(WikiPage wikiPage, AttachmentContent attContent, String attName, InputStream data)
+			throws IOException, ProviderException {
+		File attDir = findAttachmentDir(null);
 
 		if (!attDir.exists()) {
 			attDir.mkdirs(); //workaround.
 		}
 
 		File newfile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, attDir);
-		att.getAttachmentContent().setPlace(newfile.getCanonicalPath());
+		attContent.setPlace(newfile.getCanonicalPath());
 
 		try (final OutputStream out = new FileOutputStream(newfile)) {
-			log.info("Uploading attachment " + att.getName() + " to page " + wikiPage.getName());
+			log.info("Uploading attachment " + attName + " to page " + wikiPage.getName());
 			log.info("Saving attachment contents to " + newfile.getAbsolutePath());
 			FileUtil.copyContents(data, out);
 
 			PageManager pm = ServicesRefs.getPageManager();
-			result = pm.addAttachment(wikiPage, att);
+			pm.addAttachment(wikiPage, attContent, attName);
 		} catch (final Exception ex) {
 			log.error("Could not save attachment data: ", ex);
 			throw new IOException(ex);
 		}
-
-		return result;
 	}
 
     /**
      *  {@inheritDoc}
      */
     @Override
-    public InputStream getAttachmentData( final PageAttachment att ) throws IOException, ProviderException {
+    public FileInputStream getAttachmentData( final AttachmentContent att ) throws IOException, ProviderException {
         final File attDir = findAttachmentDir( att );
         try {
-            final File f = new File(attDir, att.getAttachmentContent().getPlace());
+            final File f = new File(attDir, att.getPlace());
             return new FileInputStream( f );
         } catch( final FileNotFoundException e ) {
             log.error( "File not found: " + e.getMessage() );
@@ -240,31 +238,36 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     /**
      *  {@inheritDoc}
      */
-    @Override
-    public PageAttachment getAttachmentInfo(WikiPage page, String name, int version ) throws ProviderException {
-        log.debug( "Getting attachment, name=\" + name + \", version=" + version + " for page" + page);
+	@Override
+	public AttachmentContent getAttachmentContent(WikiPage page, String name, int... version) throws ProviderException {
+		log.debug("Getting attachment, name=\" + name + \", version=" + version + ", for page" + page);
 
-		PageAttachment attachment = null;
+        if(page == null) {
+            return null;
+        }
+		
+		PageAttachment pageAttachment = null;
 		for (PageAttachment attachItem : page.getAttachments()) {
-			if (name.equals(attachItem.getName())) {
-				attachment = attachItem;
+			if (attachItem.getName().equals(name)) {
+				pageAttachment = attachItem;
 				break;
 			}
 		}
 
-		if (attachment == null) {
+		if (pageAttachment == null) {
 			log.debug("Attachment \"" + name + "\"not found - thus no attachment can exist.");
 			return null;
 		}
 
-		AttachmentContent attachmentContent = (version == WikiProvider.LATEST_VERSION) ? //
-				attachment.forLastContent() : attachment.forVersionContent(version);
+		AttachmentContent attachmentContent;
+		if(version.length == 0 || version[0] == WikiProvider.LATEST_VERSION) {
+			attachmentContent = pageAttachment.forLastContent();
+		} else {
+			attachmentContent = pageAttachment.forVersionContent(version[0]);
+		}
 
-		if (attachmentContent == null)
-			return null;
-
-		return attachment;
-    }
+		return attachmentContent;
+	}
 
     /**
      *  {@inheritDoc}
@@ -288,9 +291,9 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      *  {@inheritDoc}
      */
     @Override
-    public void deleteAttachment( final PageAttachment att ) throws ProviderException {
+    public void deleteAttachment( final AttachmentContent att ) throws ProviderException {
         final File dir = findAttachmentDir( att );
-        for(AttachmentContent attachContent : att.getAttachContents()) {
+        for(AttachmentContent attachContent : att.getPageAttachment().getAttachContents()) {
         	File file = new File(dir, attachContent.getPlace());
         	file.delete();
         }

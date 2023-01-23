@@ -16,13 +16,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.data.authorize.UnresolvedPrincipal;
-import org.elwiki.data.authorize.WikiPrincipal;
-import org.elwiki.permissions.AllPermission;
-import org.elwiki.permissions.GroupPermission;
-import org.elwiki.permissions.PagePermission;
-import org.elwiki.permissions.WikiPermission;
+
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.AttachmentContent;
@@ -82,13 +76,13 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.PAGES_STORE: return (EObject)createPagesStore();
 			case Elwiki_dataPackage.PAGE_CONTENT: return (EObject)createPageContent();
 			case Elwiki_dataPackage.PAGE_ATTACHMENT: return (EObject)createPageAttachment();
+			case Elwiki_dataPackage.ATTACHMENT_CONTENT: return (EObject)createAttachmentContent();
 			case Elwiki_dataPackage.COMPARABLE: return (EObject)createComparable();
 			case Elwiki_dataPackage.CLONEABLE: return (EObject)createCloneable();
 			case Elwiki_dataPackage.PAGE_REFERENCE: return (EObject)createPageReference();
 			case Elwiki_dataPackage.ACL_ENTRY: return (EObject)createAclEntry();
 			case Elwiki_dataPackage.ACL: return (EObject)createAcl();
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
-			case Elwiki_dataPackage.ATTACHMENT_CONTENT: return (EObject)createAttachmentContent();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -194,6 +188,17 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * @generated
 	 */
 	@Override
+	public AttachmentContent createAttachmentContent() {
+		AttachmentContentImpl attachmentContent = new AttachmentContentImpl();
+		return attachmentContent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Comparable createComparable() {
 		ComparableImpl comparable = new ComparableImpl();
 		return comparable;
@@ -258,17 +263,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public AttachmentContent createAttachmentContent() {
-		AttachmentContentImpl attachmentContent = new AttachmentContentImpl();
-		return attachmentContent;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String[] createArrayStringFromString(EDataType eDataType, String initialValue) {
 		return (String[])super.createFromString(initialValue);
 	}
@@ -305,6 +299,24 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Principal createPrincipalObjectFromString(EDataType eDataType, String initialValue) {
+		return (Principal)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertPrincipalObjectToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Principal[] createArrayPrincipalFromString(EDataType eDataType, String initialValue) {
 		return (Principal[])super.createFromString(initialValue);
 	}
@@ -321,25 +333,9 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated NOT
+	 * @generated
 	 */
 	public Permission createPermissionObjectFromString(EDataType eDataType, String initialValue) {
-		// :FVK: workaround.
-		String[] param = initialValue.split("|");
-		String className = param[0];
-		String name = param[1];
-		String actions = (param.length > 2) ? param[2] : null;
-
-		if (className.equals(PagePermission.class.getName())) {
-			return new PagePermission(name, actions);
-		} else if (className.equals(WikiPermission.class.getName())) {
-			return new WikiPermission(name, actions);
-		} else if (className.equals(GroupPermission.class.getName())) {
-			return new GroupPermission(name, actions);
-		} else if (className.equals(AllPermission.class.getName())) {
-			return new AllPermission(name, null);
-		}
-
 		return (Permission)super.createFromString(eDataType, initialValue);
 	}
 
@@ -369,38 +365,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 */
 	public String convertListPageContentToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated NOT
-	 */
-	public Principal createPrincipalObjectFromString(EDataType eDataType, String initialValue) {
-		// :FVK: workaround.
-		String[] param = initialValue.split("|");
-		String className = param[0];
-		String name = param[1];
-		String type = (param.length > 2) ? param[2] : null;
-
-		if (className.equals(WikiPrincipal.class.getName())) {
-			return new WikiPrincipal(name, type);
-		} else if (className.equals(GroupPrincipal.class.getName())) {
-			return new GroupPrincipal(name);
-		} else if (className.equals(UnresolvedPrincipal.class.getName())) {
-			return new UnresolvedPrincipal(name);
-		}
-
-		return (Principal)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertPrincipalObjectToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

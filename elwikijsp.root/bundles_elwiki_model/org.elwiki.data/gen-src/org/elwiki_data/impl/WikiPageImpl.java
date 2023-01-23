@@ -120,6 +120,26 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public int getLastVersion() {
+		return (Integer)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setLastVersion(int newLastVersion) {
+		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, newLastVersion);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getDescription() {
 		return (String)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__DESCRIPTION, true);
 	}
@@ -296,26 +316,6 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public EList<PageReference> getPageReferences() {
 		return (EList<PageReference>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGE_REFERENCES, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getLastVersion() {
-		return (Integer)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setLastVersion(int newLastVersion) {
-		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, newLastVersion);
 	}
 
 	/**
@@ -580,8 +580,4 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 		return super.eInvoke(operationID, arguments);
 	}
 
-	public String toString() {
-		String cdoId = (this.cdoID() != null)? this.cdoID().toString() : "noCDOid";
-		return this.getName() + " / " + this.getId() + " : " + cdoId;
-	}
 } //WikiPageImpl

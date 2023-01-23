@@ -42,16 +42,6 @@
 	</tag>
 
 	<tag>
-		<name>AttachmentsIterator</name>
-		<tag-class>org.apache.wiki.tags.AttachmentsIteratorTag</tag-class>
-		<tei-class>org.apache.wiki.tags.AttachmentsIteratorInfo</tei-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>id</name>
-		</attribute>
-	</tag>
-
-	<tag>
 		<name>Author</name>
 		<tag-class>org.apache.wiki.tags.AuthorTag</tag-class>
 		<body-content>empty</body-content>
@@ -312,16 +302,6 @@
 		<name>HasAttachments</name>
 		<tag-class>org.apache.wiki.tags.HasAttachmentsTag</tag-class>
 		<body-content>JSP</body-content>
-	</tag>
-
-	<tag>
-		<name>HistoryIterator</name>
-		<tag-class>org.apache.wiki.tags.HistoryIteratorTag</tag-class>
-		<tei-class>org.apache.wiki.tags.HistoryIteratorInfo</tei-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>id</name>
-		</attribute>
 	</tag>
 
 	<tag>

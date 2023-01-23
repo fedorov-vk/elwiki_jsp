@@ -73,6 +73,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass attachmentContentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass objectEClass = null;
 
 	/**
@@ -136,13 +143,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass attachmentContentEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EDataType arrayStringEDataType = null;
 
 	/**
@@ -151,6 +151,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EDataType accessListEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EDataType principalObjectEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -172,13 +179,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EDataType listPageContentEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType principalObjectEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -268,6 +268,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EAttribute getWikiPage_Name() {
 		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getWikiPage_LastVersion() {
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -378,16 +388,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EReference getWikiPage_PageReferences() {
 		return (EReference)wikiPageEClass.getEStructuralFeatures().get(13);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getWikiPage_LastVersion() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -646,6 +646,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getPageAttachment_LastVersion() {
+		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getPageAttachment_Wikipage() {
 		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(3);
 	}
@@ -666,26 +676,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getPageAttachment_LastVersion() {
-		return (EAttribute)pageAttachmentEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getPageAttachment_AttachmentContent() {
-		return (EReference)pageAttachmentEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getPageAttachment__ForLastContent() {
 		return pageAttachmentEClass.getEOperations().get(0);
 	}
@@ -698,6 +688,46 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EOperation getPageAttachment__ForVersionContent__int() {
 		return pageAttachmentEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getAttachmentContent() {
+		return attachmentContentEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAttachmentContent_Place() {
+		return (EAttribute)attachmentContentEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAttachmentContent_Size() {
+		return (EAttribute)attachmentContentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAttachmentContent_PageAttachment() {
+		return (EReference)attachmentContentEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -966,46 +996,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EClass getAttachmentContent() {
-		return attachmentContentEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAttachmentContent_Place() {
-		return (EAttribute)attachmentContentEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAttachmentContent_Size() {
-		return (EAttribute)attachmentContentEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getAttachmentContent_PageAttachment() {
-		return (EReference)attachmentContentEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EDataType getArrayString() {
 		return arrayStringEDataType;
 	}
@@ -1018,6 +1008,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EDataType getAccessList() {
 		return accessListEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EDataType getPrincipalObject() {
+		return principalObjectEDataType;
 	}
 
 	/**
@@ -1048,16 +1048,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EDataType getListPageContent() {
 		return listPageContentEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getPrincipalObject() {
-		return principalObjectEDataType;
 	}
 
 	/**
@@ -1135,9 +1125,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEAttribute(pageAttachmentEClass, PAGE_ATTACHMENT__LAST_VERSION);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__WIKIPAGE);
 		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACH_CONTENTS);
-		createEReference(pageAttachmentEClass, PAGE_ATTACHMENT__ATTACHMENT_CONTENT);
 		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_LAST_CONTENT);
 		createEOperation(pageAttachmentEClass, PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT);
+
+		attachmentContentEClass = createEClass(ATTACHMENT_CONTENT);
+		createEAttribute(attachmentContentEClass, ATTACHMENT_CONTENT__PLACE);
+		createEAttribute(attachmentContentEClass, ATTACHMENT_CONTENT__SIZE);
+		createEReference(attachmentContentEClass, ATTACHMENT_CONTENT__PAGE_ATTACHMENT);
 
 		objectEClass = createEClass(OBJECT);
 
@@ -1173,11 +1167,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		stringToObjectMapEClass = createEClass(STRING_TO_OBJECT_MAP);
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__KEY);
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__VALUE);
-
-		attachmentContentEClass = createEClass(ATTACHMENT_CONTENT);
-		createEAttribute(attachmentContentEClass, ATTACHMENT_CONTENT__PLACE);
-		createEAttribute(attachmentContentEClass, ATTACHMENT_CONTENT__SIZE);
-		createEReference(attachmentContentEClass, ATTACHMENT_CONTENT__PAGE_ATTACHMENT);
 
 		// Create data types
 		arrayStringEDataType = createEDataType(ARRAY_STRING);
@@ -1284,12 +1273,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEAttribute(getPageAttachment_LastVersion(), ecorePackage.getEInt(), "lastVersion", "0", 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_Wikipage(), this.getWikiPage(), this.getWikiPage_Attachments(), "wikipage", null, 0, 1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageAttachment_AttachContents(), this.getAttachmentContent(), this.getAttachmentContent_PageAttachment(), "attachContents", null, 0, -1, PageAttachment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPageAttachment_AttachmentContent(), this.getAttachmentContent(), null, "attachmentContent", null, 0, 1, PageAttachment.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getPageAttachment__ForLastContent(), this.getAttachmentContent(), "forLastContent", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getPageAttachment__ForVersionContent__int(), this.getAttachmentContent(), "forVersionContent", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEInt(), "desiredVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEClass(attachmentContentEClass, AttachmentContent.class, "AttachmentContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAttachmentContent_Place(), ecorePackage.getEString(), "place", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAttachmentContent_Size(), ecorePackage.getELong(), "size", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAttachmentContent_PageAttachment(), this.getPageAttachment(), this.getPageAttachment_AttachContents(), "pageAttachment", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(objectEClass, Object.class, "Object", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 
@@ -1336,11 +1329,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(stringToObjectMapEClass, Map.Entry.class, "StringToObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStringToObjectMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToObjectMap_Value(), ecorePackage.getEJavaObject(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(attachmentContentEClass, AttachmentContent.class, "AttachmentContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttachmentContent_Place(), ecorePackage.getEString(), "place", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAttachmentContent_Size(), ecorePackage.getELong(), "size", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttachmentContent_PageAttachment(), this.getPageAttachment(), this.getPageAttachment_AttachContents(), "pageAttachment", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(arrayStringEDataType, String[].class, "ArrayString", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

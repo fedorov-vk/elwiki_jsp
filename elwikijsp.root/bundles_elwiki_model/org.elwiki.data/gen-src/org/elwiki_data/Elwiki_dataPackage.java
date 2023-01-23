@@ -66,7 +66,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getComparable()
 	 * @generated
 	 */
-	int COMPARABLE = 5;
+	int COMPARABLE = 6;
 
 	/**
 	 * The number of structural features of the '<em>Comparable</em>' class.
@@ -438,7 +438,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getIHistoryInfo()
 	 * @generated
 	 */
-	int IHISTORY_INFO = 7;
+	int IHISTORY_INFO = 8;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -641,22 +641,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGE_ATTACHMENT__ATTACH_CONTENTS = 4;
 
 	/**
-	 * The feature id for the '<em><b>Attachment Content</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_ATTACHMENT__ATTACHMENT_CONTENT = 5;
-
-	/**
 	 * The number of structural features of the '<em>Page Attachment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PAGE_ATTACHMENT_FEATURE_COUNT = 6;
+	int PAGE_ATTACHMENT_FEATURE_COUNT = 5;
 
 	/**
 	 * The operation id for the '<em>For Last Content</em>' operation.
@@ -693,25 +684,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getObject()
 	 * @generated
 	 */
-	int OBJECT = 4;
-
-	/**
-	 * The number of structural features of the '<em>Object</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OBJECT_FEATURE_COUNT = 0;
-
-	/**
-	 * The number of operations of the '<em>Object</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OBJECT_OPERATION_COUNT = 0;
+	int OBJECT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.CloneableImpl <em>Cloneable</em>}' class.
@@ -721,34 +694,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getCloneable()
 	 * @generated
 	 */
-	int CLONEABLE = 6;
-
-	/**
-	 * The number of structural features of the '<em>Cloneable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CLONEABLE_FEATURE_COUNT = 0;
-
-	/**
-	 * The operation id for the '<em>Clone</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CLONEABLE___CLONE = 0;
-
-	/**
-	 * The number of operations of the '<em>Cloneable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CLONEABLE_OPERATION_COUNT = 1;
+	int CLONEABLE = 7;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PageReferenceImpl <em>Page Reference</em>}' class.
@@ -758,43 +704,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPageReference()
 	 * @generated
 	 */
-	int PAGE_REFERENCE = 8;
-
-	/**
-	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_REFERENCE__PAGE_ID = 0;
-
-	/**
-	 * The feature id for the '<em><b>Wikipage</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_REFERENCE__WIKIPAGE = 1;
-
-	/**
-	 * The number of structural features of the '<em>Page Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_REFERENCE_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>Page Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PAGE_REFERENCE_OPERATION_COUNT = 0;
+	int PAGE_REFERENCE = 9;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.AclEntryImpl <em>Acl Entry</em>}' class.
@@ -804,61 +714,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclEntry()
 	 * @generated
 	 */
-	int ACL_ENTRY = 9;
-
-	/**
-	 * The feature id for the '<em><b>Principal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY__PRINCIPAL = 0;
-
-	/**
-	 * The feature id for the '<em><b>Permission</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY__PERMISSION = 1;
-
-	/**
-	 * The number of structural features of the '<em>Acl Entry</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY_FEATURE_COUNT = 2;
-
-	/**
-	 * The operation id for the '<em>Check Permission</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY___CHECK_PERMISSION__PERMISSION = 0;
-
-	/**
-	 * The operation id for the '<em>Find Permission</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY___FIND_PERMISSION__PERMISSION = 1;
-
-	/**
-	 * The number of operations of the '<em>Acl Entry</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY_OPERATION_COUNT = 2;
+	int ACL_ENTRY = 10;
 
 	/**
 	 * The meta object id for the '{@link java.security.Principal <em>Principal</em>}' class.
@@ -868,25 +724,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
 	 * @generated
 	 */
-	int PRINCIPAL = 10;
-
-	/**
-	 * The number of structural features of the '<em>Principal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRINCIPAL_FEATURE_COUNT = 0;
-
-	/**
-	 * The number of operations of the '<em>Principal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRINCIPAL_OPERATION_COUNT = 0;
+	int PRINCIPAL = 11;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
@@ -896,52 +734,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
 	 * @generated
 	 */
-	int ACL = 11;
-
-	/**
-	 * The feature id for the '<em><b>Acl Entries</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL__ACL_ENTRIES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Acl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_FEATURE_COUNT = 1;
-
-	/**
-	 * The operation id for the '<em>Get Entry</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL___GET_ENTRY__PRINCIPAL = 0;
-
-	/**
-	 * The operation id for the '<em>Find Principals</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL___FIND_PRINCIPALS__PERMISSION = 1;
-
-	/**
-	 * The number of operations of the '<em>Acl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_OPERATION_COUNT = 2;
+	int ACL = 12;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
@@ -951,43 +744,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
 	 * @generated
 	 */
-	int STRING_TO_OBJECT_MAP = 12;
-
-	/**
-	 * The feature id for the '<em><b>Key</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STRING_TO_OBJECT_MAP__KEY = 0;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STRING_TO_OBJECT_MAP__VALUE = 1;
-
-	/**
-	 * The number of structural features of the '<em>String To Object Map</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STRING_TO_OBJECT_MAP_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>String To Object Map</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
+	int STRING_TO_OBJECT_MAP = 13;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.
@@ -997,7 +754,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAttachmentContent()
 	 * @generated
 	 */
-	int ATTACHMENT_CONTENT = 13;
+	int ATTACHMENT_CONTENT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -1079,6 +836,240 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTACHMENT_CONTENT_OPERATION_COUNT = IHISTORY_INFO_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Object</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OBJECT_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Object</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OBJECT_OPERATION_COUNT = 0;
+
+	/**
+	 * The number of structural features of the '<em>Cloneable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLONEABLE_FEATURE_COUNT = 0;
+
+	/**
+	 * The operation id for the '<em>Clone</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLONEABLE___CLONE = 0;
+
+	/**
+	 * The number of operations of the '<em>Cloneable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CLONEABLE_OPERATION_COUNT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_REFERENCE__PAGE_ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Wikipage</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_REFERENCE__WIKIPAGE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Page Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_REFERENCE_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Page Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGE_REFERENCE_OPERATION_COUNT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Principal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY__PRINCIPAL = 0;
+
+	/**
+	 * The feature id for the '<em><b>Permission</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY__PERMISSION = 1;
+
+	/**
+	 * The number of structural features of the '<em>Acl Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY_FEATURE_COUNT = 2;
+
+	/**
+	 * The operation id for the '<em>Check Permission</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY___CHECK_PERMISSION__PERMISSION = 0;
+
+	/**
+	 * The operation id for the '<em>Find Permission</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY___FIND_PERMISSION__PERMISSION = 1;
+
+	/**
+	 * The number of operations of the '<em>Acl Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_ENTRY_OPERATION_COUNT = 2;
+
+	/**
+	 * The number of structural features of the '<em>Principal</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRINCIPAL_FEATURE_COUNT = 0;
+
+	/**
+	 * The number of operations of the '<em>Principal</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRINCIPAL_OPERATION_COUNT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Acl Entries</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL__ACL_ENTRIES = 0;
+
+	/**
+	 * The number of structural features of the '<em>Acl</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_FEATURE_COUNT = 1;
+
+	/**
+	 * The operation id for the '<em>Get Entry</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL___GET_ENTRY__PRINCIPAL = 0;
+
+	/**
+	 * The operation id for the '<em>Find Principals</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL___FIND_PRINCIPALS__PERMISSION = 1;
+
+	/**
+	 * The number of operations of the '<em>Acl</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_OPERATION_COUNT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>String To Object Map</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>String To Object Map</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
@@ -1596,17 +1587,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPageAttachment_LastVersion();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.elwiki_data.PageAttachment#getAttachmentContent <em>Attachment Content</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Attachment Content</em>'.
-	 * @see org.elwiki_data.PageAttachment#getAttachmentContent()
-	 * @see #getPageAttachment()
-	 * @generated
-	 */
-	EReference getPageAttachment_AttachmentContent();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.PageAttachment#forLastContent() <em>For Last Content</em>}' operation.
@@ -2386,14 +2366,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PAGE_ATTACHMENT__LAST_VERSION = eINSTANCE.getPageAttachment_LastVersion();
-
-		/**
-		 * The meta object literal for the '<em><b>Attachment Content</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PAGE_ATTACHMENT__ATTACHMENT_CONTENT = eINSTANCE.getPageAttachment_AttachmentContent();
 
 		/**
 		 * The meta object literal for the '<em><b>For Last Content</b></em>' operation.

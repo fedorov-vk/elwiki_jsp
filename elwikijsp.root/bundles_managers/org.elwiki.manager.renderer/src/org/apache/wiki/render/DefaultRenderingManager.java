@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
+import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
@@ -216,13 +217,13 @@ public class DefaultRenderingManager implements RenderingManager {
     public String beautifyTitle( final String title ) {
         if( m_beautifyTitle ) {
             try {
-                final PageAttachment att = this.attachmentManager.getAttachmentInfo( title );
+                final AttachmentContent att = this.attachmentManager.getAttachmentContent( title );
                 if( att == null ) {
                     return TextUtil.beautifyString( title );
                 }
 
                 final String parent = ":FVK:"; //:FVK: TextUtil.beautifyString( att.getParentName() );
-                return parent + "/" + att.getName();
+                return parent + "/" + att.getPageAttachment().getName();
             } catch( final ProviderException e ) {
                 return title;
             }

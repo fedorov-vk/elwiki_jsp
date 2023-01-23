@@ -97,6 +97,10 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 				return createPageAttachmentAdapter();
 			}
 			@Override
+			public Adapter caseAttachmentContent(AttachmentContent object) {
+				return createAttachmentContentAdapter();
+			}
+			@Override
 			public Adapter caseObject(Object object) {
 				return createObjectAdapter();
 			}
@@ -131,10 +135,6 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseStringToObjectMap(Map.Entry<String, Object> object) {
 				return createStringToObjectMapAdapter();
-			}
-			@Override
-			public Adapter caseAttachmentContent(AttachmentContent object) {
-				return createAttachmentContentAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {

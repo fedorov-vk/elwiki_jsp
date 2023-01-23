@@ -24,9 +24,9 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -43,16 +43,18 @@ public interface AttachmentProvider extends WikiProvider {
     /** Property that supplies the directory used to store attachments. */
     String PROP_STORAGEDIR = "jspwiki.basicAttachmentProvider.storageDir";
 
-    /**
-     *  Put new attachment data.
-     * @param wikiPage Wiki page is owned of specified attachment.
-     * @param att Attachment object to add new data to.
-     * @param data The stream from which the provider should read the data
-     * @return TODO
-     *  @throws IOException If writing fails
-     *  @throws ProviderException If there are other errors.
-     */
-    PageAttachment putAttachmentData( WikiPage wikiPage, PageAttachment att, InputStream data ) throws ProviderException, IOException;
+	/**
+	 * Put new attachment data.
+	 * 
+	 * @param wikiPage Wiki page is owned of specified attachment.
+	 * @param attContent Attachment data to add new data to.
+	 * @param attName Attachment data name.
+	 * @param data The stream from which the provider should read the data
+	 * @throws IOException TODO
+	 * @throws ProviderException TODO
+	 */
+	void putAttachmentData(WikiPage wikiPage, AttachmentContent attContent, String attName, InputStream data)
+			throws IOException, ProviderException;
 
     /**
      *  Get attachment data.
@@ -62,7 +64,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @throws ProviderException If the attachment cannot be found
      *  @throws IOException If the attachment cannot be opened
      */
-    InputStream getAttachmentData( PageAttachment att ) throws ProviderException, IOException;
+    FileInputStream getAttachmentData( AttachmentContent att ) throws ProviderException, IOException;
 
     /**
      *  Lists all attachments attached to a page.
@@ -97,7 +99,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @return An attachment object
      *  @throws ProviderException If the attachment cannot be found or some other error occurs.
      */
-    PageAttachment getAttachmentInfo( WikiPage page, String name, int version ) throws ProviderException;
+    AttachmentContent getAttachmentContent( WikiPage page, String name, int... version ) throws ProviderException;
 
     /**
      *  Returns version history.  Each element should be an Attachment.
@@ -126,7 +128,7 @@ public interface AttachmentProvider extends WikiProvider {
      *  @param att Attachment to delete.
      *  @throws ProviderException If the page could not be removed for some reason.
      */
-    void deleteAttachment( PageAttachment att ) throws ProviderException;
+    void deleteAttachment( AttachmentContent att ) throws ProviderException;
    
     /**
      * Move all the attachments for a given page so that they are attached to a new page.
