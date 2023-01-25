@@ -28,6 +28,7 @@ import org.apache.wiki.api.IStorageCdo.ITransactionalOperation;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
+import org.elwiki_data.PageReference;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -189,7 +190,10 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	private IWikiConfiguration wikiConfiguration;
 
     @WikiServiceReference
-    private IStorageCdo storageCdo;
+    PageManager pageManager;
+
+    @WikiServiceReference
+    private IStorageCdo storageCdo; //:FVK: - unused?
 
 	/**
 	 * ReferenceManager initializer.
@@ -230,7 +234,12 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
             res.add( att.getName() );
         }
 
-        internalUpdateReferences( page.getName(), res );
+        try {
+			internalUpdateReferences( page, res );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -489,7 +498,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @Override
 	public void postSave( final Context context, final String content ) {
         final WikiPage page = context.getPage();
-        updateReferences( page.getName(), scanWikiLinks( page, content ) );
+        updateReferences( page, scanWikiLinks( page, content ) );
         serializeAttrsToDisk( page );
     }
 
@@ -578,7 +587,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @Override
     public void updateReferences( final WikiPage page ) {
         final String pageData = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
-        updateReferences( page.getName(), scanWikiLinks( page, pageData ) );
+        updateReferences( page, scanWikiLinks( page, pageData ) );
     }
 
     /**
@@ -592,10 +601,15 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  @param references A Collection of Strings, each one pointing to a page this page references.
      */
     @Override
-    public synchronized void updateReferences( final String page, final Collection< String > references ) {
-        internalUpdateReferences( page, references );
-        serializeToDisk();
-    }
+	public synchronized void updateReferences(WikiPage page, final Collection<String> references) {
+		try {
+			internalUpdateReferences(page, references);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		serializeToDisk();
+	}
 
     /**
      *  Updates the referred pages of a new or edited WikiPage. If a refersTo entry for this page already exists, it is
@@ -604,37 +618,11 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  This method does not synchronize the database to disk.
      *
      *  @param page Name of the page to update.
-     *  @param references A Collection of Strings, each one pointing to a page this page references.
+     *  @param pagesIds A Collection of Strings, each one pointing to a page this page references.
+     * @throws Exception TODO
      */
-    private void internalUpdateReferences( String page, final Collection< String > references) {
-        page = getFinalPageName( page );
-
-        // Create a new entry in m_refersTo.
-        final Collection< String > oldRefTo = m_refersTo.get( page );
-        m_refersTo.remove( page );
-
-        final TreeSet< String > cleanedRefs = new TreeSet<>();
-        for( final String ref : references ) {
-            final String reference = getFinalPageName( ref );
-            cleanedRefs.add( reference );
-        }
-
-        m_refersTo.put( page, cleanedRefs );
-
-        //  We know the page exists, since it's making references somewhere. If an entry for it didn't exist previously
-        //  in m_referredBy, make sure one is added now.
-        if( !m_referredBy.containsKey( page ) ) {
-            m_referredBy.put( page, new TreeSet<>() );
-        }
-
-        //  Get all pages that used to be referred to by 'page' and remove that reference. (We don't want to try to figure out
-        //  which particular references were removed...)
-        cleanReferredBy( page, oldRefTo, cleanedRefs );
-
-        //  Notify all referred pages of their referinesshoodicity.
-        for( final String referredPageName : cleanedRefs ) {
-            updateReferredBy( getFinalPageName( referredPageName ), page );
-        }
+    private void internalUpdateReferences( WikiPage page, final Collection< String > pagesIds) throws Exception {
+    	this.pageManager.updateReferences(page, pagesIds);
     }
 
     /**
@@ -666,7 +654,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *
      * We'll just try the first for now. Need to come back and optimize this a bit.
      */
-    private void cleanReferredBy( final String referrer,
+    private void cleanReferredBy( final WikiPage referrer,
                                   final Collection< String > oldReferred,
                                   final Collection< String > newReferred ) {
         if( oldReferred == null ) {

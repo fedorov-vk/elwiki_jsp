@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -168,14 +169,6 @@ public class CdoWikiPageProvider implements PageProvider {
 				transaction.close();
 			}
 		}
-
-		// Обновить список исходящих ссылок страницы.
-		try {
-			updatePageLinks(page, text);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -185,6 +178,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	 * @param pageText
 	 * @throws Exception
 	 */
+	@Deprecated
 	private void updatePageLinks(WikiPage argWikiPage, String pageText) throws Exception {
 		Set<String> referredPagesId = new HashSet<>(10);
 
@@ -528,37 +522,38 @@ public class CdoWikiPageProvider implements PageProvider {
 		return wikiPage;
 	}
 
-	//:FVK: @Override
-	public List<PageReference> getPageReferencesById(String pageId) throws RepositoryModifiedException {
+	@Override
+	public List<PageReference> getPageReferencesById(String pageId) throws Exception {
 		// TODO: здесь версия не учитывается - переписать код, который вызывает этот метод.
 		if (pageId == null) {
 			return null;
 		}
 
-		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-		CDOQuery query;
-		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
-		query = transaction.createQuery("ocl",
-				"PageReference.allInstances()->select(p:PageReference|p.pageId='" + pageId + "')", eClassWikiPage,
-				false);
-		query.setParameter("cdoLazyExtents", Boolean.FALSE);
-
-		List<PageReference> references = new ArrayList<>();
+		CDOTransaction transaction = null;
 		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl",
+					"PageReference.allInstances()->select(p:PageReference|p.pageId='" + pageId + "')", eClassWikiPage,
+					false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			List<PageReference> references = new ArrayList<>();
+
 			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
 			for (Object ref : query.getResult()) {
 				PageReference pageReference = (PageReference) view.getObject(((PageReference) ref).cdoID());
 				references.add(pageReference);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			return references;
 		} finally {
-			if (!transaction.isClosed()) {
+			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();
 			}
 		}
-
-		return references;
 	}
 
 	@Override
@@ -1153,6 +1148,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 	private static final String ATTFILE_SUFFIX = ".dat";
 
+	@Deprecated
 	private List<String> unhandledPages = new ArrayList<>();
 
 	private Engine m_engine;
@@ -1499,6 +1495,50 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 
 			return pageAttachment;
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
+	@Override
+	public void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception {
+		List<String> oldRefs = new ArrayList<>();
+		for (PageReference pageReference : page.getPageReferences()) {
+			oldRefs.add(pageReference.getPageId());
+		}
+
+		List<String> newRefs = new ArrayList<>(pagesIds);
+		newRefs.removeAll(oldRefs); // now contains only new elements.
+
+		oldRefs.removeAll(pagesIds); // now contains only old elements;
+
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			// Refresh list of references from page.
+			WikiPage wikiPage = transaction.getObject(page);
+			EList<PageReference> pageReferences = wikiPage.getPageReferences();
+
+			// Remove old (unused) references.
+			if (oldRefs.size() > 0) {
+				for (Iterator<PageReference> iter = pageReferences.iterator(); iter.hasNext();) {
+					String pageId = iter.next().getPageId();
+					if (oldRefs.contains(pageId)) {
+						iter.remove();
+					}
+				}
+			}
+
+			// Add new references.
+			for (String pageId : newRefs) {
+				PageReference pageReference = Elwiki_dataFactory.eINSTANCE.createPageReference();
+				pageReference.setPageId(pageId);
+				pageReferences.add(pageReference); // Adding reference into list.
+			}
+
+			transaction.commit();
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();

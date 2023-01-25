@@ -226,13 +226,55 @@
       <tr>
       <td>
         <div class="tree list-hover">
+        <!--:FVK:
           <wiki:Link><wiki:PageName /></wiki:Link>
           <wiki:Plugin plugin="ReferringPagesPlugin" args="before='*' after='\n' " />
+        -->
+        <%
+          List<PageReference> inReferences = ServicesRefs.getPageManager().getPageReferencesById(wikiPage.getId());
+        %>
+        <c:set var="inReferences" value="<%=inReferences%>" />
+        <c:if test="${empty inReferences}">
+          nothing. <!-- TODO: make message in the properties file. <fmt:message key="info.attachment.type"/> -->
+        </c:if>
+        <c:if test="${not empty inReferences}">
+		<%
+			for (PageReference pageReference : inReferences) {
+				String pageId = pageReference.getWikipage().getId();
+				String href = ctx.getURL( Context.VIEW, pageId );
+				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
+				String name = (refPage != null)? refPage.getName() : "unknown page";
+				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
+				out.append(link);
+			}
+	    %>
+        </c:if>
         </div>
       </td>
       <td>
         <div class="tree list-hover">
+        <!--:FVK:
           <wiki:Plugin plugin="ReferredPagesPlugin" args="depth='1' type='local'" />
+        -->
+        <%
+          List<PageReference> outReferences = wikiPage.getPageReferences();
+        %>
+        <c:set var="outReferences" value="<%=outReferences%>" />
+        <c:if test="${empty outReferences}">
+          nothing. <!-- TODO: make message in the properties file. <fmt:message key="info.attachment.type"/> -->
+        </c:if>
+        <c:if test="${not empty outReferences}">
+		<%
+			for (PageReference pageReference : outReferences) {
+				String pageId = pageReference.getPageId();
+				String href = ctx.getURL( Context.VIEW, pageId );
+				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
+				String name = (refPage != null)? refPage.getName() : "unknown page";
+				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
+				out.append(link);
+			}
+		%>
+        </c:if>
         </div>
       </td>
       </tr>

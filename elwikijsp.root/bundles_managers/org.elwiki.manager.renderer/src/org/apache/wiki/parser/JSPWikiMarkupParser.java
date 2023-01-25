@@ -1254,7 +1254,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 				//LinkType linkType = LinkType.EMPTY;
 
-				String cmdName = linkRef.substring(5); // :FVK: Workaround - длина префикса.
+				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
 				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
 			} else if (linkRef.matches("@.+")) {
 				// Internal wiki link (by page.id).
@@ -1262,7 +1262,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 				LinkType linkType = LinkType.EMPTY;
 
-				String pageId = linkRef.substring(1); // :FVK: Workaround - длина префикса.
+				String pageId = linkRef.substring(1); // :FVK: Workaround - length of prefix '@'
 				WikiPage wikiPage = this.m_context.getPageById(pageId);
 				if (wikiPage != null) {
 					// Making HREF.

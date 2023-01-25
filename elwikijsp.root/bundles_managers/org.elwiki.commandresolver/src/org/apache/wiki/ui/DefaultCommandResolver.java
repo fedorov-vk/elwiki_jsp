@@ -274,6 +274,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	/**
 	 * {@inheritDoc}
 	 */
+	@Deprecated //:FVK: this method now obfuscates wiki functionality - now page names are fixed, and can be repeated.
 	@Override
 	public String getFinalPageName(final String page) throws ProviderException {
 		boolean isThere = simplePageExists(page);

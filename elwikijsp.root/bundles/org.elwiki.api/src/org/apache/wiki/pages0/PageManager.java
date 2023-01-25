@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Context;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
+import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -431,5 +432,9 @@ public interface PageManager extends WikiEventListener {
 	 * @throws Exception TODO
 	 */
 	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
+
+	void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception;
+
+	List<PageReference> getPageReferencesById(String pageId) throws Exception;
 
 }

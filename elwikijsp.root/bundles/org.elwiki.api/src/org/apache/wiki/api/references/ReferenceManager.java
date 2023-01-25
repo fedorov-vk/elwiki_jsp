@@ -90,7 +90,7 @@ public interface ReferenceManager extends PageFilter, InternalModule, WikiEventL
      *  @param page Name of the page to update.
      *  @param references A Collection of Strings, each one pointing to a page this page references.
      */
-    void updateReferences( final String page, final Collection<String> references );
+    void updateReferences( final WikiPage page, final Collection<String> references );
 
     /**
      * Clears the references to a certain page so it's no longer in the map.

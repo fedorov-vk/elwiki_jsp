@@ -86,6 +86,7 @@ import org.elwiki_data.AclEntry;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
+import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
@@ -1021,6 +1022,16 @@ public class DefaultPageManager implements PageManager, Initializable {
 		PageAttachment pageAttachment = null;
 		pageAttachment = this.m_provider.getPageAttachmentById(pageAttachmentId);
 		return pageAttachment;
+	}
+
+	@Override
+	public void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception {
+		m_provider.updateReferences(page, pagesIds);		
+	}
+
+	@Override
+	public List<PageReference> getPageReferencesById(String pageId) throws Exception {
+		return m_provider.getPageReferencesById(pageId);
 	}
 
 }
