@@ -1030,8 +1030,8 @@ public class DefaultPageManager implements PageManager, Initializable {
 	}
 
 	@Override
-	public List<PageReference> getPageReferencesById(String pageId) throws Exception {
-		return m_provider.getPageReferencesById(pageId);
+	public List<PageReference> getPageReferrers(String pageId) throws WikiException {
+		return m_provider.getPageReferrers(pageId);
 	}
 
 }

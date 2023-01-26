@@ -43,8 +43,8 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    	super.initialize( context, params );
         final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
-        super.initialize( context, params );
 
         Collection< String > links = refmgr.findUncreated();
         links = filterAndSortCollection( links );
@@ -57,7 +57,7 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
         if( m_show.equals( PARAM_SHOW_VALUE_COUNT ) ) {
             wikitext = "" + links.size();
         } else {
-            wikitext = wikitizeCollection( links, m_separator, ALL_ITEMS );
+            wikitext = wikitizeCollectionDeprecated( links, m_separator, ALL_ITEMS );
         }
         
         return makeHTML( context, wikitext );

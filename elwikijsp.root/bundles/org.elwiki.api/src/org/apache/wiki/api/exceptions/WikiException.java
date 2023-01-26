@@ -18,33 +18,41 @@
  */
 package org.apache.wiki.api.exceptions;
 
-
 /**
- *  A generic Wiki exception.
+ * A generic Wiki exception.
  *
- *  @since 2.0
+ * @since 2.0
  */
 public class WikiException extends Exception {
 
 	private static final long serialVersionUID = 3257290231723210803L;
 
-    /**
-     *  Constructs an exception.
-     *  
-     *  @param msg the message in the exception.
-     */
-    public WikiException( final String msg ) {
-        super( msg );
-    }
-    
-    /**
-     *  Constructs an exception with a supplied cause.
-     *  
-     *  @param msg the message in the exception.
-     *  @param cause the cause of the exception
-     */
-    public WikiException( final String msg, final Throwable cause ) {
-        super( msg, cause );
-    }
+	/**
+	 * Constructs an exception.
+	 * 
+	 * @param msg the message in the exception.
+	 */
+	public WikiException(String msg) {
+		super(msg);
+	}
+
+	/**
+	 * Constructs an exception.
+	 * 
+	 * @param cause the cause of the exception.
+	 */
+	public WikiException(Throwable cause) {
+		super(cause);
+	}
+
+	/**
+	 * Constructs an exception with a supplied cause.
+	 * 
+	 * @param msg   the message in the exception.
+	 * @param cause the cause of the exception
+	 */
+	public WikiException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 
 }

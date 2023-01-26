@@ -18,44 +18,53 @@
  */
 package org.apache.wiki.api.exceptions;
 
-
 /**
- *  Provides a generic PluginException.  This is the kind of an exception that the plugins should throw.
+ * Provides a generic PluginException. This is the kind of an exception that the plugins should throw.
  */
-public class PluginException  extends WikiException {
+public class PluginException extends WikiException {
 
-    private static final long serialVersionUID = -289900047240960332L;
+	private static final long serialVersionUID = -289900047240960332L;
 
-    private final Throwable m_throwable;
+	private final Throwable m_throwable;
 
-    /**
-     *  Create a PluginException.
-     *
-     *  @param message exception message.
-     */
-    public PluginException( final String message ) {
-        super( message );
-        m_throwable = null;
-    }
+	/**
+	 * Create a PluginException.
+	 *
+	 * @param message exception message.
+	 */
+	public PluginException(String message) {
+		super(message);
+		m_throwable = null;
+	}
 
-    /**
-     *  Create a PluginException with the given original exception wrapped.
-     *
-     *  @param message exception message.
-     *  @param original The original exception.
-     */
-    public PluginException( final String message, final Throwable original ) {
-        super( message, original );
-        m_throwable = original;
-    }
+	/**
+	 * Constructs an exception.
+	 * 
+	 * @param cause the cause of the exception.
+	 */
+	public PluginException(Throwable cause) {
+		super(cause);
+		m_throwable = cause;
+	}
 
-    /**
-     *  Return the original exception.
-     *
-     *  @return The original exception.
-     */
-    public Throwable getRootThrowable() {
-        return m_throwable;
-    }
+	/**
+	 * Create a PluginException with the given original exception wrapped.
+	 *
+	 * @param message  exception message.
+	 * @param original The original exception.
+	 */
+	public PluginException(String message, Throwable original) {
+		super(message, original);
+		m_throwable = original;
+	}
+
+	/**
+	 * Return the original exception.
+	 *
+	 * @return The original exception.
+	 */
+	public Throwable getRootThrowable() {
+		return m_throwable;
+	}
 
 }

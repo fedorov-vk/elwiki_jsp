@@ -523,17 +523,6 @@ public class WikiContext implements Context, Command {
 	}
 
 	/**
-	 * A shortcut to generate a VIEW url.
-	 *
-	 * @param page The page to which to link.
-	 * @return An URL to the page. This honours the current absolute/relative setting.
-	 */
-	@Override
-	public String getViewURL(final String page) {
-		return getURL(ContextEnum.PAGE_VIEW.getRequestContext(), page, null);
-	}
-
-	/**
 	 * Creates an URL for the given request context.
 	 *
 	 * @param context e.g. WikiContext.EDIT

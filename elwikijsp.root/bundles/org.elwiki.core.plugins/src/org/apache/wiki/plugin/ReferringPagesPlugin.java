@@ -21,8 +21,10 @@ package org.apache.wiki.plugin;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
+import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
@@ -31,115 +33,132 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- *  Displays the pages referring to the current page.
+ * Displays the pages referring to the current page.
  *
- *  Parameters:
- *  <ul>
- *  <li><b>max</b> - How many items to show.</li>
- *  <li><b>extras</b> - How to announce extras.</li>
- *  <li><b>page</b> - Which page to get the table of contents from.</li>
- *  </ul>
+ * Parameters:
+ * <ul>
+ * <li><b>id</b> - Which page to get the table of contents from.</li>
+ * <li><b>max</b> - How many items to show.</li>
+ * <li><b>extras</b> - How to announce extras.</li>
+ * </ul>
  *
- *  From AbstractReferralPlugin:
- *  <ul>
- *  <li><b>separator</b> - How to separate generated links; default is a wikitext line break, producing a vertical list.</li>
- *  <li><b>maxwidth</b> - maximum width, in chars, of generated links.</li>
- *  </ul>
+ * From AbstractReferralPlugin:
+ * <ul>
+ * <li><b>separator</b> - How to separate generated links; default is a wikitext line break, producing a
+ * vertical list.</li>
+ * <li><b>maxwidth</b> - maximum width, in chars, of generated links.</li>
+ * </ul>
  */
 public class ReferringPagesPlugin extends AbstractReferralPlugin {
 
-    private static final Logger log = Logger.getLogger( ReferringPagesPlugin.class );
+	private static final Logger log = Logger.getLogger(ReferringPagesPlugin.class);
 
-    /** Parameter name for setting the maximum items to show.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_MAX      = "max";
+	/** Parameter name for choosing the page by ID. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_PAGE_ID = "id";
 
-    /** Parameter name for setting the text to show when the maximum items is overruled. Value is <tt>{@value}</tt>. */
-    public static final String PARAM_EXTRAS   = "extras";
+	/** Parameter name for setting the maximum items to show. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_MAX = "max";
 
-    /** Parameter name for choosing the page.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_PAGE     = "page";
+	/**
+	 * The name of the resource for the text output when the maximum number of elements is overruled. Value is
+	 * <tt>{@value}</tt>.
+	 */
+	public static final String PARAM_EXTRAS = "extras";
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
-        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
-        String pageName = params.get( PARAM_PAGE );
-        final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
 
-        StringBuilder result = new StringBuilder( 256 );
+		try {
+			//ReferenceManager refmgr = ServicesRefs.getReferenceManager();
+			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+			StringBuilder result = new StringBuilder(256);
 
-        if( pageName == null ) {
-            pageName = context.getPage().getName();
-        }
+			WikiPage page;
+			String pageName;
 
-        final WikiPage page = ServicesRefs.getPageManager().getPage( pageName );
+			/* Parse parameters.
+			 */
+			String pageId = params.get(PARAM_PAGE_ID);
+			page = (pageId == null) ? context.getPage() : pageManager.getPageById(pageId);
+			if (page == null) {
+				return "";
+			}
+			pageId = page.getId();
+			pageName = page.getName();
 
-        if( page != null ) {
-            Collection< String > links  = refmgr.findReferrers( page.getName() );
-            String wikitext;
+			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
 
-            super.initialize( context, params );
+			String extras = TextUtil.replaceEntities(params.get(PARAM_EXTRAS));
+			if (extras == null) {
+				extras = rb.getString("referringpagesplugin.more");
+			}
 
-            final int items = TextUtil.parseIntParameter( params.get( PARAM_MAX ), ALL_ITEMS );
+			log.debug("Fetching referring pages for " + page.getName() + " with a max of " + items);
 
-            String extras = TextUtil.replaceEntities( params.get( PARAM_EXTRAS ) );
-            if( extras == null ) {
-                extras = rb.getString("referringpagesplugin.more");
-            }
+			/* Do the actual work.
+			 */
+			List<PageReference> inReferences;
+			inReferences = pageManager.getPageReferrers(pageId);
+			List<WikiPage> referrers = new ArrayList<>();
+			for (PageReference pageReference : inReferences) {
+				String pageId1 = pageReference.getWikipage().getId();
+				WikiPage refPage = pageManager.getPageById(pageId1);
+				if (refPage != null) {
+					referrers.add(refPage);
+				}
+			}
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "Fetching referring pages for " + page.getName() + " with a max of "+items);
-            }
+			String wikitext;
 
-            if( links != null && links.size() > 0 ) {
-                links = filterAndSortCollection( links );
-                wikitext = wikitizeCollection( links, m_separator, items );
+			if (referrers != null && referrers.size() > 0) {
+				//TODO: :FVK: rewrite code filterAndSortCollection() for WikiPages, PageReference... 
+				// old call:: links = filterAndSortCollection(links);
+				wikitext = wikitizeCollection(referrers, m_separator, items);
 
-                result.append( makeHTML( context, wikitext ) );
+				result.append(makeHTML(context, wikitext));
 
-                if( items < links.size() && items > 0 )
-                {
-                    final Object[] args = { "" + ( links.size() - items) };
-                    extras = MessageFormat.format(extras, args);
+				if (items < referrers.size() && items > 0) {
+					Object[] args = { "" + (referrers.size() - items) };
+					extras = MessageFormat.format(extras, args);
 
-                    result.append( "<br />" )
-                          .append( "<a class='morelink' href='" )
-                          .append( context.getURL( ContextEnum.PAGE_INFO.getRequestContext(), page.getName() ) )
-                          .append( "' " )
-                          .append( ">" )
-                          .append( extras )
-                          .append( "</a><br />" );
-                }
-            }
+					result.append("<br />").append("<a class='morelink' href='")
+							.append(context.getURL(ContextEnum.PAGE_INFO.getRequestContext(), page.getName()))
+							.append("' ").append(">").append(extras).append("</a><br />");
+				}
+			}
 
-            //
-            // If nothing was left after filtering or during search
-            //
-            if( links == null || links.size() == 0 ) {
-                wikitext = rb.getString( "referringpagesplugin.nobody" );
+			//
+			// If nothing was left after filtering or during search
+			//
+			if (referrers == null || referrers.size() == 0) {
+				wikitext = rb.getString("referringpagesplugin.nobody");
 
-                result.append( makeHTML( context, wikitext ) );
-            } else {
-                if( m_show.equals( PARAM_SHOW_VALUE_COUNT ) ) {
-                    result = new StringBuilder();
-                    result.append( links.size() );
-                    if( m_lastModified ) {
-                        result.append( " (" ).append( m_dateFormat.format( m_dateLastModified ) ).append( ")" );
-                    }
-                }
-            }
+				result.append(makeHTML(context, wikitext));
+			} else {
+				if (m_show.equals(PARAM_SHOW_VALUE_COUNT)) {
+					result = new StringBuilder();
+					result.append(referrers.size());
+					if (m_lastModified) {
+						result.append(" (").append(m_dateFormat.format(m_dateLastModified)).append(")");
+					}
+				}
+			}
 
-            return result.toString();
-        }
-
-        return "";
-    }
+			return result.toString();
+		} catch (Exception e) {
+			throw new PluginException(e);
+		}
+	}
 
 }

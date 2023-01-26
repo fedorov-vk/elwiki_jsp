@@ -226,12 +226,8 @@
       <tr>
       <td>
         <div class="tree list-hover">
-        <!--:FVK:
-          <wiki:Link><wiki:PageName /></wiki:Link>
-          <wiki:Plugin plugin="ReferringPagesPlugin" args="before='*' after='\n' " />
-        -->
         <%
-          List<PageReference> inReferences = ServicesRefs.getPageManager().getPageReferencesById(wikiPage.getId());
+          List<PageReference> inReferences = ServicesRefs.getPageManager().getPageReferrers(wikiPage.getId());
         %>
         <c:set var="inReferences" value="<%=inReferences%>" />
         <c:if test="${empty inReferences}">
@@ -253,9 +249,6 @@
       </td>
       <td>
         <div class="tree list-hover">
-        <!--:FVK:
-          <wiki:Plugin plugin="ReferredPagesPlugin" args="depth='1' type='local'" />
-        -->
         <%
           List<PageReference> outReferences = wikiPage.getPageReferences();
         %>

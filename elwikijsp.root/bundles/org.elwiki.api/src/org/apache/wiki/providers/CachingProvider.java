@@ -32,6 +32,7 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
@@ -600,7 +601,7 @@ public class CachingProvider implements PageProvider {
 	}
 
 	@Override
-	public List<PageReference> getPageReferencesById(String pageId) throws Exception {
+	public List<PageReference> getPageReferrers(String pageId) throws WikiException {
 		// TODO Auto-generated method stub
 		return null;
 	}

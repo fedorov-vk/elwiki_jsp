@@ -29,6 +29,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -138,6 +139,9 @@ public abstract class AbstractReferralPlugin implements Plugin {
 
     protected           Engine m_engine;
 
+    protected RenderingManager renderingManager;
+    protected PageManager pageManager;
+
     /**
      * @param context the wiki context
      * @param params parameters for initializing the plugin
@@ -145,9 +149,11 @@ public abstract class AbstractReferralPlugin implements Plugin {
      */
     // FIXME: The compiled pattern strings should really be cached somehow.
     public void initialize( final Context context, final Map<String, String> params ) throws PluginException {
-        m_dateFormat = Preferences.getDateFormat( context, TimeFormat.DATETIME );
-        m_engine = context.getEngine();
-        m_maxwidth = TextUtil.parseIntParameter( params.get( PARAM_MAXWIDTH ), Integer.MAX_VALUE );
+    	m_engine = context.getEngine();
+    	pageManager = m_engine.getManager(PageManager.class);
+    	renderingManager = m_engine.getManager(RenderingManager.class);
+    	m_dateFormat = Preferences.getDateFormat( context, TimeFormat.DATETIME );
+    	m_maxwidth = TextUtil.parseIntParameter( params.get( PARAM_MAXWIDTH ), Integer.MAX_VALUE );
         if( m_maxwidth < 0 ) m_maxwidth = 0;
 
         String s = params.get( PARAM_SEPARATOR );
@@ -345,7 +351,8 @@ public abstract class AbstractReferralPlugin implements Plugin {
      *  @param numItems How many items to show.
      *  @return The WikiText
      */
-    protected String wikitizeCollection( final Collection< String > links, final String separator, final int numItems ) {
+    @Deprecated // работает с именами как со ссылками
+    protected String wikitizeCollectionDeprecated( final Collection< String > links, final String separator, final int numItems ) {
         if( links == null || links.isEmpty() ) {
             return "";
         }
@@ -371,7 +378,53 @@ public abstract class AbstractReferralPlugin implements Plugin {
             output.append( m_before );
 
             // Make a Wiki markup link. See TranslatorReader.
-            output.append( "[" + ServicesRefs.getRenderingManager().beautifyTitle(value) + "|" + value + "]" );
+            output.append( "[" + renderingManager.beautifyTitle(value) + "|" + value + "]" );
+            count++;
+        }
+
+        //
+        //  Output final item - if there have been none, no "after" is printed
+        //
+        if( count > 0 ) output.append( m_after );
+
+        return output.toString();
+    }
+
+    /**
+     *  Makes WikiText from a Collection.
+     *
+     *  @param linkedPages Collection to make into WikiText.
+     *  @param separator Separator string to use.
+     *  @param numItems How many items to show.
+     *  @return The WikiText
+     */
+    protected String wikitizeCollection( Collection<WikiPage> linkedPages,  String separator,  int numItems ) {
+        if( linkedPages == null || linkedPages.isEmpty() ) {
+            return "";
+        }
+
+        StringBuilder output = new StringBuilder();
+
+        Iterator<WikiPage> it = linkedPages.iterator();
+        int count = 0;
+
+        //
+        //  The output will be B Item[1] A S B Item[2] A S B Item[3] A
+        //
+        while( it.hasNext() && ( (count < numItems) || ( numItems == ALL_ITEMS ) ) )
+        {
+             WikiPage value = it.next();
+
+            if( count > 0 )
+            {
+                output.append( m_after );
+                output.append( m_separator );
+            }
+
+            output.append( m_before );
+
+            // Make a Wiki markup link. See TranslatorReader.
+            output.append( "[" + TextUtil.replaceEntities(value.getName()) + "|@" + value.getId() + "]" );
             count++;
         }
 
@@ -394,15 +447,13 @@ public abstract class AbstractReferralPlugin implements Plugin {
     protected String makeHTML( final Context context, final String wikitext ) {
         String result = "";
 
-        final RenderingManager mgr = ServicesRefs.getRenderingManager();
-
         try {
-            final MarkupParser parser = mgr.getParser(context, wikitext);
+            final MarkupParser parser = renderingManager.getParser(context, wikitext);
             parser.addLinkTransmutator( new CutMutator(m_maxwidth) );
             parser.enableImageInlining( false );
 
             final WikiDocument doc = parser.parse();
-            result = mgr.getHTML( context, doc );
+            result = renderingManager.getHTML( context, doc );
         } catch( final IOException e ) {
             log.error("Failed to convert page data to HTML", e);
         }

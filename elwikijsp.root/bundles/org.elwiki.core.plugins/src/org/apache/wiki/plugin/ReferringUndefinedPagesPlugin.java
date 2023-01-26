@@ -48,6 +48,8 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 
     @Override
     public String execute( final Context context, final Map<String, String> params) throws PluginException {
+        super.initialize( context, params );
+
         final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
         final ReferenceManager referenceManager = ServicesRefs.getReferenceManager();
 
@@ -58,7 +60,6 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
         }
 
         final Collection< String > uncreatedPages = referenceManager.findUncreated();
-        super.initialize( context, params );
         Collection< String > result = null;
 
         final TreeMap< String, String > sortedMap = new TreeMap<>();
@@ -76,7 +77,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 
         result = super.filterAndSortCollection( result );
 
-        final String wikitext = wikitizeCollection( result, m_separator, items );
+        final String wikitext = wikitizeCollectionDeprecated( result, m_separator, items );
         final StringBuilder resultHTML = new StringBuilder();
         resultHTML.append( makeHTML( context, wikitext ) );
 

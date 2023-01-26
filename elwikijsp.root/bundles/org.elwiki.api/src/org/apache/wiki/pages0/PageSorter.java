@@ -35,6 +35,7 @@ import java.util.Properties;
  * <p>
  * <b>Note</b> - this class is deliberately not null safe. Never call any of the methods with a null argument!
  */
+@Deprecated
 public class PageSorter implements Comparator< String > {
     
     private static final Logger LOG = Logger.getLogger( PageSorter.class );

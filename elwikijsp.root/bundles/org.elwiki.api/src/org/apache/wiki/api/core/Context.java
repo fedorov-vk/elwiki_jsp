@@ -343,10 +343,12 @@ public interface Context extends Cloneable, Command {
     /**
      *  A shortcut to generate a VIEW url.
      *
-     *  @param WikiPage The WikiPage to which to link.
+     *  @param pageId The string to which to link.
      *  @return An URL to the page.  This honours the current absolute/relative setting.
      */
-    String getViewURL( String WikiPage );
+    default String getViewURL( String pageId )  {
+        return getURL( Context.VIEW, pageId, null );
+    }
 
     /**
      *  Figure out to which WikiPage we are really going to.  Considers special WikiPage names from the jspwiki.properties, and possible aliases.

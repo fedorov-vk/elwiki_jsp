@@ -24,6 +24,7 @@ import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 
@@ -230,6 +231,15 @@ public interface PageProvider extends WikiProvider {
 
 	void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception;
 
-	List<PageReference> getPageReferencesById(String pageId) throws Exception;
+    /**
+     * Finds all references that refer to this page.
+     * Returns a collection containing {@link PageReference} that refer to this one.<br/>
+     * The page version is not taken into account.
+     * <p>
+     * @param pageId The page ID to find referrers for.
+     * @return A List of {@link PageReference}. May return empty, if it has no references.
+     * @throws WikiException TODO
+     */
+	List<PageReference> getPageReferrers(String pageId) throws WikiException;
 
 }

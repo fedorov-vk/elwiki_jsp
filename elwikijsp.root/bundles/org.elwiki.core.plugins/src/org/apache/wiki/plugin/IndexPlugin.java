@@ -67,6 +67,8 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
      */
     @Override
     public String execute( final Context context, final Map<String,String> params ) throws PluginException {
+        super.initialize( context, params );
+
         final String include = params.get(PARAM_INCLUDE);
         final String exclude = params.get(PARAM_EXCLUDE);
         

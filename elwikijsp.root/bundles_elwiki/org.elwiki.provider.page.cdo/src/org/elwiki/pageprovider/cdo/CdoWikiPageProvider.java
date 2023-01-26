@@ -31,6 +31,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RepositoryModifiedException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.search.QueryItem;
@@ -523,8 +524,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public List<PageReference> getPageReferencesById(String pageId) throws Exception {
-		// TODO: здесь версия не учитывается - переписать код, который вызывает этот метод.
+	public List<PageReference> getPageReferrers(String pageId) throws WikiException {
 		if (pageId == null) {
 			return null;
 		}
@@ -549,6 +549,8 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 
 			return references;
+		} catch (Exception e) {
+			throw new WikiException(e);
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();

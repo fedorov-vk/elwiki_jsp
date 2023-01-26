@@ -18,6 +18,11 @@
 */
 package org.apache.wiki.plugin;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
@@ -26,236 +31,203 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-
+import org.elwiki_data.PageReference;
+import org.elwiki_data.WikiPage;
 
 /**
- *  Displays the pages referring to the current page.
+ * Displays the pages referred from the current page.
  *
- *  <p>Parameters</p>
- *  <ul>
- *    <li><b>name</b> - Name of the root page. Default name of calling page
- *    <li><b>type</b> - local|externalattachment
- *    <li><b>depth</b> - How many levels of pages to be parsed.
- *    <li><b>include</b> - Include only these pages. (eg. include='UC.*|BP.*' )
- *    <li><b>exclude</b> - Exclude with this pattern. (eg. exclude='LeftMenu' )
- *    <li><b>format</b> -  full|compact, FULL now expands all levels correctly
- *  </ul>
- *
+ * <p>
+ * Parameters of plugin:
+ * </p>
+ * <ul>
+ * <li><b>id</b> - Identifier of the root page. Default page is calling page of context.
+ * <li><b>depth</b> - How many levels of pages to be parsed. (allowed from 1 to 8)
+ * <li><b>include</b> - Include only these pages. (eg. include='UC.*|BP.*')
+ * <li><b>exclude</b> - Exclude with this pattern. (eg. exclude='LeftMenu')
+ * <li><b>format</b> - The 'sort' format sorts the page's target links in alphabetical order.
+ * </ul>
  */
 public class ReferredPagesPlugin implements Plugin {
 
-    private static final Logger log = Logger.getLogger( ReferredPagesPlugin.class );
-    private Engine         m_engine;
-    private int            m_depth;
-    private HashSet<String> m_exists  = new HashSet<>();
-    private StringBuffer   m_result  = new StringBuffer(1024);
-    private PatternMatcher m_matcher = new Perl5Matcher();
-    private Pattern        m_includePattern;
-    private Pattern        m_excludePattern;
-    private boolean m_formatCompact  = true;
-    private boolean m_formatSort     = false;
+	private static final Logger log = Logger.getLogger(ReferredPagesPlugin.class);
 
-    /** The parameter name for the root page to start from.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_ROOT    = "page";
+	private Engine m_engine;
+	private PageManager pageManager;
 
-    /** The parameter name for the depth.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_DEPTH   = "depth";
+	private int m_depth;
+	private Pattern m_includePattern;
+	private Pattern m_excludePattern;
+	private boolean m_formatSort = false;
 
-    /** The parameter name for the type of the references.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_TYPE    = "type";
+	private PatternMatcher m_matcher = new Perl5Matcher();
+	private StringBuffer m_result = new StringBuffer(1024);
 
-    /** The parameter name for the included pages.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_INCLUDE = "include";
+	/** The parameter name for the root page ID to start from. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_PAGE_ID = "id";
 
-    /** The parameter name for the excluded pages.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_EXCLUDE = "exclude";
+	/** The parameter name for the depth. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_DEPTH = "depth";
 
-    /** The parameter name for the format.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_FORMAT  = "format";
+	/** The parameter name for the included pages. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_INCLUDE = "include";
 
-    /** The minimum depth. Value is <tt>{@value}</tt>. */
-    public static final int    MIN_DEPTH = 1;
+	/** The parameter name for the excluded pages. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_EXCLUDE = "exclude";
 
-    /** The maximum depth. Value is <tt>{@value}</tt>. */
-    public static final int    MAX_DEPTH = 8;
+	/** The parameter name for the format. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_FORMAT = "format";
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
-        m_engine = context.getEngine();
-        final WikiPage page = context.getPage();
-        if( page == null ) {
-            return "";
-        }
+	/** The minimum depth. Value is <tt>{@value}</tt>. */
+	public static final int MIN_DEPTH = 1;
 
-        // parse parameters
-        String rootname = params.get( PARAM_ROOT );
-        if( rootname == null ) {
-            rootname = page.getName() ;
-        }
+	/** The maximum depth. Value is <tt>{@value}</tt>. */
+	public static final int MAX_DEPTH = 8;
 
-        String format = params.get( PARAM_FORMAT );
-        if( format == null) {
-            format = "";
-        }
-        if( format.contains( "full" ) ) {
-            m_formatCompact = false ;
-        }
-        if( format.contains( "sort" ) ) {
-            m_formatSort = true  ;
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		m_engine = context.getEngine();
+		pageManager = m_engine.getManager(PageManager.class);
 
-        m_depth = TextUtil.parseIntParameter( params.get( PARAM_DEPTH ), MIN_DEPTH );
-        if( m_depth > MAX_DEPTH )  m_depth = MAX_DEPTH;
+		WikiPage rootPage;
+		String rootPageName;
 
-        String includePattern = params.get(PARAM_INCLUDE);
-        if( includePattern == null ) includePattern = ".*";
+		// parse parameters
+		String rootPageId = params.get(PARAM_PAGE_ID);
+		rootPage = (rootPageId == null) ? context.getPage() : pageManager.getPageById(rootPageId);
+		if (rootPage == null) {
+			return ""; //TODO: there should be an information string.
+		}
+		rootPageId = rootPage.getId();
+		rootPageName = rootPage.getName();
 
-        String excludePattern = params.get(PARAM_EXCLUDE);
-        if( excludePattern == null ) excludePattern = "^$";
+		String format = params.get(PARAM_FORMAT);
+		if (format == null) {
+			format = "";
+		} else {
+			if (format.contains("sort")) {
+				m_formatSort = true;
+			}
+		}
 
-        log.debug( "Fetching referred pages for "+ rootname +
-                   " with a depth of "+ m_depth +
-                   " with include pattern of "+ includePattern +
-                   " with exclude pattern of "+ excludePattern );
+		m_depth = TextUtil.parseIntParameter(params.get(PARAM_DEPTH), MIN_DEPTH);
+		m_depth = Math.max(m_depth, MIN_DEPTH);
+		m_depth = Math.min(m_depth, MAX_DEPTH);
 
-        //
-        // do the actual work
-        //
-        final String href  = context.getViewURL( rootname );
-        final String title = "ReferredPagesPlugin: depth[" + m_depth +
-                             "] include[" + includePattern + "] exclude[" + excludePattern +
-                             "] format[" + ( m_formatCompact ? "compact" : "full" ) +
-                             ( m_formatSort ? " sort" : "" ) + "]";
+		String includePattern = params.get(PARAM_INCLUDE);
+		if (includePattern == null)
+			includePattern = ".*";
 
-        m_result.append( "<div class=\"ReferredPagesPlugin\">\n" );
-        m_result.append( "<a class=\"wikipage\" href=\""+ href +
-                         "\" title=\"" + TextUtil.replaceEntities( title ) +
-                         "\">" + TextUtil.replaceEntities( rootname ) + "</a>\n" );
-        m_exists.add( rootname );
+		String excludePattern = params.get(PARAM_EXCLUDE);
+		if (excludePattern == null)
+			excludePattern = "^$";
 
-        // pre compile all needed patterns
-        // glob compiler :  * is 0..n instance of any char  -- more convenient as input
-        // perl5 compiler : .* is 0..n instances of any char -- more powerful
-        //PatternCompiler g_compiler = new GlobCompiler();
-        final PatternCompiler compiler = new Perl5Compiler();
+		//@formatter:off
+        log.debug("Fetching referred pages for " + rootPageId +
+        			" with a depth of " + m_depth +
+        			" with include pattern of " + includePattern +
+        			" with exclude pattern of " + excludePattern );
+        //@formatter:on
 
-        try {
-            m_includePattern = compiler.compile( includePattern );
-            m_excludePattern = compiler.compile( excludePattern );
-        } catch( final MalformedPatternException e ) {
-            if( m_includePattern == null ) {
-                throw new PluginException( "Illegal include pattern detected." );
-            } else if( m_excludePattern == null ) {
-                throw new PluginException( "Illegal exclude pattern detected." );
-            } else {
-                throw new PluginException( "Illegal internal pattern detected." );
-            }
-        }
+		//
+		// do the actual work
+		//
+		String href = context.getViewURL(rootPageId);
+		String tooltip = "ReferredPagesPlugin: depth[" + m_depth + "] include[" + includePattern + "] exclude["
+				+ excludePattern + "] format[" + (m_formatSort ? " sort" : "") + "]";
 
-        // go get all referred links
-        getReferredPages(context,rootname, 0);
+		m_result.append("<div class=\"ReferredPagesPlugin\">\n");
+		m_result.append("<a class=\"wikipage\" href=\"" + href + "\" title=\"" + TextUtil.replaceEntities(tooltip)
+				+ "\">" + TextUtil.replaceEntities(rootPageName) + "</a>\n");
 
-        // close and finish
-        m_result.append ("</div>\n" ) ;
+		// pre compile all needed patterns
+		// glob compiler :  * is 0..n instance of any char  -- more convenient as input
+		// perl5 compiler : .* is 0..n instances of any char -- more powerful
+		//PatternCompiler g_compiler = new GlobCompiler();
+		PatternCompiler compiler = new Perl5Compiler();
 
-        return m_result.toString() ;
-    }
+		try {
+			m_includePattern = compiler.compile(includePattern);
+			m_excludePattern = compiler.compile(excludePattern);
+		} catch (MalformedPatternException e) {
+			if (m_includePattern == null) {
+				throw new PluginException("Illegal include pattern detected.");
+			} else if (m_excludePattern == null) {
+				throw new PluginException("Illegal exclude pattern detected.");
+			} else {
+				throw new PluginException("Illegal internal pattern detected.");
+			}
+		}
 
+		// go get all referred links
+		getReferredPages(context, rootPage, 0);
 
-    /**
-     * Retrieves a list of all referred pages. Is called recursively depending on the depth parameter.
-     */
-    private void getReferredPages( final Context context, final String pagename, int depth ) {
-        if( depth >= m_depth ) {
-            return;  // end of recursion
-        }
-        if( pagename == null ) {
-            return;
-        }
-        if( !ServicesRefs.getPageManager().pageExistsByName(pagename) ) {
-            return;
-        }
+		// close and finish
+		m_result.append("</div>\n");
 
-        final ReferenceManager mgr = ServicesRefs.getReferenceManager();
-        final Collection< String > allPages = mgr.findRefersTo( pagename );
-        handleLinks( context, allPages, ++depth, pagename );
-    }
+		return m_result.toString();
+	}
 
-    private void handleLinks( final Context context, final Collection<String> links, final int depth, final String pagename) {
-        boolean isUL = false;
-        final HashSet< String > localLinkSet = new HashSet<>();  // needed to skip multiple
-        // links to the same page
-        localLinkSet.add( pagename );
+	/**
+	 * Retrieves a list of all referred pages. Is called recursively depending on the depth
+	 * parameter.
+	 */
+	private void getReferredPages(Context context, WikiPage page, int depth) {
+		if (depth >= m_depth) {
+			return; // end of recursion
+		}
 
-        final ArrayList< String > allLinks = new ArrayList<>();
+		handleLinks(context, ++depth, page);
+	}
 
-        if( links != null )
-            allLinks.addAll( links );
+	private void handleLinks(Context context, int depth, WikiPage page) {
+		boolean isUL = false;
+		List<WikiPage> allLinks = new ArrayList<>();
 
-        if( m_formatSort ) ServicesRefs.getPageManager().getPageSorter().sort( allLinks );
+		for (PageReference pageReference : page.getPageReferences()) {
+			String pageId = pageReference.getPageId();
+			WikiPage refPage = pageManager.getPageById(pageId);
+			if (refPage != null) {
+				allLinks.add(refPage);
+			}
+		}
 
-        for( final String link : allLinks ) {
-            if( localLinkSet.contains( link ) ) {
-                continue; // skip multiple links to the same page
-            }
-            localLinkSet.add( link );
+		if (m_formatSort) {
+			Collections.sort(allLinks);
+		}
 
-            if( !ServicesRefs.getPageManager().pageExistsByName( link ) ) {
-                continue; // hide links to non existing pages
-            }
-            if(  m_matcher.matches( link , m_excludePattern ) ) {
-                continue;
-            }
-            if( !m_matcher.matches( link , m_includePattern ) ) {
-                continue;
-            }
+		for (WikiPage refPage : allLinks) {
+			String pageName = refPage.getName();
+			String pageId = refPage.getId();
+			if (m_matcher.matches(pageName, m_excludePattern)) {
+				continue;
+			}
+			if (!m_matcher.matches(pageName, m_includePattern)) {
+				continue;
+			}
 
-            if( m_exists.contains( link ) ) {
-                if( !m_formatCompact ) {
-                    if( !isUL ) {
-                        isUL = true;
-                        m_result.append("<ul>\n");
-                    }
+			if (!isUL) {
+				isUL = true;
+				m_result.append("<ul>\n");
+			}
 
-                    //See https://www.w3.org/wiki/HTML_lists  for proper nesting of UL and LI
-                    m_result.append( "<li> " + TextUtil.replaceEntities(link) + "\n" );
-                    getReferredPages( context, link, depth );  // added recursive call - on general request
-                    m_result.append( "\n</li>\n" );
-                }
-            } else {
-                if( !isUL ) {
-                    isUL = true;
-                    m_result.append("<ul>\n");
-                }
+			String href = context.getViewURL(pageId);
+			m_result.append("<li><a class=\"wikipage\" href=\"" + href + "\">" + pageName + "</a>\n");
+			getReferredPages(context, refPage, depth);
+			m_result.append("\n</li>\n");
+		}
 
-                final String href = context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), link );
-                m_result.append( "<li><a class=\"wikipage\" href=\"" + href + "\">" + TextUtil.replaceEntities(link) + "</a>\n" );
-                m_exists.add( link );
-                getReferredPages( context, link, depth );
-                m_result.append( "\n</li>\n" );
-            }
-        }
-
-        if( isUL ) {
-            m_result.append("</ul>\n");
-        }
-    }
+		if (isUL) {
+			m_result.append("</ul>\n");
+		}
+	}
 
 }

@@ -544,7 +544,7 @@ Wiki.Snips = {
         "ListLocksPlugin":"List page locks",
         "RecentChangesPlugin":"Displays the recent changed pages",
         "ReferringPagesPlugin page='{pagename}' separator=',' include='regexp' exclude='regexp'":"Incoming Links (referring pages)",
-        "ReferredPagesPlugin page='{pagename}' type='local|external|attachment' depth='1..8' include='regexp' exclude='regexp'":"Outgoing Links (referred pages)",
+        "ReferredPagesPlugin page='{pagename}' depth='1..8' include='regexp' exclude='regexp'":"Outgoing Links (referred pages)",
         "Search query='{Janne}' max='10'":"Insert a Search query",
         "TableOfContents ":"Table Of Contents ",
         "UndefinedPagesPlugin":"List pages that are missing",

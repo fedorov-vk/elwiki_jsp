@@ -160,6 +160,8 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+        super.initialize( context, params );
+
         final PageViewManager manager = c_singleton;
         String result = STR_EMPTY;
 

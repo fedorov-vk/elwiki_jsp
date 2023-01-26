@@ -47,6 +47,8 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+        super.initialize( context, params );
+
         final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
         Collection< String > links = refmgr.findUnreferenced();
 
@@ -57,7 +59,6 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
             links.removeIf( link -> link.contains( "/" ) );
         }
 
-        super.initialize( context, params );
         links = filterAndSortCollection( links );
 
         String wikitext;
@@ -67,7 +68,7 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
                 wikitext = links.size() + " (" + m_dateFormat.format( m_dateLastModified ) + ")";
             }
         } else {
-            wikitext = wikitizeCollection( links, m_separator, ALL_ITEMS );
+            wikitext = wikitizeCollectionDeprecated( links, m_separator, ALL_ITEMS );
         }
         return makeHTML( context, wikitext );
     }

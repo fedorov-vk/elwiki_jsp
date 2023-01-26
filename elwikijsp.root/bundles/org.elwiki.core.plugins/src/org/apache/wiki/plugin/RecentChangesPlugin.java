@@ -77,6 +77,8 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
      */
     @Override
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+        super.initialize( context, params );
+
         final int since = TextUtil.parseIntParameter( params.get( "since" ), DEFAULT_DAYS );
         String spacing  = "4";
         boolean showAuthor = true;
@@ -102,7 +104,6 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
         // FIXME: Should really have a since date on the getRecentChanges method.
         Collection< WikiPage > changes = ServicesRefs.getPageManager().getRecentChanges();
-        super.initialize( context, params );
         changes = filterWikiPageCollection( changes );
         
         if ( changes != null ) {
