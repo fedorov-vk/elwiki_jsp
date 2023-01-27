@@ -174,8 +174,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 		try {
 			Role[] roles = this.userAdmin.getRoles(null); // :FVK: workaround. (возможно лучше использовать фильтр)
 			for (Role role : roles) {
-				if (role instanceof User && !(role instanceof Group)) {
-					User user = (User) role;
+				if (role instanceof User user && !(role instanceof Group)) {
 					String login = (String) user.getProperties().get(LOGIN_NAME);
 					if (login != null) {
 						Principal principal = new WikiPrincipal(login, WikiPrincipal.WIKI_NAME);

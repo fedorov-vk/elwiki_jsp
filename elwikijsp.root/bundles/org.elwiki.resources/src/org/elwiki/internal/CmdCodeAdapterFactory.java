@@ -42,8 +42,8 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 
 	@Override
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-		if (adapterType == CmdCode.class && adaptableObject instanceof ContextEnum) {
-			return adapterType.cast(getCommandCode((ContextEnum) adaptableObject));
+		if (adapterType == CmdCode.class && adaptableObject instanceof ContextEnum contextEnum) {
+			return adapterType.cast(getCommandCode(contextEnum));
 		}
 		return null;
 	}

@@ -76,17 +76,16 @@ public class WikiCallbackHandler implements CallbackHandler {
 	@Override
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 		for (Callback callback : callbacks) {
-			if (callback instanceof HttpRequestCallback) {
-				((HttpRequestCallback) callback).setRequest(this.m_request);
-			} else if (callback instanceof WikiEngineCallback) {
-				((WikiEngineCallback) callback).setEngine(this.m_engine);
-			} else if (callback instanceof UserDatabaseCallback) {
-				((UserDatabaseCallback) callback)
-						.setUserDatabase(ServicesRefs.getUserManager().getUserDatabase() );
-			} else if (callback instanceof NameCallback) {
-				((NameCallback) callback).setName(this.m_username);
-			} else if (callback instanceof PasswordCallback) {
-				((PasswordCallback) callback).setPassword(this.m_password.toCharArray());
+			if (callback instanceof HttpRequestCallback httpRequestCallback) {
+				httpRequestCallback.setRequest(this.m_request);
+			} else if (callback instanceof WikiEngineCallback wikiEngineCallback) {
+				wikiEngineCallback.setEngine(this.m_engine);
+			} else if (callback instanceof UserDatabaseCallback userDatabaseCallback) {
+				userDatabaseCallback.setUserDatabase(ServicesRefs.getUserManager().getUserDatabase() );
+			} else if (callback instanceof NameCallback nameCallback) {
+				nameCallback.setName(this.m_username);
+			} else if (callback instanceof PasswordCallback passwordCallback) {
+				passwordCallback.setPassword(this.m_password.toCharArray());
 			} else {
 				throw new UnsupportedCallbackException(callback);
 			}

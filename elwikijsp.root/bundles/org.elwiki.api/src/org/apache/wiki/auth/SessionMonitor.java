@@ -92,9 +92,9 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
 	@Activate
 	protected void startup(ComponentContext componentContext) {
-		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (engine instanceof Engine) {
-			this.m_engine = (Engine) engine;
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			this.m_engine = engine;
 		}
 	}
 

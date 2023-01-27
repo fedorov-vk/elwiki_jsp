@@ -287,22 +287,18 @@ public class DefaultUserManager implements UserManager {
 	 * This component activate routine. Does all the real initialization.
 	 *
 	 * @param componentContext
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
+	protected void startup(ComponentContext componentContext) throws WikiException {
 		BundleContext bc = componentContext.getBundleContext();
 		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				bc.getBundle().getSymbolicName() + "/" + NODE_USERMANAGER);
 
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
+		}
 	}
 
 	public void initialize(final Engine engine) throws WikiException {
@@ -647,8 +643,8 @@ public class DefaultUserManager implements UserManager {
         final FilterManager fm = getFilterManager();
         final List< PageFilter > ls = fm.getFilterList();
         for( final PageFilter pf : ls ) {
-            if( pf instanceof SpamFilter ) {
-                if( !( ( SpamFilter )pf ).isValidUserProfile( context, profile ) ) {
+            if( pf instanceof SpamFilter spamFilter) {
+                if( !spamFilter.isValidUserProfile( context, profile ) ) {
                     session.addMessage( SESSION_MESSAGES, "Invalid userprofile" );
                     return;
                 }

@@ -100,12 +100,13 @@ public class DefaultWorkflowManager implements WorkflowManager {
      * This component activate routine. Does all the real initialization.
      * 
      * @param componentContext
+     * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) {
-		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (engine instanceof Engine) {
-			initialize((Engine) engine);
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
     
@@ -139,7 +140,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
      * <code>Admin</code> will be resolved via {@link org.apache.wiki.auth.AuthorizationManager#resolvePrincipal(String)}.
      */
     @Override
-    public void initialize( final Engine engine ) {
+    public void initialize( final Engine engine ) throws WikiException {
         m_engine = engine;
 
         /*:FVK:
@@ -311,8 +312,8 @@ public class DefaultWorkflowManager implements WorkflowManager {
     @Override
     public void actionPerformed( final WikiEvent event ) {
         if( event instanceof WorkflowEvent ) {
-            if( event.getSrc() instanceof Workflow ) {
-                final Workflow workflow = event.getSrc();
+        	Object eventSource = event.getSrc();
+            if( eventSource instanceof Workflow workflow) {
                 switch( event.getType() ) {
                 // Remove from manager
                 case WorkflowEvent.ABORTED   :
@@ -321,8 +322,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
                 case WorkflowEvent.CREATED   : add( workflow ); break;
                 default: break;
                 }
-            } else if( event.getSrc() instanceof Decision ) {
-                final Decision decision = event.getSrc();
+            } else if( eventSource instanceof Decision decision) {
                 switch( event.getType() ) {
                 // Add to DecisionQueue
                 case WorkflowEvent.DQ_ADDITION : addToDecisionQueue( decision ); break;

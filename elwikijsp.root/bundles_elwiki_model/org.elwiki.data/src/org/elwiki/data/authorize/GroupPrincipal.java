@@ -85,8 +85,8 @@ public final class GroupPrincipal extends Aprincipal {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof GroupPrincipal) {
-			return this.getName().equals(((GroupPrincipal) obj).getName());
+		if (obj instanceof GroupPrincipal groupPrincipal) {
+			return this.getName().equals(groupPrincipal.getName());
 		}
 		return false;
 	}

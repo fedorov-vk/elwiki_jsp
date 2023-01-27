@@ -16,8 +16,8 @@ public class CmdContextAdapterFactory implements IAdapterFactory {
 
 	@Override
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-		if (adapterType == ContextEnum.class && adaptableObject instanceof String) {
-			return adapterType.cast(getContext((String) adaptableObject));
+		if (adapterType == ContextEnum.class && adaptableObject instanceof String uri) {
+			return adapterType.cast(getContext(uri));
 		}
 		return null;
 	}
@@ -31,12 +31,12 @@ public class CmdContextAdapterFactory implements IAdapterFactory {
 	 * Get WikiContext according given URI. If URI is not determined as known - then returns
 	 * default, ContextEnum.PAGE_VIEW.
 	 * 
-	 * @param adaptableObject
+	 * @param adaptableUri
 	 * @return Wiki context.
 	 */
-	private Object getContext(String adaptableObject) {
+	private Object getContext(String adaptableUri) {
 		for (ContextEnum context : ContextEnum.values()) {
-			if (adaptableObject.equals(context.getUri())) {
+			if (adaptableUri.equals(context.getUri())) {
 				return context;
 			}
 		}

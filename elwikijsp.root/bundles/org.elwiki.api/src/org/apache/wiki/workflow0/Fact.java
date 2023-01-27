@@ -80,12 +80,11 @@ public final class Fact implements Serializable
      */
     public boolean equals( Object obj )
     {
-        if ( !( obj instanceof Fact ) ) 
+        if ( !( obj instanceof Fact f) ) 
         {
             return false;
         }
-        
-        Fact f = (Fact)obj;
+
         return m_key.equals( f.m_key) && m_obj.equals( f.m_obj );
     }
     

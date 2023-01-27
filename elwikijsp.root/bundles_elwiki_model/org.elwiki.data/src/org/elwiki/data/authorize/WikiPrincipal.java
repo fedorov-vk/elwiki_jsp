@@ -113,8 +113,8 @@ public final class WikiPrincipal extends Aprincipal implements Comparable<Princi
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof WikiPrincipal) {
-			return this.getName().equals(((WikiPrincipal) obj).getName());
+		if (obj instanceof WikiPrincipal wikiPrincipal) {
+			return this.getName().equals(wikiPrincipal.getName());
 		}
 		return false;
 	}

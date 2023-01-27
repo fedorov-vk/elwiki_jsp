@@ -112,8 +112,8 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	private void buildContext() {
 		final Context context = m_wikiContext.clone();
 		final Object o = m_iterator.next();
-		if (o instanceof WikiPage) {
-			context.setPage((WikiPage) o);
+		if (o instanceof WikiPage wikiPage) {
+			context.setPage(wikiPage);
 		}
 
 		pageContext.setAttribute(Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);

@@ -128,8 +128,8 @@ public final class XmlUtil  {
 		final StringBuilder sb = new StringBuilder();
 		final List< ? > nodes = XPathFactory.instance().compile( ALL_TEXT_NODES ).evaluate( doc );
 		for( final Object el : nodes ) {
-			if( el instanceof Text ) {
-				sb.append( ( ( Text )el ).getValue() );
+			if( el instanceof Text text) {
+				sb.append( text.getValue() );
 			}
 		}
 

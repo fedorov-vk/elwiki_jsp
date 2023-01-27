@@ -60,10 +60,10 @@ public final class AllPermission extends Apermission {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof AllPermission)) {
+		if (!(obj instanceof AllPermission p)) {
 			return false;
 		}
-		AllPermission p = (AllPermission) obj;
+
 		return p.getWikiName() != null && p.getWikiName().equals(this.getWikiName());
 	}
 
@@ -106,8 +106,8 @@ public final class AllPermission extends Apermission {
 	@Override
 	public boolean implies(Permission permission) {
 		// Permission must be of ElWiki permissions.
-		if (permission instanceof Apermission) {
-			String wiki = ((Apermission) permission).getWikiName();
+		if (permission instanceof Apermission aPermission) {
+			String wiki = aPermission.getWikiName();
 
 			// If the wiki is implied, it's allowed
 			return isSubset(this.getWikiName(), wiki);

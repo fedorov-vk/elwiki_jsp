@@ -451,9 +451,8 @@ public final class SecurityVerifier {
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
         {
-            if ( principal instanceof GroupPrincipal )
+            if ( principal instanceof GroupPrincipal role)
             {
-                final GroupPrincipal role = (GroupPrincipal) principal;
                 final boolean isContainerRole = ArrayUtils.contains( containerRoles, role );
                 if ( !GroupPrincipal.isBuiltInGroup( role ) && !isContainerRole )
                 {

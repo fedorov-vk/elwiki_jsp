@@ -64,12 +64,13 @@ public class DefaultURLConstructor implements URLConstructor {
 	 * This component activate routine. Does all the real initialization.
 	 * 
 	 * @param componentContext passed the Engine.
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (engine instanceof Engine) {
-			initialize((Engine) engine);
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
 
@@ -80,7 +81,7 @@ public class DefaultURLConstructor implements URLConstructor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void initialize( final Engine engine ) {
+	public void initialize( final Engine engine ) throws WikiException {
 		m_engine = engine;
 		m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
 	}

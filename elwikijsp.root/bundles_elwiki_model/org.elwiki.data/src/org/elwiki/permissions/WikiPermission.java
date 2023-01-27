@@ -104,10 +104,10 @@ public final class WikiPermission extends Apermission {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof WikiPermission)) {
+		if (!(obj instanceof WikiPermission p)) {
 			return false;
 		}
-		WikiPermission p = (WikiPermission) obj;
+
 		return p.getMask() == this.getMask() && p.getWikiName() != null && p.getWikiName().equals(this.getWikiName());
 	}
 
@@ -126,10 +126,9 @@ public final class WikiPermission extends Apermission {
 	@Override
 	public boolean implies(Permission permission) {
 		// Permission must be a WikiPermission
-		if (!(permission instanceof WikiPermission)) {
+		if (!(permission instanceof WikiPermission p)) {
 			return false;
 		}
-		WikiPermission p = (WikiPermission) permission;
 
 		// See if the wiki is implied
 		boolean impliedWiki = isSubset(this.getWikiName(), p.getWikiName());

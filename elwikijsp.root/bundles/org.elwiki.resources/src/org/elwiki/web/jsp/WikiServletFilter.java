@@ -133,8 +133,8 @@ public class WikiServletFilter implements Filter {
     @Override
     public void doFilter( final ServletRequest request, final ServletResponse response, final FilterChain chain ) throws IOException, ServletException {
     	String uri = "«unknown URL»";
-    	if(request instanceof HttpServletRequest) {
-    		uri = ((HttpServletRequest)request).getRequestURI();
+    	if(request instanceof HttpServletRequest httpServletRequest) {
+    		uri = httpServletRequest.getRequestURI();
     	}
 		log.debug("◄►doFilter◄► " + uri);    	
 
@@ -210,8 +210,9 @@ public class WikiServletFilter implements Filter {
      * @return <code>true</code> if the request has previously been wrapped; <code>false</code> otherwise
      */
     private boolean isWrapped( ServletRequest request ) {
-        while( !(request instanceof WikiRequestWrapper ) && request instanceof HttpServletRequestWrapper ) {
-            request = ( ( HttpServletRequestWrapper ) request ).getRequest();
+        while( !(request instanceof WikiRequestWrapper )
+        		&& request instanceof HttpServletRequestWrapper httpRequestWrapper) {
+            request = httpRequestWrapper.getRequest();
         }
         return request instanceof WikiRequestWrapper;
     }

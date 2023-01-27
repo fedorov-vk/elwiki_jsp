@@ -698,8 +698,8 @@ public class ServicesRefs implements Engine {
 			Assert.isNotNull(service, ":FVK: Internal error - initService()");
 
 			managers.put(clazz, service);
-			if (service instanceof Initializable) {
-				((Initializable) service).initialize(this);
+			if (service instanceof Initializable initializableService) {
+				initializableService.initialize(this);
 			}
 			return service;
 		} catch (Exception e) {

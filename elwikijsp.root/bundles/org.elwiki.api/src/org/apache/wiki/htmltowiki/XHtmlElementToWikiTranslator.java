@@ -102,10 +102,8 @@ public class XHtmlElementToWikiTranslator
 
     private void print( Object element ) throws IOException, JDOMException
     {
-        if( element instanceof Text )
-        {
-            Text t = (Text)element;
-            String s = t.getText();
+		if (element instanceof Text textElement) {
+			String s = textElement.getText();
             if( m_preStack.isPreMode() )
             {
                 m_out.print( s );
@@ -117,9 +115,8 @@ public class XHtmlElementToWikiTranslator
                 m_out.print( s );
             }
         }
-        else if( element instanceof Element )
+        else if( element instanceof Element base)
         {
-            Element base = (Element)element;
             String n = base.getName().toLowerCase();
             if( "imageplugin".equals( base.getAttributeValue( "class" ) ) )
             {
@@ -253,9 +250,8 @@ public class XHtmlElementToWikiTranslator
         for( Iterator< Content > i = base.getContent().iterator(); i.hasNext(); )
         {
             Content c = i.next();
-            if( c instanceof Element )
+            if( c instanceof Element e)
             {
-                Element e = (Element)c;
                 String n = e.getName().toLowerCase();
                 if( n.equals( "h1" ) )
                 {

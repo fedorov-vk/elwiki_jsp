@@ -91,14 +91,9 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
      */
     @Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
 

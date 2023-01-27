@@ -248,26 +248,25 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
 	 */
     @Override
 	public void actionPerformed( final WikiEvent event ) {
-        if( event instanceof WikiEngineEvent ) {
-            if( event.getType() == WikiEngineEvent.SHUTDOWN ) {
-                for( final AdminBean m_allBean : m_allBeans ) {
-                    try {
-                        final ObjectName on = getObjectName( m_allBean );
-                        if( m_mbeanServer.isRegistered( on ) ) {
-                            m_mbeanServer.unregisterMBean( on );
-                            log.info( "Unregistered AdminBean " + m_allBean.getTitle() );
-                        }
-                    } catch( final MalformedObjectNameException e ) {
-                        log.error( "Malformed object name when unregistering", e );
-                    } catch( final InstanceNotFoundException e ) {
-                        log.error( "Object was registered; yet claims that it's not there", e );
-                    } catch( final MBeanRegistrationException e ) {
-                        log.error( "Registration exception while unregistering", e );
-                    }
-                }
-            }
-        }
-    }
+		if (event instanceof WikiEngineEvent //
+				&& event.getType() == WikiEngineEvent.SHUTDOWN) {
+			for (final AdminBean m_allBean : m_allBeans) {
+				try {
+					final ObjectName on = getObjectName(m_allBean);
+					if (m_mbeanServer.isRegistered(on)) {
+						m_mbeanServer.unregisterMBean(on);
+						log.info("Unregistered AdminBean " + m_allBean.getTitle());
+					}
+				} catch (final MalformedObjectNameException e) {
+					log.error("Malformed object name when unregistering", e);
+				} catch (final InstanceNotFoundException e) {
+					log.error("Object was registered; yet claims that it's not there", e);
+				} catch (final MBeanRegistrationException e) {
+					log.error("Registration exception while unregistering", e);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void initialize(Engine engine) throws WikiException {

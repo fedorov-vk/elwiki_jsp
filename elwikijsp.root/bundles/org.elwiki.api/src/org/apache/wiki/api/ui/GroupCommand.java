@@ -92,10 +92,10 @@ public final class GroupCommand extends AbstractCommand {
      * @return the new, targeted command
      */
     public Command targetedCommand( final Object target ) {
-        if( !( target instanceof GroupPrincipal ) ) {
+        if( !( target instanceof GroupPrincipal groupPrincipal) ) {
             throw new IllegalArgumentException( "Target must non-null and of type GroupPrincipal." );
         }
-        return new GroupCommand( getContextCmd(), ( GroupPrincipal )target, m_action );
+        return new GroupCommand( getContextCmd(), groupPrincipal, m_action );
     }
     
     /**

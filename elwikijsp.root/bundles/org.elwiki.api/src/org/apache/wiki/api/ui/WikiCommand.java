@@ -123,10 +123,10 @@ public final class WikiCommand extends AbstractCommand {
      */
     @Override
     public Command targetedCommand( final Object target ) {
-        if ( !( target instanceof String ) ) {
-            throw new IllegalArgumentException( "Target must non-null and of type String." );
-        }
-        return new WikiCommand( getContextCmd(), (String)target, m_action );
+		if (!(target instanceof String string)) {
+			throw new IllegalArgumentException("Target must non-null and of type String.");
+		}
+		return new WikiCommand(getContextCmd(), string, m_action);
     }
     
     /**

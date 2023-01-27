@@ -43,15 +43,10 @@ public class PermissionManager implements IPermissionManager, EventHandler {
 	 */
 	@Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-				//:FVK: -- here -- initContextPermissions();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
+			//:FVK: -- here -- initContextPermissions();
 		}
 	}
 

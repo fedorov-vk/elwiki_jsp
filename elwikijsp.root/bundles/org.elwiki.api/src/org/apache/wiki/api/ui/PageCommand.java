@@ -103,10 +103,10 @@ public final class PageCommand extends AbstractCommand {
      * @throws IllegalArgumentException if the target is not of the correct type
      */
     public Command targetedCommand( final Object target ) {
-        if( !( target instanceof WikiPage ) ) {
-            throw new IllegalArgumentException( "Target must non-null and of type Page." );
-        }
-        return new PageCommand( getContextCmd(), ( WikiPage )target, m_action );
+		if (!(target instanceof WikiPage wikiPage)) {
+			throw new IllegalArgumentException("Target must non-null and of type Page.");
+		}
+		return new PageCommand(getContextCmd(), wikiPage, m_action);
     }
 
     /**

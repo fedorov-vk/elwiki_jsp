@@ -196,17 +196,13 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	 * This component activate routine. Does all the real initialization.
 	 * 
 	 * @param componentContext passed the Engine.
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
 
@@ -550,15 +546,15 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
                 try {
                     final Plugin p = newPluginInstance(searchPath, externalJars);
-                    if( p instanceof InitializablePlugin ) {
-                        ( ( InitializablePlugin )p ).initialize( engine );
+                    if( p instanceof InitializablePlugin initializablePlugin) {
+                    	initializablePlugin.initialize( engine );
                     }
-                    if( p instanceof WikiAjaxServlet ) {
+                    if( p instanceof WikiAjaxServlet wikiAjaxServlet) {
                     	WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-                    	wikiAjaxDispatcher.registerServlet( (WikiAjaxServlet) p );
+                    	wikiAjaxDispatcher.registerServlet( wikiAjaxServlet );
                     	final String ajaxAlias = info.getAjaxAlias();
                     	if (StringUtils.isNotBlank(ajaxAlias)) {
-                    		wikiAjaxDispatcher.registerServlet( info.getAjaxAlias(), (WikiAjaxServlet) p );
+                    		wikiAjaxDispatcher.registerServlet( info.getAjaxAlias(), wikiAjaxServlet );
                     	}
                     }
                 } catch( final Exception e ) {

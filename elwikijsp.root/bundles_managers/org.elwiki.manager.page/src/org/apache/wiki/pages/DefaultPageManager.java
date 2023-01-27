@@ -156,17 +156,13 @@ public class DefaultPageManager implements PageManager, Initializable {
 	 * This component activate routine. Does all the real initialization.
 	 * 
 	 * @param componentContext passed the Engine.
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
 
@@ -905,11 +901,10 @@ public class DefaultPageManager implements PageManager, Initializable {
      */
     @Override
     public void actionPerformed( final WikiEvent event ) {
-        if( !( event instanceof WikiSecurityEvent ) ) {
+        if( !( event instanceof WikiSecurityEvent se) ) {
             return;
         }
 
-        final WikiSecurityEvent se = ( WikiSecurityEvent ) event;
         if( se.getType() == WikiSecurityEvent.PROFILE_NAME_CHANGED ) {
             final UserProfile[] profiles = (UserProfile[]) se.getTarget();
             final Principal[] oldPrincipals = new Principal[] { new WikiPrincipal( profiles[ 0 ].getLoginName() ),

@@ -169,8 +169,8 @@ public final class FileUtil {
         out.flush();
 
         // FileOutputStream.flush is an empty method, so in this case we grab the underlying file descriptor and force from there thw write to disk
-        if( out instanceof FileOutputStream ) {
-            FileDescriptor fd = ( ( FileOutputStream )out ).getFD();
+        if( out instanceof FileOutputStream fos) {
+            FileDescriptor fd = fos.getFD();
             fd.sync();
         }
     }

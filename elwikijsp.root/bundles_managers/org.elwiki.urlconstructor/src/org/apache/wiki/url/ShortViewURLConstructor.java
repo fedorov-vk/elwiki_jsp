@@ -20,6 +20,7 @@ package org.apache.wiki.url;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.WikiException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Properties;
@@ -34,7 +35,7 @@ public class ShortViewURLConstructor extends ShortURLConstructor {
     /**
      *  {@inheritDoc}
      */
-    @Override public void initialize( final Engine engine ) {
+    @Override public void initialize( final Engine engine ) throws WikiException {
         super.initialize( engine );
     }
     

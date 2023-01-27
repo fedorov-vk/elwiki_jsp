@@ -168,10 +168,10 @@ public final class GroupPermission extends Apermission {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof GroupPermission)) {
+		if (!(obj instanceof GroupPermission p)) {
 			return false;
 		}
-		GroupPermission p = (GroupPermission) obj;
+
 		return p.getMask() == this.getMask() && p.m_group.equals(this.m_group) && p.getWikiName() != null
 				&& p.getWikiName().equals(this.getWikiName());
 	}

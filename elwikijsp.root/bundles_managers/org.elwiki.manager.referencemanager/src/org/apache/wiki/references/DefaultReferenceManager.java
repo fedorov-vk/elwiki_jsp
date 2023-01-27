@@ -199,17 +199,13 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	 * ReferenceManager initializer.
 	 * 
 	 * @param componentContext passed the Engine.
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
 		}
 	}
     

@@ -70,11 +70,11 @@ public final class RedirectCommand extends AbstractCommand {
      * @throws IllegalArgumentException if the target is not of the correct type
      */
     public Command targetedCommand( final Object target ) {
-        if ( !( target instanceof String ) ) {
-            throw new IllegalArgumentException( "Target must non-null and of type String." );
-        }
-        //:FVK: тут введена ошибка - на месте параметра getContextCmd() - 'urlPattern' - был (String)target. 
-        return new RedirectCommand( getContextCmd(), ( String )target );
+		if (!(target instanceof String string)) {
+			throw new IllegalArgumentException("Target must non-null and of type String.");
+		}
+		//:FVK: тут введена ошибка - на месте параметра getContextCmd() - 'urlPattern' - был (String)target. 
+		return new RedirectCommand(getContextCmd(), string);
     }
     
     /**

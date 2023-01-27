@@ -107,15 +107,10 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
      */
     @Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-		        wikiAjaxDispatcher = ((Engine) engine).getManager(WikiAjaxDispatcher.class); 
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class); 
+			initialize(engine);
 		}
 	}
 
@@ -233,8 +228,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
             if( searchString.length() > 0 ) {
                 try {
                     final Collection< SearchResult > c;
-                    if( m_searchProvider instanceof LuceneSearchProvider ) {
-                        c = ( ( LuceneSearchProvider )m_searchProvider ).findPages( searchString, 0, wikiContext );
+                    if( m_searchProvider instanceof LuceneSearchProvider luceneSearchProvider ) {
+                        c = luceneSearchProvider.findPages( searchString, 0, wikiContext );
                     } else {
                         c = m_searchProvider.findPages( searchString, wikiContext );
                     }
@@ -330,8 +325,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     /** {@inheritDoc} */
     @Override
     public void actionPerformed( final WikiEvent event ) {
-        if( event instanceof WikiPageEvent ) {
-            final String pageName = ( ( WikiPageEvent ) event ).getPageName();
+        if( event instanceof WikiPageEvent wikiPageEvent) {
+            final String pageName = wikiPageEvent.getPageName();
             if( event.getType() == WikiPageEvent.PAGE_DELETE_REQUEST ) {
                 final WikiPage p = this.pageManager.getPage( pageName );
                 if( p != null ) {

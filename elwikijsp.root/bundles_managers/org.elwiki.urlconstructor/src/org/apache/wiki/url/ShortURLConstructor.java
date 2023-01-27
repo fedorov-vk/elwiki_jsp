@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -51,7 +52,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
     
     /** {@inheritDoc} */
     @Override
-    public void initialize( final Engine engine ) {
+    public void initialize( final Engine engine ) throws WikiException {
         super.initialize( engine );
         
         m_urlPrefix = TextUtil.getStringProperty( engine.getWikiPreferences(), PROP_PREFIX, null );

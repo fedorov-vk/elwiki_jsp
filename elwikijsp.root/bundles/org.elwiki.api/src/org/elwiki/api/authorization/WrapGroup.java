@@ -140,11 +140,9 @@ public class WrapGroup {
 	 */
 	@Override
 	public boolean equals(final Object o) {
-		if (!(o instanceof WrapGroup)) {
+		if (!(o instanceof WrapGroup g)) {
 			return false;
 		}
-
-		final WrapGroup g = (WrapGroup) o; // Just a shortcut.
 
 		if (g.m_members.size() != m_members.size()) {
 			return false;
@@ -215,8 +213,8 @@ public class WrapGroup {
 		String creator = (String) properties.get(UserDatabase.GROUP_CREATOR);
 
 		Role tryUser = this.userAdmin.getRole(creator);
-		if (tryUser instanceof User) {
-			creator = (String) ((User) tryUser).getProperties().get(UserDatabase.LOGIN_NAME);
+		if (tryUser instanceof User user) {
+			creator = (String)user.getProperties().get(UserDatabase.LOGIN_NAME);
 		} else {
 			creator = "unknown"; // :FVK: workaround.
 		}
@@ -247,8 +245,8 @@ public class WrapGroup {
 		String modifierName;
 
 		Role tryUser = this.userAdmin.getRole(modifierUID);
-		if (tryUser instanceof User) {
-			modifierName = (String) ((User) tryUser).getProperties().get(UserDatabase.LOGIN_NAME);
+		if (tryUser instanceof User user) {
+			modifierName = (String)user.getProperties().get(UserDatabase.LOGIN_NAME);
 		} else {
 			modifierName = "unknown"; // :FVK: workaround.
 		}
@@ -306,14 +304,12 @@ public class WrapGroup {
 		if (members != null) {
 			for (org.osgi.service.useradmin.Role role : members) {
 				String member;
-				if (role instanceof Group) {
-					Group group = (Group) role;
+				if (role instanceof Group group) {
 					member = (String) group.getProperties().get(UserDatabase.GROUP_NAME);
-				} else if (role instanceof User) {
-					User user = (User) role;
-					member = (String) user.getProperties().get(UserDatabase.LOGIN_NAME);
+				} else if (role instanceof User user) {
+					member = (String)user.getProperties().get(UserDatabase.LOGIN_NAME);
 				} else if (role instanceof Role) {
-					member = ((Role) role).getName();
+					member = role.getName();
 				} else {
 					member = ":FVK:"; // :FVK: workaround.
 				}

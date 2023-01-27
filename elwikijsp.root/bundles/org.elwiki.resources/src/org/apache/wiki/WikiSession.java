@@ -149,8 +149,8 @@ public final class WikiSession implements Session, EventHandler {
     @Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
 		Object sm = componentContext.getProperties().get(ISessionMonitor.SESSION_MONITOR);
-		if (sm instanceof ISessionMonitor) {
-			this.sessionMonitor = (ISessionMonitor) sm;
+		if (sm instanceof ISessionMonitor sessionMonitor) {
+			this.sessionMonitor = sessionMonitor;
 		}
 		this.invalidate();
 	}
@@ -374,18 +374,17 @@ public final class WikiSession implements Session, EventHandler {
     @Override
     @Deprecated
     public void actionPerformed( final WikiEvent event ) {
-        if ( event instanceof WikiSecurityEvent ) {
-            final WikiSecurityEvent e = (WikiSecurityEvent)event;
-            if ( e.getTarget() != null ) {
-                switch( e.getType() ) {
+        if ( event instanceof WikiSecurityEvent se) {
+            if ( se.getTarget() != null ) {
+                switch( se.getType() ) {
                 case WikiSecurityEvent.GROUP_ADD:
-                    final WrapGroup groupAdd = ( WrapGroup )e.getTarget();
+                    final WrapGroup groupAdd = ( WrapGroup )se.getTarget();
                     if( isInGroup( groupAdd ) ) {
                         m_subject.getPrincipals().add( groupAdd.getPrincipal() );
                     }
                     break;
                 case WikiSecurityEvent.GROUP_REMOVE:
-                    final WrapGroup group = ( WrapGroup )e.getTarget();
+                    final WrapGroup group = ( WrapGroup )se.getTarget();
                     m_subject.getPrincipals().remove( group.getPrincipal() );
                     break;
                 case WikiSecurityEvent.GROUP_CLEAR_GROUPS:
@@ -396,8 +395,8 @@ public final class WikiSession implements Session, EventHandler {
                     break;
                 case WikiSecurityEvent.PRINCIPAL_ADD:
                 	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
-                    final WikiSession targetPA = ( WikiSession )e.getTarget();
-                    Principal principal = (Principal) e.getPrincipal();
+                    final WikiSession targetPA = ( WikiSession )se.getTarget();
+                    Principal principal = (Principal) se.getPrincipal();
                     // bypass wrong logging status - don't add ANONYMOUS, ASSERTED roles.
 					if (principal != null
 					  && !principal.equals(GroupPrincipal.ANONYMOUS)
@@ -409,11 +408,11 @@ public final class WikiSession implements Session, EventHandler {
                     break;
                 case WikiSecurityEvent.LOGIN_ANONYMOUS:
                 	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
-                    final WikiSession targetLAN = ( WikiSession )e.getTarget();
+                    final WikiSession targetLAN = ( WikiSession )se.getTarget();
                     if( this.equals( targetLAN ) ) {
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
-                        m_loginPrincipal = ( Principal )e.getPrincipal();
+                        m_loginPrincipal = ( Principal )se.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
 						setUser(this.m_userPrincipal);
@@ -427,11 +426,11 @@ public final class WikiSession implements Session, EventHandler {
                     break;
                 case WikiSecurityEvent.LOGIN_ASSERTED:
                 	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
-                    final WikiSession targetLAS = ( WikiSession )e.getTarget();
+                    final WikiSession targetLAS = ( WikiSession )se.getTarget();
                     if( this.equals( targetLAS ) ) {
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
-                        m_loginPrincipal = ( Principal )e.getPrincipal();
+                        m_loginPrincipal = ( Principal )se.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
 						setUser(this.m_userPrincipal);
@@ -445,11 +444,11 @@ public final class WikiSession implements Session, EventHandler {
                     break;
                 case WikiSecurityEvent.LOGIN_AUTHENTICATED:
                 	//:FVK: код устарел - дубль в handleEvent()  @Deprecated
-                    final WikiSession targetLAU = ( WikiSession )e.getTarget();
+                    final WikiSession targetLAU = ( WikiSession )se.getTarget();
                     if( this.equals( targetLAU ) ) {
                         // Set the login/user principals and login status
                         final Set< Principal > principals = m_subject.getPrincipals();
-                        m_loginPrincipal = ( Principal )e.getPrincipal();
+                        m_loginPrincipal = ( Principal )se.getPrincipal();
                         m_userPrincipal = m_loginPrincipal;
 
 						setUser(this.m_userPrincipal);
@@ -466,7 +465,7 @@ public final class WikiSession implements Session, EventHandler {
                     }
                     break;
                 case WikiSecurityEvent.PROFILE_SAVE:
-                    final WikiSession sourcePS = e.getSrc();
+                    final WikiSession sourcePS = se.getSrc();
                     if( this.equals( sourcePS ) ) {
                         injectUserProfilePrincipals();  // Add principals for the user profile
                         injectGroupPrincipals();  // Inject group principals
@@ -474,10 +473,10 @@ public final class WikiSession implements Session, EventHandler {
                     break;
                 case WikiSecurityEvent.PROFILE_NAME_CHANGED:
                     // Refresh user principals based on new user profile
-                    final WikiSession sourcePNC = e.getSrc();
+                    final WikiSession sourcePNC = se.getSrc();
                     if( this.equals( sourcePNC ) && isAuthenticated()) {
                         // To prepare for refresh, set the new full name as the primary principal
-                        final UserProfile[] profiles = (org.apache.wiki.auth.user0.UserProfile[] )e.getTarget();
+                        final UserProfile[] profiles = (org.apache.wiki.auth.user0.UserProfile[] )se.getTarget();
                         final UserProfile newProfile = profiles[ 1 ];
                         if( newProfile.getFullname() == null ) {
                             throw new IllegalStateException( "User profile FullName cannot be null." );

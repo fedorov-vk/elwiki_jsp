@@ -121,10 +121,8 @@ public class GroupWiki implements IGroupWiki {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof GroupWiki))
+		if (o == null || !(o instanceof GroupWiki g))
 			return false;
-
-		GroupWiki g = (GroupWiki) o; // Just a shortcut.
 
 		if (g.m_members.size() != this.m_members.size())
 			return false;

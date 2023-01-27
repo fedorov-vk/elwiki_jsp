@@ -146,8 +146,8 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 			Object result = operation.execute(transactionalObject, transaction);
 			transaction.commit();
 
-			if (result instanceof CDOObject) {
-				return this.view.getObject((CDOObject) result);
+			if (result instanceof CDOObject cdoObject) {
+				return this.view.getObject(cdoObject);
 			}
 			return result;
 		} catch (CommitException ex) {

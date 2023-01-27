@@ -180,10 +180,10 @@ public final class PagePermission extends Apermission {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof PagePermission)) {
+		if (!(obj instanceof PagePermission p)) {
 			return false;
 		}
-		PagePermission p = (PagePermission) obj;
+
 		boolean equalsStatus = p.getMask() == this.getMask() && p.m_page.equals(this.m_page) && p.getWikiName() != null
 				&& p.getWikiName().equals(this.getWikiName());
 		return equalsStatus;
@@ -225,12 +225,11 @@ public final class PagePermission extends Apermission {
 	@Override
 	public boolean implies(Permission permission) {
 		// Permission must be a PagePermission
-		if (!(permission instanceof PagePermission)) {
+		if (!(permission instanceof PagePermission p)) {
 			return false;
 		}
 
 		// Build up an "implied mask"
-		PagePermission p = (PagePermission) permission;
 		int impliedMask = impliedMask(this.getMask());
 
 		// If actions aren't a proper subset, return false

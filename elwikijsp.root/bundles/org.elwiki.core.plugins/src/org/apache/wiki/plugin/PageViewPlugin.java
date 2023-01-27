@@ -264,9 +264,10 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                     log.info( "Detected wiki engine shutdown" );
                     handleShutdown();
                 }
-            } else if( ( event instanceof WikiPageRenameEvent ) && ( event.getType() == WikiPageRenameEvent.PAGE_RENAMED ) ) {
-                final String oldPageName = ( ( WikiPageRenameEvent )event ).getOldPageName();
-                final String newPageName = ( ( WikiPageRenameEvent )event ).getNewPageName();
+            } else if( ( event instanceof WikiPageRenameEvent wikiPageRenameEvent)
+            		&& ( event.getType() == WikiPageRenameEvent.PAGE_RENAMED ) ) {
+                final String oldPageName = wikiPageRenameEvent.getOldPageName();
+                final String newPageName = wikiPageRenameEvent.getNewPageName();
                 final Counter oldCounter = m_counters.get( oldPageName );
                 if( oldCounter != null ) {
                     m_storage.remove( oldPageName );
@@ -275,8 +276,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                     m_counters.remove( oldPageName );
                     m_dirty = true;
                 }
-            } else if( ( event instanceof WikiPageEvent ) && ( event.getType() == WikiPageEvent.PAGE_DELETED ) ) {
-                final String pageName = ( ( WikiPageEvent )event ).getPageName();
+            } else if( ( event instanceof WikiPageEvent wikiPageEvent )
+            		&& ( event.getType() == WikiPageEvent.PAGE_DELETED ) ) {
+                final String pageName = wikiPageEvent.getPageName();
                 m_storage.remove( pageName );
                 m_counters.remove( pageName );
             }

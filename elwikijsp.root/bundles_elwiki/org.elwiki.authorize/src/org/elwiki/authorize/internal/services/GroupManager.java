@@ -202,8 +202,8 @@ public class GroupManager implements IAuthorizer {
 		List<Group> groups = new ArrayList<>();
 		try {
 			for (Role role : this.userAdminService.getRoles(null)) {
-				if (role instanceof Group) {
-					groups.add((Group) role);
+				if (role instanceof Group group) {
+					groups.add(group);
 				}
 			}
 		} catch (InvalidSyntaxException e) {
@@ -390,8 +390,8 @@ public class GroupManager implements IAuthorizer {
 		WrapGroup group = parseGroup(null, name, memberLine, create);
 		*/
 		Object role = this.userAdminService.getUser(UserDatabase.GROUP_NAME, name);
-		if (role instanceof Group) {
-			wrapGroup = new WrapGroup((Group) role);
+		if (role instanceof Group group) {
+			wrapGroup = new WrapGroup(group);
 		} else {
 			// TODO: обработать отсутствие группы.
 		}
@@ -653,11 +653,10 @@ public class GroupManager implements IAuthorizer {
 	 */
 	//:FVK: @Override
 	public void actionPerformed(WikiEvent event) {
-		if (!(event instanceof WikiSecurityEvent)) {
+		if (!(event instanceof WikiSecurityEvent se)) {
 			return;
 		}
 
-		WikiSecurityEvent se = (WikiSecurityEvent) event;
 		if (se.getType() == WikiSecurityEvent.PROFILE_NAME_CHANGED) {
 			Session session = se.getSrc();
 			UserProfile[] profiles = (UserProfile[]) se.getTarget();
@@ -716,10 +715,9 @@ public class GroupManager implements IAuthorizer {
 	@Override
 	public PermissionInfo[] getRolePermissionInfo(String roleName) throws IllegalArgumentException {
 		Role role = userAdminService.getRole(roleName);
-		if (!(role instanceof Group)) {
+		if (!(role instanceof Group group)) {
 			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not founded as group of UserAdmin service.");
 		}
-		Group group = (Group) role;
 		String allPermissions = (String) group.getProperties().get(UserDatabase.GROUP_PERMISSIONS);
 		List<PermissionInfo> listPi = new ArrayList<>();
 		String[] permissions = new Gson().fromJson(allPermissions, String[].class);

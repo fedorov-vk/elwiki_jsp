@@ -54,8 +54,7 @@ public class ErrorHandlingServlet extends HttpServlet {
 
 		log.debug("<-- ErrorHandlingServlet -->");
 		Object obj = req.getAttribute(ATTR_ELWIKI_ERROR_EXCEPTION);
-		if( obj!=null && obj instanceof Exception) {
-			Exception ex = (Exception)obj;
+		if( obj!=null && obj instanceof Exception ex) {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			ex.printStackTrace(pw);

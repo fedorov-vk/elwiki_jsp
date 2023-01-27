@@ -133,18 +133,14 @@ public class DefaultRenderingManager implements RenderingManager {
 	 * This component activate routine. Does all the real initialization.
 	 *
 	 * @param componentContext
+	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		try {
-			Object engine = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-			if (engine instanceof Engine) {
-				initialize((Engine) engine);
-			}
-		} catch (WikiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+	protected void startup(ComponentContext componentContext) throws WikiException {
+		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+		if (obj instanceof Engine engine) {
+			initialize(engine);
+		}
 	}
 
 	// -- service handling -----------------------------(end)--
@@ -498,9 +494,10 @@ public class DefaultRenderingManager implements RenderingManager {
     public void actionPerformed( final WikiEvent event ) {
         log.debug( "event received: " + event.toString() );
         if( m_useCache ) {
-            if( ( event instanceof WikiPageEvent ) && ( event.getType() == WikiPageEvent.POST_SAVE_BEGIN ) ) {
+            if( ( event instanceof WikiPageEvent wikiPageEvent)
+            		&& ( event.getType() == WikiPageEvent.POST_SAVE_BEGIN ) ) {
                 if( m_documentCache != null ) {
-                    final String pageName = ( ( WikiPageEvent ) event ).getPageName();
+                    final String pageName = wikiPageEvent.getPageName();
                     m_documentCache.remove( pageName );
                     final Collection< String > referringPages = this.referenceManager.findReferrers( pageName );
 

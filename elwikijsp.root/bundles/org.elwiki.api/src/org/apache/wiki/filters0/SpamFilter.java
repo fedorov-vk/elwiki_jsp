@@ -1079,12 +1079,13 @@ public class SpamFilter extends BasePageFilter {
             return m_change;
         }
 
-        @Override public boolean equals( final Object o ) {
-            if( o instanceof Change ) {
-                return m_change.equals( ( ( Change )o ).m_change );
-            }
-            return false;
-        }
+		@Override
+		public boolean equals(final Object o) {
+			if (o instanceof Change change) {
+				return m_change.equals(change.m_change);
+			}
+			return false;
+		}
 
         @Override public int hashCode() {
             return m_change.hashCode() + 17;

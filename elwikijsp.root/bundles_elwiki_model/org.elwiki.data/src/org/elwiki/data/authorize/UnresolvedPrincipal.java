@@ -49,8 +49,8 @@ public final class UnresolvedPrincipal extends Aprincipal {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof UnresolvedPrincipal) {
-			return this.getName().equals(((UnresolvedPrincipal) obj).getName());
+		if (obj instanceof UnresolvedPrincipal unresolvedPrincipal) {
+			return this.getName().equals(unresolvedPrincipal.getName());
 		}
 		return false;
 	}
