@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.api;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.apache.wiki.api.internal.ApiActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.api
 Import-Package: javax.servlet;version="3.1.0",
  javax.servlet.http;version="3.1.0",

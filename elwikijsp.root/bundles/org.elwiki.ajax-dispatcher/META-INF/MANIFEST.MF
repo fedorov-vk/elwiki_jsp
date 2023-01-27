@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ajax Dispatcher
-Bundle-SymbolicName: org.elwiki.ajax-dispatcher
+Bundle-SymbolicName: org.elwiki.ajax-dispatcher;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.ajax.dispatcher
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.10.200",
  org.apache.log4j;bundle-version="1.2.15",
  com.google.gson;bundle-version="2.8.2",

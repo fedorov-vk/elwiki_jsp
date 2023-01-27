@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.test.utils;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.elwiki.test.utils
 Bundle-Activator: org.elwiki.test.internal.bundle.TestUtilsActivator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.equinox.useradmin;bundle-version="1.1.700",
  org.eclipse.rap.rwt.testfixture,
  org.eclipse.rap.rwt;bundle-version="3.9.0",

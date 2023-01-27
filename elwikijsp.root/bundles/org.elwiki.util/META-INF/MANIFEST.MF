@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.util;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.apache.wiki.util.internal.UtilActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.util
 Import-Package: javax.mail;version="1.4.0",
  javax.mail.internet;version="1.4.0",

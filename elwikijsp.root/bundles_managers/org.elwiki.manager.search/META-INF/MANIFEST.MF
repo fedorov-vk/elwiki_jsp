@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.manager.search;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.search
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/elwiki.DefaultSearchManager.xml
 Import-Package: java.io;resolution:=optional,
  java.lang.reflect;resolution:=optional,

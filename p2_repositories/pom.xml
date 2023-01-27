@@ -10,8 +10,8 @@
 	<description>Root for make p2 repositories</description>
 
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 
 		<p2-maven-plugin.version>2.1.0</p2-maven-plugin.version>
 		<jetty-maven-plugin.version>8.1.5.v20120716</jetty-maven-plugin.version>

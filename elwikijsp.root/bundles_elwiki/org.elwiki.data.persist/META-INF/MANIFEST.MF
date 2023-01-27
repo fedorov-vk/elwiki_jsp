@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.data.persist;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.data.persist.internal.PluginActivator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.data.persist
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,

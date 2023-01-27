@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rendering Manager
-Bundle-SymbolicName: org.elwiki.manager.renderer
+Bundle-SymbolicName: org.elwiki.manager.renderer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.manager.renderer.Activator
 Bundle-Vendor: FVK
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.manager.renderer
 Import-Package: javax.servlet.http;version="3.1.0",
  org.eclipse.jface.preference,

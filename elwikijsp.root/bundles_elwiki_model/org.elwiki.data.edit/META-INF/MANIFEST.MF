@@ -8,7 +8,7 @@ Bundle-ClassPath: .
 Bundle-Activator: org.elwiki_data.provider.Elwiki_dataEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.elwiki_data.provider
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.cdo.edit;visibility:=reexport,

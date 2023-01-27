@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Difference
-Bundle-SymbolicName: org.elwiki.manager.difference
+Bundle-SymbolicName: org.elwiki.manager.difference;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.difference
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.apache.wiki.diff
 Service-Component: OSGI-INF/elwiki.DefaultDifferenceManager.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",

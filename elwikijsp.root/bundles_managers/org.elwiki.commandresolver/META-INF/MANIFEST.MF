@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Commandresolver
-Bundle-SymbolicName: org.elwiki.commandresolver
+Bundle-SymbolicName: org.elwiki.commandresolver;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.commandresolver
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/elwiki.DefaultCommandResolver.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  jakarta.servlet-api;bundle-version="4.0.0",

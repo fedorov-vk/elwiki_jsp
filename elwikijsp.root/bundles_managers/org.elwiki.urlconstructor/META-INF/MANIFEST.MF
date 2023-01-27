@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.elwiki.urlconstructor;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.urlconstructor
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/elwiki.DefaultUrlConstructor.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",

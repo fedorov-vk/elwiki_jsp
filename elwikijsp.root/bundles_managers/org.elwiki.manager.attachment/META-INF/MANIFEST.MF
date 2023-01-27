@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Attachment
-Bundle-SymbolicName: org.elwiki.manager.attachment
+Bundle-SymbolicName: org.elwiki.manager.attachment;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.attachment
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.apache.wiki.attachment,
  org.apache.wiki.providers
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",

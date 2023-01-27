@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Workflow
-Bundle-SymbolicName: org.elwiki.manager.workflow
+Bundle-SymbolicName: org.elwiki.manager.workflow;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.workflow
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/elwiki.DefaultWorkflowManager.xml
 Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",
