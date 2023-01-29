@@ -24,7 +24,6 @@ import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 
@@ -238,8 +237,8 @@ public interface PageProvider extends WikiProvider {
      * <p>
      * @param pageId The page ID to find referrers for.
      * @return A List of {@link PageReference}. May return empty, if it has no references.
-     * @throws WikiException TODO
+     * @throws ProviderException If something goes wrong.
      */
-	List<PageReference> getPageReferrers(String pageId) throws WikiException;
+	List<PageReference> getPageReferrers(String pageId) throws ProviderException;
 
 }

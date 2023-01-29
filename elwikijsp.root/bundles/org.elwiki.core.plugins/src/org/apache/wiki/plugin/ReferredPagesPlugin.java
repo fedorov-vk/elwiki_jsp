@@ -201,7 +201,7 @@ public class ReferredPagesPlugin implements Plugin {
 		}
 
 		if (m_formatSort) {
-			Collections.sort(allLinks);
+			Collections.sort(allLinks, WikiPage::compareTo);
 		}
 
 		for (WikiPage refPage : allLinks) {

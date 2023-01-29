@@ -70,8 +70,7 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
 
             return doWikiStartTag();
         } catch( final Exception e ) {
-            log.error( "Tag failed", e );
-            throw new JspException( "Tag failed, check logs: "+e.getMessage() );
+            throw new JspException( "Tag failed: " + e.getMessage(), e );
         }
     }
 

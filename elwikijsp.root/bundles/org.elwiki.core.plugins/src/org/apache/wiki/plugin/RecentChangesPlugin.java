@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
@@ -43,7 +42,6 @@ import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
-
 
 /**
  *  Returns the Recent Changes in the wiki being a date-sorted list of page names.
@@ -76,32 +74,36 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
      * {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( Context context, Map< String, String > params ) throws PluginException {
         super.initialize( context, params );
 
-        final int since = TextUtil.parseIntParameter( params.get( "since" ), DEFAULT_DAYS );
-        String spacing  = "4";
-        boolean showAuthor = true;
-        boolean showChangenote = true;
-        String tablewidth = "4";
-        
-        final Engine engine = context.getEngine();
+		String spacing = "4";
+		boolean showAuthor = true;
+		boolean showChangenote = true;
+		String tablewidth = "4";
 
-        //
-        //  Which format we want to see?
-        //
-        if( "compact".equals( params.get( PARAM_FORMAT ) ) ) {
-            spacing  = "0";
-            showAuthor = false;
-            showChangenote = false;
-            tablewidth = "2";
-        }
+		/* Parse parameters.
+		 */
+		Calendar sincedate = new GregorianCalendar();
+		int since = TextUtil.parseIntParameter(params.get("since"), -1);
+		if (since > 0) {
+			sincedate.add(Calendar.DAY_OF_MONTH, -since);
+		} else if (since < 0) {
+			sincedate = new GregorianCalendar(2000, 0, 1); // 2000-01-01
+		}
 
-        final Calendar sincedate = new GregorianCalendar();
-        sincedate.add( Calendar.DAY_OF_MONTH, -since );
+		//  Which format we want to see?
+		if ("compact".equals(params.get(PARAM_FORMAT))) {
+			spacing = "0";
+			showAuthor = false;
+			showChangenote = false;
+			tablewidth = "2";
+		}
 
-        log.debug("Calculating recent changes from "+sincedate.getTime());
+		log.debug("Calculating recent changes from " + sincedate.getTime());
 
+		/* Do the actual work.
+		 */
         // FIXME: Should really have a since date on the getRecentChanges method.
         Collection< WikiPage > changes = ServicesRefs.getPageManager().getRecentChanges();
         changes = filterWikiPageCollection( changes );
@@ -109,17 +111,17 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         if ( changes != null ) {
             Date olddate = new Date( 0 );
 
-            final DateFormat fmt = getDateFormat( context, params );
-            final DateFormat tfmt = getTimeFormat( context, params );
+            DateFormat fmt = getDateFormat( context, params );
+            DateFormat tfmt = getTimeFormat( context, params );
 
-            final Element rt = XhtmlUtil.element( XHTML.table );
+            Element rt = XhtmlUtil.element( XHTML.table );
             rt.setAttribute( XHTML.ATTR_class, "recentchanges" );
             rt.setAttribute( XHTML.ATTR_cellpadding, spacing );
 
             for(WikiPage pageref : changes ) {
                 Date lastmod = pageref.getLastModifiedDate();
 				if (lastmod == null) {
-					lastmod = new GregorianCalendar(1972, 1, 12).getTime(); //:FVK: workaround.
+					lastmod = new Date(); //:FVK: workaround.
 				}
 
                 if( lastmod.before( sincedate.getTime() ) ) {
@@ -127,8 +129,8 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 }
 
                 if( !isSameDay( lastmod, olddate ) ) {
-                    final Element row = XhtmlUtil.element( XHTML.tr );
-                    final Element col = XhtmlUtil.element( XHTML.td );
+                    Element row = XhtmlUtil.element( XHTML.tr );
+                    Element col = XhtmlUtil.element( XHTML.td );
                     col.setAttribute( XHTML.ATTR_colspan, tablewidth );
                     col.setAttribute( XHTML.ATTR_class, "date" );
                     col.addContent( XhtmlUtil.element( XHTML.b, fmt.format( lastmod ) ) );
@@ -138,14 +140,14 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     olddate = lastmod;
                 }
 
-                //TODO: разобраться с //pageref instanceof PageAttachment//
+                //TODO: here porting code for JSPwiki "pageref instanceof PageAttachment" (Page -> PageAttachment):
 
-				final String href = context
+				String href = context
 						.getURL(pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
                 Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
-                final Element row = XhtmlUtil.element( XHTML.tr );
-                final Element col = XhtmlUtil.element( XHTML.td );
+                Element row = XhtmlUtil.element( XHTML.tr );
+                Element col = XhtmlUtil.element( XHTML.td );
                 col.setAttribute( XHTML.ATTR_width, "30%" );
                 col.addContent( link );
 
@@ -156,7 +158,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     link = XhtmlUtil.link( context.getURL( Context.INFO, pageref.getName() ), null );
                     link.setAttribute( XHTML.ATTR_class, "infolink" );
 
-                    final Element img = XhtmlUtil.img( context.getURL( Context.NONE, "images/attachment_small.png" ), null );
+                    Element img = XhtmlUtil.img( context.getURL( Context.NONE, "images/attachment_small.png" ), null );
                     link.addContent( img );
 
                     col.addContent( link );
@@ -166,11 +168,11 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 rt.addContent( row );
 
                 if( pageref instanceof PageAttachment ) {
-                    final Element td = XhtmlUtil.element( XHTML.td, tfmt.format( lastmod ) );
+                    Element td = XhtmlUtil.element( XHTML.td, tfmt.format( lastmod ) );
                     td.setAttribute( XHTML.ATTR_class, "lastchange" );
                     row.addContent( td );
                 } else {
-                    final Element infocol = XhtmlUtil.element( XHTML.td );
+                    Element infocol = XhtmlUtil.element( XHTML.td );
                     infocol.setAttribute( XHTML.ATTR_class, "lastchange" );
                     infocol.addContent( XhtmlUtil.link( context.getURL( Context.DIFF, pageref.getName(), "r1=-1" ),
                                                         tfmt.format( lastmod ) ) );
@@ -181,9 +183,9 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //  Display author information.
                 //
                 if( showAuthor ) {
-                    final String author = pageref.getAuthor();
+                    String author = pageref.getAuthor();
 
-                    final Element authorinfo = XhtmlUtil.element( XHTML.td );
+                    Element authorinfo = XhtmlUtil.element( XHTML.td );
                     authorinfo.setAttribute( XHTML.ATTR_class, "author" );
 
                     if( author != null ) {
@@ -202,8 +204,8 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
                 // Change note
                 if( showChangenote ) {
-                    final String changenote = ":FVK:"; //:FVK: pageref.getAttribute( WikiPage.CHANGENOTE );
-                    final Element td_changenote = XhtmlUtil.element( XHTML.td, changenote );
+                    String changenote = ":FVK:"; //:FVK: pageref.getAttribute( WikiPage.CHANGENOTE );
+                    Element td_changenote = XhtmlUtil.element( XHTML.td, changenote );
                     td_changenote.setAttribute( XHTML.ATTR_class, "changenote" );
                     row.addContent( td_changenote );
                 }
@@ -222,9 +224,9 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
     }
 
     
-    private boolean isSameDay( final Date a, final Date b ) {
-        final Calendar aa = Calendar.getInstance(); aa.setTime( a );
-        final Calendar bb = Calendar.getInstance(); bb.setTime( b );
+    private boolean isSameDay( Date a, Date b ) {
+        Calendar aa = Calendar.getInstance(); aa.setTime( a );
+        Calendar bb = Calendar.getInstance(); bb.setTime( b );
 
         return aa.get( Calendar.YEAR ) == bb.get( Calendar.YEAR ) 
             && aa.get( Calendar.DAY_OF_YEAR ) == bb.get( Calendar.DAY_OF_YEAR );
@@ -235,8 +237,8 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
     // locale, but that is at odds with the 1st version of this plugin. We seek to preserve the
     // behaviour of that first version, so to get the default format, the user must explicitly do
     // something like: dateFormat='' timeformat='' which is a odd, but probably okay.
-    private DateFormat getTimeFormat( final Context context, final Map< String, String > params ) {
-        final String formatString = get( params, DEFAULT_TIME_FORMAT, PARAM_TIME_FORMAT );
+    private DateFormat getTimeFormat( Context context, Map< String, String > params ) {
+        String formatString = get( params, DEFAULT_TIME_FORMAT, PARAM_TIME_FORMAT );
         if( StringUtils.isBlank( formatString ) ) {
             return Preferences.getDateFormat( context, TimeFormat.TIME );
         }
@@ -244,8 +246,8 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         return new SimpleDateFormat( formatString );
     }
 
-    private DateFormat getDateFormat( final Context context, final Map< String, String > params ) {
-        final String formatString = get( params, DEFAULT_DATE_FORMAT, PARAM_DATE_FORMAT );
+    private DateFormat getDateFormat( Context context, Map< String, String > params ) {
+        String formatString = get( params, DEFAULT_DATE_FORMAT, PARAM_DATE_FORMAT );
         if( StringUtils.isBlank( formatString ) ) {
             return Preferences.getDateFormat( context, TimeFormat.DATE );
         }
@@ -253,9 +255,9 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         return new SimpleDateFormat( formatString );
     }
     
-    private String get( final Map< String, String > params, final String defaultValue, final String paramName ) {
-        final String value = params.get( paramName );
+    private String get( Map< String, String > params, String defaultValue, String paramName ) {
+        String value = params.get( paramName );
         return value == null ? defaultValue : value;
     }
-    
+
 }

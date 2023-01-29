@@ -343,14 +343,34 @@ public class CdoWikiPageProvider implements PageProvider {
 
 	@Override
 	public Collection<WikiPage> getAllPages() throws ProviderException {
-		// :FVK: workaround - возвращаются только 'корневые' страницы.
-		PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
 
-		//initializeRepositoryContentFromText(); //:FVK: WORKAROUND
+		CDOTransaction transaction = null;
+		try {
+			List<WikiPage> wikiPages = new ArrayList<>();
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl", "WikiPage.allInstances()", eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
 
-		EList<WikiPage> pages = pagesStore.getWikipages();
+			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+			for (Object page : query.getResult()) {
+				//@formatter:off
+				wikiPages.add((WikiPage) view.getObject(
+						((WikiPage) page).cdoID()
+						)
+				);
+				//@formatter:on
+			}
 
-		return pages;
+			return wikiPages;
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (!transaction.isClosed()) {
+				transaction.close();
+			}
+		}
 	}
 
 	@Override
@@ -524,7 +544,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public List<PageReference> getPageReferrers(String pageId) throws WikiException {
+	public List<PageReference> getPageReferrers(String pageId) throws ProviderException {
 		if (pageId == null) {
 			return null;
 		}
@@ -550,7 +570,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			return references;
 		} catch (Exception e) {
-			throw new WikiException(e);
+			throw new ProviderException(e);
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();

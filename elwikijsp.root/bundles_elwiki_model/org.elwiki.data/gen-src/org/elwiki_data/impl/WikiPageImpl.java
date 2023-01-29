@@ -422,7 +422,9 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 					Date date1 = o1.getCreationDate();
 					Date date2 = o2.getCreationDate();
 					if (date1 != null) {
-						return date1.compareTo(date2);
+						if (date2 != null)
+							return date1.compareTo(date2);
+						return 1; // (date2 == null), then date1 > date2. 
 					} else if (date2 != null) {
 						return -1;
 					}

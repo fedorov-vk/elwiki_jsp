@@ -21,135 +21,138 @@ package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- *  A Plugin that creates an index of pages according to a certain pattern.
- *  <br />
- *  The default is to include all pages.
- *  <p>
- *  This is a rewrite of the earlier JSPWiki IndexPlugin using JDOM2.
- 8  </p>
- *  <p>
- *  Parameters (from AbstractReferralPlugin):
- *  </p>
- *  <ul>
- *    <li><b>include</b> - A regexp pattern for marking which pages should be included.</li>
- *    <li><b>exclude</b> - A regexp pattern for marking which pages should be excluded.</li>
- *  </ul>
- *  
+ * A Plugin that creates an index of pages according to a certain pattern. <br />
+ * The default is to include all pages.
+ * <p>
+ * This is a rewrite of the earlier JSPWiki IndexPlugin using JDOM2. 8
+ * </p>
+ * <p>
+ * Parameters (from AbstractReferralPlugin):
+ * </p>
+ * <ul>
+ * <li><b>include</b> - A regexp pattern for marking which pages should be included.</li>
+ * <li><b>exclude</b> - A regexp pattern for marking which pages should be excluded.</li>
+ * </ul>
+ * 
  * @author Ichiro Furusato
  */
 public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 
-    private static final Logger log = Logger.getLogger(IndexPlugin.class);
+	private static final Logger log = Logger.getLogger(IndexPlugin.class);
 
-    private Namespace xmlns_XHTML = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String,String> params ) throws PluginException {
-        super.initialize( context, params );
+	private Namespace xmlns_XHTML = Namespace.getNamespace("http://www.w3.org/1999/xhtml");
 
-        final String include = params.get(PARAM_INCLUDE);
-        final String exclude = params.get(PARAM_EXCLUDE);
-        
-        final Element masterDiv = getElement("div","index");
-        final Element indexDiv = getElement("div","header");
-        masterDiv.addContent(indexDiv);
-        try {
-            final List<String> pages = listPages(context,include,exclude);
-            ServicesRefs.getPageManager().getPageSorter().sort(pages);
-            char initialChar = ' ';
-            Element currentDiv = new Element("div",xmlns_XHTML);            
-            for ( final String name : pages ) {
-                if ( name.charAt(0) != initialChar ) {
-                    if ( initialChar != ' ' ) {
-                        indexDiv.addContent(" - ");
-                    }                    
-                    initialChar = name.charAt(0);
-                    masterDiv.addContent(makeHeader(String.valueOf(initialChar)));
-                    currentDiv = getElement("div","body");
-                    masterDiv.addContent(currentDiv);
-                    indexDiv.addContent(getLink("#"+initialChar,String.valueOf(initialChar)));
-                } else {
-                    currentDiv.addContent(", ");
-                }
-                currentDiv.addContent( getLink( context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), name ), name ) );
-            }
-            
-        } catch( final ProviderException e ) {
-            log.warn("could not load page index",e);
-            throw new PluginException( e.getMessage() );
-        }
-        // serialize to raw format string (no changes to whitespace)
-        final XMLOutputter out = new XMLOutputter(Format.getRawFormat());
-        return out.outputString(masterDiv);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
 
-    private Element getLink( final String href, final String content ) {
-        final Element a = new Element( "a", xmlns_XHTML );
-        a.setAttribute( "href", href );
-        a.addContent( content );
-        return a;
-    }
+		String include = params.get(PARAM_INCLUDE);
+		String exclude = params.get(PARAM_EXCLUDE);
 
-    private Element makeHeader( final String initialChar ) {
-        final Element span = getElement( "span", "section" );
-        final Element a = new Element( "a", xmlns_XHTML );
-        a.setAttribute( "id", initialChar );
-        a.addContent( initialChar );
-        span.addContent( a );
-        return span;
-    }
+		Element masterDiv = getElement("div", "index");
+		Element indexDiv = getElement("div", "header");
+		masterDiv.addContent(indexDiv);
+		try {
+			List<WikiPage> pages = listPages(context, include, exclude);
+			Collections.sort(pages, WikiPage::compareTo);
+			char initialChar = '\u0020'; // space.
+			Element currentDiv = new Element("div", xmlns_XHTML);
+			for (WikiPage page : pages) {
+				if (page.isInternalPage()) {
+					continue;
+				}
+				String name = page.getName();
+				if (name.charAt(0) != initialChar) {
+					if (initialChar != '\u0020') {
+						indexDiv.addContent(" - ");
+					}
+					initialChar = name.charAt(0);
+					masterDiv.addContent(makeHeader(String.valueOf(initialChar)));
+					currentDiv = getElement("div", "body");
+					masterDiv.addContent(currentDiv);
+					indexDiv.addContent(getLink("#" + initialChar, String.valueOf(initialChar)));
+				} else {
+					currentDiv.addContent(", ");
+				}
+				currentDiv.addContent(getLink(context.getURL(Context.VIEW, page.getId()), name));
+			}
 
-    private Element getElement( final String gi, final String classValue ) {
-        final Element elt = new Element( gi, xmlns_XHTML );
-        elt.setAttribute( "class", classValue );
-        return elt;
-    }
+		} catch (ProviderException e) {
+			log.warn("could not load page index", e);
+			throw new PluginException(e.getMessage());
+		}
+		// serialize to raw format string (no changes to whitespace)
+		XMLOutputter out = new XMLOutputter(Format.getRawFormat());
+		return out.outputString(masterDiv);
+	}
 
-    /**
-     *  Grabs a list of all pages and filters them according to the include/exclude patterns.
-     *  
-     * @param context
-     * @param include
-     * @param exclude
-     * @return A list containing page names which matched the filters.
-     * @throws ProviderException
-     */
-    private List<String> listPages( final Context context, final String include, final String exclude ) throws ProviderException {
-        final Pattern includePtrn = include != null ? Pattern.compile( include ) : Pattern.compile(".*");
-        final Pattern excludePtrn = exclude != null ? Pattern.compile( exclude ) : Pattern.compile("\\p{Cntrl}"); // there are no control characters in page names
-        final List< String > result = new ArrayList<>();
-        final Set< String > pages = ServicesRefs.getReferenceManager().findCreated();
-        for( final String pageName : pages ) {
-            if( excludePtrn.matcher( pageName ).matches() ) {
-                continue;
-            }
-            if( includePtrn.matcher( pageName ).matches() ) {
-                result.add( pageName );
-            }
-        }
-        return result;
-    }
+	private Element getLink(String href, String content) {
+		Element a = new Element("a", xmlns_XHTML);
+		a.setAttribute("href", href);
+		a.addContent(content);
+		return a;
+	}
+
+	private Element makeHeader(String initialChar) {
+		Element span = getElement("span", "section");
+		Element a = new Element("a", xmlns_XHTML);
+		a.setAttribute("id", initialChar);
+		a.addContent(initialChar);
+		span.addContent(a);
+		return span;
+	}
+
+	private Element getElement(String gi, String classValue) {
+		Element elt = new Element(gi, xmlns_XHTML);
+		elt.setAttribute("class", classValue);
+		return elt;
+	}
+
+	/**
+	 * Grabs a list of all pages and filters them according to the include/exclude patterns.
+	 * 
+	 * @param context
+	 * @param include
+	 * @param exclude
+	 * @return A list containing page names which matched the filters.
+	 * @throws ProviderException
+	 */
+	private List<WikiPage> listPages(Context context, String include, String exclude) throws ProviderException {
+		Pattern includePattern = include != null ? Pattern.compile(include) : Pattern.compile(".*");
+		Pattern excludePattern = exclude != null ? Pattern.compile(exclude) : Pattern.compile("\\p{Cntrl}"); // there are no control characters in page names
+		List<WikiPage> result = new ArrayList<>();
+		Collection<WikiPage> pages = pageManager.getAllPages();
+		//Set< String > pages = ServicesRefs.getReferenceManager().findCreated();
+		for (WikiPage page : pages) {
+			String pageName = page.getName();
+			if (excludePattern.matcher(pageName).matches()) {
+				continue;
+			}
+			if (includePattern.matcher(pageName).matches()) {
+				result.add(page);
+			}
+		}
+		return result;
+	}
 
 }

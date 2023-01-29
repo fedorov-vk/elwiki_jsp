@@ -18,23 +18,31 @@
  */
 package org.apache.wiki.api.exceptions;
 
-
 /**
- *  This exception represents the superclass of all exceptions that providers may throw.  It is okay to throw
- *  it in case you cannot use any of the specific subclasses, in which case the page loading is considered to be
- *  broken, and the user is notified.
+ * This exception represents the superclass of all exceptions that providers may throw. It is okay to throw it
+ * in case you cannot use any of the specific subclasses, in which case the page loading is considered to be
+ * broken, and the user is notified.
  */
 public class ProviderException extends WikiException {
 
-    private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 0L;
 
-    /**
-     *  Creates a ProviderException.
-     *
-     *  @param msg exception message.
-     */
-    public ProviderException( final String msg ) {
-        super( msg );
-    }
+	/**
+	 * Creates a ProviderException.
+	 *
+	 * @param msg exception message.
+	 */
+	public ProviderException(final String msg) {
+		super(msg);
+	}
+
+	/**
+	 * Constructs an exception.
+	 * 
+	 * @param cause the cause of the exception.
+	 */
+	public ProviderException(Throwable cause) {
+		super(cause);
+	}
 
 }

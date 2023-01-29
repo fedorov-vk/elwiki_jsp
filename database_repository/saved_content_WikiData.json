@@ -672,7 +672,7 @@
           "creationDate": "12 Feb 1972 00:00:00.000 +0300",
           "author": "Administrator",
           "changeNote": "",
-          "content": "* ElWiki, version: __[{$elwikiversion}]__\r\n* Number of pages : %%badge [{$totalpages}]/%\r\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\r\n* System Uptime: %%badge [{$uptime}] /%\r\n* ----\r\n* [Full System Info|Reader:1|class\u003d\u0027slimbox-link\u0027]\r\n* [Edit this page...|Edit:2]\r\n\r\n[{ALLOW edit Admin}]\r\n[{ALLOW view All}]\r\n"
+          "content": "* ElWiki, version: __[{$elwikiversion}]__\r\n* Number of pages : %%badge [{$totalpages}]/%\r\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\r\n* System Uptime: %%badge [{$uptime}] /%\r\n* ----\r\n* [Full System Info|Reader:w1|class\u003d\u0027slimbox-link\u0027]\r\n* [Edit this page...|Edit:w2]\r\n\r\n[{ALLOW edit Admin}]\r\n[{ALLOW view All}]\r\n"
         }
       ],
       "attachments": []
