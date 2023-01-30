@@ -470,9 +470,9 @@ public class LinkParser
         public boolean isInterwikiLink()
         {
             LinkParsingOperations lpo = new LinkParsingOperations( null );
-            if( !hasReference() ) m_ref = m_text;
-            m_interwikiPoint = lpo.interWikiLinkAt( m_ref );
-            return lpo.isInterWikiLink( m_ref );
+            String reference = getReference();
+            m_interwikiPoint = lpo.interWikiLinkAt( reference );
+            return lpo.isInterWikiLink( reference );
         }
 
         /**
@@ -488,7 +488,7 @@ public class LinkParser
         {
             if( isInterwikiLink() )
             {
-                return m_ref.substring( 0, m_interwikiPoint );
+                return getReference().substring( 0, m_interwikiPoint );
             }
 
             return null;
@@ -507,7 +507,7 @@ public class LinkParser
         {
             if( isInterwikiLink() )
             {
-                return m_ref.substring( m_interwikiPoint+1 );
+                return getReference().substring( m_interwikiPoint+1 );
             }
 
             return null;

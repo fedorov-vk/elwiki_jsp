@@ -186,8 +186,9 @@ public interface RenderingManager extends RenderApi, WikiEventListener, Internal
      *  @param pagedata The data to render
      *  @param localLinkHook Is called whenever a wiki link is found
      *  @param extLinkHook   Is called whenever an external link is found
+     *  @param attLinkHook   Is called whenever ...
      *  @param parseAccessRules Parse the access rules if we encounter them
-     *  @param justParse Just parses the pagedata, does not actually render.  In this case, this methods an empty string.
+     *  @param justParse Just parses the pagedata, does not actually render. In this case, this methods an empty string.
      *  @return HTML-rendered page text.
      */
     String textToHTML( Context context,

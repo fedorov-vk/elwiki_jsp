@@ -106,7 +106,7 @@ public abstract class MarkupParser {
    public static final String CLASS_WIKIPAGE = "wikipage";
 
    /** The value for anchor element <tt>class</tt> attributes when used for edit page links. The value is "createpage". */
-   public static final String CLASS_EDITPAGE = "createpage";
+   public static final String CLASS_CREATEPAGE = "createpage";
 
    /** The value for anchor element <tt>class</tt> attributes when used for interwiki page links. The value is "interwiki". */
    public static final String CLASS_INTERWIKI = "interwiki";
@@ -126,7 +126,7 @@ public abstract class MarkupParser {
    @Deprecated
    public static final String[] CLASS_TYPES = {
       CLASS_WIKIPAGE,
-      CLASS_EDITPAGE,
+      CLASS_CREATEPAGE,
       "",
       CLASS_FOOTNOTE,
       CLASS_FOOTNOTE_REF,

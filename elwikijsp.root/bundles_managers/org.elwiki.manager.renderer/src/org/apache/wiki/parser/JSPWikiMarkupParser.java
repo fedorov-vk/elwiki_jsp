@@ -107,7 +107,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 		CMD(CLASS_WIKIPAGE),
 		READ(CLASS_WIKIPAGE),
 		//:FVK: READ_ID(CLASS_WIKIPAGE),
-		EDIT(CLASS_EDITPAGE),
+		CREATE(CLASS_CREATEPAGE),
 		LOCAL(CLASS_FOOTNOTE),
 		LOCALREF(CLASS_FOOTNOTE_REF),
 		IMAGE(""),
@@ -346,8 +346,8 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 el = createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), link), text, section );
                 break;
 
-            case EDIT:
-                el = createAnchor( LinkType.EDIT, m_context.getURL( ContextEnum.PAGE_EDIT.getRequestContext(),link), text, "" );
+            case CREATE:
+                el = createAnchor( LinkType.CREATE, m_context.getURL( ContextEnum.PAGE_EDIT.getRequestContext(),link), text, "" );
                 el.setAttribute("title", MessageFormat.format( rb.getString( "markupparser.link.create" ), link ) );
 
                 break;
@@ -951,7 +951,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         if( matchedLink != null ) {
             makeLink( LinkType.READ, matchedLink, wikiname, null, null );
         } else {
-            makeLink( LinkType.EDIT, wikiname, wikiname, null, null );
+            makeLink( LinkType.CREATE, wikiname, wikiname, null, null );
         }
 
         return m_currentElement;
@@ -1186,7 +1186,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             //
             //  Yes, we now have the components separated.
             //  linktext = the text the link should have
-            //  linkref  = the url or page name.
+            //  linkref  = the url or @pageID, name of page attachment.
             //
             //  In many cases these are the same.  [linktext|linkref].
             //
@@ -1274,10 +1274,10 @@ public class JSPWikiMarkupParser extends MarkupParser {
 					if (wikiPage.getPageContents().size() > 0) {
 						linkType = LinkType.READ;
 					} else {
-						linkType = LinkType.EDIT; // :FVK: workaround?
+						linkType = LinkType.CREATE; // :FVK: workaround? the page needs content creation. 
 					}
 				} else {
-					// что-то пошло не так.
+					// page creation required.
 					WikiPage page = this.m_context.getPage();
 					String msg = String.format("Incorrect reference to page with id=%d, in page '%s'.", pageId,
 							((page != null) ? page.getName() : "null"));
@@ -1321,7 +1321,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                         sectref = sectref.replace( '%', '_' );
                         makeLink( LinkType.READ, matchedLink, linkText, sectref, link.getAttributes() );
                     } else {
-                        makeLink( LinkType.EDIT, linkRef, linkText, null, link.getAttributes() );
+                        makeLink( LinkType.CREATE, linkRef, linkText, null, link.getAttributes() );
                     }
                 } else {
                     // It's an internal Wiki link
@@ -1333,7 +1333,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                     if( matchedLink != null ) {
                         makeLink( LinkType.READ, matchedLink, linkText, null, link.getAttributes() );
                     } else {
-                        makeLink( LinkType.EDIT, linkRef, linkText, null, link.getAttributes() );
+                        makeLink( LinkType.CREATE, linkRef, linkText, null, link.getAttributes() );
                     }
                 }
             }
