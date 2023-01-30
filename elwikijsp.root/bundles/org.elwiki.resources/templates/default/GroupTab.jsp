@@ -46,9 +46,9 @@
   //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
 
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
-  IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+  IGroupManager groupMgr = ServicesRefs.getGroupManager();
 
-  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getRoles();
+  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getGroups();
   Principal[] groups;
   //:FVK: Arrays.sort( groups, new PrincipalComparator() );
 

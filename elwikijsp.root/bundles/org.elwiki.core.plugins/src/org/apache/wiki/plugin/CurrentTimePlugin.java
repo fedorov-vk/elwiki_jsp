@@ -62,7 +62,7 @@ public class CurrentTimePlugin implements Plugin {
             return fmt.format( d );
         } catch( final IllegalArgumentException e ) {
             final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
-            throw new PluginException( rb.getString( "currenttimeplugin.badformat" ) + e.getMessage() );
+            throw new PluginException( rb.getString( "currenttimeplugin.badformat" ) + e.getMessage(), e );
         }
     }
 

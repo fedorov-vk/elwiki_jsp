@@ -70,7 +70,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiScopeManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki_data.WikiPage;
@@ -92,7 +92,7 @@ public class ServicesRefs implements Engine {
 	private static PageManager pageManager;
 	private static PageRenamer pageRenamer;
 	private static AuthorizationManager authorizationManager;
-	private static IAuthorizer groupManager;
+	private static IGroupManager groupManager;
 	private static ProgressManager progressManager;
 	private static UserManager userManager;
 	private static AdminBeanManager adminBeanManager;
@@ -150,7 +150,7 @@ public class ServicesRefs implements Engine {
 	private ComponentFactory<AuthorizationManager> factoryAuthorizationManager;
 
 	@Reference(target = "(component.factory=elwiki.GroupManager.factory)")
-	private ComponentFactory<IAuthorizer> factoryGroupManager;
+	private ComponentFactory<IGroupManager> factoryGroupManager;
 
 	@Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
 	private ComponentFactory<ProgressManager> factoryProgressManager;
@@ -287,7 +287,7 @@ public class ServicesRefs implements Engine {
 						.getInstance());
 		managers.put(AuthorizationManager.class, ServicesRefs.authorizationManager = this.factoryAuthorizationManager
 				.newInstance(properties).getInstance());
-		managers.put(IAuthorizer.class,
+		managers.put(IGroupManager.class,
 				ServicesRefs.groupManager = this.factoryGroupManager.newInstance(properties).getInstance());
 		managers.put(PageManager.class,
 				ServicesRefs.pageManager = this.factoryPageManager.newInstance(properties).getInstance());
@@ -367,7 +367,7 @@ public class ServicesRefs implements Engine {
 		return authorizationManager;
 	}
 
-	public static IAuthorizer getGroupManager() {
+	public static IGroupManager getGroupManager() {
 		return groupManager;
 	}
 
@@ -576,7 +576,7 @@ public class ServicesRefs implements Engine {
 			initService(GroupManager.class);
 			//initComponent( GroupManager.class );
 			 */
-			// initService(IAuthorizer.class);
+			// initService(IGroupManager.class);
 
 //:FVK: отладить:
 			// initService(EditorManager.class);

@@ -18,72 +18,69 @@
  */
 package org.apache.wiki.plugin;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
-import org.eclipse.core.runtime.Assert;
-import org.elwiki.api.authorization.IAuthorizer;
-import org.elwiki.services.ServicesRefs;
-
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map;
+import org.elwiki.api.authorization.IGroupManager;
+import org.osgi.service.useradmin.Group;
 
 /**
- *  <p>Prints the groups managed by this wiki, separated by commas.
- *  <br>The groups are sorted in ascending order, and are hyperlinked to the page that displays the group's members.
- *  </p>
- *  <p>Parameters : </p>
- *  NONE
+ * <p>
+ * Prints the groups managed by this wiki, separated by commas. <br>
+ * The groups are sorted in ascending order, and are hyperlinked to the page that displays the group's members.
+ * </p>
+ * <p>
+ * Parameters :
+ * </p>
+ * NONE
  *
- *  @since 2.4.19
+ * @since 2.4.19
  */
 public class Groups implements Plugin {
 
-    private static final Comparator<Principal> COMPARATOR = new PrincipalComparator();
-    
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
-		Assert.isTrue(false, "Код опущен!");
-		/*:FVK:
-        // Retrieve groups, and sort by name
-        final Engine engine = context.getEngine();
-        final IAuthorizer groupMgr = ServicesRefs.getGroupManager(); // IAuthorizer.class
-        final Principal[] groups = groupMgr.getRoles();
-        Arrays.sort( groups, COMPARATOR );
+	private static final Comparator<Principal> COMPARATOR = new PrincipalComparator();
 
-        final StringBuilder s = new StringBuilder();
-        
-        for ( int i = 0; i < groups.length; i++ ) {
-            final String name = groups[ i ].getName();
-            
-            // Make URL
-            final String url = ServicesRefs.getUrlConstructor().makeURL( ContextEnum.GROUP_VIEW.getRequestContext(), name,  null );
-            
-            // Create hyperlink
-            s.append( "<a href=\"" );
-            s.append( url );
-            s.append( "\">" );
-            s.append( name );
-            s.append( "</a>" );
-            
-            // If not the last one, add a comma and space
-            if ( i < ( groups.length - 1 ) ) {
-                s.append( ',' );
-                s.append( ' ' );
-            }
-        }
-        return s.toString();
-        */
-		return null;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		// Retrieve groups, and sort by name
+		Engine engine = context.getEngine();
+		IGroupManager groupMgr = engine.getManager(IGroupManager.class); // IGroupManager.class
+		URLConstructor urlConstructor = engine.getManager(URLConstructor.class);
+		List<Group> groups = groupMgr.getGroups();
+		//:FVK: Arrays.sort( groups, COMPARATOR );
+
+		List<String> listGroups = new ArrayList<>();
+		for (Group group : groups) {
+			StringBuilder str = new StringBuilder();
+			Dictionary<String, Object> groupProps = group.getProperties();
+			String name = (String) groupProps.get(UserDatabase.GROUP_NAME);
+
+			// Make URL
+			String url = urlConstructor.makeURL(Context.VIEW_GROUP, name, null);
+
+			// Create hyperlink
+			str.append("<a href=\"").append(url).append("\">").append(name).append("</a>");
+
+			listGroups.add(str.toString());
+		}
+
+		// Adding a comma and a space as separators.
+		return listGroups.stream().collect(Collectors.joining(", "));
+	}
 
 }

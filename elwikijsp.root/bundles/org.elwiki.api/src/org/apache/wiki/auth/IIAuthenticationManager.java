@@ -86,7 +86,7 @@ public interface IIAuthenticationManager extends Initializable {
      * container <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method fires event
      * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_AUTHENTICATED} with two parameters: a Principal representing the login principal,
      * and the current Session. In addition, if the authorizer is of type WebContainerAuthorizer, this method iterates through the
-     * container roles returned by {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#getRoles()}, tests for membership in each
+     * container roles returned by {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#getGroups()}, tests for membership in each
      * one, and adds those that pass to the Subject's principal set.</li>
      * <li>If, after checking for authentication, the Session is still Anonymous, this method next checks to see if the user has
      * "asserted" an identity by supplying an assertion cookie. If the user is found to be asserted, this method fires event

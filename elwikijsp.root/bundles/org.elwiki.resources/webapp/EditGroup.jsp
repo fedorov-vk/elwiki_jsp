@@ -23,7 +23,7 @@
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
 <%@ page import="org.elwiki.api.authorization.WrapGroup" %>
-<%@ page import="org.elwiki.api.authorization.IAuthorizer" %>
+<%@ page import="org.elwiki.api.authorization.IGroupManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
@@ -39,7 +39,7 @@
 
     // Extract the current user, group name, members and action attributes
     Session wikiSession = wikiContext.getWikiSession();
-    IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+    IGroupManager groupMgr = ServicesRefs.getGroupManager();
     WrapGroup group = null;
     /*:FVK: TODO:... передача редактируемой группы. */
     try
@@ -49,7 +49,7 @@
     }
     catch ( WikiSecurityException e )
     {
-        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
+        wikiSession.addMessage( IGroupManager.MESSAGES_KEY, e.getMessage() );
         response.sendRedirect( "Group.jsp" );
     }
 
@@ -61,7 +61,7 @@
         groupMgr.validateGroup( wikiContext, group );
 
         // If no errors, save the group now
-        if ( wikiSession.getMessages( IAuthorizer.MESSAGES_KEY ).length == 0 )
+        if ( wikiSession.getMessages( IGroupManager.MESSAGES_KEY ).length == 0 )
         {
             try
             {
@@ -70,10 +70,10 @@
             catch( WikiSecurityException e )
             {
                 // Something went horribly wrong! Maybe it's an I/O error...
-                wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
+                wikiSession.addMessage( IGroupManager.MESSAGES_KEY, e.getMessage() );
             }
         }
-        if ( wikiSession.getMessages( IAuthorizer.MESSAGES_KEY ).length == 0 )
+        if ( wikiSession.getMessages( IGroupManager.MESSAGES_KEY ).length == 0 )
         {
             response.sendRedirect( "Group.jsp?group=" + group.getName() );
             return;

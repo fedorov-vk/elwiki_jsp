@@ -22,13 +22,13 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 
 /**
- * Extends the {@link org.elwiki.api.authorization.IAuthorizer} interface by including a delgate
+ * Extends the {@link org.elwiki.api.authorization.IGroupManager} interface by including a delgate
  * method for {@link javax.servlet.http.HttpServletRequest#isUserInRole(String)}.
  */
-public interface IWebAuthorizer extends IAuthorizer {
+public interface IWebAuthorizer extends IGroupManager {
 
 	/**
 	 * Determines whether a user associated with an HTTP request possesses a particular

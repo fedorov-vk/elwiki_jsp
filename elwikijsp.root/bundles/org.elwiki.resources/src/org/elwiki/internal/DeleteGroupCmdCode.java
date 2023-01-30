@@ -10,7 +10,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.services.ServicesRefs;
 
@@ -31,7 +31,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
-		IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+		IGroupManager groupMgr = ServicesRefs.getGroupManager();
 		WrapGroup group = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {
@@ -44,7 +44,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 			
 			httpRequest.setAttribute("Group", group); //HACK: вместо pageContext.setAttribute() 
 		} catch (WikiSecurityException e) {
-			wikiSession.addMessage(IAuthorizer.MESSAGES_KEY, e.getMessage());
+			wikiSession.addMessage(IGroupManager.MESSAGES_KEY, e.getMessage());
 			httpResponse.sendRedirect("Group.jsp");
 		}
 
@@ -58,7 +58,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 	    catch ( WikiSecurityException e )
 	    {
 	        // Send error message
-	        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
+	        wikiSession.addMessage( IGroupManager.MESSAGES_KEY, e.getMessage() );
 	        httpResponse.sendRedirect( "Group.jsp" );
 	    }
 	}

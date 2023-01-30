@@ -33,14 +33,14 @@
 <%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-Engine wiki = Wiki.engine().find( getServletConfig() );
+    Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_VIEW.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     
     // Extract the current user, group name, members
     Session wikiSession = wikiContext.getWikiSession();
-    IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+    IGroupManager groupMgr = ServicesRefs.getGroupManager();
     WrapGroup group = null;
     try {
         group = groupMgr.parseGroup( wikiContext, false );
@@ -48,7 +48,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     } catch ( NoSuchPrincipalException e ) {
         // New group; let GroupContent print out the message...
     } catch ( WikiSecurityException e ) {
-        wikiSession.addMessage( IAuthorizer.MESSAGES_KEY, e.getMessage() );
+        wikiSession.addMessage( IGroupManager.MESSAGES_KEY, e.getMessage() );
     }
     
     // Set the content type and include the response content

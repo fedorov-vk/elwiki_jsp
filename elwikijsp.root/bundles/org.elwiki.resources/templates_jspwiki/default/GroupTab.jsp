@@ -40,16 +40,16 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+Context c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   //String name = request.getParameter( "group" );
   //Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
 
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
-  IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+  IGroupManager groupMgr = ServicesRefs.getGroupManager();
 
-  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getRoles();
+  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getGroups();
   Principal[] groups;
   //:FVK: Arrays.sort( groups, new PrincipalComparator() );
 

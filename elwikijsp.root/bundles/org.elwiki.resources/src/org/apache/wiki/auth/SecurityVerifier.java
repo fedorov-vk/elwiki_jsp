@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.authorize.GroupDatabase;
+//import org.apache.wiki.auth.authorize.GroupDatabase;
 //import org.apache.wiki.auth.authorize.GroupManager;
 //:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.elwiki.permissions.AllPermission;
@@ -475,7 +475,7 @@ public final class SecurityVerifier {
     {
     	Object mgr = null, db = null; // :FVK:
     	/*:FVK:
-        final IAuthorizer mgr = ServicesRefs.getGroupManager(); // GroupManager
+        final IGroupManager mgr = ServicesRefs.getGroupManager(); // GroupManager
         GroupDatabase db = null;
         try {
             db = ServicesRefs.getGroupManager().getGroupDatabase();

@@ -25,7 +25,7 @@ import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -142,7 +142,7 @@ public interface AuthorizationManager extends Initializable {
      * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer could not be initialized
      * @return the current Authorizer
      */
-    IAuthorizer getAuthorizer() throws WikiSecurityException;
+    IGroupManager getAuthorizer() throws WikiSecurityException;
 
     /**
      * <p>Determines if the Subject associated with a supplied Session contains a desired user Principal or built-in Role principal,

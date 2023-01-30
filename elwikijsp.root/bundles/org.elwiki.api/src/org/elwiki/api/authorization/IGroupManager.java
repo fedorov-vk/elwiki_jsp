@@ -46,10 +46,10 @@ import org.osgi.service.useradmin.Group;
  * настроенным авторизатором, чтобы определить, какие дополнительные принципалы
  * {@link org.elwiki.data.authorize.Role} должны быть добавлены в WikiSession
  * пользователя. Таким образом, для определения вводимых ролей, авторизатор запрашивает об
- * известных ему ролях, путем вызова {@link IAuthorizer#getRoles()}. Затем каждая роль,
+ * известных ему ролях, путем вызова {@link IGroupManager#getGroups()}. Затем каждая роль,
  * возвращаемая авторизатором, проверяется путем вызова
- * {@link IAuthorizer#isUserInRole(WikiSession, GroupWiki)}. Если эта проверка отвергла роль, и
- * IAuthorizer имеет тип WebAuthorizer, то AuthenticationManager снова проверяет роль, вызывая
+ * {@link IGroupManager#isUserInRole(WikiSession, GroupWiki)}. Если эта проверка отвергла роль, и
+ * IGroupManager имеет тип WebAuthorizer, то AuthenticationManager снова проверяет роль, вызывая
  * {@link org.elwiki.api.authorization.authorize.IWebAuthorizer#isUserInRole(HttpServletRequest, Principal)}.
  * Любые роли, которые проходят тест, вводятся в Субъект путем запуска соответствующих событий
  * аутентификации.
@@ -59,16 +59,16 @@ import org.osgi.service.useradmin.Group;
  * Authorizer to determine which additional {@link org.elwiki.data.authorize.Role} principals
  * should be added to the user's WikiSession. To determine which roles should be injected, the
  * Authorizer is queried for the roles it knows about by calling
- * {@link org.elwiki.api.authorization.IAuthorizer#getRoles()}. Then, each role returned by the
+ * {@link org.elwiki.api.authorization.IGroupManager#getGroups()}. Then, each role returned by the
  * Authorizer is tested by calling
- * {@link org.elwiki.api.authorization.IAuthorizer#isUserInRole(WikiSession, GroupWiki)}. If this
- * check fails, and the IAuthorizer is of type WebAuthorizer, AuthenticationManager checks the
+ * {@link org.elwiki.api.authorization.IGroupManager#isUserInRole(WikiSession, GroupWiki)}. If this
+ * check fails, and the IGroupManager is of type WebAuthorizer, AuthenticationManager checks the
  * role again by calling
  * {@link org.elwiki.api.authorization.authorize.IWebAuthorizer#isUserInRole(javax.servlet.http.HttpServletRequest, Principal)}).
  * Any roles that pass the test are injected into the Subject by firing appropriate
  * authentication events.
  */
-public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener, WikiEventProvider*/ {
+public interface IGroupManager {
 
 	String CREATED = "created";	
 
@@ -113,7 +113,7 @@ public interface IAuthorizer /* :FVK: extends IElwikiManager, WikiEventListener,
 	 * @return an array of Principals representing the roles.
 	 */
 	//TODO: :FVK: remove full class name of Group.; RENAME getRoles -> getGroups.
-	List<org.osgi.service.useradmin.Group> getRoles();
+	List<org.osgi.service.useradmin.Group> getGroups();
 
 	/**
 	 * Looks up and returns a role Principal (GroupPrincipal) matching a given name. If a matching

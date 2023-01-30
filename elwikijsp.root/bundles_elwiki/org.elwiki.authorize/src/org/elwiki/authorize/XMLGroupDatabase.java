@@ -80,6 +80,7 @@ import org.w3c.dom.NodeList;
  * 
  * @since 2.4.17
  */
+@Deprecated
 public class XMLGroupDatabase implements GroupDatabase {
 
 	protected static final Logger log = Logger.getLogger(XMLGroupDatabase.class);

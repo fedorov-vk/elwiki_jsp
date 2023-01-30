@@ -67,7 +67,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IWikiContext;
 //import org.elwiki.api.IWikiEngine;
 
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.api.authorization.authorize.GroupDatabase;
 //import org.elwiki.api.authorization.user.UserProfile;
@@ -114,9 +114,9 @@ import com.google.gson.Gson;
  * </p>
  */
 /* For ElWiki reviewed by Victor Fedorov. */
-@Component(name = "elwiki.GroupManager", service = IAuthorizer.class, //
+@Component(name = "elwiki.GroupManager", service = IGroupManager.class, //
 		factory = "elwiki.GroupManager.factory")
-public class GroupManager implements IAuthorizer {
+public class GroupManager implements IGroupManager {
 
 	private static final Logger log = Logger.getLogger(GroupManager.class);
 
@@ -198,7 +198,7 @@ public class GroupManager implements IAuthorizer {
 	// -- service handling -----------------------------(end)--
 	
 	@Override
-	public List<Group> getRoles() {
+	public List<Group> getGroups() {
 		List<Group> groups = new ArrayList<>();
 		try {
 			for (Role role : this.userAdminService.getRoles(null)) {
@@ -297,7 +297,7 @@ public class GroupManager implements IAuthorizer {
 			} else {
 				throw new WikiSecurityException("Group name cannot be blank.");
 			}
-		} else if (ArrayUtils.contains(IAuthorizer.RESTRICTED_GROUPNAMES, name)) {
+		} else if (ArrayUtils.contains(IGroupManager.RESTRICTED_GROUPNAMES, name)) {
 			// Certain names are forbidden
 			throw new WikiSecurityException("Illegal group name: " + name);
 		}

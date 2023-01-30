@@ -83,11 +83,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IAuthenticationManager;
 //import org.elwiki.api.IAuthorizationManager;
 //import org.elwiki.api.IElWikiSession;
-//import org.elwiki.api.authorization.Group;
 import org.osgi.service.useradmin.Group;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 //import org.elwiki.api.authorization.user.IUserDatabase;
 //import org.elwiki.api.authorization.user.UserProfile;
 //import org.elwiki.api.event.WikiEvent;
@@ -180,13 +179,13 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
-	/** The extension ID for access to implementation set of {@link IAuthorizer}. */
+	/** The extension ID for access to implementation set of {@link IGroupManager}. */
 	private static final String ID_EXTENSION_AUTHORIZER = "authorizer";
 
 	/** Extension's specific ID of default external Authorizer. Current value - {@value} */
 	protected static final String DEFAULT_AUTHORIZER = "WebContainerAuthorizer";
 
-	/** The property name in jspwiki.properties for specifying the external {@link IAuthorizer}. */
+	/** The property name in jspwiki.properties for specifying the external {@link IGroupManager}. */
 	protected static final String PROP_AUTHORIZER = "jspwiki.authorizer";
 
 	/** Name of the default security policy file, as bundle resource. */
@@ -194,9 +193,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	private static final Class<?>[] permissionMethodArgs = new Class[] {String.class, String.class};
 	
-	private final Map<String, Class<? extends IAuthorizer>> authorizerClasses = new HashMap<>();
+	private final Map<String, Class<? extends IGroupManager>> authorizerClasses = new HashMap<>();
 
-	private IAuthorizer m_authorizer = null;
+	private IGroupManager m_authorizer = null;
 
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
@@ -220,7 +219,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
-	private IAuthorizer groupManager;
+	private IGroupManager groupManager;
 
 	@WikiServiceReference
 	private AclManager aclManager;
@@ -322,7 +321,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @return a Authorizer used to get page authorization information
 	 * @throws WikiException
 	 */
-	private IAuthorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
+	private IGroupManager getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
@@ -340,8 +339,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 					final Bundle bundle = Platform.getBundle(contributorName);
 					Class<?> clazz = bundle.loadClass(className);
 					try {
-						Class<? extends IAuthorizer> cl = clazz.asSubclass(IAuthorizer.class);
-						this.authorizerClasses.put(authorizerId, (Class<? extends IAuthorizer>) cl);
+						Class<? extends IGroupManager> cl = clazz.asSubclass(IGroupManager.class);
+						this.authorizerClasses.put(authorizerId, (Class<? extends IGroupManager>) cl);
 					} catch (ClassCastException e) {
 						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
 						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
@@ -353,13 +352,13 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			}
 		}
 
-		Class<? extends IAuthorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
+		Class<? extends IGroupManager> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
 		if (clazzAuthorizer == null) {
 			// TODO: это сообщение не к месту (логика не адекватна).
 			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
 		}
 
-		IAuthorizer authorizer;
+		IGroupManager authorizer;
 		try {
 			authorizer = clazzAuthorizer.newInstance();
 		} catch (InstantiationException e) {
@@ -481,7 +480,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @see org.elwiki.core.auth.IAuthorizationManager#getAuthorizer()
 	 */
 	@Override
-	public IAuthorizer getAuthorizer() throws WikiSecurityException {
+	public IGroupManager getAuthorizer() throws WikiSecurityException {
 		if (this.m_authorizer != null) {
 			return this.m_authorizer;
 		}
@@ -656,7 +655,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		/*:FVK:
 		// Check Groups
-		principal = ServicesRefs.getGroupManager().findRole(name); // IAuthorizer.class
+		principal = ServicesRefs.getGroupManager().findRole(name); // IGroupManager.class
 		if (principal != null) {
 			return principal;
 		}

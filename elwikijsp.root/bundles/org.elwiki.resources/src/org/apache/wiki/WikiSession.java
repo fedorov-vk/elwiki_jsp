@@ -20,8 +20,7 @@ package org.apache.wiki;
 
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IAuthorizer;
-import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.services.ServicesRefs;
@@ -523,7 +522,7 @@ public final class WikiSession implements Session, EventHandler {
 
     /**
      * Injects GroupPrincipal objects into the user's Principal set based on the groups the user belongs to. For Groups, the algorithm
-     * first calls the {@link GroupManager#getRoles()} to obtain the array of GroupPrincipals the authorizer knows about. Then, the
+     * first calls the {@link GroupManager#getGroups()} to obtain the array of GroupPrincipals the authorizer knows about. Then, the
      * method {@link GroupManager#isUserInRole(Session, Principal)} is called for each Principal. If the user is a member of the
      * group, an equivalent GroupPrincipal is injected into the user's principal set. Existing GroupPrincipals are flushed and replaced.
      * This method should generally be called after a user's {@link org.apache.wiki.auth.user0.UserProfile} is saved. If the wiki session

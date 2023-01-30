@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.authorize.WebContainerAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.AnonymousLoginModule;
@@ -569,7 +569,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * @param authorizer the Engine's configured Authorizer
      * @param request the user's HTTP session, which may be <code>null</code>
      */
-    private void injectAuthorizerRoles( final Session session, final IAuthorizer authorizer, final HttpServletRequest request ) {
+    private void injectAuthorizerRoles( final Session session, final IGroupManager authorizer, final HttpServletRequest request ) {
     	/*:FVK:
     	Authorizer authorizer1 = (Authorizer)authorizer; //:FVK: cast -- это неверно !!!
         // Test each role the authorizer knows about

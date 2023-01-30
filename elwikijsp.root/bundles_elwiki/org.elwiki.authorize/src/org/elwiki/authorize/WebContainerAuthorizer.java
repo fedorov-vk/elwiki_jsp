@@ -197,7 +197,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 *            the role to check
 	 * @return <code>true</code> if the user is considered to be in the role, <code>false</code>
 	 *         otherwise
-	 * @see org.elwiki.api.authorization.IAuthorizer.auth.wiki.auth.Authorizer#isUserInRole(org.elwiki.api.release.core.common.core.common.wiki.WikiSession,
+	 * @see org.elwiki.api.authorization.IGroupManager.auth.wiki.auth.Authorizer#isUserInRole(org.elwiki.api.release.core.common.core.common.wiki.WikiSession,
 	 *      Group)
 	 */
 	//:FVK: @Override
@@ -215,7 +215,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * @param role
 	 *            the name of the Role to retrieve
 	 * @return a Role Principal, or <code>null</code>
-	 * @see org.elwiki.api.authorization.IAuthorizer.auth.wiki.auth.Authorizer#initialize(IApplicationSesion)
+	 * @see org.elwiki.api.authorization.IGroupManager.auth.wiki.auth.Authorizer#initialize(IApplicationSesion)
 	 */
 	@Override
 	public Principal findRole(String role) {
@@ -320,7 +320,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * @return an array of Principals representing the roles
 	 */
 	@Override
-	public List<Group> getRoles() {
+	public List<Group> getGroups() {
 		return Collections.emptyList(); // :FVK: this.m_containerRoles.clone();
 	}
 

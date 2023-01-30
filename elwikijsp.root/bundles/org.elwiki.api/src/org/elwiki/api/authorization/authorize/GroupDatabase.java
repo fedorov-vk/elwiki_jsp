@@ -32,6 +32,7 @@ import org.elwiki.api.authorization.IGroupWiki;
 /**
  * Defines an interface for loading, persisting and storing wiki groups.
  */
+@Deprecated
 public interface GroupDatabase {
 	/**
 	 * No-op method that in previous versions of JSPWiki was intended to atomically commit

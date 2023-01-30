@@ -50,6 +50,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * why we use them in Subjects rather than the Groups themselves.
  * </p>
  */
+@Deprecated
 public class GroupWiki implements IGroupWiki {
 
 	public static final String[] RESTRICTED_GROUPNAMES = new String[] { "Anonymous", "All", "Asserted", "Authenticated" };
@@ -73,8 +74,8 @@ public class GroupWiki implements IGroupWiki {
 
 	/**
 	 * Protected constructor to prevent direct instantiation except by other package members. Callers should
-	 * use {@link IAuthorizer#parseGroup(String, String, boolean)} or
-	 * {@link IAuthorizer#parseGroup(org.apache.wiki.api.core.Context, boolean)}. instead.
+	 * use {@link IGroupManager#parseGroup(String, String, boolean)} or
+	 * {@link IGroupManager#parseGroup(org.apache.wiki.api.core.Context, boolean)}. instead.
 	 * 
 	 * @param name
 	 *            the name of the group

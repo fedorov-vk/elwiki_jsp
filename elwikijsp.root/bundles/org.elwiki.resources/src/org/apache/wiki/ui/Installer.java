@@ -30,7 +30,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.authorization.IAuthorizer;
+import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
@@ -152,7 +152,7 @@ public class Installer {
         }
         
         // Create a new admin group
-        final IAuthorizer groupMgr = ServicesRefs.getGroupManager();
+        final IGroupManager groupMgr = ServicesRefs.getGroupManager();
         WrapGroup group;
         /*:FVK:
         try {
