@@ -23,9 +23,11 @@ import java.security.Principal;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
@@ -47,7 +49,7 @@ public class UserUidTag extends BaseWikiTag {
 	private static final Pattern VALID_USER_NAME_PATTERN = Pattern.compile(notStartWithBlankOrColon + noColons);
 
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final Session wikiSession = ServicesRefs.getSessionMonitor()
 				.getWikiSession((HttpServletRequest) pageContext.getRequest());

@@ -18,13 +18,17 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 
 /**
@@ -77,8 +81,11 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
     /**
      *  This method is allowed to do pretty much whatever he wants.
      *  We then catch all mistakes.
+     * @throws ProviderException TODO
+     * @throws IOException TODO
+     * @throws JspTagException TODO
      */
-    public abstract int doWikiStartTag() throws Exception;
+    public abstract int doWikiStartTag() throws ProviderException, IOException, JspTagException;
 
     public int doEndTag() throws JspException {
         return EVAL_PAGE;

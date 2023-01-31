@@ -20,6 +20,9 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.configuration.IWikiConfiguration;
 
 /**
@@ -35,7 +38,7 @@ public class ContentEncodingTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final IWikiConfiguration config = m_wikiContext.getConfiguration();
 		pageContext.getOut().print(config.getContentEncodingCs());
 		return SKIP_BODY;

@@ -27,6 +27,8 @@ import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -65,7 +67,7 @@ public class IncludeTag extends BaseWikiTag {
 	}
 
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		return SKIP_BODY;
 	}
 

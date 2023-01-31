@@ -193,8 +193,9 @@ public interface PageProvider extends WikiProvider {
 	 * 
 	 * @param pageId ID of the required page.
 	 * @return Wiki page or <code>null</code>.
+	 * @throws ProviderException TODO
 	 */
-	WikiPage getPageById(String pageId);
+	WikiPage getPageById(String pageId) throws ProviderException;
 
 	String getMainPageId();
 

@@ -991,7 +991,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     }
 
 	@Override
-	public WikiPage getPageById(String pageId) {
+	public WikiPage getPageById(String pageId) throws ProviderException {
 		WikiPage page = null;
 		page = this.m_provider.getPageById(pageId);
 		return page;
@@ -1005,7 +1005,7 @@ public class DefaultPageManager implements PageManager, Initializable {
 	}
 
 	@Override
-	public WikiPage createPage(String pageName, String parentPageId) {
+	public WikiPage createPage(String pageName, String parentPageId) throws ProviderException {
 		final WikiPage p = getPageById( parentPageId );
 		return m_provider.createPage( pageName, "", p );		
 	}
@@ -1057,14 +1057,8 @@ public class DefaultPageManager implements PageManager, Initializable {
 		Collection<WikiPage> unreferencedPages = m_provider.getAllPages();
 		Collection<PageReference> pageReferences = m_provider.getPageReferences();
 		Set<String> referencedId = pageReferences.stream().map(PageReference::getPageId).collect(Collectors.toSet());
-		
-		Iterator<WikiPage> iter = unreferencedPages.iterator();
-		while(iter.hasNext()) {
-			WikiPage page = iter.next();
-			if(referencedId.contains(page.getId())) {
-				iter.remove();
-			}
-		}
+
+		unreferencedPages.removeIf(page -> referencedId.contains(page.getId()));
 
 		return unreferencedPages;
 	}

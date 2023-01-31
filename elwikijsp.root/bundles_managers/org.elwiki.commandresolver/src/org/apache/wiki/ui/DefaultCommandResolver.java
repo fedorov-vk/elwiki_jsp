@@ -385,7 +385,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 					return wikiPage.getName();
 				}
 			}
-		} catch (final IOException e) {
+		} catch (final IOException | ProviderException e) {
 			LOG.error("Unable to create context", e);
 			throw new InternalWikiException("Big internal booboo, please check logs.", e);
 		}

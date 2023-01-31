@@ -18,11 +18,15 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
 import java.security.Permission;
+
+import javax.servlet.jsp.JspTagException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -162,7 +166,7 @@ public class PermissionTag extends BaseWikiTag {
 	 * @return the result of the tag: SKIP_BODY or EVAL_BODY_CONTINUE
 	 */
 	@Override
-	public final int doWikiStartTag() {
+	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		for (final String perm : m_permissionList) {
 			final boolean hasPermission;
 			if (perm.charAt(0) == '!') {

@@ -22,10 +22,12 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.preferences.Preferences;
@@ -89,7 +91,7 @@ public class RSSImageLinkTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final JspWriter out = pageContext.getOut();
 		final ResourceBundle rb = Preferences.getBundle(m_wikiContext, InternationalizationManager.CORE_BUNDLE);

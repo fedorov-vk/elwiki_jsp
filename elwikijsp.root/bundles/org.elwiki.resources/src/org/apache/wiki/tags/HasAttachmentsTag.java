@@ -18,6 +18,10 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
@@ -36,7 +40,7 @@ public class HasAttachmentsTag extends BaseWikiTag {
 	private static final Logger log = Logger.getLogger(HasAttachmentsTag.class);
 
 	@Override
-	public final int doWikiStartTag() {
+	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final WikiPage page = m_wikiContext.getPage();
 		final AttachmentManager mgr = ServicesRefs.getAttachmentManager();

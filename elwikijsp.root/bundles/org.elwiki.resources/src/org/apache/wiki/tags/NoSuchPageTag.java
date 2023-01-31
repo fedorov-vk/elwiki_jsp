@@ -20,6 +20,7 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.Tag;
 
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -34,7 +35,7 @@ public class NoSuchPageTag extends PageExistsTag {
 	private static final long serialVersionUID = -5846814974234845798L;
 
 	@Override
-	public int doWikiStartTag() throws IOException, ProviderException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		int result = (super.doWikiStartTag() == SKIP_BODY) ? Tag.EVAL_BODY_INCLUDE : Tag.SKIP_BODY;
 		return result;
 	}

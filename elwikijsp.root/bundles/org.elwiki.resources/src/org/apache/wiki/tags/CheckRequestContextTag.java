@@ -23,6 +23,8 @@ import org.apache.wiki.api.exceptions.ProviderException;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
 /**
  * Includes body, if the request context matches. To understand more about
  * RequestContexts, please look at the WikiContext class.
@@ -81,7 +83,7 @@ public class CheckRequestContextTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		for (int i = 0; i < m_contextList.length; i++) {
 			String ctx = m_wikiContext.getRequestContext();
 

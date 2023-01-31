@@ -20,8 +20,11 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.rss.Feed;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -37,7 +40,7 @@ public class FeedDiscoveryTag extends BaseWikiTag {
 	private static final long serialVersionUID = 6827322800489528947L;
 
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final IWikiConfiguration config = m_wikiContext.getConfiguration();
 		final WikiPage page = m_wikiContext.getPage();

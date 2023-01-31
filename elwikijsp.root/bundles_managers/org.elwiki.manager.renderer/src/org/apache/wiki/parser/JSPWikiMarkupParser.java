@@ -38,6 +38,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
@@ -1298,7 +1299,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 }
             }
 
-    } catch( final ParseException | IOException e ) {
+    } catch( final ParseException | ProviderException | IOException e ) {
         log.info( "Parser failure: ", e );
         final Object[] args = { e.getMessage() };
         addElement( makeError( MessageFormat.format( rb.getString( "markupparser.error.parserfailure" ), args ) ) );

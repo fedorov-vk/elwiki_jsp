@@ -42,9 +42,6 @@ import java.util.stream.Collectors;
  */
 public class UnusedPagesPlugin extends AbstractReferralPlugin {
 
-    /** If set to "true", attachments are excluded from display.  Value is {@value}. */
-    public static final String PARAM_EXCLUDEATTS = "excludeattachments";
-
     /**
      *  {@inheritDoc}
      */
@@ -54,28 +51,19 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
 
 		try {
 			Collection<WikiPage> unreferencedPages = super.pageManager.getUnreferencedPages();
-
-//			final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
-//			Collection<String> links = refmgr.findUnreferenced();
-			Collection<String> links = unreferencedPages.stream().map(WikiPage::getName).collect(Collectors.toList());
-
-			// filter out attachments if "excludeattachments" was requested:
-			final String prop = params.get(PARAM_EXCLUDEATTS);
-			if (TextUtil.isPositive(prop)) {
-				// remove links to attachments (recognizable by a slash in it)
-				links.removeIf(link -> link.contains("/"));
-			}
-
-			links = filterAndSortCollection(links);
+			//:FVK: Collection<String> links = unreferencedPages.stream().map(WikiPage::getName).collect(Collectors.toList());
+			//:FVK: links = filterAndSortCollection(links);
+			
+			unreferencedPages.removeIf(page -> page.getId().startsWith("w")); // :FVK: workaround.
 
 			String wikitext;
 			if (m_show.equals(PARAM_SHOW_VALUE_COUNT)) {
-				wikitext = "" + links.size();
-				if (m_lastModified && links.size() != 0) {
-					wikitext = links.size() + " (" + m_dateFormat.format(m_dateLastModified) + ")";
+				wikitext = "" + unreferencedPages.size();
+				if (m_lastModified && unreferencedPages.size() != 0) {
+					wikitext = unreferencedPages.size() + " (" + m_dateFormat.format(m_dateLastModified) + ")";
 				}
 			} else {
-				wikitext = wikitizeStringCollection(links, m_separator, ALL_ITEMS);
+				wikitext = wikitizePageCollection(unreferencedPages, m_separator, ALL_ITEMS);
 			}
 			return makeHTML(context, wikitext);
 		} catch (Exception e) {

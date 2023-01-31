@@ -20,6 +20,8 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -37,7 +39,7 @@ public class PageSizeTag extends BaseWikiTag {
 	private static final Logger log = Logger.getLogger(PageSizeTag.class);
 
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final WikiPage page = m_wikiContext.getPage();
 

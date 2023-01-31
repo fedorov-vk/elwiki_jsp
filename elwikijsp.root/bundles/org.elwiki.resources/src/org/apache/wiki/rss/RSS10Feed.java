@@ -119,7 +119,7 @@ public class RSS10Feed extends Feed {
             /*
             Element description = new Element("Description", NS_RDF);
             if( m_wikiContext.getEngine().pageExists(author) ) {
-                description.setAttribute( "link", engine.getURL( WikiContext.VIEW, author, null, true ), NS_XMNLS );
+                description.setAttribute( "link", engine.getURL( WikiContext.PAGE_VIEW, author, null, true ), NS_XMNLS );
             }
 
             description.addContent( new Element("value", NS_XMNLS).addContent( author) );

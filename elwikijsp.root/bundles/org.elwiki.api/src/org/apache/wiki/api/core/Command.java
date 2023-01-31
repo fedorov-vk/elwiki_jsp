@@ -33,7 +33,7 @@ import java.security.Permission;
  * <li><strong>Static commands</strong> are exactly what they sound like: static. They are
  * <code>final</code>, threadsafe, and immutable. They have no intrinsic idea of the context
  * they are acting in. For example, the static command
- * {@link org.apache.wiki.ui.PageCommand#VIEW} embodies the idea of viewing a page &#8212; but
+ * {@link org.apache.wiki.ui.PageCommand#PAGE_VIEW} embodies the idea of viewing a page &#8212; but
  * exactly <em>which</em> page is left undefined. Static commands exist so that they can be
  * freely shared and passed around without incurring the penalties of object creation. Static
  * commands are a lot like naked request contexts ("edit", "view", etc.) except that they
@@ -128,7 +128,7 @@ public interface Command {
 	/**
 	 * Returns the Permission required to successfully execute this Command. If no Permission is
 	 * requred, this method returns <code>null</code>. For example, the static command
-	 * {@link org.apache.wiki.ui.PageCommand#VIEW} doesn't require a permission because it isn't
+	 * {@link org.apache.wiki.ui.PageCommand#PAGE_VIEW} doesn't require a permission because it isn't
 	 * referring to a particular WikiPage. However, if this command targets a WikiPage called
 	 * <code>Main</code>(via {@link org.apache.wiki.ui.PageCommand#targetedCommand(Object)}, the
 	 * resulting Command would require the permission

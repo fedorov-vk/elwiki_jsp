@@ -20,6 +20,10 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
+
 /**
  * Returns the currently used template. For example "default".
  *
@@ -29,7 +33,7 @@ public class TemplateDirTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -5513899998046353340L;
 
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		String template = m_wikiContext.getTemplate();
 
 		pageContext.getOut().print(template);

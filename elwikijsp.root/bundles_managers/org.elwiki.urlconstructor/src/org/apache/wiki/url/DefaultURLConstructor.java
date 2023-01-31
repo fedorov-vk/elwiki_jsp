@@ -41,7 +41,7 @@ import java.nio.charset.Charset;
 
 /**
  *  Implements the default URL constructor using links directly to the JSP pages.  This is what JSPWiki by default is using.  For example,
- *  WikiContext.VIEW points at "Wiki.jsp", etc.
+ *  WikiContext.PAGE_VIEW points at "Wiki.jsp", etc.
  *
  *  @since 2.2
  */

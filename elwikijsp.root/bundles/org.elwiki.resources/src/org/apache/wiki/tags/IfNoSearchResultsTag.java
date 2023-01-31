@@ -21,7 +21,10 @@ package org.apache.wiki.tags;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 
 /**
  * If there have been no search results, then outputs the body text.
@@ -32,7 +35,7 @@ public class IfNoSearchResultsTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 903898694980325576L;
 
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		Collection<?> list = (Collection<?>) pageContext.getAttribute("searchresults", PageContext.REQUEST_SCOPE);
 		if (list == null || list.size() == 0) {
 			return EVAL_BODY_INCLUDE;

@@ -20,6 +20,9 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -41,7 +44,7 @@ public class LinkToParentTag extends LinkToTag {
 
 	private static final long serialVersionUID = -3221811690118879748L;
 
-	public int doWikiStartTag() throws IOException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final WikiPage p = m_wikiContext.getPage();
 
 		//TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.

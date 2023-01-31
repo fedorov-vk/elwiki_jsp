@@ -20,6 +20,7 @@ package org.apache.wiki.api.core;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 
@@ -71,7 +72,7 @@ public interface Context extends Cloneable, Command {
     public static final String DIFF = ContextEnum.PAGE_DIFF.getRequestContext();
 
     /** The EDIT context - the user is editing the page. */
-    public static final String EDIT = ContextEnum.PAGE_EDIT.getRequestContext();
+    public static final String PAGE_EDIT = ContextEnum.PAGE_EDIT.getRequestContext();
 
     /** User is editing an existing group. */
     public static final String EDIT_GROUP = ContextEnum.GROUP_EDIT.getRequestContext();
@@ -119,7 +120,7 @@ public interface Context extends Cloneable, Command {
     public static final String UPLOAD = ContextEnum.PAGE_UPLOAD.getRequestContext();
 
     /** The VIEW context - the user just wants to view the page contents. */
-    public static final String VIEW = ContextEnum.PAGE_VIEW.getRequestContext();
+    public static final String PAGE_VIEW = ContextEnum.PAGE_VIEW.getRequestContext();
 
     /** User is viewing an existing group */
     public static final String VIEW_GROUP = ContextEnum.GROUP_VIEW.getRequestContext();
@@ -231,8 +232,9 @@ public interface Context extends Cloneable, Command {
 	 *            Page identifier for find page.
 	 * 
 	 * @return WikiPage page, paossibly <code>null</code>, if the page is not found for any reason.
+	 * @throws ProviderException TODO
 	 */
-	WikiPage getPageById(String pageId);
+	WikiPage getPageById(String pageId) throws ProviderException;
     
 	/**
 	 * Returns the wiki configuration.
@@ -350,7 +352,7 @@ public interface Context extends Cloneable, Command {
      *  @return An URL to the page.  This honours the current absolute/relative setting.
      */
     default String getViewURL( String pageId )  {
-        return getURL( Context.VIEW, pageId, null );
+        return getURL( Context.PAGE_VIEW, pageId, null );
     }
 
     /**
@@ -371,7 +373,7 @@ public interface Context extends Cloneable, Command {
     /**
      *  Creates an URL for the given request context.
      *
-     *  @param context e.g. WikiContext.EDIT
+     *  @param context e.g. WikiContext.PAGE_EDIT
      *  @param page The WikiPage to which to link
      *  @return An URL to the page.
      */

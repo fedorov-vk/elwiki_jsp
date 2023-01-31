@@ -20,6 +20,8 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
@@ -60,7 +62,7 @@ public class PageExistsTag extends BaseWikiTag {
 		return m_pageId;
 	}
 
-	public int doWikiStartTag() throws IOException, ProviderException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		WikiPage page;
 

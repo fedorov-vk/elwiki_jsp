@@ -237,13 +237,13 @@
 		<%
 			for (PageReference pageReference : inReferences) {
 				String pageId = pageReference.getWikipage().getId();
-				String href = ctx.getURL( Context.VIEW, pageId );
+				String href = ctx.getURL( Context.PAGE_VIEW, pageId );
 				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
 				out.append(link);
 			}
-	    %>
+		%>
         </c:if>
         </div>
       </td>
@@ -260,7 +260,7 @@
 		<%
 			for (PageReference pageReference : outReferences) {
 				String pageId = pageReference.getPageId();
-				String href = ctx.getURL( Context.VIEW, pageId );
+				String href = ctx.getURL( Context.PAGE_VIEW, pageId );
 				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);

@@ -410,7 +410,7 @@
       </wiki:CheckRequestContext>
 
       <%-- Persisting wiki content --%>
-      <wiki:CheckRequestContext context="<%=Context.VIEW%>">      
+      <wiki:CheckRequestContext context="<%=Context.PAGE_VIEW%>">      
       <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
         <li class="divider"></li>
         <li>

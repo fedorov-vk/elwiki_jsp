@@ -24,10 +24,12 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
 
@@ -183,7 +185,7 @@ public class BreadcrumbsTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int doWikiStartTag() throws IOException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final HttpSession session = pageContext.getSession();
 		FixedQueue trail = (FixedQueue) session.getAttribute(BREADCRUMBTRAIL_KEY);
 		final String pageName = m_wikiContext.getPage().getName();

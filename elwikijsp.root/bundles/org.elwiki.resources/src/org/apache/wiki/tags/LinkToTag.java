@@ -20,9 +20,11 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -76,7 +78,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 	}
 
 	@Override
-	public int doWikiStartTag() throws IOException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		String pageName = m_pageName;
 		String pageId = m_pageId;
 		boolean isattachment = false;

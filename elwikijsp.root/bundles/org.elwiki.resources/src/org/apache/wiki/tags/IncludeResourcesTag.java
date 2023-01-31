@@ -18,6 +18,11 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.ui.TemplateManager;
 
 /**
@@ -47,7 +52,7 @@ public class IncludeResourcesTag extends BaseWikiTag {
 		m_type = type;
 	}
 
-	public int doWikiStartTag() throws Exception {
+	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		String marker = TemplateManager.getMarker(m_wikiContext, m_type);
 
 		pageContext.getOut().println(marker);

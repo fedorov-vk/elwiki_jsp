@@ -27,12 +27,14 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -242,7 +244,7 @@ public class CalendarTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final IWikiConfiguration config = m_wikiContext.getConfiguration();
 		Session session = m_wikiContext.getWikiSession();
 		Locale locale = session.getLocale();

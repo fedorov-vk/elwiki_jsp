@@ -20,8 +20,10 @@ package org.apache.wiki.tags;
 
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki_data.WikiPage;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
@@ -46,7 +48,7 @@ public class CommentLinkTag extends BaseWikiLinkTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final WikiPage page;
 		final String pageName;
 

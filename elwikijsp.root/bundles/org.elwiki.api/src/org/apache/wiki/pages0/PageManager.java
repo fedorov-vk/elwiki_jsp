@@ -400,8 +400,9 @@ public interface PageManager extends WikiEventListener {
 	 * 
 	 * @param pageId ID of the required page. 
 	 * @return Wiki page or <code>null</code>.
+	 * @throws ProviderException TODO
 	 */
-	WikiPage getPageById(String pageId);
+	WikiPage getPageById(String pageId) throws ProviderException;
 
 	String getMainPageId();
 
@@ -412,8 +413,9 @@ public interface PageManager extends WikiEventListener {
 	 * @param pageName The name of the new page.
 	 * @param parentPageId ID of the parent WikiPage.
 	 * @return New wiki page.
+	 * @throws ProviderException TODO
 	 */
-	WikiPage createPage( String pageName, String parentPageId );
+	WikiPage createPage( String pageName, String parentPageId ) throws ProviderException;
 
 	/**
 	 * Add attachment metadata for specisied wiki page.

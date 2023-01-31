@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
@@ -335,7 +336,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	}
 
 	@Override
-	public int doWikiStartTag() throws Exception {
+	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		return EVAL_BODY_BUFFERED;
 	}
 

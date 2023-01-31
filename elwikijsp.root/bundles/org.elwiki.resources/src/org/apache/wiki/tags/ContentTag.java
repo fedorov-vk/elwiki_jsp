@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
@@ -136,7 +137,7 @@ public class ContentTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		return SKIP_BODY;
 	}
 

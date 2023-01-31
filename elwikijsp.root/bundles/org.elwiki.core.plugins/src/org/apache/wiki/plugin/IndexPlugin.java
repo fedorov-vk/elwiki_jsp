@@ -94,7 +94,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 				} else {
 					currentDiv.addContent(", ");
 				}
-				currentDiv.addContent(getLink(context.getURL(Context.VIEW, page.getId()), name));
+				currentDiv.addContent(getLink(context.getURL(Context.PAGE_VIEW, page.getId()), name));
 			}
 
 		} catch (ProviderException e) {

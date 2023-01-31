@@ -18,6 +18,11 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.ui.TemplateManager;
 
 /**
@@ -53,7 +58,7 @@ public class RequestResourceTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int doWikiStartTag() throws Exception {
+	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		if (m_type != null && m_resource != null) {
 			TemplateManager.addResourceRequest(m_wikiContext, m_type, m_resource);
 		}

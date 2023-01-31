@@ -20,8 +20,10 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 
 /**
@@ -117,7 +119,7 @@ public class SetPaginationTag extends BaseWikiTag {
 	// 0 20 40 60 80 next last
 	// first previous 20 40 *60* 80 100 next last
 	// fist previous 40 60 80 100 120
-	public int doWikiStartTag() throws IOException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		if (m_total <= m_pagesize)
 			return SKIP_BODY;
 

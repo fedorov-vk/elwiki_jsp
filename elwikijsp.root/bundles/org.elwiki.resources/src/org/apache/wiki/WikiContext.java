@@ -33,6 +33,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
@@ -250,7 +251,7 @@ public class WikiContext implements Context, Command {
 
 	/** {@inheritDoc} */
 	@Override
-	public WikiPage getPageById(String pageId) {
+	public WikiPage getPageById(String pageId) throws ProviderException {
 		WikiPage wikiPage = null;
 		wikiPage = this.m_engine.getPageById(pageId);
 		return wikiPage;
@@ -525,7 +526,7 @@ public class WikiContext implements Context, Command {
 	/**
 	 * Creates an URL for the given request context.
 	 *
-	 * @param context e.g. WikiContext.EDIT
+	 * @param context e.g. WikiContext.PAGE_EDIT
 	 * @param page    The page to which to link
 	 * @return An URL to the page, honours the absolute/relative setting in jspwiki.properties
 	 */

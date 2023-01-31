@@ -21,7 +21,10 @@ package org.apache.wiki.tags;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 
 /**
  * Outputs the size of the search results list, if it contains any items.
@@ -33,7 +36,7 @@ public class SearchResultsSizeTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -46567608695273363L;
 
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		Collection<?> list = (Collection<?>) pageContext.getAttribute("searchresults", PageContext.REQUEST_SCOPE);
 		if (list != null) {
 			pageContext.getOut().print(list.size());

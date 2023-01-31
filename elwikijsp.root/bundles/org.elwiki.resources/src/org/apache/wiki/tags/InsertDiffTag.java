@@ -20,12 +20,14 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
 
 /**
@@ -91,7 +93,7 @@ public class InsertDiffTag extends BaseWikiTag {
 
 	/** {@inheritDoc} */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final Context ctx;
 

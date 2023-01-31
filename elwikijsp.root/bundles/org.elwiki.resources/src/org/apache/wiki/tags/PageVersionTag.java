@@ -20,6 +20,9 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -32,7 +35,7 @@ public class PageVersionTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 0L;
 
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final WikiPage page = m_wikiContext.getPage();
 		if (page != null) {
 			final int version = page.getVersion();

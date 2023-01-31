@@ -561,7 +561,7 @@ public class CachingProvider implements PageProvider {
     }
 
 	@Override
-	public WikiPage getPageById(String pageId) {
+	public WikiPage getPageById(String pageId) throws ProviderException {
 		Assert.isTrue(false, "Код не реализован.");
 		// TODO Auto-generated method stub
 		return null;

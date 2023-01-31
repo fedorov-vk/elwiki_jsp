@@ -33,6 +33,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
@@ -94,93 +95,98 @@ public class ReferredPagesPlugin implements Plugin {
 	 */
 	@Override
 	public String execute(Context context, Map<String, String> params) throws PluginException {
-		m_engine = context.getEngine();
-		pageManager = m_engine.getManager(PageManager.class);
+		try {
+			m_engine = context.getEngine();
+			pageManager = m_engine.getManager(PageManager.class);
 
-		WikiPage rootPage;
-		String rootPageName;
+			WikiPage rootPage;
+			String rootPageName;
 
-		// parse parameters
-		String rootPageId = params.get(PARAM_PAGE_ID);
-		rootPage = (rootPageId == null) ? context.getPage() : pageManager.getPageById(rootPageId);
-		if (rootPage == null) {
-			return ""; //TODO: there should be an information string.
-		}
-		rootPageId = rootPage.getId();
-		rootPageName = rootPage.getName();
-
-		String format = params.get(PARAM_FORMAT);
-		if (format == null) {
-			format = "";
-		} else {
-			if (format.contains("sort")) {
-				m_formatSort = true;
+			// parse parameters
+			String rootPageId = params.get(PARAM_PAGE_ID);
+			rootPage = (rootPageId == null) ? context.getPage() : pageManager.getPageById(rootPageId);
+			if (rootPage == null) {
+				return ""; //TODO: there should be an information string.
 			}
-		}
+			rootPageId = rootPage.getId();
+			rootPageName = rootPage.getName();
 
-		m_depth = TextUtil.parseIntParameter(params.get(PARAM_DEPTH), MIN_DEPTH);
-		m_depth = Math.max(m_depth, MIN_DEPTH);
-		m_depth = Math.min(m_depth, MAX_DEPTH);
+			String format = params.get(PARAM_FORMAT);
+			if (format == null) {
+				format = "";
+			} else {
+				if (format.contains("sort")) {
+					m_formatSort = true;
+				}
+			}
 
-		String includePattern = params.get(PARAM_INCLUDE);
-		if (includePattern == null)
-			includePattern = ".*";
+			m_depth = TextUtil.parseIntParameter(params.get(PARAM_DEPTH), MIN_DEPTH);
+			m_depth = Math.max(m_depth, MIN_DEPTH);
+			m_depth = Math.min(m_depth, MAX_DEPTH);
 
-		String excludePattern = params.get(PARAM_EXCLUDE);
-		if (excludePattern == null)
-			excludePattern = "^$";
+			String includePattern = params.get(PARAM_INCLUDE);
+			if (includePattern == null)
+				includePattern = ".*";
 
-		//@formatter:off
-        log.debug("Fetching referred pages for " + rootPageId +
+			String excludePattern = params.get(PARAM_EXCLUDE);
+			if (excludePattern == null)
+				excludePattern = "^$";
+
+			//@formatter:off
+			log.debug("Fetching referred pages for " + rootPageId +
         			" with a depth of " + m_depth +
         			" with include pattern of " + includePattern +
         			" with exclude pattern of " + excludePattern );
-        //@formatter:on
+			//@formatter:on
 
-		//
-		// do the actual work
-		//
-		String href = context.getViewURL(rootPageId);
-		String tooltip = "ReferredPagesPlugin: depth[" + m_depth + "] include[" + includePattern + "] exclude["
-				+ excludePattern + "] format[" + (m_formatSort ? " sort" : "") + "]";
+			//
+			// do the actual work
+			//
+			String href = context.getViewURL(rootPageId);
+			String tooltip = "ReferredPagesPlugin: depth[" + m_depth + "] include[" + includePattern + "] exclude["
+					+ excludePattern + "] format[" + (m_formatSort ? " sort" : "") + "]";
 
-		m_result.append("<div class=\"ReferredPagesPlugin\">\n");
-		m_result.append("<a class=\"wikipage\" href=\"" + href + "\" title=\"" + TextUtil.replaceEntities(tooltip)
-				+ "\">" + TextUtil.replaceEntities(rootPageName) + "</a>\n");
+			m_result.append("<div class=\"ReferredPagesPlugin\">\n");
+			m_result.append("<a class=\"wikipage\" href=\"" + href + "\" title=\"" + TextUtil.replaceEntities(tooltip)
+					+ "\">" + TextUtil.replaceEntities(rootPageName) + "</a>\n");
 
-		// pre compile all needed patterns
-		// glob compiler :  * is 0..n instance of any char  -- more convenient as input
-		// perl5 compiler : .* is 0..n instances of any char -- more powerful
-		//PatternCompiler g_compiler = new GlobCompiler();
-		PatternCompiler compiler = new Perl5Compiler();
+			// pre compile all needed patterns
+			// glob compiler :  * is 0..n instance of any char  -- more convenient as input
+			// perl5 compiler : .* is 0..n instances of any char -- more powerful
+			//PatternCompiler g_compiler = new GlobCompiler();
+			PatternCompiler compiler = new Perl5Compiler();
 
-		try {
-			m_includePattern = compiler.compile(includePattern);
-			m_excludePattern = compiler.compile(excludePattern);
-		} catch (MalformedPatternException e) {
-			if (m_includePattern == null) {
-				throw new PluginException("Illegal include pattern detected.");
-			} else if (m_excludePattern == null) {
-				throw new PluginException("Illegal exclude pattern detected.");
-			} else {
-				throw new PluginException("Illegal internal pattern detected.");
+			try {
+				m_includePattern = compiler.compile(includePattern);
+				m_excludePattern = compiler.compile(excludePattern);
+			} catch (MalformedPatternException e) {
+				if (m_includePattern == null) {
+					throw new PluginException("Illegal include pattern detected.");
+				} else if (m_excludePattern == null) {
+					throw new PluginException("Illegal exclude pattern detected.");
+				} else {
+					throw new PluginException("Illegal internal pattern detected.");
+				}
 			}
+
+			// go get all referred links
+			getReferredPages(context, rootPage, 0);
+
+			// close and finish
+			m_result.append("</div>\n");
+
+			return m_result.toString();
+		} catch (Exception e) {
+			throw new PluginException(e);
 		}
-
-		// go get all referred links
-		getReferredPages(context, rootPage, 0);
-
-		// close and finish
-		m_result.append("</div>\n");
-
-		return m_result.toString();
 	}
 
 	/**
-	 * Retrieves a list of all referred pages. Is called recursively depending on the depth
-	 * parameter.
+	 * Retrieves a list of all referred pages. Is called recursively depending on the depth parameter.
+	 * 
+	 * @throws ProviderException TODO
 	 */
-	private void getReferredPages(Context context, WikiPage page, int depth) {
+	private void getReferredPages(Context context, WikiPage page, int depth) throws ProviderException {
 		if (depth >= m_depth) {
 			return; // end of recursion
 		}
@@ -188,7 +194,7 @@ public class ReferredPagesPlugin implements Plugin {
 		handleLinks(context, ++depth, page);
 	}
 
-	private void handleLinks(Context context, int depth, WikiPage page) {
+	private void handleLinks(Context context, int depth, WikiPage page) throws ProviderException {
 		boolean isUL = false;
 		List<WikiPage> allLinks = new ArrayList<>();
 

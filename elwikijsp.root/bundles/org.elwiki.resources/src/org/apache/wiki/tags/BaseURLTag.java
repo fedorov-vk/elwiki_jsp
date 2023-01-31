@@ -20,6 +20,10 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
+
 /**
  * Writes the ElWiki baseURL.
  *
@@ -33,7 +37,7 @@ public class BaseURLTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		pageContext.getOut().print(m_wikiContext.getConfiguration().getBaseURL());
 		return SKIP_BODY;
 	}

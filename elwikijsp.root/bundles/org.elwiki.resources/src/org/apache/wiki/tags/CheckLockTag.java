@@ -26,6 +26,8 @@ import org.apache.wiki.pages0.PageManager;
 import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspTagException;
+
 import java.io.IOException;
 
 /**
@@ -92,7 +94,7 @@ public class CheckLockTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final WikiPage page = m_wikiContext.getPage();
 

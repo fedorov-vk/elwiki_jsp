@@ -880,7 +880,7 @@ public class ServicesRefs implements Engine {
 	}
 	
 	@Override
-	public WikiPage getPageById(String pageId) {
+	public WikiPage getPageById(String pageId) throws ProviderException {
 		WikiPage wikiPage;
 		PageManager pageManager = ServicesRefs.getPageManager();
 		wikiPage = pageManager.getPageById(pageId);

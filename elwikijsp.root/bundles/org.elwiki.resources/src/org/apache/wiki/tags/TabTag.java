@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspTagException;
 
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 
 /**
@@ -111,7 +112,7 @@ public class TabTag extends BaseWikiTag {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int doWikiStartTag() throws JspTagException {
+	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		TabbedSectionTag parent = (TabbedSectionTag) findAncestorWithClass(this, TabbedSectionTag.class);
 
 		//

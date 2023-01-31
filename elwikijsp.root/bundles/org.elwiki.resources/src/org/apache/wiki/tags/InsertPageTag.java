@@ -26,6 +26,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.elwiki.services.ServicesRefs;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.xml.crypto.dsig.keyinfo.PGPData;
 
@@ -101,7 +102,7 @@ public class InsertPageTag extends BaseWikiTag {
 	}
 
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		WikiPage insertedPage;
 

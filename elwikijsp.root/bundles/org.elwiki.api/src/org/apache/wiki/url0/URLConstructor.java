@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 /**
  *  Provides an interface through which JSPWiki constructs URLs. JSPWiki calls the methods of this interface whenever an URL
  *  that points to any JSPWiki internals is required.  For example, if you need to find an URL to the editor page for page
- *  "TextFormattingRules", you would call makeURL( WikiContext.EDIT, "TextFormattingRules", false, null );
+ *  "TextFormattingRules", you would call makeURL( WikiContext.PAGE_EDIT, "TextFormattingRules", false, null );
  *
  *  @since 2.2
  */

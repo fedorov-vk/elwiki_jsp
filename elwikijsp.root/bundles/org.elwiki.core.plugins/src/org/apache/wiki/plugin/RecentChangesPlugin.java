@@ -190,7 +190,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
                     if( author != null ) {
                         if( ServicesRefs.getPageManager().pageExistsByName( author ) ) {
-                            authorinfo.addContent( XhtmlUtil.link( context.getURL( Context.VIEW, author ), author ) );
+                            authorinfo.addContent( XhtmlUtil.link( context.getURL( Context.PAGE_VIEW, author ), author ) );
                         } else {
                             authorinfo.addContent( author );
                         }

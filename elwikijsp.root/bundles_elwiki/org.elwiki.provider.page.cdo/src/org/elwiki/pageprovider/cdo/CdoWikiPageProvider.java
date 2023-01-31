@@ -580,34 +580,37 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public WikiPage getPageById(String pageId) {
+	public WikiPage getPageById(String pageId) throws ProviderException {
 		if (pageId == null) {
 			return null;
 		}
 
-		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-		CDOQuery query;
-		EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
-		query = transaction.createQuery("ocl", "WikiPage.allInstances()->select(p:WikiPage|p.id='" + pageId + "')",
-				eClassWikiPage, false);
-		query.setParameter("cdoLazyExtents", Boolean.FALSE);
-
-		WikiPage wikiPage = null;
+		CDOTransaction transaction = null;
 		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl",
+					"WikiPage.allInstances()->select(p:WikiPage|p.id='" + pageId + "')",
+					eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			WikiPage wikiPage = null;
 			List<WikiPage> pages = query.getResult();
 			if (pages.size() > 0) {
 				wikiPage = pages.get(0);
 				CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
 				wikiPage = (WikiPage) view.getObject(wikiPage.cdoID());
 			}
-		} catch (Exception e) {
-			log.debug("Ошибка: " + e.getMessage());			
-		}
-		if (!transaction.isClosed()) {
-			transaction.close();
-		}
 
-		return wikiPage;
+			return wikiPage;
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
 	}
 
 	/* обычная версия, без OCL

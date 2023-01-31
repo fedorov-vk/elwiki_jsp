@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.jsp.JspTagException;
+
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.elwiki_data.WikiPage;
@@ -60,7 +63,7 @@ public class PageDateTag extends BaseWikiTag {
 		m_format = arg;
 	}
 
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final WikiPage page = m_wikiContext.getPage();
 		if (page != null) {
 			final Date d = page.getLastModifiedDate();

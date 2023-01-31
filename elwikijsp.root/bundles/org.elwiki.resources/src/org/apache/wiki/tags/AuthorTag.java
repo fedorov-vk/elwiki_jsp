@@ -20,7 +20,10 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
@@ -56,7 +59,7 @@ public class AuthorTag extends BaseWikiTag {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
 		final WikiPage page = m_wikiContext.getPage();
 		String author = page.getAuthor();

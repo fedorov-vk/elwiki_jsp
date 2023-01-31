@@ -18,7 +18,12 @@
  */
 package org.apache.wiki.tags;
 
+import java.io.IOException;
+
+import javax.servlet.jsp.JspTagException;
+
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.elwiki.services.ServicesRefs;
 
@@ -104,7 +109,7 @@ public class UserCheckTag extends BaseWikiTag {
 	 * @see org.apache.wiki.tags.BaseWikiTag#doWikiStartTag()
 	 */
 	@Override
-	public final int doWikiStartTag() {
+	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		final Session session = m_wikiContext.getWikiSession();
 		final IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
 		final boolean containerAuth = mgr.isContainerAuthenticated();

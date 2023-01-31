@@ -324,6 +324,6 @@ public interface Engine {
      */
     Charset getContentEncoding();
 
-	WikiPage getPageById(String pageId);
+	WikiPage getPageById(String pageId) throws ProviderException;
 
 }

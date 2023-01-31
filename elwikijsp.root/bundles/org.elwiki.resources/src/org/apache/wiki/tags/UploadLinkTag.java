@@ -19,7 +19,9 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.exceptions.ProviderException;
 
+import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 
@@ -42,7 +44,7 @@ public class UploadLinkTag extends BaseWikiLinkTag {
 	private static final long serialVersionUID = 593568457874198342L;
 
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		String pageName = m_pageName;
 		if (m_pageName == null) {
 			if (m_wikiContext.getPage() != null) {

@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserManager;
@@ -110,7 +112,7 @@ public class UserProfileTag extends BaseWikiTag {
 	}
 
 	@Override
-	public final int doWikiStartTag() throws IOException {
+	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final UserManager manager = ServicesRefs.getUserManager();
 		final UserProfile profile = manager.getUserProfile(m_wikiContext.getWikiSession());
 		String result = null;
