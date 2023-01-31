@@ -1629,4 +1629,47 @@ public class CdoWikiPageProvider implements PageProvider {
 		}
 	}
 
+	/*
+Rental.allInstances->one(r | r.oclIsNew()
+	and r.oclIsTypeOf(Rental)
+	and r.endingDate=endingDate
+	and r.startingDate=startingDate 
+    and r.driver=customer
+    and r.pickupBranch=pickupBranch
+    and r.dropOffBranch=dropOffBranch
+    and r.car=Car.allInstances()->any(c | c.regNum=carRegNum))
+
+PageReference.allInstances()->select(p:PageReference|p.pageId='" + pageId + "')
+
+WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()->any(pr|pr.pageId))
+	 */
+	@Override
+	public Collection<PageReference> getPageReferences() throws ProviderException {
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl", "PageReference.allInstances()", eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			List<PageReference> references = new ArrayList<>();
+
+			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+			for (Object ref : query.getResult()) {
+				PageReference pageReference = (PageReference) view.getObject(((PageReference) ref).cdoID());
+				references.add(pageReference);
+			}
+
+			return references;
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
 }

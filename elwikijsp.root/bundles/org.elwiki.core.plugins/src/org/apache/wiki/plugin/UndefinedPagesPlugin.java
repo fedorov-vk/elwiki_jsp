@@ -22,45 +22,53 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.UnknownPage;
+import org.elwiki_data.WikiPage;
 
 import java.util.Collection;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 /**
- *  Plugin that enumerates the pages in the wiki that have not yet been defined.
- *  
- *  Parameters  (from AbstractReferralPlugin):
- *  <ul>
- *  <li><b>separator</b> - how to separate generated links; default is a wikitext line break,  producing a vertical list</li>
+ * Plugin that enumerates the pages in the wiki that have not yet been defined.
+ * 
+ * Parameters (from AbstractReferralPlugin):
+ * <ul>
+ * <li><b>separator</b> - how to separate generated links; default is a wikitext line break, producing a
+ * vertical list</li>
  * <li><b> maxwidth</b> - maximum width, in chars, of generated links.</li>
  * </ul>
  */
 public class UndefinedPagesPlugin extends AbstractReferralPlugin {
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
-    	super.initialize( context, params );
-        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(final Context context, final Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
+		try {
+			Collection<UnknownPage> unknownPages = super.pageManager.getUnknownPages();
+			Collection<String> links = unknownPages.stream().map(UnknownPage::getPageName).collect(Collectors.toList());
 
-        Collection< String > links = refmgr.findUncreated();
-        links = filterAndSortCollection( links );
+			links = filterAndSortCollection(links);
 
-        if( m_lastModified ) {
-            throw new PluginException( "parameter " + PARAM_LASTMODIFIED + " is not valid for the UndefinedPagesPlugin" );
-        }
+			if (m_lastModified) {
+				throw new PluginException(
+						"parameter " + PARAM_LASTMODIFIED + " is not valid for the UndefinedPagesPlugin");
+			}
 
-        final String wikitext;
-        if( m_show.equals( PARAM_SHOW_VALUE_COUNT ) ) {
-            wikitext = "" + links.size();
-        } else {
-            wikitext = wikitizeCollectionDeprecated( links, m_separator, ALL_ITEMS );
-        }
-        
-        return makeHTML( context, wikitext );
-    }
+			final String wikitext;
+			if (m_show.equals(PARAM_SHOW_VALUE_COUNT)) {
+				wikitext = "" + links.size();
+			} else {
+				wikitext = wikitizeStringCollection(links, m_separator, ALL_ITEMS);
+			}
+
+			return makeHTML(context, wikitext);
+		} catch (Exception e) {
+			throw new PluginException(e);
+		}
+	}
 
 }

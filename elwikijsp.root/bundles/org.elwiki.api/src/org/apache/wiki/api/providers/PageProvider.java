@@ -243,4 +243,12 @@ public interface PageProvider extends WikiProvider {
 
 	List<UnknownPage> getUnknownPages() throws ProviderException;
 
+	/**
+	 * Returns a collection of pages that are not linked to in other pages.
+	 *
+	 * @return Collection of pages that are not linked to in other pages.
+	 * @throws ProviderException TODO
+	 */
+	Collection<PageReference> getPageReferences() throws ProviderException;
+
 }

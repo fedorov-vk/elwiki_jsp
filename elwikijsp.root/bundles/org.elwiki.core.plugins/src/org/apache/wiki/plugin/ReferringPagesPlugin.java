@@ -124,7 +124,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 			if (referrers != null && referrers.size() > 0) {
 				//TODO: :FVK: rewrite code filterAndSortCollection() for WikiPages, PageReference... 
 				// old call:: links = filterAndSortCollection(links);
-				wikitext = wikitizeCollection(referrers, m_separator, items);
+				wikitext = wikitizePageCollection(referrers, m_separator, items);
 
 				result.append(makeHTML(context, wikitext));
 

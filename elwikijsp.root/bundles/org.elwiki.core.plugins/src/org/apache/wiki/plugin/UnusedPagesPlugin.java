@@ -23,9 +23,12 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
+import org.elwiki_data.UnknownPage;
+import org.elwiki_data.WikiPage;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Plugin for displaying pages that are not linked to in other pages.
@@ -49,28 +52,35 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
     public String execute( final Context context, final Map< String, String > params ) throws PluginException {
         super.initialize( context, params );
 
-        final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
-        Collection< String > links = refmgr.findUnreferenced();
+		try {
+			Collection<WikiPage> unreferencedPages = super.pageManager.getUnreferencedPages();
 
-        // filter out attachments if "excludeattachments" was requested:
-        final String prop = params.get( PARAM_EXCLUDEATTS );
-        if( TextUtil.isPositive( prop ) ) {
-            // remove links to attachments (recognizable by a slash in it)
-            links.removeIf( link -> link.contains( "/" ) );
-        }
+//			final ReferenceManager refmgr = ServicesRefs.getReferenceManager();
+//			Collection<String> links = refmgr.findUnreferenced();
+			Collection<String> links = unreferencedPages.stream().map(WikiPage::getName).collect(Collectors.toList());
 
-        links = filterAndSortCollection( links );
+			// filter out attachments if "excludeattachments" was requested:
+			final String prop = params.get(PARAM_EXCLUDEATTS);
+			if (TextUtil.isPositive(prop)) {
+				// remove links to attachments (recognizable by a slash in it)
+				links.removeIf(link -> link.contains("/"));
+			}
 
-        String wikitext;
-        if( m_show.equals( PARAM_SHOW_VALUE_COUNT ) ) {
-            wikitext = "" + links.size();
-            if( m_lastModified && links.size() != 0 ) {
-                wikitext = links.size() + " (" + m_dateFormat.format( m_dateLastModified ) + ")";
-            }
-        } else {
-            wikitext = wikitizeCollectionDeprecated( links, m_separator, ALL_ITEMS );
-        }
-        return makeHTML( context, wikitext );
+			links = filterAndSortCollection(links);
+
+			String wikitext;
+			if (m_show.equals(PARAM_SHOW_VALUE_COUNT)) {
+				wikitext = "" + links.size();
+				if (m_lastModified && links.size() != 0) {
+					wikitext = links.size() + " (" + m_dateFormat.format(m_dateLastModified) + ")";
+				}
+			} else {
+				wikitext = wikitizeStringCollection(links, m_separator, ALL_ITEMS);
+			}
+			return makeHTML(context, wikitext);
+		} catch (Exception e) {
+			throw new PluginException(e);
+		}
     }
 
 }

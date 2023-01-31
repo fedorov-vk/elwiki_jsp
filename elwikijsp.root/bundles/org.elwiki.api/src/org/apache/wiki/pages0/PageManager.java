@@ -23,6 +23,7 @@ import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -446,6 +447,27 @@ public interface PageManager extends WikiEventListener {
      */
 	List<PageReference> getPageReferrers(String pageId) throws WikiException;
 
+	/**
+	 * Returns a collection of pages containing links to Undefined Pages (pages containing dead links).
+	 *
+	 * @return Collection of pages containing links to Undefined Pages.
+	 * @throws ProviderException
+	 */
 	Collection<WikiPage> getReferrersToUncreatedPages() throws ProviderException;
+
+	/**
+	 * Returns a collection of names of pages that do not exist in the wiki.
+	 *
+	 * @return Collection of names of pages that do not exist in the wiki.
+	 * @throws ProviderException
+	 */
+	Collection<UnknownPage> getUnknownPages() throws ProviderException;
+
+	/**
+	 * Returns a collection of pages that are not linked to in other pages.
+	 *
+	 * @return Collection of pages that are not linked to in other pages.
+	 */
+	Collection<WikiPage> getUnreferencedPages() throws ProviderException;
 
 }

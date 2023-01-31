@@ -337,6 +337,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
      *  @param c The collection to filter.
      *  @return A filtered and sorted collection.
      */
+    //TODO: needs overview this method.
     protected List< String > filterAndSortCollection( final Collection< String > c ) {
         final List< String > result = filterCollection( c );
         result.sort( m_sorter );
@@ -351,8 +352,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
      *  @param numItems How many items to show.
      *  @return The WikiText
      */
-    @Deprecated // работает с именами как со ссылками
-    protected String wikitizeCollectionDeprecated( final Collection< String > links, final String separator, final int numItems ) {
+    protected String wikitizeStringCollection( final Collection< String > links, final String separator, final int numItems ) {
         if( links == null || links.isEmpty() ) {
             return "";
         }
@@ -378,7 +378,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
             output.append( m_before );
 
             // Make a Wiki markup link. See TranslatorReader.
-            output.append( "[" + renderingManager.beautifyTitle(value) + "|" + value + "]" );
+            output.append( "[" + TextUtil.replaceEntities(value) + "|@xxxx]" );
             count++;
         }
 
@@ -398,7 +398,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
      *  @param numItems How many items to show.
      *  @return The WikiText
      */
-    protected String wikitizeCollection( Collection<WikiPage> linkedPages,  String separator,  int numItems ) {
+    protected String wikitizePageCollection( Collection<WikiPage> linkedPages,  String separator,  int numItems ) {
         if( linkedPages == null || linkedPages.isEmpty() ) {
             return "";
         }

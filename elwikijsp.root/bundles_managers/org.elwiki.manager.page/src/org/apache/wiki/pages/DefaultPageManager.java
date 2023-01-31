@@ -32,6 +32,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -1043,6 +1044,29 @@ public class DefaultPageManager implements PageManager, Initializable {
 			}
 		}
 		return wikiPages;
+	}
+
+	@Override
+	public Collection<UnknownPage> getUnknownPages() throws ProviderException {
+		List<UnknownPage> unknownPages = m_provider.getUnknownPages();
+		return unknownPages;
+	}
+
+	@Override
+	public Collection<WikiPage> getUnreferencedPages() throws ProviderException {
+		Collection<WikiPage> unreferencedPages = m_provider.getAllPages();
+		Collection<PageReference> pageReferences = m_provider.getPageReferences();
+		Set<String> referencedId = pageReferences.stream().map(PageReference::getPageId).collect(Collectors.toSet());
+		
+		Iterator<WikiPage> iter = unreferencedPages.iterator();
+		while(iter.hasNext()) {
+			WikiPage page = iter.next();
+			if(referencedId.contains(page.getId())) {
+				iter.remove();
+			}
+		}
+
+		return unreferencedPages;
 	}
 
 }

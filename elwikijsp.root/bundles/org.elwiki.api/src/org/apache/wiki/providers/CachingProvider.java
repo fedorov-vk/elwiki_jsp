@@ -612,4 +612,10 @@ public class CachingProvider implements PageProvider {
 		return null;
 	}
 
+	@Override
+	public Collection<PageReference> getPageReferences() throws ProviderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

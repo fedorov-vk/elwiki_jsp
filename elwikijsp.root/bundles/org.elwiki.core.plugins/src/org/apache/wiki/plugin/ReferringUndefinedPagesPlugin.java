@@ -56,7 +56,6 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-
 			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
 			Engine engine = context.getEngine();
 			PageManager pageManager = engine.getManager(PageManager.class);
@@ -72,7 +71,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 			Collection<WikiPage> referrers = pageManager.getReferrersToUncreatedPages();
 
 			//:FVK: result = super.filterAndSortCollection( result );
-			String wikitext = wikitizeCollection(referrers, m_separator, items);
+			String wikitext = wikitizePageCollection(referrers, m_separator, items);
 
 			StringBuilder resultHTML = new StringBuilder();
 			resultHTML.append(makeHTML(context, wikitext));
