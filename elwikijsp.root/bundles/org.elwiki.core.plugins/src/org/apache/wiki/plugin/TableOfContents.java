@@ -41,203 +41,207 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- *  Provides a table of contents.
- *  <p>Parameters : </p>
- *  <ul>
- *  <li><b>title</b> - The title of the table of contents.</li>
- *  <li><b>numbered</b> - if true, generates automatically numbers for the headings.</li>
- *  <li><b>start</b> - If using a numbered list, sets the start number.</li>
- *  <li><b>prefix</b> - If using a numbered list, sets the prefix used for the list.</li>
- *  </ul>
+ * Provides a table of contents.
+ * <p>
+ * Parameters :
+ * </p>
+ * <ul>
+ * <li><b>title</b> - The title of the table of contents.</li>
+ * <li><b>numbered</b> - if true, generates automatically numbers for the headings.</li>
+ * <li><b>start</b> - If using a numbered list, sets the start number.</li>
+ * <li><b>prefix</b> - If using a numbered list, sets the prefix used for the list.</li>
+ * </ul>
  *
- *  @since 2.2
+ * @since 2.2
  */
 public class TableOfContents implements Plugin, HeadingListener {
 
-    private static final Logger log = Logger.getLogger( TableOfContents.class );
+	private static final Logger log = Logger.getLogger(TableOfContents.class);
 
-    /** Parameter name for setting the title. */
-    public static final String PARAM_TITLE = "title";
+	/** Parameter name for setting the title. */
+	public static final String PARAM_TITLE = "title";
 
-    /** Parameter name for setting whether the headings should be numbered. */
-    public static final String PARAM_NUMBERED = "numbered";
+	/** Parameter name for setting whether the headings should be numbered. */
+	public static final String PARAM_NUMBERED = "numbered";
 
-    /** Parameter name for setting where the numbering should start. */
-    public static final String PARAM_START = "start";
+	/** Parameter name for setting where the numbering should start. */
+	public static final String PARAM_START = "start";
 
-    /** Parameter name for setting what the prefix for the heading is. */
-    public static final String PARAM_PREFIX = "prefix";
+	/** Parameter name for setting what the prefix for the heading is. */
+	public static final String PARAM_PREFIX = "prefix";
 
-    private static final String VAR_ALREADY_PROCESSING = "__TableOfContents.processing";
+	private static final String VAR_ALREADY_PROCESSING = "__TableOfContents.processing";
 
-    StringBuffer m_buf = new StringBuffer();
-    private boolean m_usingNumberedList = false;
-    private String m_prefix = "";
-    private int m_starting = 0;
-    private int m_level1Index = 0;
-    private int m_level2Index = 0;
-    private int m_level3Index = 0;
-    private int m_lastLevel = 0;
+	StringBuffer m_buf = new StringBuffer();
+	private boolean m_usingNumberedList = false;
+	private String m_prefix = "";
+	private int m_starting = 0;
+	private int m_level1Index = 0;
+	private int m_level2Index = 0;
+	private int m_level3Index = 0;
+	private int m_lastLevel = 0;
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public void headingAdded( final Context context, final Heading hd ) {
-        log.debug( "HD: " + hd.m_level + ", " + hd.m_titleText + ", " + hd.m_titleAnchor );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void headingAdded(Context context, Heading hd) {
+		log.debug("HD: " + hd.m_level + ", " + hd.m_titleText + ", " + hd.m_titleAnchor);
 
-        switch( hd.m_level ) {
-          case Heading.HEADING_SMALL:
-            m_buf.append("<li class=\"toclevel-3\">");
-            m_level3Index++;
-            break;
-          case Heading.HEADING_MEDIUM:
-            m_buf.append("<li class=\"toclevel-2\">");
-            m_level2Index++;
-            break;
-          case Heading.HEADING_LARGE:
-            m_buf.append("<li class=\"toclevel-1\">");
-            m_level1Index++;
-            break;
-          default:
-            throw new InternalWikiException("Unknown depth in toc! (Please submit a bug report.)");
-        }
+		switch (hd.m_level) {
+		case Heading.HEADING_SMALL:
+			m_buf.append("<li class=\"toclevel-3\">");
+			m_level3Index++;
+			break;
+		case Heading.HEADING_MEDIUM:
+			m_buf.append("<li class=\"toclevel-2\">");
+			m_level2Index++;
+			break;
+		case Heading.HEADING_LARGE:
+			m_buf.append("<li class=\"toclevel-1\">");
+			m_level1Index++;
+			break;
+		default:
+			throw new InternalWikiException("Unknown depth in toc! (Please submit a bug report.)");
+		}
 
-        if( m_level1Index < m_starting ) {
-            // in case we never had a large heading ...
-            m_level1Index++;
-        }
-        if( ( m_lastLevel == Heading.HEADING_SMALL ) && ( hd.m_level != Heading.HEADING_SMALL ) ) {
-            m_level3Index = 0;
-        }
-        if( ( ( m_lastLevel == Heading.HEADING_SMALL ) || ( m_lastLevel == Heading.HEADING_MEDIUM ) ) && ( hd.m_level
-                == Heading.HEADING_LARGE ) ) {
-            m_level3Index = 0;
-            m_level2Index = 0;
-        }
+		if (m_level1Index < m_starting) {
+			// in case we never had a large heading ...
+			m_level1Index++;
+		}
+		if ((m_lastLevel == Heading.HEADING_SMALL) && (hd.m_level != Heading.HEADING_SMALL)) {
+			m_level3Index = 0;
+		}
+		if (((m_lastLevel == Heading.HEADING_SMALL) || (m_lastLevel == Heading.HEADING_MEDIUM))
+				&& (hd.m_level == Heading.HEADING_LARGE)) {
+			m_level3Index = 0;
+			m_level2Index = 0;
+		}
 
-        final String titleSection = hd.m_titleSection.replace( '%', '_' );
-        String pageName = null;
+		String titleSection = hd.m_titleSection.replace('%', '_');
+		String pageName = null;
 		try {
-			pageName = context.getConfiguration().encodeName(context.getPage().getName()).replace( '%', '_' );
+			pageName = context.getConfiguration().encodeName(context.getPage().getName()).replace('%', '_');
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-        final String sectref = "#section-"+pageName+"-"+titleSection;
+		String sectref = "#section-" + pageName + "-" + titleSection;
 
-        m_buf.append( "<a class=\"wikipage\" href=\"" + sectref + "\">" );
-        if (m_usingNumberedList)
-        {
-            switch( hd.m_level )
-            {
-            case Heading.HEADING_SMALL:
-                m_buf.append(m_prefix + m_level1Index + "." + m_level2Index + "."+ m_level3Index +" ");
-                break;
-            case Heading.HEADING_MEDIUM:
-                m_buf.append(m_prefix + m_level1Index + "." + m_level2Index + " ");
-                break;
-            case Heading.HEADING_LARGE:
-                m_buf.append(m_prefix + m_level1Index +" ");
-                break;
-            default:
-                throw new InternalWikiException("Unknown depth in toc! (Please submit a bug report.)");
-            }
-        }
-        m_buf.append( TextUtil.replaceEntities(hd.m_titleText)+"</a></li>\n" );
+		m_buf.append("<a class=\"wikipage\" href=\"" + sectref + "\">");
+		if (m_usingNumberedList) {
+			switch (hd.m_level) {
+			case Heading.HEADING_SMALL:
+				m_buf.append(m_prefix + m_level1Index + "." + m_level2Index + "." + m_level3Index + " ");
+				break;
+			case Heading.HEADING_MEDIUM:
+				m_buf.append(m_prefix + m_level1Index + "." + m_level2Index + " ");
+				break;
+			case Heading.HEADING_LARGE:
+				m_buf.append(m_prefix + m_level1Index + " ");
+				break;
+			default:
+				throw new InternalWikiException("Unknown depth in toc! (Please submit a bug report.)");
+			}
+		}
+		m_buf.append(TextUtil.replaceEntities(hd.m_titleText) + "</a></li>\n");
 
-        m_lastLevel = hd.m_level;
-    }
+		m_lastLevel = hd.m_level;
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
-        final Engine engine = context.getEngine();
-        final WikiPage page = context.getPage();
-        final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		Engine engine = context.getEngine();
+		WikiPage page = context.getPage();
+		ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
 
-        if( context.getVariable( VAR_ALREADY_PROCESSING ) != null ) {
-            //return rb.getString("tableofcontents.title");
-            return "<a href=\"#section-TOC\" class=\"toc\">"+rb.getString("tableofcontents.title")+"</a>";
-        }
+		if (context.getVariable(VAR_ALREADY_PROCESSING) != null) {
+			//return rb.getString("tableofcontents.title");
+			return "<a href=\"#section-TOC\" class=\"toc\">" + rb.getString("tableofcontents.title") + "</a>";
+		}
 
-        final StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 
-        sb.append("<div class=\"toc\">\n");
-        sb.append("<div class=\"collapsebox\">\n");
+		sb.append("<div class=\"toc\">\n");
+		sb.append("<div class=\"collapsebox\">\n");
 
-        final String title = params.get(PARAM_TITLE);
-        sb.append("<h4 id=\"section-TOC\">");
-        if( title != null ) {
-            sb.append( TextUtil.replaceEntities( title ) );
-        } else {
-            sb.append( rb.getString( "tableofcontents.title" ) );
-        }
-        sb.append( "</h4>\n" );
+		String title = params.get(PARAM_TITLE);
+		sb.append("<h4 id=\"section-TOC\">");
+		if (title != null) {
+			sb.append(TextUtil.replaceEntities(title));
+		} else {
+			sb.append(rb.getString("tableofcontents.title"));
+		}
+		sb.append("</h4>\n");
 
-        // should we use an ordered list?
-        m_usingNumberedList = false;
-        if( params.containsKey( PARAM_NUMBERED ) ) {
-            final String numbered = params.get( PARAM_NUMBERED );
-            if( numbered.equalsIgnoreCase( "true" ) ) {
-                m_usingNumberedList = true;
-            } else if( numbered.equalsIgnoreCase( "yes" ) ) {
-                m_usingNumberedList = true;
-            }
-        }
+		// should we use an ordered list?
+		m_usingNumberedList = false;
+		if (params.containsKey(PARAM_NUMBERED)) {
+			String numbered = params.get(PARAM_NUMBERED);
+			if (numbered.equalsIgnoreCase("true")) {
+				m_usingNumberedList = true;
+			} else if (numbered.equalsIgnoreCase("yes")) {
+				m_usingNumberedList = true;
+			}
+		}
 
-        // if we are using a numbered list, get the rest of the parameters (if any) ...
-        if (m_usingNumberedList) {
-            int start = 0;
-            final String startStr = params.get(PARAM_START);
-            if( ( startStr != null ) && ( startStr.matches( "^\\d+$" ) ) ) {
-                start = Integer.parseInt(startStr);
-            }
-            if (start < 0) start = 0;
+		// if we are using a numbered list, get the rest of the parameters (if any) ...
+		if (m_usingNumberedList) {
+			int start = 0;
+			String startStr = params.get(PARAM_START);
+			if ((startStr != null) && (startStr.matches("^\\d+$"))) {
+				start = Integer.parseInt(startStr);
+			}
+			if (start < 0)
+				start = 0;
 
-            m_starting = start;
-            m_level1Index = start - 1;
-            if (m_level1Index < 0) m_level1Index = 0;
-            m_level2Index = 0;
-            m_level3Index = 0;
-            m_prefix = TextUtil.replaceEntities( params.get(PARAM_PREFIX) );
-            if (m_prefix == null) m_prefix = "";
-            m_lastLevel = Heading.HEADING_LARGE;
-        }
+			m_starting = start;
+			m_level1Index = start - 1;
+			if (m_level1Index < 0)
+				m_level1Index = 0;
+			m_level2Index = 0;
+			m_level3Index = 0;
+			m_prefix = TextUtil.replaceEntities(params.get(PARAM_PREFIX));
+			if (m_prefix == null)
+				m_prefix = "";
+			m_lastLevel = Heading.HEADING_LARGE;
+		}
 
-        try {
-            String wikiText = ServicesRefs.getPageManager().getPureText( page );
-            final boolean runFilters = "true".equals( ServicesRefs.getVariableManager().getValue( context, VariableManager.VAR_RUNFILTERS, "true" ) );
+		try {
+			String wikiText = ServicesRefs.getPageManager().getPureText(page);
+			boolean runFilters = "true".equals(
+					ServicesRefs.getVariableManager().getValue(context, VariableManager.VAR_RUNFILTERS, "true"));
 
-            if( runFilters ) {
+			if (runFilters) {
 				try {
-					final FilterManager fm = ServicesRefs.getFilterManager();
+					FilterManager fm = ServicesRefs.getFilterManager();
 					wikiText = fm.doPreTranslateFiltering(context, wikiText);
 
-				} catch( final Exception e ) {
+				} catch (Exception e) {
 					log.error("Could not construct table of contents: Filter Error", e);
 					throw new PluginException("Unable to construct table of contents (see logs)");
 				}
-            }
+			}
 
-            context.setVariable( VAR_ALREADY_PROCESSING, "x" );
+			context.setVariable(VAR_ALREADY_PROCESSING, "x");
 
-            final MarkupParser parser = ServicesRefs.getRenderingManager().getParser( context, wikiText );
-            parser.addHeadingListener( this );
-            parser.parse();
+			MarkupParser parser = ServicesRefs.getRenderingManager().getParser(context, wikiText);
+			parser.addHeadingListener(this);
+			parser.parse();
 
-            sb.append( "<ul>\n" ).append( m_buf.toString() ).append( "</ul>\n" );
-        } catch( final IOException e ) {
-            log.error("Could not construct table of contents", e);
-            throw new PluginException("Unable to construct table of contents (see logs)");
-        }
+			sb.append("<ul>\n").append(m_buf.toString()).append("</ul>\n");
+		} catch (IOException e) {
+			log.error("Could not construct table of contents", e);
+			throw new PluginException("Unable to construct table of contents (see logs)");
+		}
 
-        sb.append("</div>\n</div>\n");
+		sb.append("</div>\n</div>\n");
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
 }
