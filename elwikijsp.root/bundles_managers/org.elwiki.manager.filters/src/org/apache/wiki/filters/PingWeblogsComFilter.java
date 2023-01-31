@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.util.TextUtil;
 import org.apache.xmlrpc.AsyncCallback;
@@ -64,7 +65,7 @@ public class PingWeblogsComFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public void postSave( final Context context, final String pagecontent ) {
+    public void postSave( final Context context, final String pagecontent ) throws WikiException {
         String blogName = context.getPage().getName();
         final Engine engine   = context.getEngine();
         final IWikiConfiguration config = context.getConfiguration();

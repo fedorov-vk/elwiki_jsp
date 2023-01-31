@@ -19,7 +19,7 @@
 package org.apache.wiki.render0;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.StringTransmutator;
+import org.apache.wiki.LinkCollector;
 import org.apache.wiki.api.core.Context;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.engine.Initializable;
@@ -184,18 +184,19 @@ public interface RenderingManager extends RenderApi, WikiEventListener, Internal
      *
      *  @param context The WikiContext in which to do the conversion
      *  @param pagedata The data to render
-     *  @param localLinkHook Is called whenever a wiki link is found
-     *  @param extLinkHook   Is called whenever an external link is found
-     *  @param attLinkHook   Is called whenever ...
+     *  @param localLinkCollector Is called whenever a wiki link is found
+     *  @param extLinkCollector   Is called whenever an external link is found
+     *  @param attLinkCollector   Is called whenever ...
      *  @param parseAccessRules Parse the access rules if we encounter them
      *  @param justParse Just parses the pagedata, does not actually render. In this case, this methods an empty string.
      *  @return HTML-rendered page text.
      */
     String textToHTML( Context context,
                        String pagedata,
-                       StringTransmutator localLinkHook,
-                       StringTransmutator extLinkHook,
-                       StringTransmutator attLinkHook,
+                       LinkCollector localLinkCollector,
+                       LinkCollector extLinkCollector,
+                       LinkCollector attLinkCollector,
+                       LinkCollector unknownPagesLinkCollector,
                        boolean parseAccessRules,
                        boolean justParse );
 
@@ -204,16 +205,16 @@ public interface RenderingManager extends RenderApi, WikiEventListener, Internal
      *
      *  @param context The WikiContext in which to do the conversion
      *  @param pagedata The data to render
-     *  @param localLinkHook Is called whenever a wiki link is found
-     *  @param extLinkHook   Is called whenever an external link is found
+     *  @param localLinkCollector Is called whenever a wiki link is found
+     *  @param extLinkCollector   Is called whenever an external link is found
      *
      *  @return HTML-rendered page text.
      */
     default String textToHTML( final Context context,
                                final String pagedata,
-                               final StringTransmutator localLinkHook,
-                               final StringTransmutator extLinkHook ) {
-        return textToHTML( context, pagedata, localLinkHook, extLinkHook, null, true, false );
+                               final LinkCollector localLinkCollector,
+                               final LinkCollector extLinkCollector ) {
+        return textToHTML( context, pagedata, localLinkCollector, extLinkCollector, null, null, true, false );
     }
 
     /**
@@ -221,17 +222,17 @@ public interface RenderingManager extends RenderApi, WikiEventListener, Internal
      *
      *  @param context The WikiContext in which to do the conversion
      *  @param pagedata The data to render
-     *  @param localLinkHook Is called whenever a wiki link is found
-     *  @param extLinkHook   Is called whenever an external link is found
-     *  @param attLinkHook   Is called whenever an attachment link is found
+     *  @param localLinkCollector Is called whenever a wiki link is found
+     *  @param extLinkCollector   Is called whenever an external link is found
+     *  @param attLinkCollector   Is called whenever an attachment link is found
      *  @return HTML-rendered page text.
      */
     default String textToHTML( final Context context,
                                final String pagedata,
-                               final StringTransmutator localLinkHook,
-                               final StringTransmutator extLinkHook,
-                               final StringTransmutator attLinkHook ) {
-        return textToHTML( context, pagedata, localLinkHook, extLinkHook, attLinkHook, true, false );
+                               final LinkCollector localLinkCollector,
+                               final LinkCollector extLinkCollector,
+                               final LinkCollector attLinkCollector ) {
+        return textToHTML( context, pagedata, localLinkCollector, extLinkCollector, attLinkCollector, null, true, false );
     }
 
 }

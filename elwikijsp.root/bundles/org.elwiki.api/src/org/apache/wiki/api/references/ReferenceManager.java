@@ -78,7 +78,7 @@ public interface ReferenceManager extends PageFilter, InternalModule, WikiEventL
      *
      *  @param page wiki page for which references should be updated
      */
-    void updateReferences( final WikiPage page );
+  //:FVK:void updateReferences( final WikiPage page );
 
     /**
      *  Updates the referred pages of a new or edited WikiPage. If a refersTo entry for this page already exists, it is removed

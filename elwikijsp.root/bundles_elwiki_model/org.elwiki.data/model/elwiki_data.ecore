@@ -151,6 +151,8 @@
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
         eType="#//StringToObjectMap" containment="true" eKeys="#//StringToObjectMap/key"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unknownPages" upperBound="-1"
+        eType="#//UnknownPage" containment="true" eOpposite="#//UnknownPage/wikipage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"
@@ -360,4 +362,9 @@
   <eClassifiers xsi:type="ecore:EDataType" name="ArrayPrincipal" instanceClassName="java.security.Principal[]"/>
   <eClassifiers xsi:type="ecore:EDataType" name="PermissionObject" instanceClassName="java.security.Permission"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ListPageContent" instanceTypeName="java.util.List&lt;org.elwiki_data.PageContent>"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UnknownPage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
+        eOpposite="#//WikiPage/unknownPages"/>
+  </eClassifiers>
 </ecore:EPackage>

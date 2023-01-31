@@ -22,12 +22,12 @@ import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -228,7 +228,7 @@ public interface PageProvider extends WikiProvider {
 	 */
 	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
 
-	void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception;
+	void updateReferences(WikiPage page, Collection<String> pagesIds, Collection<String> unknownPages) throws ProviderException;
 
     /**
      * Finds all references that refer to this page.
@@ -240,5 +240,7 @@ public interface PageProvider extends WikiProvider {
      * @throws ProviderException If something goes wrong.
      */
 	List<PageReference> getPageReferrers(String pageId) throws ProviderException;
+
+	List<UnknownPage> getUnknownPages() throws ProviderException;
 
 }

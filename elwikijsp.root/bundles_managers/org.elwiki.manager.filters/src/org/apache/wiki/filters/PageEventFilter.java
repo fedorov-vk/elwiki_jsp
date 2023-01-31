@@ -101,7 +101,7 @@ public class PageEventFilter extends BasePageFilter {
       * Since the result is discarded from this method, this is only useful for things like counters, etc.
       */
     @Override
-    public void postSave( final Context wikiContext, final String content ) {
+    public void postSave( final Context wikiContext, final String content ) throws WikiException {
         fireEvent( WikiPageEvent.POST_SAVE, wikiContext );
     }
 

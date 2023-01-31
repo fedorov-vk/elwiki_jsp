@@ -26,6 +26,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -83,6 +84,7 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.ACL_ENTRY: return (EObject)createAclEntry();
 			case Elwiki_dataPackage.ACL: return (EObject)createAcl();
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
+			case Elwiki_dataPackage.UNKNOWN_PAGE: return (EObject)createUnknownPage();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -256,6 +258,17 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	public Map.Entry<String, Object> createStringToObjectMap() {
 		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
 		return stringToObjectMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public UnknownPage createUnknownPage() {
+		UnknownPageImpl unknownPage = new UnknownPageImpl();
+		return unknownPage;
 	}
 
 	/**

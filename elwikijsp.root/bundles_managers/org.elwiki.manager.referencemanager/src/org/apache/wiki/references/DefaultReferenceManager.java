@@ -221,6 +221,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
      */
+	@Deprecated
     private void updatePageReferences( final WikiPage page ) throws ProviderException {
         final String content = ServicesRefs.getPageManager().getPageText( page.getName(), PageProvider.LATEST_VERSION );
         final Collection< String > links = scanWikiLinks( page, content );
@@ -245,6 +246,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  @since 2.2
      *  @throws ProviderException If reading of pages fails.
      */
+    @Deprecated
     @Override
     public void initialize( final Collection< WikiPage > pages ) throws ProviderException {
         log.debug( "Initializing new ReferenceManager with " + pages.size() + " initial pages." );
@@ -274,7 +276,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
                     if( wp.getLastModifiedDate() == null ) {
                         log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
-                        
                         /*:FVK: workaround
 						EList<PageContent> pageContents = wp.getPageContents();
 						PageContent pageContent = pageContents.get(pageContents.size()-1);
@@ -285,7 +286,8 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 								pageContent.setLastModify(new GregorianCalendar(1972, 1, 12).getTime());
 								return page;
 							}
-						});*/
+						});
+						*/
                     } else if( wp.getLastModifiedDate().getTime() > saved ) {
                         updatePageReferences( wp );
                     }
@@ -318,6 +320,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  Reads the serialized data from the disk back to memory. Returns the date when the data was last written on disk
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     private synchronized long unserializeFromDisk() throws IOException, ClassNotFoundException {
         final long saved;
 
@@ -349,6 +352,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /**
      *  Serializes hashmaps to disk.  The format is private, don't touch it.
      */
+    @Deprecated
     private synchronized void serializeToDisk() {
 		final File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE);
         try( final ObjectOutputStream out = new ObjectOutputStream( new BufferedOutputStream( new FileOutputStream( f ) ) ) ) {
@@ -386,6 +390,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /**
      *  Reads the serialized data from the disk back to memory. Returns the date when the data was last written on disk
      */
+    @Deprecated
     private synchronized long unserializeAttrsFromDisk( final WikiPage p ) throws IOException, ClassNotFoundException {
         long saved = 0L;
 
@@ -436,6 +441,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /**
      *  Serializes hashmaps to disk.  The format is private, don't touch it.
      */
+    @Deprecated
     private synchronized void serializeAttrsToDisk( final WikiPage p ) {
         final StopWatch sw = new StopWatch();
         sw.start();
@@ -490,12 +496,20 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *
      *  @param context {@inheritDoc}
      *  @param content {@inheritDoc}
+     * @throws Exception 
      */
     @Override
-	public void postSave( final Context context, final String content ) {
-        final WikiPage page = context.getPage();
-        updateReferences( page, scanWikiLinks( page, content ) );
-        serializeAttrsToDisk( page );
+	public void postSave(final Context context, final String content) throws WikiException {
+		WikiPage page = context.getPage();
+		LinkCollector localCollector = new LinkCollector();
+		LinkCollector unknownPagesCollector = new LinkCollector();
+		ServicesRefs.getRenderingManager().textToHTML(Wiki.context().create(ServicesRefs.Instance, page), content,
+				localCollector, null, null, unknownPagesCollector, false, true);
+
+		Collection<String> referencedLinks = localCollector.getLinks();
+		Collection<String> unknownPages = unknownPagesCollector.getLinks();
+
+		this.pageManager.updateReferences(page, referencedLinks, unknownPages);
     }
 
     /**
@@ -505,6 +519,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  @param pagedata The page contents
      *  @return a Collection of Strings
      */
+    @Deprecated
     @Override
     public Collection< String > scanWikiLinks( final WikiPage page, final String pagedata ) {
         final LinkCollector localCollector = new LinkCollector();
@@ -512,7 +527,8 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
                                                                   pagedata,
                                                                   localCollector,
                                                                   null,
-                                                                  localCollector,
+                                                                  null,
+                                                                  null,
                                                                   false,
                                                                   true );
 
@@ -580,11 +596,12 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *
      *  @param page wiki page for which references should be updated
      */
-    @Override
+    /*:FVK:
+    @Owerride
     public void updateReferences( final WikiPage page ) {
         final String pageData = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
         updateReferences( page, scanWikiLinks( page, pageData ) );
-    }
+    }*/
 
     /**
      *  Updates the referred pages of a new or edited WikiPage. If a refersTo entry for this page already exists, it is removed
@@ -597,6 +614,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  @param references A Collection of Strings, each one pointing to a page this page references.
      */
     @Override
+    @Deprecated
 	public synchronized void updateReferences(WikiPage page, final Collection<String> references) {
 		try {
 			internalUpdateReferences(page, references);
@@ -604,7 +622,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		serializeToDisk();
+		//:FVK: serializeToDisk();
 	}
 
     /**
@@ -617,8 +635,9 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *  @param pagesIds A Collection of Strings, each one pointing to a page this page references.
      * @throws Exception TODO
      */
+    @Deprecated
     private void internalUpdateReferences( WikiPage page, final Collection< String > pagesIds) throws Exception {
-    	this.pageManager.updateReferences(page, pagesIds);
+    	this.pageManager.updateReferences(page, pagesIds, null);
     }
 
     /**
@@ -650,6 +669,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *
      * We'll just try the first for now. Need to come back and optimize this a bit.
      */
+    @Deprecated
     private void cleanReferredBy( final WikiPage referrer,
                                   final Collection< String > oldReferred,
                                   final Collection< String > newReferred ) {
@@ -680,6 +700,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      *
      * @param pages a Collection containing WikiPage objects.
      */
+    @Deprecated
     private synchronized void buildKeyLists( final Collection< WikiPage > pages ) {
         m_refersTo.clear();
         m_referredBy.clear();
@@ -707,6 +728,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      * This method is NOT synchronized. It should only be referred to from within a synchronized method, or it should be
      * made synced if necessary.
      */
+    @Deprecated
     private void updateReferredBy( final String page, final String referrer ) {
         // We're not really interested in first level self-references.
         /*

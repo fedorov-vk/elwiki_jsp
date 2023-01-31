@@ -145,7 +145,7 @@ public class DefaultPageRenamer implements PageRenamer {
 
 		// Update the references
 		ServicesRefs.getReferenceManager().pageRemoved(fromPage);
-		ServicesRefs.getReferenceManager().updateReferences(toPage);
+		//:FVK:ServicesRefs.getReferenceManager().updateReferences(toPage);
 
 		// Update referrers
 		if (changeReferrers) {
@@ -160,7 +160,7 @@ public class DefaultPageRenamer implements PageRenamer {
 		for (final PageAttachment att : attachmentsNewName) {
 			final WikiPage toAttPage = ServicesRefs.getPageManager().getPage(att.getName());
 			// add reference to attachment under new page name
-			ServicesRefs.getReferenceManager().updateReferences(toAttPage);
+			//:FVK: ServicesRefs.getReferenceManager().updateReferences(toAttPage);
 			// :FVK: ServicesRefs.getSearchManager().reindexPage( att );
 		}
 
@@ -192,6 +192,7 @@ public class DefaultPageRenamer implements PageRenamer {
 	 * @param fromPage The old page
 	 * @param toPage   The new page
 	 */
+	@Deprecated
 	private void updateReferrers(final Context context, final WikiPage fromPage, final WikiPage toPage,
 			final Set<String> referrers) {
 		if (referrers.isEmpty()) { // No referrers
@@ -222,7 +223,7 @@ public class DefaultPageRenamer implements PageRenamer {
 				content.setAuthor(context.getCurrentUser().getName());
 				try {
 					ServicesRefs.getPageManager().putPageText(p, newText, "author", "changenote"); // FIXME: здесь надо не текст, а что-то задать.
-					ServicesRefs.getReferenceManager().updateReferences(p);
+					//:FVK:ServicesRefs.getReferenceManager().updateReferences(p);
 				} catch (final ProviderException e) {
 					// We fail with an error, but we will try to continue to rename other referrers as well.
 					log.error("Unable to perform rename.", e);

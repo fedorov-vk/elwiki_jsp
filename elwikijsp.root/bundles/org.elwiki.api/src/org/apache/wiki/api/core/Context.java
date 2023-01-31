@@ -58,6 +58,9 @@ public interface Context extends Cloneable, Command {
     /** User wishes to create a new group */
     public static final String CREATE_GROUP = ContextEnum.WIKI_CREATE_GROUP.getRequestContext();
 
+    /** User is creating a page. */
+    public static final String PAGE_CREATE = ContextEnum.PAGE_CREATE.getRequestContext();
+    
     /** User is deleting a page or an attachment. */
     public static final String DELETE = ContextEnum.PAGE_DELETE.getRequestContext();
 

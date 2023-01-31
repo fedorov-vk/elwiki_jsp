@@ -433,7 +433,7 @@ public interface PageManager extends WikiEventListener {
 	 */
 	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
 
-	void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception;
+	void updateReferences(WikiPage page, Collection<String> pagesIds, Collection<String> unknownPages) throws ProviderException;
 
     /**
      * Finds all references that refer to this page.
@@ -445,5 +445,7 @@ public interface PageManager extends WikiEventListener {
      * @throws WikiException TODO
      */
 	List<PageReference> getPageReferrers(String pageId) throws WikiException;
+
+	Collection<WikiPage> getReferrersToUncreatedPages() throws ProviderException;
 
 }

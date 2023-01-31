@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -87,6 +88,7 @@ import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.ComponentContext;
@@ -372,7 +374,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             //  Empty the references and yay, it shall be recalculated
             final WikiPage p = m_provider.getPageInfo( pageName, version );
 
-            this.referenceManager.updateReferences( p );
+          //:FVK:this.referenceManager.updateReferences( p );
             fireEvent( WikiPageEvent.PAGE_REINDEX, p.getName() );
             text = m_provider.getPageText( pageName, version );
         }
@@ -597,7 +599,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             LOG.info( "Repository has been modified externally while fetching info for " + pageName );
             page = m_provider.getPageInfo( pageName, version );
             if( page != null ) {
-                this.referenceManager.updateReferences( page );
+            	//:FVK:this.referenceManager.updateReferences( page );
             } else {
             	this.referenceManager.pageRemoved( Wiki.contents().page( pageName ) );
             }
@@ -1020,13 +1022,27 @@ public class DefaultPageManager implements PageManager, Initializable {
 	}
 
 	@Override
-	public void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception {
-		m_provider.updateReferences(page, pagesIds);		
+	public void updateReferences(WikiPage page, Collection<String> pagesIds, Collection<String> unknownPages)
+			throws ProviderException {
+		m_provider.updateReferences(page, pagesIds, unknownPages);
 	}
 
 	@Override
 	public List<PageReference> getPageReferrers(String pageId) throws WikiException {
 		return m_provider.getPageReferrers(pageId);
+	}
+
+	@Override
+	public Collection<WikiPage> getReferrersToUncreatedPages() throws ProviderException {
+		List<UnknownPage> unknownPages = m_provider.getUnknownPages();
+		Set<WikiPage> wikiPages = new HashSet<>();
+		for (UnknownPage unknownPage : unknownPages) {
+			WikiPage wikiPage = unknownPage.getWikipage();
+			if (wikiPage != null) {
+				wikiPages.add(wikiPage);
+			}
+		}
+		return wikiPages;
 	}
 
 }

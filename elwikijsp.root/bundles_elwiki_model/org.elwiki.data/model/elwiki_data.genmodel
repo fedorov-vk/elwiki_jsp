@@ -34,6 +34,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/acl"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/webLog"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attributes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/unknownPages"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/compareTo" body="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
       </genOperations>
@@ -129,6 +130,10 @@
     <genClasses ecoreClass="elwiki_data.ecore#//StringToObjectMap">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/key"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/value"/>
+    </genClasses>
+    <genClasses ecoreClass="elwiki_data.ecore#//UnknownPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//UnknownPage/pageName"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//UnknownPage/wikipage"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

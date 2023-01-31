@@ -23,7 +23,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
-import org.apache.wiki.StringTransmutator;
+import org.apache.wiki.LinkCollector;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
@@ -398,9 +398,10 @@ public class DefaultRenderingManager implements RenderingManager {
     @Override
     public String textToHTML( final Context context,
                               String pagedata,
-                              final StringTransmutator localLinkHook,
-                              final StringTransmutator extLinkHook,
-                              final StringTransmutator attLinkHook,
+                              final LinkCollector localLinkCollector,
+                              final LinkCollector extLinkCollector,
+                              final LinkCollector attLinkCollector,
+                              LinkCollector unknownPagesLinkCollector,
                               final boolean parseAccessRules,
                               final boolean justParse ) {
         String result = "";
@@ -421,9 +422,10 @@ public class DefaultRenderingManager implements RenderingManager {
             }
 
             final MarkupParser mp = getParser( context, pagedata );
-            mp.addLocalLinkHook( localLinkHook );
-            mp.addExternalLinkHook( extLinkHook );
-            mp.addAttachmentLinkHook( attLinkHook );
+            mp.addLocalLinkCollector( localLinkCollector );
+            mp.addExternalLinkCollector( extLinkCollector );
+            mp.addAttachmentLinkCollector( attLinkCollector );
+            mp.addUnknownPagesLinkCollector(unknownPagesLinkCollector);
 
             if( !parseAccessRules ) {
                 mp.disableAccessRules();

@@ -22,6 +22,7 @@ import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.FilterException;
+import org.apache.wiki.api.exceptions.WikiException;
 
 import java.lang.reflect.Method;
 import java.util.Properties;
@@ -100,9 +101,9 @@ public interface PageFilter extends Initializable {
      *  
      *  @param context The WikiContext
      *  @param content The content which was just stored.
-     *  @throws FilterException If something goes wrong.  As the page is already saved, This is just logged.
+     * @throws WikiException If something goes wrong.  As the page is already saved, This is just logged.
      */
-    default void postSave( final Context context, final String content ) throws FilterException {
+    default void postSave( final Context context, final String content ) throws WikiException {
         final Method m = methodOfNonPublicAPI( this, "postSave", "org.apache.wiki.WikiContext", "java.lang.String" );
         executePageFilterPhase( () -> null, m, this, content );
         // empty method

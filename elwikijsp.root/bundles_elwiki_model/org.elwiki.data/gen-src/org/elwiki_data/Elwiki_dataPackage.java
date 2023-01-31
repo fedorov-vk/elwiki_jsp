@@ -259,13 +259,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 16;
 
 	/**
+	 * The feature id for the '<em><b>Unknown Pages</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 17;
+
+	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 17;
+	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Compare To</em>' operation.
@@ -1072,13 +1081,59 @@ public interface Elwiki_dataPackage extends EPackage {
 	int STRING_TO_OBJECT_MAP_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.UnknownPageImpl <em>Unknown Page</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.UnknownPageImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getUnknownPage()
+	 * @generated
+	 */
+	int UNKNOWN_PAGE = 14;
+
+	/**
+	 * The feature id for the '<em><b>Page Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_PAGE__PAGE_NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Wikipage</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_PAGE__WIKIPAGE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Unknown Page</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_PAGE_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Unknown Page</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_PAGE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
 	 * @generated
 	 */
-	int ARRAY_STRING = 14;
+	int ARRAY_STRING = 15;
 
 	/**
 	 * The meta object id for the '<em>Access List</em>' data type.
@@ -1088,7 +1143,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAccessList()
 	 * @generated
 	 */
-	int ACCESS_LIST = 15;
+	int ACCESS_LIST = 16;
 
 	/**
 	 * The meta object id for the '<em>Array Principal</em>' data type.
@@ -1097,7 +1152,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
 	 * @generated
 	 */
-	int ARRAY_PRINCIPAL = 17;
+	int ARRAY_PRINCIPAL = 18;
 
 	/**
 	 * The meta object id for the '<em>Permission Object</em>' data type.
@@ -1107,7 +1162,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
 	 * @generated
 	 */
-	int PERMISSION_OBJECT = 18;
+	int PERMISSION_OBJECT = 19;
 
 	/**
 	 * The meta object id for the '<em>List Page Content</em>' data type.
@@ -1117,7 +1172,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getListPageContent()
 	 * @generated
 	 */
-	int LIST_PAGE_CONTENT = 19;
+	int LIST_PAGE_CONTENT = 20;
 
 	/**
 	 * The meta object id for the '<em>Principal Object</em>' data type.
@@ -1127,7 +1182,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
 	 * @generated
 	 */
-	int PRINCIPAL_OBJECT = 16;
+	int PRINCIPAL_OBJECT = 17;
 
 
 	/**
@@ -1326,6 +1381,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getWikiPage_Attributes();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Unknown Pages</em>'.
+	 * @see org.elwiki_data.WikiPage#getUnknownPages()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EReference getWikiPage_UnknownPages();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
@@ -1886,6 +1952,38 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getStringToObjectMap_Value();
 
 	/**
+	 * Returns the meta object for class '{@link org.elwiki_data.UnknownPage <em>Unknown Page</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Unknown Page</em>'.
+	 * @see org.elwiki_data.UnknownPage
+	 * @generated
+	 */
+	EClass getUnknownPage();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.UnknownPage#getPageName <em>Page Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Page Name</em>'.
+	 * @see org.elwiki_data.UnknownPage#getPageName()
+	 * @see #getUnknownPage()
+	 * @generated
+	 */
+	EAttribute getUnknownPage_PageName();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.elwiki_data.UnknownPage#getWikipage <em>Wikipage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Wikipage</em>'.
+	 * @see org.elwiki_data.UnknownPage#getWikipage()
+	 * @see #getUnknownPage()
+	 * @generated
+	 */
+	EReference getUnknownPage_Wikipage();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.AttachmentContent <em>Attachment Content</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2160,6 +2258,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference WIKI_PAGE__ATTRIBUTES = eINSTANCE.getWikiPage_Attributes();
+
+		/**
+		 * The meta object literal for the '<em><b>Unknown Pages</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference WIKI_PAGE__UNKNOWN_PAGES = eINSTANCE.getWikiPage_UnknownPages();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.
@@ -2608,6 +2714,32 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STRING_TO_OBJECT_MAP__VALUE = eINSTANCE.getStringToObjectMap_Value();
+
+		/**
+		 * The meta object literal for the '{@link org.elwiki_data.impl.UnknownPageImpl <em>Unknown Page</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.elwiki_data.impl.UnknownPageImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getUnknownPage()
+		 * @generated
+		 */
+		EClass UNKNOWN_PAGE = eINSTANCE.getUnknownPage();
+
+		/**
+		 * The meta object literal for the '<em><b>Page Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute UNKNOWN_PAGE__PAGE_NAME = eINSTANCE.getUnknownPage_PageName();
+
+		/**
+		 * The meta object literal for the '<em><b>Wikipage</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UNKNOWN_PAGE__WIKIPAGE = eINSTANCE.getUnknownPage_Wikipage();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.

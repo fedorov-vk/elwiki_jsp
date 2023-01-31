@@ -23,6 +23,7 @@ import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -50,6 +51,7 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getUnknownPages <em>Unknown Pages</em>}</li>
  * </ul>
  *
  * @generated
@@ -367,6 +369,17 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public EMap<String, Object> getAttributes() {
 		return (EMap<String, Object>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ATTRIBUTES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public EList<UnknownPage> getUnknownPages() {
+		return (EList<UnknownPage>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__UNKNOWN_PAGES, true);
 	}
 
 	/**

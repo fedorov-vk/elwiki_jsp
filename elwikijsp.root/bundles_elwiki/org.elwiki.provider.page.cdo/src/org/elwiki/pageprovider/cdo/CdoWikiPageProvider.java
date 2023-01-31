@@ -78,6 +78,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 public class CdoWikiPageProvider implements PageProvider {
@@ -1523,46 +1524,106 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 		}
 	}
-
+	
 	@Override
-	public void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception {
-		List<String> oldRefs = new ArrayList<>();
-		for (PageReference pageReference : page.getPageReferences()) {
-			oldRefs.add(pageReference.getPageId());
-		}
-
-		List<String> newRefs = new ArrayList<>(pagesIds);
-		newRefs.removeAll(oldRefs); // now contains only new elements.
-
-		oldRefs.removeAll(pagesIds); // now contains only old elements;
-
+	public void updateReferences(WikiPage page, Collection<String> pagesIds, Collection<String> unknownPages0) throws ProviderException {
 		CDOTransaction transaction = null;
 		try {
 			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-			// Refresh list of references from page.
 			WikiPage wikiPage = transaction.getObject(page);
-			EList<PageReference> pageReferences = wikiPage.getPageReferences();
 
-			// Remove old (unused) references.
-			if (oldRefs.size() > 0) {
-				for (Iterator<PageReference> iter = pageReferences.iterator(); iter.hasNext();) {
-					String pageId = iter.next().getPageId();
-					if (oldRefs.contains(pageId)) {
-						iter.remove();
+			{// maintenance of links by page id
+				List<String> oldIds = new ArrayList<>();
+				for (PageReference pageReference : page.getPageReferences()) {
+					oldIds.add(pageReference.getPageId());
+				}
+				List<String> newIds = new ArrayList<>(pagesIds);
+				newIds.removeAll(oldIds); // now contains only new pagesIds.
+				oldIds.removeAll(pagesIds); // now contains only old pagesIds;
+
+				/* Change list of references from page. */
+				EList<PageReference> pageReferences = wikiPage.getPageReferences();
+				if (oldIds.size() > 0) {
+					// Remove old (unused) references.
+					for (Iterator<PageReference> iter = pageReferences.iterator(); iter.hasNext();) {
+						String pageId = iter.next().getPageId();
+						if (oldIds.contains(pageId)) {
+							iter.remove();
+						}
 					}
+				}
+				// Add new references.
+				for (String pageId : newIds) {
+					PageReference pageReference = Elwiki_dataFactory.eINSTANCE.createPageReference();
+					pageReference.setPageId(pageId);
+					pageReferences.add(pageReference); // Adding reference into list.
 				}
 			}
 
-			// Add new references.
-			for (String pageId : newRefs) {
-				PageReference pageReference = Elwiki_dataFactory.eINSTANCE.createPageReference();
-				pageReference.setPageId(pageId);
-				pageReferences.add(pageReference); // Adding reference into list.
+			{// maintenance of unknown page names.
+				List<String> oldNames = new ArrayList<>();
+				for (UnknownPage unknownPage : page.getUnknownPages()) {
+					oldNames.add(unknownPage.getPageName());
+				}
+				List<String> newNames = new ArrayList<>(unknownPages0);
+				newNames.removeAll(oldNames); // now contains only new page names.
+				oldNames.removeAll(unknownPages0); // now contains only old page names;
+
+				/* Change list of UnknownPages from page. */
+				EList<UnknownPage> unknownPages = wikiPage.getUnknownPages();
+				if (oldNames.size() > 0) {
+					// Remove old (unused) UnknownPages.
+					for (Iterator<UnknownPage> iter = unknownPages.iterator(); iter.hasNext();) {
+						String pageId = iter.next().getPageName();
+						if (oldNames.contains(pageId)) {
+							iter.remove();
+						}
+					}
+				}
+				// Add new UnknownPages.
+				for (String pageName : newNames) {
+					UnknownPage unknownPage = Elwiki_dataFactory.eINSTANCE.createUnknownPage();
+					unknownPage.setPageName(pageName);
+					unknownPages.add(unknownPage); // Adding UnknownPage into list.
+				}
 			}
 
 			transaction.commit();
+		} catch (Exception e) {
+			throw new ProviderException(e);
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
+	@Override
+	public List<UnknownPage> getUnknownPages() throws ProviderException {
+		CDOTransaction transaction = null;
+		try {
+			List<UnknownPage> unknownPages = new ArrayList<>();
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl", "UnknownPage.allInstances()", eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+			for (Object page : query.getResult()) {
+				//@formatter:off
+				unknownPages.add((UnknownPage) view.getObject(
+						((UnknownPage) page).cdoID()
+						)
+				);
+				//@formatter:on
+			}
+
+			return unknownPages;
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (!transaction.isClosed()) {
 				transaction.close();
 			}
 		}

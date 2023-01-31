@@ -22,6 +22,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -135,6 +136,10 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseStringToObjectMap(Map.Entry<String, Object> object) {
 				return createStringToObjectMapAdapter();
+			}
+			@Override
+			public Adapter caseUnknownPage(UnknownPage object) {
+				return createUnknownPageAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -335,6 +340,20 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringToObjectMapAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.elwiki_data.UnknownPage <em>Unknown Page</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.elwiki_data.UnknownPage
+	 * @generated
+	 */
+	public Adapter createUnknownPageAdapter() {
 		return null;
 	}
 

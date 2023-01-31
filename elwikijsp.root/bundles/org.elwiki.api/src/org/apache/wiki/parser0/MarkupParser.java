@@ -23,6 +23,7 @@ import org.apache.oro.text.GlobCompiler;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
+import org.apache.wiki.LinkCollector;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
@@ -46,29 +47,36 @@ import java.util.List;
  */
 public abstract class MarkupParser {
 
+    private static final Logger log = Logger.getLogger( MarkupParser.class );
+	
     /** Allow this many characters to be pushed back in the stream.  In effect, this limits the size of a single line.  */
     protected static final int PUSHBACK_BUFFER_SIZE = 10*1024;
     protected PushbackReader m_in;
-    private int m_pos = -1; // current position in reader stream
+    /** Current position in reader stream. */
+    private int m_pos = -1;
 
     protected Engine m_engine;
     protected IWikiConfiguration config;
     protected Context m_context;
 
-    /** Optionally stores internal wikilinks */
-    protected ArrayList< StringTransmutator > m_localLinkMutatorChain = new ArrayList<>();
-    protected ArrayList< StringTransmutator > m_externalLinkMutatorChain = new ArrayList<>();
-    protected ArrayList< StringTransmutator > m_attachmentLinkMutatorChain = new ArrayList<>();
-    protected ArrayList< StringTransmutator > m_linkMutators = new ArrayList<>();
-    protected ArrayList< HeadingListener > m_headingListenerChain = new ArrayList<>();
+	/** Optionally stores internal wikilinks. */
+	protected List<LinkCollector> m_localLinkCollectors = new ArrayList<>();
+	/** Optionally stores external wikilinks. */
+	protected List<LinkCollector> m_externalLinkCollectors = new ArrayList<>();
+	/** Optionally stores attachment links. */
+	protected List<LinkCollector> m_attachmentLinkCollectors = new ArrayList<>();
+	/** Optionally stores unknown pages links. */
+	protected List<LinkCollector> unknownPagesCollectors = new ArrayList<>();
+
+    protected List< StringTransmutator > m_linkMutators = new ArrayList<>();
+
+    protected List< HeadingListener > m_headingListenerChain = new ArrayList<>();
 
     protected boolean m_inlineImages = true;
     protected boolean m_parseAccessRules = true;
     /** Keeps image regexp Patterns */
     protected List< Pattern > m_inlineImagePatterns = null;
     protected LinkParsingOperations m_linkParsingOperations;
-
-    private static final Logger log = Logger.getLogger( MarkupParser.class );
 
     /** If set to "true", allows using raw HTML within Wiki text.  Be warned, this is a VERY dangerous option to set -
        never turn this on in a publicly allowable Wiki, unless you are absolutely certain of what you're doing. */
@@ -173,40 +181,54 @@ public abstract class MarkupParser {
      *
      *  @param mutator The hook to call.  Null is safe.
      */
-    public void addLinkTransmutator( final StringTransmutator mutator ) {
-        addLinkHook( m_linkMutators, mutator );
-    }
-
-    /**
-     *  Adds a hook for processing local links.  The engine transforms both non-existing and existing page links.
-     *
-     *  @param mutator The hook to call.  Null is safe.
-     */
-    public void addLocalLinkHook( final StringTransmutator mutator ) {
-        addLinkHook( m_localLinkMutatorChain, mutator );
-    }
-
-    /**
-     *  Adds a hook for processing external links.  This includes all http:// ftp://, etc. links, including inlined images.
-     *
-     *  @param mutator The hook to call.  Null is safe.
-     */
-    public void addExternalLinkHook( final StringTransmutator mutator ) {
-        addLinkHook( m_externalLinkMutatorChain, mutator );
-    }
-
-    /**
-     *  Adds a hook for processing attachment links.
-     *
-     *  @param mutator The hook to call.  Null is safe.
-     */
-    public void addAttachmentLinkHook( final StringTransmutator mutator ) {
-        addLinkHook( m_attachmentLinkMutatorChain, mutator );
-    }
-
-    void addLinkHook( final List< StringTransmutator > mutatorChain, final StringTransmutator mutator ) {
+    public void addLinkTransmutator( StringTransmutator mutator ) {
         if( mutator != null ) {
-            mutatorChain.add( mutator );
+        	m_linkMutators.add( mutator );
+        }
+    }
+
+    /**
+     *  Adds a link collector for processing local links.  The engine transforms both non-existing and existing page links.
+     *
+     *  @param linkCollector The link collector to call.  Null is safe.
+     */
+    public void addLocalLinkCollector( LinkCollector linkCollector ) {
+        if( linkCollector != null ) {
+        	m_localLinkCollectors.add( linkCollector );
+        }
+    }
+
+	/**
+	 * Adds a link collector for processing external links. This includes all http:// ftp://, etc. links, including
+	 * inlined images.
+	 *
+	 * @param linkCollector The link collector to call. Null is safe.
+	 */
+    public void addExternalLinkCollector( LinkCollector linkCollector ) {
+        if( linkCollector != null ) {
+        	m_externalLinkCollectors.add( linkCollector );
+        }
+    }
+
+    /**
+     *  Adds a link collector for processing attachment links.
+     *
+     *  @param linkCollector The link collector to call.  Null is safe.
+     */
+    public void addAttachmentLinkCollector( LinkCollector linkCollector ) {
+        if( linkCollector != null ) {
+        	m_attachmentLinkCollectors.add( linkCollector );
+        }
+    }
+
+    /**
+     *  Adds a link collector for processing unknown pages links.
+     *
+     *  @param linkCollector The link collector to call.  Null is safe.
+     */
+    public void addUnknownPagesLinkCollector( LinkCollector linkCollector ) {
+        if( linkCollector != null ) {
+        	unknownPagesCollectors.add( linkCollector );
         }
     }
 

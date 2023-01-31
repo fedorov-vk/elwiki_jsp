@@ -29,6 +29,7 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
+import org.apache.wiki.LinkCollector;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
@@ -177,8 +178,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
     /** If true, allows raw HTML. */
     private boolean                m_allowHTML           = false;
 
-    private boolean                m_useRelNofollow      = false;
-
     private PatternCompiler        m_compiler = new Perl5Compiler();
 
     static final String WIKIWORD_REGEX = "(^|[[:^alnum:]]+)([[:upper:]]+[[:lower:]]+[[:upper:]]+[[:alnum:]]*|(http://|https://|mailto:)([A-Za-z0-9_/\\.\\+\\?\\#\\-\\@=&;~%]+))";
@@ -238,7 +237,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         m_useOutlinkImage    = m_context.getBooleanWikiProperty( PROP_USEOUTLINKIMAGE, m_useOutlinkImage );
         m_useAttachmentImage = m_context.getBooleanWikiProperty( PROP_USEATTACHMENTIMAGE, m_useAttachmentImage );
         m_allowHTML          = m_context.getBooleanWikiProperty( PROP_ALLOWHTML, m_allowHTML );
-        m_useRelNofollow     = m_context.getBooleanWikiProperty( PROP_USERELNOFOLLOW, m_useRelNofollow );
 
         if( ServicesRefs.getUserManager().getUserDatabase() == null || ServicesRefs.getAuthorizationManager() == null ) {
             disableAccessRules();
@@ -266,6 +264,22 @@ public class JSPWikiMarkupParser extends MarkupParser {
         return text;
     }
 
+    /**
+     * Calls a link collectors chain.
+     * 
+     * @param collectors Chain to call.
+     * @param text Text that should be passed to the collec() method of each of the collectors in the chain.
+     */
+    protected void collectLink(Collection< LinkCollector > collectors, String text) {
+        if( collectors == null ) {
+        	return;
+        }
+
+        for( final LinkCollector collector : collectors ) {
+            text = collector.collect( text );
+        }
+	}
+    
     /**
      * Calls the heading listeners.
      *
@@ -333,123 +347,82 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
         final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
 
-        switch(type)
-        {
-        	/*:FVK: case READ_ID:
-        		el = createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEWID.getRequestContext(), link), text, section );
-        		break;*/
-			case CMD:
-				el = createAnchor(LinkType.CMD, m_context.getURL(link, ""), text, section);
-				break;
+        //@formatter:off
+		el = switch (type) {
+    	/*:FVK: case READ_ID -> createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEWID.getRequestContext(), link), text, section ); */
+		case CMD -> createAnchor(LinkType.CMD, m_context.getURL(link, ""), text, section);
+		case READ -> createAnchor(LinkType.READ,
+				m_context.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), link), text, section);
+		case CREATE -> createAnchor(LinkType.CREATE, m_context.getURL(Context.PAGE_CREATE, link), text, "")
+				.setAttribute("title", MessageFormat.format(rb.getString("markupparser.link.create"), text));
+		case EMPTY -> new Element("u").addContent(text);
+		//
+		//  These two are for local references - footnotes and references to footnotes.
+		//  We embed the page name (or whatever WikiContext gives us)
+		//  to make sure the links are unique across Wiki.
+		//
+		case LOCALREF -> createAnchor(LinkType.LOCALREF,
+				"#ref-" + m_context.getName() + "-" + link, "[" + text + "]", "");
+		case LOCAL -> new Element("a").setAttribute("class", CLASS_FOOTNOTE)
+				.setAttribute("name", "ref-" + m_context.getName() + "-" + link.substring(1))
+				.addContent("[" + text + "]");
+        //
+        //  With the image, external and interwiki types we need to make sure nobody can put in Javascript
+		//  or something else annoying into the links themselves.
+		//  We do this by preventing a haxor from stopping the link name short with quotes in fillBuffer().
+        //
+		case IMAGE -> new Element("img").setAttribute("class", "inline")
+				.setAttribute("src", link).setAttribute("alt", text);
+		case IMAGELINK -> createAnchor(LinkType.IMAGELINK, text, "", "").addContent(
+					new Element("img").setAttribute("class", "inline")
+						.setAttribute("src", link).setAttribute("alt", text)
+				);
+		case IMAGEWIKILINK -> createAnchor(
+				LinkType.IMAGEWIKILINK,
+					m_context.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), text),
+					"", "")
+				.addContent(
+					new Element("img").setAttribute("class", "inline")
+						.setAttribute("src", link).setAttribute("alt", text)
+				);
+		case EXTERNAL -> createAnchor(LinkType.EXTERNAL, link, text, section);
+		case INTERWIKI -> createAnchor(LinkType.INTERWIKI, link, text, section);
+		case ATTACHMENT -> {
+			Element el1;
+			final String attlink = m_context.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), link);
+			final String infolink = m_context.getURL(ContextEnum.PAGE_INFO.getRequestContext(), link);
+			final String imglink = m_context.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "images/attachment_small.png");
+			el1 = createAnchor(LinkType.ATTACHMENT, attlink, text, "");
 
-            case READ:
-                el = createAnchor( LinkType.READ, m_context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), link), text, section );
-                break;
+			if (ServicesRefs.getAttachmentManager().forceDownload(attlink)) {
+				el1.setAttribute("download", "");
+			}
 
-            case CREATE:
-                el = createAnchor( LinkType.CREATE, m_context.getURL( ContextEnum.PAGE_EDIT.getRequestContext(),link), text, "" );
-                el.setAttribute("title", MessageFormat.format( rb.getString( "markupparser.link.create" ), link ) );
+			pushElement(el1);
+			popElement(el1.getName());
 
-                break;
+			if (m_useAttachmentImage) {
+				el1 = new Element("img").setAttribute("src", imglink);
+				el1.setAttribute("border", "0");
+				el1.setAttribute("alt", "(info)");
 
-            case EMPTY:
-                el = new Element("u").addContent(text);
-                break;
-
-                //
-                //  These two are for local references - footnotes and
-                //  references to footnotes.
-                //  We embed the page name (or whatever WikiContext gives us)
-                //  to make sure the links are unique across Wiki.
-                //
-            case LOCALREF:
-                el = createAnchor( LinkType.LOCALREF, "#ref-"+m_context.getName()+"-"+link, "["+text+"]", "" );
-                break;
-
-            case LOCAL:
-                el = new Element("a").setAttribute("class",CLASS_FOOTNOTE);
-                el.setAttribute("name", "ref-"+m_context.getName()+"-"+link.substring(1));
-                el.addContent("["+text+"]");
-                break;
-
-                //
-                //  With the image, external and interwiki types we need to
-                //  make sure nobody can put in Javascript or something else
-                //  annoying into the links themselves.  We do this by preventing
-                //  a haxor from stopping the link name short with quotes in
-                //  fillBuffer().
-                //
-            case IMAGE:
-                el = new Element("img").setAttribute("class","inline");
-                el.setAttribute("src",link);
-                el.setAttribute("alt",text);
-                break;
-
-            case IMAGELINK:
-                el = new Element("img").setAttribute("class","inline");
-                el.setAttribute("src",link);
-                el.setAttribute("alt",text);
-                el = createAnchor(LinkType.IMAGELINK,text,"","").addContent(el);
-                break;
-
-            case IMAGEWIKILINK:
-                final String pagelink = m_context.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), text );
-                el = new Element("img").setAttribute("class","inline");
-                el.setAttribute("src",link);
-                el.setAttribute("alt",text);
-                el = createAnchor(LinkType.IMAGEWIKILINK,pagelink,"","").addContent(el);
-                break;
-
-            case EXTERNAL:
-                el = createAnchor( LinkType.EXTERNAL, link, text, section );
-                if( m_useRelNofollow ) el.setAttribute("rel","nofollow");
-                break;
-
-            case INTERWIKI:
-                el = createAnchor( LinkType.INTERWIKI, link, text, section );
-                break;
-
-            case ATTACHMENT:
-                final String attlink = m_context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), link );
-                final String infolink = m_context.getURL( ContextEnum.PAGE_INFO.getRequestContext(), link );
-                final String imglink = m_context.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "images/attachment_small.png" );
-                el = createAnchor( LinkType.ATTACHMENT, attlink, text, "" );
-
-                if(  ServicesRefs.getAttachmentManager().forceDownload( attlink ) ) {
-                    el.setAttribute("download", "");
-                }
-
-                pushElement(el);
-                popElement(el.getName());
-
-                if( m_useAttachmentImage )
-                {
-                    el = new Element("img").setAttribute("src",imglink);
-                    el.setAttribute("border","0");
-                    el.setAttribute("alt","(info)");
-
-                    el = new Element("a").setAttribute("href",infolink).addContent(el);
-                    el.setAttribute("class","infolink");
-                }
-                else
-                {
-                    el = null;
-                }
-                break;
-
-            default:
-                break;
-        }
-
-        if( el != null && attributes != null )
-        {
-            while( attributes.hasNext() )
-            {
-                final Attribute attr = attributes.next();
-                if( attr != null )
-                {
-                    el.setAttribute(attr);
-                }
+				el1 = new Element("a").setAttribute("href", infolink).addContent(el1);
+				el1.setAttribute("class", "infolink");
+			} else {
+				el1 = null;
+			}
+			yield el1;
+		}
+		default -> throw new IllegalArgumentException("Unexpected value: " + type);
+		};
+		//@formatter:on
+        
+		if (el != null && attributes != null) {
+			while (attributes.hasNext()) {
+				final Attribute attr = attributes.next();
+				if (attr != null) {
+					el.setAttribute(attr);
+				}
             }
         }
 
@@ -458,6 +431,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             flushPlainText();
             m_currentElement.addContent( el );
         }
+
         return el;
     }
 
@@ -946,7 +920,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
     {
         final String matchedLink = m_linkParsingOperations.linkIfExists( wikiname );
 
-        callMutatorChain( m_localLinkMutatorChain, wikiname );
+        collectLink( m_localLinkCollectors, wikiname );
 
         if( matchedLink != null ) {
             makeLink( LinkType.READ, matchedLink, wikiname, null, null );
@@ -1007,7 +981,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             url = url.substring( 0, url.length() - 1 );
         }
 
-        callMutatorChain( m_externalLinkMutatorChain, url );
+        collectLink( m_externalLinkCollectors, url );
 
         if( m_linkParsingOperations.isImageLink( url, isImageInlining(), getInlineImagePatterns() ) ) {
             result = handleImageLink( StringUtils.replace( url, "&amp;", "&" ), url, false );
@@ -1049,7 +1023,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         else if( m_linkParsingOperations.linkExists( possiblePage ) && hasLinkText )
         {
             // System.out.println("Orig="+link+", Matched: "+matchedLink);
-            callMutatorChain( m_localLinkMutatorChain, possiblePage );
+        	collectLink( m_localLinkCollectors, possiblePage );
 
             return makeLink( LinkType.IMAGEWIKILINK, reallink, link, null, null );
         }
@@ -1197,7 +1171,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             } else if( m_linkParsingOperations.isExternalLink( linkRef ) ) {
                 // It's an external link, out of this Wiki
 
-                callMutatorChain( m_externalLinkMutatorChain, linkRef );
+            	collectLink( m_externalLinkCollectors, linkRef );
 
                 if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
                     handleImageLink( linkRef, linkText, link.hasReference() );
@@ -1225,7 +1199,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
                     if( urlReference != null ) {
                         urlReference = TextUtil.replaceString( urlReference, "%s", wikiPage );
-                        urlReference = callMutatorChain( m_externalLinkMutatorChain, urlReference );
+                        collectLink( m_externalLinkCollectors, urlReference );
 
                         if( m_linkParsingOperations.isImageLink( urlReference, isImageInlining(), getInlineImagePatterns() ) ) {
                             handleImageLink( urlReference, linkText, link.hasReference() );
@@ -1257,39 +1231,25 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
 				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
 			} else if (linkRef.matches("@.+")) {
-				// Internal wiki link (by page.id).
+				// Internal wiki link (by pageId, which can be unknown).
 				// Working up link of ElWiki format.
-
 				LinkType linkType = LinkType.EMPTY;
-
-				String pageId = linkRef.substring(1); // :FVK: Workaround - length of prefix '@'
+				String pageId = linkRef.substring(1); // :FVK: Workaround: =1 is length of prefix '@'
 				WikiPage wikiPage = this.m_context.getPageById(pageId);
 				if (wikiPage != null) {
-					// Making HREF.
-					// :FVK: возможна реализация ... String url = RefAppSession.getAppSession().getWikiEngine().getUrlHandler01();
 					if (!link.hasReference()) {
 						linkText = wikiPage.getName();
 					}
 					linkRef = pageId;
-					if (wikiPage.getPageContents().size() > 0) {
-						linkType = LinkType.READ;
-					} else {
-						linkType = LinkType.CREATE; // :FVK: workaround? the page needs content creation. 
-					}
+					linkType = LinkType.READ;
+					collectLink(this.m_localLinkCollectors, linkRef);
 				} else {
 					// page creation required.
-					WikiPage page = this.m_context.getPage();
-					String msg = String.format("Incorrect reference to page with id=%d, in page '%s'.", pageId,
-							((page != null) ? page.getName() : "null"));
-					log.error(msg);
-					linkRef = "";
-					linkType = LinkType.EMPTY;
+					WikiPage basePage = m_context.getRealPage();
+					linkRef = (basePage != null) ? basePage.getId() : "";
+					linkType = LinkType.CREATE;
+					collectLink(this.unknownPagesCollectors, linkText);
 				}
-
-				// :FVK: /* cleanLink() удаляет ведущие "/?" */ linkref = MarkupParser.cleanLink(linkref);
-
-				callMutatorChain(this.m_localLinkMutatorChain, linkRef);
-
 				makeLink(linkType, linkRef, linkText, null, link.getAttributes());
 			} else {
                 final int hashMark;
@@ -1297,7 +1257,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 // Internal wiki link, but is it an attachment link?
                 String attachment = ServicesRefs.getAttachmentManager().getAttachmentName( m_context, linkRef );
                 if( attachment != null ) {
-                    callMutatorChain( m_attachmentLinkMutatorChain, attachment );
+                	collectLink( m_attachmentLinkCollectors, attachment );
 
                     if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
                         attachment = m_context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), attachment );
@@ -1313,7 +1273,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
                     linkRef = MarkupParser.cleanLink( linkRef );
 
-                    callMutatorChain( m_localLinkMutatorChain, linkRef );
+                    collectLink( m_localLinkCollectors, linkRef );
 
                     final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
                     if( matchedLink != null ) {
@@ -1327,7 +1287,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                     // It's an internal Wiki link
                     linkRef = MarkupParser.cleanLink( linkRef );
 
-                    callMutatorChain( m_localLinkMutatorChain, linkRef );
+                    collectLink( m_localLinkCollectors, linkRef );
 
                     final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
                     if( matchedLink != null ) {
@@ -1346,7 +1306,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         return m_currentElement;
     }
 
-    /**
+	/**
      *  Pushes back any string that has been read.  It will obviously
      *  be pushed back in a reverse order.
      *

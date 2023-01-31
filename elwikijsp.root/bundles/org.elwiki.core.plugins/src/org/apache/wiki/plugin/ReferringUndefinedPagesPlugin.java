@@ -18,77 +18,76 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
-
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
+
+import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki_data.WikiPage;
+
 /**
- *  <p>Lists all pages containing links to Undefined Pages (pages containing dead links).</p>
+ * <p>
+ * Lists all pages containing links to Undefined Pages (pages containing dead links).
+ * </p>
  *
- *  An original idea from Gregor Hagedorn.
+ * An original idea from Gregor Hagedorn.
  *
- *  @since 2.10.0
+ * @since 2.10.0
  */
 public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 
-    /** Parameter name for setting the maximum items to show.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_MAX = "max";
+	/** Parameter name for setting the maximum items to show. Value is <tt>{@value}</tt>. */
+	public static final String PARAM_MAX = "max";
 
-    /** Parameter name for setting the text to show when the maximum items is overruled. Value is <tt>{@value}</tt>. */
-    public static final String PARAM_EXTRAS = "extras";
+	/**
+	 * Parameter name for setting the text to show when the maximum items is overruled. Value is <tt>{@value}</tt>.
+	 */
+	public static final String PARAM_EXTRAS = "extras";
 
-    @Override
-    public String execute( final Context context, final Map<String, String> params) throws PluginException {
-        super.initialize( context, params );
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
 
-        final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
-        final ReferenceManager referenceManager = ServicesRefs.getReferenceManager();
+		try {
 
-        final int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
-        String extras = params.get(PARAM_EXTRAS);
-        if (extras == null) {
-            extras = rb.getString("referringundefinedpagesplugin.more");
-        }
+			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+			Engine engine = context.getEngine();
+			PageManager pageManager = engine.getManager(PageManager.class);
 
-        final Collection< String > uncreatedPages = referenceManager.findUncreated();
-        Collection< String > result = null;
+			/* Parse parameters.
+			 */
+			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
+			String extras = params.get(PARAM_EXTRAS);
+			if (extras == null) {
+				extras = rb.getString("referringundefinedpagesplugin.more");
+			}
 
-        final TreeMap< String, String > sortedMap = new TreeMap<>();
-        if( uncreatedPages != null ) {
-            for( final String uncreatedPageName : uncreatedPages ) {
-                final Collection< String > referrers = referenceManager.findReferrers( uncreatedPageName );
-                if( referrers != null ) {
-                    for( final String referringPage : referrers ) {
-                        sortedMap.put( referringPage, "" );
-                    }
-                }
-            }
-            result = sortedMap.keySet();
-        }
+			Collection<WikiPage> referrers = pageManager.getReferrersToUncreatedPages();
 
-        result = super.filterAndSortCollection( result );
+			//:FVK: result = super.filterAndSortCollection( result );
+			String wikitext = wikitizeCollection(referrers, m_separator, items);
 
-        final String wikitext = wikitizeCollectionDeprecated( result, m_separator, items );
-        final StringBuilder resultHTML = new StringBuilder();
-        resultHTML.append( makeHTML( context, wikitext ) );
+			StringBuilder resultHTML = new StringBuilder();
+			resultHTML.append(makeHTML(context, wikitext));
 
-        // add the more.... text
-        if( items < result.size() && items > 0 ) {
-            final Object[] args = { "" + ( result.size() - items ) };
-            extras = MessageFormat.format( extras, args );
+			// add the more.... text
+			if (items < referrers.size() && items > 0) {
+				Object[] args = { "" + (referrers.size() - items) };
+				extras = MessageFormat.format(extras, args);
 
-            resultHTML.append( "<br/>" + extras + "<br/>" );
-        }
-        return resultHTML.toString();
-    }
+				resultHTML.append("<br/>" + extras + "<br/>");
+			}
+			return resultHTML.toString();
+		} catch (Exception e) {
+			throw new PluginException(e);
+		}
+	}
 
 }

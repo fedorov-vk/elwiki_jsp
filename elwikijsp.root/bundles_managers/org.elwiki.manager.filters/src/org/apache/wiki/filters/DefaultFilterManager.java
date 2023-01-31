@@ -335,12 +335,10 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      *
      *  @param context The WikiContext
      *  @param pageData WikiMarkup data to be passed through the postSave chain.
-     *  @throws FilterException If any of the filters throws a FilterException
-     *
      *  @see PageFilter#postSave(Context, String)
      */
     @Override
-    public void doPostSaveFiltering( final Context context, final String pageData ) throws FilterException {
+    public void doPostSaveFiltering( final Context context, final String pageData ) throws WikiException {
         fireEvent( WikiPageEvent.POST_SAVE_BEGIN, context );
         for( final PageFilter f : m_pageFilters ) {
             // log.info("POSTSAVE: "+f.toString() );

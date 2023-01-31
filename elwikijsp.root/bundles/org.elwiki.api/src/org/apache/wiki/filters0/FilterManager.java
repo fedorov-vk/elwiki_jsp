@@ -20,6 +20,7 @@ package org.apache.wiki.filters0;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.FilterException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.ModuleManager;
 
@@ -93,11 +94,10 @@ public interface FilterManager extends ModuleManager {
      * 
      *  @param context The WikiContext
      *  @param pageData WikiMarkup data to be passed through the postSave chain.
-     *  @throws FilterException If any of the filters throws a FilterException
-     * 
+     *  @throws WikiException If any of the filters throws a FilterException
      *  @see PageFilter#postSave(Context, String)
      */
-    void doPostSaveFiltering( Context context, String pageData ) throws FilterException;
+    void doPostSaveFiltering( Context context, String pageData ) throws WikiException;
     
     /**
      *  Returns the list of filters currently installed.  Note that this is not

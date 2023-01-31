@@ -18,34 +18,31 @@
  */
 package org.apache.wiki;
 
-import org.apache.wiki.api.core.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- *  Just a simple class collecting all of the links that come in.
+ * Just a simple class collecting all of the links that come in.
  */
-public class LinkCollector implements StringTransmutator {
-	
-    private List< String > m_items = new ArrayList<>();
+public class LinkCollector {
 
-    /**
-     * Returns a List of Strings representing links.
-     * @return the link collection
-     */
-    public List< String > getLinks() {
-        return m_items;
-    }
+	private List<String> items = new ArrayList<>();
 
-    /**
-     * {@inheritDoc}
-     */
-    public String mutate( final Context context, final String in ) {
-        m_items.add( in );
-        return in;
-    }
+	/**
+	 * Returns a List of Strings representing links.
+	 * 
+	 * @return the link collection
+	 */
+	public List<String> getLinks() {
+		return items;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String collect(final String in) {
+		items.add(in);
+		return in;
+	}
 
 }
-

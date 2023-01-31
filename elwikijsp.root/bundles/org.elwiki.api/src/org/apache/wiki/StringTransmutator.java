@@ -23,8 +23,6 @@ import org.apache.wiki.api.core.Context;
 
 /**
  *  Defines an interface for transforming strings within a Wiki context.
- *
- *  @since 1.6.4
  */
 public interface StringTransmutator {
 	

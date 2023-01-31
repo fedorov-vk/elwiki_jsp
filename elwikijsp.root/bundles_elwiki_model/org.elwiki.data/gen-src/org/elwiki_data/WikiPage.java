@@ -40,6 +40,7 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -477,6 +478,20 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	EMap<String, Object> getAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Unknown Pages</b></em>' containment reference list.
+	 * The list contents are of type {@link org.elwiki_data.UnknownPage}.
+	 * It is bidirectional and its opposite is '{@link org.elwiki_data.UnknownPage#getWikipage <em>Wikipage</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Unknown Pages</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_UnknownPages()
+	 * @see org.elwiki_data.UnknownPage#getWikipage
+	 * @model opposite="wikipage" containment="true"
+	 * @generated
+	 */
+	EList<UnknownPage> getUnknownPages();
 
 	/**
 	 * <!-- begin-user-doc -->

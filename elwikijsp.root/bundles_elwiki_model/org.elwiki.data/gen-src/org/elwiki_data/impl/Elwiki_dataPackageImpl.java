@@ -31,6 +31,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -137,6 +138,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EClass stringToObjectMapEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass unknownPageEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -418,6 +426,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EReference getWikiPage_Attributes() {
 		return (EReference)wikiPageEClass.getEStructuralFeatures().get(16);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getWikiPage_UnknownPages() {
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(17);
 	}
 
 	/**
@@ -996,6 +1014,36 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EClass getUnknownPage() {
+		return unknownPageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getUnknownPage_PageName() {
+		return (EAttribute)unknownPageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getUnknownPage_Wikipage() {
+		return (EReference)unknownPageEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getArrayString() {
 		return arrayStringEDataType;
 	}
@@ -1097,6 +1145,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(wikiPageEClass, WIKI_PAGE__ACL);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__WEB_LOG);
 		createEReference(wikiPageEClass, WIKI_PAGE__ATTRIBUTES);
+		createEReference(wikiPageEClass, WIKI_PAGE__UNKNOWN_PAGES);
 		createEOperation(wikiPageEClass, WIKI_PAGE___COMPARE_TO__OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___CLONE);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_LAST_MODIFIED_DATE);
@@ -1168,6 +1217,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__KEY);
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__VALUE);
 
+		unknownPageEClass = createEClass(UNKNOWN_PAGE);
+		createEAttribute(unknownPageEClass, UNKNOWN_PAGE__PAGE_NAME);
+		createEReference(unknownPageEClass, UNKNOWN_PAGE__WIKIPAGE);
+
 		// Create data types
 		arrayStringEDataType = createEDataType(ARRAY_STRING);
 		accessListEDataType = createEDataType(ACCESS_LIST);
@@ -1230,6 +1283,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEAttribute(getWikiPage_WebLog(), ecorePackage.getEBoolean(), "webLog", "false", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_Attributes(), this.getStringToObjectMap(), null, "attributes", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		getWikiPage_Attributes().getEKeys().add(this.getStringToObjectMap_Key());
+		initEReference(getWikiPage_UnknownPages(), this.getUnknownPage(), this.getUnknownPage_Wikipage(), "unknownPages", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getWikiPage__CompareTo__Object(), ecorePackage.getEInt(), "compareTo", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getObject(), "obj", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -1329,6 +1383,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(stringToObjectMapEClass, Map.Entry.class, "StringToObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStringToObjectMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToObjectMap_Value(), ecorePackage.getEJavaObject(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(unknownPageEClass, UnknownPage.class, "UnknownPage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getUnknownPage_PageName(), ecorePackage.getEString(), "pageName", null, 0, 1, UnknownPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUnknownPage_Wikipage(), this.getWikiPage(), this.getWikiPage_UnknownPages(), "wikipage", null, 0, 1, UnknownPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(arrayStringEDataType, String[].class, "ArrayString", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

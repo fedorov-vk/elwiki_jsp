@@ -29,6 +29,7 @@ import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
+import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -594,13 +595,19 @@ public class CachingProvider implements PageProvider {
 	}
 
 	@Override
-	public void updateReferences(WikiPage page, Collection<String> pagesIds) throws Exception {
+	public void updateReferences(WikiPage page, Collection<String> pagesIds, Collection<String> unknownPages) throws ProviderException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public List<PageReference> getPageReferrers(String pageId) throws ProviderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UnknownPage> getUnknownPages() throws ProviderException {
 		// TODO Auto-generated method stub
 		return null;
 	}
