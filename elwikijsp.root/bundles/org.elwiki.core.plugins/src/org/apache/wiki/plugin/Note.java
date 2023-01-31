@@ -34,73 +34,78 @@ import org.elwiki.services.ServicesRefs;
 import java.util.Map;
 
 /**
- * Outputs an image with the supplied text as the <tt>title</tt> which is shown as a tooltip by
- * most browsers. This is intended for short one line comments.
+ * Outputs an image with the supplied text as the <tt>title</tt> which is shown as a tooltip by most browsers.
+ * This is intended for short one line comments.
  * <p>
- * See http://www.456bereastreet.com/archive/200412/the_alt_and_title_attributes/ for discussion on
- * alt and title attributes.
+ * See http://www.456bereastreet.com/archive/200412/the_alt_and_title_attributes/ for discussion on alt and
+ * title attributes.
  * <p>
- * Adaption of the CommentPlugin written by Scott Hulbert, cleaned up and generalized, but basically
- * his concept.
+ * Adaption of the CommentPlugin written by Scott Hulbert, cleaned up and generalized, but basically his
+ * concept.
  * <p>
  * 
- *  <p>Parameters : </p>
- *  <ul>
- *  <li><b>_cmdline</b> - the commentText</li>
- *  </ul>
- *  
+ * <p>
+ * Parameters :
+ * </p>
+ * <ul>
+ * <li><b>_cmdline</b> - the commentText</li>
+ * </ul>
+ * 
  */
 public class Note implements Plugin {
 
-    /** Property name for setting the image for the note.  Value is <tt>{@value}</tt>. */
-    public static final String PROP_NOTE_IMAGE    = "notePlugin.imageName";
-    
-    /** The default name for the note.  Value is <tt>{@value}</tt>. */
-    public static final String DEFAULT_NOTE_IMAGE = "note.png";
+	/** Property name for setting the image for the note. Value is <tt>{@value}</tt>. */
+	public static final String PROP_NOTE_IMAGE = "notePlugin.imageName";
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String, String> params) throws PluginException {
-        final String commandline = params.get(PluginManager.PARAM_CMDLINE);
-        if (commandline == null || commandline.length() == 0) {
-            return "Unable to obtain plugin command line from parameter'" + PluginManager.PARAM_CMDLINE + "'"; // I18N
-        }
+	/** The default name for the note. Value is <tt>{@value}</tt>. */
+	public static final String DEFAULT_NOTE_IMAGE = "note.png";
 
-        final String commentImage = imageUrl(context);
+	private Engine engine;
 
-        final String commentText = clean(commandline);
+	private TemplateManager templateManager;
 
-        return "<img src='" + commentImage + "' alt=\"Comment: " + 
-               commentText + "\" title=\"" + commentText + "\"/>";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		this.engine = context.getEngine();
+		this.templateManager = this.engine.getManager(TemplateManager.class);
 
-    private String imageUrl( final Context ctx ) {
-        final Engine engine = ctx.getEngine();
-        String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE );
-        commentImage = "images/" + commentImage;
-        
-        String templateDir = engine.getWikiConfiguration().getTemplateDir();
-        String resource = ServicesRefs.getTemplateManager().findResource( ctx, templateDir, commentImage );
-        
-        // JSPWIKI-876 Fixed error with Note Plugin. Only one preceding "/" is needed.
-        if( resource != null && resource.startsWith( "/" ) ) {
-        	resource = resource.substring(1);
-        }
-        return ctx.getURL( ContextEnum.PAGE_NONE.getRequestContext(), resource );
-    }
+		String commandline = params.get(PluginManager.PARAM_CMDLINE);
+		if (commandline == null || commandline.length() == 0) {
+			return "Unable to obtain plugin command line from parameter'" + PluginManager.PARAM_CMDLINE + "'"; // I18N
+		}
 
+		String commentImage = imageUrl(context);
 
-    /**
-     *  Cleans the side.
-     * 
-     * @param commandline
-     */
-    private String clean( final String commandline)
-    {
-        return TextUtil.replaceEntities( commandline );
-    }
+		String commentText = clean(commandline);
+
+		return "<img src='" + commentImage + "' alt=\"Comment: " + commentText + "\" title=\"" + commentText + "\"/>";
+	}
+
+	private String imageUrl(Context ctx) {
+		String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE,
+				DEFAULT_NOTE_IMAGE);
+		commentImage = "images/" + commentImage;
+
+		String templateDir = this.engine.getWikiConfiguration().getTemplateDir();
+		String resource = this.templateManager.findResource(ctx, templateDir, commentImage);
+
+		// JSPWIKI-876 Fixed error with Note Plugin. Only one preceding "/" is needed.
+		if (resource != null && resource.startsWith("/")) {
+			resource = resource.substring(1);
+		}
+		return ctx.getURL(ContextEnum.PAGE_NONE.getRequestContext(), resource);
+	}
+
+	/**
+	 * Cleans the side.
+	 * 
+	 * @param commandline
+	 */
+	private String clean(String commandline) {
+		return TextUtil.replaceEntities(commandline);
+	}
 
 }
-

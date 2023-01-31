@@ -90,6 +90,13 @@
             base-name="/templates/default/images/feather-small.png">
       </resource>
    </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/templates/default/images/note.png"
+            base-name="/templates/default/images/note.png">
+      </resource>
+   </extension>
 
 <!-- JSPwiki
    <extension
