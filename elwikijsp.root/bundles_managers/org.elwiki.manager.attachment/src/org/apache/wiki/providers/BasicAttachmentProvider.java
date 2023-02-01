@@ -196,7 +196,9 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     public FileInputStream getAttachmentData( final AttachmentContent att ) throws IOException, ProviderException {
         final File attDir = findAttachmentDir( att );
         try {
-            final File f = new File(attDir, att.getPlace());
+            String attachmentPlace = att.getPlace();
+			//:FVK: final File f = new File(attDir, attachmentPlace );
+            final File f = new File(attachmentPlace);
             return new FileInputStream( f );
         } catch( final FileNotFoundException e ) {
             log.error( "File not found: " + e.getMessage() );
@@ -240,11 +242,11 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
 	@Override
 	public AttachmentContent getAttachmentContent(WikiPage page, String name, int... version) throws ProviderException {
-		log.debug("Getting attachment, name=\" + name + \", version=" + version + ", for page" + page);
-
         if(page == null) {
             return null;
         }
+        String pageId = page.getId();
+		log.debug("Getting attachment for pageId: " + pageId);
 		
 		PageAttachment pageAttachment = null;
 		for (PageAttachment attachItem : page.getAttachments()) {

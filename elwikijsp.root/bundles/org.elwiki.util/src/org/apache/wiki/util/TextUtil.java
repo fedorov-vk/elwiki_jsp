@@ -632,7 +632,9 @@ public final class TextUtil {
             if( Character.isLetterOrDigit( ch ) || allowedChars.indexOf( ch ) != -1 ) {
                 // Is a letter
                 if( isWord ) {
-                    ch = Character.toUpperCase( ch );
+                    /*:FVK: - COMMENT - bringing the first letter to the capital.
+                	ch = Character.toUpperCase( ch );
+                	*/
                 }
                 clean.append( ch );
                 isWord = false;

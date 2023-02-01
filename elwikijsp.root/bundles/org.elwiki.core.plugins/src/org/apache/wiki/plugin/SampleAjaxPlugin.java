@@ -39,10 +39,13 @@ public class SampleAjaxPlugin implements Plugin, WikiAjaxServlet {
 
 	@Override
     public String execute( final Context context, final Map<String, String> params) throws PluginException {
-    	final String id = Integer.toString(this.hashCode());
-        final String html= "<div onclick='Wiki.ajaxHtmlCall(\"/"+SERVLET_MAPPING+"/ajaxAction\",[12,45],\"result"+id+"\",\"Loading...\")' style='color: blue; cursor: pointer'>Press Me</div>\n"+
-                        "<div id='result"+id+"'></div>";
-        return html;
+		final String id = Integer.toString(this.hashCode());
+		final String html = String.format(//
+				"<div onclick='Wiki.ajaxHtmlCall(\"/%s/ajaxAction\",[12,45],\"result%s\",\"Loading...\")'" //
+						+ " style='color: blue; cursor: pointer'>Press Me</div>\n" //
+						+ "<div id='result%s'></div>",
+				SERVLET_MAPPING, id, id);
+		return html;
     }
 
 	@Override

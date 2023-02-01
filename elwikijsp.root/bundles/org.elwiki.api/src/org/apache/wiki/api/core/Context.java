@@ -48,7 +48,7 @@ public interface Context extends Cloneable, Command {
     public static final String ADMIN = ContextEnum.WIKI_ADMIN.getRequestContext();
 
     /** User is downloading an attachment. */
-    public static final String ATTACH = ContextEnum.PAGE_ATTACH.getRequestContext();
+    public static final String PAGE_ATTACHMENT = ContextEnum.PAGE_ATTACH.getRequestContext();
 
     /** User is commenting something. */
     public static final String COMMENT = ContextEnum.PAGE_COMMENT.getRequestContext();

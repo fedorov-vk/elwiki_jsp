@@ -237,6 +237,19 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		if (PageCommand.VIEW.equals(command) && pageName == null) {
 			pageName = this.wikiConfiguration.getFrontPage();
 		}
+		
+		//:FVK: workaround - for /attach/ request.
+		if(PageCommand.ATTACH.equals(command)) {
+			pageName = request.getParameter("pageId");
+			WikiPage page = null;
+			try {
+				page = this.pageManager.getPageById(pageName);
+			} catch (ProviderException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return command.targetedCommand(page);
+		}
 
 		// These next blocks handle targeting requirements
 
@@ -332,7 +345,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			return null;
 		}
 
-		// remove first '/' and first "cmd."
+		// remove first '/' and first "cmd." //:FVK: - following is my workaround?
 		if (requestCtx.startsWith("/")) {
 			requestCtx = requestCtx.substring(1);
 		}
@@ -367,6 +380,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			String page = this.urlConstructor.parsePage(requestContext, request,
 					this.wikiConfiguration.getContentEncodingCs());
 			if (page != null) {
+				/*:FVK: - getFinalPageName() COMMENTED - the call of actions with the compilation of the page name. 
 				try {
 					// Look for singular/plural variants; if one not found, take the one the user supplied
 					final String finalPage = getFinalPageName(page);
@@ -376,6 +390,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 				} catch (final ProviderException e) {
 					// FIXME: Should not ignore!
 				}
+				*/
 				return page;
 			} else {
 				// extract page number.

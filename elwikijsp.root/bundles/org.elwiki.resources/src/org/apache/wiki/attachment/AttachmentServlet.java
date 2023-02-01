@@ -204,12 +204,13 @@ public class AttachmentServlet extends HttpServlet {
     // FIXME: Messages would need to be localized somehow.
     @Override
     public void doGet( final HttpServletRequest  req, final HttpServletResponse res ) throws IOException {
-        final Context context = Wiki.context().create( m_engine, req, ContextEnum.PAGE_ATTACH.getRequestContext() );
+        final Context context = Wiki.context().create( m_engine, req, Context.PAGE_ATTACHMENT );
         final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         final AuthorizationManager authmgr = ServicesRefs.getAuthorizationManager();
         final String version = req.getParameter( HDR_VERSION );
         final String nextPage = req.getParameter( "nextpage" );
-        final String attachmentName = context.getPage().getName();
+        final String attachmentName;//:FVK: = context.getPage().getName();
+        attachmentName = req.getRequestURI().substring(8);
         int ver = WikiProvider.LATEST_VERSION;
 
         if( attachmentName == null ) {
@@ -224,18 +225,20 @@ public class AttachmentServlet extends HttpServlet {
                 ver = Short.parseShort( version );
             }
 
-            final AttachmentContent attContent = mgr.getAttachmentContent( attachmentName, ver );
+            final AttachmentContent attContent = mgr.getAttachmentContent(context.getPage(), attachmentName, ver );
             if( attContent != null ) {
                 //
                 //  Check if the user has permission for this attachment
                 //
 
+            	/*:FVK: TODO: make permission checking.
                 final Permission permission = null; //:FVK: TODO: was old code = PermissionFactory.getPagePermission( att, "view" );
                 if( !authmgr.checkPermission( context.getWikiSession(), permission ) ) {
                     log.debug("User does not have permission for this");
                     res.sendError( HttpServletResponse.SC_FORBIDDEN );
                     return;
                 }
+                */
 
                 //
                 //  Check if the client already has a version of this attachment.

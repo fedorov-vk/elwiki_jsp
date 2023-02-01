@@ -64,8 +64,8 @@
            id="Groups">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.IfPlugin"
-           id="IfPlugin">
+           class="org.apache.wiki.plugin.If"
+           id="If">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.IndexPlugin"

@@ -60,35 +60,46 @@ public class Image implements Plugin {
 
     /** The parameter name for setting the src.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_SRC      = "src";
+    
     /** The parameter name for setting the align.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_ALIGN    = "align";
+    
     /** The parameter name for setting the height.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_HEIGHT   = "height";
+    
     /** The parameter name for setting the width.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_WIDTH    = "width";
+    
     /** The parameter name for setting the alt.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_ALT      = "alt";
+    
     /** The parameter name for setting the caption.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_CAPTION  = "caption";
+    
     /** The parameter name for setting the link.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_LINK     = "link";
+    
     /** The parameter name for setting the target.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_TARGET   = "target";
+    
     /** The parameter name for setting the style.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_STYLE    = "style";
+    
     /** The parameter name for setting the class.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_CLASS    = "class";
+    
     //    public static final String PARAM_MAP      = "map";
     /** The parameter name for setting the border.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_BORDER   = "border";
+
     /** The parameter name for setting the title.  Value is <tt>{@value}</tt>. */
-    public static final String PARAM_TITLE   = "title";
+        public static final String PARAM_TITLE   = "title";
 
     /**
      *  This method is used to clean away things like quotation marks which
      *  a malicious user could use to stop processing and insert javascript.
      */
-    private static String getCleanParameter( final Map< String, String > params, final String paramId ) {
+    private static String getCleanParameter( Map< String, String > params, String paramId ) {
         return TextUtil.replaceEntities( params.get( paramId ) );
     }
 
@@ -96,21 +107,21 @@ public class Image implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
-        final Engine engine  = context.getEngine();
+    public String execute( Context context, Map<String, String> params ) throws PluginException {
+        Engine engine  = context.getEngine();
         String src           = getCleanParameter( params, PARAM_SRC );
-        final String align   = getCleanParameter( params, PARAM_ALIGN );
-        final String ht      = getCleanParameter( params, PARAM_HEIGHT );
-        final String wt      = getCleanParameter( params, PARAM_WIDTH );
-        final String alt     = getCleanParameter( params, PARAM_ALT );
-        final String caption = getCleanParameter( params, PARAM_CAPTION );
-        final String link    = getCleanParameter( params, PARAM_LINK );
+        String align   = getCleanParameter( params, PARAM_ALIGN );
+        String ht      = getCleanParameter( params, PARAM_HEIGHT );
+        String wt      = getCleanParameter( params, PARAM_WIDTH );
+        String alt     = getCleanParameter( params, PARAM_ALT );
+        String caption = getCleanParameter( params, PARAM_CAPTION );
+        String link    = getCleanParameter( params, PARAM_LINK );
         String target        = getCleanParameter( params, PARAM_TARGET );
-        final String style   = getCleanParameter( params, PARAM_STYLE );
-        final String cssclass= getCleanParameter( params, PARAM_CLASS );
-        // String map        = getCleanParameter( params, PARAM_MAP );
-        final String border  = getCleanParameter( params, PARAM_BORDER );
-        final String title   = getCleanParameter( params, PARAM_TITLE );
+        String style   = getCleanParameter( params, PARAM_STYLE );
+        String cssclass= getCleanParameter( params, PARAM_CLASS );
+        // String map = getCleanParameter( params, PARAM_MAP );
+        String border  = getCleanParameter( params, PARAM_BORDER );
+        String title   = getCleanParameter( params, PARAM_TITLE );
 
         if( src == null ) {
             throw new PluginException("Parameter 'src' is required for Image plugin");
@@ -123,17 +134,18 @@ public class Image implements Plugin {
         }
 
         try {
-            final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
-            final AttachmentContent att = mgr.getAttachmentContent( context, src );
+			AttachmentManager mgr = ServicesRefs.getAttachmentManager();
+			AttachmentContent att = mgr.getAttachmentContent(context, src);
 
-            if( att != null ) {
-                src = context.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), att.getPageAttachment().getName() );
-            }
-        } catch( final ProviderException e ) {
+			if (att != null) {
+				src = context.getURL(Context.PAGE_ATTACHMENT, att.getPageAttachment().getName(),
+						"pageId=" + context.getPageId());
+			}
+        } catch( ProviderException e ) {
             throw new PluginException( "Attachment info failed: " + e.getMessage() );
         }
 
-        final StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
 
         result.append( "<table border=\"0\" class=\"imageplugin\"" );
 
@@ -207,7 +219,7 @@ public class Image implements Plugin {
         return result.toString();
     }
 
-    private boolean validTargetValue( final String s )
+    private boolean validTargetValue( String s )
     {
         if( s.equals("_blank")
                 || s.equals("_self")
@@ -218,7 +230,7 @@ public class Image implements Plugin {
         }
         else if( s.length() > 0 ) // check [a-zA-z]
         {
-            final char c = s.charAt(0);
+            char c = s.charAt(0);
             return Character.isLowerCase(c) || Character.isUpperCase(c);
         }
         return false;

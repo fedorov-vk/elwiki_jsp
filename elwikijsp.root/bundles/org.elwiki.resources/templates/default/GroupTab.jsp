@@ -158,9 +158,9 @@
       <td><fmt:formatDate value="${group.created}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
       <td>${group.creator}</td>
       <!-- :FVK: ~ это оригинальный код Wiki 
-      <td><fmt:formatDate value="${group.lastModified}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" /></td>
+      <td><fmt:formatDate value="${group.lastModifiedDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" /></td>
       -->
-      <td><fmt:formatDate value="${group.lastModified}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
+      <td><fmt:formatDate value="${group.lastModifiedDate}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
       <td>${group.modifier}</td>
 
       <td class="nowrap">

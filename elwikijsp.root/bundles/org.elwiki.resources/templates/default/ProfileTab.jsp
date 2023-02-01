@@ -166,7 +166,7 @@
        <label class="control-label form-col-20"><fmt:message key="prefs.profile.lastmodified"/></label>
        <div class="form-control-static form-col-50">
          <%--<wiki:UserProfile property="modified"/>--%>
- 	     <fmt:formatDate value="<%= profile.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
+ 	     <fmt:formatDate value="<%= profile.getLastModifiedDate() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
        </div>
      </div>
      </div>
