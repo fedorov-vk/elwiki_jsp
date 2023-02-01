@@ -102,7 +102,8 @@ public class ReferredPagesPlugin implements Plugin {
 			WikiPage rootPage;
 			String rootPageName;
 
-			// parse parameters
+			/* Parse parameters.
+			 */
 			String rootPageId = params.get(PARAM_PAGE_ID);
 			rootPage = (rootPageId == null) ? context.getPage() : pageManager.getPageById(rootPageId);
 			if (rootPage == null) {
@@ -139,9 +140,9 @@ public class ReferredPagesPlugin implements Plugin {
         			" with exclude pattern of " + excludePattern );
 			//@formatter:on
 
-			//
-			// do the actual work
-			//
+
+			/* Do the actual work.
+			 */
 			String href = context.getViewURL(rootPageId);
 			String tooltip = "ReferredPagesPlugin: depth[" + m_depth + "] include[" + includePattern + "] exclude["
 					+ excludePattern + "] format[" + (m_formatSort ? " sort" : "") + "]";

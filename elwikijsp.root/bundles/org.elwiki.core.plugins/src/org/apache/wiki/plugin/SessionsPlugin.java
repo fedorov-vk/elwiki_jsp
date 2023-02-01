@@ -31,70 +31,72 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  <p>Displays information about active wiki sessions. The parameter <code>property</code> specifies what information is displayed.
- *  If omitted, the number of sessions is returned.
+ * <p>
+ * Displays information about active wiki sessions. The parameter <code>property</code> specifies what
+ * information is displayed. If omitted, the number of sessions is returned.
  *
- *  <p>Parameters : </p>
- *  <ul>
- *  <li><b>property</b> - specify what output to display, valid values are:</li>
- *  <ul>
- *    <li><code>users</code> - returns a comma-separated list of users</li>
- *    <li><code>distinctUsers</code> - will only show distinct users.</li>
- *  </ul>
- *  </ul>
- *  @since 2.3.84
+ * <p>
+ * Parameters :
+ * </p>
+ * <ul>
+ * <li><b>property</b> - specify what output to display, valid values are:</li>
+ * <ul>
+ * <li><code>users</code> - returns a comma-separated list of users</li>
+ * <li><code>distinctUsers</code> - will only show distinct users.</li>
+ * </ul>
+ * </ul>
  */
 public class SessionsPlugin implements Plugin {
 
-    /** The parameter name for setting the property value. */
-    public static final String PARAM_PROP = "property";
+	/** The parameter name for setting the property value. */
+	public static final String PARAM_PROP = "property";
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
-        final Engine engine = context.getEngine();
-        final String prop = params.get( PARAM_PROP );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(Context context, Map<String, String> params) throws PluginException {
+		Engine engine = context.getEngine();
+		String prop = params.get(PARAM_PROP);
 
-        if( "users".equals( prop ) ) {
-            final Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
-            final StringBuilder s = new StringBuilder();
-            for( final Principal principal : principals ) {
-                s.append( principal.getName() ).append( ", " );
-            }
-            // remove the last comma and blank :
-            return TextUtil.replaceEntities( s.substring( 0, s.length() - ( s.length() > 2 ? 2 : 0 ) ) );
-        }
+		if ("users".equals(prop)) {
+			Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
+			StringBuilder s = new StringBuilder();
+			for (Principal principal : principals) {
+				s.append(principal.getName()).append(", ");
+			}
+			// remove the last comma and blank :
+			return TextUtil.replaceEntities(s.substring(0, s.length() - (s.length() > 2 ? 2 : 0)));
+		}
 
-        // show each user session only once (with a counter that indicates the number of sessions for each user)
-        if( "distinctUsers".equals( prop ) ) {
-            final Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
-            // we do not assume that the principals are sorted, so first count them :
-            final HashMap< String, Integer > distinctPrincipals = new HashMap<>();
-            for( final Principal principal : principals ) {
-                final String principalName = principal.getName();
+		// show each user session only once (with a counter that indicates the number of sessions for each user)
+		if ("distinctUsers".equals(prop)) {
+			Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
+			// we do not assume that the principals are sorted, so first count them :
+			HashMap<String, Integer> distinctPrincipals = new HashMap<>();
+			for (Principal principal : principals) {
+				String principalName = principal.getName();
 
-                if( distinctPrincipals.containsKey( principalName ) ) {
-                    // we already have an entry, increase the counter:
-                    int numSessions = distinctPrincipals.get( principalName );
-                    // store the new value:
-                    distinctPrincipals.put( principalName, ++numSessions );
-                } else {
-                    // first time we see this entry, add entry to HashMap with value 1
-                    distinctPrincipals.put( principalName, 1 );
-                }
-            }
+				if (distinctPrincipals.containsKey(principalName)) {
+					// we already have an entry, increase the counter:
+					int numSessions = distinctPrincipals.get(principalName);
+					// store the new value:
+					distinctPrincipals.put(principalName, ++numSessions);
+				} else {
+					// first time we see this entry, add entry to HashMap with value 1
+					distinctPrincipals.put(principalName, 1);
+				}
+			}
 
-            final StringBuilder s = new StringBuilder();
-            for( final Map.Entry< String, Integer > entry : distinctPrincipals.entrySet() ) {
-                s.append( entry.getKey() ).append( "(" ).append( entry.getValue().toString() ).append( "), " );
-            }
-            // remove the last comma and blank :
-            return TextUtil.replaceEntities( s.substring( 0, s.length() - ( s.length() > 2 ? 2 : 0 ) ) );
+			StringBuilder s = new StringBuilder();
+			for (Map.Entry<String, Integer> entry : distinctPrincipals.entrySet()) {
+				s.append(entry.getKey()).append("(").append(entry.getValue().toString()).append("), ");
+			}
+			// remove the last comma and blank :
+			return TextUtil.replaceEntities(s.substring(0, s.length() - (s.length() > 2 ? 2 : 0)));
 
-        }
+		}
 
-        return String.valueOf( ServicesRefs.getSessionMonitor().sessions() );
-    }
+		return String.valueOf(ServicesRefs.getSessionMonitor().sessions());
+	}
 }
