@@ -301,29 +301,46 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 	@Override
-	public boolean pageExists(String pageName1, int version) {
+	public boolean pageExists(String pageName1, int version) throws ProviderException {
 		if (pageName1 == null) {
 			return false;
 		}
 
-		PagesStore pages = PageProviderCdoActivator.getStorageCdo().getPagesStore();
-		for (WikiPage page : pages.getWikipages()) {
-			String pageName = page.getName();
-			if (pageName1.equals(pageName)) {
-				if (version == WikiProvider.LATEST_VERSION) {
+		CDOTransaction transaction = null;
+		WikiPage wikiPage = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassWikiPage = Elwiki_dataPackage.eINSTANCE.getWikiPage();
+			query = transaction.createQuery("ocl",
+					"WikiPage.allInstances()->select(p:WikiPage|p.name='" + pageName1 + "')", eClassWikiPage, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			List<WikiPage> pages = query.getResult();
+			if (pages.size() > 0) {
+				wikiPage = pages.get(0);
+				CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+				wikiPage = (WikiPage) view.getObject(wikiPage.cdoID());
+			}
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+		if (wikiPage != null) {
+			if (version == WikiProvider.LATEST_VERSION) {
+				return true;
+			}
+			for (PageContent pageContent : wikiPage.getPageContents()) {
+				if (pageContent.getVersion() == version) {
 					return true;
 				}
-				for (PageContent pageContent : page.getPageContents()) {
-					if (pageContent.getVersion() == version) {
-						return true;
-					}
-				}
-				return false;
 			}
 		}
 
 		return false;
-
 	}
 
 	@Override

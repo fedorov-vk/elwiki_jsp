@@ -197,7 +197,7 @@ public class CachingProvider implements PageProvider {
      *  {@inheritDoc}
      */
     @Override
-    public boolean pageExists( final String pageName, final int version ) {
+    public boolean pageExists( final String pageName, final int version ) throws ProviderException {
         if( pageName == null ) {
             return false;
         }

@@ -26,7 +26,8 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -41,17 +42,19 @@ public class HasAttachmentsTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
-		final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
+		Engine engine = m_wikiContext.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
+		@NonNull
+		AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
+		WikiPage page = m_wikiContext.getPage();
 
 		try {
-			if (page != null && ServicesRefs.getPageManager().wikiPageExists(page) && mgr.attachmentsEnabled()) {
-				if (mgr.hasAttachments(page)) {
+			if (page != null && pageManager.wikiPageExists(page) && attachmentManager.attachmentsEnabled()) {
+				if (attachmentManager.hasAttachments(page)) {
 					return EVAL_BODY_INCLUDE;
 				}
 			}
-		} catch (final ProviderException e) {
+		} catch (ProviderException e) {
 			log.fatal("Provider failed while trying to check for attachements", e);
 			// FIXME: THrow something.
 		}

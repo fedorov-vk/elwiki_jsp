@@ -241,14 +241,17 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		//:FVK: workaround - for /attach/ request.
 		if(PageCommand.ATTACH.equals(command)) {
 			pageName = request.getParameter("pageId");
-			WikiPage page = null;
-			try {
-				page = this.pageManager.getPageById(pageName);
-			} catch (ProviderException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (pageName != null) {
+				WikiPage page = null;
+				try {
+					page = this.pageManager.getPageById(pageName);
+				} catch (ProviderException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (page != null)
+					return command.targetedCommand(page);
 			}
-			return command.targetedCommand(page);
 		}
 
 		// These next blocks handle targeting requirements

@@ -6,5 +6,9 @@
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <reference cardinality="1..1" field="m_engine" interface="org.apache.wiki.api.core.Engine" name="m_engine"/>
+   <reference cardinality="1..1" field="attachmentManager" interface="org.apache.wiki.api.attachment.AttachmentManager" name="attachmentManager"/>
+   <reference cardinality="1..1" field="authorizationManager" interface="org.apache.wiki.auth.AuthorizationManager" name="authorizationManager"/>
+   <reference cardinality="1..1" field="progressManager" interface="org.apache.wiki.api.ui.progress.ProgressManager" name="progressManager"/>
+   <reference cardinality="1..1" field="pageManager" interface="org.apache.wiki.pages0.PageManager" name="pageManager"/>
    <implementation class="org.apache.wiki.attachment.AttachmentServlet"/>
 </scr:component>

@@ -756,31 +756,6 @@ public class DefaultPageManager implements PageManager, Initializable {
     @Override
     public boolean wikiPageExists( final String page, final int version ) throws ProviderException {
     	return this.m_provider.pageExists(page, version);
-    	/*:FVK: оригинальный код - громоздок.
-    	 * Не будем проверять присоединения к странице, специальные страницы...
-    	 * Будем проверять наличие страницы по её имени.
-    	 * -- старый код - удалим. deprecated.
-        if( ServicesRefs.getCommandResolver().getSpecialPageReference( page ) != null ) {
-            return true;
-        }
-
-        boolean isThere = false;
-        final String finalName = m_engine.getFinalPageName( page );
-        if( finalName != null ) {
-            isThere = pageExists( finalName, version );
-        }
-
-        if( !isThere ) {
-            //  Go check if such an attachment exists.
-            try {
-                isThere = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, page, version ) != null;
-            } catch( final ProviderException e ) {
-                LOG.debug( "wikiPageExists() failed to find attachments", e );
-            }
-        }
-
-        return isThere;
-        */
     }
 
     /**

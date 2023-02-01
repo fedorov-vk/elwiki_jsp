@@ -77,8 +77,9 @@ public interface PageProvider extends WikiProvider {
      * @param page    The page name to check for
      * @param version The version to check
      * @return True, if page exists; false otherwise.
+     * @throws ProviderException If something goes wrong.
      */
-    boolean pageExists( String page, int version );
+    boolean pageExists( String page, int version ) throws ProviderException;
 
     /**
      *  Finds pages based on the query.   Only applicable to providers which implement the FastSearch interface.  Otherwise JSPWiki

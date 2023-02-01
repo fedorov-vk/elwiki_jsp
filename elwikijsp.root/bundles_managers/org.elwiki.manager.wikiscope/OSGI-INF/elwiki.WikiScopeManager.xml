@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.WikiScopeManager.factory" name="elwiki.WikiScopeManager">
    <service>
-      <provide interface="org.elwiki.api.WikiScope"/>
+      <provide interface="org.elwiki.api.WikiScopeManager"/>
    </service>
    <implementation class="org.elwiki.manager.wikiscope.WikiScopeManagerImpl"/>
 </scr:component>
