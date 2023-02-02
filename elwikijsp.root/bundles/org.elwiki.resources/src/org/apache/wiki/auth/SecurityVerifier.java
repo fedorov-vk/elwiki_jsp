@@ -342,7 +342,8 @@ public final class SecurityVerifier {
      */
     public String containerRoleTable() throws WikiException {
         final AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
-        final Authorizer authorizer = (Authorizer) authorizationManager.getAuthorizer();
+        //:FVK: final Authorizer authorizer =  (Authorizer) authorizationManager.getAuthorizer();
+        
 
         // If authorizer not WebContainerAuthorizer, print error message
 /*:FVK:
@@ -355,7 +356,7 @@ public final class SecurityVerifier {
         // an evaluation of each pages' constraints for each role
         // we discovered
         final StringBuilder s = new StringBuilder();
-        final Principal[] roles = authorizer.getRoles();
+        final Principal[] roles = m_session.getRoles(); //:FVK: authorizer.getRoles();
         s.append( "<table class=\"wikitable\" border=\"1\">\n" );
         s.append( "<thead>\n" );
         s.append( "  <tr>\n" );
@@ -430,8 +431,8 @@ public final class SecurityVerifier {
      * @throws WikiException if the web authorizer cannot obtain the list of roles
      */
     public Principal[] webContainerRoles() throws WikiException {
-        final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
 /*:FVK:
+        final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
         if ( authorizer instanceof WebContainerAuthorizer ) {
             return authorizer.getRoles();
         }
@@ -446,8 +447,8 @@ public final class SecurityVerifier {
      */
     protected void verifyPolicyAndContainerRoles() throws WikiException
     {
-        final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
-        final Principal[] containerRoles = authorizer.getRoles();
+    	//:FVK: final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
+        final Principal[] containerRoles = m_session.getRoles(); //:FVK: authorizer.getRoles();
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
         {

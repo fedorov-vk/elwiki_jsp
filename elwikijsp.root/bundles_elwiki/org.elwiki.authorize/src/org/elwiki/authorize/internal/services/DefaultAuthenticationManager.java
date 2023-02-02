@@ -31,7 +31,6 @@ import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.Authorizer;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
@@ -561,8 +560,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * After successful login, this method is called to inject authorized role Principals into the Session. To determine which roles
      * should be injected, the configured Authorizer is queried for the roles it knows about by calling  {@link Authorizer#getRoles()}.
      * Then, each role returned by the authorizer is tested by calling {@link Authorizer#isUserInRole(Session, Principal)}. If this
-     * check fails, and the Authorizer is of type WebAuthorizer, the role is checked again by calling
-     * {@link WebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test are injected into the Subject by
+     * check fails, and the Authorizer is of type IWebAuthorizer, the role is checked again by calling
+     * {@link IWebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test are injected into the Subject by
      * firing appropriate authentication events.
      *
      * @param session the user's current Session
@@ -582,8 +581,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
                 }
             }
             // If web authorizer, test the request.isInRole() method also
-            else if ( request != null && authorizer instanceof WebAuthorizer ) {
-                final WebAuthorizer wa = ( WebAuthorizer )authorizer;
+            else if ( request != null && authorizer instanceof IWebAuthorizer ) {
+                final IWebAuthorizer wa = ( IWebAuthorizer )authorizer;
                 if ( wa.isUserInRole( request, role ) ) {
                     fireEvent( WikiSecurityEvent.PRINCIPAL_ADD, role, session );
                     if ( log.isDebugEnabled() ) {
