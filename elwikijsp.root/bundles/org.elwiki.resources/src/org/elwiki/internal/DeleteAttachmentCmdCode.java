@@ -15,7 +15,7 @@ public class DeleteAttachmentCmdCode extends CmdCode {
 
 		//TODO: release delete attachment resources.
 
-		String url = wikiContext.getURL(Context.UPLOAD, wikiContext.getPageId());
+		String url = wikiContext.getURL(Context.ATTACHMENT_UPLOAD, wikiContext.getPageId());
 		httpResponse.sendRedirect(url);
 	}
 

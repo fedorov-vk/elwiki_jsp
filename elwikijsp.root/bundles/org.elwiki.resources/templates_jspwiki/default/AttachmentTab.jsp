@@ -151,7 +151,7 @@
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
+                  src="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>

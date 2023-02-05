@@ -729,7 +729,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	public boolean hasAccess(Context context, HttpServletResponse response, boolean redirect) throws IOException {
         //:FVK: final boolean allowed = checkPermission( context.getWikiSession(), context.requiredPermission() );
 
-        // Stash the wiki context
+        // Stash the wiki context (:FVK: this is same in the JspServletFilter - here should be removed.)
         if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( Context.ATTR_WIKI_CONTEXT ) == null ) {
             context.getHttpRequest().setAttribute( Context.ATTR_WIKI_CONTEXT, context );
         }

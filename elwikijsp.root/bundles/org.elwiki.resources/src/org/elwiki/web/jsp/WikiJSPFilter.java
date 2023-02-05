@@ -63,7 +63,7 @@ import java.nio.charset.Charset;
  * in fact built. This filter is typically the last filter to execute, and it <em>must</em> run after servlet or JSP code that performs
  * redirections or sends error codes (such as access control methods).
  * <p>
- * Inclusion markers are placed by the IncludeResourcesTag; the default content templates (see .../templates/default/commonheader.jsp)
+ * Inclusion markers are placed by the IncludeResourcesTag; the default content shapes (see .../shapes/default/commonheader.jsp)
  * are configured to do this. As an example, a JavaScript resource marker is added like this:
  * <pre>
  * &lt;wiki:IncludeResources type="script"/&gt;

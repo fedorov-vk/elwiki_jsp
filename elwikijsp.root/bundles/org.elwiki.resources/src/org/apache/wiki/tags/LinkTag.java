@@ -168,6 +168,12 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		final IWikiConfiguration config = m_wikiContext.getConfiguration();
 		final WikiPage page;
 
+		String paramId = getId();
+		if (paramId != null) { // :FVK: workaround.
+			String parms = addParamsForRecipient(null, m_containedParams);
+			return engine.getURL(m_context, paramId, parms);
+		}
+
 		if (m_pageId != null) {
 			page = ServicesRefs.getPageManager().getPageById(m_pageId);
 		} else if (m_pageName != null) {
@@ -183,7 +189,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			final String params = addParamsForRecipient(null, m_containedParams);
 			final String template = config.getTemplateDir();
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(),
-					"templates/" + template + "/" + m_templatefile, params);
+					"shapes/" + template + "/" + m_templatefile, params);
 		} else if (m_path != null) {
 			final String params = addParamsForRecipient(null, m_containedParams);
 			//:FVK: url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
@@ -211,7 +217,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 				// Internal wiki link, but is it an attachment link?
 				if (page instanceof PageAttachment) {
-					url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), m_pageName);
+					url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), m_pageName);
 				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
 					// It's an internal Wiki link, but to a named section
 
@@ -249,7 +255,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 				// Switch context appropriately when attempting to view an
 				// attachment, but don't override the context setting otherwise
 				if (m_context == null || m_context.equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
-					ctx = ContextEnum.PAGE_ATTACH.getRequestContext();
+					ctx = ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext();
 				}
 				url = engine.getURL(ctx, m_pageName, parms);
 				//:FVK: url = m_wikiContext.getURL( ctx, m_pageName, parms );

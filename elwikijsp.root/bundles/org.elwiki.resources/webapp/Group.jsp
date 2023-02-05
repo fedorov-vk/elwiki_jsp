@@ -53,6 +53,6 @@
     
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ Group.jsp -->

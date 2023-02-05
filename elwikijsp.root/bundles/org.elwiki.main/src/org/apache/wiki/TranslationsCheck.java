@@ -95,7 +95,7 @@ public class TranslationsCheck {
 
         final String fileSuffix = ( "en".equals( suffix ) ) ? "" : "_" + suffix;
         final Map< String, Integer > coreMetrics = checkFile( "/CoreResources.properties", "/CoreResources" + fileSuffix + ".properties" );
-        final Map< String, Integer > templateMetrics = checkFile( "/templates/default.properties", "/templates/default" + fileSuffix + ".properties" );
+        final Map< String, Integer > templateMetrics = checkFile( "/shapes/default.properties", "/shapes/default" + fileSuffix + ".properties" );
         final Map< String, Integer > pluginMetrics = checkFile( "/plugin/PluginResources.properties", "/plugin/PluginResources" + fileSuffix + ".properties" );
 
         if( lang >= 0 ) {

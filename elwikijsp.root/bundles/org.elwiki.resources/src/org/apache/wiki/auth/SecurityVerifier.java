@@ -577,15 +577,15 @@ public final class SecurityVerifier {
             m_session.addMessage( INFO_JAAS,
                     "The property '" + IIAuthenticationManager.PROP_LOGIN_MODULE + "' specified the class '" + jaasClass + ".'" );
             c = Class.forName( jaasClass );
+
+            // Is the specified class actually a LoginModule?
+            if( LoginModule.class.isAssignableFrom( c ) ) {
+            	m_session.addMessage( INFO_JAAS, "We found the the class '" + jaasClass + "' on the classpath, and it is a LoginModule implementation. Good!" );
+            } else {
+            	m_session.addMessage( ERROR_JAAS, "We found the the class '" + jaasClass + "' on the classpath, but it does not seem to be LoginModule implementation! This is fatal error." );
+            }
         } catch( final ClassNotFoundException e ) {
             m_session.addMessage( ERROR_JAAS, "We could not find the the class '" + jaasClass + "' on the " + "classpath. This is fatal error." );
-        }
-
-        // Is the specified class actually a LoginModule?
-        if( LoginModule.class.isAssignableFrom( c ) ) {
-            m_session.addMessage( INFO_JAAS, "We found the the class '" + jaasClass + "' on the classpath, and it is a LoginModule implementation. Good!" );
-        } else {
-            m_session.addMessage( ERROR_JAAS, "We found the the class '" + jaasClass + "' on the classpath, but it does not seem to be LoginModule implementation! This is fatal error." );
         }
     }
 
@@ -660,16 +660,16 @@ public final class SecurityVerifier {
      */
     @SuppressWarnings("unchecked")
     protected void verifyPolicy() {
-        // Look up the policy file and set the status text.
-        final URL policyURL = m_engine.findConfigFile( AuthorizationManager.DEFAULT_POLICY );
-        String path = policyURL.getPath();
-        if ( path.startsWith("file:") ) {
-            path = path.substring( 5 );
-        }
-        final File policyFile = new File( path );
-
-        // Next, verify the policy
         try {
+        	// Look up the policy file and set the status text.
+        	final URL policyURL = m_engine.findConfigFile( AuthorizationManager.DEFAULT_POLICY );
+        	String path = policyURL.getPath();
+        	if ( path.startsWith("file:") ) {
+        		path = path.substring( 5 );
+        	}
+        	final File policyFile = new File( path );
+        	
+        	// Next, verify the policy
             // Get the file
             final PolicyReader policy = new PolicyReader( policyFile );
             m_session.addMessage( INFO_POLICY, "The security policy '" + policy.getFile() + "' exists." );
@@ -711,7 +711,7 @@ public final class SecurityVerifier {
                 }
             }
             m_policyPrincipals = principals.toArray( new Principal[principals.size()] );
-        } catch( final IOException e ) {
+        } catch( final Exception e ) {
             m_session.addMessage( ERROR_POLICY, e.getMessage() );
         }
     }

@@ -82,7 +82,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
             return doReplacement( viewurl + "?do=Preview", name );
         } else if( context.equals( ContextEnum.PAGE_EDIT.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=Edit", name );
-        } else if( context.equals( ContextEnum.PAGE_ATTACH.getRequestContext() ) ) {
+        } else if( context.equals( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext() ) ) {
             return doReplacement( "%uattach/%n", name );
         } else if( context.equals( ContextEnum.PAGE_INFO.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=PageInfo", name );
@@ -90,7 +90,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
             return doReplacement( viewurl + "?do=Diff", name );
         } else if( context.equals( ContextEnum.PAGE_NONE.getRequestContext() ) ) {
             return doReplacement( "%u%n", name );
-        } else if( context.equals( ContextEnum.PAGE_UPLOAD.getRequestContext() ) ) {
+        } else if( context.equals( ContextEnum.ATTACHMENT_UPLOAD.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=Upload", name ); 
         } else if( context.equals( ContextEnum.PAGE_COMMENT.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=Comment", name ); 
@@ -107,7 +107,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
             return doReplacement( viewurl + "?do=Search", name ); 
         } else if( context.equals( ContextEnum.WIKI_ERROR.getRequestContext() ) ) {
             return doReplacement( "%uError.jsp", name );
-        } else if( context.equals( ContextEnum.WIKI_CREATE_GROUP.getRequestContext() ) ) {
+        } else if( context.equals( ContextEnum.GROUP_CREATE.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=NewGroup", name );
         } else if( context.equals( ContextEnum.GROUP_DELETE.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=DeleteGroup", name );
@@ -126,7 +126,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( ContextEnum.PAGE_ATTACH.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) ) {
+            if( context.equals( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) ) {
                 parameters = "?" + parameters;
             } else if( context.equals(ContextEnum.PAGE_NONE.getRequestContext()) ) {
                 parameters = (name.indexOf('?') != -1 ) ? "&amp;" : "?" + parameters;

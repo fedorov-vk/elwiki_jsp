@@ -622,6 +622,12 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			return wikiPage;
 		} catch (Exception e) {
+			String msg = e.getMessage();
+			if(msg.contains("Unrecognized variable"))
+			{// :FVK: workaround, when nothig any page exists.
+				// required - check before request - how much pages exists.
+				return null;
+			}
 			throw new ProviderException(e);
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {

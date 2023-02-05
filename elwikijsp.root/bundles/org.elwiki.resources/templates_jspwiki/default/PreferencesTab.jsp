@@ -38,7 +38,7 @@
   Context c = ContextUtil.findContext( pageContext );
   TemplateManager t = ServicesRefs.getTemplateManager();
 %>
-<c:set var="skins"       value="<%= t.listSkins(pageContext, c.getTemplate() ) %>" />
+<c:set var="skins"       value="<%=t.listSkins(pageContext, c.getShape() )%>" />
 <c:set var="languages"   value="<%= t.listLanguages(pageContext) %>" />
 <c:set var="timezones"   value="<%= t.listTimeZones(pageContext) %>" />
 <c:set var="timeformats" value="<%= t.listTimeFormats(pageContext) %>" />

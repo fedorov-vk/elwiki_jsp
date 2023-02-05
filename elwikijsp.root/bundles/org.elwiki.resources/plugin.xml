@@ -47,38 +47,38 @@
             base-name="/resources/scripts">
       </resource>
       <resource
-            alias="/templates/default/fonts/FontJspwiki.eot"
-            base-name="/templates/default/fonts/FontJspwiki.eot">
+            alias="/shapes/default/fonts/FontJspwiki.eot"
+            base-name="/shapes/default/fonts/FontJspwiki.eot">
       </resource>
       <resource
-            alias="/templates/default/fonts/FontJspwiki.svg"
-            base-name="/templates/default/fonts/FontJspwiki.svg">
+            alias="/shapes/default/fonts/FontJspwiki.svg"
+            base-name="/shapes/default/fonts/FontJspwiki.svg">
       </resource>
       <resource
-            alias="/templates/default/fonts/FontJspwiki.ttf"
-            base-name="/templates/default/fonts/FontJspwiki.ttf">
+            alias="/shapes/default/fonts/FontJspwiki.ttf"
+            base-name="/shapes/default/fonts/FontJspwiki.ttf">
       </resource>
       <resource
-            alias="/templates/default/fonts/FontJspwiki.woff"
-            base-name="/templates/default/fonts/FontJspwiki.woff">
+            alias="/shapes/default/fonts/FontJspwiki.woff"
+            base-name="/shapes/default/fonts/FontJspwiki.woff">
       </resource>
       <resource
-            alias="/templates/default/haddock-wysiwyg.css"
-            base-name="/resources/templates/default/haddock-wysiwyg.css">
+            alias="/shapes/default/haddock-wysiwyg.css"
+            base-name="/resources/shapes/default/haddock-wysiwyg.css">
       </resource>
 
       <resource
-            alias="/template/haddock/haddock.css"
-            base-name="/resources/templates/default/haddock.css">
+            alias="/shapes/haddock/haddock.css"
+            base-name="/resources/shapes/default/haddock.css">
       </resource>
       <!-- :FVK: ~~ повтор haddock.css для иного URL -->
       <resource
-            alias="/templates/default/haddock.css"
-            base-name="/resources/templates/default/haddock.css">
+            alias="/shapes/default/haddock.css"
+            base-name="/resources/shapes/default/haddock.css">
       </resource>
       <resource
-            alias="/templates/default/haddock-dark.css"
-            base-name="/resources/templates/default/haddock-dark.css">
+            alias="/shapes/default/haddock-dark.css"
+            base-name="/resources/shapes/default/haddock-dark.css">
       </resource>
    </extension>
 
@@ -86,15 +86,15 @@
    <extension
          point="org.eclipse.equinox.http.registry.resources">
       <resource
-            alias="/templates/default/images/feather-small.png"
-            base-name="/templates/default/images/feather-small.png">
+            alias="/shapes/default/images/feather-small.png"
+            base-name="/shapes/default/images/feather-small.png">
       </resource>
    </extension>
    <extension
          point="org.eclipse.equinox.http.registry.resources">
       <resource
-            alias="/templates/default/images/note.png"
-            base-name="/templates/default/images/note.png">
+            alias="/shapes/default/images/note.png"
+            base-name="/shapes/default/images/note.png">
       </resource>
    </extension>
 
@@ -106,8 +106,8 @@
             class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/webapp">
       </servlet>
       <servlet
-            alias="/templates/default/*.jsp"
-            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/templates/default">
+            alias="/shapes/default/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/shapes/default">
       </servlet>
    </extension>
 -->

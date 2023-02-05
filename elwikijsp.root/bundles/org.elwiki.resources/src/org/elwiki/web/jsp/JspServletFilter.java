@@ -1,10 +1,12 @@
 package org.elwiki.web.jsp;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpFilter;
@@ -17,6 +19,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.ui.AllCommands;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.Platform;
@@ -50,14 +53,16 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	private static final long serialVersionUID = 5461829698518145349L;
 	private static final Logger log = Logger.getLogger(JspServletFilter.class);
 
-	private static final String PATH_PAGE_VIEW = "/templates/PageViewTemplate.jsp";
-	private static final String PATH_READER_VIEW = "/templates/reader/ViewTemplate.jsp";
-	private static final String PATH_RAW_VIEW = "/templates/raw/ViewTemplate.jsp";
+	private static final String PATH_PAGE_VIEW = "/shapes/PageViewTemplate.jsp";
+	private static final String PATH_READER_VIEW = "/shapes/reader/ViewTemplate.jsp";
+	private static final String PATH_RAW_VIEW = "/shapes/raw/ViewTemplate.jsp";
+	private static final String PATH_ADMIN_VIEW = "/shapes/admin/Admin.jsp";
+	private static final String PATH_SECURITY_VIEW = "/shapes/security/SecurityConfig.jsp";
 
 	@Reference
 	private Engine engine;
 
-	private ServletContext context;
+	private ServletContext servletContext;
 	private String m_wiki_encoding;
 	private boolean useEncoding;
 
@@ -68,7 +73,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		this.context = config.getServletContext();
+		this.servletContext = config.getServletContext();
 		this.m_wiki_encoding = this.engine.getWikiPreferences().getString(IWikiPreferences.PROP_ENCODING);
 		this.useEncoding = !TextUtil.getBooleanProperty(this.engine.getWikiPreferences(),
 				Engine.PROP_NO_FILTER_ENCODING, false);
@@ -79,6 +84,18 @@ public class JspServletFilter extends HttpFilter implements Filter {
 		// TODO Auto-generated method stub
 	}
 
+	/**
+	 * Get WikiContext according given URI. If URI is not determined as known - then returns
+	 * default, ContextEnum.PAGE_VIEW.
+	 * 
+	 * @param adaptableUri
+	 * @return Wiki context.
+	 */
+	private ContextEnum getContextEnum(String adaptableUri) {
+		return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(adaptableUri)) //
+				.findFirst().orElse(ContextEnum.PAGE_VIEW);
+	}
+	
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
 			throws IOException, ServletException {
@@ -107,10 +124,8 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 			/* Create Wiki context.
 			 */
-			ContextEnum cmdContext;
-			Context wikiContext;
-			cmdContext = Platform.getAdapterManager().getAdapter(uri.substring(1), ContextEnum.class); // without first '/'.
-			wikiContext = Wiki.context().create(engine, httpRequest, cmdContext.getRequestContext());
+			ContextEnum contextEnum = getContextEnum(uri.substring(1)); // URI without first symbol '/'.
+			Context wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());
 			httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
 			ThreadUtil.setCurrentRequest(httpRequest);
 
@@ -142,25 +157,20 @@ public class JspServletFilter extends HttpFilter implements Filter {
 					cmdCode.applyPrologue(httpRequest, httpResponse);
 				}
 
+				RequestDispatcher rqDispatcher = null;
 				if (!isAjaxPage) {
-					String template = wikiContext.getTemplate();
-					switch (template) {
-					case "reader":
-						//:FVK: - workaround. view only page, for skin=reader
-						httpRequest.getRequestDispatcher(PATH_READER_VIEW).include(httpRequest, httpResponse);
-						break;
-					case "raw":
-						//:FVK: - workaround. view only page, for skin=raw
-						httpRequest.getRequestDispatcher(PATH_RAW_VIEW).include(httpRequest, httpResponse);
-						break;
-					default:
-						// chain.doFilter(request, response);
-						httpRequest.getRequestDispatcher(PATH_PAGE_VIEW).include(httpRequest, httpResponse);
-						break;
-					}
+					String shape = wikiContext.getShape();
+					rqDispatcher = switch (shape) {
+					case "reader" -> httpRequest.getRequestDispatcher(PATH_READER_VIEW);
+					case "raw" -> httpRequest.getRequestDispatcher(PATH_RAW_VIEW);
+					case "admin" -> httpRequest.getRequestDispatcher(PATH_ADMIN_VIEW);
+					case "security" -> httpRequest.getRequestDispatcher(PATH_SECURITY_VIEW);
+					default -> httpRequest.getRequestDispatcher(PATH_PAGE_VIEW);
+					};
 				} else {
-					httpRequest.getRequestDispatcher(uri).include(httpRequest, httpResponse);
+					rqDispatcher = httpRequest.getRequestDispatcher(uri);
 				}
+				rqDispatcher.include(httpRequest, httpResponse);
 
 				/* TODO: check JSP error.
 				if (httpRequest.getAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION) != null) {

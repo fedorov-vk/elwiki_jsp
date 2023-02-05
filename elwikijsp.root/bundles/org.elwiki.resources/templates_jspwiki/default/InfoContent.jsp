@@ -139,7 +139,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' />"
+    <form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' />"
            class="form-group"
               id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -302,7 +302,7 @@
 </wiki:Permission>
 
 
-<form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
+<form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
            class="form-group"
               id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -373,7 +373,7 @@
          <td>
             <input type="button"
                    value="Restore"
-                   url="<wiki:Link format='url' context='<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>'/>"/>
+                   url="<wiki:Link format='url' context='<%=Context.UPLOAD%>'/>"/>
          </td>
       </wiki:Permission>
       --%>

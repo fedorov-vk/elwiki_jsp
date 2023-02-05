@@ -147,7 +147,7 @@ public class ContentTag extends BaseWikiTag {
 	@Override
 	public final int doEndTag() throws JspException {
 		try {
-			// Check the overridden templates first
+			// Check the overridden shapes first
 			final String requestContext = m_wikiContext.getRequestContext();
 			String contentTemplate = m_mappings.get(requestContext);
 
@@ -162,7 +162,7 @@ public class ContentTag extends BaseWikiTag {
 						"This template uses <wiki:Content/> in an unsupported context: " + requestContext);
 			}
 
-			String page = "/templates/default/" + contentTemplate;
+			String page = "/shapes/default/" + contentTemplate;
 
 			pageContext.include(page);
 		} catch (final ServletException e) {

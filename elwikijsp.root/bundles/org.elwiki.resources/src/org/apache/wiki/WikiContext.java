@@ -42,7 +42,6 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.core.runtime.Assert;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -84,8 +83,8 @@ public class WikiContext implements Context, Command {
 	private Command m_command;
 	private WikiPage m_page;
 	private WikiPage m_realPage;
-	private Engine m_engine; //TODO: удалить.
-	private String m_template = "default";
+	private Engine m_engine; //TODO: удалить?.
+	private String shape = "default";
 
 	private HashMap<String, Object> m_variableMap = new HashMap<>();
 
@@ -201,8 +200,8 @@ public class WikiContext implements Context, Command {
 					+ getCommand());
 		}
 
-		// Figure out what template to use
-		setDefaultTemplate(request);
+		// Figure out what shape to use.
+		setDefaultShape(request);
 	}
 
 	/**
@@ -349,9 +348,9 @@ public class WikiContext implements Context, Command {
 	}
 
 	/**
-	 * Returns the request context.
-	 *
-	 * @return The name of the request context (e.g. VIEW).
+	 * {@inheritDoc}
+	 * 
+	 * @see org.apache.wiki.api.core.Command#getRequestContext()
 	 */
 	@Override
 	public String getRequestContext() {
@@ -467,12 +466,12 @@ public class WikiContext implements Context, Command {
 	/**
 	 * Sets the template to be used for this request.
 	 *
-	 * @param dir The template name
+	 * @param dir The shape name
 	 * @since 2.1.15.
 	 */
 	@Override
-	public void setTemplate(final String dir) {
-		m_template = dir;
+	public void setShape(String dir) {
+		this.shape = dir;
 	}
 
 	/**
@@ -502,8 +501,8 @@ public class WikiContext implements Context, Command {
 	 * @return template name
 	 */
 	@Override
-	public String getTemplate() {
-		return m_template;
+	public String getShape() {
+		return this.shape;
 	}
 
 	/**
@@ -540,7 +539,7 @@ public class WikiContext implements Context, Command {
 	 * HttpServletRequest, we will attempt to construct the URL using HttpUtil, which preserves the
 	 * HTTPS portion if it was used.
 	 *
-	 * @param context The request context (e.g. WikiContext.UPLOAD)
+	 * @param context The request context (e.g. WikiContext.ATTACHMENT_UPLOAD)
 	 * @param page    The page to which to link
 	 * @param params  A list of parameters, separated with "&amp;"
 	 *
@@ -577,7 +576,7 @@ public class WikiContext implements Context, Command {
 			copy.m_engine = m_engine;
 			copy.m_command = m_command;
 
-			copy.m_template = m_template;
+			copy.shape = this.shape;
 			copy.m_variableMap = m_variableMap;
 			copy.m_request = m_request;
 			copy.m_session = m_session;
@@ -608,7 +607,7 @@ public class WikiContext implements Context, Command {
 			copy.m_engine = m_engine;
 			copy.m_command = m_command; // Static structure
 
-			copy.m_template = m_template;
+			copy.shape = this.shape;
 			copy.m_variableMap = (HashMap<String, Object>) m_variableMap.clone();
 			copy.m_request = m_request;
 			copy.m_session = m_session;
@@ -703,32 +702,43 @@ public class WikiContext implements Context, Command {
 	 * 
 	 * @param request the HTTP request
 	 */
-	protected void setDefaultTemplate(final HttpServletRequest request) {
+	protected void setDefaultShape(final HttpServletRequest request) {
 		final String defaultTemplate = wikiConfiguration.getTemplateDir();
 
-		//  Figure out which template we should be using for this page.
-		String template = null;
+		//:FVK: workaround - assign admin shape.
+		if (m_command != null) {
+			String currentContext = m_command.getContextCmd().getRequestContext();
+			if (Context.WIKI_ADMIN.equals(currentContext)) {
+				setShape("admin");
+				return;
+			} else if (Context.WIKI_SECURE.equals(currentContext)) {
+				setShape("security");
+				return;
+			}
+		}
+
+		//  Figure out which shape we should be using for this page.
+		String shape = null;
 		if (request != null) {
-			final String skin = request.getParameter("skin");
-			if (skin != null) {
-				template = skin.replaceAll("\\p{Punct}", "");
+			String value = request.getParameter("shape");
+			if (value != null && Context.allowedShapes.contains(value)) {
+				shape = value;
 			}
 		}
 
 		// If request doesn't supply the value, extract from wiki page
-		if (template == null) {
+		if (shape == null) {
 			final WikiPage page = getPage();
 			if (page != null) {
-				template = null; //:FVK: page.getAttribute( Engine.PROP_TEMPLATEDIR );
+				shape = null; //:FVK: page.getAttribute( Engine.PROP_TEMPLATEDIR );
 			}
-
 		}
 
 		// If something over-wrote the default, set the new value.
-		if (template != null) {
-			setTemplate(template);
+		if (shape != null) {
+			setShape(shape);
 		} else {
-			setTemplate(defaultTemplate);
+			setShape(defaultTemplate);
 		}
 	}
 

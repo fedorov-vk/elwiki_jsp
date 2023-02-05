@@ -34,7 +34,7 @@ public class TemplateDirTag extends BaseWikiTag {
 	private static final long serialVersionUID = -5513899998046353340L;
 
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		String template = m_wikiContext.getTemplate();
+		String template = m_wikiContext.getShape();
 
 		pageContext.getOut().print(template);
 

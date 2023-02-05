@@ -405,9 +405,9 @@ a.createpage {
 }
 
 .interwiki-raw::after,
-a.interwiki[href$="skin=raw"]::after,
+a.interwiki[href$="shape=raw"]::after,
 .interwiki-reader::after,
-a.interwiki[href$="skin=reader"]::after,
+a.interwiki[href$="shape=reader"]::after,
 .interwiki-edit::after,
 a.interwiki[href*="Edit.jsp?page="]::after,
 .interwiki-group::after,

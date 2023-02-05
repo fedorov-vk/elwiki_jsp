@@ -18,6 +18,7 @@
  */
 package org.apache.wiki.api.spi;
 
+import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -25,10 +26,8 @@ import org.elwiki_data.WikiPage;
 
 public class ContentsDSL {
 
-    final ContentsSPI contentsSPI;
-
-    public ContentsDSL( final ContentsSPI contentsSPI ) {
-        this.contentsSPI = contentsSPI;
+    public ContentsDSL() {
+    	super();
     }
 
     /**
@@ -39,8 +38,11 @@ public class ContentsDSL {
      * @param fileName   The file name for the attachment.
      * @return new {@link PageAttachment} instance.
      */
+    //TODO: для ElWiki в аргументах метода - 1) не требуется Engine; 2) передавать надо не имя а саму parent- страницу.   
     public PageAttachment attachment( final Engine engine, final String parentPage, final String fileName ) {
-        return contentsSPI.attachment( engine, parentPage, fileName );
+        PageAttachment pageAttachment = Elwiki_dataFactory.eINSTANCE.createPageAttachment();
+        pageAttachment.setName(fileName);
+        return pageAttachment;
     }
 
     /**
@@ -50,7 +52,9 @@ public class ContentsDSL {
      * @return new {@link WikiPage} instance.
      */
     public WikiPage page( final String name ) {
-        return contentsSPI.page( name );
+    	WikiPage wikiPage = Elwiki_dataFactory.eINSTANCE.createWikiPage();
+    	wikiPage.setName(name);
+        return wikiPage;
     }
 
 }

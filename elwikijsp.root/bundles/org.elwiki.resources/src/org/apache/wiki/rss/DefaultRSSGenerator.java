@@ -247,7 +247,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
             final String url;
             if( page instanceof PageAttachment ) {
-                url = m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(),null );
+                url = m_engine.getURL( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), page.getName(),null );
             } else {
                 url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), null );
             }
@@ -350,7 +350,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             final String url;
 
             if( page instanceof PageAttachment ) {
-                url = m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(),null );
+                url = m_engine.getURL( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), page.getName(),null );
             } else {
                 url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(),null );
             }

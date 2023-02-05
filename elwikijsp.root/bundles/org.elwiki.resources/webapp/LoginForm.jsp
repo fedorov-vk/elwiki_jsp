@@ -50,7 +50,7 @@
     }
     
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
                                                             
     log.debug("Login template content is: " + contentPage);
 %><wiki:Include page="<%=contentPage%>" />

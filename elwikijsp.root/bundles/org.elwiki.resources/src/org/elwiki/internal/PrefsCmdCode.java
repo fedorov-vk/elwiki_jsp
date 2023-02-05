@@ -157,7 +157,7 @@ public class PrefsCmdCode extends CmdCode {
 
 		httpResponse.setContentType("text/html; charset=" + wiki.getContentEncoding());
 		// :FVK: String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext,
-		// wikiContext.getTemplate(), "ViewTemplate.jsp" );
+		// wikiContext.getShape(), "ViewTemplate.jsp" );
 	}
 
 }

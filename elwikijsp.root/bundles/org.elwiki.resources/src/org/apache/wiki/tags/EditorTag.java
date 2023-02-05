@@ -54,7 +54,7 @@ public class EditorTag extends BaseWikiBodyTag {
 
 		try {
 			String page; 
-			page = ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getTemplate(), editorPath );
+			page = ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getShape(), editorPath );
 			if (page == null) {
 				//FIXME: should be I18N ...
 				pageContext.getOut().println("Unable to find editor '" + editorPath + "'");

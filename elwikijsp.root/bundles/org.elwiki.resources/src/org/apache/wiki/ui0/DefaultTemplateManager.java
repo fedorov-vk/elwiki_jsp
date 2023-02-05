@@ -58,7 +58,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * This class takes care of managing JSPWiki templates. This class also provides the
+ * This class takes care of managing JSPWiki shapes. This class also provides the
  * ResourceRequest mechanism.
  *
  * Размещается в бандле ''org.elwiki.resources''. <br/>
@@ -76,7 +76,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	private static final String SKIN_DIRECTORY = "skins";
 
 	/** The default directory for the properties. Value is {@value}. */
-	private static final String DIRECTORY = "templates";
+	private static final String DIRECTORY = "shapes";
 
 	/** The name of the default template. Value is {@value}. */
 	String DEFAULT_TEMPLATE = "default";
@@ -102,7 +102,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	// -- service handling -----------------------------(end)--
 	
 	/**
-	 * Returns the full name (/templates/foo/bar) for: template=foo, name=bar.
+	 * Returns the full name (/shapes/foo/bar) for: template=foo, name=bar.
 	 *
 	 * @param template The name of the template.
 	 * @param name     The name of the resource.
@@ -242,7 +242,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	/*
 	public String getTemplateProperty( WikiContext context, String key )
 	{
-	    String template = context.getTemplate();
+	    String template = context.getShape();
 	
 	    try
 	    {

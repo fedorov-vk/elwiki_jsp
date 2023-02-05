@@ -153,7 +153,7 @@ public class Image implements Plugin {
 			AttachmentContent att = this.attachmentManager.getAttachmentContent(context, src);
 
 			if (att != null) {
-				src = context.getURL(Context.PAGE_ATTACHMENT, att.getPageAttachment().getName(),
+				src = context.getURL(Context.ATTACHMENT_DOWNLOAD, att.getPageAttachment().getName(),
 						"pageId=" + context.getPageId());
 			}
 		} catch (ProviderException e) {

@@ -30,5 +30,5 @@
  
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "CookieErrorTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "CookieErrorTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />

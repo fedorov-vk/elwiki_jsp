@@ -27,7 +27,8 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.PAGE_DIFF, new DiffCmdCode()),
 			Map.entry(ContextEnum.PAGE_INFO, new InfoCmdCode()),
 			Map.entry(ContextEnum.PAGE_RENAME, new RenameCmdCode()),
-			Map.entry(ContextEnum.PAGE_UPLOAD, new UploadCmdCode()),
+			Map.entry(ContextEnum.ATTACHMENT_UPLOAD, new UploadCmdCode()),
+			Map.entry(ContextEnum.ATTACHMENT_DELETE, new DeleteAttachmentCmdCode()),
 			Map.entry(ContextEnum.GROUP_EDIT, new EditGroupCmdCode()),
 			//Map.entry(ContextEnum.GROUP_VIEW, )
 			//Map.entry(ContextEnum.GROUP_CREATE, )
@@ -36,8 +37,7 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.WIKI_FIND, new FindCmdCode()),
 			Map.entry(ContextEnum.WIKI_SCOPE, new ScopeCmdCode()),
 			Map.entry(ContextEnum.PAGE_COMMENT, new CommentCmdCode()),
-			Map.entry(ContextEnum.WIKI_PERSIST_CONTENT, new PersistContentCmdCode()),
-			Map.entry(ContextEnum.ATTACHMENT_DELETE, new DeleteAttachmentCmdCode())
+			Map.entry(ContextEnum.WIKI_PERSIST_CONTENT, new PersistContentCmdCode())
 	); //@formatter:on
 
 	@Override

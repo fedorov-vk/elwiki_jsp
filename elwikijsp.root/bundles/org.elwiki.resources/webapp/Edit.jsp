@@ -249,7 +249,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 		session.setAttribute("lock-" + pagereq, lock);
 	}
 
-	String contentPage = ServicesRefs.getTemplateManager().findJSP(pageContext, wikiContext.getTemplate(),
+	String contentPage = ServicesRefs.getTemplateManager().findJSP(pageContext, wikiContext.getShape(),
 	"EditTemplate.jsp");
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ Edit.jsp -->

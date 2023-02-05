@@ -40,7 +40,7 @@ public class ViewCmdCode extends CmdCode {
 	        // Set the content type and include the response content
 	        response.setContentType("text/html; charset="+ServicesRefs.Instance.getContentEncoding() );
 	        String contentPage = ServicesRefs.getTemplateManager()
-	        		.findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+	        		.findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 	    }
 	    finally {
 		}

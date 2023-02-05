@@ -62,7 +62,8 @@ Service-Component: OSGI-INF/elwiki.DefaultAdminBeanManager.xml,
  OSGI-INF/part11.WikiJSPFilter.xml,
  OSGI-INF/web.AttachmentServlet.xml,
  OSGI-INF/web.ContextHelper.xml,
- OSGI-INF/web.JspServlet.xml
+ OSGI-INF/web.JspServlet.xml,
+ OSGI-INF/contextSPI.xml
 Export-Package: javax.servlet.jsp.jstl.fmt,
  org.apache.wiki,
  org.apache.wiki.auth,

@@ -71,7 +71,7 @@ public class Groups implements Plugin {
 			String name = (String) groupProps.get(UserDatabase.GROUP_NAME);
 
 			// Make URL
-			String url = urlConstructor.makeURL(Context.VIEW_GROUP, name, null);
+			String url = urlConstructor.makeURL(Context.GROUP_VIEW, name, null);
 
 			// Create hyperlink
 			str.append("<a href=\"").append(url).append("\">").append(name).append("</a>");

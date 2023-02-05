@@ -41,10 +41,8 @@ import java.nio.charset.Charset;
 
 
 /**
- *  Implements the default URL constructor using links directly to the JSP pages.  This is what JSPWiki by default is using.  For example,
- *  WikiContext.PAGE_VIEW points at "Wiki.jsp", etc.
- *
- *  @since 2.2
+ * Implements the default URL constructor using links directly to the JSP pages. This is what
+ * JSPWiki by default is using. For example, WikiContext.PAGE_VIEW points at "cmd.view?id=", etc.
  */
 @Component(name = "elwiki.DefaultUrlConstructor", service = URLConstructor.class, //
 factory = "elwiki.UrlConstructor.factory")
@@ -55,7 +53,7 @@ public class DefaultURLConstructor implements URLConstructor {
     /** Contains the absolute path of the JSPWiki Web application without the actual servlet (which is the m_urlPrefix). */
     protected String m_pathPrefix = "";
 
-	// -- service handling --------------------------< start --
+	// -- service handling ---------------------------(start)--
     
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -75,7 +73,7 @@ public class DefaultURLConstructor implements URLConstructor {
 		}
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- service handling -----------------------------(end)--
 
 	/**
 	 *
@@ -140,7 +138,7 @@ public class DefaultURLConstructor implements URLConstructor {
      * @throws IllegalArgumentException if the context cannot be found
      */
     public static String getURLPattern( final String context, final String name ) throws IllegalArgumentException {
-        if( context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) && name == null) {
+        if( context.equals( Context.PAGE_VIEW ) && name == null) {
             // FIXME
             return "%uWiki.jsp";
         }
@@ -167,9 +165,9 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( Context.PAGE_ATTACHMENT ) ) {
+            if( context.equals( Context.ATTACHMENT_DOWNLOAD ) ) {
                 parameters = "?" + parameters;
-            } else if( context.equals( Context.NONE ) ) {
+            } else if( context.equals( Context.PAGE_NONE ) ) {
                 parameters = name.indexOf( '?' ) != -1 ? "&amp;" : "?" + parameters;
             } else {
                 parameters = "&amp;" + parameters;
@@ -188,7 +186,7 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String parsePage( final String context, final HttpServletRequest request, final Charset encoding ) {
         String pagereq = request.getParameter( "page" );
-        if( context.equals( Context.PAGE_ATTACHMENT ) ) {
+        if( context.equals( Context.ATTACHMENT_DOWNLOAD ) ) {
             pagereq = URLConstructor.parsePageFromURL( request, encoding );
         }
 

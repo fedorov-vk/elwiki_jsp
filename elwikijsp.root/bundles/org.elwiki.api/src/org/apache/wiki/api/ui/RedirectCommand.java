@@ -55,7 +55,7 @@ public final class RedirectCommand extends AbstractCommand {
      * @param target the target of the command
      * @throws IllegalArgumentException if the request content, URL pattern, or type is <code>null</code>
      */
-/*    private RedirectCommand( final String requestContext, final String urlPattern, final String contentTemplate, final String target ) {
+/*:FVK:    private RedirectCommand( final String requestContext, final String urlPattern, final String contentTemplate, final String target ) {
         super(currentContext, target );
     }
 */

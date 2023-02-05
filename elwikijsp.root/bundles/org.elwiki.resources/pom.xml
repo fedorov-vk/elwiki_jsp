@@ -32,7 +32,7 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<cssDestinationFolder>${project.basedir}/resources/templates/210/</cssDestinationFolder>
+							<cssDestinationFolder>${project.basedir}/resources/shapes/210/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro.xml</wroFile>
 							<targetGroups>jspwiki,jspwiki_print,jspwiki-common,jspwiki-edit,jspwiki-prefs</targetGroups>
 						</configuration>
@@ -45,7 +45,7 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<cssDestinationFolder>${project.basedir}/resources/templates/default/</cssDestinationFolder>
+							<cssDestinationFolder>${project.basedir}/resources/shapes/default/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro-haddock.xml</wroFile>
 							<targetGroups>haddock,haddock-wysiwyg,haddock-edit,scope-controller</targetGroups>
 						</configuration>
@@ -77,13 +77,13 @@
 				<version>${maven.resources.plugin.version}</version>
 				<executions>
 					<execution>
-						<id>copy-resources_2_templates-default</id>
+						<id>copy-resources_2_shapes-default</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/resources/templates/default</outputDirectory>
+							<outputDirectory>${project.basedir}/resources/shapes/default</outputDirectory>
 							<resources>
 								<resource>
 									<directory>${project.basedir}/main/context/styles/haddock/fontjspwiki/FontJspwiki</directory>
@@ -92,7 +92,7 @@
 									</includes>
 								</resource>
 								<resource>
-									<directory>${project.basedir}/main/context/styles/static/templates/default</directory>
+									<directory>${project.basedir}/main/context/styles/static/shapes/default</directory>
 								</resource>
 							</resources>
 						</configuration>

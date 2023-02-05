@@ -67,7 +67,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** If true, all titles will be cleaned. */
 	private boolean m_beautifyTitle;
 
-	/** Stores the template path. This is relative to "templates". (:FVK: here  it is necessary to eliminate connection with resource plugin) */
+	/** Stores the template path. This is relative to "shapes". (:FVK: here  it is necessary to eliminate connection with resource plugin) */
 	private String m_templateDir;
 
 	/** The default front page name. Defaults to "Main". */
@@ -288,7 +288,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 		// Для ElWiki - это работает через bundle.
 		/*
 		if (m_servletContext != null) {
-			final String viewTemplate = "templates" + File.separator + getTemplateDir() + File.separator
+			final String viewTemplate = "shapes" + File.separator + getTemplateDir() + File.separator
 					+ "ViewTemplate.jsp";
 			boolean exists = new File(m_servletContext.getRealPath("/") + viewTemplate).exists();
 			if (!exists) {

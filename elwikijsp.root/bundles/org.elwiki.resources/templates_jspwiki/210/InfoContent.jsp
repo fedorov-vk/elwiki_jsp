@@ -156,7 +156,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' />"
+    <form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' />"
            class="wikiform"
               id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />"
@@ -196,9 +196,9 @@
 
     <%-- if( itemcount > 1 ) { --%>
 
-    <wiki:SetPagination start="<%=startitem%>" total="<%=itemcount%>" pagesize="<%=pagesize%>" maxlinks="9"
+    <wiki:SetPagination start="<%=t(startit%>" total="<%=t(itemcou%>" pagesize="<%=t(pagesi%>" maxlinks="9"
                        fmtkey="info.pagination"
-                         href='<%=c.getURL(ContextEnum.PAGE_INFO.getRequestContext(), c.getPage().getName(), "start=%s")%>' />
+                         href='<%=t(c.getURL(ContextEnum.PAGE_INFO.getRequestContext(), c.getPage().getName(), "start=%s%>' />
 
     <div class="zebra-table sortable table-filter">
     <table class="wikitable" >
@@ -213,19 +213,21 @@
 
       org.elwiki_data.PageContent currentPage = (org.elwiki_data.PageContent) pageContext.getAttribute("currentPage");
       <%
-      if( ( startitem == -1 ) ||
-                               (  ( currentPage.getVersion() > startitem )
-                               && ( currentPage.getVersion() <= startitem + pagesize ) ) )
-                           {
+      p
+
+            if( ( startitem == -1 ) ||
+                                     (  ( currentPage.getVersion() > startitem )
+                                     && ( currentPage.getVersion() <= startitem + pagesize ) ) )
+                                 {
       %>
       <tr>
         <td>
-          <wiki:LinkTo version="<%=Integer.toString(currentPage.getVersion())%>">
+          <wiki:LinkTo version="<%=t(Integer.toString(currentPage.getVersion(%>">
             <wiki:PageVersion/>
           </wiki:LinkTo>
         </td>
 
-	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%=currentPage.getLastModifiedDate().getTime()%>">
+	    <td style="white-space:nowrap;" jspwiki:sortvalue="<%=t(currentPage.getLastModifiedDate().getTime%>">
         <fmt:formatDate value="<%= currentPage.getLastModified() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </td>
         <td style="white-space:nowrap;text-align:right;">
@@ -247,14 +249,18 @@
 
          <td class="changenote">
            <%
-           String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
+           p
+
+                      String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
            %>
-		   <%=(changenote==null) ? "" : changenote%>
+		   <%=t((changenote==null) ? "" : changeno%>
          </td>
 
       </tr>
       <%
-      }
+      p
+
+            }
       %>
       </wiki:HistoryIterator>
 
@@ -272,26 +278,28 @@
 <%-- part 2 : attachments --%>
 <wiki:PageType type="attachment">
 <%
+p
+
 int MAXATTACHNAMELENGTH = 30;
-  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
+  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier()
 %>
 
-  <wiki:TabbedSection defaultTab="<%=tabParam%>">
+  <wiki:TabbedSection defaultTab="<%=t(tabPar%>">
   <wiki:Tab id="pagecontent"
-         title='<%=LocaleSupport.getLocalizedMessage(pageContext, "info.parent")%>'
+         title='<%=t(LocaleSupport.getLocalizedMessage(pageContext, "info.parent%>'
      accesskey="v"
-	       url="<%=c.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), ((PageAttachment)wikiPage).getParentName())%>">
+	       url="<%=t(c.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), ((PageAttachment)wikiPage).getParentName(%>">
   </wiki:Tab>
 
-  <wiki:Tab id="info" title='<%=LocaleSupport.getLocalizedMessage(pageContext, "info.attachment.tab")%>' accesskey="i" >
+  <wiki:Tab id="info" title='<%=t(LocaleSupport.getLocalizedMessage(pageContext, "info.attachment.tab%>' accesskey="i" >
 
   <h3><fmt:message key="info.uploadnew"/></h3>
 
   <wiki:Permission permission="upload">
-  <form action="<wiki:Link jsp='attach' format='url'><wiki:Param name='progressid' value='<%=progressId%>'/></wiki:Link>"
+  <form action="<wiki:Link jsp='attach' format='url'><wiki:Param name='progressid' value='<%=t(progress%>'/></wiki:Link>"
          class="wikiform"
             id="uploadform"
-      onsubmit="return Wiki.submitUpload(this, '<%=progressId%>');"
+      onsubmit="return Wiki.submitUpload(this, '<%=t(progress%>');"
         method="post" accept-charset="<wiki:ContentEncoding/>"
        enctype="multipart/form-data" >
 
@@ -331,7 +339,7 @@ int MAXATTACHNAMELENGTH = 30;
 
   <wiki:Permission permission="delete">
     <h3><fmt:message key="info.deleteattachment"/></h3>
-    <form action="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' />"
+    <form action="<wiki:Link format='url' context='<%=t(Context.%>' />"
            class="wikiform"
               id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />"
@@ -397,7 +405,7 @@ int MAXATTACHNAMELENGTH = 30;
          <td>
             <input type="button"
                    value="Restore"
-                   url="<wiki:Link format='url' context='<%=ContextEnum.PAGE_UPLOAD.getRequestContext()%>'/>"/>
+                   url="<wiki:Link format='url' context='<%=Context.UPLOAD.getRequestContext()%>'/>"/>
          </td>
       </wiki:Permission>
       --%>

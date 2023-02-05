@@ -117,7 +117,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 		String forceDownload = "";
 
 		if (isattachment) {//TODO: разобраться с типом "присоединение"...
-			url = m_wikiContext.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), pageName,
+			url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), pageName,
 					(getVersion() != null) ? "version=" + getVersion() : null);
 			linkclass = "attachment";
 
@@ -131,7 +131,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 				params.append("version=").append(getVersion());
 			}
 			if (getTemplate() != null) {
-				params.append(params.length() > 0 ? "&amp;" : "").append("skin=").append(getTemplate());
+				params.append(params.length() > 0 ? "&amp;" : "").append("shape=").append(getTemplate());
 			}
 
 			url = m_wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString());

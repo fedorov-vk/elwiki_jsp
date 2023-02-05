@@ -44,7 +44,7 @@ public class LoginCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		Context wikiContext = ContextUtil.findContext(httpRequest);
-		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE
+		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE - уже должен быть установлен.
 		// httpRequest.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();
 		ResourceBundle rb = Preferences.getBundle(wikiContext, "CoreResources"); // :FVK: это ресурсы в заданном

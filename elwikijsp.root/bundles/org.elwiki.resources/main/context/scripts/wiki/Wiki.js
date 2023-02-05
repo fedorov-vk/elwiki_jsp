@@ -71,7 +71,7 @@ var Wiki = {
         wiki.once = behavior.once.bind(behavior);
         wiki.update = behavior.update.bind(behavior);
 
-        //add the standard jspwiki behaviors; needed to render the haddock JSP templates
+        //add the standard jspwiki behaviors; needed to render the haddock JSP shapes
         wiki.add( "body", wiki.caniuse )
 
             .add( "[accesskey]", Accesskey )
@@ -238,7 +238,7 @@ var Wiki = {
         //The default Date & Time format is taken for m a preference cookie, with fallback
         //String.I18N.DEFAULT_DATE_FORMAT = wiki.prefs("DateFormat") || "dd mmm yyyy hh:mm";
 
-        if( wiki.prefs("SectionEditing") && wiki.EditPermission && (wiki.Context != "preview") ){
+        if( wiki.prefs("SectionEditing") && wiki.EditPermission && (wiki.Context != "preview") ){//:FVK: workaround - this string constant can changed in java code.
 
             wiki.addEditLinks( wiki.toUrl( wiki.PageName, true ) );
 

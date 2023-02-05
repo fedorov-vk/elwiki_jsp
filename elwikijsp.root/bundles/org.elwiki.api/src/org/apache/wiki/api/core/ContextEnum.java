@@ -31,42 +31,43 @@ package org.apache.wiki.api.core;
 public enum ContextEnum {
 
 	//@formatter:off
-    GROUP_DELETE( "deleteGroup", "cmd.deleteGroup", "%u", "?group=%n", null ),
-    GROUP_EDIT( "editGroup", "cmd.editGroup", "%u", "?group=%n", "EditGroupContent.jsp" ),
-    GROUP_VIEW( "viewGroup", "cmd.viewGroup", "%u", "?group=%n", "PreferencesContent.jsp" ),
+	GROUP_VIEW( "cmd.viewGroup", "%u", "?group=%n", "PreferencesContent.jsp" ),
+	GROUP_CREATE( "cmd.createGroup", "%u", "", "NewGroupContent.jsp" ),
+	GROUP_EDIT( "cmd.editGroup", "%u", "?id=%n", "EditGroupContent.jsp" ),
+    GROUP_DELETE( "cmd.deleteGroup", "%u", "?group=%n", null ),
 
-    PAGE_ATTACH( "att", "attach", "%u", "/%n", null ),
-    PAGE_COMMENT( "comment", "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
-    PAGE_CONFLICT( "conflict", "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
-    PAGE_CREATE( "createPage", "cmd.createPage", "%u", "?pageId=%n", "CreatePageContent.jsp" ),
-    PAGE_DELETE( "deletePage", "cmd.deletePage", "%u", "?pageId=%n", null ),
-    PAGE_INFO( "info", "cmd.info", "%u", "?pageId=%n", "InfoContent.jsp" ),
-    PAGE_DIFF( "diff", "cmd.diff", "%u", "?pageId=%n", "InfoContent.jsp" ),
-    PAGE_EDIT( "edit", "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
-    PAGE_NONE( "", "", "%u", "%n", null ),
-    PAGE_PREVIEW( "preview", "cmd.preview", "%u", "?pageId=%n", "PreviewContent.jsp" ),
-    PAGE_RENAME( "rename", "cmd.rename", "%u", "?pageId=%n", "InfoContent.jsp" ),
-    PAGE_RSS( "rss", "rss.jsp", "%u", "", null ),
-    PAGE_UPLOAD( "upload", "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
-    PAGE_VIEW( "view", "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
+    PAGE_COMMENT( "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
+    PAGE_CONFLICT( "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
+    PAGE_CREATE( "cmd.createPage", "%u", "?pageId=%n", "CreatePageContent.jsp" ),
+    PAGE_DELETE( "cmd.deletePage", "%u", "?pageId=%n", null ),
+    PAGE_INFO( "cmd.info", "%u", "?pageId=%n", "InfoContent.jsp" ),
+    PAGE_DIFF( "cmd.diff", "%u", "?pageId=%n", "InfoContent.jsp" ),
+    PAGE_EDIT( "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
+    PAGE_NONE( "", "%u", "%n", null ),
+    PAGE_PREVIEW( "cmd.preview", "%u", "?pageId=%n", "PreviewContent.jsp" ),
+    PAGE_RENAME( "cmd.rename", "%u", "?pageId=%n", "InfoContent.jsp" ),
+    PAGE_RSS( "rss.jsp", "%u", "", null ),
+    PAGE_VIEW( "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
 
-    ATTACHMENT_DELETE( "deleteAttachment", "cmd.deleteAttachment", "%u", "?pageId=%n", null ),
-    ATTACHMENT_INFO( "infoAttachment", "cmd.infoAttachment", "%u", "?id=%n", "InfoAttachmentContent.jsp" ),
+    ATTACHMENT_UPLOAD( "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
+    ATTACHMENT_DOWNLOAD( "attach", "%u", "/%n", null ),
+    ATTACHMENT_INFO( "cmd.infoAttachment", "%u", "?id=%n", "InfoAttachmentContent.jsp" ),
+    ATTACHMENT_DELETE( "cmd.deleteAttachment", "%u", "?pageId=%n", null ),
 
-    REDIRECT( "", "", "%u", "%n", null ),
+    REDIRECT( "", "%u", "%n", null ),
 
-    WIKI_ADMIN( "admin", "admin/Admin.jsp", "%u", "", "AdminContent.jsp" ),
-    WIKI_CREATE_GROUP( "createGroup", "cmd.createGroup", "%u", "", "NewGroupContent.jsp" ),
-    WIKI_ERROR( "error", "Error.jsp", "%u", "", "DisplayMessage.jsp" ),
-    WIKI_FIND( "find", "cmd.find", "%u", "", "FindContent.jsp" ),
-    WIKI_INSTALL( "install", "Install.jsp", "%u", "", null ),
-    WIKI_LOGIN( "login", "cmd.login", "%u", "?redirect=%n", "LoginContent.jsp" ),
-    WIKI_LOGOUT( "logout", "cmd.logout", "%u", "", null ),
-    WIKI_MESSAGE( "message", "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
-    WIKI_PREFS( "prefs", "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
-    WIKI_WORKFLOW( "workflow", "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
-    WIKI_SCOPE( "scope", "cmd.scope", "%u", "", "ScopeContent.jsp" ),
-	WIKI_PERSIST_CONTENT( "persistContent", "cmd.persistContent", "%u", "",
+    WIKI_ADMIN( "cmd.admin", "%u", "", "AdminContent.jsp" ),
+    WIKI_SECURE( "cmd.secure", "%u", "", "SecurityConfig.jsp" ),
+    WIKI_ERROR( "Error.jsp", "%u", "", "DisplayMessage.jsp" ),
+    WIKI_FIND( "cmd.find", "%u", "", "FindContent.jsp" ),
+    WIKI_INSTALL( "Install.jsp", "%u", "", null ),
+    WIKI_LOGIN( "cmd.login", "%u", "?redirect=%n", "LoginContent.jsp" ),
+    WIKI_LOGOUT( "cmd.logout", "%u", "", null ),
+    WIKI_MESSAGE( "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
+    WIKI_PREFS( "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
+    WIKI_WORKFLOW( "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
+    WIKI_SCOPE( "cmd.scope", "%u", "", "ScopeContent.jsp" ),
+	WIKI_PERSIST_CONTENT( "cmd.persistContent", "%u", "",
 			// :FVK: workaround, this contentTemplate should be null,
 			// but error expected:
 			//   at org.apache.wiki.tags.ContentTag.doEndTag(ContentTag.java:160)
@@ -75,7 +76,6 @@ public enum ContextEnum {
 			"PageContent.jsp" ); 
 	//@formatter:on
 
-	private final String requestContext;
 	private final String urlPattern;
 	private final String uri;
 	private final String contentTemplate;
@@ -83,21 +83,20 @@ public enum ContextEnum {
 	/**
 	 * Creates a variable that describes the context of ElWiki.
 	 *
-	 * @param requestContext this string represents the context identifier.
-	 * @param uri this string is the URI for activating this context from an HTTP request.
-	 * @param prefix this is the prefix for forming the request URI.
-	 * @param postfix this is the postfix for forming the request URI.
+	 * @param uri             this string is the URI for activating this context from an HTTP request.
+	 * @param prefix          this is the prefix for forming the request URI.
+	 * @param postfix         this is the postfix for forming the request URI.
 	 * @param contentTemplate the name of the JSP page, for generating HTML content.
 	 */
-	ContextEnum(String requestContext, String uri, String prefix, String postfix, String contentTemplate) {
-		this.requestContext = requestContext;
+	ContextEnum(String uri, String prefix, String postfix, String contentTemplate) {
 		this.urlPattern = prefix + uri + postfix;
 		this.uri = uri;
 		this.contentTemplate = contentTemplate;
 	}
 
 	public String getRequestContext() {
-		return requestContext;
+		String name = this.name();
+		return name;
 	}
 
 	public String getUrlPattern() {
@@ -107,9 +106,26 @@ public enum ContextEnum {
 	public String getUri() {
 		return uri;
 	}
-	
+
 	public String getContentTemplate() {
 		return contentTemplate;
+	}
+
+	/**
+	 * Returns URI template by name of wiki context.
+	 * 
+	 * @param contextName Required name of wiki context.
+	 * @return URI template according to the wiki context.
+	 * @throws Exception if the contextName is invalid.
+	 */
+	static String getUriTemplate(String contextName) throws Exception {
+		ContextEnum contextEnum = null;
+		try {
+			contextEnum = ContextEnum.valueOf(contextName);
+			return contextEnum.getUrlPattern();
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
 	}
 
 }

@@ -135,7 +135,7 @@
       <td>
           <input type="button"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=ContextEnum.PAGE_DELETE.getRequestContext()%>' ><wiki:Param name='tab' value='attach'/></wiki:Link>"
+                  src="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach'/></wiki:Link>"
               onclick="$('deleteForm').setProperty('action',this.src); $('delete-all').click();" />
       </td>
       </wiki:Permission>

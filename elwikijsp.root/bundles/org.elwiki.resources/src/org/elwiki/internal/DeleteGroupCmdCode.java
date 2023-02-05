@@ -25,7 +25,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 		Engine wiki = ServicesRefs.Instance;
 
 		// Create wiki context and check for authorization
-		Context wikiContext = Wiki.context().create(wiki, httpRequest, ContextEnum.GROUP_EDIT.getRequestContext());
+		Context wikiContext = Wiki.context().create(wiki, httpRequest, Context.GROUP_EDIT);
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;
 

@@ -48,7 +48,7 @@ import java.util.Set;
 
 
 /**
- *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under templates/default/editors
+ *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under shapes/default/editors
  *  If you want your editor to include any scripts or something, you can simply request it by adding the following in your
  *  {@code ini/jspwiki_module.xml}:
  *

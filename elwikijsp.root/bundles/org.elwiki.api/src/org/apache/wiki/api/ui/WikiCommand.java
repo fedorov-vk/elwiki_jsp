@@ -35,7 +35,8 @@ import java.security.Permission;
 public final class WikiCommand extends AbstractCommand {
 
     public static final Command ADMIN = new WikiCommand( ContextEnum.WIKI_ADMIN, null );
-    public static final Command CREATE_GROUP = new WikiCommand( ContextEnum.WIKI_CREATE_GROUP, null, WikiPermission.CREATE_GROUPS_ACTION );
+    public static final Command SECURE = new WikiCommand( ContextEnum.WIKI_SECURE, null );
+    public static final Command CREATE_GROUP = new WikiCommand( ContextEnum.GROUP_CREATE, null, WikiPermission.CREATE_GROUPS_ACTION );
     public static final Command ERROR = new WikiCommand( ContextEnum.WIKI_ERROR, null, null );
     public static final Command FIND = new WikiCommand( ContextEnum.WIKI_FIND, null, null );
     public static final Command INSTALL = new WikiCommand( ContextEnum.WIKI_INSTALL, null, null );

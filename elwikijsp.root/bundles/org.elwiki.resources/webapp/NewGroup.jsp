@@ -37,7 +37,7 @@
 <%
 Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_CREATE_GROUP.getRequestContext() );
+    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_CREATE.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     
     // Extract the current user, group name, members and action attributes
@@ -95,6 +95,6 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "ViewTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ NewGroup.jsp -->

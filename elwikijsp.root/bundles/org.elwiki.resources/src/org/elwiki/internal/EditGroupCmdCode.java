@@ -10,7 +10,9 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.services.ServicesRefs;
@@ -23,17 +25,20 @@ public class EditGroupCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-
-		// Get wiki context and check for authorization
 		Context wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		@NonNull
+		AuthorizationManager authorizationManager = wiki.getManager(AuthorizationManager.class);
+		@NonNull
+		IGroupManager groupMgr = wiki.getManager(IGroupManager.class);
+
+		// Check for authorization
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
-		IGroupManager groupMgr = ServicesRefs.getGroupManager();
 		WrapGroup group = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {

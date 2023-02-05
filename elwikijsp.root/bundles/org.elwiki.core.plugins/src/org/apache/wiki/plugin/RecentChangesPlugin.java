@@ -143,7 +143,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //TODO: here porting code for JSPwiki "pageref instanceof PageAttachment" (Page -> PageAttachment):
 
 				String href = context
-						.getURL(pageref instanceof PageAttachment ? ContextEnum.PAGE_ATTACH.getRequestContext()
+						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
                 Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
                 Element row = XhtmlUtil.element( XHTML.tr );
@@ -155,10 +155,10 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //  Add the direct link to the attachment info.
                 //
                 if( pageref instanceof PageAttachment ) {
-                    link = XhtmlUtil.link( context.getURL( Context.INFO, pageref.getName() ), null );
+                    link = XhtmlUtil.link( context.getURL( Context.PAGE_INFO, pageref.getName() ), null );
                     link.setAttribute( XHTML.ATTR_class, "infolink" );
 
-                    Element img = XhtmlUtil.img( context.getURL( Context.NONE, "images/attachment_small.png" ), null );
+                    Element img = XhtmlUtil.img( context.getURL( Context.PAGE_NONE, "images/attachment_small.png" ), null );
                     link.addContent( img );
 
                     col.addContent( link );
@@ -174,7 +174,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 } else {
                     Element infocol = XhtmlUtil.element( XHTML.td );
                     infocol.setAttribute( XHTML.ATTR_class, "lastchange" );
-                    infocol.addContent( XhtmlUtil.link( context.getURL( Context.DIFF, pageref.getName(), "r1=-1" ),
+                    infocol.addContent( XhtmlUtil.link( context.getURL( Context.PAGE_DIFF, pageref.getName(), "r1=-1" ),
                                                         tfmt.format( lastmod ) ) );
                     row.addContent( infocol );
                 }

@@ -24,7 +24,7 @@
   <group name="base" abstract="true">
     <!--<js>/scripts/mootools.js</js>-->
     <js>/scripts/jspwiki-common.js</js>
-    <!-- <css>/templates/default/jspwiki.css</css> -->
+    <!-- <css>/shapes/default/jspwiki.css</css> -->
   </group>
 
   <group name="jspwiki-common">

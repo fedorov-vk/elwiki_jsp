@@ -75,7 +75,7 @@ public class IncludeTag extends BaseWikiTag {
 	public final int doEndTag() throws JspException {
 		try {
 			TemplateManager templateManager = ServicesRefs.getTemplateManager();
-			final String page = templateManager.findJSP(pageContext, m_wikiContext.getTemplate(), m_page);
+			final String page = templateManager.findJSP(pageContext, m_wikiContext.getShape(), m_page);
 
 			if (page == null) {
 				pageContext.getOut().println("No template file called '" + TextUtil.replaceEntities(m_page) + "'");

@@ -31,8 +31,6 @@ public class Wiki {
 	// default values
 	// :FVK:private static Properties properties = PropertyReader.getDefaultProperties();
 
-	private static AclsSPI aclsSPI;
-	private static ContentsSPI contentsSPI;
 	private static ContextSPI contextSPI;
 
 	/**
@@ -41,7 +39,7 @@ public class Wiki {
 	 * @return {@link AclsSPI} operations.
 	 */
 	public static AclsDSL acls() {
-		return new AclsDSL(aclsSPI);
+		return new AclsDSL();
 	}
 
 	/**
@@ -50,7 +48,7 @@ public class Wiki {
 	 * @return {@link ContentsSPI} operations.
 	 */
 	public static ContentsDSL contents() {
-		return new ContentsDSL(contentsSPI);
+		return new ContentsDSL();
 	}
 
 	/**
@@ -63,14 +61,6 @@ public class Wiki {
 	}
 
 	// -- service handling ---------------------------(start)--
-
-	public void setAclsSPI(AclsSPI aclsSPI1) {
-		aclsSPI = aclsSPI1;
-	}
-
-	public void setContentsSPI(ContentsSPI contentsSPI1) {
-		contentsSPI = contentsSPI1;
-	}
 
 	public void setContextSPI(ContextSPI contextSPI1) {
 		contextSPI = contextSPI1;

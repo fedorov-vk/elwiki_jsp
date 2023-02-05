@@ -91,6 +91,8 @@ public class WrapGroup {
 
 	private UserAdmin userAdmin;
 
+	private String groupId;
+
 	/**
 	 * Protected constructor to prevent direct instantiation except by other package members.
 	 * Callers should use {@link GroupManager#parseGroup(String, String, boolean)} or
@@ -101,6 +103,7 @@ public class WrapGroup {
 	 */
 	public WrapGroup(final Group group) {
 		this.group = group;
+		this.groupId = group.getName();
 		Dictionary<String, Object> properties = group.getProperties();
 		m_name = (String) properties.get(UserDatabase.GROUP_NAME);
 		m_wiki = "foo_wiki"; // :FVK:
@@ -109,6 +112,10 @@ public class WrapGroup {
 		this.userAdmin = ApiActivator.getService(UserAdmin.class);
 	}
 
+	public String getGroupId() {
+		return groupId;
+	}
+	
 	/**
 	 * Adds a Principal to the group.
 	 * 

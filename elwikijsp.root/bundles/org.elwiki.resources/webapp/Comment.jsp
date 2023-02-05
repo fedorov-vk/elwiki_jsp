@@ -295,5 +295,5 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     response.setHeader( "Cache-control", "max-age=0" );
     response.setDateHeader( "Expires", new Date().getTime() );
     response.setDateHeader( "Last-Modified", new Date().getTime() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getTemplate(), "EditTemplate.jsp" );
+    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />

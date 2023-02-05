@@ -560,7 +560,7 @@ public class SpamFilter extends BasePageFilter {
                 final String userAgent     = req.getHeader( "User-Agent" );
                 final String referrer      = req.getHeader( "Referer");
                 final String permalink     = context.getViewURL( context.getPage().getName() );
-                final String commentType   = context.getRequestContext().equals( ContextEnum.PAGE_COMMENT.getRequestContext() ) ? "comment" : "edit";
+                final String commentType   = context.getRequestContext().equals( Context.PAGE_COMMENT ) ? "comment" : "edit"; //:FVK: is workaround? - is definitions needs: Context.PAGE_COMMENT, Context.PAGE_EDIT?
                 final String commentAuthor = context.getCurrentUser().getName();
                 final String commentAuthorEmail = null;
                 final String commentAuthorURL   = null;

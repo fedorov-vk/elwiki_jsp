@@ -90,7 +90,7 @@ public class RSS20Feed extends Feed
                     for( final PageAttachment att : c ) {
 						final Element attEl = new Element("enclosure");
 						attEl.setAttribute("url",
-								engine.getURL(ContextEnum.PAGE_ATTACH.getRequestContext(), att.getName(), null));
+								engine.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), att.getName(), null));
 						AttachmentContent attachmentContent = att.forLastContent();
 						long size = (attachmentContent != null) ? attachmentContent.getSize() : -1;
 						attEl.setAttribute("length", Long.toString(size));

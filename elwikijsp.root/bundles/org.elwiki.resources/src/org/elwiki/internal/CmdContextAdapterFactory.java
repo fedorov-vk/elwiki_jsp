@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
  *
  * @author v.fedorov
  */
+@Deprecated
 public class CmdContextAdapterFactory implements IAdapterFactory {
 
 	// use a static final field so that the adapterList is only instantiated once.

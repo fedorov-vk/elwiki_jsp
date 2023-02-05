@@ -34,7 +34,7 @@ import java.security.Permission;
  */
 public final class PageCommand extends AbstractCommand {
 
-    public static final Command ATTACH = new PageCommand( ContextEnum.PAGE_ATTACH, null, PagePermission.UPLOAD_ACTION );
+    public static final Command ATTACH = new PageCommand( ContextEnum.ATTACHMENT_DOWNLOAD, null, PagePermission.UPLOAD_ACTION );
     public static final Command COMMENT = new PageCommand( ContextEnum.PAGE_COMMENT, null, PagePermission.COMMENT_ACTION );
     public static final Command CONFLICT = new PageCommand( ContextEnum.PAGE_CONFLICT, null, PagePermission.VIEW_ACTION );
     public static final Command CREATE = new PageCommand( ContextEnum.PAGE_CREATE, null, PagePermission.EDIT_ACTION );
@@ -45,7 +45,7 @@ public final class PageCommand extends AbstractCommand {
     public static final Command PREVIEW = new PageCommand( ContextEnum.PAGE_PREVIEW, null, PagePermission.VIEW_ACTION );
     public static final Command RENAME = new PageCommand( ContextEnum.PAGE_RENAME, null, PagePermission.RENAME_ACTION );
     public static final Command RSS = new PageCommand( ContextEnum.PAGE_RSS, null, PagePermission.VIEW_ACTION );
-    public static final Command UPLOAD = new PageCommand( ContextEnum.PAGE_UPLOAD, null, PagePermission.UPLOAD_ACTION );
+    public static final Command UPLOAD = new PageCommand( ContextEnum.ATTACHMENT_UPLOAD, null, PagePermission.UPLOAD_ACTION );
     public static final Command VIEW = new PageCommand( ContextEnum.PAGE_VIEW, null, PagePermission.VIEW_ACTION );
     //:FVK: public static final Command VIEWID = new PageCommand( ContextEnum.PAGE_VIEWID, null, PagePermission.VIEW_ACTION );
     public static final Command DELETE_ATTACHMENT = new PageCommand( ContextEnum.ATTACHMENT_DELETE, null, PagePermission.DELETE_ACTION );

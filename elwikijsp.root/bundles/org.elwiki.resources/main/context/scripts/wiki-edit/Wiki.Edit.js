@@ -189,7 +189,7 @@ function livepreview(content, preview, previewToggle){
 
         }
 
-        if( wiki.Context == "comment" ){
+        if( wiki.Context == "comment" ){ //:FVK: workaround - this string constant can changed in java code.
 
             name = $("authorname").value || wiki.UserName || "AnonymousCoward";
             link = $("link").value;

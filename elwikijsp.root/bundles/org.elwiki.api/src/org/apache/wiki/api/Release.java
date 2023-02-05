@@ -86,7 +86,7 @@ public final class Release {
     }
 
     /**
-     *  This method is useful for templates, because hopefully it will not be inlined, and thus any change to version number does not
+     *  This method is useful for shapes, because hopefully it will not be inlined, and thus any change to version number does not
      *  need recompiling the pages.
      *
      *  @since 2.1.26.

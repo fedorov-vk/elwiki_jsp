@@ -20,14 +20,13 @@ package org.apache.wiki.api.spi;
 
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
+import org.elwiki_data.Elwiki_dataFactory;
 
 
 public class AclsDSL {
 
-    private final AclsSPI aclsSPI;
-
-    public AclsDSL( final AclsSPI aclsSPI ) {
-        this.aclsSPI = aclsSPI;
+    public AclsDSL() {
+        super();
     }
 
     /**
@@ -36,7 +35,7 @@ public class AclsDSL {
      * @return new {@link Acl} instance.
      */
     public Acl acl() {
-        return aclsSPI.acl();
+        return Elwiki_dataFactory.eINSTANCE.createAcl();
     }
 
     /**
@@ -45,7 +44,7 @@ public class AclsDSL {
      * @return new {@link AclEntry} instance.
      */
     public AclEntry entry() {
-        return aclsSPI.entry();
+    	return Elwiki_dataFactory.eINSTANCE.createAclEntry();
     }
 
 }

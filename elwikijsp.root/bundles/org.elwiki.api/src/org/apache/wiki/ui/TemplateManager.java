@@ -38,7 +38,7 @@ import org.apache.wiki.preferences.Preferences;
 
 
 /**
- *  This class takes care of managing JSPWiki templates.  This class also provides the ResourceRequest mechanism.
+ *  This class takes care of managing JSPWiki shapes.  This class also provides the ResourceRequest mechanism.
  *
  *  @since 2.1.62
  */
@@ -63,12 +63,12 @@ public interface TemplateManager extends ModuleManager {
     String PROPERTYFILE = "template.properties";
 
     /** Location of I18N Resource bundles, and path prefix and suffixes */
-    String I18NRESOURCE_PREFIX = "templates/default_";
+    String I18NRESOURCE_PREFIX = "shapes/default_";
 
     String I18NRESOURCE_SUFFIX = ".properties";
 
     /** The default (en) RESOURCE name and id. */
-    String I18NRESOURCE_EN = "templates/default.properties";
+    String I18NRESOURCE_EN = "shapes/default.properties";
     String I18NRESOURCE_EN_ID = "en";
 
     /** I18N string to mark the default locale */
@@ -141,8 +141,8 @@ public interface TemplateManager extends ModuleManager {
 
     /**
      * List all installed i18n language properties by classpath searching for files like :
-     *    templates/default_*.properties
-     *    templates/default.properties
+     *    shapes/default_*.properties
+     *    shapes/default.properties
      *
      * @param pageContext page context
      * @return map of installed Languages

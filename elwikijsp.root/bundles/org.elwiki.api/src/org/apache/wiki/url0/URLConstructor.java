@@ -38,7 +38,7 @@ public interface URLConstructor extends Initializable {
      *  Constructs the URL with a bunch of parameters.
      *
      *  @param context The request context (@see WikiContext) that you want the URL for
-     *  @param name The page name (or in case of WikiContext.NONE, the auxiliary JSP page
+     *  @param name The page name (or in case of WikiContext.PAGE_NONE, the auxiliary JSP page
      *              or resource you want to point at).  This must be URL encoded.  Null is NOT safe.
      *  @param parameters An URL parameter string (these must be URL-encoded, and separated with &amp;amp;)
      *  @return An URL pointing to the resource.  Must never return null - throw an InternalWikiException  if something goes wrong.
