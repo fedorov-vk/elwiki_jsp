@@ -544,6 +544,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EOperation getWikiPage__ToString() {
+		return wikiPageEClass.getEOperations().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getPagesStore() {
 		return pagesStoreEClass;
 	}
@@ -1156,6 +1166,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEOperation(wikiPageEClass, WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___IS_INTERNAL_PAGE);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED);
+		createEOperation(wikiPageEClass, WIKI_PAGE___TO_STRING);
 
 		pagesStoreEClass = createEClass(PAGES_STORE);
 		createEReference(pagesStoreEClass, PAGES_STORE__WIKIPAGES);
@@ -1308,6 +1319,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEOperation(getWikiPage__IsInternalPage(), ecorePackage.getEBoolean(), "isInternalPage", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getWikiPage__GetPageContentsReversed(), this.getListPageContent(), "getPageContentsReversed", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getWikiPage__ToString(), ecorePackage.getEString(), "toString", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(pagesStoreEClass, PagesStore.class, "PagesStore", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPagesStore_Wikipages(), this.getWikiPage(), null, "wikipages", null, 0, -1, PagesStore.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

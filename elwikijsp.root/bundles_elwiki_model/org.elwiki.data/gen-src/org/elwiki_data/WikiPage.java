@@ -596,4 +596,12 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 */
 	List<PageContent> getPageContentsReversed();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	String toString();
+
 } // WikiPage

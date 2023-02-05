@@ -56,6 +56,7 @@
           body="String pageId = this.getId();&#xA;return (pageId.startsWith(&quot;w&quot;))? true : false;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getPageContentsReversed"
           body="List&lt;PageContent> contents = new ArrayList&lt;>(this.getPageContents());&#xA;contents.sort(Comparator.comparing(PageContent::getVersion, Comparator.reverseOrder()));&#xA;&#xA;return contents;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/toString" body="return super.toString() + &quot; &quot; + getId() + &quot;:&quot; + getName();"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>

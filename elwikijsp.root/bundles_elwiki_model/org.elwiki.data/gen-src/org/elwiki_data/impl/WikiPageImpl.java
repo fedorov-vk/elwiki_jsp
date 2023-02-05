@@ -546,6 +546,16 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public String toString() {
+		return super.toString() + " " + getId() + ":" + getName();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Comparable.class) {
 			switch (baseOperationID) {
@@ -591,6 +601,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return isInternalPage();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED:
 				return getPageContentsReversed();
+			case Elwiki_dataPackage.WIKI_PAGE___TO_STRING:
+				return toString();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

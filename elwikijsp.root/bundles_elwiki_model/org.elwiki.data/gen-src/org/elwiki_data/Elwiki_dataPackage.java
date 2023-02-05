@@ -367,13 +367,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED = COMPARABLE_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___TO_STRING = COMPARABLE_OPERATION_COUNT + 11;
+
+	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 11;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -1494,6 +1503,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getWikiPage__GetPageContentsReversed();
 
 	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#toString() <em>To String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>To String</em>' operation.
+	 * @see org.elwiki_data.WikiPage#toString()
+	 * @generated
+	 */
+	EOperation getWikiPage__ToString();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PagesStore <em>Pages Store</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2346,6 +2365,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation WIKI_PAGE___GET_PAGE_CONTENTS_REVERSED = eINSTANCE.getWikiPage__GetPageContentsReversed();
+
+		/**
+		 * The meta object literal for the '<em><b>To String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___TO_STRING = eINSTANCE.getWikiPage__ToString();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
