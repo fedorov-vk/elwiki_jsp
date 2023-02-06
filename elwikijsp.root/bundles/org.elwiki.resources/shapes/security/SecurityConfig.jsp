@@ -41,7 +41,7 @@
 <!doctype html>
 <html lang="<c:out value='${prefs.Language}' default='en'/>">
 <%
-  Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_NONE.getRequestContext() );
+WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.PAGE_NONE );
   if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
   response.setContentType("text/html; charset="+wiki.getContentEncoding() );
   verifier = new SecurityVerifier( wiki, wikiContext.getWikiSession() );

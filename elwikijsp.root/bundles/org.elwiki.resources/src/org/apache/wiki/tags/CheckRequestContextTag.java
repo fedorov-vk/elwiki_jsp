@@ -39,7 +39,7 @@ import javax.servlet.jsp.JspTagException;
  * </ul>
  *
  * @since 2.0
- * @see org.apache.wiki.WikiContext
+ * @see org.apache.wiki.WikiContextImpl
  */
 public class CheckRequestContextTag extends BaseWikiTag {
 

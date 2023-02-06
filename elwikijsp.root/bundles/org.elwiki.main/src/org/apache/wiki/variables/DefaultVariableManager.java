@@ -21,7 +21,7 @@ package org.apache.wiki.variables;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -86,7 +86,7 @@ public class DefaultVariableManager implements VariableManager {
      *  {@inheritDoc}
      */
     @Override
-    public String parseAndGetValue( final Context context, final String link ) throws IllegalArgumentException, NoSuchVariableException {
+    public String parseAndGetValue( final WikiContext context, final String link ) throws IllegalArgumentException, NoSuchVariableException {
         if( !link.startsWith( "{$" ) ) {
             throw new IllegalArgumentException( "Link does not start with {$" );
         }
@@ -103,7 +103,7 @@ public class DefaultVariableManager implements VariableManager {
      */
     @Override
     // FIXME: somewhat slow.
-    public String expandVariables( final Context context, final String source ) {
+    public String expandVariables( final WikiContext context, final String source ) {
         final StringBuilder result = new StringBuilder();
         for( int i = 0; i < source.length(); i++ ) {
             if( source.charAt(i) == '{' ) {
@@ -138,7 +138,7 @@ public class DefaultVariableManager implements VariableManager {
      *  {@inheritDoc}
      */
     @Override
-    public String getValue( final Context context, final String varName, final String defValue ) {
+    public String getValue( final WikiContext context, final String varName, final String defValue ) {
         try {
             return getValue( context, varName );
         } catch( final NoSuchVariableException e ) {
@@ -150,7 +150,7 @@ public class DefaultVariableManager implements VariableManager {
      *  {@inheritDoc}
      */
     @Override
-    public String getVariable( final Context context, final String name ) {
+    public String getVariable( final WikiContext context, final String name ) {
         return getValue( context, name, null );
     }
 
@@ -158,7 +158,7 @@ public class DefaultVariableManager implements VariableManager {
      *  {@inheritDoc}
      */
     @Override
-    public String getValue( final Context context, final String varName ) throws IllegalArgumentException, NoSuchVariableException {
+    public String getValue( final WikiContext context, final String varName ) throws IllegalArgumentException, NoSuchVariableException {
         if( varName == null ) {
             throw new IllegalArgumentException( "Null variable name." );
         }
@@ -288,9 +288,9 @@ public class DefaultVariableManager implements VariableManager {
     @SuppressWarnings( "unused" )
 	private /*:FVK:static*/ class SystemVariables {
 
-        private final Context m_context;
+        private final WikiContext m_context;
 
-        public SystemVariables( final Context context )
+        public SystemVariables( final WikiContext context )
         {
             m_context=context;
         }

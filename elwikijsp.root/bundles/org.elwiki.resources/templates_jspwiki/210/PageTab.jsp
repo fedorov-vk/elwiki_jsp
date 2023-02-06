@@ -28,7 +28,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	Context c = ContextUtil.findContext( pageContext );
+    WikiContext c = ContextUtil.findContext( pageContext );
    	WikiPage p = c.getPage();
 	String pagename = p.getName();
 

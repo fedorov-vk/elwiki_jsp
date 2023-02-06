@@ -19,7 +19,7 @@
 
 package org.apache.wiki.forms;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
@@ -51,7 +51,7 @@ public class FormInput extends FormElement {
      * {@inheritDoc}
      */
     @Override
-    public String execute( final Context ctx, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext ctx, final Map< String, String > params ) throws PluginException {
         final String inputName  = params.get( PARAM_INPUTNAME );
         String inputValue = params.get( PARAM_VALUE );
         final String inputType  = params.get( PARAM_TYPE );

@@ -45,10 +45,10 @@
     This provides a wysiwy editor for JSPWiki. (based on mooeditable)
 --%>
 <%
-	Context context = ContextUtil.findContext( pageContext );
+	WikiContext context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
-    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
@@ -58,7 +58,7 @@
     String usertext = ContextUtil.getEditedText(pageContext);
 %>
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
-<wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
 	String clone = request.getParameter( "clone" );
@@ -110,7 +110,7 @@
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for wysiwyg editor has been rendered.
-   context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
 //:FVK:   wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
 
@@ -121,13 +121,12 @@
        protocol = "https://";
    }
    */
-
 %>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:CheckRequestContext
-     context='<%=Context.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='<%=Context.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
+     context='<%=WikiContext.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
+     context='<%=WikiContext.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
        class="editform wysiwyg"
           id="editform"
      enctype="application/x-www-form-urlencoded" >
@@ -156,7 +155,7 @@
              placeholder="<fmt:message key='editor.plain.changenote'/>"
              value="${changenote}" />
       </li>
-      <wiki:CheckRequestContext context="<%=Context.PAGE_COMMENT%>">
+      <wiki:CheckRequestContext context="<%=WikiContext.PAGE_COMMENT%>">
       <li class="divider" />
       <li class="dropdown-header">
         <fmt:message key="editor.commentsignature"/>
@@ -207,7 +206,7 @@
       </ul>
     </div>
 
-    <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
+    <c:set var="editors" value="<%=ServicesRefs.getEditorManager().getEditorList()%>" />
     <c:if test='${fn:length(editors)>1}'>
    <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>
@@ -217,7 +216,7 @@
           <c:choose>
             <c:when test="${edt != prefs.editor}">
               <li>
-                <wiki:Link context="<%=Context.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
+                <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
               </li>
             </c:when>
             <c:otherwise>

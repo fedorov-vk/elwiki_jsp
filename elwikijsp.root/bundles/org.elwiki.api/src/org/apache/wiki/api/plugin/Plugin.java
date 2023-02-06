@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 
 import java.util.Map;
@@ -47,6 +47,6 @@ public interface Plugin {
      *  @return HTML, ready to be included into the rendered page.
      *  @throws PluginException In case anything goes wrong.
      */
-    String execute( Context context, Map< String, String > params ) throws PluginException;
+    String execute( WikiContext context, Map< String, String > params ) throws PluginException;
     
 }

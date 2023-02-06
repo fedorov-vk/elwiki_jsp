@@ -25,7 +25,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context context = ContextUtil.findContext( pageContext );
+  WikiContext context = ContextUtil.findContext( pageContext );
   TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT, "scripts/jspwiki-prefs.js" );
 %>
 

@@ -25,7 +25,7 @@
 <fmt:setBundle basename="shapes.default"/>
 
 <wiki:CheckRequestContext
-  context='<%=ContextUtil.compose(Context.PAGE_VIEW, Context.PAGE_DIFF, Context.PAGE_EDIT, Context.PAGE_INFO, Context.ATTACHMENT_UPLOAD)%>' >
+  context='<%=ContextUtil.compose(WikiContext.PAGE_VIEW, WikiContext.PAGE_DIFF, WikiContext.PAGE_EDIT, WikiContext.PAGE_INFO, WikiContext.ATTACHMENT_UPLOAD)%>' >
 <div class="page-footer visible-print">
   <wiki:PageExists>
     <wiki:CheckVersion mode="latest">

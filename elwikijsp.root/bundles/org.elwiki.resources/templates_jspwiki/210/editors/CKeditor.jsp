@@ -40,7 +40,7 @@
     This provides the WYSIWYG CKeditor for JSPWiki.
 --%>
 <%
-	Context context = ContextUtil.findContext( pageContext );
+    WikiContext context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
     /* local download of CKeditor */
@@ -51,7 +51,7 @@
     TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT, "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js" );
     */
 
-    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
@@ -85,14 +85,14 @@
 %>
 </wiki:NoSuchPage>
 <%
-  if( usertext == null )
+if( usertext == null )
   {
     usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
 <%
-   if( usertext == null ) usertext = "";
+if( usertext == null ) usertext = "";
 
    String pageAsHtml;
    try
@@ -108,7 +108,7 @@
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for CKeditor has been rendered.
-   context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
 
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );

@@ -28,8 +28,8 @@
 <%!
     Logger log = Logger.getLogger("JSPWiki");
 %><%
-	Engine wiki = null;
-	Context wikiContext = null;
+    Engine wiki = null;
+	WikiContext wikiContext = null;
 	String pagereq = "";
     try {
     	wiki = Wiki.engine().find( getServletConfig() );

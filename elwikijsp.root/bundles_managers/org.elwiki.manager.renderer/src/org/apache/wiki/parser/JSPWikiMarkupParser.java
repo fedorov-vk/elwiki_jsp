@@ -34,7 +34,7 @@ import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.Acl;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -198,7 +198,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
      *  @param context The WikiContext which controls the parsing
      *  @param in Where the data is read from.
      */
-    public JSPWikiMarkupParser( final Context context, final Reader in )
+    public JSPWikiMarkupParser( final WikiContext context, final Reader in )
     {
         super( context, in );
         initialize();
@@ -229,7 +229,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             m_camelCaseLinks  = TextUtil.getBooleanProperty( props, PROP_CAMELCASELINKS, m_camelCaseLinks );
         }
 
-        final Boolean wysiwygVariable = m_context.getVariable( Context.VAR_WYSIWYG_EDITOR_MODE );
+        final Boolean wysiwygVariable = m_context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         if( wysiwygVariable != null ) {
             m_wysiwygEditorMode = wysiwygVariable;
         }
@@ -354,7 +354,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 		case CMD -> createAnchor(LinkType.CMD, m_context.getURL(link, ""), text, section);
 		case READ -> createAnchor(LinkType.READ,
 				m_context.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), link), text, section);
-		case CREATE -> createAnchor(LinkType.CREATE, m_context.getURL(Context.PAGE_CREATE, link), text, "")
+		case CREATE -> createAnchor(LinkType.CREATE, m_context.getURL(WikiContext.PAGE_CREATE, link), text, "")
 				.setAttribute("title", MessageFormat.format(rb.getString("markupparser.link.create"), text));
 		case EMPTY -> new Element("u").addContent(text);
 		//
@@ -826,7 +826,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
     private JSPWikiMarkupParser getCleanTranslator() {
         if( m_cleanTranslator == null ) {
         	HttpServletRequest servletRequest = m_context.getHttpRequest();
-            final Context dummyContext = Wiki.context().create( m_engine, servletRequest, m_context.getPage() );
+            final WikiContext dummyContext = Wiki.context().create( m_engine, servletRequest, m_context.getPage() );
             m_cleanTranslator = new JSPWikiMarkupParser( dummyContext, null );
             m_cleanTranslator.m_allowHTML = true;
         }
@@ -1230,7 +1230,8 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				//LinkType linkType = LinkType.EMPTY;
 
 				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
-				makeLink(LinkType.CMD, cmdName, linkText, null, link.getAttributes());				
+				String nameWikiContext = ContextEnum.getWikiContextName("cmd." + cmdName);
+				makeLink(LinkType.CMD, nameWikiContext, linkText, null, link.getAttributes());				
 			} else if (linkRef.matches("@.+")) {
 				// Internal wiki link (by pageId, which can be unknown).
 				// Working up link of ElWiki format.

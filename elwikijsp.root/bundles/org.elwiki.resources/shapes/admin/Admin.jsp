@@ -44,7 +44,7 @@
 	String bean = request.getParameter("bean");
     Engine wiki = ServicesRefs.Instance;//:FVK: Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, Context.WIKI_ADMIN );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.WIKI_ADMIN );
 
     //:FVK: надо вернуть код -- if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
@@ -64,6 +64,6 @@
         }
     }
 
-    //:FVK: Ð°ÑÐ³ÑÐ¼ÐµÐ½Ñ Ð´Ð»Ñ <wiki:Include> -- String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
+    //:FVK: аргумент для <wiki:Include> -- String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
 %>
 <wiki:Include page="AdminTemplate.jsp" />

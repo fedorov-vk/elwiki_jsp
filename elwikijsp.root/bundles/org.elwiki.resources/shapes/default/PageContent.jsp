@@ -26,7 +26,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
 %>
 <%-- Main Content Section --%>
 <%-- This has been source ordered to come first in the markup (and on small devices)

@@ -18,9 +18,9 @@
 */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.wiki.WikiContext;
+import org.apache.wiki.WikiContextImpl;
 import org.apache.wiki.api.Release;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
@@ -59,7 +59,7 @@ public abstract class ModuleBean extends SimpleAdminBean {
      * {@inheritDoc}
      */
     @Override
-    public String doGet( final Context context ) {
+    public String doGet( final WikiContext context ) {
         final Collection< WikiModuleInfo > filters = modules();
         final Element root = title();
         final Element tb = containerForModuleDetail( root );
@@ -88,7 +88,7 @@ public abstract class ModuleBean extends SimpleAdminBean {
     }
 
     /**
-     * Obtains the collection of modules which is going to be inspected at {@link #doGet(WikiContext)}.
+     * Obtains the collection of modules which is going to be inspected at {@link #doGet(WikiContextImpl)}.
      *
      * @return a collection of {@link WikiModuleInfo}
      */

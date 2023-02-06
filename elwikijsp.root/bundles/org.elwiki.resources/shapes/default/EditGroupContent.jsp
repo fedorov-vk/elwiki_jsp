@@ -32,7 +32,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-Context grCtx = ContextUtil.findContext( pageContext );
+  WikiContext grCtx = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );

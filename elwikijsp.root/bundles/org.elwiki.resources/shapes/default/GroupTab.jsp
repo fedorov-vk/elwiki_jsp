@@ -40,7 +40,7 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
   //Context grCtx = ThreadUtil.getCurrentContext(); //:FVK:
-  Context grCtx = ContextUtil.findContext( pageContext );
+  WikiContext grCtx = ContextUtil.findContext( pageContext );
   // Extract the group name and members
   //String name = request.getParameter( "group" );
   //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
@@ -60,7 +60,7 @@
 %>
 <c:set var="groups" value="<%= groups1 %>" />
 
-<wiki:CheckRequestContext context="!<%=Context.GROUP_CREATE%>"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
+<wiki:CheckRequestContext context="!<%=WikiContext.GROUP_CREATE%>"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
   <form action="<wiki:Link format='url' path='cmd.createGroup'/>"
          class="accordion${createFormClose}"
@@ -93,7 +93,7 @@
   </form>
 </wiki:Permission>
 
-<wiki:CheckRequestContext context="!<%=Context.GROUP_CREATE%>">
+<wiki:CheckRequestContext context="!<%=WikiContext.GROUP_CREATE%>">
   <fmt:message key='group.errorprefix' var="msg"/>
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
@@ -124,22 +124,22 @@
     </thead>
     <tbody>
     <%
-        /*for( int g = 0; g < groups.length; g++ )
-        {
-          if ( groups[g] instanceof GroupPrincipal )*/
-        for(org.osgi.service.useradmin.Group group2 : groups1) {
-       	  if ( group2 instanceof org.osgi.service.useradmin.Group )
-          {
-       		Dictionary<String, Object> groupProps = group2.getProperties();
-       		name = (String)groupProps.get(UserDatabase.GROUP_NAME);
-       		group = new WrapGroup(group2);
+            /*for( int g = 0; g < groups.length; g++ )
+            {
+              if ( groups[g] instanceof GroupPrincipal )*/
+            for(org.osgi.service.useradmin.Group group2 : groups1) {
+           	  if ( group2 instanceof org.osgi.service.useradmin.Group )
+              {
+           		Dictionary<String, Object> groupProps = group2.getProperties();
+           		name = (String)groupProps.get(UserDatabase.GROUP_NAME);
+           		group = new WrapGroup(group2);
 
-            //name = group2.getName(); //:FVK: groups[g].getName();
-            //? group1 = groupMgr.getGroup( name );
-            //:FVK:..........
-            members = group.members();
-            //Arrays.sort( members, Comparator.naturalOrder() );
-            pageContext.setAttribute("members", members);
+                //name = group2.getName(); //:FVK: groups[g].getName();
+                //? group1 = groupMgr.getGroup( name );
+                //:FVK:..........
+                members = group.members();
+                //Arrays.sort( members, Comparator.naturalOrder() );
+                pageContext.setAttribute("members", members);
     %>
     
     <c:set var="group" value="<%= group %>" />
@@ -175,7 +175,7 @@
       <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
       <%--:FVK: <wiki:Permission permission="editGroup"> <wiki:Param name='id' value='${group.groupId}'/> --%>
         <a class="btn btn-xs btn-primary"
-           href="<wiki:Link context='<%=Context.GROUP_EDIT%>' format='url' id='${group.groupId}'/>">
+           href="<wiki:Link context='<%=WikiContext.GROUP_EDIT%>' format='url' id='${group.groupId}'/>">
            <fmt:message key="actions.editgroup"/>
         </a>
       <%--</wiki:Permission>--%>

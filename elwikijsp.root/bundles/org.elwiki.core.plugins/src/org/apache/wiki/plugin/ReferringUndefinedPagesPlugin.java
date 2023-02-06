@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -52,7 +52,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 	public static final String PARAM_EXTRAS = "extras";
 
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		super.initialize(context, params);
 
 		try {

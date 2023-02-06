@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.WikiSecurityException;
 //import org.elwiki.api.IAuthenticationManager;
@@ -154,7 +154,7 @@ public interface IGroupManager {
 	 */
 	//:FVK:org.osgi.service.useradmin.Group getGroup(String name) throws NoSuchPrincipalException;
 
-	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException;
+	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException;
 	
 	/**
 	 * Extracts group name and members from passed parameters and populates an existing Group with
@@ -264,5 +264,5 @@ public interface IGroupManager {
 	 */
 	PermissionInfo[] getRolePermissionInfo(String roleName);
 
-	void validateGroup(Context context, WrapGroup group);
+	void validateGroup(WikiContext context, WrapGroup group);
 }

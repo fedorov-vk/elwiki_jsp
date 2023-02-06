@@ -42,7 +42,7 @@
     This provides the WYSIWYG CKeditor for JSPWiki.
 --%>
 <%
-	Context context = ContextUtil.findContext( pageContext );
+	WikiContext context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
 
     /* local download of CKeditor */
@@ -53,7 +53,7 @@
     TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT, "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js" );
     */
 
-    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
@@ -63,7 +63,7 @@
     String usertext = ContextUtil.getEditedText(pageContext);
 %>
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
-<wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
 	String clone = request.getParameter( "clone" );
@@ -115,7 +115,7 @@
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for CKeditor has been rendered.
-   context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
    wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, originalCCLOption);
 
@@ -130,8 +130,8 @@
 %>
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:CheckRequestContext
-     context='<%=Context.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='<%=Context.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
+     context='<%=WikiContext.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
+     context='<%=WikiContext.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
        class="editform wysiwyg"
           id="editform"
      enctype="application/x-www-form-urlencoded" >
@@ -150,7 +150,7 @@
 
     <div class="form-group dropdown">
     <button class="btn btn-success" type="submit" name="ok" accesskey="s">
-      <%-- :FVK: follow "edit" - is wrong constant of Context.EDIT definition. --%>
+      <%-- :FVK: follow "edit" - is wrong constant of WikiContext.PAGE_EDIT definition ? --%>
       <fmt:message key='editor.plain.save.submit${ context == "edit" ? "" : ".comment" }'/>
       <span class="caret"></span>
     </button>
@@ -160,7 +160,7 @@
              placeholder="<fmt:message key='editor.plain.changenote'/>"
              value="${changenote}" />
       </li>
-      <wiki:CheckRequestContext context="<%=Context.PAGE_COMMENT%>">
+      <wiki:CheckRequestContext context="<%=WikiContext.PAGE_COMMENT%>">
       <li class="divider" />
       <li class="dropdown-header">
         <fmt:message key="editor.commentsignature"/>
@@ -221,7 +221,7 @@
           <c:choose>
             <c:when test="${edt != prefs.editor}">
               <li>
-                <wiki:Link context="<%=Context.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
+                <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
               </li>
             </c:when>
             <c:otherwise>

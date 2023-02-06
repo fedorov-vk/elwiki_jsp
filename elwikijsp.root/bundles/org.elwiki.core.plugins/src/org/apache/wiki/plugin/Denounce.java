@@ -27,7 +27,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
@@ -139,7 +139,7 @@ public class Denounce implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map<String, String> params ) throws PluginException {
+    public String execute( final WikiContext context, final Map<String, String> params ) throws PluginException {
         final String link = params.get( PARAM_LINK );
         String text = params.get( PARAM_TEXT );
         boolean linkAllowed = true;

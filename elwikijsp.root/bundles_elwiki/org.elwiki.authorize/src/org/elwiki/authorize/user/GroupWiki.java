@@ -75,7 +75,7 @@ public class GroupWiki implements IGroupWiki {
 	/**
 	 * Protected constructor to prevent direct instantiation except by other package members. Callers should
 	 * use {@link IGroupManager#parseGroup(String, String, boolean)} or
-	 * {@link IGroupManager#parseGroup(org.apache.wiki.api.core.Context, boolean)}. instead.
+	 * {@link IGroupManager#parseGroup(org.apache.wiki.api.core.WikiContext, boolean)}. instead.
 	 * 
 	 * @param name
 	 *            the name of the group

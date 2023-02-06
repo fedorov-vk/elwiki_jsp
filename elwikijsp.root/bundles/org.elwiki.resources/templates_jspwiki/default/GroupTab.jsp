@@ -40,7 +40,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-Context c = ContextUtil.findContext( pageContext );
+WikiContext c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   //String name = request.getParameter( "group" );

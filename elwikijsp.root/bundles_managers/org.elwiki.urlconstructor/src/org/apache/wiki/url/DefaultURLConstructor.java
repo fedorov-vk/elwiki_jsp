@@ -20,7 +20,7 @@ package org.apache.wiki.url;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -138,7 +138,7 @@ public class DefaultURLConstructor implements URLConstructor {
      * @throws IllegalArgumentException if the context cannot be found
      */
     public static String getURLPattern( final String context, final String name ) throws IllegalArgumentException {
-        if( context.equals( Context.PAGE_VIEW ) && name == null) {
+        if( context.equals( WikiContext.PAGE_VIEW ) && name == null) {
             // FIXME
             return "%uWiki.jsp";
         }
@@ -165,9 +165,9 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( Context.ATTACHMENT_DOWNLOAD ) ) {
+            if( context.equals( WikiContext.ATTACHMENT_DOWNLOAD ) ) {
                 parameters = "?" + parameters;
-            } else if( context.equals( Context.PAGE_NONE ) ) {
+            } else if( context.equals( WikiContext.PAGE_NONE ) ) {
                 parameters = name.indexOf( '?' ) != -1 ? "&amp;" : "?" + parameters;
             } else {
                 parameters = "&amp;" + parameters;
@@ -186,7 +186,7 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String parsePage( final String context, final HttpServletRequest request, final Charset encoding ) {
         String pagereq = request.getParameter( "page" );
-        if( context.equals( Context.ATTACHMENT_DOWNLOAD ) ) {
+        if( context.equals( WikiContext.ATTACHMENT_DOWNLOAD ) ) {
             pagereq = URLConstructor.parsePageFromURL( request, encoding );
         }
 

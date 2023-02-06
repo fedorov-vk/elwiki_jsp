@@ -21,7 +21,7 @@ package org.elwiki.web.jsp;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 import org.apache.wiki.WatchDog;
-import org.apache.wiki.WikiContext;
+import org.apache.wiki.WikiContextImpl;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
@@ -134,7 +134,7 @@ public class WikiJSPFilter extends WikiServletFilter {
 
             try {
                 w.enterState( "Delivering response", 30 );
-                final WikiContext wikiContext = getWikiContext( request );
+                final WikiContextImpl wikiContext = getWikiContext( request );
                 final String r = filter( wikiContext, responseWrapper );
 
                 if( useEncoding ) {
@@ -171,7 +171,7 @@ public class WikiJSPFilter extends WikiServletFilter {
      * @param response The source string
      * @return The modified string with all the insertions in place.
      */
-    private String filter( final WikiContext wikiContext, final HttpServletResponse response ) {
+    private String filter( final WikiContextImpl wikiContext, final HttpServletResponse response ) {
         String string = response.toString();
 
         if( wikiContext != null ) {
@@ -207,7 +207,7 @@ public class WikiJSPFilter extends WikiServletFilter {
      *  @param type Type identifier for insertion
      *  @return The filtered string.
      */
-    private String insertResources( final WikiContext wikiContext, final String string, final String type ) {
+    private String insertResources( final WikiContextImpl wikiContext, final String string, final String type ) {
         if( wikiContext == null ) {
             return string;
         }

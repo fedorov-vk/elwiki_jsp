@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.ui.admin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.ui.admin0.AdminBean;
@@ -35,12 +35,12 @@ import java.util.Map;
  */
 public abstract class WikiFormAdminBean implements AdminBean {
 
-    public abstract String getForm( Context context );
+    public abstract String getForm( WikiContext context );
     
-    public abstract void handleResponse( Context context, Map< ?, ? > params );
+    public abstract void handleResponse( WikiContext context, Map< ?, ? > params );
 
     @Override
-    public String doGet( final Context context ) {
+    public String doGet( final WikiContext context ) {
         String result = "";
         final String wikiMarkup = getForm( context );
         final RenderingManager mgr = ServicesRefs.getRenderingManager();
@@ -56,7 +56,7 @@ public abstract class WikiFormAdminBean implements AdminBean {
         return result;
     }
 
-    public String handlePost( final Context context, final HttpServletRequest req, final HttpServletResponse resp ) {
+    public String handlePost( final WikiContext context, final HttpServletRequest req, final HttpServletResponse resp ) {
         // FIXME: Not yet implemented
         return null;
     }

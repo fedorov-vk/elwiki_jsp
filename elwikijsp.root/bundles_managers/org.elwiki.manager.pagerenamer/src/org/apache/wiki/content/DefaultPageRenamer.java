@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Activate;
@@ -87,7 +87,7 @@ public class DefaultPageRenamer implements PageRenamer {
 	 * @throws WikiException If the page cannot be renamed.
 	 */
 	@Override
-	public String renamePage(final Context context, final String renameFrom, final String renameTo,
+	public String renamePage(final WikiContext context, final String renameFrom, final String renameTo,
 			final boolean changeReferrers) throws WikiException {
 		// Sanity checks first
 		if (renameFrom == null || renameFrom.length() == 0) {
@@ -193,7 +193,7 @@ public class DefaultPageRenamer implements PageRenamer {
 	 * @param toPage   The new page
 	 */
 	@Deprecated
-	private void updateReferrers(final Context context, final WikiPage fromPage, final WikiPage toPage,
+	private void updateReferrers(final WikiContext context, final WikiPage fromPage, final WikiPage toPage,
 			final Set<String> referrers) {
 		if (referrers.isEmpty()) { // No referrers
 			return;
@@ -257,7 +257,7 @@ public class DefaultPageRenamer implements PageRenamer {
 	/**
 	 * Replaces camelcase links.
 	 */
-	private String replaceCCReferrerString(final Context context, final String sourceText, final String from,
+	private String replaceCCReferrerString(final WikiContext context, final String sourceText, final String from,
 			final String to) {
 		final StringBuilder sb = new StringBuilder(sourceText.length() + 32);
 		final Pattern linkPattern = Pattern.compile("\\p{Lu}+\\p{Ll}+\\p{Lu}+[\\p{L}\\p{Digit}]*");
@@ -284,7 +284,7 @@ public class DefaultPageRenamer implements PageRenamer {
 		return sb.toString();
 	}
 
-	private String replaceReferrerString(final Context context, final String sourceText, final String from,
+	private String replaceReferrerString(final WikiContext context, final String sourceText, final String from,
 			final String to) {
 		final StringBuilder sb = new StringBuilder(sourceText.length() + 32);
 
@@ -348,7 +348,7 @@ public class DefaultPageRenamer implements PageRenamer {
 	 * This method does a correct replacement of a single link, taking into account anchors and
 	 * attachments.
 	 */
-	private String replaceSingleLink(final Context context, final String original, final String from,
+	private String replaceSingleLink(final WikiContext context, final String original, final String from,
 			final String newlink) {
 		final int hash = original.indexOf('#');
 		final int slash = original.indexOf('/');

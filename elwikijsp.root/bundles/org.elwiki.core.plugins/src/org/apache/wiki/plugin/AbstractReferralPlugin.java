@@ -27,7 +27,7 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.StringTransmutator;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
@@ -148,7 +148,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
      * @throws PluginException if any of the plugin parameters are malformed
      */
     // FIXME: The compiled pattern strings should really be cached somehow.
-    public void initialize( final Context context, final Map<String, String> params ) throws PluginException {
+    public void initialize( final WikiContext context, final Map<String, String> params ) throws PluginException {
     	m_engine = context.getEngine();
     	pageManager = m_engine.getManager(PageManager.class);
     	renderingManager = m_engine.getManager(RenderingManager.class);
@@ -444,7 +444,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
      *  @return HTML
      *  @since 1.6.4
      */
-    protected String makeHTML( final Context context, final String wikitext ) {
+    protected String makeHTML( final WikiContext context, final String wikitext ) {
         String result = "";
 
         try {
@@ -474,7 +474,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
         }
 
         @Override
-        public String mutate( final Context context, final String text ) {
+        public String mutate( final WikiContext context, final String text ) {
             if( text.length() > m_length ) {
                 return text.substring( 0, m_length ) + "...";
             }
@@ -486,7 +486,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
     /**
      * Helper method to initialize the comparator for this page.
      */
-    private void initSorter( final Context context, final Map< String, String > params ) {
+    private void initSorter( final WikiContext context, final Map< String, String > params ) {
         final String order = params.get( PARAM_SORTORDER );
         if( order == null || order.length() == 0 ) {
             // Use the configured comparator

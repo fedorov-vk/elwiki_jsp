@@ -19,7 +19,7 @@
 package org.apache.wiki.ui.admin.beans;
 
 import org.apache.wiki.WikiBackgroundThread;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.search.SearchManager;
@@ -127,7 +127,7 @@ public class SearchManagerBean extends SimpleAdminBean {
     }
 
     @Override
-    public String doGet( final Context context ) {
+    public String doGet( final WikiContext context ) {
         if( m_updater != null ) {
             return "Update already in progress ("+ ServicesRefs.getProgressManager().getProgress(PROGRESS_ID)+ "%)";
         }
@@ -137,7 +137,7 @@ public class SearchManagerBean extends SimpleAdminBean {
     }
 
     @Override
-    public String doPost( final Context context ) {
+    public String doPost( final WikiContext context ) {
         final String val = context.getHttpParameter( "searchmanagerbean-reload" );
         if( val != null ) {
             reload();

@@ -33,10 +33,10 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
   int MAXATTACHNAMELENGTH = 30;
-  Context ctx = ContextUtil.findContext(pageContext);
+  WikiContext ctx = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = ctx.getPage();
 %>
-<c:set var="progressId" value="<%= ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
+<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
 <div class="page-content">
 <wiki:Permission permission="upload">
 
@@ -48,7 +48,7 @@
        enctype="multipart/form-data" accept-charset="<wiki:ContentEncoding/>" >
 
     <h4><span class="icon-paper-clip"></span> <fmt:message key="attach.add"/></h4>
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=Context.ATTACHMENT_UPLOAD%>' format='url'/>" />
+    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url'/>" />
     <input type="hidden" name="pageId" value="<%=ctx.getPageId()%>" />
     <input type="hidden" name="action" value="upload" />
 
@@ -98,7 +98,7 @@
 
       <%--TODO: "nextpage" is not yet implemented in Delete.jsp
       --%>
-      <input type="hidden" name="nextpage" value="<wiki:Link context='<%=Context.ATTACHMENT_UPLOAD%>' format='url'/>" />
+      <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url'/>" />
       <input id="delete-all" name="delete-all" type="submit"
         data-modal="+ .modal"
              value="Delete" />
@@ -149,7 +149,7 @@
       </td>
 
       <td class="nowrap" title="${size} bytes" data-sortvalue="${size}">
-        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( attContent.getSize() ) %>
+        <%=org.apache.commons.io.FileUtils.byteCountToDisplaySize( attContent.getSize() )%>
       </td>
 
       <td class="attach-type"><span class="icon-file-${fn:toLowerCase(type)}-o"></span>${type}</td>
@@ -158,7 +158,7 @@
 
       <td class="nowrap">
         <a class="btn btn-primary btn-xs"
-           href="<wiki:Link format='url' context='<%=Context.ATTACHMENT_INFO%>' pageId='${pageAttachment.id}'/>"
+           href="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_INFO%>' pageId='${pageAttachment.id}'/>"
            title="<fmt:message key='attach.moreinfo.title'/>">
           <fmt:message key="attach.moreinfo"/>
         </a>
@@ -166,7 +166,7 @@
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=Context.ATTACHMENT_DELETE%>' pageId='${pageAttachment.id}' />"
+                  src="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_DELETE%>' pageId='${pageAttachment.id}' />"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>

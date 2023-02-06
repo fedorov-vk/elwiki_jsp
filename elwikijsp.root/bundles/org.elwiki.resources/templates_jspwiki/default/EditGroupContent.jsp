@@ -32,11 +32,11 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-Context c = ContextUtil.findContext( pageContext );
+WikiContext c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );
-  //TODO: :FVK: разобраться с -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
+  //TODO: :FVK: разобраться -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
   WrapGroup group = (WrapGroup)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
   String[] members = {};
 

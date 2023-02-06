@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.render;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.WikiRenderer;
 import org.apache.wiki.util.XmlUtil;
@@ -37,7 +37,7 @@ public class CleanTextRenderer extends WikiRenderer {
      *  @param context A WikiContext in which the rendering will take place.
      *  @param doc The WikiDocument which shall be rendered.
      */
-    public CleanTextRenderer( final Context context, final WikiDocument doc ) {
+    public CleanTextRenderer( final WikiContext context, final WikiDocument doc ) {
         super( context, doc );
     }
 

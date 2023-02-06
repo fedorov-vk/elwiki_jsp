@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.management0.SimpleMBean;
 import org.apache.wiki.ui.admin0.AdminBean;
@@ -49,7 +49,7 @@ public class PlainEditorAdminBean extends SimpleMBean implements AdminBean {
     }
     
     @Override
-    public String doGet( final Context context) {
+    public String doGet( final WikiContext context) {
         final HttpServletRequest req = context.getHttpRequest();
         if( req != null && req.getMethod().equals("POST") && getTitle().equals( req.getParameter("form") ) ) {
             return doPost( context );
@@ -61,7 +61,7 @@ public class PlainEditorAdminBean extends SimpleMBean implements AdminBean {
     }
 
     @Override
-    public String doPost( final Context context ) {
+    public String doPost( final WikiContext context ) {
         final HttpServletRequest req = context.getHttpRequest();
         final boolean checked = "checked".equals( req.getParameter( "id" ) );
         

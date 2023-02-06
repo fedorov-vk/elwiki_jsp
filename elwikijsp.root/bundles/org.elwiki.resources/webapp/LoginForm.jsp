@@ -41,12 +41,12 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Retrieve the Login page context, then go and find the login form
 
-    Context wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
+    WikiContext wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
     
     // If no context, it means we're using container auth.  So, create one anyway
     if( wikiContext == null ) {
         wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
-        pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     }
     
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );

@@ -43,7 +43,7 @@
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-	Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RENAME.getRequestContext() );
+	WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RENAME.getRequestContext() );
 	if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );

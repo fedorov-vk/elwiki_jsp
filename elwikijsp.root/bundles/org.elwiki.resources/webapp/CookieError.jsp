@@ -26,7 +26,7 @@
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context; authorization check not needed
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
  
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );

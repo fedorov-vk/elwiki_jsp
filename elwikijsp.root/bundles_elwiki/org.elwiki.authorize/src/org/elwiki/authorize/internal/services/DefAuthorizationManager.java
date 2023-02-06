@@ -48,7 +48,7 @@ import java.util.function.Function;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.elwiki_data.WikiPage;
@@ -726,12 +726,12 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	}
 
 	@Override
-	public boolean hasAccess(Context context, HttpServletResponse response, boolean redirect) throws IOException {
+	public boolean hasAccess(WikiContext context, HttpServletResponse response, boolean redirect) throws IOException {
         //:FVK: final boolean allowed = checkPermission( context.getWikiSession(), context.requiredPermission() );
 
         // Stash the wiki context (:FVK: this is same in the JspServletFilter - here should be removed.)
-        if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( Context.ATTR_WIKI_CONTEXT ) == null ) {
-            context.getHttpRequest().setAttribute( Context.ATTR_WIKI_CONTEXT, context );
+        if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( WikiContext.ATTR_WIKI_CONTEXT ) == null ) {
+            context.getHttpRequest().setAttribute( WikiContext.ATTR_WIKI_CONTEXT, context );
         }
 
 		return true;

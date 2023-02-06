@@ -29,7 +29,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
   int MAXATTACHNAMELENGTH = 30;
-  Context c = ContextUtil.findContext(pageContext);
+  WikiContext c = ContextUtil.findContext(pageContext);
   String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
 %>
 
@@ -135,7 +135,7 @@
       <td>
           <input type="button"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach'/></wiki:Link>"
+                  src="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach'/></wiki:Link>"
               onclick="$('deleteForm').setProperty('action',this.src); $('delete-all').click();" />
       </td>
       </wiki:Permission>

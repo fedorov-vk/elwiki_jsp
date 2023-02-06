@@ -42,7 +42,7 @@
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
 <wiki:CheckVersion mode="notlatest">
   <%
-    Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
   %>
   <c:set var="thisVersion" value="<%= c.getPage().getVersion() %>" />
   <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />

@@ -19,7 +19,7 @@
 
 package org.apache.wiki.filters;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -67,7 +67,7 @@ public class PageEventFilter extends BasePageFilter {
      * @param content WikiMarkup.
      */
     @Override
-    public String preTranslate( final Context wikiContext, final String content ) {
+    public String preTranslate( final WikiContext wikiContext, final String content ) {
         fireEvent( WikiPageEvent.PRE_TRANSLATE, wikiContext );
         return content;
     }
@@ -78,7 +78,7 @@ public class PageEventFilter extends BasePageFilter {
      * If you want to do any of your own WikiMarkup2HTML translation, do it here.
      */
     @Override
-    public String postTranslate( final Context wikiContext, final String htmlContent ) {
+    public String postTranslate( final WikiContext wikiContext, final String htmlContent ) {
         fireEvent( WikiPageEvent.POST_TRANSLATE, wikiContext );
         return htmlContent;
     }
@@ -88,7 +88,7 @@ public class PageEventFilter extends BasePageFilter {
       * This method is called before the page has been saved to the PageProvider.
       */
     @Override
-    public String preSave( final Context wikiContext, final String content ) {
+    public String preSave( final WikiContext wikiContext, final String content ) {
         fireEvent( WikiPageEvent.PRE_SAVE, wikiContext );
         return content;
     }
@@ -101,7 +101,7 @@ public class PageEventFilter extends BasePageFilter {
       * Since the result is discarded from this method, this is only useful for things like counters, etc.
       */
     @Override
-    public void postSave( final Context wikiContext, final String content ) throws WikiException {
+    public void postSave( final WikiContext wikiContext, final String content ) throws WikiException {
         fireEvent( WikiPageEvent.POST_SAVE, wikiContext );
     }
 
@@ -134,7 +134,7 @@ public class PageEventFilter extends BasePageFilter {
      * @param type      the WikiPageEvent type to be fired.
      * @param context   the WikiContext of the event.
      */
-    protected final void fireEvent( final int type, final Context context ) {
+    protected final void fireEvent( final int type, final WikiContext context ) {
         if( WikiEventManager.isListening(this ) && WikiPageEvent.isValidType( type ) ) {
             final WikiPageEvent event = new WikiPageEvent( context.getEngine(), type, context.getPage().getName() );
             WikiEventManager.fireEvent(this, event );

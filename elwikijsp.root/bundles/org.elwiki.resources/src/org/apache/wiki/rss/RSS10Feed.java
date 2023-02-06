@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.rss;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.rss.Entry;
@@ -49,7 +49,7 @@ public class RSS10Feed extends Feed {
      *
      * @param context The WikiContext.
      */
-    public RSS10Feed( final Context context ) {
+    public RSS10Feed( final WikiContext context ) {
         super( context );
     }
 

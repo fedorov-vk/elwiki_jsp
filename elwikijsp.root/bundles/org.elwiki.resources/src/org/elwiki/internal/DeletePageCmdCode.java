@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.pages0.PageManager;
@@ -75,7 +75,7 @@ public class DeletePageCmdCode extends CmdCode {
 	    }
 
 	    /*{
-			Context m_wikiContext = (Context) httpRequest.getAttribute(Context.ATTR_WIKI_CONTEXT);
+			WikiContext m_wikiContext = (WikiContext) httpRequest.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
 			final Engine engine = m_wikiContext.getEngine();
 			@NonNull
 			PageManager pageManager = engine.getManager(PageManager.class);

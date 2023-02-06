@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.htmltowiki;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 
 
@@ -45,7 +45,7 @@ public class XHtmlToWikiConfig {
      *
      * @param wikiContext A WikiContext
      */
-    public XHtmlToWikiConfig( final Context wikiContext ) {
+    public XHtmlToWikiConfig( final WikiContext wikiContext ) {
         setWikiContext( wikiContext );
 
         //  Figure out the actual URLs.
@@ -56,7 +56,7 @@ public class XHtmlToWikiConfig {
         m_pageInfoJsp = wikiContext.getURL( ContextEnum.PAGE_INFO.getRequestContext(), "" );
     }
 
-    private void setWikiContext( final Context wikiContext ) {
+    private void setWikiContext( final WikiContext wikiContext ) {
         if( wikiContext.getPage() != null ) {
             setPageName( wikiContext.getPage().getName() + '/' );
         }

@@ -107,12 +107,12 @@
 
     //Create wiki context like in Login.jsp:
     //don't check for access permissions: if you have lost your password you cannot login!
-    Context wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
+    WikiContext wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
 
     // If no context, it means we're using container auth.  So, create one anyway
     if( wikiContext == null ) {
         wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() ); /* reuse login context ! */
-        pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+        pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     }
 
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );

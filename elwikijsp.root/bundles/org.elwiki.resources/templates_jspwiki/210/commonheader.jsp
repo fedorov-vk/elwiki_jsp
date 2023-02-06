@@ -85,7 +85,7 @@
 <link rel="help"   href="<wiki:LinkTo format='url' pageName='TextFormattingRules'/>"
     title="Help" />
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
   String frontpage = c.getConfiguration().getFrontPage();
  %>
  <link rel="start"  href="<wiki:LinkTo format='url' pageName='<%=frontpage%>' />"

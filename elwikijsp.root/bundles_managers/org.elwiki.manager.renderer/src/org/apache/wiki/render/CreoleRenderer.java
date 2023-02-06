@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.render;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.parser0.PluginContent;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.WikiRenderer;
@@ -80,7 +80,7 @@ public class CreoleRenderer extends WikiRenderer {
     /**
      *  Creates a new Creole Renderer.
      */
-    public CreoleRenderer( final Context ctx, final WikiDocument doc )
+    public CreoleRenderer( final WikiContext ctx, final WikiDocument doc )
     {
         super( ctx, doc );
     }

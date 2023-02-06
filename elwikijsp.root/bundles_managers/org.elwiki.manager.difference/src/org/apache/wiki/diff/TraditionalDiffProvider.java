@@ -20,7 +20,7 @@
 package org.apache.wiki.diff;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -92,7 +92,7 @@ public class TraditionalDiffProvider implements DiffProvider {
      * @return Full HTML diff.
      */
     @Override
-    public String makeDiffHtml( final Context ctx, final String p1, final String p2 ) {
+    public String makeDiffHtml( final WikiContext ctx, final String p1, final String p2 ) {
         final String diffResult;
 
         try {
@@ -124,10 +124,10 @@ public class TraditionalDiffProvider implements DiffProvider {
     private static final class RevisionPrint implements RevisionVisitor {
 
         private StringBuffer m_result;
-        private Context  m_context;
+        private WikiContext  m_context;
         private ResourceBundle m_rb;
         
-        private RevisionPrint( final Context ctx, final StringBuffer sb ) {
+        private RevisionPrint( final WikiContext ctx, final StringBuffer sb ) {
             m_result = sb;
             m_context = ctx;
             m_rb = Preferences.getBundle( ctx, InternationalizationManager.CORE_BUNDLE );

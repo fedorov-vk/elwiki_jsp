@@ -22,7 +22,7 @@ import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -57,7 +57,7 @@ public class RSS20Feed extends Feed
      *
      *  @param context The WikiContext.
      */
-    public RSS20Feed( final Context context )
+    public RSS20Feed( final WikiContext context )
     {
         super( context );
     }

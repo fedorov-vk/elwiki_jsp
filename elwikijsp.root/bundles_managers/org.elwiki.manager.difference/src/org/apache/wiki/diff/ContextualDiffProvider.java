@@ -20,7 +20,7 @@
 package org.apache.wiki.diff;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -132,12 +132,12 @@ public class ContextualDiffProvider implements DiffProvider {
     /**
      * Do a colored diff of the two regions. This. is. serious. fun. ;-)
      *
-     * @see org.apache.wiki.api.diff.DiffProvider#makeDiffHtml(Context, String, String)
+     * @see org.apache.wiki.api.diff.DiffProvider#makeDiffHtml(WikiContext, String, String)
      * 
      * {@inheritDoc}
      */
     @Override
-    public synchronized String makeDiffHtml( final Context ctx, final String wikiOld, final String wikiNew ) {
+    public synchronized String makeDiffHtml( final WikiContext ctx, final String wikiOld, final String wikiNew ) {
         //
         // Sequencing handles lineterminator to <br /> and every-other consequtive space to a &nbsp;
         //

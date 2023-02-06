@@ -29,7 +29,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.elwiki_data.WikiPage;
 
@@ -52,7 +52,7 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 
 	protected String m_pageName;
 	protected Iterator<T> m_iterator;
-	protected Context m_wikiContext;
+	protected WikiContext m_wikiContext;
 
 	/**
 	 * Sets the collection that is used to form the iteration.
@@ -110,13 +110,13 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	 * Arg, I hate globals.
 	 */
 	private void buildContext() {
-		final Context context = m_wikiContext.clone();
+		final WikiContext context = m_wikiContext.clone();
 		final Object o = m_iterator.next();
 		if (o instanceof WikiPage wikiPage) {
 			context.setPage(wikiPage);
 		}
 
-		pageContext.setAttribute(Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);
+		pageContext.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);
 		pageContext.setAttribute(getId(), o);
 	}
 
@@ -124,7 +124,7 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	@Override
 	public int doEndTag() {
 		// Return back to the original.
-		pageContext.setAttribute(Context.ATTR_WIKI_CONTEXT, m_wikiContext, PageContext.REQUEST_SCOPE);
+		pageContext.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, m_wikiContext, PageContext.REQUEST_SCOPE);
 
 		return EVAL_PAGE;
 	}

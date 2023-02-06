@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.parser0;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 
 /**
@@ -32,6 +32,6 @@ public interface HeadingListener {
      *  @param context The WikiContext
      *  @param hd The heading which was just encountered.
      */
-    void headingAdded( Context context, Heading hd );
+    void headingAdded( WikiContext context, Heading hd );
 
 }

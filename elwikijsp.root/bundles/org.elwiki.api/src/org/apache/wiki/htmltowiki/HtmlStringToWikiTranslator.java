@@ -19,7 +19,7 @@
 package org.apache.wiki.htmltowiki;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -79,7 +79,7 @@ public class HtmlStringToWikiTranslator
      *  @throws JDOMException If parsing fails
      *  @throws IOException For other kinds of errors.
      */
-    public String translate( final String html, final Context wikiContext ) throws JDOMException, IOException
+    public String translate( final String html, final WikiContext wikiContext ) throws JDOMException, IOException
     {
         return translate( html, new XHtmlToWikiConfig( wikiContext ) );
     }

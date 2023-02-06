@@ -29,6 +29,7 @@ import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.services.ServicesRefs;
@@ -203,7 +204,7 @@ public class BreadcrumbsTag extends BaseWikiTag {
 			}
 		}
 
-		if (m_wikiContext.getRequestContext().equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
+		if (m_wikiContext.getRequestContext().equals(WikiContext.PAGE_VIEW)) {
 			if (ServicesRefs.getPageManager().pageExistsById(pageId)) {
 				if (trail.isEmpty()) {
 					trail.pushItem(new PageDescription(pageName, pageId));

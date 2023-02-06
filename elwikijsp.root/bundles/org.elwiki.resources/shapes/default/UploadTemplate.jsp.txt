@@ -41,7 +41,7 @@
 
   <c:set var="sidebarState"><wiki:Variable var="sidebar" default="${prefs.Sidebar}" /></c:set>
   <c:set var="sidebarCookie" value="Sidebar" />
-  <wiki:CheckRequestContext context='<%=Context.WIKI_LOGIN%>|<%=Context.WIKI_PREFS%>|<%=Context.GROUP_CREATE%>|<%=Context.GROUP_VIEW%>|<%=Context.PAGE_CONFLICT%>'>
+  <wiki:CheckRequestContext context='<%=WikiContext.WIKI_LOGIN%>|<%=WikiContext.WIKI_PREFS%>|<%=WikiContext.GROUP_CREATE%>|<%=WikiContext.GROUP_VIEW%>|<%=WikiContext.PAGE_CONFLICT%>'>
     <c:set var="sidebarState" value="" />
     <c:set var="sidebarCookie" value="" />
   </wiki:CheckRequestContext>

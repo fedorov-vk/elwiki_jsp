@@ -35,7 +35,7 @@
   Engine wiki;
 %>
 <%
-  Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
+  WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
 
   if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 

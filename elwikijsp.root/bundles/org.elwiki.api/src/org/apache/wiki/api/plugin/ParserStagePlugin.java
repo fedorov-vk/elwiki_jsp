@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 import java.util.Map;
 
@@ -35,6 +35,6 @@ public interface ParserStagePlugin {
      *  @param context WikiContext, as usual.
      *  @param params  Parsed parameters for the plugin.
      */
-    void executeParser( PluginElement element, Context context, Map< String, String > params );
+    void executeParser( PluginElement element, WikiContext context, Map< String, String > params );
     
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
@@ -32,7 +32,7 @@ public class RenameCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		// Get wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;
 

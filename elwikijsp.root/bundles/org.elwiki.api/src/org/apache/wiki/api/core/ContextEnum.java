@@ -36,18 +36,18 @@ public enum ContextEnum {
 	GROUP_EDIT( "cmd.editGroup", "%u", "?id=%n", "EditGroupContent.jsp" ),
     GROUP_DELETE( "cmd.deleteGroup", "%u", "?group=%n", null ),
 
-    PAGE_COMMENT( "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
-    PAGE_CONFLICT( "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
+    PAGE_VIEW( "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
+    PAGE_PREVIEW( "cmd.preview", "%u", "?pageId=%n", "PreviewContent.jsp" ),
     PAGE_CREATE( "cmd.createPage", "%u", "?pageId=%n", "CreatePageContent.jsp" ),
+    PAGE_EDIT( "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
     PAGE_DELETE( "cmd.deletePage", "%u", "?pageId=%n", null ),
     PAGE_INFO( "cmd.info", "%u", "?pageId=%n", "InfoContent.jsp" ),
+    PAGE_COMMENT( "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),
+    PAGE_CONFLICT( "PageModified.jsp", "%u", "?page=%n", "ConflictContent.jsp" ),
     PAGE_DIFF( "cmd.diff", "%u", "?pageId=%n", "InfoContent.jsp" ),
-    PAGE_EDIT( "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
     PAGE_NONE( "", "%u", "%n", null ),
-    PAGE_PREVIEW( "cmd.preview", "%u", "?pageId=%n", "PreviewContent.jsp" ),
     PAGE_RENAME( "cmd.rename", "%u", "?pageId=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss.jsp", "%u", "", null ),
-    PAGE_VIEW( "cmd.view", "%u", "?pageId=%n", "PageContent.jsp" ),
 
     ATTACHMENT_UPLOAD( "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
     ATTACHMENT_DOWNLOAD( "attach", "%u", "/%n", null ),
@@ -126,6 +126,17 @@ public enum ContextEnum {
 		} catch (Exception e) {
 			throw new Exception(e);
 		}
+	}
+
+	public static String getWikiContextName(String uri) {
+		String result = WikiContext.PAGE_VIEW; // default context if uri is not relevant. 
+		for (ContextEnum item : ContextEnum.values()) {
+			if(item.getUri().equals(uri)) {
+				result = item.name();
+				break;
+			}
+		}
+		return result;
 	}
 
 }

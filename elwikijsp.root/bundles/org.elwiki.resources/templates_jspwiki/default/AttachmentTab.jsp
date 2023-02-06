@@ -32,10 +32,10 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  int MAXATTACHNAMELENGTH = 30;
-  Context c = ContextUtil.findContext(pageContext);
+int MAXATTACHNAMELENGTH = 30;
+  WikiContext c = ContextUtil.findContext(pageContext);
 %>
-<c:set var="progressId" value="<%= ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
+<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
 <div class="page-content">
 <wiki:Permission permission="upload">
 
@@ -151,7 +151,7 @@
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
+                  src="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>

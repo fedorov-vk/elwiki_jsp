@@ -18,7 +18,7 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
   //Context prCtx = ThreadUtil.getCurrentContext(); //:FVK: ContextUtil.findContext( pageContext );
-  Context ctx = ContextUtil.findContext( pageContext );
+  WikiContext ctx = ContextUtil.findContext( pageContext );
   //String redir = (String)ctx.getVariable("redirect");
   //if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
 %>

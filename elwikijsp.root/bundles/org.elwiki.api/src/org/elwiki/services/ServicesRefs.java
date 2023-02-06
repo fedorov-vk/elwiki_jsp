@@ -27,7 +27,7 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;

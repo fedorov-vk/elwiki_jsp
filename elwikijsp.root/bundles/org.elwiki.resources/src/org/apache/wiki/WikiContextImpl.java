@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
@@ -74,9 +74,9 @@ import org.elwiki_data.WikiPage;
  *
  * @see org.elwiki.core.plugins.Counter
  */
-public class WikiContext implements Context, Command {
+public class WikiContextImpl implements WikiContext, Command {
 
-	private static final Logger log = Logger.getLogger(WikiContext.class);
+	private static final Logger log = Logger.getLogger(WikiContextImpl.class);
 
 	private static final Permission DUMMY_PERMISSION = new PropertyPermission("os.name", "read");
 
@@ -104,7 +104,7 @@ public class WikiContext implements Context, Command {
 	 * @param page   The WikiPage. If you want to create a WikiContext for an older version of a
 	 *               page, you must use this constructor.
 	 */
-	public WikiContext(final Engine engine, final WikiPage page) {
+	public WikiContextImpl(final Engine engine, final WikiPage page) {
 		this(engine, null, findCommand(engine, null, page));
 	}
 
@@ -120,7 +120,7 @@ public class WikiContext implements Context, Command {
 	 * @param page    The WikiPage. If you want to create a WikiContext for an older version of a
 	 *                page, you must supply this parameter
 	 */
-	public WikiContext(final Engine engine, final HttpServletRequest request, final WikiPage page) {
+	public WikiContextImpl(final Engine engine, final HttpServletRequest request, final WikiPage page) {
 		this(engine, request, findCommand(engine, request, page));
 	}
 
@@ -134,7 +134,7 @@ public class WikiContext implements Context, Command {
 	 * @see org.apache.wiki.api.core.Command
 	 * @since 2.1.15.
 	 */
-	public WikiContext(final Engine engine, final HttpServletRequest request, final String requestContext) {
+	public WikiContextImpl(final Engine engine, final HttpServletRequest request, final String requestContext) {
 		this(engine, request, ServicesRefs.getCommandResolver().findCommand(request, requestContext));
 		if (!engine.isConfigured()) {
 			throw new InternalWikiException(
@@ -158,7 +158,7 @@ public class WikiContext implements Context, Command {
 	 * @throws IllegalArgumentException if <code>engine</code> or <code>command</code> are
 	 *                                  <code>null</code>
 	 */
-	public WikiContext(final Engine engine, final HttpServletRequest request, final Command command)
+	public WikiContextImpl(final Engine engine, final HttpServletRequest request, final Command command)
 			throws IllegalArgumentException {
 		if (engine == null || command == null) {
 			throw new IllegalArgumentException("Parameter engine and command must not be null.");
@@ -567,11 +567,11 @@ public class WikiContext implements Context, Command {
 	 * @return A shallow clone of the WikiContext
 	 */
 	@Override
-	public WikiContext clone() {
+	public WikiContextImpl clone() {
 		try {
 			// super.clone() must always be called to make sure that inherited objects
 			// get the right type
-			final WikiContext copy = (WikiContext) super.clone();
+			final WikiContextImpl copy = (WikiContextImpl) super.clone();
 
 			copy.m_engine = m_engine;
 			copy.m_command = m_command;
@@ -597,11 +597,11 @@ public class WikiContext implements Context, Command {
 	 * @return A deep clone of the WikiContext.
 	 */
 	@SuppressWarnings("unchecked")
-	public WikiContext deepClone() {
+	public WikiContextImpl deepClone() {
 		try {
 			// super.clone() must always be called to make sure that inherited objects
 			// get the right type
-			final WikiContext copy = (WikiContext) super.clone();
+			final WikiContextImpl copy = (WikiContextImpl) super.clone();
 
 			//  No need to deep clone these
 			copy.m_engine = m_engine;
@@ -708,10 +708,10 @@ public class WikiContext implements Context, Command {
 		//:FVK: workaround - assign admin shape.
 		if (m_command != null) {
 			String currentContext = m_command.getContextCmd().getRequestContext();
-			if (Context.WIKI_ADMIN.equals(currentContext)) {
+			if (WikiContext.WIKI_ADMIN.equals(currentContext)) {
 				setShape("admin");
 				return;
-			} else if (Context.WIKI_SECURE.equals(currentContext)) {
+			} else if (WikiContext.WIKI_SECURE.equals(currentContext)) {
 				setShape("security");
 				return;
 			}
@@ -721,7 +721,7 @@ public class WikiContext implements Context, Command {
 		String shape = null;
 		if (request != null) {
 			String value = request.getParameter("shape");
-			if (value != null && Context.allowedShapes.contains(value)) {
+			if (value != null && WikiContext.allowedShapes.contains(value)) {
 				shape = value;
 			}
 		}

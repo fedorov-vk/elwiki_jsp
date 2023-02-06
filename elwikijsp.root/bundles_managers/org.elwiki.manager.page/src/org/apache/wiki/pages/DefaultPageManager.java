@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
@@ -413,7 +413,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     }
 
 	@Override
-    public void saveText( final Context context, final String text, String author, String changenote ) throws WikiException {
+    public void saveText( final WikiContext context, final String text, String author, String changenote ) throws WikiException {
         // Check if page data actually changed; bail if not
         final WikiPage page = context.getPage();
         final String oldText = getPureText( page );

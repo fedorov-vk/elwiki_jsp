@@ -11,7 +11,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
@@ -37,7 +37,7 @@ public class DiffCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;

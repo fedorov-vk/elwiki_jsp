@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
@@ -46,7 +46,7 @@ public class CurrentTimePlugin implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
         final String formatString = params.get( "format" );
 
         try {

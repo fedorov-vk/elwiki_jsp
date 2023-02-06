@@ -30,7 +30,7 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -94,7 +94,7 @@ public class ReferredPagesPlugin implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		try {
 			m_engine = context.getEngine();
 			pageManager = m_engine.getManager(PageManager.class);
@@ -187,7 +187,7 @@ public class ReferredPagesPlugin implements Plugin {
 	 * 
 	 * @throws ProviderException TODO
 	 */
-	private void getReferredPages(Context context, WikiPage page, int depth) throws ProviderException {
+	private void getReferredPages(WikiContext context, WikiPage page, int depth) throws ProviderException {
 		if (depth >= m_depth) {
 			return; // end of recursion
 		}
@@ -195,7 +195,7 @@ public class ReferredPagesPlugin implements Plugin {
 		handleLinks(context, ++depth, page);
 	}
 
-	private void handleLinks(Context context, int depth, WikiPage page) throws ProviderException {
+	private void handleLinks(WikiContext context, int depth, WikiPage page) throws ProviderException {
 		boolean isUL = false;
 		List<WikiPage> allLinks = new ArrayList<>();
 

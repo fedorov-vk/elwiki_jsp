@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tasks.pages;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.tasks.TasksManager;
@@ -39,7 +39,7 @@ import java.security.Principal;
 public class PreSaveWikiPageTask extends Task {
 
     private static final long serialVersionUID = 6304715570092804615L;
-    private final Context m_context;
+    private final WikiContext m_context;
     private final String m_proposedText;
 
     /**
@@ -48,7 +48,7 @@ public class PreSaveWikiPageTask extends Task {
      * @param context The WikiContext
      * @param proposedText The text that was just saved.
      */
-    public PreSaveWikiPageTask( final Context context, final String proposedText ) {
+    public PreSaveWikiPageTask( final WikiContext context, final String proposedText ) {
         super( TasksManager.WIKIPAGE_PRESAVE_TASK_MESSAGE_KEY );
         m_context = context;
         m_proposedText = proposedText;

@@ -41,7 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiEventListener;
@@ -586,7 +586,7 @@ public class DefaultUserManager implements UserManager {
 	 * @return a new, populated user profile.
 	 */
 	// :FVK: Не используется в Java. См. JSP файлы.
-	public UserProfile parseProfile(Context context) {
+	public UserProfile parseProfile(WikiContext context) {
 		// Retrieve the user's profile (may have been previously cached)
 		UserProfile profile = getUserProfile(context.getWikiSession());
 		HttpServletRequest request = context.getHttpRequest();
@@ -633,7 +633,7 @@ public class DefaultUserManager implements UserManager {
 	 */
 	//:FVK: - где используется?
 	@Override
-	public void validateProfile(Context context, UserProfile profile) {
+	public void validateProfile(WikiContext context, UserProfile profile) {
 		 final boolean isNew = profile.isNew();
         final Session session = context.getWikiSession();
         final InputValidator validator = new InputValidator( SESSION_MESSAGES, context );

@@ -40,9 +40,9 @@
     This provides the FCK editor for JSPWiki.
 --%>
 <%
-	Context context = ContextUtil.findContext( pageContext );
+    WikiContext context = ContextUtil.findContext( pageContext );
     Engine engine = context.getEngine();
-    context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = context.getPage();
@@ -91,7 +91,7 @@
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for FCK has been rendered.
-   context.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
 

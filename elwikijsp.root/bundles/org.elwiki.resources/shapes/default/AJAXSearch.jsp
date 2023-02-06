@@ -50,14 +50,14 @@
   }
 %>
 <%
-  Context wikiContext;
+  WikiContext wikiContext;
   /* ********************* actual start ********************* */
   /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
-  wikiContext = (Context)request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
   if( wikiContext==null )
   {
 	  wikiContext = Wiki.context().create(wiki, request, ContextEnum.WIKI_FIND.getRequestContext());
-	  request.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+	  request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
   }
   if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 

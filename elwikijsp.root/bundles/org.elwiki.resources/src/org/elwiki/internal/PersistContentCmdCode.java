@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.api.IStorageCdo;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 
@@ -12,7 +12,7 @@ public class PersistContentCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		IStorageCdo storageCdo = wiki.getManager(IStorageCdo.class);
 

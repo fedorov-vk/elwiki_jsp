@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences;
@@ -54,7 +54,7 @@ public final class InputValidator {
 
     private final String m_form;
     private final Session m_session;
-    private final Context m_context;
+    private final WikiContext m_context;
 
     /**
      * Constructs a new input validator for a specific form and wiki session. When validation errors are detected, they will be added to
@@ -63,7 +63,7 @@ public final class InputValidator {
      * @param form the ID or name of the form this validator should be associated with
      * @param context the wiki context
      */
-    public InputValidator( final String form, final Context context ) {
+    public InputValidator( final String form, final WikiContext context ) {
         m_form = form;
         m_context = context;
         m_session = context.getWikiSession();

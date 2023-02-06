@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tasks.pages;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -39,7 +39,7 @@ public class SaveWikiPageTask extends Task {
 
     private static final long serialVersionUID = 3190559953484411420L;
 
-    private final Context context;
+    private final WikiContext context;
 
 	private final String author;
 
@@ -50,7 +50,7 @@ public class SaveWikiPageTask extends Task {
      * @param author TODO
      * @param changenote TODO
      */
-    public SaveWikiPageTask( final Context context, String author, String changenote ) {
+    public SaveWikiPageTask( final WikiContext context, String author, String changenote ) {
         super( TasksManager.WIKIPAGE_SAVE_TASK_MESSAGE_KEY );
         this.context = context;
         this.author = author;

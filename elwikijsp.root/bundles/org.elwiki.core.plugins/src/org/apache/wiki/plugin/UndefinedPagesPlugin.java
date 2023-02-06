@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.elwiki.services.ServicesRefs;
@@ -45,7 +45,7 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(final Context context, final Map<String, String> params) throws PluginException {
+	public String execute(final WikiContext context, final Map<String, String> params) throws PluginException {
 		super.initialize(context, params);
 		try {
 			Collection<UnknownPage> unknownPages = super.pageManager.getUnknownPages();

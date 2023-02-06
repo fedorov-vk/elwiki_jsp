@@ -39,17 +39,17 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   Context context = ContextUtil.findContext( pageContext );
+   WikiContext context = ContextUtil.findContext( pageContext );
    Engine engine = context.getEngine();
 
    String usertext = ContextUtil.getEditedText( pageContext );
 %>
 <wiki:RequestResource type="script" resource="scripts/haddock-edit.js" />
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
-<wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-	String clone = request.getParameter( "clone" );
+  String clone = request.getParameter( "clone" );
   if( clone != null )
   {
     WikiPage p = ServicesRefs.getPageManager().getPage( clone );
@@ -77,7 +77,7 @@
   }
 %>
 </wiki:CheckRequestContext>
-<% if( usertext == null ) usertext = "";  %>
+<% if( usertext == null ) usertext = ""; %>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:Link context='${context}' format='url'/>"
@@ -107,7 +107,7 @@
 
     <div class="form-inline form-group dropdown">
     <button class="btn btn-success" type="submit" name="ok" accesskey="s">
-      <%-- :FVK: follow "edit" - is wrong constant of Context.EDIT definition. --%>
+      <%-- :FVK: follow "edit" - is wrong constant of WikiContext.PAGE_EDIT definition ? --%>
       <fmt:message key='editor.plain.save.submit${ context == "edit" ? "" : ".comment" }'/>
       <span class="caret"></span>
     </button>
@@ -117,7 +117,7 @@
              placeholder="<fmt:message key='editor.plain.changenote'/>"
              value="${changenote}" />
       </li>
-      <wiki:CheckRequestContext context="<%=Context.PAGE_COMMENT%>">
+      <wiki:CheckRequestContext context="<%=WikiContext.PAGE_COMMENT%>">
       <li class="divider" />
       <li class="dropdown-header">
         <fmt:message key="editor.commentsignature"/>
@@ -144,7 +144,7 @@
 
   <div class="btn-group editor-tools">
 
-    <wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+    <wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
     <div class="btn-group sections">
       <button class="btn btn-default" type="button"><span class="icon-bookmark"></span><span class="caret"></span></button>
       <ul class="dropdown-menu" data-hover-parent="div">
@@ -241,7 +241,7 @@
           <c:choose>
             <c:when test="${edt != prefs.editor}">
               <li>
-                <wiki:Link context="<%=Context.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
+                <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
               </li>
             </c:when>
             <c:otherwise>
@@ -345,8 +345,8 @@
     <div class="row edit-area"><%-- .livepreview  .previewcolumn--%>
       <div>
         <textarea class="editor form-control snipeable"
-           <wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">placeholder="<fmt:message key='editor.plain.create'/>"</wiki:CheckRequestContext>
-           <wiki:CheckRequestContext context="<%=Context.PAGE_COMMENT%>">placeholder="<fmt:message key='editor.plain.comment'/>"</wiki:CheckRequestContext>
+           <wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">placeholder="<fmt:message key='editor.plain.create'/>"</wiki:CheckRequestContext>
+           <wiki:CheckRequestContext context="<%=WikiContext.PAGE_COMMENT%>">placeholder="<fmt:message key='editor.plain.comment'/>"</wiki:CheckRequestContext>
                   autofocus="autofocus"
                   rows="20" cols="80"></textarea>
         <textarea class="editor form-control hidden" id="editorarea" name="<%=EditorManager.REQ_EDITEDTEXT%>"

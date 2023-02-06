@@ -19,7 +19,7 @@
 package org.apache.wiki.filters;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.util.TextUtil;
 
@@ -72,7 +72,7 @@ public class ProfanityFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public String preTranslate( final Context context, String content ) {
+    public String preTranslate( final WikiContext context, String content ) {
         for( final String word : c_profanities ) {
             final String replacement = word.charAt( 0 ) + "*" + word.charAt( word.length() - 1 );
             content = TextUtil.replaceStringCaseUnsensitive( content, word, replacement );

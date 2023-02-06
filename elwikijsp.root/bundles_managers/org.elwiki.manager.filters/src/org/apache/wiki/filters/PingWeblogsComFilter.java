@@ -19,7 +19,7 @@
 package org.apache.wiki.filters;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -65,7 +65,7 @@ public class PingWeblogsComFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public void postSave( final Context context, final String pagecontent ) throws WikiException {
+    public void postSave( final WikiContext context, final String pagecontent ) throws WikiException {
         String blogName = context.getPage().getName();
         final Engine engine   = context.getEngine();
         final IWikiConfiguration config = context.getConfiguration();

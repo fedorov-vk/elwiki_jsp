@@ -31,8 +31,8 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	/* dateformatting not yet supported by wiki:UserProfile tag - diy */
-  Context wikiContext = ContextUtil.findContext(pageContext);
+/* dateformatting not yet supported by wiki:UserProfile tag - diy */
+  WikiContext wikiContext = ContextUtil.findContext(pageContext);
   UserManager manager = ServicesRefs.getUserManager();
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>

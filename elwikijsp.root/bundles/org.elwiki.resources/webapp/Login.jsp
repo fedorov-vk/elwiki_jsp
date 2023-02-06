@@ -39,10 +39,10 @@
     Logger log = Logger.getLogger("JSPWiki");
 %>
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
+    Engine wiki = Wiki.engine().find( getServletConfig() );
     IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
-    pageContext.setAttribute( Context.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
+    pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     Session wikiSession = wikiContext.getWikiSession();
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
 

@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -183,7 +183,7 @@ public class UserProfileTag extends BaseWikiTag {
 	 * 
 	 * @return the list of groups, sorted by name
 	 */
-	public static String printGroups(final Context context) {
+	public static String printGroups(final WikiContext context) {
 		final Principal[] roles = context.getWikiSession().getRoles();
 		final List<String> tempRoles = new ArrayList<>();
 		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
@@ -219,7 +219,7 @@ public class UserProfileTag extends BaseWikiTag {
 	 * 
 	 * @return the list of roles, sorted by name
 	 */
-	public static String printRoles(final Context context) {
+	public static String printRoles(final WikiContext context) {
 		final Principal[] roles = context.getWikiSession().getRoles();
 		final List<String> tempRoles = new ArrayList<>();
 		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);

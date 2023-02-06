@@ -519,7 +519,7 @@ var EditTools =
 	onPageLoadSectionEdit : function( ){
 
 		/* section editing is only valid for edit context, not valid in the comment context */
-		if( (Wiki.Context!='edit')
+		if( (Wiki.Context!='edit') //:FVK: workaround - this string constant can changed in java code.
 		  ||(Wiki.prefs.get('SectionEditing') != 'on') ) return;
 
 		/* Duplicate the textarea into a main and work area.

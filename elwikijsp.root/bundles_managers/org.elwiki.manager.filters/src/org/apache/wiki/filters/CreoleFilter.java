@@ -19,7 +19,7 @@
 package org.apache.wiki.filters;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -59,7 +59,7 @@ public class CreoleFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public String preSave( final Context wikiContext, final String content ) {
+    public String preSave( final WikiContext wikiContext, final String content ) {
         try {
             final String username = wikiContext.getCurrentUser().getName();
             IPreferenceStore prop = wikiContext.getEngine().getWikiPreferences();
@@ -74,7 +74,7 @@ public class CreoleFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public String preTranslate( final Context wikiContext, final String content ) {
+    public String preTranslate( final WikiContext wikiContext, final String content ) {
         try {
              IPreferenceStore prop = wikiContext.getEngine().getWikiPreferences();
             return new CreoleToJSPWikiTranslator().translate(prop ,content);

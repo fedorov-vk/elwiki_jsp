@@ -35,7 +35,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContextt c = ContextUtil.findContext( pageContext );
   TemplateManager t = ServicesRefs.getTemplateManager();
 %>
 <c:set var="skins"       value="<%=t.listSkins(pageContext, c.getShape() )%>" />

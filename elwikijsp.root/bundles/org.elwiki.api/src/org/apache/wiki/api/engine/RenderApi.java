@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.engine;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 
 /**
@@ -35,6 +35,6 @@ public interface RenderApi {
      *  @param context  The WikiContext in which the page is to be rendered
      *  @return Rendered page text
      */
-    String textToHTML( Context context, String pagedata );
+    String textToHTML( WikiContext context, String pagedata );
 
 }

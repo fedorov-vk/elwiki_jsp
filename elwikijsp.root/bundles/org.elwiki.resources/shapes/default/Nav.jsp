@@ -32,12 +32,11 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  Context ctx = ContextUtil.findContext( pageContext );
+  WikiContext ctx = ContextUtil.findContext( pageContext );
 
   String text = ServicesRefs.getPageManager().getText( ctx.getPage() );
   StringTokenizer tokens = new StringTokenizer( text );
   //avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
-
 %>
 <c:set var="attachments" value="<%= ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size() %>" />
 
@@ -132,8 +131,8 @@
   </c:if>
   --%>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME,
-    Context.PAGE_EDIT, Context.PAGE_COMMENT, Context.PAGE_CONFLICT)%>'>
+    WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME,
+    WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT, WikiContext.PAGE_CONFLICT)%>'>
   <li id="view">
     <wiki:Link pageName="${pageId}" >
         <span class="icon-view-menu"></span>
@@ -150,7 +149,7 @@
   <c:if test="${param.tab ne 'attach'}"><!-- context upload -> context view&tab=attach ... -- >
   <li id="attach"
    class="<wiki:Permission permission='!upload'>disabled</wiki:Permission>">
-    <wiki:Link pageName="${page}" context="<%=Context.ATTACHMENT_UPLOAD%>" accessKey="a" >
+    <wiki:Link pageName="${page}" context="<%=WikiContext.ATTACHMENT_UPLOAD%>" accessKey="a" >
       <span class="icon-paper-clip"></span>
       <span><fmt:message key='attach.tab'/></span>
       <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -163,8 +162,8 @@
 
   <%-- info --%>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    Context.PAGE_VIEW, Context.PAGE_INFO, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME,
-    Context.PAGE_EDIT, Context.PAGE_COMMENT, Context.PAGE_CONFLICT)%>'>
+    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME,
+    WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT, WikiContext.PAGE_CONFLICT)%>'>
   <wiki:PageExists>
   <li id="info" tabindex="0" role="contentinfo">
       <a href="#" accessKey="i">
@@ -198,18 +197,18 @@
       <li class="divider"></li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context="<%=Context.PAGE_INFO%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
+        <wiki:CheckRequestContext context="<%=WikiContext.PAGE_INFO%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
         <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=Context.PAGE_INFO%>" pageId="${pageId}" tabindex="0">
+                    context="<%=WikiContext.PAGE_INFO%>" pageId="${pageId}" tabindex="0">
           <fmt:message key="info.moreinfo"/>
         </wiki:Link>
       </li>
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
-        <wiki:CheckRequestContext context="<%=Context.ATTACHMENT_UPLOAD%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
+        <wiki:CheckRequestContext context="<%=WikiContext.ATTACHMENT_UPLOAD%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
         <wiki:Permission permission='!upload'><c:set var="disabledBtn" value="disabled" /></wiki:Permission>
         <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=Context.ATTACHMENT_UPLOAD%>" pageId="${pageId}" tabindex="0">
+                    context="<%=WikiContext.ATTACHMENT_UPLOAD%>" pageId="${pageId}" tabindex="0">
           <span class="icon-paper-clip"></span>
           <fmt:message key='edit.tab.attachments'/>
           <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -238,16 +237,16 @@
   <%-- edit --%>
   <wiki:PageType type="page">
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
+    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
 	<li id="edit" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="<%=Context.PAGE_EDIT%>" pageId="${pageId}" accessKey="e" >
+        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
       </wiki:PageType>
       <wiki:PageType type="attachment">
-        <wiki:Link context="<%=Context.PAGE_EDIT%>" pageName="<wiki:ParentPageName />" accessKey="e" >
+        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageName="<wiki:ParentPageName />" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
@@ -259,10 +258,10 @@
   <%-- create page --%>
   <wiki:PageType type="page">
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
+    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="<%=Context.PAGE_CREATE%>" pageId="${pageId}" >
+        <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
           <wiki:Param name="redirect" value="${pageId}"/>
           <span class="icon-pencil"></span>
           <span>Create</span>
@@ -279,7 +278,7 @@
     Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
       <wiki:PageType type="page">
-        <wiki:Link context="<%=Context.PAGE_DELETE%>" pageId="<%=ctx.getPageId()%>" >
+        <wiki:Link context="<%=WikiContext.PAGE_DELETE%>" pageId="<%=ctx.getPageId()%>" >
           <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
           <span class="icon-pencil"></span>
           <span>Create</span>
@@ -291,7 +290,7 @@
  --%>
 
   <%-- help slimbox-link --%>
-  <wiki:CheckRequestContext context='<%=Context.WIKI_FIND%>'>
+  <wiki:CheckRequestContext context='<%=WikiContext.WIKI_FIND%>'>
   <li>
     <a class="slimbox-link" href="<wiki:Link format='url' pageName='SearchPageHelp' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
@@ -299,7 +298,7 @@
     </a>
   </li>
   </wiki:CheckRequestContext>
-  <wiki:CheckRequestContext context='<%=ContextUtil.compose(Context.PAGE_EDIT, Context.PAGE_COMMENT)%>'>
+  <wiki:CheckRequestContext context='<%=ContextUtil.compose(WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT)%>'>
   <li>
     <a class="slimbox-link" href="<wiki:Link format='url' pageName='EditPageHelp' ></wiki:Link>">
       <span class="icon-help-menu"></span>
@@ -316,7 +315,7 @@
     --%>
   </li>
   </wiki:CheckRequestContext>
-  <wiki:CheckRequestContext context='<%=Context.WIKI_LOGIN%>'>
+  <wiki:CheckRequestContext context='<%=WikiContext.WIKI_LOGIN%>'>
   <li>
     <a class="slimbox-link" href="<wiki:Link format='url' pageName='LoginHelp' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
@@ -345,7 +344,7 @@
     <ul class="dropdown-menu pull-right" data-hover-parent="li">
       <wiki:PageExists>
       <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-        Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_PREVIEW)%>' >
+        WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_PREVIEW)%>' >
 
         <%-- VIEW RAW PAGE SOURCE --%>
         <li>
@@ -385,12 +384,12 @@
 
       <%-- ADD COMMENT --%>
       <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-        Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD)%>'>
+        WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD)%>'>
       <wiki:PageExists>
       <wiki:Permission permission="comment">
         <wiki:PageType type="page">
           <li>
-            <wiki:Link context="comment" pageId="${pageId}">
+            <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${pageId}">
               <span class="icon-plus"></span> <fmt:message key="actions.comment" />
             </wiki:Link>
           </li>
@@ -398,7 +397,7 @@
         <wiki:PageType type="attachment">
           <li>
             <%--
-            <wiki:Link pageName="<wiki:ParentPageName />" context="<%=Context.PAGE_COMMENT%>" title="<fmt:message key='actions.comment.title' />">
+            <wiki:Link pageName="<wiki:ParentPageName />" context="<%=WikiContext.PAGE_COMMENT%>" title="<fmt:message key='actions.comment.title' />">
               <fmt:message key="actions.comment" />
             </wiki:Link>
             --%>
@@ -421,7 +420,7 @@
       </wiki:CheckRequestContext>
 
       <%-- Persisting wiki content --%>
-      <wiki:CheckRequestContext context="<%=Context.PAGE_VIEW%>">      
+      <wiki:CheckRequestContext context="<%=WikiContext.PAGE_VIEW%>">      
       <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
         <li class="divider"></li>
         <li>
@@ -455,13 +454,13 @@
       <wiki:PageExists pageId="w3">
 
         <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-          Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.GROUP_CREATE)%>'>
+          WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.GROUP_CREATE)%>'>
 	      <wiki:PageExists>
             <li class="divider "></li>
           </wiki:PageExists>
         </wiki:CheckRequestContext>
 
-        <wiki:CheckRequestContext context='<%=ContextUtil.compose(Context.WIKI_PREFS, Context.PAGE_EDIT)%>'>
+        <wiki:CheckRequestContext context='<%=ContextUtil.compose(WikiContext.WIKI_PREFS, WikiContext.PAGE_EDIT)%>'>
           <wiki:UserCheck status="authenticated">
             <li class="divider "></li>
           </wiki:UserCheck>

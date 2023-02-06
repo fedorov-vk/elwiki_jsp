@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
@@ -105,7 +105,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
 	}
 
 	@Override
-	public void ReinitScope(Context wikiContext, String scopeArea, String scopeName, String scopes) {
+	public void ReinitScope(WikiContext wikiContext, String scopeArea, String scopeName, String scopes) {
 		Session session = wikiContext.getWikiSession();
 
 		if ("all".equals(scopeArea)) {

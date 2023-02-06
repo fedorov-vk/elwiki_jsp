@@ -1,10 +1,13 @@
 [
   {
     "name": "All",
-    "permissions": ["(org.elwiki.permissions.PagePermission \"*:*\" \"view\")",
+    "permissions": [
+                    "(org.elwiki.permissions.PagePermission \"*:*\" \"view\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editPreferences\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editProfile\")",
-                    "(org.elwiki.permissions.WikiPermission \"*\" \"login\")"],
+                    "(org.elwiki.permissions.WikiPermission \"*\" \"login\")",
+                    "(org.elwiki.permissions.AllPermission \"*\" \"*\")"
+                   ],
     "uid": "00E38123-3FF8-4C9E-BC30-19190A2D07DC",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",
     "modifier": "c7654a70-4451-4303-9a4b-7da13fddd1d5"

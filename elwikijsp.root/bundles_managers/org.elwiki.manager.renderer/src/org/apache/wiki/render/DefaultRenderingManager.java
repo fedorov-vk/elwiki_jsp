@@ -28,7 +28,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -179,7 +179,7 @@ public class DefaultRenderingManager implements RenderingManager {
         final String renderImplName = TextUtil.getStringProperty(properties, PROP_RENDERER, DEFAULT_RENDERER );
         final String renderWysiwygImplName = TextUtil.getStringProperty(properties, PROP_WYSIWYG_RENDERER, DEFAULT_WYSIWYG_RENDERER );
 
-        final Class< ? >[] rendererParams = { Context.class, WikiDocument.class };
+        final Class< ? >[] rendererParams = { WikiContext.class, WikiDocument.class };
         m_rendererConstructor = initRenderer( renderImplName, rendererParams );
         m_rendererWysiwygConstructor = initRenderer( renderWysiwygImplName, rendererParams );
 
@@ -244,7 +244,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public MarkupParser getParser( final Context context, final String pagedata ) {
+    public MarkupParser getParser( final WikiContext context, final String pagedata ) {
     	// :FVK: WORKAROUND.
 		if (1 == 1) {
 			JSPWikiMarkupParser parser = new JSPWikiMarkupParser(context, new StringReader(pagedata));
@@ -267,10 +267,10 @@ public class DefaultRenderingManager implements RenderingManager {
      */
     @Override
     // FIXME: The cache management policy is not very good: deleted/changed pages should be detected better.
-    public WikiDocument getRenderedDocument( final Context context, final String pagedata ) {
+    public WikiDocument getRenderedDocument( final WikiContext context, final String pagedata ) {
         final String pageid = context.getRealPage().getName() + VERSION_DELIMITER +
                               //:FVK: context.getRealPage().getVersion() + VERSION_DELIMITER +
-                              context.getVariable( Context.VAR_EXECUTE_PLUGINS );
+                              context.getVariable( WikiContext.VAR_EXECUTE_PLUGINS );
 
         if( useCache( context ) ) {
             final Element element = m_documentCache.get( pageid );
@@ -307,7 +307,7 @@ public class DefaultRenderingManager implements RenderingManager {
         return null;
     }
 
-    boolean useCache( final Context context ) {
+    boolean useCache( final WikiContext context ) {
         return m_useCache && ContextEnum.PAGE_VIEW.getRequestContext().equals( context.getRequestContext() );
     }
 
@@ -315,8 +315,8 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public String getHTML( final Context context, final WikiDocument doc ) throws IOException {
-        final Boolean wysiwygVariable = context.getVariable( Context.VAR_WYSIWYG_EDITOR_MODE );
+    public String getHTML( final WikiContext context, final WikiDocument doc ) throws IOException {
+        final Boolean wysiwygVariable = context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         final boolean wysiwygEditorMode;
         if( wysiwygVariable != null ) {
             wysiwygEditorMode = wysiwygVariable;
@@ -337,7 +337,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public String getHTML( final Context context, final WikiPage page ) {
+    public String getHTML( final WikiContext context, final WikiPage page ) {
         final String pagedata = this.pageManager.getPureText( page.getName(), -1); //:FVK: page.getVersion() );
         return textToHTML( context, pagedata );
     }
@@ -353,7 +353,7 @@ public class DefaultRenderingManager implements RenderingManager {
     @Override
     public String getHTML( final String pagename, final int version ) {
         final WikiPage page = this.pageManager.getPage( pagename, version );
-        final Context context = Wiki.context().create( m_engine, page );
+        final WikiContext context = Wiki.context().create( m_engine, page );
         context.setRequestContext( ContextEnum.PAGE_NONE.getRequestContext() );
         return getHTML( context, page );
     }
@@ -362,7 +362,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public String textToHTML( final Context context, String pagedata ) {
+    public String textToHTML( final WikiContext context, String pagedata ) {
         String result = "";
 
         String valueRunFilters = this.variableManager.getValue( context,VariableManager.VAR_RUNFILTERS,"true" ); 
@@ -396,7 +396,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public String textToHTML( final Context context,
+    public String textToHTML( final WikiContext context,
                               String pagedata,
                               final LinkCollector localLinkCollector,
                               final LinkCollector extLinkCollector,
@@ -461,7 +461,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public WikiRenderer getRenderer( final Context context, final WikiDocument doc ) {
+    public WikiRenderer getRenderer( final WikiContext context, final WikiDocument doc ) {
         final Object[] params = { context, doc };
         return getRenderer( params, m_rendererConstructor );
     }
@@ -470,7 +470,7 @@ public class DefaultRenderingManager implements RenderingManager {
      *  {@inheritDoc}
      */
     @Override
-    public WikiRenderer getWysiwygRenderer( final Context context, final WikiDocument doc ) {
+    public WikiRenderer getWysiwygRenderer( final WikiContext context, final WikiDocument doc ) {
         final Object[] params = { context, doc };
         return getRenderer( params, m_rendererWysiwygConstructor );
     }

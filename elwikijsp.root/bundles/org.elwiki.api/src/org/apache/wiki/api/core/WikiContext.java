@@ -29,17 +29,17 @@ import org.elwiki_data.WikiPage;
 
 /**
  * <p>
- * Provides state information throughout the processing of a page. A Context is born when the JSP pages that are
- * the main entry points, are invoked. The JSPWiki engine creates the new Context, which basically holds
+ * Provides state information throughout the processing of a page. A WikiContext is born when the JSP pages that are
+ * the main entry points, are invoked. The JSPWiki engine creates the new WikiContext, which basically holds
  * information about the page, the handling engine, and in which context (view, edit, etc) the call was done.
  * </p>
  * <p>
- * A Context also provides request-specific variables, which can be used to communicate between plugins on the
- * same page, or between different instances of the same plugin. A Context variable is valid until the
+ * A WikiContext also provides request-specific variables, which can be used to communicate between plugins on the
+ * same page, or between different instances of the same plugin. A WikiContext variable is valid until the
  * processing of the WikiPage has ended. For an example, please see the Counter plugin.
  * </p>
  * <p>
- * When a Context is created, it automatically associates a {@link Session} object with the user's HttpSession.
+ * When a WikiContext is created, it automatically associates a {@link Session} object with the user's HttpSession.
  * The Session contains information about the user's authentication status, and is consulted by
  * {@link #getCurrentUser()} object.
  * </p>
@@ -49,12 +49,12 @@ import org.elwiki_data.WikiPage;
  *
  * @see org.apache.wiki.plugin.Counter
  */
-public interface Context extends Cloneable, Command {
+public interface WikiContext extends Cloneable, Command {
 
 	/** List of valid values ​​for the "shape" parameter of URL. */
 	List<String> allowedShapes = List.of("raw", "reader");
 
-	// Context identifiers for operations with GROUP.
+	// WikiContext identifiers for operations with GROUP.
 
 	/** User is viewing an existing group */
 	String GROUP_VIEW = ContextEnum.GROUP_VIEW.getRequestContext();
@@ -68,7 +68,7 @@ public interface Context extends Cloneable, Command {
 	/** User is deleting an existing group. */
 	String GROUP_DELETE = ContextEnum.GROUP_DELETE.getRequestContext();
 
-	// Context identifiers for operations with PAGE.
+	// WikiContext identifiers for operations with PAGE.
 
 	/** The VIEW context - the user just wants to view the page contents. */
 	String PAGE_VIEW = ContextEnum.PAGE_VIEW.getRequestContext();
@@ -109,7 +109,7 @@ public interface Context extends Cloneable, Command {
 	/** RSS feed is being generated. */
 	String RSS = ContextEnum.PAGE_RSS.getRequestContext();
 
-	// Context identifiers for operations with ATTACHMENT.
+	// WikiContext identifiers for operations with ATTACHMENT.
 
 	/** User is uploading something. */
 	String ATTACHMENT_UPLOAD = ContextEnum.ATTACHMENT_UPLOAD.getRequestContext();
@@ -123,7 +123,7 @@ public interface Context extends Cloneable, Command {
 	/** Delete all version of attached file. */
 	String ATTACHMENT_DELETE = ContextEnum.ATTACHMENT_DELETE.getRequestContext();
 
-	// Context identifiers for operations with WIKI.
+	// WikiContext identifiers for operations with WIKI.
 
 	/** User is doing administrative things. */
 	String WIKI_ADMIN = ContextEnum.WIKI_ADMIN.getRequestContext();
@@ -355,7 +355,7 @@ public interface Context extends Cloneable, Command {
 
 	/**
 	 * Convenience method that gets the current user. Delegates the lookup to the Session associated with this
-	 * Context. May return null, in case the current user has not yet been determined; or this is an internal
+	 * WikiContext. May return null, in case the current user has not yet been determined; or this is an internal
 	 * system. If the Session has not been set, <em>always</em> returns null.
 	 *
 	 * @return The current user; or maybe null in case of internal calls.
@@ -377,7 +377,7 @@ public interface Context extends Cloneable, Command {
 	 * @return An URL to the page. This honours the current absolute/relative setting.
 	 */
 	default String getViewURL(String pageId) {
-		return getURL(Context.PAGE_VIEW, pageId, null);
+		return getURL(WikiContext.PAGE_VIEW, pageId, null);
 	}
 
 	/**
@@ -390,7 +390,7 @@ public interface Context extends Cloneable, Command {
 	String getRedirectURL();
 
 	/**
-	 * Returns the Command associated with this Context.
+	 * Returns the Command associated with this WikiContext.
 	 *
 	 * @return the command
 	 */
@@ -408,7 +408,7 @@ public interface Context extends Cloneable, Command {
 	}
 
 	/**
-	 * Returns an URL from a page. It this Context instance was constructed with an actual HttpServletRequest, we
+	 * Returns an URL from a page. It this WikiContext instance was constructed with an actual HttpServletRequest, we
 	 * will attempt to construct the URL using HttpUtil, which preserves the HTTPS portion if it was used.
 	 *
 	 * @param context The request context (e.g. WikiContext.ATTACHMENT_UPLOAD)
@@ -423,15 +423,15 @@ public interface Context extends Cloneable, Command {
 	}
 
 	/** {@inheritDoc} */
-	Context clone();
+	WikiContext clone();
 
 	/**
-	 * Creates a deep clone of the Context. This is useful when you want to be sure that you don't accidentally mess
+	 * Creates a deep clone of the WikiContext. This is useful when you want to be sure that you don't accidentally mess
 	 * with page attributes, etc.
 	 *
 	 * @since 2.8.0
-	 * @return A deep clone of the Context.
+	 * @return A deep clone of the WikiContext.
 	 */
-	Context deepClone();
+	WikiContext deepClone();
 
 }

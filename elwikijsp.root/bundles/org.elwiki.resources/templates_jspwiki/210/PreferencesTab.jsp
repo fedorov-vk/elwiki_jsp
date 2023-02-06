@@ -34,8 +34,8 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  //FIXME: this should better move to UserPreferences.jsp but that doesn't seem to work. Ugh ?
-  Context c = ContextUtil.findContext( pageContext );
+//FIXME: this should better move to UserPreferences.jsp but that doesn't seem to work. Ugh ?
+  WikiContext c = ContextUtil.findContext( pageContext );
   TemplateManager t = ServicesRefs.getTemplateManager();
   pageContext.setAttribute( "skins", t.listSkins(pageContext, c.getShape() ) );
   pageContext.setAttribute( "languages", t.listLanguages(pageContext) );

@@ -39,7 +39,7 @@
 <%
 Engine wiki = Wiki.engine().find( getServletConfig() );
 // Create wiki context and check for authorization
-Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_INSTALL.getRequestContext() );
+WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_INSTALL.getRequestContext() );
 if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
 Installer installer = new Installer( request, config );

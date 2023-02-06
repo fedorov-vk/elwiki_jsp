@@ -61,7 +61,7 @@ String pageName = (wikiPage!=null)? wikiPage.getName() : "<nod defined>";
 
     <div class="pagename" title="<wiki:PageName />">
       <wiki:CheckRequestContext
-        context='<%=ContextUtil.compose(Context.GROUP_VIEW, Context.GROUP_CREATE, Context.GROUP_EDIT)%>'>
+        context='<%=ContextUtil.compose(WikiContext.GROUP_VIEW, WikiContext.GROUP_CREATE, WikiContext.GROUP_EDIT)%>'>
         <span class="icon-group"></span>
       </wiki:CheckRequestContext>
       <wiki:PageType type="attachment"><span class="icon-paper-clip"></span></wiki:PageType>

@@ -49,7 +49,7 @@ import org.elwiki_data.WikiPage;
  *
  *  <p>
  *  There's basically only a single Engine for each web application, and you should always get it using either the
- *  {@code Context#getEngine()} method or through OSGi {@code ServiceReference}.
+ *  {@code WikiContext#getEngine()} method or through OSGi {@code ServiceReference}.
  */
 public interface Engine {
 

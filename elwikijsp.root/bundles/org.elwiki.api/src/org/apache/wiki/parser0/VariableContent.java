@@ -19,7 +19,7 @@
 package org.apache.wiki.parser0;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
 import org.elwiki.services.ServicesRefs;
@@ -63,12 +63,12 @@ public class VariableContent extends Text {
             return m_varName;
         }
         
-        final Context context = root.getContext();
+        final WikiContext context = root.getContext();
         if( context == null ) {
             return "No WikiContext available: INTERNAL ERROR";
         }
     
-        final Boolean wysiwygEditorMode = context.getVariable( Context.VAR_WYSIWYG_EDITOR_MODE );
+        final Boolean wysiwygEditorMode = context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         if( wysiwygEditorMode != null && wysiwygEditorMode ) {
             result = "[" + m_varName + "]";
         } else {

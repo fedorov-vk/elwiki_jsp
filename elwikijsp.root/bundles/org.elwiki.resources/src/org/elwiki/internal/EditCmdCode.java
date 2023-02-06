@@ -46,7 +46,7 @@ public class EditCmdCode extends CmdCode {
 		HttpSession session = httpRequest.getSession();
 
 	    // Get wiki context and check for authorization
-	    Context wikiContext = ContextUtil.findContext(httpRequest);
+	    WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 	    Engine wiki = wikiContext.getEngine();
 	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) {
 	        return;

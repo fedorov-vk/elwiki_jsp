@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.forms;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.plugin.Plugin;
 
 /**
@@ -76,22 +76,22 @@ public abstract class FormElement implements Plugin {
     //public static final String CONTEXT_FORMINFO = "FormPluginInfo";
 
     /**
-     * Utility method stores a FormInfo object into the Context.
+     * Utility method stores a FormInfo object into the WikiContext.
      * 
-     * @param ctx The Context to store it in
+     * @param ctx The WikiContext to store it in
      * @param info The FormInfo to store.
      */
-    protected void storeFormInfo( final Context ctx, final FormInfo info ) {
+    protected void storeFormInfo( final WikiContext ctx, final FormInfo info ) {
         ctx.setVariable( FORM_VALUES_CARRIER, info );
     }
 
     /**
-     * Attempts to retrieve information on the currently handled form from the Context.
+     * Attempts to retrieve information on the currently handled form from the WikiContext.
      * 
-     * @param ctx The Context
+     * @param ctx The WikiContext
      * @return The FormInfo from the context
      */
-    protected FormInfo getFormInfo( final Context ctx ) {
+    protected FormInfo getFormInfo( final WikiContext ctx ) {
         return ( FormInfo )ctx.getVariable( FORM_VALUES_CARRIER );
     }
 

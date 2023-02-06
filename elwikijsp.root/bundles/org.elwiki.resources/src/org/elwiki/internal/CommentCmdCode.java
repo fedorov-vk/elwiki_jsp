@@ -50,7 +50,7 @@ public class CommentCmdCode extends CmdCode {
 		HttpSession session = httpRequest.getSession();
 
 		// Create wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) return;
 	    if( wikiContext.getCommand().getTarget() == null ) {

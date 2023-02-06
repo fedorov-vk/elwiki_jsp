@@ -44,9 +44,9 @@
     Logger log = Logger.getLogger("JSPWiki"); 
 %>
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
+    Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_PREFS.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
     // Extract the user profile and action attributes

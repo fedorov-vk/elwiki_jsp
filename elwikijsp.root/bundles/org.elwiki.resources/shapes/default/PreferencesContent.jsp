@@ -53,7 +53,7 @@
   <wiki:Permission permission="createGroups"><%-- use WikiPermission --%>
     <c:set var="groupTab" value="${param.tab == 'groups' ? 'data-activePane' : ''}"/>
     <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-      Context.GROUP_VIEW, Context.GROUP_EDIT, Context.GROUP_CREATE)%>'>
+      WikiContext.GROUP_VIEW, WikiContext.GROUP_EDIT, WikiContext.GROUP_CREATE)%>'>
        <c:set var="groupTab">data-activePane</c:set>
     </wiki:CheckRequestContext>
     <h3 ${groupTab} id="section-groups"><fmt:message key="group.tab" /></h3>

@@ -36,7 +36,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
@@ -562,13 +562,13 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	}
 
 	@Override
-	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException {
+	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void validateGroup(Context context, WrapGroup group) {
+	public void validateGroup(WikiContext context, WrapGroup group) {
 		// TODO Auto-generated method stub
 		
 	}

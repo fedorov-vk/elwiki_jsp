@@ -19,7 +19,7 @@
 package org.apache.wiki.api.plugin;
 
 import org.apache.oro.text.regex.Pattern;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.modules.ModuleManager;
 
@@ -86,7 +86,7 @@ public interface PluginManager extends ModuleManager {
      *
      * @since 2.0
      */
-    String execute( Context context, String classname, Map< String, String > params ) throws PluginException;
+    String execute( WikiContext context, String classname, Map< String, String > params ) throws PluginException;
 
     /**
      * Parses plugin arguments.  Handles quotes and all other kewl stuff.
@@ -116,7 +116,7 @@ public interface PluginManager extends ModuleManager {
      *  @return HTML as returned by the plugin, or possibly an error message.
      *  @throws PluginException From the plugin itself, it propagates, waah!
      */
-    String execute( Context context, String commandline ) throws PluginException;
+    String execute( WikiContext context, String commandline ) throws PluginException;
     
     /**
      * Creates a {@link Plugin}.

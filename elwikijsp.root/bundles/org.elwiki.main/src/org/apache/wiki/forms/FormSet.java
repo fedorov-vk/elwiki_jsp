@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.forms;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 
@@ -62,7 +62,7 @@ public class FormSet implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context ctx, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext ctx, final Map< String, String > params ) throws PluginException {
         final String formName = params.get( FormElement.PARAM_FORM );
         if( formName == null || formName.trim().length() == 0 ) {
             return "";

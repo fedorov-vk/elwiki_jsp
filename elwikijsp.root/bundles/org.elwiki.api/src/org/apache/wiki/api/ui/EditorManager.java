@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.ui;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.modules.ModuleManager;
 
@@ -74,7 +74,7 @@ public interface EditorManager extends ModuleManager, Initializable {
      * @param context The context that is chosen.
      * @return The name of the chosen editor. If no match could be found, will revert to the default "plain" editor.
      */
-    String getEditorName( Context context );
+    String getEditorName( WikiContext context );
 
     /**
      *  Returns a list of editors as Strings of editor names.
@@ -89,6 +89,6 @@ public interface EditorManager extends ModuleManager, Initializable {
      *  @param context WikiContext from where the editor name is retrieved.
      *  @return e.g. "editors/plain.jsp"
      */
-    String getEditorPath( Context context );
+    String getEditorPath( WikiContext context );
 
 }

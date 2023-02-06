@@ -28,7 +28,7 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.WikiBackgroundThread;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -159,7 +159,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
         super.initialize( context, params );
 
         final PageViewManager manager = c_singleton;
@@ -292,7 +292,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          * @return String Wiki page snippet
          * @throws PluginException Malformed pattern parameter.
          */
-        public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+        public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
             final Engine engine = context.getEngine();
             final WikiPage page = context.getPage();
             String result = STR_EMPTY;

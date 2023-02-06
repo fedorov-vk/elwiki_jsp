@@ -20,7 +20,7 @@ package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -85,7 +85,7 @@ public class TableOfContents implements Plugin, HeadingListener {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void headingAdded(Context context, Heading hd) {
+	public void headingAdded(WikiContext context, Heading hd) {
 		log.debug("HD: " + hd.m_level + ", " + hd.m_titleText + ", " + hd.m_titleAnchor);
 
 		switch (hd.m_level) {
@@ -154,7 +154,7 @@ public class TableOfContents implements Plugin, HeadingListener {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		Engine engine = context.getEngine();
 		WikiPage page = context.getPage();
 		ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);

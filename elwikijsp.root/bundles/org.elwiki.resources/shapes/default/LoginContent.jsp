@@ -29,7 +29,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-	Context ctx = ContextUtil.findContext( pageContext );
+	WikiContext ctx = ContextUtil.findContext( pageContext );
     IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
     String loginURL = "";
 

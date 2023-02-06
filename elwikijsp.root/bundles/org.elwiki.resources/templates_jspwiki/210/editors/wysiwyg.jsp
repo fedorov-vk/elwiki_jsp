@@ -36,7 +36,7 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   Context context = ContextUtil.findContext( pageContext );
+   WikiContext context = ContextUtil.findContext( pageContext );
    Engine engine = context.getEngine();
 
    TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT,

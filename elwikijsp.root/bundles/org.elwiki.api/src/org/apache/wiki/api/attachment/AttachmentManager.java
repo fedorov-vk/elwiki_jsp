@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
@@ -117,7 +117,7 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment exists.
      *  @throws ProviderException If something goes wrong.
      */
-    default AttachmentContent getAttachmentContent( final Context context, final String attachmentname ) throws ProviderException {
+    default AttachmentContent getAttachmentContent( final WikiContext context, final String attachmentname ) throws ProviderException {
         return getAttachmentContent( context, attachmentname, WikiProvider.LATEST_VERSION );
     }
 
@@ -130,7 +130,7 @@ public interface AttachmentManager {
      *  @return Attachment, or null, if no such attachment or version exists.
      *  @throws ProviderException If something goes wrong.
      */
-    AttachmentContent getAttachmentContent( Context context, String attachmentname, int version ) throws ProviderException;
+    AttachmentContent getAttachmentContent( WikiContext context, String attachmentname, int version ) throws ProviderException;
 
     /**
      *  Figures out the full attachment name from the context and attachment name.
@@ -139,7 +139,7 @@ public interface AttachmentManager {
      *  @param attachmentname The file name of the attachment.
      *  @return Attachment, or null, if no such attachment exists.
      */
-    String getAttachmentName( Context context, String attachmentname );
+    String getAttachmentName( WikiContext context, String attachmentname );
 
     /**
      *  Returns the list of attachments associated with a given wiki page. If there are no attachments, returns an empty Collection.
@@ -197,7 +197,7 @@ public interface AttachmentManager {
      *  @throws ProviderException If the backend fails due to some reason
      *  @throws IOException If the stream cannot be opened
      */
-    InputStream getAttachmentStream( Context ctx, AttachmentContent att ) throws ProviderException, IOException;
+    InputStream getAttachmentStream( WikiContext ctx, AttachmentContent att ) throws ProviderException, IOException;
 
     /**
      *  Stores a dynamic attachment.  Unlike storeAttachment(), this just stores the attachment in the memory.
@@ -205,7 +205,7 @@ public interface AttachmentManager {
      *  @param ctx A WikiContext
      *  @param att An attachment to store
      */
-    void storeDynamicAttachment( Context ctx, IDynamicAttachment att );
+    void storeDynamicAttachment( WikiContext ctx, IDynamicAttachment att );
 
     /**
      *  Finds a DynamicAttachment.  Normally, you should just use {@link #getAttachmentInfo(String)} , since that will find also

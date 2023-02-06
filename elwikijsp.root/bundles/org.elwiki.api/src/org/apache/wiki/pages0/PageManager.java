@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.pages0;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -163,7 +163,7 @@ public interface PageManager extends WikiEventListener {
      *  Individual PageFilters, such as the {@link org.apache.wiki.filters.SpamFilter} may also throw a
      *  {@link org.apache.wiki.api.exceptions.RedirectException}.
      */
-	void saveText(Context context, String text, String author, String changenote) throws WikiException;
+	void saveText(WikiContext context, String text, String author, String changenote) throws WikiException;
 
     /**
      * Puts the page text into the repository.  Note that this method does NOT update

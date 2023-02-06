@@ -24,7 +24,7 @@ import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki.services.ServicesRefs;
 
 /**
@@ -40,7 +40,7 @@ public class TranslateTag extends BodyTagSupport {
 	@Override
 	public final int doAfterBody() throws JspException {
 		try {
-			Context context = (Context) pageContext.getAttribute(Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
+			WikiContext context = (WikiContext) pageContext.getAttribute(WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
 
 			//  Because the TranslateTag should not affect any of the real page attributes we have to make a clone here.
 			context = context.deepClone();

@@ -20,7 +20,7 @@ package org.apache.wiki.rpc.atom;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -146,7 +146,7 @@ public class AtomAPIServlet extends HttpServlet {
             final String username = author.getName();
             final WikiPage entryPage = Wiki.contents().page( pageName );
 
-            final Context context = Wiki.context().create( m_engine, request, entryPage );
+            final WikiContext context = Wiki.context().create( m_engine, request, entryPage );
             final StringBuilder text = new StringBuilder();
             text.append( "!" )
                 .append( title.getBody() )
@@ -243,7 +243,7 @@ public class AtomAPIServlet extends HttpServlet {
             }
 
             final String encodedName = TextUtil.urlEncodeUTF8( p.getName() );
-            final Context context = Wiki.context().create( m_engine, p );
+            final WikiContext context = Wiki.context().create( m_engine, p );
             final String title = TextUtil.replaceEntities( org.apache.wiki.api.rss.Feed.getSiteName( context ) );
             final Link postlink = createLink( "service.post", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );
             final Link editlink = createLink( "service.edit", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );

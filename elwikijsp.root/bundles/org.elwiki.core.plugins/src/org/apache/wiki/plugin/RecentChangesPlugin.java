@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
@@ -74,7 +74,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
      * {@inheritDoc}
      */
     @Override
-    public String execute( Context context, Map< String, String > params ) throws PluginException {
+    public String execute( WikiContext context, Map< String, String > params ) throws PluginException {
         super.initialize( context, params );
 
 		String spacing = "4";
@@ -155,10 +155,10 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //  Add the direct link to the attachment info.
                 //
                 if( pageref instanceof PageAttachment ) {
-                    link = XhtmlUtil.link( context.getURL( Context.PAGE_INFO, pageref.getName() ), null );
+                    link = XhtmlUtil.link( context.getURL( WikiContext.PAGE_INFO, pageref.getName() ), null );
                     link.setAttribute( XHTML.ATTR_class, "infolink" );
 
-                    Element img = XhtmlUtil.img( context.getURL( Context.PAGE_NONE, "images/attachment_small.png" ), null );
+                    Element img = XhtmlUtil.img( context.getURL( WikiContext.PAGE_NONE, "images/attachment_small.png" ), null );
                     link.addContent( img );
 
                     col.addContent( link );
@@ -174,7 +174,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 } else {
                     Element infocol = XhtmlUtil.element( XHTML.td );
                     infocol.setAttribute( XHTML.ATTR_class, "lastchange" );
-                    infocol.addContent( XhtmlUtil.link( context.getURL( Context.PAGE_DIFF, pageref.getName(), "r1=-1" ),
+                    infocol.addContent( XhtmlUtil.link( context.getURL( WikiContext.PAGE_DIFF, pageref.getName(), "r1=-1" ),
                                                         tfmt.format( lastmod ) ) );
                     row.addContent( infocol );
                 }
@@ -190,7 +190,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 
                     if( author != null ) {
                         if( ServicesRefs.getPageManager().pageExistsByName( author ) ) {
-                            authorinfo.addContent( XhtmlUtil.link( context.getURL( Context.PAGE_VIEW, author ), author ) );
+                            authorinfo.addContent( XhtmlUtil.link( context.getURL( WikiContext.PAGE_VIEW, author ), author ) );
                         } else {
                             authorinfo.addContent( author );
                         }
@@ -237,7 +237,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
     // locale, but that is at odds with the 1st version of this plugin. We seek to preserve the
     // behaviour of that first version, so to get the default format, the user must explicitly do
     // something like: dateFormat='' timeformat='' which is a odd, but probably okay.
-    private DateFormat getTimeFormat( Context context, Map< String, String > params ) {
+    private DateFormat getTimeFormat( WikiContext context, Map< String, String > params ) {
         String formatString = get( params, DEFAULT_TIME_FORMAT, PARAM_TIME_FORMAT );
         if( StringUtils.isBlank( formatString ) ) {
             return Preferences.getDateFormat( context, TimeFormat.TIME );
@@ -246,7 +246,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
         return new SimpleDateFormat( formatString );
     }
 
-    private DateFormat getDateFormat( Context context, Map< String, String > params ) {
+    private DateFormat getDateFormat( WikiContext context, Map< String, String > params ) {
         String formatString = get( params, DEFAULT_DATE_FORMAT, PARAM_DATE_FORMAT );
         if( StringUtils.isBlank( formatString ) ) {
             return Preferences.getDateFormat( context, TimeFormat.DATE );

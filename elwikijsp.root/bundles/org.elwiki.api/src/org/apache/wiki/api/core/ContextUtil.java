@@ -38,13 +38,13 @@ public class ContextUtil {
 	 * @param pageContext the JSP page context
 	 * @return Current WikiContext, or null, of no context exists.
 	 */
-	public static Context findContext(PageContext pageContext) {
+	public static WikiContext findContext(PageContext pageContext) {
 		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		return (Context) request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+		return (WikiContext) request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
 	}
 
-	public static Context findContext(HttpServletRequest request) {
-		return (Context) request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+	public static WikiContext findContext(HttpServletRequest request) {
+		return (WikiContext) request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
 	}
 
 	// (::FVK: from EditorManager)

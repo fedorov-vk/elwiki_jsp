@@ -19,7 +19,7 @@
 package org.apache.wiki.plugin;
 
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 
@@ -38,7 +38,7 @@ public class SampleAjaxPlugin implements Plugin, WikiAjaxServlet {
 	private static final String SERVLET_MAPPING = "SampleAjaxPlugin";
 
 	@Override
-    public String execute( final Context context, final Map<String, String> params) throws PluginException {
+    public String execute( final WikiContext context, final Map<String, String> params) throws PluginException {
 		final String id = Integer.toString(this.hashCode());
 		final String html = String.format(//
 				"<div onclick='Wiki.ajaxHtmlCall(\"/%s/ajaxAction\",[12,45],\"result%s\",\"Loading...\")'" //

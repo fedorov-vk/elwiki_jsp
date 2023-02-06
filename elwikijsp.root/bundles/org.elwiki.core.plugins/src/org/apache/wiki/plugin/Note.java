@@ -20,7 +20,7 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -68,7 +68,7 @@ public class Note implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		this.engine = context.getEngine();
 		this.templateManager = this.engine.getManager(TemplateManager.class);
 
@@ -84,7 +84,7 @@ public class Note implements Plugin {
 		return "<img src='" + commentImage + "' alt=\"Comment: " + commentText + "\" title=\"" + commentText + "\"/>";
 	}
 
-	private String imageUrl(Context ctx) {
+	private String imageUrl(WikiContext ctx) {
 		String commentImage = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_NOTE_IMAGE,
 				DEFAULT_NOTE_IMAGE);
 		commentImage = "images/" + commentImage;

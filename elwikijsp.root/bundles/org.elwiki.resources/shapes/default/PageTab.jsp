@@ -42,7 +42,7 @@
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
 <wiki:CheckVersion mode="notlatest">
   <%
-    Context ctx = ContextUtil.findContext( pageContext );
+    WikiContext ctx = ContextUtil.findContext( pageContext );
   %>
   <c:set var="thisVersion" value="<%= ctx.getPage().getVersion() %>" />
   <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( ctx.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
@@ -69,7 +69,7 @@
       <wiki:Link cssClass="btn btn-primary">
         <fmt:message key="view.backtocurrent" />
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-danger" context="<%=Context.PAGE_EDIT%>" version="${thisVersion}">
+      <wiki:Link cssClass="btn btn-danger" context="<%=WikiContext.PAGE_EDIT%>" version="${thisVersion}">
         <fmt:message key="view.restore" />
       </wiki:Link>
       </div>
@@ -116,7 +116,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
       <wiki:Link cssClass="btn btn-xs btn-default" pageName="${mainblogpage}">
          <fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-default" context="<%=Context.PAGE_COMMENT%>" pageName="${blogcommentpage}">
+      <wiki:Link cssClass="btn btn-xs btn-default" context="<%=WikiContext.PAGE_COMMENT%>" pageName="${blogcommentpage}">
         <span class="icon-plus"></span> <fmt:message key="blog.addcomments" />
       </wiki:Link>
   </div>
@@ -138,7 +138,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <div class="error">
     <fmt:message key="common.nopage">
       <fmt:param>
-        <wiki:Link cssClass="createpage" context="<%=Context.PAGE_EDIT%>">
+        <wiki:Link cssClass="createpage" context="<%=WikiContext.PAGE_EDIT%>">
           <fmt:message key="common.createit" />
         </wiki:Link>
       </fmt:param>

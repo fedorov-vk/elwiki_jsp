@@ -19,7 +19,7 @@
 package org.apache.wiki;
 
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.spi.ContextSPI;
@@ -38,32 +38,32 @@ public class ContextSPIDefaultImpl implements ContextSPI {
      * {@inheritDoc}
      */
     @Override
-    public Context create( final Engine engine, final WikiPage page ) {
-        return new WikiContext( engine, page );
+    public WikiContext create( final Engine engine, final WikiPage page ) {
+        return new WikiContextImpl( engine, page );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Context create( final Engine engine, final HttpServletRequest request, final Command command ) {
-        return new WikiContext( engine, request, command );
+    public WikiContext create( final Engine engine, final HttpServletRequest request, final Command command ) {
+        return new WikiContextImpl( engine, request, command );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Context create( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
-        return new WikiContext( engine, request, page );
+    public WikiContext create( final Engine engine, final HttpServletRequest request, final WikiPage page ) {
+        return new WikiContextImpl( engine, request, page );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Context create( final Engine engine, final HttpServletRequest request, final String requestContext ) {
-        return new WikiContext( engine, request, requestContext );
+    public WikiContext create( final Engine engine, final HttpServletRequest request, final String requestContext ) {
+        return new WikiContextImpl( engine, request, requestContext );
     }
 
 }

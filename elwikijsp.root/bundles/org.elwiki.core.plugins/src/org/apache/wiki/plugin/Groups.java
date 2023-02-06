@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -56,7 +56,7 @@ public class Groups implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		// Retrieve groups, and sort by name
 		Engine engine = context.getEngine();
 		IGroupManager groupMgr = engine.getManager(IGroupManager.class); // IGroupManager.class
@@ -71,7 +71,7 @@ public class Groups implements Plugin {
 			String name = (String) groupProps.get(UserDatabase.GROUP_NAME);
 
 			// Make URL
-			String url = urlConstructor.makeURL(Context.GROUP_VIEW, name, null);
+			String url = urlConstructor.makeURL(WikiContext.GROUP_VIEW, name, null);
 
 			// Create hyperlink
 			str.append("<a href=\"").append(url).append("\">").append(name).append("</a>");

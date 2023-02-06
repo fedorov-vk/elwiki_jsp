@@ -19,7 +19,7 @@
 package org.apache.wiki.api.rss;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
@@ -41,7 +41,7 @@ public abstract class Feed {
     protected String m_channelDescription;
     protected String m_channelLanguage;
 
-    protected Context m_wikiContext;
+    protected WikiContext m_wikiContext;
 
     protected String m_mode = RSSGenerator.MODE_WIKI;
 
@@ -56,7 +56,7 @@ public abstract class Feed {
      * @param context the wiki context
      * @return the site name
      */
-    public static String getSiteName( final Context context ) {
+    public static String getSiteName( final WikiContext context ) {
         final Engine engine = context.getEngine();
 
         String blogname = null;
@@ -78,7 +78,7 @@ public abstract class Feed {
      *
      * @param context The WikiContext.
      */
-    public Feed( final Context context) {
+    public Feed( final WikiContext context) {
         m_wikiContext = context;
     }
 

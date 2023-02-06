@@ -3,7 +3,7 @@ package org.elwiki.internal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 
 public class InfoCmdCode extends CmdCode {
@@ -15,7 +15,7 @@ public class InfoCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		/*
 		if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 		if( wikiContext.getCommand().getTarget() == null ) {

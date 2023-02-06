@@ -32,7 +32,7 @@
         This is a special editor component for JSPWiki preview storage.
 --%>
 <%
-   Context context = ContextUtil.findContext( pageContext );
+   WikiContext context = ContextUtil.findContext( pageContext );
    String usertext = (String)pageContext.getAttribute( EditorManager.ATTR_EDITEDTEXT, PageContext.REQUEST_SCOPE );
    if( usertext == null ) usertext = "";
 

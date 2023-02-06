@@ -27,7 +27,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 
@@ -44,7 +44,7 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
     private static final long serialVersionUID = -1409836349293777141L;
     private static final Logger log = Logger.getLogger( BaseWikiTag.class );
 
-    protected Context m_wikiContext;
+    protected WikiContext m_wikiContext;
 
     /**
      * This method calls the parent setPageContext() but it also provides a way for a tag to initialize itself before
@@ -67,7 +67,7 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
     
     public int doStartTag() throws JspException {
         try {
-            m_wikiContext = ( Context )pageContext.getAttribute( Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
+            m_wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
             if( m_wikiContext == null ) {
                 throw new JspException("WikiContext may not be NULL - serious internal problem!");
             }

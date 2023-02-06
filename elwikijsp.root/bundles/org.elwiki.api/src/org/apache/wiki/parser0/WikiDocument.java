@@ -18,7 +18,7 @@
 */
 package org.apache.wiki.parser0;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Document;
 
@@ -38,7 +38,7 @@ public class WikiDocument extends Document {
     
     private WikiPage m_page;
     private String m_wikiText;
-    private WeakReference< Context > m_context;
+    private WeakReference< WikiContext > m_context;
     
     /**
      *  Creates a new WikiDocument for a specific page.
@@ -87,7 +87,7 @@ public class WikiDocument extends Document {
      *  
      *  @param ctx A WikiContext.
      */
-    public void setContext( final Context ctx )
+    public void setContext( final WikiContext ctx )
     {
         m_context = new WeakReference<>( ctx );
     }
@@ -98,7 +98,7 @@ public class WikiDocument extends Document {
      * had previously been garbage-collected.
      * @return the wiki context
      */
-    public Context getContext()
+    public WikiContext getContext()
     {
         return m_context.get();
     }

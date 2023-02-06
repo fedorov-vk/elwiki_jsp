@@ -27,7 +27,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 
 /**
@@ -49,7 +49,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setView(final String s) {
-		m_mappings.put(ContextEnum.PAGE_VIEW.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_VIEW, s);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setDiff(final String s) {
-		m_mappings.put(ContextEnum.PAGE_DIFF.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_DIFF, s);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setInfo(final String s) {
-		m_mappings.put(ContextEnum.PAGE_INFO.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_INFO, s);
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setPreview(final String s) {
-		m_mappings.put(ContextEnum.PAGE_PREVIEW.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_PREVIEW, s);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setConflict(final String s) {
-		m_mappings.put(ContextEnum.PAGE_CONFLICT.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_CONFLICT, s);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setFind(final String s) {
-		m_mappings.put(ContextEnum.WIKI_FIND.getRequestContext(), s);
+		m_mappings.put(WikiContext.WIKI_FIND, s);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setPrefs(final String s) {
-		m_mappings.put(ContextEnum.WIKI_PREFS.getRequestContext(), s);
+		m_mappings.put(WikiContext.WIKI_PREFS, s);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setError(final String s) {
-		m_mappings.put(ContextEnum.WIKI_ERROR.getRequestContext(), s);
+		m_mappings.put(WikiContext.WIKI_ERROR, s);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setEdit(final String s) {
-		m_mappings.put(ContextEnum.PAGE_EDIT.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_EDIT, s);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class ContentTag extends BaseWikiTag {
 	 * @param s The template name.
 	 */
 	public void setComment(final String s) {
-		m_mappings.put(ContextEnum.PAGE_COMMENT.getRequestContext(), s);
+		m_mappings.put(WikiContext.PAGE_COMMENT, s);
 	}
 
 	/**

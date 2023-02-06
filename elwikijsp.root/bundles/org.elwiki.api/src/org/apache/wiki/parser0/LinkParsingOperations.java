@@ -21,7 +21,7 @@ package org.apache.wiki.parser0;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 
@@ -38,7 +38,7 @@ import java.util.List;
 public class LinkParsingOperations {
 
     private static final Logger log = Logger.getLogger( LinkParsingOperations.class );
-    private final Context wikiContext;
+    private final WikiContext wikiContext;
 
     /**
      *  This list contains all IANA registered URI protocol types as of September 2004 + a few well-known extra types.
@@ -64,7 +64,7 @@ public class LinkParsingOperations {
         Arrays.sort( EXTERNAL_LINKS );
     }
 
-    public LinkParsingOperations( final Context wikiContext ) {
+    public LinkParsingOperations( final WikiContext wikiContext ) {
     	this.wikiContext = wikiContext;
     }
 

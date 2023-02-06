@@ -21,7 +21,7 @@ package org.apache.wiki.rss;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -135,7 +135,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
     private String getPageDescription( final WikiPage page ) {
         final StringBuilder buf = new StringBuilder();
         final String author = getAuthor( page );
-        final Context ctx = Wiki.context().create( m_engine, page );
+        final WikiContext ctx = Wiki.context().create( m_engine, page );
       /*:FVK:
         if( page.getVersion() > 1 ) {
             final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx,
@@ -171,7 +171,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
     /** {@inheritDoc} */
     @Override
     public String generate() {
-        final Context context = Wiki.context().create( m_engine, Wiki.contents().page( "__DUMMY" ) );
+        final WikiContext context = Wiki.context().create( m_engine, Wiki.contents().page( "__DUMMY" ) );
         context.setRequestContext( ContextEnum.PAGE_RSS.getRequestContext() );
         final Feed feed = new RSS10Feed( context );
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + generateFullWikiRSS( context, feed );
@@ -179,7 +179,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateFeed( final Context wikiContext, final List< WikiPage > changed, final String mode, final String type ) throws IllegalArgumentException {
+    public String generateFeed( final WikiContext wikiContext, final List< WikiPage > changed, final String mode, final String type ) throws IllegalArgumentException {
         final Feed feed;
         final String res;
 
@@ -226,7 +226,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateFullWikiRSS( final Context wikiContext, final Feed feed ) {
+    public String generateFullWikiRSS( final WikiContext wikiContext, final Feed feed ) {
         feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() );
         feed.setFeedURL( m_engine.getWikiConfiguration().getBaseURL() );
         feed.setChannelLanguage( m_channelLanguage );
@@ -267,7 +267,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateWikiPageRSS( final Context wikiContext, final List< WikiPage > changed, final Feed feed ) {
+    public String generateWikiPageRSS( final WikiContext wikiContext, final List< WikiPage > changed, final Feed feed ) {
         feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName()+": "+wikiContext.getPage().getName() );
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
         final String language = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
@@ -314,7 +314,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateBlogRSS( final Context wikiContext, final List< WikiPage > changed, final Feed feed ) {
+    public String generateBlogRSS( final WikiContext wikiContext, final List< WikiPage > changed, final Feed feed ) {
         if( log.isDebugEnabled() ) {
             log.debug( "Generating RSS for blog, size=" + changed.size() );
         }

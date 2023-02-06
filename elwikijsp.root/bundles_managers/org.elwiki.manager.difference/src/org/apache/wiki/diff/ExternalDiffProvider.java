@@ -20,7 +20,7 @@
 package org.apache.wiki.diff;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -101,7 +101,7 @@ public class ExternalDiffProvider implements DiffProvider {
      * {@inheritDoc}
      */
     @Override
-    public String makeDiffHtml( final Context ctx, final String p1, final String p2 ) {
+    public String makeDiffHtml( final WikiContext ctx, final String p1, final String p2 ) {
         File f1 = null;
         File f2 = null;
         String diff = null;

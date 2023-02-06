@@ -31,7 +31,7 @@ import java.util.Vector;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.modules.ModuleManager;
 import org.apache.wiki.preferences.Preferences;
@@ -125,7 +125,7 @@ public interface TemplateManager extends ModuleManager {
      *  @param name the name of the resource to fine.
      *  @return the path to the resource, or <code>null</code>.
      */
-    String findResource( Context ctx, String template, String name );
+    String findResource( WikiContext ctx, String template, String name );
 
     /**
      *   Lists the skins available under this template.  Returns an empty Set, if there are no extra skins available.  Note that
@@ -224,7 +224,7 @@ public interface TemplateManager extends ModuleManager {
      *  @param type the marker
      *  @return the generated resources list
      */
-    static String getMarker( final Context context, final String type ) {
+    static String getMarker( final WikiContext context, final String type ) {
         if( type.equals( RESOURCE_JSLOCALIZEDSTRINGS ) ) {
             return getJSLocalizedStrings( context );
         }
@@ -241,11 +241,11 @@ public interface TemplateManager extends ModuleManager {
     /**
      *  Extract all i18n strings in the javascript domain. (javascript.*) Returns a javascript snippet which defines the LocalizedStings array.
      *
-     *  @param context the {@link Context}
+     *  @param context the {@link WikiContext}
      *  @return Javascript snippet which defines the LocalizedStrings array
      *  @since 2.5.108
      */
-    static String getJSLocalizedStrings( final Context context ) {
+    static String getJSLocalizedStrings( final WikiContext context ) {
         final StringBuilder sb = new StringBuilder();
         sb.append( "var LocalizedStrings = {\n");
         final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.DEF_TEMPLATE );
@@ -287,7 +287,7 @@ public interface TemplateManager extends ModuleManager {
      *  @param type What kind of a request should be added?
      *  @param resource The resource to add.
      */
-    static void addResourceRequest( final Context ctx, final String type, final String resource ) {
+    static void addResourceRequest( final WikiContext ctx, final String type, final String resource ) {
         HashMap< String, Vector< String > > resourcemap = ctx.getVariable( RESOURCE_INCLUDES );
         if( resourcemap == null ) {
             resourcemap = new HashMap<>();
@@ -332,7 +332,7 @@ public interface TemplateManager extends ModuleManager {
      *  @param type The resource request type
      *  @return a String array for the resource requests
      */
-    static String[] getResourceRequests( final Context ctx, final String type ) {
+    static String[] getResourceRequests( final WikiContext ctx, final String type ) {
         final HashMap< String, Vector< String > > hm = ctx.getVariable( RESOURCE_INCLUDES );
         if( hm == null ) {
             return new String[0];
@@ -353,7 +353,7 @@ public interface TemplateManager extends ModuleManager {
      * @param ctx the wiki context
      * @return the array of types requested
      */
-    static String[] getResourceTypes( final Context ctx ) {
+    static String[] getResourceTypes( final WikiContext ctx ) {
         String[] res = new String[0];
         if( ctx != null ) {
             final HashMap< String, String > hm = ctx.getVariable( RESOURCE_INCLUDES );

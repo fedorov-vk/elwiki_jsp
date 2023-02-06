@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -88,7 +88,7 @@ public class InsertPage implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		Engine engine = context.getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
 
@@ -165,7 +165,7 @@ public class InsertPage implements Plugin {
 				 * correct.
 				 */
 
-				Context includedContext = context.clone();
+				WikiContext includedContext = context.clone();
 				includedContext.setPage(page);
 
 				String pageData = ServicesRefs.getPageManager().getPureText(page);
@@ -181,7 +181,7 @@ public class InsertPage implements Plugin {
 
 				if (pageData.length() > maxlen) {
 					pageData = pageData.substring(0, maxlen) + " ...";
-					moreLink = "<p><a href=\"" + context.getURL(Context.PAGE_VIEW, includedPageId) + "\">"
+					moreLink = "<p><a href=\"" + context.getURL(WikiContext.PAGE_VIEW, includedPageId) + "\">"
 							+ rb.getString("insertpage.more") + "</a></p>";
 				}
 
@@ -210,7 +210,7 @@ public class InsertPage implements Plugin {
 				} else {
 					res.append("There is no page called '" + includedPageId + "'.  Would you like to ");
 					res.append("<a href=\"" //
-							+ context.getURL(Context.PAGE_EDIT, includedPageId) + "\">create it?</a>");
+							+ context.getURL(WikiContext.PAGE_EDIT, includedPageId) + "\">create it?</a>");
 				}
 			}
 		} else {

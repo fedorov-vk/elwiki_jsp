@@ -33,7 +33,7 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
   //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK:
-  Context ctx = ContextUtil.findContext( pageContext );
+  WikiContext ctx = ContextUtil.findContext( pageContext );
   //String redir = (String)ctx.getVariable("redirect");
   //if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
 %>

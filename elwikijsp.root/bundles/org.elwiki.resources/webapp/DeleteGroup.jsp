@@ -35,7 +35,7 @@
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_DELETE.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_DELETE.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
     Session wikiSession = wikiContext.getWikiSession();

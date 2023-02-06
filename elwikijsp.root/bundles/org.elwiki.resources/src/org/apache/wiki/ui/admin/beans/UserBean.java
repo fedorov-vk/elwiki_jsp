@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
@@ -54,7 +54,7 @@ public class UserBean extends SimpleAdminBean {
     }
 
     @Override
-    public String doPost( final Context context ) {
+    public String doPost( final WikiContext context ) {
         final HttpServletRequest request = context.getHttpRequest();
         final Session session = context.getWikiSession();
         final UserManager mgr = ServicesRefs.getUserManager();

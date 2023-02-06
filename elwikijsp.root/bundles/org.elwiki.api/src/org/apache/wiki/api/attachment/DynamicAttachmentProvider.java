@@ -19,7 +19,7 @@
 package org.apache.wiki.api.attachment;
 
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 
 import java.io.IOException;
@@ -45,6 +45,6 @@ public interface DynamicAttachmentProvider {
      *  @throws ProviderException If something goes wrong internally
      *  @throws IOException If something goes wrong when reading the data
      */
-    InputStream getAttachmentData( Context context, PageAttachment att ) throws ProviderException, IOException;
+    InputStream getAttachmentData( WikiContext context, PageAttachment att ) throws ProviderException, IOException;
 
 }

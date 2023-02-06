@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.AllCommands;
@@ -125,8 +125,8 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			/* Create Wiki context according to required URI.
 			 */
 			ContextEnum contextEnum = getContextEnum(uri.substring(1)); // URI without first symbol '/'.
-			Context wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());
-			httpRequest.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+			WikiContext wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());
+			httpRequest.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
 			ThreadUtil.setCurrentRequest(httpRequest);
 
 			log.debug("context:  " + ((wikiContext != null) ? wikiContext.getName() : "NULL"));

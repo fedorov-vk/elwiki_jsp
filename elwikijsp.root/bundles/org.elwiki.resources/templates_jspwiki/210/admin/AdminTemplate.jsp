@@ -42,7 +42,7 @@ in your <code>jspwiki.properties</code> file.</div>
 
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
-    Context ctx = ContextUtil.findContext(pageContext);
+    WikiContext ctx = ContextUtil.findContext(pageContext);
     AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
  %>
 

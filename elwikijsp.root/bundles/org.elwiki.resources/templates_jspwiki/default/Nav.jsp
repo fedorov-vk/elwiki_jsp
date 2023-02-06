@@ -31,12 +31,11 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
 
   String text = ServicesRefs.getPageManager().getText( c.getPage() );
   StringTokenizer tokens = new StringTokenizer( text );
   //avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
-
 %>
 <c:set var="attachments" value="<%= ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size() %>" />
 

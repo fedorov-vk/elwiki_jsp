@@ -40,7 +40,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  Context ctx = ContextUtil.findContext(pageContext);
+  WikiContext ctx = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = ctx.getPage();
   int attCount = ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -122,7 +122,7 @@
       <input class="form-control form-col-50" type="text" name="changenote" id="changenote" maxlength="80" size="60" />
     </div>
     <div class="form-group">
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=Context.PAGE_INFO%>' format='url'/>" /><%-- *** --%>
+    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.PAGE_INFO%>' format='url'/>" /><%-- *** --%>
     <input type="hidden" name="page" value="<wiki:Variable var="pagename"/>" />
     <input class="btn btn-success form-col-offset-20 form-col-50"
            type="submit" name="upload" id="upload" disabled="disabled" value="<fmt:message key='attach.add.submit'/>" />
@@ -139,7 +139,7 @@
 </wiki:Permission>
 
 
-<form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
+<form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
            class="form-group"
               id="deletePageVersionForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -222,7 +222,7 @@
          <td>
             <input type="button"
                    value="Restore"
-                   url="<wiki:Link format='url' context='<%=Context.ATTACHMENT_UPLOAD%>'/>"/>
+                   url="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_UPLOAD%>'/>"/>
          </td>
       </wiki:Permission>
       --%>

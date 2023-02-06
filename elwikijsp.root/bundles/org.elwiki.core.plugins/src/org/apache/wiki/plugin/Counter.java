@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
@@ -59,7 +59,7 @@ public class Counter implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
         //  First, determine which kind of name we use to store in the WikiContext.
         String  countername = params.get(  PARAM_NAME);
 

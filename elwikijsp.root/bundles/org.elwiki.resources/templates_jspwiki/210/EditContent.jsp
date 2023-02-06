@@ -27,7 +27,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
   int attCount = ServicesRefs.getAttachmentManager().listAttachments(c.getPage()).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";

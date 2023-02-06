@@ -23,7 +23,7 @@ import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -61,7 +61,7 @@ public class AtomFeed extends Feed {
      *  
      *  @param c A WikiContext.
      */
-    public AtomFeed( final Context c )
+    public AtomFeed( final WikiContext c )
     {
         super(c);
     }

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
@@ -25,7 +25,7 @@ public class EditGroupCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		@NonNull
 		AuthorizationManager authorizationManager = wiki.getManager(AuthorizationManager.class);

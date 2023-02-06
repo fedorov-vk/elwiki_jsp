@@ -33,7 +33,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -153,7 +153,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public String getAttachmentName( final Context context, final String attachmentname ) {
+    public String getAttachmentName( final WikiContext context, final String attachmentname ) {
         final AttachmentContent att;
         try {
             att = getAttachmentContent( context, attachmentname );
@@ -183,7 +183,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-	public AttachmentContent getAttachmentContent(Context context, String attachmentName, int version)
+	public AttachmentContent getAttachmentContent(WikiContext context, String attachmentName, int version)
 			throws ProviderException {
         if( m_provider == null ) {
             return null;
@@ -241,7 +241,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public InputStream getAttachmentStream( final Context ctx, final AttachmentContent att ) throws ProviderException, IOException {
+    public InputStream getAttachmentStream( final WikiContext ctx, final AttachmentContent att ) throws ProviderException, IOException {
         if( m_provider == null ) {
             return null;
         }
@@ -257,7 +257,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     /** {@inheritDoc} */
     @Override
-    public void storeDynamicAttachment( final Context ctx, final IDynamicAttachment att ) {
+    public void storeDynamicAttachment( final WikiContext ctx, final IDynamicAttachment att ) {
         m_dynamicAttachments.put( new Element( att.getName(), att ) );
     }
 
@@ -301,7 +301,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
             return null;
         }
 
-        final AttachmentContent att = getAttachmentContent( (Context)null, attachmentName );
+        final AttachmentContent att = getAttachmentContent( (WikiContext)null, attachmentName );
         if( att != null ) {
             return m_provider.getVersionHistory( att.getPageAttachment() );
         }

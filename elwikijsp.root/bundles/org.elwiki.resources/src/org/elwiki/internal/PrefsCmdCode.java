@@ -65,7 +65,7 @@ public class PrefsCmdCode extends CmdCode {
 		*/
 
 		// Get wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		/*:FVK:
 		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;

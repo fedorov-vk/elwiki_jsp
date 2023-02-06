@@ -32,7 +32,7 @@ import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
@@ -278,7 +278,7 @@ public class SpamFilter extends BasePageFilter {
     private static final int ACCEPT = 1;
     private static final int NOTE   = 2;
 
-    private static String log( final Context ctx, final int type, final String source, String message ) {
+    private static String log( final WikiContext ctx, final int type, final String source, String message ) {
         message = TextUtil.replaceString( message, "\r\n", "\\r\\n" );
         message = TextUtil.replaceString( message, "\"", "\\\"" );
 
@@ -308,7 +308,7 @@ public class SpamFilter extends BasePageFilter {
 
     /** {@inheritDoc} */
     @Override
-    public String preSave( final Context context, final String content ) throws RedirectException {
+    public String preSave( final WikiContext context, final String content ) throws RedirectException {
         cleanBanList();
         refreshBlacklists( context );
         final Change change = getChange( context, content );
@@ -333,7 +333,7 @@ public class SpamFilter extends BasePageFilter {
         return content;
     }
 
-    private void checkPageName( final Context context, final String content, final Change change) throws RedirectException {
+    private void checkPageName( final WikiContext context, final String content, final Change change) throws RedirectException {
         final WikiPage page = context.getPage();
         final String pageName = page.getName();
         final int maxlength = Integer.valueOf(m_pageNameMaxLength);
@@ -350,7 +350,7 @@ public class SpamFilter extends BasePageFilter {
         }
     }
 
-    private void checkStrategy( final Context context, final String error, final String message ) throws RedirectException {
+    private void checkStrategy( final WikiContext context, final String error, final String message ) throws RedirectException {
         if( m_stopAtFirstMatch ) {
             throw new RedirectException( message, getRedirectPage( context ) );
         }
@@ -438,7 +438,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param content
      *  @throws RedirectException
      */
-    private synchronized void checkSinglePageChange( final Context context, final String content, final Change change )
+    private synchronized void checkSinglePageChange( final WikiContext context, final String content, final Change change )
     		throws RedirectException {
         final HttpServletRequest req = context.getHttpRequest();
 
@@ -530,7 +530,7 @@ public class SpamFilter extends BasePageFilter {
      * @param change
      * @throws RedirectException
      */
-    private void checkAkismet( final Context context, final Change change ) throws RedirectException {
+    private void checkAkismet( final WikiContext context, final Change change ) throws RedirectException {
         if( m_akismetAPIKey != null ) {
             if( m_akismet == null ) {
                 log.info( "Initializing Akismet spam protection." );
@@ -560,7 +560,7 @@ public class SpamFilter extends BasePageFilter {
                 final String userAgent     = req.getHeader( "User-Agent" );
                 final String referrer      = req.getHeader( "Referer");
                 final String permalink     = context.getViewURL( context.getPage().getName() );
-                final String commentType   = context.getRequestContext().equals( Context.PAGE_COMMENT ) ? "comment" : "edit"; //:FVK: is workaround? - is definitions needs: Context.PAGE_COMMENT, Context.PAGE_EDIT?
+                final String commentType   = context.getRequestContext().equals( WikiContext.PAGE_COMMENT ) ? "comment" : "edit"; //:FVK: is workaround? - is definitions needs: WikiContext.PAGE_COMMENT, WikiContext.PAGE_EDIT?
                 final String commentAuthor = context.getCurrentUser().getName();
                 final String commentAuthorEmail = null;
                 final String commentAuthorURL   = null;
@@ -607,7 +607,7 @@ public class SpamFilter extends BasePageFilter {
      * @param change
      * @throws RedirectException
      */
-    private void checkBotTrap( final Context context, final Change change ) throws RedirectException {
+    private void checkBotTrap( final WikiContext context, final Change change ) throws RedirectException {
         final HttpServletRequest request = context.getHttpRequest();
         if( request != null ) {
             final String unspam = request.getParameter( getBotFieldName() );
@@ -620,7 +620,7 @@ public class SpamFilter extends BasePageFilter {
         }
     }
 
-    private void checkUTF8( final Context context, final Change change ) throws RedirectException {
+    private void checkUTF8( final WikiContext context, final Change change ) throws RedirectException {
         final HttpServletRequest request = context.getHttpRequest();
         if( request != null ) {
             final String utf8field = request.getParameter( "encodingcheck" );
@@ -652,7 +652,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param context
      *  @throws RedirectException
      */
-    private void checkBanList( final Context context, final Change change ) throws RedirectException {
+    private void checkBanList( final WikiContext context, final Change change ) throws RedirectException {
         final HttpServletRequest req = context.getHttpRequest();
 
         if( req != null ) {
@@ -676,7 +676,7 @@ public class SpamFilter extends BasePageFilter {
      *
      *  @param context associated WikiContext
      */
-    private void refreshBlacklists( final Context context ) {
+    private void refreshBlacklists( final WikiContext context ) {
         try {
             boolean rebuild = false;
 
@@ -737,7 +737,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param change
      *  @throws RedirectException
      */
-    private void checkPatternList( final Context context, final String content, final Change change ) throws RedirectException {
+    private void checkPatternList( final WikiContext context, final String content, final Change change ) throws RedirectException {
         // If we have no spam patterns defined, or we're trying to save the page containing the patterns, just return.
         if( m_spamPatterns == null || context.getPage().getName().equals( m_forbiddenWordsPage ) ) {
             return;
@@ -768,7 +768,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param context
      *  @throws RedirectException
      */
-    private void checkIPList( final Context context ) throws RedirectException {
+    private void checkIPList( final WikiContext context ) throws RedirectException {
         //  If we have no IP patterns defined, or we're trying to save the page containing the IP patterns, just return.
         if( m_IPPatterns == null || context.getPage().getName().equals( m_forbiddenIPsPage ) ) {
             return;
@@ -792,7 +792,7 @@ public class SpamFilter extends BasePageFilter {
         }
     }
 
-    private void checkPatternList( final Context context, final String content, final String change ) throws RedirectException {
+    private void checkPatternList( final WikiContext context, final String content, final String change ) throws RedirectException {
         final Change c = new Change();
         c.m_change = change;
         checkPatternList( context, content, c );
@@ -805,7 +805,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param newText
      *  @return Empty string, if there is no change.
      */
-    private static Change getChange( final Context context, final String newText ) {
+    private static Change getChange( final WikiContext context, final String newText ) {
         final WikiPage page = context.getPage();
         final StringBuffer change = new StringBuffer();
         final Engine engine = context.getEngine();
@@ -864,7 +864,7 @@ public class SpamFilter extends BasePageFilter {
      * @param context
      * @return True, if this users should be ignored.
      */
-    private boolean ignoreThisUser( final Context context ) {
+    private boolean ignoreThisUser( final WikiContext context ) {
         if( context.hasAdminPermissions() ) {
             return true;
         }
@@ -901,7 +901,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param ctx WikiContext
      *  @return An URL to redirect to
      */
-    private String getRedirectPage( final Context ctx ) {
+    private String getRedirectPage( final WikiContext ctx ) {
         if( m_useCaptcha ) {
             try {
 				return ctx.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "Captcha.jsp",
@@ -923,7 +923,7 @@ public class SpamFilter extends BasePageFilter {
      *  @return False, if this userprofile is suspect and should not be allowed to be added.
      *  @since 2.6.1
      */
-    public boolean isValidUserProfile( final Context context, final UserProfile profile ) {
+    public boolean isValidUserProfile( final WikiContext context, final UserProfile profile ) {
         try {
             checkPatternList( context, profile.getEmail(), profile.getEmail() );
             checkPatternList( context, profile.getFullname(), profile.getFullname() );
@@ -999,7 +999,7 @@ public class SpamFilter extends BasePageFilter {
      *  @throws IOException If redirection fails
      *  @since 2.6
      */
-    public static final boolean checkHash( final Context context, final PageContext pageContext ) throws IOException {
+    public static final boolean checkHash( final WikiContext context, final PageContext pageContext ) throws IOException {
         final String hashName = getHashFieldName( (HttpServletRequest)pageContext.getRequest() );
         if( pageContext.getRequest().getParameter(hashName) == null ) {
             if( pageContext.getAttribute( hashName ) == null ) {
@@ -1023,7 +1023,7 @@ public class SpamFilter extends BasePageFilter {
      * @return A HTML string which contains input fields for the SpamFilter.
      */
     public static final String insertInputFields( final PageContext pageContext ) {
-        final Context ctx = ContextUtil.findContext( pageContext );
+        final WikiContext ctx = ContextUtil.findContext( pageContext );
         final IWikiConfiguration config = ctx.getConfiguration();
         final StringBuilder sb = new StringBuilder();
         if( config.getContentEncodingCs().equals( StandardCharsets.UTF_8 ) ) {

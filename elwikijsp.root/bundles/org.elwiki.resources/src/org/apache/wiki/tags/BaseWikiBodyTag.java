@@ -26,8 +26,8 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.WikiContext;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.WikiContextImpl;
+import org.apache.wiki.api.core.WikiContext;
 
 /**
  * This is a class that provides the same services as the WikiTagBase, but this
@@ -38,11 +38,11 @@ public abstract class BaseWikiBodyTag extends BodyTagSupport implements TryCatch
 	private static final long serialVersionUID = -6732266865112847897L;
 	private static final Logger log = Logger.getLogger(BaseWikiBodyTag.class);
 
-	protected WikiContext m_wikiContext;
+	protected WikiContextImpl m_wikiContext;
 
 	public int doStartTag() throws JspException {
 		try {
-			m_wikiContext = (WikiContext) pageContext.getAttribute(Context.ATTR_WIKI_CONTEXT,
+			m_wikiContext = (WikiContextImpl) pageContext.getAttribute(WikiContext.ATTR_WIKI_CONTEXT,
 					PageContext.REQUEST_SCOPE);
 			if (m_wikiContext == null) {
 				throw new JspException("WikiContext may not be NULL - serious internal problem!");

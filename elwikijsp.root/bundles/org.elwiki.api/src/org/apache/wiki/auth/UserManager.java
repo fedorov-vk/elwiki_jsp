@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEventListener;
@@ -122,7 +122,7 @@ public interface UserManager {
      * @param context the current wiki context
      * @return a new, populated user profile
      */
-    UserProfile parseProfile( Context context );
+    UserProfile parseProfile( WikiContext context );
 
     /**
      * Validates a user profile, and appends any errors to the session errors list. If the profile is new, the password will be checked to
@@ -134,7 +134,7 @@ public interface UserManager {
      * @param context the current wiki context
      * @param profile the supplied UserProfile
      */
-    void validateProfile( Context context, UserProfile profile );
+    void validateProfile( WikiContext context, UserProfile profile );
 
     /**
      *  A helper method for returning all of the known WikiNames in this system.

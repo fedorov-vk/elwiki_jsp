@@ -26,7 +26,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  Context c = ContextUtil.findContext(pageContext);
+  WikiContext c = ContextUtil.findContext(pageContext);
 %>
 <c:set var="redirect"><%= c.getPageId() %></c:set>
 <c:set var="username"><wiki:UserName /></c:set>

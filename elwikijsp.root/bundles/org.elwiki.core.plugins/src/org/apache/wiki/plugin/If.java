@@ -29,7 +29,7 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -127,7 +127,7 @@ import org.apache.wiki.util.TextUtil;
  *
  * <p>
  * The functional (method ifInclude), decision-making part of this plugin may be called from other code (e.g.,
- * other plugins) since it is available as a static method {@link #ifInclude(Context,Map)}. Note that the plugin
+ * other plugins) since it is available as a static method {@link #ifInclude(WikiContext,Map)}. Note that the plugin
  * body may contain references to other plugins.
  * </p>
  *
@@ -173,7 +173,7 @@ public class If implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		this.engine = context.getEngine();
 		this.variableManager = engine.getManager(VariableManager.class);
 		this.authorizationManager = engine.getManager(AuthorizationManager.class);
@@ -194,7 +194,7 @@ public class If implements Plugin {
 	 * @throws PluginException If something goes wrong.
 	 * @return True, if the condition holds.
 	 */
-	protected boolean ifInclude(Context context, Map<String, String> params) throws PluginException {
+	protected boolean ifInclude(WikiContext context, Map<String, String> params) throws PluginException {
 		String group = params.get(PARAM_GROUP);
 		String user = params.get(PARAM_USER);
 		String ip = params.get(PARAM_IP);
@@ -225,7 +225,7 @@ public class If implements Plugin {
 		return include;
 	}
 
-	private boolean checkExists(Context context, String page, String exists) {
+	private boolean checkExists(WikiContext context, String page, String exists) {
 		if (exists == null) {
 			return false;
 		}
@@ -239,7 +239,7 @@ public class If implements Plugin {
 		return varContent == null ^ TextUtil.isPositive(exists);
 	}
 
-	private boolean checkGroup(Context context, String group) {
+	private boolean checkGroup(WikiContext context, String group) {
 		if (group == null) {
 			return false;
 		}
@@ -263,7 +263,7 @@ public class If implements Plugin {
 		return include;
 	}
 
-	private boolean checkUser(Context context, String user) {
+	private boolean checkUser(WikiContext context, String user) {
 		if (user == null || context.getCurrentUser() == null) {
 			return false;
 		}
@@ -288,7 +288,7 @@ public class If implements Plugin {
 	}
 
 	// TODO: Add subnetwork matching, e.g. 10.0.0.0/8
-	private boolean checkIP(Context context, String ipaddr) {
+	private boolean checkIP(WikiContext context, String ipaddr) {
 		if (ipaddr == null || context.getHttpRequest() == null) {
 			return false;
 		}

@@ -28,8 +28,8 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	String postURL = "";
-    Context ctx = ContextUtil.findContext( pageContext );
+String postURL = "";
+    WikiContext ctx = ContextUtil.findContext( pageContext );
     IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
 
     if( mgr.isContainerAuthenticated() )

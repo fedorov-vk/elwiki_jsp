@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEventListener;
@@ -165,10 +165,10 @@ public interface AuthorizationManager extends Initializable {
     boolean hasRoleOrPrincipal( Session session, Principal principal );
 
     /**
-     * Checks whether the current user has access to the wiki context, by obtaining the required Permission ({@link Context#requiredPermission()})
+     * Checks whether the current user has access to the wiki context, by obtaining the required Permission ({@link WikiContext#requiredPermission()})
      * and delegating the access check to {@link #checkPermission(Session, Permission)}. If the user is allowed, this method returns
      * <code>true</code>; <code>false</code> otherwise. If access is allowed, the wiki context will be added to the request as an attribute
-     * with the key name {@link org.apache.wiki.api.core.Context#ATTR_WIKI_CONTEXT}. Note that this method will automatically redirect the user to
+     * with the key name {@link org.apache.wiki.api.core.WikiContext#ATTR_WIKI_CONTEXT}. Note that this method will automatically redirect the user to
      * a login or error page, as appropriate, if access fails. This is NOT guaranteed to be default behavior in the future.
      *
      * @param context wiki context to check if it is accesible
@@ -176,18 +176,18 @@ public interface AuthorizationManager extends Initializable {
      * @return the result of the access check
      * @throws IOException In case something goes wrong
      */
-    default boolean hasAccess( final Context context, final HttpServletResponse response ) throws IOException {
+    default boolean hasAccess( final WikiContext context, final HttpServletResponse response ) throws IOException {
     	boolean result = hasAccess( context, response, true );
         return result;
     }
 
     /**
      * Checks whether the current user has access to the wiki context (and
-     * optionally redirects if not), by obtaining the required Permission ({@link Context#requiredPermission()})
+     * optionally redirects if not), by obtaining the required Permission ({@link WikiContext#requiredPermission()})
      * and delegating the access check to {@link #checkPermission(Session, Permission)}.
      * If the user is allowed, this method returns <code>true</code>;
      * <code>false</code> otherwise. Also, the wiki context will be added to the request as attribute
-     * with the key name {@link org.apache.wiki.api.core.Context#ATTR_WIKI_CONTEXT}.
+     * with the key name {@link org.apache.wiki.api.core.WikiContext#ATTR_WIKI_CONTEXT}.
      *
      * @param context wiki context to check if it is accesible
      * @param response The servlet response object
@@ -195,7 +195,7 @@ public interface AuthorizationManager extends Initializable {
      * @return the result of the access check
      * @throws IOException If something goes wrong
      */
-    boolean hasAccess( final Context context, final HttpServletResponse response, final boolean redirect ) throws IOException;
+    boolean hasAccess( final WikiContext context, final HttpServletResponse response, final boolean redirect ) throws IOException;
 
     /**
      * Checks to see if the local security policy allows a particular static Permission.

@@ -36,7 +36,7 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
   //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK:
-  Context prCtx = ContextUtil.findContext( pageContext );
+  WikiContext prCtx = ContextUtil.findContext( pageContext );
   TemplateManager t = ServicesRefs.getTemplateManager();
 %>
 <c:set var="skins"       value="<%=t.listSkins(pageContext, prCtx.getShape() )%>" />

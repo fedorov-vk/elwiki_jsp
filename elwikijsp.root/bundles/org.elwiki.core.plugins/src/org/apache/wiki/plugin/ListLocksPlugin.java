@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.plugin;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
@@ -43,7 +43,7 @@ public class ListLocksPlugin implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
     	final StringBuilder result = new StringBuilder();
         final PageManager mgr = ServicesRefs.getPageManager();
         final List< PageLock > locks = mgr.getActiveLocks();

@@ -31,7 +31,7 @@
 <fmt:setBundle basename="templates.default"/>
 
 <%
-  Context c = ContextUtil.findContext( pageContext );
+  WikiContext c = ContextUtil.findContext( pageContext );
   List history = ServicesRefs.getPageManager().getVersionHistory(c.getPage().getName());
   pageContext.setAttribute( "history", history );
   pageContext.setAttribute( "diffprovider", ServicesRefs.getVariableManager().getVariable(c,"jspwiki.diffProvider"));

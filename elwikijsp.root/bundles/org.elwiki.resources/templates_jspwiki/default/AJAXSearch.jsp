@@ -49,10 +49,10 @@
   Engine wiki;
 %>
 <%
-  /* ********************* actual start ********************* */
+/* ********************* actual start ********************* */
   /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
 
-  Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
+  WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
   if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
   String query = request.getParameter( "query");

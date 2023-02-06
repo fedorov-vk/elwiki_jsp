@@ -30,13 +30,13 @@
   }
 %>
 <%
-  Context wikiContext;
-  wikiContext = (Context)request.getAttribute(Context.ATTR_WIKI_CONTEXT);
+  WikiContext wikiContext;
+  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
   if( wikiContext==null )
   {
     // Copied from a top-level jsp -- which would be a better place to put this 
     wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
-    request.setAttribute(Context.ATTR_WIKI_CONTEXT, wikiContext);
+    request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
   }
   if( !ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response) ) return;
   String pagereq = wikiContext.getPage().getName();

@@ -18,7 +18,7 @@
  */
 package org.apache.wiki;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 
 /**
@@ -33,6 +33,6 @@ public interface StringTransmutator {
      *  @param source  The source string.
      *  @return The mutated string.
      */
-    String mutate( Context context, String source );
+    String mutate( WikiContext context, String source );
 
 }

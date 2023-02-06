@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -80,7 +80,7 @@ public class Search implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		this.engine = context.getEngine();
 		this.searchManager = this.engine.getManager(SearchManager.class);
 		this.renderingManager = this.engine.getManager(RenderingManager.class);
@@ -120,12 +120,12 @@ public class Search implements Plugin {
 		return res;
 	}
 
-	private Collection<SearchResult> doBasicQuery(Context context, String query) throws ProviderException, IOException {
+	private Collection<SearchResult> doBasicQuery(WikiContext context, String query) throws ProviderException, IOException {
 		log.debug("Searching for string " + query);
 		return this.searchManager.findPages(query, context);
 	}
 
-	private String renderResults(Collection<SearchResult> results, Context context, int maxItems) {
+	private String renderResults(Collection<SearchResult> results, WikiContext context, int maxItems) {
 		Element table = XhtmlUtil.element(XHTML.table);
 		//table.setAttribute(XHTML.ATTR_border,"0");
 		//table.setAttribute(XHTML.ATTR_cellpadding,"4");

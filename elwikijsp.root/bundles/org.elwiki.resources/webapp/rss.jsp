@@ -55,7 +55,7 @@ if (m_cacheManager.cacheExists(cacheName)) {
     }
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     WikiPage wikipage = wikiContext.getPage();
 

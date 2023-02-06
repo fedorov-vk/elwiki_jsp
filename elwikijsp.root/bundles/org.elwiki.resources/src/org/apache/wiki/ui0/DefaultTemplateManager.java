@@ -40,7 +40,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
@@ -231,7 +231,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 
 	/** {@inheritDoc} */
 	@Override
-	public String findResource(final Context ctx, final String template, final String name) {
+	public String findResource(final WikiContext ctx, final String template, final String name) {
 		return findResource((ServletContext)null, template, name);
 	}
 
@@ -356,7 +356,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	/** {@inheritDoc} */
 	@Override
 	public Map<String, String> listTimeFormats(final PageContext pageContext) {
-		final Context context = ContextUtil.findContext(pageContext);
+		final WikiContext context = ContextUtil.findContext(pageContext);
 		IPreferenceStore props = this.wikiConfiguration.getWikiPreferences();
 		final ArrayList<String> tfArr = new ArrayList<>(40);
 		final LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();

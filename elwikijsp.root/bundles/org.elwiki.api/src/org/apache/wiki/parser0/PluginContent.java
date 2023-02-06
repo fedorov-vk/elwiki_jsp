@@ -23,7 +23,7 @@ import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.ParserStagePlugin;
@@ -118,7 +118,7 @@ public class PluginContent extends Text implements PluginElement {
             return getPluginName();
         }
 
-        final Context context = doc.getContext();
+        final WikiContext context = doc.getContext();
         if( context == null ) {
             log.info( "WikiContext garbage-collected, cannot proceed" );
             return getPluginName();
@@ -129,9 +129,9 @@ public class PluginContent extends Text implements PluginElement {
 
     /**{@inheritDoc}*/
     @Override
-    public String invoke( final Context context ) {
+    public String invoke( final WikiContext context ) {
 		String result;
-		final Boolean wysiwygVariable = context.getVariable( Context.VAR_WYSIWYG_EDITOR_MODE );
+		final Boolean wysiwygVariable = context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         boolean wysiwygEditorMode = false;
         if( wysiwygVariable != null ) {
             wysiwygEditorMode = wysiwygVariable;
@@ -151,7 +151,7 @@ public class PluginContent extends Text implements PluginElement {
                 final String cmdLine = m_params.get( CMDLINE ).replaceAll( LINEBREAK, ELEMENT_BR );
                 result = result + cmdLine + PLUGIN_END;
             } else {
-                final Boolean b = context.getVariable( Context.VAR_EXECUTE_PLUGINS );
+                final Boolean b = context.getVariable( WikiContext.VAR_EXECUTE_PLUGINS );
                 if (b != null && !b ) {
                     return BLANK;
                 }
@@ -186,7 +186,7 @@ public class PluginContent extends Text implements PluginElement {
 
     /**{@inheritDoc}*/
     @Override
-    public void executeParse( final Context context ) throws PluginException {
+    public void executeParse( final WikiContext context ) throws PluginException {
         final PluginManager pm = ServicesRefs.getPluginManager();
         if( pm.pluginsEnabled() ) {
             final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
@@ -212,7 +212,7 @@ public class PluginContent extends Text implements PluginElement {
      * @throws PluginException If plugin invocation is faulty
      * @since 2.10.0
      */
-    public static PluginContent parsePluginLine( final Context context, final String commandline, final int pos ) throws PluginException {
+    public static PluginContent parsePluginLine( final WikiContext context, final String commandline, final int pos ) throws PluginException {
         final PatternMatcher matcher = new Perl5Matcher();
 
         try {

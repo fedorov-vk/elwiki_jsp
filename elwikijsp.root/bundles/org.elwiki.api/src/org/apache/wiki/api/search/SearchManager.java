@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.search;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -61,7 +61,7 @@ public interface SearchManager extends PageFilter, InternalModule, WikiEventList
      * @throws ProviderException If the provider fails and a search cannot be completed.
      * @throws IOException If something else goes wrong.
      */
-    default Collection< SearchResult > findPages( String query, final Context wikiContext ) throws ProviderException, IOException {
+    default Collection< SearchResult > findPages( String query, final WikiContext wikiContext ) throws ProviderException, IOException {
         if( query == null ) {
             query = "";
         }

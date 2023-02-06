@@ -55,7 +55,7 @@ import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
@@ -480,7 +480,7 @@ public class LuceneSearchProvider implements SearchProvider {
      *  {@inheritDoc}
      */
     @Override
-    public Collection< SearchResult > findPages( final String query, final Context wikiContext ) throws ProviderException {
+    public Collection< SearchResult > findPages( final String query, final WikiContext wikiContext ) throws ProviderException {
         return findPages( query, FLAG_CONTEXTS, wikiContext );
     }
 
@@ -498,7 +498,7 @@ public class LuceneSearchProvider implements SearchProvider {
      *  @return A Collection of SearchResult instances
      *  @throws ProviderException if there is a problem with the backend
      */
-    public Collection< SearchResult > findPages( final String query, final int flags, final Context wikiContext ) throws ProviderException {
+    public Collection< SearchResult > findPages( final String query, final int flags, final WikiContext wikiContext ) throws ProviderException {
         ArrayList<SearchResult> list = null;
         Highlighter highlighter = null;
 

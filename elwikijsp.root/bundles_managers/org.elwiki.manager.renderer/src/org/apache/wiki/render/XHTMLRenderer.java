@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.render;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.WikiRenderer;
 import org.jdom2.output.Format;
@@ -43,7 +43,7 @@ public class XHTMLRenderer extends WikiRenderer {
      *  @param context A WikiContext in which the rendering will take place.
      *  @param doc The WikiDocument which shall be rendered.
      */
-    public XHTMLRenderer( final Context context, final WikiDocument doc )
+    public XHTMLRenderer( final WikiContext context, final WikiDocument doc )
     {
         super( context, doc );
     }

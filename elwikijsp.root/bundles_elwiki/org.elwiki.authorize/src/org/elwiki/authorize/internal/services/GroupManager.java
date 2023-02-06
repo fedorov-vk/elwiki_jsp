@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiEvent;
@@ -377,7 +377,7 @@ public class GroupManager implements IGroupManager {
 	 */
 	// :FVK: этот метод используется только в JSP файлах.
 	@Override
-	public WrapGroup parseGroup(Context context, boolean create) throws WikiSecurityException {
+	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException {
 		// Extract parameters
 		HttpServletRequest request = context.getHttpRequest();
 		String name = request.getParameter("group");
@@ -487,7 +487,7 @@ public class GroupManager implements IGroupManager {
 	//? :FVK: этот метод используется -- в коде EditGroupCmdCode (из JSP файла).
 	//? :FVK: этот метод нигде используется -- в JSP файле.
 	@Override
-	public void validateGroup(Context context, WrapGroup group) {
+	public void validateGroup(WikiContext context, WrapGroup group) {
 		InputValidator validator = new InputValidator(MESSAGES_KEY, context);
 
 		// Name cannot be null or one of the restricted names
@@ -539,7 +539,7 @@ public class GroupManager implements IGroupManager {
 	 *                               is illegal.
 	 * @see Group#RESTRICTED_GROUPNAMES
 	 */
-	protected void checkGroupName(Context context, String name) throws WikiSecurityException {
+	protected void checkGroupName(WikiContext context, String name) throws WikiSecurityException {
 		//TODO: groups cannot have the same name as a user
 
 		// Name cannot be null

@@ -19,7 +19,7 @@
 package org.apache.wiki.ui.admin;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.management0.SimpleMBean;
 import org.apache.wiki.ui.admin0.AdminBean;
@@ -66,7 +66,7 @@ public abstract class SimpleAdminBean extends SimpleMBean implements AdminBean {
      *  The value is determined by the toString() method of the attribute.
      */
     @Override
-    public String doGet( final Context context ) {
+    public String doGet( final WikiContext context ) {
         final MBeanInfo info = getMBeanInfo();
         final MBeanAttributeInfo[] attributes = info.getAttributes();
         final StringBuilder sb = new StringBuilder();
@@ -98,7 +98,7 @@ public abstract class SimpleAdminBean extends SimpleMBean implements AdminBean {
      *  Not implemented yet.
      */
     @Override
-    public String doPost( final Context context) {
+    public String doPost( final WikiContext context) {
         return null;
     }
 

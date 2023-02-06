@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
@@ -25,7 +25,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 		Engine wiki = ServicesRefs.Instance;
 
 		// Create wiki context and check for authorization
-		Context wikiContext = Wiki.context().create(wiki, httpRequest, Context.GROUP_EDIT);
+		WikiContext wikiContext = Wiki.context().create(wiki, httpRequest, WikiContext.GROUP_EDIT);
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
 			return;
 

@@ -19,7 +19,7 @@
 package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -160,7 +160,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
         final Calendar   startTime;
         final Calendar   stopTime;
         int        numDays = DEFAULT_DAYS;
@@ -271,7 +271,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  @param entry
      *  @throws ProviderException
      */
-    private void addEntryHTML( final Context context, final DateFormat entryFormat, final boolean hasComments,
+    private void addEntryHTML( final WikiContext context, final DateFormat entryFormat, final boolean hasComments,
                                final StringBuilder buffer, final WikiPage entry, final Map< String, String > params) {
         final Engine engine = context.getEngine();
         final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
@@ -290,7 +290,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         //
         //  Append the text of the latest version.  Reset the context to that page.
         //
-        final Context entryCtx = context.clone();
+        final WikiContext entryCtx = context.clone();
         entryCtx.setPage( entry );
 
         String html = ServicesRefs.getRenderingManager().getHTML( entryCtx, ServicesRefs.getPageManager().getPage( entry.getName() ) );
@@ -446,7 +446,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  {@inheritDoc}
      */
     @Override
-    public void executeParser( final PluginElement element, final Context context, final Map< String, String > params ) {
+    public void executeParser( final PluginElement element, final WikiContext context, final Map< String, String > params ) {
         context.getPage().setAttribute(ATTR_ISWEBLOG, "true");
     }
 

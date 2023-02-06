@@ -36,13 +36,13 @@
     Logger log = Logger.getLogger("JSPWiki");
 %>
 <%
-	/*
+    /*
      *  This JSP creates support for the SisterSites standard, as specified by
      *  http://usemod.com/cgi-bin/mb.pl?SisterSitesImplementationGuide
      */
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
     if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
     Set< String > allPages = ServicesRefs.getReferenceManager().findCreated();

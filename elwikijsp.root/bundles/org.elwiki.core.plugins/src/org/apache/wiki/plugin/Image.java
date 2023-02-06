@@ -21,7 +21,7 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -117,7 +117,7 @@ public class Image implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		this.engine = context.getEngine();
 		this.attachmentManager = engine.getManager(AttachmentManager.class);
 
@@ -153,7 +153,7 @@ public class Image implements Plugin {
 			AttachmentContent att = this.attachmentManager.getAttachmentContent(context, src);
 
 			if (att != null) {
-				src = context.getURL(Context.ATTACHMENT_DOWNLOAD, att.getPageAttachment().getName(),
+				src = context.getURL(WikiContext.ATTACHMENT_DOWNLOAD, att.getPageAttachment().getName(),
 						"pageId=" + context.getPageId());
 			}
 		} catch (ProviderException e) {

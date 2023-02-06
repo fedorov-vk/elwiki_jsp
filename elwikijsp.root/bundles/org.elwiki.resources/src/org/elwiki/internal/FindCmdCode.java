@@ -11,7 +11,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
@@ -44,7 +44,7 @@ public class FindCmdCode extends CmdCode {
 		Engine wiki = ServicesRefs.Instance;
 
 		// Get wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
 			return;
 		}

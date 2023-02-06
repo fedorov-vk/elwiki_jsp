@@ -35,7 +35,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-	Context c = ContextUtil.findContext(pageContext);
+  WikiContext c = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
   int attCount = ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -156,7 +156,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' />"
            class="wikiform"
               id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />"
@@ -405,7 +405,7 @@ int MAXATTACHNAMELENGTH = 30;
          <td>
             <input type="button"
                    value="Restore"
-                   url="<wiki:Link format='url' context='<%=Context.UPLOAD.getRequestContext()%>'/>"/>
+                   url="<wiki:Link format='url' context='<%=WikiContext.UPLOAD.getRequestContext()%>'/>"/>
          </td>
       </wiki:Permission>
       --%>

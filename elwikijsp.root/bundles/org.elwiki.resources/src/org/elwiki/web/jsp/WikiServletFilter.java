@@ -21,8 +21,8 @@ package org.elwiki.web.jsp;
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.WikiContext;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.WikiContextImpl;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.IIAuthenticationManager;
@@ -197,9 +197,9 @@ public class WikiServletFilter implements Filter {
      *  @param request The request to examine
      *  @return A valid WikiContext value (or null, if the context could not be located).
      */
-    protected WikiContext getWikiContext( final ServletRequest request ) {
+    protected WikiContextImpl getWikiContext( final ServletRequest request ) {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
-        return ( WikiContext )httpRequest.getAttribute( Context.ATTR_WIKI_CONTEXT );
+        return ( WikiContextImpl )httpRequest.getAttribute( WikiContext.ATTR_WIKI_CONTEXT );
     }
 
     /** 

@@ -20,7 +20,7 @@
 package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -63,7 +63,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		super.initialize(context, params);
 
 		String include = params.get(PARAM_INCLUDE);
@@ -94,7 +94,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 				} else {
 					currentDiv.addContent(", ");
 				}
-				currentDiv.addContent(getLink(context.getURL(Context.PAGE_VIEW, page.getId()), name));
+				currentDiv.addContent(getLink(context.getURL(WikiContext.PAGE_VIEW, page.getId()), name));
 			}
 
 		} catch (ProviderException e) {
@@ -137,7 +137,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 	 * @return A list containing page names which matched the filters.
 	 * @throws ProviderException
 	 */
-	private List<WikiPage> listPages(Context context, String include, String exclude) throws ProviderException {
+	private List<WikiPage> listPages(WikiContext context, String include, String exclude) throws ProviderException {
 		Pattern includePattern = include != null ? Pattern.compile(include) : Pattern.compile(".*");
 		Pattern excludePattern = exclude != null ? Pattern.compile(exclude) : Pattern.compile("\\p{Cntrl}"); // there are no control characters in page names
 		List<WikiPage> result = new ArrayList<>();

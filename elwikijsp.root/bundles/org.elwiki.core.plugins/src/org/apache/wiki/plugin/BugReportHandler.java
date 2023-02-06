@@ -20,7 +20,7 @@ package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -76,7 +76,7 @@ public class BugReportHandler implements Plugin {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context context, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
         final String title = params.get( PARAM_TITLE );
         String description = params.get( PARAM_DESCRIPTION );
         String version = params.get( PARAM_VERSION );
@@ -143,7 +143,7 @@ public class BugReportHandler implements Plugin {
             //  Now create a new page for this bug report
             final String pageName = findNextPage( context, title, params.get( PARAM_PAGE ) );
             final WikiPage newPage = Wiki.contents().page( pageName );
-            final Context newContext = context.clone();
+            final WikiContext newContext = context.clone();
             newContext.setPage( newPage );
             ServicesRefs.getPageManager().saveText( newContext, str.toString(), "bugreporthandler", "" ); // :FVK: workaround - надо задать автора?
 
@@ -165,7 +165,7 @@ public class BugReportHandler implements Plugin {
      *  Finds a free page name for adding the bug report.  Tries to construct a page, and if it's found, adds a number to it
      *  and tries again.
      */
-    private synchronized String findNextPage( final Context context, final String title, final String baseName ) {
+    private synchronized String findNextPage( final WikiContext context, final String title, final String baseName ) {
         final String basicPageName = ( ( baseName != null ) ? baseName : "Bug" ) + MarkupParser.cleanLink( title );
         final Engine engine = context.getEngine();
 

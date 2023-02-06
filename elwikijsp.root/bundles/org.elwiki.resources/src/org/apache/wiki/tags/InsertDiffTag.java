@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.services.ServicesRefs;
@@ -95,7 +95,7 @@ public class InsertDiffTag extends BaseWikiTag {
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final Engine engine = m_wikiContext.getEngine();
-		final Context ctx;
+		final WikiContext ctx;
 
 		if (m_pageId != null) {
 			ctx = m_wikiContext.clone();

@@ -19,7 +19,7 @@
 
 package org.apache.wiki.forms;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
@@ -56,7 +56,7 @@ public class FormOutput extends FormElement {
      * @return {@inheritDoc}
      */
     @Override
-    public String execute( final Context ctx, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext ctx, final Map< String, String > params ) throws PluginException {
         //  If there is no HTTP request, returns immediately.
         if( ctx.getHttpRequest() == null ) {
             return "";

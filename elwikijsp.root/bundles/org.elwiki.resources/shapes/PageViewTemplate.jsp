@@ -43,10 +43,10 @@
   <wiki:CheckVersion mode="notlatest">
     <meta name="robots" content="noindex,nofollow" />
   </wiki:CheckVersion>
-  <wiki:CheckRequestContext context="<%=ContextUtil.compose(Context.PAGE_DIFF, Context.PAGE_INFO)%>">
+  <wiki:CheckRequestContext context="<%=ContextUtil.compose(WikiContext.PAGE_DIFF, WikiContext.PAGE_INFO)%>">
     <meta name="robots" content="noindex,nofollow" />
   </wiki:CheckRequestContext>
-  <wiki:CheckRequestContext context="!view">
+  <wiki:CheckRequestContext context="!<%=WikiContext.PAGE_VIEW%>">
     <meta name="robots" content="noindex,follow" />
   </wiki:CheckRequestContext>
 </head>
@@ -55,12 +55,12 @@
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
 <%@ include file="/shapes/default/Header.jsp" %>
 <!-- ~~ Page Middle ~~ -->
-<wiki:CheckRequestContext context="!<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="!<%=WikiContext.PAGE_EDIT%>">
   <c:set var="sidebarState"><wiki:Variable var="sidebar" default="${prefs.Sidebar}" /></c:set>
   <c:set var="sidebarCookie" value="Sidebar" />
   <wiki:CheckRequestContext context='login'>
   <%--:FVK:
-  <%=Context.WIKI_LOGIN%>|<%=Context.WIKI_PREFS%>|<%=Context.GROUP_CREATE%>|<%=Context.GROUP_VIEW%>|<%=Context.PAGE_CONFLICT%>'>
+  <%=WikiContext.WIKI_LOGIN%>|<%=WikiContext.WIKI_PREFS%>|<%=WikiContext.GROUP_CREATE%>|<%=WikiContext.GROUP_VIEW%>|<%=WikiContext.PAGE_CONFLICT%>'>
   --%>
     <c:set var="sidebarState" value="" />
     <c:set var="sidebarCookie" value="" />
@@ -70,7 +70,7 @@
                                        data-toggle-pref="${sidebarCookie}" >
     <div class="page" role="main">
 </wiki:CheckRequestContext>
-<wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
   <div class="content" data-toggle="li#menu,.sidebar>.close" >
     <div class="page">
 </wiki:CheckRequestContext>

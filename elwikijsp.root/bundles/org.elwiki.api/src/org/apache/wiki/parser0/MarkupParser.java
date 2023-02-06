@@ -25,7 +25,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.StringTransmutator;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -57,7 +57,7 @@ public abstract class MarkupParser {
 
     protected Engine m_engine;
     protected IWikiConfiguration config;
-    protected Context m_context;
+    protected WikiContext m_context;
 
 	/** Optionally stores internal wikilinks. */
 	protected List<LinkCollector> m_localLinkCollectors = new ArrayList<>();
@@ -152,7 +152,7 @@ public abstract class MarkupParser {
      *  @param context The WikiContext.
      *  @param in The reader from which we are reading the bytes from.
      */
-    protected MarkupParser( final Context context, final Reader in ) {
+    protected MarkupParser( final WikiContext context, final Reader in ) {
         m_engine = context.getEngine();
         this.config = context.getConfiguration();
         m_context = context;

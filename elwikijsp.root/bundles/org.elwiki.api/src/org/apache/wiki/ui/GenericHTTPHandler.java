@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 
 /**
@@ -40,13 +40,13 @@ public interface GenericHTTPHandler {
      *  @param context associated WikiContext
      *  @return the HTML for the bean
      */
-    String doGet( Context context );
+    String doGet( WikiContext context );
     
     /**
      *  Handles a POST response.
      *  @param context associated WikiContext
      *  @return the response string resulting from the POST
      */
-    String doPost( Context context );
+    String doPost( WikiContext context );
 
 }

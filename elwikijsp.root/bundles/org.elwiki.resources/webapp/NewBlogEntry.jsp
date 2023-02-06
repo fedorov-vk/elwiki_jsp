@@ -30,7 +30,7 @@
 <%
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context; no need to check for authorization since the redirect will take care of that
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_EDIT.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_EDIT.getRequestContext() );
     String pagereq = wikiContext.getName();
     
     // Redirect if the request was for a 'special page'

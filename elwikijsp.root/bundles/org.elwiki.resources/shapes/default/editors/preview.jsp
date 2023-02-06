@@ -32,14 +32,14 @@
         This is a special editor component for JSPWiki preview storage.
 --%>
 <%
-   Context context = ContextUtil.findContext( pageContext );
+   WikiContext context = ContextUtil.findContext( pageContext );
    String usertext = (String)pageContext.getAttribute( EditorManager.ATTR_EDITEDTEXT, PageContext.REQUEST_SCOPE );
    if( usertext == null ) usertext = "";
 
    String action = "comment".equals(request.getParameter("action")) ?
-                   context.getURL( ContextEnum.PAGE_COMMENT.getRequestContext(), context.getName() ) :
-                   context.getURL( ContextEnum.PAGE_EDIT.getRequestContext(), context.getName() );
- %>
+                   context.getURL( WikiContext.PAGE_COMMENT, context.getName() ) :
+                   context.getURL( WikiContext.PAGE_EDIT, context.getName() );
+%>
 <form action="<%=action%>"
       method="post" accept-charset="<wiki:ContentEncoding/>"
        class=""

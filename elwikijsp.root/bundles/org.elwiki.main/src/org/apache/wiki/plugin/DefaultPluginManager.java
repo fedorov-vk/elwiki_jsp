@@ -32,7 +32,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -348,7 +348,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
     /** {@inheritDoc} */
     @Override
-    public String execute( final Context context, final String classname, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext context, final String classname, final Map< String, String > params ) throws PluginException {
         if( !m_pluginsEnabled ) {
             return "";
         }
@@ -466,7 +466,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
     /** {@inheritDoc} */
     @Override
-    public String execute( final Context context, final String commandline ) throws PluginException {
+    public String execute( final WikiContext context, final String commandline ) throws PluginException {
         if( !m_pluginsEnabled ) {
             return "";
         }

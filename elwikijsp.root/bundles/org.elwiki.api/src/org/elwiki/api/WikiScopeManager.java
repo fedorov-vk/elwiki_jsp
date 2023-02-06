@@ -2,7 +2,7 @@ package org.elwiki.api;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 public interface WikiScopeManager {
 	String getData();
@@ -20,5 +20,5 @@ public interface WikiScopeManager {
 	 *                    pages.
 	 * @param scopes      contains JSON data defining the names and pages of named scopes.
 	 */
-	void ReinitScope(Context wikiContext, String scopeArea, String scopeName, String scopes);
+	void ReinitScope(WikiContext wikiContext, String scopeArea, String scopeName, String scopes);
 }

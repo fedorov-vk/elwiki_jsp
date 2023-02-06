@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.api.filters;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.FilterException;
@@ -34,8 +34,8 @@ import static org.apache.wiki.api.filters.FilterSupportOperations.methodOfNonPub
 /**
  *  <p>Provides a definition for a page filter. A page filter is a class that can be used to transform the WikiPage content being saved or
  *  being loaded at any given time.</p>
- *  <p>Note that the Context#getPage() method always returns the context in which text is rendered, i.e. the original request. Thus the
- *  content may actually be different content than what what the Context#getPage() implies! This happens often if you are for example
+ *  <p>Note that the WikiContext#getPage() method always returns the context in which text is rendered, i.e. the original request. Thus the
+ *  content may actually be different content than what what the WikiContext#getPage() implies! This happens often if you are for example
  *  including multiple pages on the same page.</p>
  *  <p>PageFilters must be thread-safe! There is only one instance of each PageFilter per each Engine invocation. If you need to store data
  *  persistently, use VariableManager, or WikiContext.</p>
@@ -58,7 +58,7 @@ public interface PageFilter extends Initializable {
      *  @return The modified wikimarkup content. Default implementation returns the markup as received.
      *  @throws FilterException If something goes wrong.  Throwing this causes the entire page processing to be abandoned.
      */
-    default String preTranslate( final Context context, final String content ) throws FilterException {
+    default String preTranslate( final WikiContext context, final String content ) throws FilterException {
         final Method m = methodOfNonPublicAPI( this, "preTranslate", "org.apache.wiki.WikiContext", "java.lang.String" );
         return executePageFilterPhase( () -> content, m, this, context, content );
         // return content;
@@ -73,7 +73,7 @@ public interface PageFilter extends Initializable {
      *  @return The modified HTML. Default implementation returns the translated html as received.
      *  @throws FilterException If something goes wrong.  Throwing this causes the entire page processing to be abandoned.
      */
-    default String postTranslate( final Context context, final String htmlContent ) throws FilterException {
+    default String postTranslate( final WikiContext context, final String htmlContent ) throws FilterException {
         final Method m = methodOfNonPublicAPI( this, "postTranslate", "org.apache.wiki.WikiContext", "java.lang.String" );
         return executePageFilterPhase( () -> htmlContent, m, this, context, htmlContent );
         // return htmlContent;
@@ -87,7 +87,7 @@ public interface PageFilter extends Initializable {
      *  @return The modified wikimarkup. Default implementation returns the markup as received.
      *  @throws FilterException If something goes wrong.  Throwing this causes the entire page processing to be abandoned.
      */
-    default String preSave( final Context context, final String content ) throws FilterException {
+    default String preSave( final WikiContext context, final String content ) throws FilterException {
         final Method m = methodOfNonPublicAPI( this, "preSave", "org.apache.wiki.WikiContext", "java.lang.String" );
         return executePageFilterPhase( () -> content, m, this, context, content );
         // return content;
@@ -103,7 +103,7 @@ public interface PageFilter extends Initializable {
      *  @param content The content which was just stored.
      * @throws WikiException If something goes wrong.  As the page is already saved, This is just logged.
      */
-    default void postSave( final Context context, final String content ) throws WikiException {
+    default void postSave( final WikiContext context, final String content ) throws WikiException {
         final Method m = methodOfNonPublicAPI( this, "postSave", "org.apache.wiki.WikiContext", "java.lang.String" );
         executePageFilterPhase( () -> null, m, this, content );
         // empty method

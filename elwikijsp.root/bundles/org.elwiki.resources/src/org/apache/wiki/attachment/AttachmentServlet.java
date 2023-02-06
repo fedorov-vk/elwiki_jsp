@@ -45,7 +45,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
@@ -208,7 +208,7 @@ public class AttachmentServlet extends HttpServlet {
 	// FIXME: Messages would need to be localized somehow.
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		Context context = Wiki.context().create(m_engine, req, Context.ATTACHMENT_DOWNLOAD);
+		WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOWNLOAD);
 		String version = req.getParameter(HDR_VERSION);
 		String nextPage = req.getParameter("nextpage");
 		String attachmentName;//:FVK: = context.getPage().getName();
@@ -327,7 +327,7 @@ public class AttachmentServlet extends HttpServlet {
 	 * @param fileName The name to check for.
 	 * @return A valid mime type, or application/binary, if not recognized
 	 */
-	private static String getMimeType(Context ctx, String fileName) {
+	private static String getMimeType(WikiContext ctx, String fileName) {
 		String mimetype = null;
 
 		HttpServletRequest req = ctx.getHttpRequest();
@@ -410,7 +410,7 @@ public class AttachmentServlet extends HttpServlet {
 			FileItemFactory factory = new DiskFileItemFactory();
 
 			// Create the context _before_ Multipart operations, otherwise strict servlet containers may fail when setting encoding.
-			Context context = Wiki.context().create(m_engine, req, Context.ATTACHMENT_DOWNLOAD);
+			WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOWNLOAD);
 			UploadListener pl = new UploadListener();
 
 			this.progressManager.startProgress(pl, progressId);
@@ -502,7 +502,7 @@ public class AttachmentServlet extends HttpServlet {
 	 * @throws IOException       If there is a problem in the upload.
 	 * @throws ProviderException If there is a problem in the backend.
 	 */
-	protected void executeUpload(Context context, InputStream data, String filename, String errorPage,
+	protected void executeUpload(WikiContext context, InputStream data, String filename, String errorPage,
 			WikiPage parentPage, String changenote, long contentLength)
 			throws RedirectException, IOException, ProviderException {
 		try {

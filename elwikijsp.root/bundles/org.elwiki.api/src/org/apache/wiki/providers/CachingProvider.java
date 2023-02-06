@@ -23,7 +23,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -418,7 +418,7 @@ public class CachingProvider implements PageProvider {
             final RenderingManager mgr = ServicesRefs.getRenderingManager();
             try {
                 final String data = m_provider.getPageText( page.getName(), page.getVersion() );
-                final Context ctx = Wiki.context().create( m_engine, page );
+                final WikiContext ctx = Wiki.context().create( m_engine, page );
                 final MarkupParser parser = mgr.getParser( ctx, data );
 
                 parser.parse();

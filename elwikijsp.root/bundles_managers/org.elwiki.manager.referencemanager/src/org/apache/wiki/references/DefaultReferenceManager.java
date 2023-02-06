@@ -29,7 +29,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
@@ -496,7 +496,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      * @throws Exception 
      */
     @Override
-	public void postSave(final Context context, final String content) throws WikiException {
+	public void postSave(final WikiContext context, final String content) throws WikiException {
 		WikiPage page = context.getPage();
 		LinkCollector localCollector = new LinkCollector();
 		LinkCollector unknownPagesCollector = new LinkCollector();

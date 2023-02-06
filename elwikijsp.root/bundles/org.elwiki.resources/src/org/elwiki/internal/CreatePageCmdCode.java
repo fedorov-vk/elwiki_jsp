@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.pages0.PageManager;
 import org.eclipse.jdt.annotation.NonNull;
@@ -27,7 +27,7 @@ public class CreatePageCmdCode extends CmdCode {
 
 		// Are we create page?
 		if (action != null && (action.equals("create") || action.equals("createedit"))) {
-			Context m_wikiContext = (Context) httpRequest.getAttribute(Context.ATTR_WIKI_CONTEXT);
+			WikiContext m_wikiContext = (WikiContext) httpRequest.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
 			final Engine engine = m_wikiContext.getEngine();
 			@NonNull
 			PageManager pageManager = engine.getManager(PageManager.class);

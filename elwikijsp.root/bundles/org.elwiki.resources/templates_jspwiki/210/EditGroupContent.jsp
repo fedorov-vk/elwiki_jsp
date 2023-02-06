@@ -33,7 +33,7 @@
 <%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-Context c = ContextUtil.findContext( pageContext );
+WikiContext c = ContextUtil.findContext( pageContext );
 
   // Extract the group name and members
   String name = request.getParameter( "group" );

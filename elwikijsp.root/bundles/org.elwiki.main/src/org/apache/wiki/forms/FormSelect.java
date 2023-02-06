@@ -19,7 +19,7 @@
 
 package org.apache.wiki.forms;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
@@ -40,7 +40,7 @@ public class FormSelect extends FormElement {
      *  {@inheritDoc}
      */
     @Override
-    public String execute( final Context ctx, final Map< String, String > params ) throws PluginException {
+    public String execute( final WikiContext ctx, final Map< String, String > params ) throws PluginException {
         // Don't render if no error and error-only-rendering is on.
         final FormInfo info = getFormInfo( ctx );
         final ResourceBundle rb = Preferences.getBundle( ctx, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );

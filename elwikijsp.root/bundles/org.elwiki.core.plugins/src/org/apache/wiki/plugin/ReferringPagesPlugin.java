@@ -19,7 +19,7 @@
 package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
@@ -76,7 +76,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(Context context, Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		super.initialize(context, params);
 
 		try {

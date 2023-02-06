@@ -34,9 +34,9 @@
 <%@ page errorPage="/Error.jsp" %><%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! Logger log = Logger.getLogger("JSPWikiSearch"); %>
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
+    Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
-    Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
+    WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     String pagereq = wikiContext.getName();
 

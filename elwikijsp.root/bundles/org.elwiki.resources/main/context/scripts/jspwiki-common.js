@@ -1309,7 +1309,7 @@ var Collapsible =
 
 	render: function(page, name){
 		page = $(page); if(!page) return;
-
+        //:FVK: workaround - follow  string constant can changed in java code.
 		var cookie = Wiki.Context.test(/view|edit|comment/) ? "JSPWikiCollapse"+ name: "";
 
 		if(!this.bullet) {

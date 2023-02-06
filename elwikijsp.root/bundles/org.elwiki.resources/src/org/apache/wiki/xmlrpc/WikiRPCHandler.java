@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.xmlrpc;
 
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 
 
 /**
@@ -29,6 +29,6 @@ import org.apache.wiki.api.core.Context;
 // FIXME3.0: This class is fast becoming obsolete.  It should be moved to the "rpc" package in 3.0
 public interface WikiRPCHandler {
 
-    void initialize( Context context );
+    void initialize( WikiContext context );
 
 }

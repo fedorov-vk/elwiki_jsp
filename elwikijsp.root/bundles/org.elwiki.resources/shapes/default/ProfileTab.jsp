@@ -30,15 +30,15 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-	/* dateformatting not yet supported by wiki:UserProfile tag - diy */
-  Context wikiContext = ContextUtil.findContext(pageContext);
+  /* dateformatting not yet supported by wiki:UserProfile tag - diy */
+  WikiContext wikiContext = ContextUtil.findContext(pageContext);
   UserManager manager = ServicesRefs.getUserManager();
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <!-- TODO: understand and release follow //wiki:Link path='Login.jsp'// :FVK:  -->
 <form method="post" accept-charset="UTF-8"
       action="<wiki:CheckRequestContext
-     context='<%=Context.WIKI_LOGIN%>'><wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab'
+     context='<%=WikiContext.WIKI_LOGIN%>'><wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext><wiki:CheckRequestContext
      context='!login'><wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext>"

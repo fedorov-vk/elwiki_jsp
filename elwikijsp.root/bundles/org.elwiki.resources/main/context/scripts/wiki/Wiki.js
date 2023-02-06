@@ -141,6 +141,7 @@ var Wiki = {
                     },
                     toUrl: wiki.toUrl.bind(wiki),
                     allowClone: function(){
+						//:FVK: workaround - follow string constant can changed in java code.
                         return /view|preview|info|attach/.test( wiki.Context );
                     }
                 });
@@ -238,7 +239,8 @@ var Wiki = {
         //The default Date & Time format is taken for m a preference cookie, with fallback
         //String.I18N.DEFAULT_DATE_FORMAT = wiki.prefs("DateFormat") || "dd mmm yyyy hh:mm";
 
-        if( wiki.prefs("SectionEditing") && wiki.EditPermission && (wiki.Context != "preview") ){//:FVK: workaround - this string constant can changed in java code.
+        //:FVK: workaround - follow string constant can changed in java code.
+        if( wiki.prefs("SectionEditing") && wiki.EditPermission && (wiki.Context != "preview") ){
 
             wiki.addEditLinks( wiki.toUrl( wiki.PageName, true ) );
 

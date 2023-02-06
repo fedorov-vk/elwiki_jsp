@@ -40,7 +40,7 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  Context ctx = ContextUtil.findContext(pageContext);
+  WikiContext ctx = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = ctx.getPage();
   int attCount = ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
@@ -118,7 +118,7 @@
 
   <wiki:Permission permission="rename">
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
-    <form action="<wiki:Link format='url' context='<%=Context.PAGE_RENAME%>' pageId='<%=ctx.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=t(ctx.getPageId%>' />"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -138,7 +138,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=Context.PAGE_DELETE%>' pageId='<%=ctx.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=t(ctx.getPageId%>' />"
            class="form-group"
               id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -198,11 +198,11 @@
         <td class="nowrap">
           <c:if test="${not status.last}">
             <c:set var="nextVersion" value="${pageContents[status.index+1].version}" />
-            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=Context.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
+            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
           </c:if>
           ${not status.last && not status.first? '|' : ''}
           <c:if test="${not status.first}">
-            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=Context.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
+            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
           </c:if>
         </td>
 
@@ -237,7 +237,7 @@
 		<%
 		for (PageReference pageReference : inReferences) {
 				String pageId = pageReference.getWikipage().getId();
-				String href = ctx.getURL( Context.PAGE_VIEW, pageId );
+				String href = ctx.getURL( WikiContext.PAGE_VIEW, pageId );
 				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
@@ -260,7 +260,7 @@
 		<%
 		for (PageReference pageReference : outReferences) {
 				String pageId = pageReference.getPageId();
-				String href = ctx.getURL( Context.PAGE_VIEW, pageId );
+				String href = ctx.getURL( WikiContext.PAGE_VIEW, pageId );
 				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
@@ -274,7 +274,7 @@
     </table>
 
     <%-- Page versions difference section --%>
-    <wiki:CheckRequestContext context='<%=Context.PAGE_DIFF%>'>
+    <wiki:CheckRequestContext context='<%=WikiContext.PAGE_DIFF%>'>
       <h4 data-activePane id="diff"><fmt:message key="diff.tab" /></h4>
       <c:set var="olddiff" value="${param.r1}" />
       <c:set var="newdiff" value="${param.r2}" />

@@ -39,7 +39,7 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   Context context = ContextUtil.findContext( pageContext );
+WikiContext context = ContextUtil.findContext( pageContext );
    Engine engine = context.getEngine();
 
    String usertext = ContextUtil.getEditedText( pageContext );

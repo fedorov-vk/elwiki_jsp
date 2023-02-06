@@ -28,7 +28,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.api.ui.PageCommand;
@@ -93,7 +93,7 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 		}
 
 		m_count = 0;
-		m_wikiContext = (Context) pageContext.getAttribute(Context.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
+		m_wikiContext = (WikiContext) pageContext.getAttribute(WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
 
 		return nextResult();
 	}
@@ -108,10 +108,10 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 			final Engine engine = m_wikiContext.getEngine();
 			final HttpServletRequest request = m_wikiContext.getHttpRequest();
 			final Command command = PageCommand.VIEW.targetedCommand(r.getPage());
-			final Context context = Wiki.context().create(engine, request, command);
+			final WikiContext context = Wiki.context().create(engine, request, command);
 
 			// Stash it in the page context
-			pageContext.setAttribute(Context.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);
+			pageContext.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, context, PageContext.REQUEST_SCOPE);
 			pageContext.setAttribute(getId(), r);
 
 			return EVAL_BODY_BUFFERED;

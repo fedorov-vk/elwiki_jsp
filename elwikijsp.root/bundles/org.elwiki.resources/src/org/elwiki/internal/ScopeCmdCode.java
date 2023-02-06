@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.HttpUtil;
@@ -31,7 +31,7 @@ public class ScopeCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		// Get wiki context and check for authorization
-		Context wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		/*:FVK:
 		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;

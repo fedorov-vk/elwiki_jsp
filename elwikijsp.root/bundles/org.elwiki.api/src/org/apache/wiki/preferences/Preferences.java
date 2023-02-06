@@ -24,7 +24,7 @@ import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.api.core.Context;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
@@ -117,7 +117,7 @@ public class Preferences extends HashMap<String, String> {
 		// pageContext.getServletContext() );
 		IPreferenceStore props = ServicesRefs.Instance.getWikiPreferences();
 
-		final Context ctx = ContextUtil.findContext(request);
+		final WikiContext ctx = ContextUtil.findContext(request);
 		InternationalizationManager i18lManager = ServicesRefs.getInternationalizationManager();
 		final String dateFormat = i18lManager.get(InternationalizationManager.CORE_BUNDLE, getLocale(ctx),
 				"common.datetimeformat");
@@ -182,7 +182,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @param name
 	 * @return the preference value
 	 */
-	public static String getPreference(final Context wikiContext, final String name) {
+	public static String getPreference(final WikiContext wikiContext, final String name) {
 		final HttpServletRequest request = wikiContext.getHttpRequest();
 		if (request == null) {
 			return null;
@@ -219,7 +219,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @return a Locale object.
 	 * @since 2.8
 	 */
-	public static Locale getLocale(final Context context) {
+	public static Locale getLocale(final WikiContext context) {
 		Locale loc = null;
 
 		final String langSetting = getPreference(context, "Language");
@@ -273,7 +273,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @return A SimpleTimeFormat object which you can use to render
 	 * @since 2.8
 	 */
-	public static SimpleDateFormat getDateFormat(final Context context, final TimeFormat tf) {
+	public static SimpleDateFormat getDateFormat(final WikiContext context, final TimeFormat tf) {
 		final InternationalizationManager imgr = ServicesRefs.getInternationalizationManager();
 		final Locale clientLocale = getLocale(context);
 		final String prefTimeZone = getPreference(context, "TimeZone");
@@ -322,13 +322,13 @@ public class Preferences extends HashMap<String, String> {
 	 * Locates the i18n ResourceBundle given. This method interprets the request locale, and uses
 	 * that to figure out which language the user wants.
 	 *
-	 * @param context {@link Context} holding the user's locale
+	 * @param context {@link WikiContext} holding the user's locale
 	 * @param bundle  The name of the bundle you are looking for.
 	 * @return A localized string (or from the default language, if not found)
 	 * @throws MissingResourceException If the bundle cannot be found
 	 * @see org.apache.wiki.i18n.InternationalizationManager
 	 */
-	public static ResourceBundle getBundle(final Context context, final String bundle) throws MissingResourceException {
+	public static ResourceBundle getBundle(final WikiContext context, final String bundle) throws MissingResourceException {
 		final Locale loc = getLocale(context);
 		final InternationalizationManager i18n = ServicesRefs.getInternationalizationManager();
 		return i18n.getBundle(bundle, loc);
@@ -344,7 +344,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @return A ready-rendered date.
 	 * @since 2.8
 	 */
-	public static String renderDate(final Context context, final Date date, final TimeFormat tf) {
+	public static String renderDate(final WikiContext context, final Date date, final TimeFormat tf) {
 		final DateFormat df = getDateFormat(context, tf);
 		return df.format(date);
 	}

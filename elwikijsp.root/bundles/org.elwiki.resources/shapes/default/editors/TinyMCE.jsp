@@ -47,10 +47,10 @@
     This provides the WYSIWYG TinyMCE for JSPWiki.
 --%>
 <%
-Context context = ContextUtil.findContext( pageContext );
+    WikiContext context = ContextUtil.findContext( pageContext );
     Engine engine = servletContext.getEngine();
 
-    servletContext.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    servletContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
     servletContext.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
     WikiPage wikiPage = servletContext.getPage();
@@ -61,7 +61,7 @@ Context context = ContextUtil.findContext( pageContext );
 %>
 
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
-<wiki:CheckRequestContext context="<%=Context.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
 String clone = request.getParameter( "clone" );
@@ -116,7 +116,7 @@ if( usertext == null ) usertext = "";
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for TinyMCE has been rendered.
-   servletContext.setVariable( Context.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   servletContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
    servletContext.setVariable( VariableManager.VAR_RUNFILTERS,  null );
    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, originalCCLOption );
 
@@ -131,8 +131,8 @@ if( usertext == null ) usertext = "";
 %>
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:CheckRequestContext
-     context='<%=Context.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='<%=Context.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
+     context='<%=WikiContext.PAGE_EDIT%>'><wiki:EditLink format='url'/></wiki:CheckRequestContext><wiki:CheckRequestContext
+     context='<%=WikiContext.PAGE_COMMENT%>'><wiki:CommentLink format='url'/></wiki:CheckRequestContext>"
        class="editform wysiwyg"
           id="editform"
      enctype="application/x-www-form-urlencoded" >
@@ -151,7 +151,7 @@ if( usertext == null ) usertext = "";
 
     <div class="form-group dropdown">
     <button class="btn btn-success" type="submit" name="ok" accesskey="s">
-      <%-- :FVK: follow "edit" - is wrong constant of Context.EDIT definition. --%>
+      <%-- :FVK: follow "edit" - is wrong constant of WikiContext.PAGE_EDIT definition?. --%>
       <fmt:message key='editor.plain.save.submit${ context == "edit" ? "" : ".comment" }'/>
       <span class="caret"></span>
     </button>
@@ -161,7 +161,7 @@ if( usertext == null ) usertext = "";
              placeholder="<fmt:message key='editor.plain.changenote'/>"
              value="${changenote}" />
       </li>
-      <wiki:CheckRequestContext context="<%=Context.PAGE_COMMENT">
+      <wiki:CheckRequestContext context="<%=WikiContext.PAGE_COMMENT%>">
       <li class="divider" />
       <li class="dropdown-header">
         <fmt:message key="editor.commentsignature"/>
@@ -220,7 +220,7 @@ if( usertext == null ) usertext = "";
           <c:choose>
             <c:when test="${edt != prefs.editor}">
               <li>
-                <wiki:Link context="<%=Context.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
+                <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" cssClass="editor-type">${edt}</wiki:Link>
               </li>
             </c:when>
             <c:otherwise>
