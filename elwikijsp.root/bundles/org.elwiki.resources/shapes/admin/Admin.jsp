@@ -16,6 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page errorPage="/shapes/Error.jsp" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
@@ -28,10 +29,16 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.commons.lang3.time.StopWatch" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-
+<fmt:setLocale value="${prefs.Language}" />
 <%!
-    Logger log = Logger.getLogger("JSPWiki");
+  public void jspInit()
+  {
+	wiki = ServicesRefs.Instance; //:FVK: workaround.
+  }
+  Logger log = Logger.getLogger("JSPWiki");
+  Engine wiki;
 %>
 <%
 	String bean = request.getParameter("bean");
@@ -57,6 +64,6 @@
         }
     }
 
-    //:FVK: аргумент для <wiki:Include> -- String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
+    //:FVK: Ð°ÑÐ³ÑÐ¼ÐµÐ½Ñ Ð´Ð»Ñ <wiki:Include> -- String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
 %>
 <wiki:Include page="AdminTemplate.jsp" />

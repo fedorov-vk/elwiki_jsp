@@ -34,11 +34,14 @@ import org.apache.wiki.auth.user.DummyUserDatabase;*/
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
+import org.apache.xpath.operations.Bool;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.WikiPermission;
 import org.elwiki.services.ServicesRefs;
 import org.freshcookies.security.policy.PolicyReader;
+import org.osgi.service.useradmin.Group;
+import org.osgi.service.useradmin.Role;
 
 import javax.security.auth.Subject;
 import javax.security.auth.spi.LoginModule;
@@ -53,8 +56,12 @@ import java.security.Permission;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -62,6 +69,7 @@ import java.util.Set;
  *
  * @since 2.4
  */
+@SuppressWarnings({ "unused", "deprecation" })
 public final class SecurityVerifier {
 
     private Engine                m_engine;
@@ -132,7 +140,7 @@ public final class SecurityVerifier {
                                                                                 "Delete pages"
                                                                               };
 
-    private static final String[] CONTAINER_JSPS               = new String[] { "/Wiki.jsp",
+	private static final String[] CONTAINER_JSPS               = new String[] { "/Wiki.jsp",
                                                                                 "/Comment.jsp",
                                                                                 "/Edit.jsp",
                                                                                 "/Upload.jsp",
@@ -175,6 +183,7 @@ public final class SecurityVerifier {
      * the policy.
      * @return the array of principals
      */
+    @Deprecated
     public Principal[] policyPrincipals()
     {
         return m_policyPrincipals;
@@ -189,46 +198,54 @@ public final class SecurityVerifier {
      */
     public String policyRoleTable()
     {
-        final Principal[] roles = m_policyPrincipals;
+    	/* */
+    	//:FVK: get all wiki groups (also known as Principals)
+    	List<Group> groups1 = ServicesRefs.getGroupManager().getGroups();
+    	Map<GroupPrincipal,Group> groupPrincipals = new HashMap<>();
+    	for(Group role : groups1) {
+    		//group.getProperties().get()
+    		GroupPrincipal groupPrincipal = new GroupPrincipal(role.getName());
+    		groupPrincipals.put(groupPrincipal, role);
+    	}
+    	
+    	/*:FVK:
+    	AuthorizationManager authorizer = ServicesRefs.getAuthorizationManager();
+    	authorizer.allowedByLocalPolicy(m_policyPrincipals, null);
+    	*/
+
+        //final Principal[] roles = principals.toArray(new Principal[principals.size()]); //:FVK: m_policyPrincipals;
         final String wiki = m_engine.getWikiConfiguration().getApplicationName();
 
-        final String[] pages = new String[]
-        { "Main", "Index", "GroupTest", "GroupAdmin" };
-        final String[] pageActions = new String[]
-        { "view", "edit", "modify", "rename", "delete" };
+		final String[] pages = new String[] { "Main", "Index", "GroupTest", "GroupAdmin" };
+		final String[] pageActions = new String[] { "view", "edit", "modify", "rename", "delete" };
 
-        final String[] groups = new String[]
-        { "Admin", "TestGroup", "Foo" };
-        final String[] groupActions = new String[]
-        { "view", "edit", null, null, "delete" };
+		final String[] groups = new String[] { "Admin", "TestGroup", "Foo" };
+		final String[] groupActions = new String[] { "view", "edit", null, null, "delete" };
 
-        // Calculate column widths
-        final String colWidth;
-        if( pageActions.length > 0 && roles.length > 0 ) {
-            colWidth = ( 67f / ( pageActions.length * roles.length ) ) + "%";
-        } else {
-            colWidth = "67%";
-        }
+        // Calculate any principal column width.
+		int rolesCount = groupPrincipals.size();
+		String colWidth = (pageActions.length > 0 && rolesCount > 0) ? //
+				(67f / (pageActions.length * rolesCount)) + "%" : "67%";        
 
         final StringBuilder s = new StringBuilder();
 
         // Write the table header
         s.append( "<table class=\"wikitable\" border=\"1\">\n" );
         s.append( "  <colgroup span=\"1\" width=\"33%\"/>\n" );
-        s.append( "  <colgroup span=\"" + pageActions.length * roles.length + "\" width=\"" + colWidth
-                + "\" align=\"center\"/>\n" );
+        s.append( "  <colgroup span=\"" + pageActions.length * rolesCount + "\" width=\"" + colWidth + "\" align=\"center\"/>\n" );
         s.append( "  <tr>\n" );
         s.append( "    <th rowspan=\"2\" valign=\"bottom\">Permission</th>\n" );
-        for( int i = 0; i < roles.length; i++ )
+        for(Entry<GroupPrincipal, Group> pair :groupPrincipals.entrySet())
         {
-            s.append( "    <th colspan=\"" + pageActions.length + "\" title=\"" + roles[i].getClass().getName() + "\">"
-                    + roles[i].getName() + "</th>\n" );
+        	String clazzName = pair.getKey().getClass().getName();
+        	Object roleName = pair.getValue().getProperties().get(UserDatabase.GROUP_NAME);
+            s.append( "    <th colspan=\"" + pageActions.length + "\" title=\"" + clazzName + "\">" + roleName + "</th>\n" );
         }
         s.append( "  </tr>\n" );
 
         // Print a column for each role
         s.append( "  <tr>\n" );
-        for( int i = 0; i < roles.length; i++ )
+        for( int i = 0; i < rolesCount; i++ )
         {
             for( final String pageAction : pageActions )
             {
@@ -242,7 +259,7 @@ public final class SecurityVerifier {
         for( final String page : pages ) {
             s.append( "  <tr>\n" );
             s.append( "    <td>PagePermission \"" + wiki + ":" + page + "\"</td>\n" );
-            for( final Principal role : roles ) {
+            for( final Principal role : groupPrincipals.keySet() ) {
                 for( final String pageAction : pageActions ) {
                     final Permission permission = PermissionFactory.getPagePermission( wiki + ":" + page, pageAction );
                     s.append( printPermissionTest( permission, role, 1 ) );
@@ -255,7 +272,7 @@ public final class SecurityVerifier {
         for( final String group : groups ) {
             s.append( "  <tr>\n" );
             s.append( "    <td>GroupPermission \"" + wiki + ":" + group + "\"</td>\n" );
-            for( final Principal role : roles ) {
+            for( final Principal role : groupPrincipals.keySet() ) {
                 for( final String groupAction : groupActions ) {
                     Permission permission = null;
                     if( groupAction != null ) {
@@ -273,7 +290,7 @@ public final class SecurityVerifier {
         for( final String wikiPerm : wikiPerms ) {
             s.append( "  <tr>\n" );
             s.append( "    <td>WikiPermission \"" + wiki + "\",\"" + wikiPerm + "\"</td>\n" );
-            for( final Principal role : roles ) {
+            for( final Principal role : groupPrincipals.keySet() ) {
                 final Permission permission = new WikiPermission( wiki, wikiPerm );
                 s.append( printPermissionTest( permission, role, pageActions.length ) );
             }
@@ -283,7 +300,7 @@ public final class SecurityVerifier {
         // Lastly, check for AllPermission
         s.append( "  <tr>\n" );
         s.append( "    <td>AllPermission \"" + wiki + "\"</td>\n" );
-        for( final Principal role : roles )
+        for( final Principal role : groupPrincipals.keySet() )
         {
             final Permission permission = new AllPermission( wiki, null );
             s.append( printPermissionTest( permission, role, pageActions.length ) );
@@ -307,7 +324,7 @@ public final class SecurityVerifier {
             s.append( "    <td colspan=\"" + cols + "\" align=\"center\" title=\"N/A\">" );
             s.append( "&nbsp;</td>\n" );
         } else {
-            final boolean allowed = verifyStaticPermission( principal, permission );
+            boolean allowed = verifyStaticPermission( principal, permission );
             s.append( "    <td colspan=\"" + cols + "\" align=\"center\" title=\"" );
             s.append( allowed ? "ALLOW: " : "DENY: " );
             s.append( permission.getClass().getName() );
@@ -421,7 +438,7 @@ public final class SecurityVerifier {
      */
     public boolean isSecurityPolicyConfigured()
     {
-        return m_isSecurityPolicyConfigured;
+        return true; //:FVK: workaround -- return m_isSecurityPolicyConfigured;
     }
 
     /**
@@ -653,7 +670,7 @@ public final class SecurityVerifier {
     }
 
     /**
-     * Verfies the Java security policy configuration. The configuration is
+     * Verifies the Java security policy configuration. The configuration is
      * valid if value of the local policy (at <code>WEB-INF/jspwiki.policy</code>
      * resolves to an existing file, and the policy file contained therein
      * represents a valid policy.
@@ -662,7 +679,7 @@ public final class SecurityVerifier {
     protected void verifyPolicy() {
         try {
         	// Look up the policy file and set the status text.
-        	final URL policyURL = m_engine.findConfigFile( AuthorizationManager.DEFAULT_POLICY );
+			final URL policyURL = m_engine.findConfigFile( AuthorizationManager.DEFAULT_POLICY );
         	String path = policyURL.getPath();
         	if ( path.startsWith("file:") ) {
         		path = path.substring( 5 );
@@ -726,9 +743,11 @@ public final class SecurityVerifier {
      */
     protected boolean verifyStaticPermission( final Principal principal, final Permission permission )
     {
+    	/*:FVK:
         final Subject subject = new Subject();
         subject.getPrincipals().add( principal );
-        final boolean allowedByGlobalPolicy = (Boolean)
+        @SuppressWarnings("removal")
+		final boolean allowedByGlobalPolicy = (Boolean)
             Subject.doAsPrivileged( subject, ( PrivilegedAction< Object > )() -> {
                 try {
                     AccessController.checkPermission( permission );
@@ -742,6 +761,7 @@ public final class SecurityVerifier {
         {
             return true;
         }
+        */
 
         // Check local policy
         final Principal[] principals = new Principal[]{ principal };
