@@ -45,7 +45,7 @@ public class IsGroupContainAdapterFactory implements IAdapterFactory {
 			GroupPermission groupPermission = (GroupPermission) adaptableObject;
 			String groupName = groupPermission.getGroup();
 			Role role = userAdminService.getUser(UserDatabase.GROUP_NAME, groupName);
-			String groupUid = role.getName();
+			String groupUid = (role != null) ? role.getName() : "";
 
 			Context wikiContext = (Context) ThreadUtil.getCurrentRequest().getAttribute(Context.ATTR_WIKI_CONTEXT);
 			User user = wikiContext.getWikiSession().getUser();

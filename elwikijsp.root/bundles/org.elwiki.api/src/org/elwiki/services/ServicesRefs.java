@@ -798,12 +798,6 @@ public class ServicesRefs implements Engine {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getSpecialPageReference(final String original) {
-		return ServicesRefs.getCommandResolver().getSpecialPageReference(original);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String getFinalPageName(final String page) throws ProviderException {
 		return ServicesRefs.getCommandResolver().getFinalPageName(page);
 	}

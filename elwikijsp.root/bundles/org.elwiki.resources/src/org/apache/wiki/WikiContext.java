@@ -287,7 +287,7 @@ public class WikiContext implements Context, Command {
 	@Override
 	public String getRedirectURL() {
 		final String pagename = m_page.getName();
-		String redirectURL = ServicesRefs.getCommandResolver().getSpecialPageReference(pagename);
+		String redirectURL = null; //:FVK: ServicesRefs.getCommandResolver().getSpecialPageReference(pagename);
 		if (redirectURL == null) {
 			final String alias = m_page.getAlias();
 			/* TODO: :FVK: в `if` - добавил `&& !alias.isEmpty()` - чтоб не рестартовал вход через Wiki.jsp, без указания страницы. */

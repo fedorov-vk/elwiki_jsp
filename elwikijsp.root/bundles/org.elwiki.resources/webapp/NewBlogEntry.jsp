@@ -34,7 +34,7 @@
     String pagereq = wikiContext.getName();
     
     // Redirect if the request was for a 'special page'
-    String specialpage = wiki.getSpecialPageReference( pagereq );
+    String specialpage = null; //:FVK: wiki.getSpecialPageReference( pagereq );
     if( specialpage != null ) {
         // FIXME: Do Something Else
         response.sendRedirect( specialpage );

@@ -160,8 +160,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     private Map< String, Set< String > > m_referredBy;
     private Map< String, Set< String > > m_unmutableReferredBy;
 
-    private boolean m_matchEnglishPlurals;
-
     private static final Logger log = Logger.getLogger( DefaultReferenceManager.class);
     private static final String SERIALIZATION_FILE = "refmgr.ser";
     private static final String SERIALIZATION_DIR  = "refmgr-attr";
@@ -213,7 +211,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	public void initialize(Engine engine) throws WikiException {
 		super.initialize(engine);
 		IPreferenceStore wikiPreferences = engine.getWikiPreferences();
-		m_matchEnglishPlurals = TextUtil.getBooleanProperty( wikiPreferences, Engine.PROP_MATCHPLURALS, false );
 	}
 
 	// -- service handling -----------------------------(end)--
@@ -737,13 +734,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
             return;
         }
         */
-        // Neither are we interested if plural forms refer to each other.
-        if( m_matchEnglishPlurals ) {
-            final String p2 = page.endsWith( "s" ) ? page.substring( 0, page.length() - 1 ) : page + "s";
-            if( referrer.equals( p2 ) ) {
-                return;
-            }
-        }
 
         // Even if 'page' has not been created yet, it can still be referenced. This requires we don't use m_referredBy
         // keys when looking up missing pages, of course.
@@ -758,8 +748,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      * @param pagename  Name of the page to clear references for.
      */
     @Override public synchronized void clearPageEntries( String pagename ) {
-        pagename = getFinalPageName( pagename );
-
         //  Remove this item from the referredBy list of any page which this item refers to.
         final Collection< String > c = m_refersTo.get( pagename );
         if( c != null ) {
@@ -832,24 +820,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     private < T > Set< T > getReferenceList( final Map< String, Set< T > > coll, final String pagename ) {
         Set< T > refs = coll.get( pagename );
 
-        if( m_matchEnglishPlurals ) {
-            //  We'll add also matches from the "other" page.
-            final Set< T > refs2;
-
-            if( pagename.endsWith( "s" ) ) {
-                refs2 = coll.get( pagename.substring( 0, pagename.length() - 1 ) );
-            } else {
-                refs2 = coll.get( pagename + "s" );
-            }
-
-            if( refs2 != null ) {
-                if( refs != null ) {
-                    refs.addAll( refs2 );
-                } else {
-                    refs = refs2;
-                }
-            }
-        }
         return refs;
     }
 
@@ -883,7 +853,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      * @since 2.2.33
      */
     @Override public Set< String > findReferredBy( final String pageName ) {
-        return m_unmutableReferredBy.get( getFinalPageName(pageName) );
+        return m_unmutableReferredBy.get( pageName );
     }
 
     /**
@@ -901,7 +871,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      * @since 2.2.33
      */
     @Override public Collection< String > findRefersTo( final String pageName ) {
-        return m_unmutableRefersTo.get( getFinalPageName( pageName ) );
+        return m_unmutableRefersTo.get( pageName );
     }
 
     /**
@@ -945,16 +915,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      */
     @Override public Set< String > findCreated() {
         return new HashSet<>( m_refersTo.keySet() );
-    }
-
-    private String getFinalPageName( final String orig ) {
-        try {
-            final String s = ServicesRefs.Instance.getFinalPageName( orig );
-            return s != null ? s : orig;
-        } catch( final ProviderException e ) {
-            log.error("Error while trying to fetch a page name; trying to cope with the situation.",e);
-            return orig;
-        }
     }
 
     /**

@@ -122,7 +122,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 				return;
 			}
 
-			/* Create Wiki context.
+			/* Create Wiki context according to required URI.
 			 */
 			ContextEnum contextEnum = getContextEnum(uri.substring(1)); // URI without first symbol '/'.
 			Context wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());

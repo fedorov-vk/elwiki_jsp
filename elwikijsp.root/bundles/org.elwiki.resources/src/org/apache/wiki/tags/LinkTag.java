@@ -224,21 +224,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 					final String namedSection = m_ref.substring(hashMark + 1);
 					String reallink = m_ref.substring(0, hashMark);
 					reallink = MarkupParser.cleanLink(reallink);
-
-					String matchedLink;
-					String sectref = "";
-					if ((matchedLink = engine.getFinalPageName(reallink)) != null) {
-						try {
-							sectref = "section-" + config.encodeName(matchedLink) + "-" + namedSection;
-						} catch (IOException e) {
-							throw new ProviderException(e.getMessage());
-						}
-						sectref = "#" + sectref.replace('%', '_');
-					} else {
-						matchedLink = reallink;
-					}
-
-					url = makeBasicURL(m_context, matchedLink, parms) + sectref;
+					url = makeBasicURL(m_context, reallink, parms);
 				} else {
 					final String reallink = MarkupParser.cleanLink(m_ref);
 					url = makeBasicURL(m_context, reallink, parms);

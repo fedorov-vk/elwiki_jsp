@@ -726,27 +726,6 @@ public class DefaultPageManager implements PageManager, Initializable {
     @Override
     public boolean pageExistsByName( final String pageName ) {
     	return this.m_provider.pageExistsByName(pageName);
-    	/*:FVK: оригинальный код - громоздок.
-    	 * Не будем проверять присоединения к странице, специальные страницы...
-    	 * Будем проверять наличие страницы по её имени.
-    	 * -- старый код - удалим. deprecated.
-        if( ServicesRefs.getCommandResolver().getSpecialPageReference( page ) != null ) {
-            return true;
-        }
-
-        PageAttachment att = null;
-        try {
-            if( m_engine.getFinalPageName( page ) != null ) {
-                return true;
-            }
-
-            att = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, page );
-        } catch( final ProviderException e ) {
-            LOG.debug( "pageExists() failed to find attachments", e );
-        }
-
-        return att != null;
-        */
     }
 
     /**

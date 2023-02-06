@@ -69,9 +69,6 @@ public interface Engine {
     /** The name of the cookie that gets stored to the user browser. */
     String PREFS_COOKIE_NAME = "JSPWikiUserProfile";
 
-    /** Property name for the "match english plurals" -hack. */
-    String PROP_MATCHPLURALS = "jspwiki.translatorReader.matchEnglishPlurals";
-
     /** Property name for the template that is used. */
     String PROP_TEMPLATEDIR = "jspwiki.templateDir";
 
@@ -180,6 +177,7 @@ public interface Engine {
      * @param name the file to obtain, <em>e.g.</em>, <code>jspwiki.policy</code>
      * @return the URL to the file
      */
+    @Deprecated
     default URL findConfigFile( final String name ) {
         Logger.getLogger( Engine.class ).info( "looking for " + name + " inside WEB-INF " );
         // Try creating an absolute path first
@@ -237,17 +235,6 @@ public interface Engine {
         }
         return path;
     }
-
-    /**
-     *  <p>If the page is a special page, then returns a direct URL to that page. Otherwise returns <code>null</code>.
-     *  This method delegates requests to {@link org.apache.wiki.ui.CommandResolver#getSpecialPageReference(String)}.</p>
-     *  <p>Special pages are defined in jspwiki.properties using the jspwiki.specialPage setting. They're typically used to give Wiki page
-     *  names to e.g. custom JSP pages.</p>
-     *
-     *  @param original The page to check
-     *  @return A reference to the page, or null, if there's no special page.
-     */
-    String getSpecialPageReference( String original );
 
     /**
      *  Returns the root path.  The root path is where the Engine is located in the file system.

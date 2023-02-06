@@ -64,44 +64,33 @@ import java.util.Map;
 		factory = "elwiki.CommandResolver.factory")
 public final class DefaultCommandResolver implements CommandResolver, Initializable {
 
+	private static final Logger LOG = Logger.getLogger(DefaultCommandResolver.class);
+
 	private static final String URL_CMD_PREFIX = "cmd.";
 
 	/** Private map with request contexts as keys, Commands as values */
 	private static final Map<String, Command> CONTEXTS;
 
-	/** Private map with JSPs as keys, Commands as values */
-	private static final Map<String, Command> JSPS;
-
 	/* Store the JSP-to-Command and context-to-Command mappings */
 	static {
 		CONTEXTS = new HashMap<>();
-		JSPS = new HashMap<>();
 		final Command[] commands = AllCommands.get();
 		for (final Command command : commands) {
-			JSPS.put(command.getJSP(), command);
 			CONTEXTS.put(command.getRequestContext(), command);
 		}
 	}
-
-	private static final Logger LOG = Logger.getLogger(DefaultCommandResolver.class);
-
-	/** If true, we'll also consider english plurals (+s) a match. */
-	private /*final*/ boolean m_matchEnglishPlurals;
-
-	/** Stores special page names as keys, and Commands as values. */
-	private final Map<String, Command> m_specialPages;
 
 	/**
 	 * Create instance of DefaultCommandResolver.
 	 */
 	public DefaultCommandResolver() {
-		m_specialPages = new HashMap<>();
+		super();
 	}
 
 	// -- service handling ---------------------------(start)--
 
 	private Engine m_engine;
-	
+
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
@@ -131,72 +120,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	@Override
 	public void initialize(Engine wikiEngine) throws WikiException {
 		m_engine = wikiEngine;
-
-		// Skim through the properties and look for anything with the "special page" prefix. Create maps
-		// that allow us look up
-		// the correct Command based on special page name. If a matching command isn't found, create a
-		// RedirectCommand.
-		/*:FVK:
-		for (final String key : properties.stringPropertyNames()) {
-			if (key.startsWith(PROP_SPECIALPAGE)) {
-				String specialPage = key.substring(PROP_SPECIALPAGE.length());
-				String jsp = properties.getProperty(key);
-				if (jsp != null) {
-					specialPage = specialPage.trim();
-					jsp = jsp.trim();
-					Command command = JSPS.get(jsp);
-					if (command == null) {
-						final Command redirect = RedirectCommand.REDIRECT;
-						command = redirect.targetedCommand(jsp);
-					}
-					m_specialPages.put(specialPage, command);
-				}
-			}
-		}
-		*/
-
-		// Do we match plurals?
-		m_matchEnglishPlurals = TextUtil.getBooleanProperty(wikiEngine.getWikiPreferences(), Engine.PROP_MATCHPLURALS,
-				true);
-	}
-
-	/**
-	 * Constructs a CommandResolver for a given Engine. This constructor will extract the special
-	 * page references for this wiki and store them in a cache used for resolution.
-	 *
-	 * @param engine     the wiki engine
-	 * @param properties the properties used to initialize the wiki
-	 */
-	public DefaultCommandResolver(final Engine engine) {
-		m_engine = engine;
-		m_specialPages = new HashMap<>();
-
-		// Skim through the properties and look for anything with the "special page" prefix. Create maps
-		// that allow us look up
-		// the correct Command based on special page name. If a matching command isn't found, create a
-		// RedirectCommand.
-		/*:FVK:
-		for( final String key : properties.stringPropertyNames() ) {
-		    if ( key.startsWith( PROP_SPECIALPAGE ) ) {
-		        String specialPage = key.substring( PROP_SPECIALPAGE.length() );
-		        String jsp = properties.getProperty( key );
-		        if ( jsp != null ) {
-		            specialPage = specialPage.trim();
-		            jsp = jsp.trim();
-		            Command command = JSPS.get( jsp );
-		            if ( command == null ) {
-		                final Command redirect = RedirectCommand.REDIRECT;
-		                command = redirect.targetedCommand( jsp );
-		            }
-		            m_specialPages.put( specialPage, command );
-		        }
-		    }
-		}
-		*/
-
-		IPreferenceStore wikiPreferences = engine.getWikiPreferences();
-		// Do we match plurals?
-		m_matchEnglishPlurals = TextUtil.getBooleanProperty(wikiPreferences, Engine.PROP_MATCHPLURALS, true);
 	}
 
 	/**
@@ -214,14 +137,9 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		// Determine the name of the page (which may be null)
 		String pageName = extractPageFromParameter(defaultContext, request);
 
-		// Can we find a special-page command matching the extracted page?
-		if (pageName != null) {
-			command = m_specialPages.get(pageName);
-		}
-
 		// If we haven't found a matching command yet, extract the JSP path and compare to our list of
 		// special pages
-		if (command == null) {
+		/*:FVK:if (command == null)*/ {
 			command = extractCommandFromPath(request);
 
 			// Otherwise: use the default context
@@ -289,48 +207,15 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	@Deprecated //:FVK: this method now obfuscates wiki functionality - now page names are fixed, and can be repeated.
 	@Override
 	public String getFinalPageName(final String page) throws ProviderException {
-		boolean isThere = simplePageExists(page);
+		boolean isThere = this.pageManager.pageExists(page);
 		String finalName = page;
-
-		if (!isThere && m_matchEnglishPlurals) {
-			if (page.endsWith("s")) {
-				finalName = page.substring(0, page.length() - 1);
-			} else {
-				finalName += "s";
-			}
-
-			isThere = simplePageExists(finalName);
-		}
 
 		if (!isThere) {
 			finalName = MarkupParser.wikifyLink(page);
-			isThere = simplePageExists(finalName);
-
-			if (!isThere && m_matchEnglishPlurals) {
-				if (finalName.endsWith("s")) {
-					finalName = finalName.substring(0, finalName.length() - 1);
-				} else {
-					finalName += "s";
-				}
-
-				isThere = simplePageExists(finalName);
-			}
+			isThere = this.pageManager.pageExists(finalName);
 		}
 
 		return isThere ? finalName : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getSpecialPageReference(final String page) {
-		final Command command = m_specialPages.get(page);
-		if (command != null) {
-			return this.urlConstructor.makeURL(command.getRequestContext(), command.getURLPattern(), null);
-		}
-
-		return null;
 	}
 
 	/**
@@ -358,14 +243,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 
 		if (requestCtx.length() == 0) {
 			return null;
-		}
-
-		// TODO: сделать обработку для спец. страниц на основе атрибута. // Find special page reference?
-		for (final Map.Entry<String, Command> entry : m_specialPages.entrySet()) {
-			final Command specialCommand = entry.getValue();
-			if (specialCommand.getJSP().equals(requestCtx)) {
-				return specialCommand;
-			}
 		}
 
 		// Still haven't found a matching command?
@@ -436,22 +313,6 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			wikipage = Wiki.contents().page(page);
 		}
 		return wikipage;
-	}
-
-	/**
-	 * Determines whether a "page" exists by examining the list of special pages and querying the
-	 * page manager.
-	 *
-	 * @param page the page to seek
-	 * @return <code>true</code> if the page exists, <code>false</code> otherwise
-	 * @throws ProviderException if the underlyng page provider that locates pages throws an
-	 *                           exception
-	 */
-	protected boolean simplePageExists(final String page) throws ProviderException {
-		if (m_specialPages.containsKey(page)) {
-			return true;
-		}
-		return this.pageManager.pageExists(page);
 	}
 
 }

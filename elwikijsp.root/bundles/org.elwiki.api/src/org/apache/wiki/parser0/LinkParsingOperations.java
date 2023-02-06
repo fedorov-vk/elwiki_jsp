@@ -23,6 +23,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.pages0.PageManager;
 
 import java.util.Arrays;
 import java.util.Comparator;

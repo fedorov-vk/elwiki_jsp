@@ -100,16 +100,6 @@ public interface CommandResolver {
     String getFinalPageName( String page ) throws ProviderException;
 
     /**
-     * <p>If the page is a special page, this method returns a direct URL to that page; otherwise, it returns <code>null</code>.</p>
-     * <p>Special pages are non-existant references to other pages. For example, you could define a special page reference "RecentChanges"
-     * which would always be redirected to "RecentChanges.jsp" instead of trying to find a Wiki page called "RecentChanges".</p>
-     *
-     * @param page the page name ro search for
-     * @return the URL of the special page, if the supplied page is one, or <code>null</code>
-     */
-    String getSpecialPageReference( final String page );
-
-    /**
      * Determines the correct wiki page based on a supplied request context and HTTP request.
      * This method attempts to determine the page requested by a user, taking into acccount special pages.
      * The resolution algorithm will:
