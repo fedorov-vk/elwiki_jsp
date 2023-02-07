@@ -24,8 +24,8 @@ import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.api.authorization.IGroupManager;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -142,7 +142,7 @@ public interface AuthorizationManager extends Initializable {
      * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer could not be initialized
      * @return the current Authorizer
      */
-    IGroupManager getAuthorizer() throws WikiSecurityException;
+    Authorizer getAuthorizer() throws WikiSecurityException;
 
     /**
      * <p>Determines if the Subject associated with a supplied Session contains a desired user Principal or built-in Role principal,
@@ -227,7 +227,7 @@ public interface AuthorizationManager extends Initializable {
      * group, or user). This method is guaranteed to always return a Principal. The algorithm is straightforward:</p>
      * <ol>
      * <li>If the name matches one of the built-in {@link org.elwiki.data.authorize.GroupPrincipal} names, return that built-in Role</li>
-     * <li>If the name matches one supplied by the current {@link org.apache.wiki.auth.Authorizer}, return that Role</li>
+     * <li>If the name matches one supplied by the current {@link org.elwiki.api.authorization.Authorizer}, return that Role</li>
      * <li>If the name matches a group managed by the current {@link org.apache.wiki.auth.authorize.GroupManager}, return that Group</li>
      * <li>Otherwise, assume that the name represents a user principal. Using the current {@link org.apache.wiki.auth.user.UserDatabase},
      * find the first user who matches the supplied name by calling {@link org.apache.wiki.auth.user.UserDatabase#find(String)}.</li>

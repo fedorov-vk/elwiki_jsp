@@ -14,7 +14,11 @@
    <extension
          point="org.elwiki.authorize.authorizer">
       <authorizer
-            class="org.elwiki.authorize.WebContainerAuthorizer"
+            class="org.elwiki.authorize.internal.authorizer.DefaultAuthorizer"
+            id="DefaultAuthorizer">
+      </authorizer>
+      <authorizer
+            class="org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer"
             id="WebContainerAuthorizer">
       </authorizer>
    </extension>

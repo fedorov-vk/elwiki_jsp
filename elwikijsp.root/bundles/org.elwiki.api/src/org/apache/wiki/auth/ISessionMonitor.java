@@ -95,7 +95,7 @@ public interface ISessionMonitor {
 	 * </p>
 	 * <p>
 	 * When a session is created, this method attaches a WikiEventListener to the
-	 * GroupManager, UserManager and AuthenticationManager, so that changes to
+	 * GroupManager, AccountManager and AuthenticationManager, so that changes to
 	 * users, groups, logins, etc. are detected automatically.
 	 * </p>
 	 * 
@@ -109,7 +109,7 @@ public interface ISessionMonitor {
 	 * user Principal {@link org.apache.wiki.auth.WikiPrincipal#GUEST}, plus the
 	 * role principals {@link Role#ALL} and {@link Role#ANONYMOUS}. This method also
 	 * adds the session as a listener for GroupManager, AuthenticationManager and
-	 * UserManager events.
+	 * AccountManager events.
 	 *
 	 * @return the guest wiki session
 	 */

@@ -33,7 +33,7 @@
 <%
 /* dateformatting not yet supported by wiki:UserProfile tag - diy */
   WikiContext wikiContext = ContextUtil.findContext(pageContext);
-  UserManager manager = ServicesRefs.getUserManager();
+  AccountManager manager = ServicesRefs.getAccountManager();
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form method="post" accept-charset="UTF-8"

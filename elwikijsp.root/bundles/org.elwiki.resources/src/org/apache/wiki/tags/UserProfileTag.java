@@ -33,7 +33,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
@@ -113,7 +113,7 @@ public class UserProfileTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final UserManager manager = ServicesRefs.getUserManager();
+		final AccountManager manager = ServicesRefs.getAccountManager();
 		final UserProfile profile = manager.getUserProfile(m_wikiContext.getWikiSession());
 		String result = null;
 

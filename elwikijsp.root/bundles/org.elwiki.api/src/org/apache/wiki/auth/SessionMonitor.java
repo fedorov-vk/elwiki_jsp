@@ -304,12 +304,12 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
 		Session wikiSession = (Session) this.factoryWikiSession.newInstance(properties).getInstance();
 
-		// Add the session as listener for GroupManager, AuthManager, UserManager events
+		// Add the session as listener for GroupManager, AuthManager, AccountManager events
 		//TODO: add listeners...
 		/*
 		//:FVK: final GroupManager groupMgr = ServicesRefs.getGroupManager();
 		final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
-		final UserManager userMgr = ServicesRefs.getUserManager();
+		final AccountManager userMgr = ServicesRefs.getAccountManager();
 		//:FVK: groupMgr.addWikiEventListener( session );
 		authMgr.addWikiEventListener( session );
 		userMgr.addWikiEventListener( session );

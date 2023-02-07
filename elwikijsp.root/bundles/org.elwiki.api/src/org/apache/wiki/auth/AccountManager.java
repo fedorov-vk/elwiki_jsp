@@ -28,6 +28,7 @@ import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
+import org.elwiki.api.authorization.IGroupManager;
 
 import java.security.Principal;
 
@@ -37,7 +38,7 @@ import java.security.Principal;
  *
  * @since 2.3
  */
-public interface UserManager {
+public interface AccountManager extends IGroupManager {
 
     /** Message key for the "save profile" message. */
     String PROP_DATABASE = "jspwiki.userdatabase";
@@ -86,7 +87,7 @@ public interface UserManager {
      * group memberships and ACLs if needed.
      * </p>
      * <p>
-     * Note that Sessions normally attach event listeners to the UserManager, so changes to the profile will automatically cause the
+     * Note that Sessions normally attach event listeners to the AccountManager, so changes to the profile will automatically cause the
      * correct Principals to be reloaded into the current Session's Subject.
      * </p>
      *
@@ -143,35 +144,5 @@ public interface UserManager {
      *  @throws WikiSecurityException If for reason the names cannot be fetched
      */
     Principal[] listWikiNames() throws WikiSecurityException;
-
-    // events processing .......................................................
-
-    /**
-     * Registers a WikiEventListener with this instance. This is a convenience method.
-     *
-     * @param listener the event listener
-     */
-    void addWikiEventListener( WikiEventListener listener );
-
-    /**
-     * Un-registers a WikiEventListener with this instance. This is a convenience method.
-     *
-     * @param listener the event listener
-     */
-    void removeWikiEventListener( WikiEventListener listener );
-
-    /**
-     *  Fires a WikiSecurityEvent of the provided type, Principal and target Object to all registered listeners.
-     *
-     * @see org.apache.wiki.api.event.WikiSecurityEvent
-     * @param type       the event type to be fired
-     * @param session    the wiki session supporting the event
-     * @param profile    the user profile (or array of user profiles), which may be <code>null</code>
-     */
-    default void fireEvent( final int type, final Session session, final Object profile ) {
-        if( WikiEventManager.isListening( this ) ) {
-            WikiEventManager.fireEvent( this, new WikiSecurityEvent( session, type, profile ) );
-        }
-    }
 
 }

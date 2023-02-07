@@ -28,10 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.WikiSecurityException;
-//import org.elwiki.api.IAuthenticationManager;
-//import org.elwiki.api.IElWikiSession;
-//import org.elwiki.api.IElwikiManager;
-import org.elwiki.api.authorization.authorize.GroupDatabase;
 //import org.elwiki.api.event.WikiEventListener;
 //import org.elwiki.api.event.WikiEventProvider;
 //import org.elwiki.api.exceptions.WikiSecurityException;
@@ -39,34 +35,16 @@ import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.useradmin.Group;
 
 /**
- * Интерфейс частично обслуживает группы. (утилитарно, например, WrapGroup) 
  * <p>
- * Интерфейс для поставщиков услуг авторизации информации.<br/>
- * После успешного входа пользователя {@link IAuthenticationManager} консультируется с
- * настроенным авторизатором, чтобы определить, какие дополнительные принципалы
- * {@link org.elwiki.data.authorize.Role} должны быть добавлены в WikiSession
- * пользователя. Таким образом, для определения вводимых ролей, авторизатор запрашивает об
- * известных ему ролях, путем вызова {@link IGroupManager#getGroups()}. Затем каждая роль,
- * возвращаемая авторизатором, проверяется путем вызова
- * {@link IGroupManager#isUserInRole(WikiSession, GroupWiki)}. Если эта проверка отвергла роль, и
- * IGroupManager имеет тип WebAuthorizer, то AuthenticationManager снова проверяет роль, вызывая
- * {@link org.elwiki.api.authorization.authorize.IWebAuthorizer#isUserInRole(HttpServletRequest, Principal)}.
- * Любые роли, которые проходят тест, вводятся в Субъект путем запуска соответствующих событий
- * аутентификации.
+ * Интерфейс частично обслуживает группы. (утилитарно, например, WrapGroup)
+ * <hr>
  * <p>
- * Interface for service providers of authorization information. After a user successfully logs
- * in, the {@link org.elwiki.IIAuthenticationManager.internal.AuthenticationManager} consults the configured
- * Authorizer to determine which additional {@link org.elwiki.data.authorize.Role} principals
- * should be added to the user's WikiSession. To determine which roles should be injected, the
- * Authorizer is queried for the roles it knows about by calling
- * {@link org.elwiki.api.authorization.IGroupManager#getGroups()}. Then, each role returned by the
- * Authorizer is tested by calling
- * {@link org.elwiki.api.authorization.IGroupManager#isUserInRole(WikiSession, GroupWiki)}. If this
- * check fails, and the IGroupManager is of type WebAuthorizer, AuthenticationManager checks the
- * role again by calling
- * {@link org.elwiki.api.authorization.authorize.IWebAuthorizer#isUserInRole(javax.servlet.http.HttpServletRequest, Principal)}).
- * Any roles that pass the test are injected into the Subject by firing appropriate
- * authentication events.
+ * <em>Note: prior to JSPWiki 2.4.19, GroupManager was an interface; it is now a concrete, final
+ * class. The aspects of GroupManager which previously extracted group information from storage
+ * (e.g., wiki pages) have been refactored into the GroupDatabase interface.</em>
+ * </p>
+ * 
+ * @since 2.4.19
  */
 public interface IGroupManager {
 
@@ -253,8 +231,6 @@ public interface IGroupManager {
 	 * @return
 	 */
 	org.osgi.service.useradmin.Group getGroup(String groupName);
-
-	boolean isUserInGroup(String attrValue, org.osgi.service.useradmin.Group group);
 
 	/**
 	 * Возвращает массив PermissionInfo для заданной группы.<br/>

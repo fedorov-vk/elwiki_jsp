@@ -46,9 +46,9 @@
   //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
 
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
-  IGroupManager groupMgr = ServicesRefs.getGroupManager();
+  AccountManager accountManager = ServicesRefs.getAccountManager();
 
-  List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getGroups();
+  List<org.osgi.service.useradmin.Group> groups1 = accountManager.getGroups();
   Principal[] groups;
   //:FVK: Arrays.sort( groups, new PrincipalComparator() );
 
@@ -135,7 +135,7 @@
            		group = new WrapGroup(group2);
 
                 //name = group2.getName(); //:FVK: groups[g].getName();
-                //? group1 = groupMgr.getGroup( name );
+                //? group1 = accountManager.getGroup( name );
                 //:FVK:..........
                 members = group.members();
                 //Arrays.sort( members, Comparator.naturalOrder() );

@@ -34,7 +34,6 @@ Import-Package: javax.mail;version="1.4.0",
 Export-Package: org.elwiki.authorize;
   uses:="org.elwiki.api.authorization,
    javax.servlet.http,
-   org.elwiki.api.authorization.authorize,
    org.elwiki.api.event,
    org.osgi.service.useradmin,
    org.jdom2,
@@ -58,7 +57,5 @@ Export-Package: org.elwiki.authorize;
 Service-Component: OSGI-INF/elwiki.DefaultAclManager.xml,
  OSGI-INF/elwiki.DefaultAuthenticationManager.xml,
  OSGI-INF/elwiki.DefaultAuthorizationManager.xml,
- OSGI-INF/elwiki.DefaultUserManager.xml,
- OSGI-INF/elwiki.GroupManager.xml,
- OSGI-INF/elwiki.PermissionManager.xml
+ OSGI-INF/elwiki.DefaultAccountManager.xml
 Bundle-ClassPath: .

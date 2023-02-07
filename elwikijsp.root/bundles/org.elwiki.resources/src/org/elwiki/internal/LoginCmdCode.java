@@ -19,7 +19,7 @@ import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.preferences.Preferences;
@@ -56,7 +56,7 @@ public class LoginCmdCode extends CmdCode {
 
 		// Are we saving the profile? (:FVK: - зачем эта ветка?)
 		if ("saveProfile".equals(httpRequest.getParameter("action"))) {
-			UserManager userMgr = ServicesRefs.getUserManager();
+			AccountManager userMgr = ServicesRefs.getAccountManager();
 			UserProfile profile = userMgr.parseProfile(wikiContext);
 
 			// Validate the profile

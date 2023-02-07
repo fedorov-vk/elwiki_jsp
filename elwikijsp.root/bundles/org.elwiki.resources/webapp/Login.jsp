@@ -53,7 +53,7 @@
 
     // Are we saving the profile?
     if( "saveProfile".equals(request.getParameter("action")) ) {
-        UserManager userMgr = ServicesRefs.getUserManager();
+        AccountManager userMgr = ServicesRefs.getAccountManager();
         UserProfile profile = userMgr.parseProfile( wikiContext );
          
         // Validate the profile

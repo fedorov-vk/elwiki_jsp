@@ -65,7 +65,7 @@ function addNew()
    <p><wiki:Messages/></p>
    <div id="userlist">
       <select name="userid" id="userid" size="16" onchange="javascript:refreshUserInfo()">
-         <c:forEach var="user" items="${engine.userManager.userDatabase.wikiNames}">
+         <c:forEach var="user" items="${engine.accountManager.userDatabase.wikiNames}">
             <option value="${user.name}"><c:out value="${user.name}" escapeXml="true"/></option>
          </c:forEach>
       </select>

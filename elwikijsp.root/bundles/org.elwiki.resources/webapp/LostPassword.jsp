@@ -45,7 +45,7 @@
     public boolean resetPassword( Engine wiki, HttpServletRequest request, ResourceBundle rb ) {
         // Reset pw for account name
         String name = request.getParameter( "name" );
-        UserDatabase userDatabase = ServicesRefs.getUserManager().getUserDatabase();
+        UserDatabase userDatabase = ServicesRefs.getAccountManager().getUserDatabase();
         boolean success = false;
 
         try {

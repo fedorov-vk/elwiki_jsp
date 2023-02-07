@@ -16,18 +16,13 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.elwiki.api.authorization.authorize;
+package org.elwiki.api.authorization;
 
 import java.security.Principal;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.auth.WikiSecurityException;
-//import org.elwiki.api.IApplicationSession;
-//import org.elwiki.api.IElWikiSession;
-import org.elwiki.api.authorization.IGroupWiki;
-//import org.elwiki.api.exceptions.NoRequiredPropertyException;
-//import org.elwiki.api.exceptions.WikiSecurityException;
 
 /**
  * Defines an interface for loading, persisting and storing wiki groups.

@@ -128,7 +128,7 @@ public interface IIAuthenticationManager extends Initializable {
      * @param username The user name. This is a login name, not a WikiName. In most cases they are the same, but in some cases, they might not be.
      * @param password the password
      * @return true, if the username/password is valid
-     * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer or UserManager cannot be obtained
+     * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer or AccountManager cannot be obtained
      */
     boolean loginAsserted( Session session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
 

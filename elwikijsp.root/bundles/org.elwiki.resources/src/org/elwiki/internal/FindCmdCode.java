@@ -20,7 +20,6 @@ import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;

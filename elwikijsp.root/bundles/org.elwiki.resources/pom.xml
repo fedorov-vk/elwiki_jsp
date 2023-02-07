@@ -25,6 +25,7 @@
 				<version>${wro4j.version}</version>
 				<executions>
 					<!-- template "210" -->
+					<!--:FVK: workaround - skip these resources.
 					<execution>
 						<id>buildDefaultJsAndCss</id>
 						<phase>generate-resources</phase>
@@ -37,6 +38,7 @@
 							<targetGroups>jspwiki,jspwiki_print,jspwiki-common,jspwiki-edit,jspwiki-prefs</targetGroups>
 						</configuration>
 					</execution>
+					-->
 					<!-- HADDOCK template (default) -->
 					<execution>
 						<id>buildHaddockJsAndCss</id>

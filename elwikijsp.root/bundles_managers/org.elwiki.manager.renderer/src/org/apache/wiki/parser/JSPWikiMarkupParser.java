@@ -43,7 +43,6 @@ import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.UserManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.parser0.Heading;
@@ -239,7 +238,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         m_useAttachmentImage = m_context.getBooleanWikiProperty( PROP_USEATTACHMENTIMAGE, m_useAttachmentImage );
         m_allowHTML          = m_context.getBooleanWikiProperty( PROP_ALLOWHTML, m_allowHTML );
 
-        if( ServicesRefs.getUserManager().getUserDatabase() == null || ServicesRefs.getAuthorizationManager() == null ) {
+        if( ServicesRefs.getAccountManager().getUserDatabase() == null || ServicesRefs.getAuthorizationManager() == null ) {
             disableAccessRules();
         }
 

@@ -22,7 +22,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
@@ -57,7 +57,7 @@ public class UserBean extends SimpleAdminBean {
     public String doPost( final WikiContext context ) {
         final HttpServletRequest request = context.getHttpRequest();
         final Session session = context.getWikiSession();
-        final UserManager mgr = ServicesRefs.getUserManager();
+        final AccountManager mgr = ServicesRefs.getAccountManager();
         final String loginid = request.getParameter( "loginid" );
         final String loginname = request.getParameter( "loginname" );
         final String fullname = request.getParameter( "fullname" );

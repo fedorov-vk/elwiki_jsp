@@ -16,7 +16,7 @@ import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.HttpUtil;
@@ -72,7 +72,7 @@ public class PrefsCmdCode extends CmdCode {
 		*/
 
 		// Extract the user profile and action attributes
-		UserManager userMgr = ServicesRefs.getUserManager();
+		AccountManager userMgr = ServicesRefs.getAccountManager();
 		Session wikiSession = wikiContext.getWikiSession();
 
 		/* FIXME: Obsolete

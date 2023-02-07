@@ -30,10 +30,10 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
-import org.elwiki.api.authorization.IGroupManager;
 import org.osgi.service.useradmin.Group;
 
 /**
@@ -59,9 +59,9 @@ public class Groups implements Plugin {
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		// Retrieve groups, and sort by name
 		Engine engine = context.getEngine();
-		IGroupManager groupMgr = engine.getManager(IGroupManager.class); // IGroupManager.class
+		AccountManager accountManager = engine.getManager(AccountManager.class);
 		URLConstructor urlConstructor = engine.getManager(URLConstructor.class);
-		List<Group> groups = groupMgr.getGroups();
+		List<Group> groups = accountManager.getGroups();
 		//:FVK: Arrays.sort( groups, COMPARATOR );
 
 		List<String> listGroups = new ArrayList<>();

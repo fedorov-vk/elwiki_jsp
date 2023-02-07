@@ -25,7 +25,7 @@
 <%@ page import="org.apache.wiki.api.core.Session" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
-<%@ page import="org.apache.wiki.auth.UserManager" %>
+<%@ page import="org.apache.wiki.auth.AccountManager" %>
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
 <%@ page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
 <%@ page import="org.apache.wiki.api.exceptions.DuplicateUserException" %>
@@ -50,7 +50,7 @@
     if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
     // Extract the user profile and action attributes
-    UserManager userMgr = ServicesRefs.getUserManager();
+    AccountManager userMgr = ServicesRefs.getAccountManager();
     Session wikiSession = wikiContext.getWikiSession();
 
 /* FIXME: Obsolete

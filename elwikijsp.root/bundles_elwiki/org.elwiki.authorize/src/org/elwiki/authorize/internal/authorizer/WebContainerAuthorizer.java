@@ -14,9 +14,9 @@
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
-    under the License.  
+    under the License.
  */
-package org.elwiki.authorize;
+package org.elwiki.authorize.internal.authorizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,23 +37,24 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
+import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
-import org.elwiki.api.authorization.authorize.IWebAuthorizer;
 //import org.elwiki.api.IApplicationSession;
 //import org.elwiki.api.IElWikiSession;
 //import org.elwiki.api.IWikiEngine;
-//import org.elwiki.api.authorization.authorize.IWebAuthorizer;
 //import org.elwiki.api.event.WikiEvent;
 //import org.elwiki.api.event.WikiEventListener;
 //import org.elwiki.api.exceptions.InternalWikiException;
@@ -81,11 +82,11 @@ import org.osgi.service.useradmin.Group;
  * to determine if the container manages authorization.
  */
 @SuppressWarnings({ "deprecation", "unused" })
-public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
-
-	private static final String J2EE_SCHEMA_25_NAMESPACE = "http://java.sun.com/xml/ns/javaee";
+public class WebContainerAuthorizer implements WebAuthorizer {
 
 	protected static final Logger log = Logger.getLogger(WebContainerAuthorizer.class);
+
+	private static final String J2EE_SCHEMA_25_NAMESPACE = "http://java.sun.com/xml/ns/javaee";
 
 	protected Engine m_engine;
 
@@ -120,11 +121,11 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 *            the wiki engine initialization properties
 	 */
 	@Override
-	public void initialize(Engine engine) {
+	public void initialize(Engine engine, Properties props) throws WikiSecurityException {
 		m_engine = engine;
 
 		this.m_containerAuthorized = false;
-		/*  :FVK: WORKAROUND... -- этот код JSPwiki только для описания авторизации в "web.xml"
+		/*  :FVK: WORKAROUND... -- этот код JSPwiki только для описания авторизации в "web.xml" */
 		// FIXME: Error handling here is not very verbose
 		try {
 			this.m_webxml = getWebXml();
@@ -132,8 +133,8 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 				// Add the J2EE 2.4 schema namespace
 				this.m_webxml.getRootElement().setNamespace(Namespace.getNamespace(J2EE_SCHEMA_25_NAMESPACE));
 
-				this.m_containerAuthorized = isConstrained("/Delete.jsp", Role.ALL)
-						&& isConstrained("/Login.jsp", Role.ALL);
+				this.m_containerAuthorized = isConstrained("/Delete.jsp", GroupPrincipal.ALL)
+						&& isConstrained("/Login.jsp", GroupPrincipal.ALL);
 			}
 			if (this.m_containerAuthorized) {
 				this.m_containerRoles = getRoles(this.m_webxml);
@@ -143,20 +144,20 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 			}
 		} catch (IOException e) {
 			log.error("Initialization failed: ", e);
-			throw new InternalWikiException(e.getClass().getName() + ": " + e.getMessage());
+			throw new InternalWikiException(e.getClass().getName() + ": " + e.getMessage(), e);
 		} catch (JDOMException e) {
 			log.error("Malformed XML in web.xml", e);
-			throw new InternalWikiException(e.getClass().getName() + ": " + e.getMessage());
+			throw new InternalWikiException(e.getClass().getName() + ": " + e.getMessage(), e);
 		}
 
 		if (this.m_containerRoles.length > 0) {
 			String roles = "";
-			for (Role containerRole : this.m_containerRoles) {
+			for (GroupPrincipal containerRole : this.m_containerRoles) {
 				roles = roles + containerRole + " ";
 			}
 			log.info(" JSPWiki determined the web container manages these roles: " + roles);
 		}
-		*/
+
 		log.info("Authorizer WebContainerAuthorizer initialized successfully.");
 	}
 
@@ -178,28 +179,34 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	}
 
 	/**
-	 * Determines whether the Subject associated with a WikiSession is in a particular role. This method
-	 * takes two parameters: the WikiSession containing the subject and the desired role ( which may be
-	 * a Role or a Group). If either parameter is <code>null</code>, this method must return
-	 * <code>false</code>. This method simply examines the WikiSession subject to see if it possesses
-	 * the desired Principal.
-	 * <p>
-	 * We assume that the method
-	 * {@link WikiServletFilter#doFilter(ServletRequest, ServletResponse, FilterChain)} previously
-	 * executed, and that it has set the WikiSession subject correctly by logging in the user with the
-	 * various login modules, in particular {@link WebContainerLoginModule}}. This is definitely a hack,
-	 * but it eliminates the need for WikiSession to keep dangling references to the last WikiContext
-	 * hanging around, just so we can look up the HttpServletRequest.
+	 * Determines whether the Subject associated with a Session is in a particular role. This method
+	 * takes two parameters: the Session containing the subject and the desired role ( which may be a
+	 * Role or a Group). If either parameter is <code>null</code>, this method must return
+	 * <code>false</code>. This method simply examines the Session subject to see if it possesses the
+	 * desired Principal.
+	 * <p> We assume that the method
+	 * {@link org.apache.wiki.ui.WikiServletFilter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)}
+	 * previously executed, and that it has set the Session subject correctly by logging in the user
+	 * with the various login modules, in particular
+	 * {@link org.apache.wiki.auth.login.WebContainerLoginModule}}. This is definitely a hack, but it
+	 * eliminates the need for Session to keep dangling references to the last WikiContext hanging
+	 * around, just so we can look up the HttpServletRequest.
 	 *
-	 * @param session
-	 *            the current WikiSession
-	 * @param rgoup
-	 *            the role to check
+	 * @param session the current Session
+	 * @param role    the role to check
 	 * @return <code>true</code> if the user is considered to be in the role, <code>false</code>
 	 *         otherwise
-	 * @see org.elwiki.api.authorization.IGroupManager.auth.wiki.auth.Authorizer#isUserInRole(org.elwiki.api.release.core.common.core.common.wiki.WikiSession,
-	 *      Group)
+	 * @see org.apache.wiki.auth.Authorizer#isUserInRole(org.apache.wiki.api.core.Session,
+	 *      java.security.Principal)
 	 */
+	   @Override
+    public boolean isUserInRole( final Session session, final Principal role ) {
+        if ( session == null || role == null ) {
+            return false;
+        }
+        return session.hasPrincipal( role );
+    }
+
 	//:FVK: @Override
 	public boolean isUserInRole(Session session, Group rgoup) {
 		if (session == null || rgoup == null) {
@@ -312,18 +319,20 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 		return this.m_containerAuthorized;
 	}
 
-	/**
-	 * Returns an array of role Principals this Authorizer knows about. This method will return an array
-	 * of Role objects corresponding to the logical roles enumerated in the <code>web.xml</code>. This
-	 * method actually returns a defensive copy of an internally stored array.
-	 * 
-	 * @return an array of Principals representing the roles
-	 */
-	@Override
-	public List<Group> getGroups() {
-		return Collections.emptyList(); // :FVK: this.m_containerRoles.clone();
-	}
-
+    /**
+     * Returns an array of role Principals this Authorizer knows about.
+     * This method will return an array of Role objects corresponding to
+     * the logical roles enumerated in the <code>web.xml</code>.
+     * This method actually returns a defensive copy of an internally stored
+     * array.
+     * @return an array of Principals representing the roles
+     */
+    @Override
+    public Principal[] getRoles()
+    {
+        return m_containerRoles.clone();
+    }
+	
 	/**
 	 * Protected method that extracts the roles from JSPWiki's web application deployment descriptor.
 	 * Each Role is constructed by using the String representation of the Role, for example
@@ -375,6 +384,7 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 	 * @throws JDOMException
 	 *             if the deployment descriptor cannot be parsed correctly
 	 */
+
 	protected Document getWebXml() throws JDOMException, IOException {
 		URL url;
 		SAXBuilder builder = new SAXBuilder();
@@ -473,111 +483,10 @@ public class WebContainerAuthorizer implements IWebAuthorizer, Initializable {
 //		}
 //	}
 
-	//:FVK: @Override
-	public void actionPerformed(WikiEvent event) {
-		// TODO Auto-generated method stub
-		Assert.isTrue(false, ":FVK: Код не реализован.");
-	}
-
-	//:FVK: @Override
-	public void addWikiEventListener(WikiEventListener listener) {
-		// TODO Auto-generated method stub
-		Assert.isTrue(false, ":FVK: Код не реализован.");
-	}
-
-	//:FVK: @Override
-	public void removeWikiEventListener(WikiEventListener listener) {
-		// TODO Auto-generated method stub
-		Assert.isTrue(false, ":FVK: Код не реализован.");
-	}
-
-//	@Override
-//	public Group getGroup(String name) throws NoSuchPrincipalException {
-//		// TODO Auto-generated method stub
-//		Assert.isTrue(false, ":FVK: Код не реализован.");
-//		return null;
-//	}
-
-//	@Override
-//	public Group parseGroup(IElWikiSession session, String name1, String memberLine1, boolean create) throws WikiSecurityException {
-//		// TODO Auto-generated method stub
-//		Assert.isTrue(false, ":FVK: Код не реализован.");
-//		return null;
-//	}
-
-//	@Override
-//	public void setGroup(IElWikiSession session, Group group) throws WikiSecurityException {
-//		// TODO Auto-generated method stub
-//		Assert.isTrue(false, ":FVK: Код не реализован.");
-//	}
-
 	@Override
-	public void setGroup(Session session, WrapGroup group) throws WikiSecurityException {
+	public String toString() {
 		// TODO Auto-generated method stub
-		
+		return super.toString();
 	}
-
-	@Override
-	public void removeGroup(WrapGroup index) throws WikiSecurityException {
-		// TODO Auto-generated method stub
-		Assert.isTrue(false, ":FVK: Код не реализован.");
-	}
-
-	//:FVK: @Override
-	public org.osgi.service.useradmin.Group parseGroup(Session session, String name, String memberLine,
-			boolean create) throws WikiSecurityException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Group getGroup(String adminGroup) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isUserInGroup(String attrValue, Group group) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public PermissionInfo[] getRolePermissionInfo(String roleName) {
-		// TODO Auto-generated method stub
-		Assert.isTrue(false, "missed code!");
-		return null;
-	}
-
-	@Override
-	public boolean isUserInRole(Group rgoup) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Group parseGroup(String name, String memberLine, boolean create) throws WikiSecurityException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void validateGroup(WikiContext context, WrapGroup group) {
-		// TODO Auto-generated method stub
-		
-	}
-
-//	@Override
-//	public org.osgi.service.useradmin.Group parseGroup(IElWikiSession session, String name, String memberLine,
-//			boolean create) throws WikiSecurityException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 }

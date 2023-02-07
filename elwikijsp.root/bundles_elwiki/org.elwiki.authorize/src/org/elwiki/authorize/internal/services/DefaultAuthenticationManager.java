@@ -47,8 +47,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IGroupManager;
-import org.elwiki.authorize.WebContainerAuthorizer;
+import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.authorization.WebAuthorizer;
+import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.AnonymousLoginModule;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
@@ -265,7 +266,6 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      */
     @Override
     public boolean isContainerAuthenticated() {
-    	/*:FVK:
         try {
             final Authorizer authorizer = this.authorizationManager.getAuthorizer();
             if ( authorizer instanceof WebContainerAuthorizer ) {
@@ -273,7 +273,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
             }
         } catch ( final WikiException e ) {
             // It's probably ok to fail silently...
-        }*/
+        }
         return false;
     }
 
@@ -561,36 +561,34 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * should be injected, the configured Authorizer is queried for the roles it knows about by calling  {@link Authorizer#getRoles()}.
      * Then, each role returned by the authorizer is tested by calling {@link Authorizer#isUserInRole(Session, Principal)}. If this
      * check fails, and the Authorizer is of type IWebAuthorizer, the role is checked again by calling
-     * {@link IWebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test are injected into the Subject by
+     * {@link WebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test are injected into the Subject by
      * firing appropriate authentication events.
      *
      * @param session the user's current Session
      * @param authorizer the Engine's configured Authorizer
      * @param request the user's HTTP session, which may be <code>null</code>
      */
-    private void injectAuthorizerRoles( final Session session, final IGroupManager authorizer, final HttpServletRequest request ) {
-    	/*:FVK:
-    	Authorizer authorizer1 = (Authorizer)authorizer; //:FVK: cast -- это неверно !!!
-        // Test each role the authorizer knows about
-        for( final Principal role : authorizer1.getRoles() ) {
-            // Test the Authorizer
-            if( authorizer1.isUserInRole( session, role ) ) {
-                fireEvent( WikiSecurityEvent.PRINCIPAL_ADD, role, session );
-                if( log.isDebugEnabled() ) {
-                    log.debug( "Added authorizer role " + role.getName() + "." );
-                }
-            }
-            // If web authorizer, test the request.isInRole() method also
-            else if ( request != null && authorizer instanceof IWebAuthorizer ) {
-                final IWebAuthorizer wa = ( IWebAuthorizer )authorizer;
-                if ( wa.isUserInRole( request, role ) ) {
-                    fireEvent( WikiSecurityEvent.PRINCIPAL_ADD, role, session );
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "Added container role " + role.getName() + "." );
-                    }
-                }
-            }
-        }*/
-    }
+    private void injectAuthorizerRoles( final Session session, final Authorizer authorizer, final HttpServletRequest request ) {
+		// Test each role the authorizer knows about
+		for (final Principal role : authorizer.getRoles()) {
+			// Test the Authorizer
+			if (authorizer.isUserInRole(session, role)) {
+				fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, role, session);
+				if (log.isDebugEnabled()) {
+					log.debug("Added authorizer role " + role.getName() + ".");
+				}
+			}
+			// If web authorizer, test the request.isInRole() method also
+			else if (request != null && authorizer instanceof WebAuthorizer) {
+				final WebAuthorizer wa = (WebAuthorizer) authorizer;
+				if (wa.isUserInRole(request, role)) {
+					fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, role, session);
+					if (log.isDebugEnabled()) {
+						log.debug("Added container role " + role.getName() + ".");
+					}
+				}
+			}
+		}
+	}
 
 }

@@ -172,7 +172,7 @@ public class UserAdminDatabase extends AbstractUserDatabase {
 	public Principal[] getWikiNames() throws WikiSecurityException {
 		SortedSet<Principal> principals = new TreeSet<Principal>();
 		try {
-			Role[] roles = this.userAdmin.getRoles(null); // :FVK: workaround. (возможно лучше использовать фильтр)
+			Role[] roles = this.userAdmin.getRoles(null); // :FVK: workaround. (возможно лучше использовать фильтр, см. UserAdmin описание)
 			for (Role role : roles) {
 				if (role instanceof User user && !(role instanceof Group)) {
 					String login = (String) user.getProperties().get(LOGIN_NAME);

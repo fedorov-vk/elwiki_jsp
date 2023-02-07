@@ -6,7 +6,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.tasks.TasksManager;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.workflow0.Outcome;
@@ -52,7 +52,7 @@ public class SaveUserProfileTask extends Task {
         final UserProfile profile = ( UserProfile )getWorkflowContext().get( WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE );
         if ( profile != null) {
         	// Save the profile (userdatabase will take care of timestamps for us)
-        	ServicesRefs.getUserManager().getUserDatabase().save( profile );
+        	ServicesRefs.getAccountManager().getUserDatabase().save( profile );
         	
             // Send e-mail if user supplied an e-mail address
         	final String to = profile.getEmail();

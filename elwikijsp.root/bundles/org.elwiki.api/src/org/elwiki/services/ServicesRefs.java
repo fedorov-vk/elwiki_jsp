@@ -50,9 +50,8 @@ import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.IPermissionManager;
 import org.apache.wiki.auth.ISessionMonitor;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.filters0.FilterManager;
@@ -70,7 +69,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiScopeManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki_data.WikiPage;
@@ -86,15 +84,13 @@ import org.osgi.service.component.annotations.Reference;
 public class ServicesRefs implements Engine {
 
 	private static WikiAjaxDispatcher wikiAjaxDispatcher;
-	private static IPermissionManager permissionManager;
 	private static AclManager aclManager;
 	private static AttachmentManager attachmentManager;
 	private static PageManager pageManager;
 	private static PageRenamer pageRenamer;
 	private static AuthorizationManager authorizationManager;
-	private static IGroupManager groupManager;
 	private static ProgressManager progressManager;
-	private static UserManager userManager;
+	private static AccountManager accountManager;
 	private static AdminBeanManager adminBeanManager;
 	private static IIAuthenticationManager authenticationManager;
 	private static RenderingManager renderingManager;
@@ -131,9 +127,6 @@ public class ServicesRefs implements Engine {
 	@Reference(target = "(component.factory=" + WikiAjaxDispatcher.WIKI_AJAX_DISPATCHER_FACTORY + ")")
 	private ComponentFactory<WikiAjaxDispatcher> factoryWikiAjaxDispatcher;
 	
-	@Reference(target = "(component.factory=" + IPermissionManager.COMPONENT_FACTORY +")")
-	private ComponentFactory<IPermissionManager> factoryPermissionManager;
-
 	@Reference(target = "(component.factory=elwiki.AclManager.factory)")
 	private ComponentFactory<AclManager> factoryAclManager;
 
@@ -149,14 +142,11 @@ public class ServicesRefs implements Engine {
 	@Reference(target = "(component.factory=elwiki.AuthorizationManager.factory)")
 	private ComponentFactory<AuthorizationManager> factoryAuthorizationManager;
 
-	@Reference(target = "(component.factory=elwiki.GroupManager.factory)")
-	private ComponentFactory<IGroupManager> factoryGroupManager;
-
 	@Reference(target = "(component.factory=elwiki.ProgressManager.factory)")
 	private ComponentFactory<ProgressManager> factoryProgressManager;
 
-	@Reference(target = "(component.factory=elwiki.UserManager.factory)")
-	private ComponentFactory<UserManager> factoryUserManager;
+	@Reference(target = "(component.factory=elwiki.AccountManager.factory)")
+	private ComponentFactory<AccountManager> factoryAccountManager;
 
 	@Reference(target = "(component.factory=elwiki.AdminBeanManager.factory)")
 	private ComponentFactory<AdminBeanManager> factoryAdminBeanManager;
@@ -247,8 +237,6 @@ public class ServicesRefs implements Engine {
 
 		managers.put(WikiAjaxDispatcher.class,
 				ServicesRefs.wikiAjaxDispatcher = this.factoryWikiAjaxDispatcher.newInstance(properties).getInstance());
-		managers.put(IPermissionManager.class,
-				ServicesRefs.permissionManager = this.factoryPermissionManager.newInstance(properties).getInstance());
 		managers.put(PageRenamer.class,
 				ServicesRefs.pageRenamer = this.factoryPageRenamer.newInstance(properties).getInstance());
 		managers.put(ProgressManager.class,
@@ -278,8 +266,8 @@ public class ServicesRefs implements Engine {
 				ServicesRefs.renderingManager = this.factoryRenderingManager.newInstance(properties).getInstance());
 		managers.put(AttachmentManager.class,
 				ServicesRefs.attachmentManager = this.factoryAttachmentManager.newInstance(properties).getInstance());
-		managers.put(UserManager.class,
-				ServicesRefs.userManager = this.factoryUserManager.newInstance(properties).getInstance());
+		managers.put(AccountManager.class,
+				ServicesRefs.accountManager = this.factoryAccountManager.newInstance(properties).getInstance());
 		managers.put(FilterManager.class,
 				ServicesRefs.filterManager = this.factoryFilterManager.newInstance(properties).getInstance());
 		managers.put(IIAuthenticationManager.class,
@@ -287,8 +275,6 @@ public class ServicesRefs implements Engine {
 						.getInstance());
 		managers.put(AuthorizationManager.class, ServicesRefs.authorizationManager = this.factoryAuthorizationManager
 				.newInstance(properties).getInstance());
-		managers.put(IGroupManager.class,
-				ServicesRefs.groupManager = this.factoryGroupManager.newInstance(properties).getInstance());
 		managers.put(PageManager.class,
 				ServicesRefs.pageManager = this.factoryPageManager.newInstance(properties).getInstance());
 		managers.put(DifferenceManager.class,
@@ -343,10 +329,6 @@ public class ServicesRefs implements Engine {
 
 	// -- service handling -----------------------------(end)--
 
-	public static IPermissionManager getPermissionManager() {
-		return permissionManager;
-	}
-
 	public static AclManager getAclManager() {
 		return aclManager;
 	}
@@ -367,16 +349,12 @@ public class ServicesRefs implements Engine {
 		return authorizationManager;
 	}
 
-	public static IGroupManager getGroupManager() {
-		return groupManager;
-	}
-
 	public static ProgressManager getProgressManager() {
 		return progressManager;
 	}
 
-	public static UserManager getUserManager() {
-		return userManager;
+	public static AccountManager getAccountManager() {
+		return accountManager;
 	}
 
 	public static AdminBeanManager getAdminBeanManager() {
@@ -571,12 +549,6 @@ public class ServicesRefs implements Engine {
 
 			// initService(AuthorizationManager.class);
 			// initComponent( AuthorizationManager.class );
-
-			/*:FVK: 
-			initService(GroupManager.class);
-			//initComponent( GroupManager.class );
-			 */
-			// initService(IGroupManager.class);
 
 //:FVK: отладить:
 			// initService(EditorManager.class);

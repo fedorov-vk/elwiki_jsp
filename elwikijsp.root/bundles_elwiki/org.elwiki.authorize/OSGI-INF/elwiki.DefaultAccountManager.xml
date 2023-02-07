@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.AccountManager.factory" name="elwiki.DefaultAccountManager">
+   <service>
+      <provide interface="org.apache.wiki.auth.AccountManager"/>
+   </service>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
+   <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService"/>
+   <implementation class="org.elwiki.authorize.internal.accounting.DefaultAccountManager"/>
+</scr:component>

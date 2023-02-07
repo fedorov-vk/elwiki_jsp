@@ -37,7 +37,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
@@ -650,7 +650,7 @@ public class WikiContextImpl implements WikiContext, Command {
 		if (WikiCommand.INSTALL.equals(m_command)) {
 			// See if admin users exists
 			try {
-				final UserManager userMgr = ServicesRefs.getUserManager();
+				final AccountManager userMgr = ServicesRefs.getAccountManager();
 				final UserDatabase userDb = userMgr.getUserDatabase();
 				userDb.findByLoginName(Installer.ADMIN_ID);
 			} catch (final NoSuchPrincipalException e) {

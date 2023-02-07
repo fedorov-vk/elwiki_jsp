@@ -16,11 +16,11 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.auth.login;
+package org.elwiki.authorize.login;
 
 import javax.security.auth.callback.Callback;
 
-import org.apache.wiki.auth.Authorizer;
+import org.elwiki.api.authorization.Authorizer;
 
 /**
  * Callback for requesting and supplying an Authorizer required by a

@@ -23,14 +23,12 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.AttachmentProvider;
-import org.apache.wiki.auth.UserManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
-//import org.apache.wiki.auth.authorize.GroupManager;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
@@ -110,8 +108,8 @@ public class Installer {
      */
     public boolean adminExists() {
         // See if the admin user exists already
-        final UserManager userMgr = ServicesRefs.getUserManager();
-        final UserDatabase userDb = userMgr.getUserDatabase();
+        final AccountManager accountManager = ServicesRefs.getAccountManager();
+        final UserDatabase userDb = accountManager.getUserDatabase();
         try {
             userDb.findByLoginName( ADMIN_ID );
             return true;
@@ -135,8 +133,8 @@ public class Installer {
         }
         
         // See if the admin user exists already
-        final UserManager userMgr = ServicesRefs.getUserManager();
-        final UserDatabase userDb = userMgr.getUserDatabase();
+        final AccountManager accountManager = ServicesRefs.getAccountManager();
+        final UserDatabase userDb = accountManager.getUserDatabase();
         String password = null;
         
         try {
@@ -152,16 +150,15 @@ public class Installer {
         }
         
         // Create a new admin group
-        final IGroupManager groupMgr = ServicesRefs.getGroupManager();
         WrapGroup group;
         /*:FVK:
         try {
-            group = groupMgr.getGroup( ADMIN_GROUP );
+            group = accountManager.getGroup( ADMIN_GROUP );
             group.add( new WikiPrincipal( ADMIN_NAME ) );
         } catch( final NoSuchPrincipalException e ) {
-            group = groupMgr.parseGroup( ADMIN_GROUP, ADMIN_NAME, true );
+            group = accountManager.parseGroup( ADMIN_GROUP, ADMIN_NAME, true );
         }
-        groupMgr.setGroup( m_session, group );
+        accountManager.setGroup( m_session, group );
         */
         
         return password;

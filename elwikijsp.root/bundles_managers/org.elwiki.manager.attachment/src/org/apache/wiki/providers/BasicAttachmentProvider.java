@@ -33,7 +33,6 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.search.QueryItem;
-import org.apache.wiki.auth.IPermissionManager;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;

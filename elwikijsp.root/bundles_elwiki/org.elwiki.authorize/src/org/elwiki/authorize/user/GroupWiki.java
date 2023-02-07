@@ -53,6 +53,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
 @Deprecated
 public class GroupWiki implements IGroupWiki {
 
+	@Deprecated
 	public static final String[] RESTRICTED_GROUPNAMES = new String[] { "Anonymous", "All", "Asserted", "Authenticated" };
 
 	private final Vector<Principal> m_members = new Vector<Principal>();

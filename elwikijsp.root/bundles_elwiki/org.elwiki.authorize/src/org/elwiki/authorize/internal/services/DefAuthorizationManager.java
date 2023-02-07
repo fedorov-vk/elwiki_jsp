@@ -60,6 +60,7 @@ import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
@@ -86,7 +87,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.useradmin.Group;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IGroupManager;
+import org.elwiki.api.authorization.Authorizer;
 //import org.elwiki.api.authorization.user.IUserDatabase;
 //import org.elwiki.api.authorization.user.UserProfile;
 //import org.elwiki.api.event.WikiEvent;
@@ -179,13 +180,13 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
-	/** The extension ID for access to implementation set of {@link IGroupManager}. */
+	/** The extension ID for access to implementation set of {@link Authorizer}. */
 	private static final String ID_EXTENSION_AUTHORIZER = "authorizer";
 
 	/** Extension's specific ID of default external Authorizer. Current value - {@value} */
-	protected static final String DEFAULT_AUTHORIZER = "WebContainerAuthorizer";
+	protected static final String DEFAULT_AUTHORIZER = "DefaultAuthorizer";//:FVK: "WebContainerAuthorizer"; 
 
-	/** The property name in jspwiki.properties for specifying the external {@link IGroupManager}. */
+	/** The property name in jspwiki.properties for specifying the external {@link Authorizer}. */
 	protected static final String PROP_AUTHORIZER = "jspwiki.authorizer";
 
 	/** Name of the default security policy file, as bundle resource. */
@@ -193,9 +194,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 	private static final Class<?>[] permissionMethodArgs = new Class[] {String.class, String.class};
 	
-	private final Map<String, Class<? extends IGroupManager>> authorizerClasses = new HashMap<>();
+	private final Map<String, Class<? extends Authorizer>> authorizerClasses = new HashMap<>();
 
-	private IGroupManager m_authorizer = null;
+	private Authorizer m_authorizer = null;
 
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
@@ -219,7 +220,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
-	private IGroupManager groupManager;
+	private AccountManager accountManager;
 
 	@WikiServiceReference
 	private AclManager aclManager;
@@ -321,7 +322,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @return a Authorizer used to get page authorization information
 	 * @throws WikiException
 	 */
-	private IGroupManager getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
+	private Authorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
@@ -339,8 +340,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 					final Bundle bundle = Platform.getBundle(contributorName);
 					Class<?> clazz = bundle.loadClass(className);
 					try {
-						Class<? extends IGroupManager> cl = clazz.asSubclass(IGroupManager.class);
-						this.authorizerClasses.put(authorizerId, (Class<? extends IGroupManager>) cl);
+						Class<? extends Authorizer> cl = clazz.asSubclass(Authorizer.class);
+						this.authorizerClasses.put(authorizerId, (Class<? extends Authorizer>) cl);
 					} catch (ClassCastException e) {
 						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
 						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
@@ -352,13 +353,13 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			}
 		}
 
-		Class<? extends IGroupManager> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
+		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
 		if (clazzAuthorizer == null) {
 			// TODO: это сообщение не к месту (логика не адекватна).
 			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
 		}
 
-		IGroupManager authorizer;
+		Authorizer authorizer;
 		try {
 			authorizer = clazzAuthorizer.newInstance();
 		} catch (InstantiationException e) {
@@ -480,7 +481,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @see org.elwiki.core.auth.IAuthorizationManager#getAuthorizer()
 	 */
 	@Override
-	public IGroupManager getAuthorizer() throws WikiSecurityException {
+	public Authorizer getAuthorizer() throws WikiSecurityException {
 		if (this.m_authorizer != null) {
 			return this.m_authorizer;
 		}
@@ -577,7 +578,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 				} else {
 					// Instantiates permissions from groups configuration.
 					permCollection = new Permissions();
-					PermissionInfo[] permInfos = this.groupManager.getRolePermissionInfo(roleName);
+					PermissionInfo[] permInfos = this.accountManager.getRolePermissionInfo(roleName);
 					for (PermissionInfo permInfo : permInfos) {
 						String typePermission = permInfo.getType();
 						String name = permInfo.getName();
@@ -655,7 +656,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		/*:FVK:
 		// Check Groups
-		principal = ServicesRefs.getGroupManager().findRole(name); // IGroupManager.class
+		principal = ServicesRefs.getAccountManager().findRole(name); // IGroupManager.class
 		if (principal != null) {
 			return principal;
 		}

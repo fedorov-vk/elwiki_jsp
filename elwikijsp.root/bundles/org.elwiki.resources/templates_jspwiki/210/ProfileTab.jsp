@@ -31,7 +31,7 @@
 <%
 /* dateformatting not yet supported by wiki:UserProfile tag - diy */
   WikiContext wikiContext = ContextUtil.findContext(pageContext);
-  UserManager manager = ServicesRefs.getUserManager();
+  AccountManager manager = ServicesRefs.getAccountManager();
   JIUserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form action="<wiki:CheckRequestContext 

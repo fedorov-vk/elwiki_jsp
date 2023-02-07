@@ -24,17 +24,16 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
 //import org.apache.wiki.auth.authorize.GroupDatabase;
-//import org.apache.wiki.auth.authorize.GroupManager;
 //:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;
-/*:FVK:
-import org.apache.wiki.auth.user.DummyUserDatabase;*/
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
 import org.apache.xpath.operations.Bool;
+import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.api.authorization.WrapGroup;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.WikiPermission;
@@ -200,7 +199,7 @@ public final class SecurityVerifier {
     {
     	/* */
     	//:FVK: get all wiki groups (also known as Principals)
-    	List<Group> groups1 = ServicesRefs.getGroupManager().getGroups();
+    	List<Group> groups1 = ServicesRefs.getAccountManager().getGroups();
     	Map<GroupPrincipal,Group> groupPrincipals = new HashMap<>();
     	for(Group role : groups1) {
     		//group.getProperties().get()
@@ -359,15 +358,13 @@ public final class SecurityVerifier {
      */
     public String containerRoleTable() throws WikiException {
         final AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
-        //:FVK: final Authorizer authorizer =  (Authorizer) authorizationManager.getAuthorizer();
+        final Authorizer authorizer = authorizationManager.getAuthorizer();
         
 
         // If authorizer not WebContainerAuthorizer, print error message
-/*:FVK:
-        if ( !( authorizer instanceof WebContainerAuthorizer ) ) {
+        if ( !( authorizer instanceof WebAuthorizer ) ) {
             throw new IllegalStateException( "Authorizer should be WebContainerAuthorizer" );
         }
-*/
 
         // Now, print a table with JSP pages listed on the left, and
         // an evaluation of each pages' constraints for each role
@@ -390,12 +387,11 @@ public final class SecurityVerifier {
         s.append( "</thead>\n" );
         s.append( "<tbody>\n" );
 
-/*:FVK:
-        final WebContainerAuthorizer wca = (WebContainerAuthorizer) authorizer;
+        final WebAuthorizer wca = (WebAuthorizer) authorizer;
         for( int i = 0; i < CONTAINER_ACTIONS.length; i++ ) {
             final String action = CONTAINER_ACTIONS[i];
             final String jsp = CONTAINER_JSPS[i];
-
+/*:FVK:
             // Print whether the page is constrained for each role
             final boolean allowsAnonymous = !wca.isConstrained( jsp, Role.ALL );
             s.append( "  <tr>\n" );
@@ -424,8 +420,8 @@ public final class SecurityVerifier {
                 s.append( "&nbsp;</td>\n" );
             }
             s.append( "  </tr>\n" );
+ */
         }
-*/
         s.append( "</tbody>\n" );
         s.append( "</table>\n" );
         return s.toString();
@@ -448,12 +444,11 @@ public final class SecurityVerifier {
      * @throws WikiException if the web authorizer cannot obtain the list of roles
      */
     public Principal[] webContainerRoles() throws WikiException {
-/*:FVK:
         final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
-        if ( authorizer instanceof WebContainerAuthorizer ) {
+        if ( authorizer instanceof WebAuthorizer ) {
             return authorizer.getRoles();
         }
-*/
+
         return new Principal[0];
     }
 
@@ -464,8 +459,8 @@ public final class SecurityVerifier {
      */
     protected void verifyPolicyAndContainerRoles() throws WikiException
     {
-    	//:FVK: final Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
-        final Principal[] containerRoles = m_session.getRoles(); //:FVK: authorizer.getRoles();
+    	final Authorizer authorizer = ServicesRefs.getAuthorizationManager().getAuthorizer();
+        final Principal[] containerRoles = authorizer.getRoles();
         boolean missing = false;
         for( final Principal principal : m_policyPrincipals )
         {
@@ -493,22 +488,22 @@ public final class SecurityVerifier {
     {
     	Object mgr = null, db = null; // :FVK:
     	/*:FVK:
-        final IGroupManager mgr = ServicesRefs.getGroupManager(); // GroupManager
+        final IGroupManager mgr = ServicesRefs.getAccountManager(); // GroupManager
         GroupDatabase db = null;
         try {
-            db = ServicesRefs.getGroupManager().getGroupDatabase();
+            db = ServicesRefs.getAccountManager().getGroupDatabase();
         } catch ( final WikiSecurityException e ) {
-            m_session.addMessage( ERROR_GROUPS, "Could not retrieve GroupManager: " + e.getMessage() );
+            m_session.addMessage( ERROR_GROUPS, "Could not retrieve AccountManager: " + e.getMessage() );
         }
         */
 
         // Check for obvious error conditions
         if ( mgr == null || db == null ) {
             if ( mgr == null ) {
-                m_session.addMessage( ERROR_GROUPS, "GroupManager is null; JSPWiki could not initialize it. Check the error logs." );
+                m_session.addMessage( ERROR_GROUPS, "AccountManager is null; JSPWiki could not initialize it. Check the error logs." );
             }
             if ( db == null ) {
-                m_session.addMessage( ERROR_GROUPS, "GroupDatabase is null; JSPWiki could not initialize it. Check the error logs." );
+                m_session.addMessage( ERROR_GROUPS, "AccountResource (DB) is null; JSPWiki could not initialize it. Check the error logs." );
             }
             return;
         }
@@ -680,6 +675,8 @@ public final class SecurityVerifier {
         try {
         	// Look up the policy file and set the status text.
 			final URL policyURL = m_engine.findConfigFile( AuthorizationManager.DEFAULT_POLICY );
+			if(policyURL==null)
+				return;//:FVK: workaround.
         	String path = policyURL.getPath();
         	if ( path.startsWith("file:") ) {
         		path = path.substring( 5 );
@@ -774,7 +771,7 @@ public final class SecurityVerifier {
      */
     protected void verifyUserDatabase()
     {
-        final UserDatabase db = ServicesRefs.getUserManager().getUserDatabase();
+        final UserDatabase db = ServicesRefs.getAccountManager().getUserDatabase();
 
         // Check for obvious error conditions
         if ( db == null )
