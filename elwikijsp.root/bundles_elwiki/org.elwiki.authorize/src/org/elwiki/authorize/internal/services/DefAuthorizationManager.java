@@ -65,6 +65,7 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
+import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.TemplateManager;
@@ -85,6 +86,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 //import org.elwiki.api.IAuthorizationManager;
 //import org.elwiki.api.IElWikiSession;
 import org.osgi.service.useradmin.Group;
+import org.osgi.service.useradmin.UserAdmin;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
@@ -98,7 +100,7 @@ import org.elwiki.api.authorization.Authorizer;
 //import org.elwiki.api.exceptions.NoSuchPrincipalException;
 //import org.elwiki.api.exceptions.WikiException;
 //import org.elwiki.api.exceptions.WikiSecurityException;
-
+import org.elwiki.authorize.internal.accounting.GroupWiki;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.Aprincipal;
@@ -214,7 +216,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	}
 
 	// -- service handling ---------------------------(start)--
-
+	
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
@@ -570,8 +572,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 */
 	public boolean allowedByLocalPolicy(Principal[] principals, Permission permission) {
 		for (Principal principal : principals) {
-			if(principal instanceof Aprincipal) {
-				String roleName = principal.getName();
+			if(principal instanceof Aprincipal aprincipal) {
+				String roleName = aprincipal.getUid();
 				PermissionCollection permCollection;
 				if( cachedPermissions.containsKey(roleName) ) {
 					permCollection = cachedPermissions.get(roleName);
@@ -638,18 +640,19 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @see org.elwiki.core.auth.IAuthorizationManager#resolvePrincipal(java.lang.String)
 	 */
 	@Override
-	public Principal resolvePrincipal(String name) {
+	public Principal resolvePrincipal(String groupName) {
 		GroupPrincipal role;
 		Principal principal;
 
 		// Check built-in Roles first
-		role = new GroupPrincipal(name);
+		String uid = this.accountManager.getGroupUid(groupName); //:FVK: workaround - get group by its name, for take group UID
+		role = new GroupPrincipal(groupName, uid);
 		if (GroupPrincipal.isBuiltInGroup(role)) {
 			return role;
 		}
 
 		// Check Authorizer Roles
-		principal = this.m_authorizer.findRole(name);
+		principal = this.m_authorizer.findRole(groupName);
 		if (principal != null) {
 			return principal;
 		}
@@ -673,7 +676,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		*/
 
 		// Ok, no luck---mark this as unresolved and move on
-		return new UnresolvedPrincipal(name);
+		return new UnresolvedPrincipal(groupName);
 	}
 
 	// -- events processing ---------------------------------------------------

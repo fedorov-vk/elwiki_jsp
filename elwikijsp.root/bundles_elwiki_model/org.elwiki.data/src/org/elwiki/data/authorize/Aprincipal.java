@@ -8,11 +8,22 @@ abstract public class Aprincipal implements Principal, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String principalName;
+	private final String principalUid;
 
 	protected Aprincipal(String name) {
 		this.principalName = name;
+		this.principalUid = "---"; //:FVK: workaround.
 	}
 
+	public Aprincipal(String name, String uid) {
+		this.principalName = name;
+		this.principalUid = uid;
+	}
+
+	public String getUid() {
+		return this.principalUid;
+	}
+	
 	/**
 	 * Returns the name of the ElWiki Principal.
 	 * 

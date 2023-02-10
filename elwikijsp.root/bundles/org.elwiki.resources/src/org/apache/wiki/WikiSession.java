@@ -20,7 +20,7 @@ package org.apache.wiki;
 
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.services.ServicesRefs;
 
@@ -108,7 +108,7 @@ public final class WikiSession implements Session, EventHandler {
      * @param group the group to test
      * @return the result
      */
-    protected boolean isInGroup( final WrapGroup group ) {
+    protected boolean isInGroup( final IGroupWiki group ) {
         for( final Principal principal : getPrincipals() ) {
             if( isAuthenticated() && group.isMember( principal ) ) {
                 return true;
@@ -375,13 +375,13 @@ public final class WikiSession implements Session, EventHandler {
             if ( se.getTarget() != null ) {
                 switch( se.getType() ) {
                 case WikiSecurityEvent.GROUP_ADD:
-                    final WrapGroup groupAdd = ( WrapGroup )se.getTarget();
+                    final IGroupWiki groupAdd = ( IGroupWiki )se.getTarget();
                     if( isInGroup( groupAdd ) ) {
                         m_subject.getPrincipals().add( groupAdd.getPrincipal() );
                     }
                     break;
                 case WikiSecurityEvent.GROUP_REMOVE:
-                    final WrapGroup group = ( WrapGroup )se.getTarget();
+                    final IGroupWiki group = ( IGroupWiki )se.getTarget();
                     m_subject.getPrincipals().remove( group.getPrincipal() );
                     break;
                 case WikiSecurityEvent.GROUP_CLEAR_GROUPS:
@@ -534,7 +534,8 @@ public final class WikiSession implements Session, EventHandler {
 		for (String roleItem : userAdminService.getAuthorization(this.getUser()).getRoles()) {
 			org.osgi.service.useradmin.Role role = userAdminService.getRole(roleItem);
 			if (role != null && role.getType() == org.osgi.service.useradmin.Role.GROUP) {
-				GroupPrincipal group = new GroupPrincipal(role.getName());
+				String name = (String) role.getProperties().get(UserDatabase.GROUP_NAME);
+				GroupPrincipal group = new GroupPrincipal(name, role.getName());
 				m_subject.getPrincipals().add(group);
 			}
 		}

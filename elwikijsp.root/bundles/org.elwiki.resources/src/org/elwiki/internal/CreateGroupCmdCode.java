@@ -15,7 +15,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.services.ServicesRefs;
 import org.osgi.service.useradmin.Group;
 
@@ -38,17 +38,17 @@ public class CreateGroupCmdCode extends CmdCode {
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
 		AccountManager accountManager = ServicesRefs.getAccountManager();
-		WrapGroup group = null;
+		IGroupWiki groupWiki = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {
-			group = accountManager.parseGroup(wikiContext, false);
+			groupWiki = accountManager.parseGroup(wikiContext, false);
 			// pageContext.setAttribute( "Group", group, PageContext.REQUEST_SCOPE );
 
 			/* TODO: if group == null (undefined) - make redirect:
 	        wikiSession.addMessage( AccountManager.MESSAGES_KEY, "Parameter 'group' cannot be null." );
 	        response.sendRedirect( "Group.jsp" );*/        	
 
-			httpRequest.setAttribute("Group", group); //HACK: вместо pageContext.setAttribute() 
+			httpRequest.setAttribute("Group", groupWiki); //HACK: вместо pageContext.setAttribute() 
 		} catch (WikiSecurityException e) {
 			wikiSession.addMessage(AccountManager.MESSAGES_KEY, e.getMessage());
 			httpResponse.sendRedirect("Group.jsp");
@@ -58,29 +58,29 @@ public class CreateGroupCmdCode extends CmdCode {
 		// :FVK: TODO:... проверить, рефакторизовать (выделить функционал групп).
 		if ("save".equals(httpRequest.getParameter("action"))) {
 			// Validate the group
-			accountManager.validateGroup(wikiContext, group);
+			accountManager.validateGroup(wikiContext, groupWiki);
 
-			Group grp2 = accountManager.getGroup(group.getName());
+			Group grp2 = accountManager.getGroup(groupWiki.getName());
 			if (grp2 != null) {
 
 				// Oops! The group already exists. This is mischief!
 				ResourceBundle rb = null; // Preferences.getBundle( wikiContext, "CoreResources");
 				wikiSession.addMessage(AccountManager.MESSAGES_KEY,
-						MessageFormat.format(rb.getString("newgroup.exists"), group.getName()));
+						MessageFormat.format(rb.getString("newgroup.exists"), groupWiki.getName()));
 			}
 			// Group not found; this is good!
 			
 			// If no errors, save the group now
 			if (wikiSession.getMessages(AccountManager.MESSAGES_KEY).length == 0) {
 				try {
-					accountManager.setGroup( wikiSession, group );
+					accountManager.setGroup( wikiSession, groupWiki );
 				} catch (WikiSecurityException e) {
 					// Something went horribly wrong! Maybe it's an I/O error...
 	                wikiSession.addMessage(AccountManager.MESSAGES_KEY, e.getMessage());
 				}
 			}
 			if (wikiSession.getMessages(AccountManager.MESSAGES_KEY).length == 0) {
-				httpResponse.sendRedirect("Group.jsp?group=" + group.getName());
+				httpResponse.sendRedirect("Group.jsp?group=" + groupWiki.getName());
 				return;
 			}
 		}

@@ -176,7 +176,7 @@ public class UserProfileTag extends BaseWikiTag {
 	}
 
 	/**
-	 * Returns a sorted list of the {@link org.elwiki.api.authorization.WrapGroup}
+	 * Returns a sorted list of the {@link org.elwiki.api.authorization.IGroupWiki}
 	 * objects a user possesses in his or her Session. The result is computed by
 	 * consulting {@link org.apache.wiki.api.core.Session#getRoles()} and extracting
 	 * those that are of type Group.

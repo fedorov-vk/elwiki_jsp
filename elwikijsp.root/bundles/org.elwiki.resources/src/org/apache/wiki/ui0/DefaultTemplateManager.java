@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -358,7 +359,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	public Map<String, String> listTimeFormats(final PageContext pageContext) {
 		final WikiContext context = ContextUtil.findContext(pageContext);
 		IPreferenceStore props = this.wikiConfiguration.getWikiPreferences();
-		final ArrayList<String> tfArr = new ArrayList<>(40);
+		final List<String> tfArr = new ArrayList<>(40);
 		final LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
 
 		/* filter timeformat properties */

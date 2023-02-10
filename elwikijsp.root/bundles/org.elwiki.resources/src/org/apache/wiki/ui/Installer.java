@@ -29,7 +29,7 @@ import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
 import org.elwiki.services.ServicesRefs;
@@ -150,7 +150,7 @@ public class Installer {
         }
         
         // Create a new admin group
-        WrapGroup group;
+        IGroupWiki group;
         /*:FVK:
         try {
             group = accountManager.getGroup( ADMIN_GROUP );

@@ -26,7 +26,7 @@
 <%@ page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
+<%@ page import="org.elwiki.api.authorization.IGroupWiki" %>
 <%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.elwiki.permissions.GroupPermission" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
@@ -39,27 +39,10 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  //Context grCtx = ThreadUtil.getCurrentContext(); //:FVK:
-  WikiContext grCtx = ContextUtil.findContext( pageContext );
-  // Extract the group name and members
-  //String name = request.getParameter( "group" );
-  //Group group = (Group)pageContext.getAttribute("Group",PageContext.REQUEST_SCOPE);
-
+  WikiContext wikiCtx = ContextUtil.findContext( pageContext );
   AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
   AccountManager accountManager = ServicesRefs.getAccountManager();
-
-  List<org.osgi.service.useradmin.Group> groups1 = accountManager.getGroups();
-  Principal[] groups;
-  //:FVK: Arrays.sort( groups, new PrincipalComparator() );
-
-  String name = null;
-  WrapGroup group = null;
-  org.osgi.service.useradmin.Group group1 = null;
-  String[] members = null;
-  StringBuffer membersAsString = null;
 %>
-<c:set var="groups" value="<%= groups1 %>" />
-
 <wiki:CheckRequestContext context="!<%=WikiContext.GROUP_CREATE%>"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
   <form action="<wiki:Link format='url' path='cmd.createGroup'/>"
@@ -124,33 +107,19 @@
     </thead>
     <tbody>
     <%
-            /*for( int g = 0; g < groups.length; g++ )
-            {
-              if ( groups[g] instanceof GroupPrincipal )*/
-            for(org.osgi.service.useradmin.Group group2 : groups1) {
-           	  if ( group2 instanceof org.osgi.service.useradmin.Group )
-              {
-           		Dictionary<String, Object> groupProps = group2.getProperties();
-           		name = (String)groupProps.get(UserDatabase.GROUP_NAME);
-           		group = new WrapGroup(group2);
-
-                //name = group2.getName(); //:FVK: groups[g].getName();
-                //? group1 = accountManager.getGroup( name );
-                //:FVK:..........
-                members = group.members();
-                //Arrays.sort( members, Comparator.naturalOrder() );
-                pageContext.setAttribute("members", members);
+     List<IGroupWiki> groups = accountManager.getGroups();
+     Collections.sort(groups);
     %>
-    
-    <c:set var="group" value="<%= group %>" />
-    <tr class="${param.group == group.name ? 'highlight' : ''}">
-      <%--<td><wiki:Link path='Group.jsp'><wiki:Param name='group' value='${group.name}'/>${group.name}</wiki:Link></td>--%>
+
+	<c:forEach var="group" items="<%=groups%>" varStatus="status">
+    <tr class="${param.group == group.name ? 'highlight' : ''}"> <!-- :FVK: here highligh specified group from parameters. -->
+
+      <!--:FVK: <td><wiki:Link path='Group.jsp'><wiki:Param name='group' value='${group.name}'/>${group.name}</wiki:Link></td>-->
       <td><c:if test="${group.name =='Admin'}"><span class="icon-unlock-alt"></span> </c:if>${group.name}</td>
 
       <td>
-        <c:forEach items="${members}" var="member" varStatus="iterator">
-          <c:if test="${iterator.index > 0}">, </c:if>
-          ${member}
+        <c:forEach items="${group.memberNames}" var="member" varStatus="iter2Status">
+          <c:if test="${not iter2Status.first}">, </c:if>${member}
         </c:forEach>
       </td>
 
@@ -160,41 +129,41 @@
       <td><fmt:formatDate value="${group.created}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
 
       <td>${group.creator}</td>
+
       <!-- :FVK: ~ это оригинальный код Wiki 
       <td><fmt:formatDate value="${group.lastModifiedDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" /></td>
       -->
-
       <td><fmt:formatDate value="${group.lastModifiedDate}" pattern="dd-MM-yyyy" timeZone="GMT+2" /></td>
 
       <td>${group.modifier}</td>
 
       <td class="nowrap">
-      <%--
+      <%-- :FVK: why can't the wiki:Permission be used here?
         We can't use wiki:Permission, cause we are in a loop; so let's just borrow some code from PermissionTag.java
       --%>
-      <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "edit" ) ) %>'>
-      <%--:FVK: <wiki:Permission permission="editGroup"> <wiki:Param name='id' value='${group.groupId}'/> --%>
-        <a class="btn btn-xs btn-primary"
-           href="<wiki:Link context='<%=WikiContext.GROUP_EDIT%>' format='url' id='${group.groupId}'/>">
-           <fmt:message key="actions.editgroup"/>
-        </a>
-      <%--</wiki:Permission>--%>
-      </c:if>
-      <c:if test='<%= authMgr.checkPermission( grCtx.getWikiSession(), new GroupPermission( name, "delete" ) ) %>'>
-      <%--:FVK: <wiki:Permission permission="deleteGroup"> --%>
-        <button class="btn btn-xs btn-danger" type="button" onclick="document.deleteGroupForm.group.value ='${group.groupId}';document.deleteGroupForm.ok.click();">
+     <%
+      	IGroupWiki group = (IGroupWiki)pageContext.getAttribute("group");
+      	String grouName = group.getName();
+      	Session wikiSession = wikiCtx.getWikiSession();
+      	if( authMgr.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
+      %>
+          <a class="btn btn-xs btn-primary"
+             href="<wiki:Link context='<%=WikiContext.GROUP_EDIT%>' format='url' id='${group.uid}'/>">
+             <fmt:message key="actions.editgroup"/>
+          </a>
+     <% } %>
+     <%
+      	if( authMgr.checkPermission(wikiSession, new GroupPermission( grouName, "delete" )) ) {
+      %>
+        <button class="btn btn-xs btn-danger" type="button"
+            onclick="document.deleteGroupForm.group.value ='${group.uid}';document.deleteGroupForm.ok.click();">
           <fmt:message key="actions.deletegroup"/>
         </button>
-      <%--</wiki:Permission>--%>
-      </c:if>
+     <% } %>
       </td>
     </tr>
-    <%
-    int nn=23;
-        } /* end of if-GroupPrincipal */
-    } /* end of for loop */
-        int n=33;
-    %>
+    </c:forEach>
+
     </tbody>
   </table>
 </div>

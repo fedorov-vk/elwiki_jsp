@@ -30,7 +30,7 @@ package org.elwiki.data.authorize;
  * @see org.elwiki.api.authorization.Group
  * @since 2.3.79
  */
-public final class GroupPrincipal extends Aprincipal {
+public final class GroupPrincipal extends Aprincipal implements Comparable<GroupPrincipal> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,26 +41,30 @@ public final class GroupPrincipal extends Aprincipal {
 	public static final String ADMIN_GROUP_UID = "80618E94-99F8-4BDA-9646-290EE539F874";
 
 	/** All users, regardless of authentication status */
-	public static final GroupPrincipal ALL = new GroupPrincipal(ALL_GROUP_UID);
+	public static final GroupPrincipal ALL = new GroupPrincipal("All", ALL_GROUP_UID);
 
 	/** If the user hasn't supplied a name */
-	public static final GroupPrincipal ANONYMOUS = new GroupPrincipal(ANONYMOUS_GROUP_UID);
+	public static final GroupPrincipal ANONYMOUS = new GroupPrincipal("Anonymous", ANONYMOUS_GROUP_UID);
 
 	/** If the user has supplied a cookie with a user name */
-	public static final GroupPrincipal ASSERTED = new GroupPrincipal(ASSERTED_GROUP_UID);
+	public static final GroupPrincipal ASSERTED = new GroupPrincipal("Asserted", ASSERTED_GROUP_UID);
 
 	/** If the user has authenticated with the Container or UserDatabase */
-	public static final GroupPrincipal AUTHENTICATED = new GroupPrincipal(AUTHENTICATED_GROUP_UID);
+	public static final GroupPrincipal AUTHENTICATED = new GroupPrincipal("Authenticated", AUTHENTICATED_GROUP_UID);
 
 	/**
 	 * Constructs a new GroupPrincipal object with a supplied name.
 	 *
-	 * @param group the wiki group; cannot be <code>null</code>
+	 * @param groupName the wiki group; cannot be <code>null</code>
+	 * @param groupUid the UID of group; cannot be <code>null</code>
 	 */
-	public GroupPrincipal(String group) {
-		super(group);
-		if (group == null) {
-			throw new IllegalArgumentException("Group parameter cannot be null.");
+	public GroupPrincipal(String groupName, String groupUid) throws IllegalArgumentException {
+		super(groupName, groupUid);
+		if (groupName == null) {
+			throw new IllegalArgumentException("Group name cannot be null.");
+		}
+		if (groupUid == null) {
+			throw new IllegalArgumentException("Group UID cannot be null.");
 		}
 	}
 
@@ -89,6 +93,11 @@ public final class GroupPrincipal extends Aprincipal {
 			return this.getName().equals(groupPrincipal.getName());
 		}
 		return false;
+	}
+
+	@Override
+	public int compareTo(GroupPrincipal o) {
+		return this.getName().compareTo(o.getName());
 	}
 
 }

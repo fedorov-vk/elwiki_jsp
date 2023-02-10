@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.elwiki.api.authorization.WebAuthorizer;
-import org.elwiki.api.authorization.WrapGroup;
 //import org.elwiki.api.IApplicationSession;
 //import org.elwiki.api.IElWikiSession;
 //import org.elwiki.api.IWikiEngine;
@@ -355,7 +354,7 @@ public class WebContainerAuthorizer implements WebAuthorizer {
 		List<?> nodes = xpath.selectNodes(root);
 		for (Iterator<?> it = nodes.iterator(); it.hasNext();) {
 			String role = ((Element) it.next()).getTextTrim();
-			roles.add(new GroupPrincipal(role));
+			roles.add(new GroupPrincipal(role, "---")); //:FVK: workaround UID.
 		}
 
 		// Get all defined roles
@@ -365,7 +364,7 @@ public class WebContainerAuthorizer implements WebAuthorizer {
 		nodes = xpath.selectNodes(root);
 		for (Iterator<?> it = nodes.iterator(); it.hasNext();) {
 			String role = ((Element) it.next()).getTextTrim();
-			roles.add(new GroupPrincipal(role));
+			roles.add(new GroupPrincipal(role, "----")); //:FVK: workaround UID.
 		}
 
 		return roles.toArray(new GroupPrincipal[roles.size()]);

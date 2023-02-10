@@ -38,6 +38,8 @@ import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.RedirectCommand;
 import org.apache.wiki.api.ui.WikiCommand;
+import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.url0.URLConstructor;
@@ -101,6 +103,9 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	@WikiServiceReference
 	private URLConstructor urlConstructor;
 
+	@WikiServiceReference
+	private AccountManager accountManager;
+	
 	/**
 	 * This component activate routine. Does all the real initialization.
 	 * 
@@ -192,7 +197,8 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 			String groupName = request.getParameter("group");
 			groupName = TextUtil.replaceEntities(groupName);
 			if (groupName != null && groupName.length() > 0) {
-				final GroupPrincipal group = new GroupPrincipal(groupName);
+				String uid = accountManager.getGroupUid(groupName);
+				final GroupPrincipal group = new GroupPrincipal(groupName, uid);
 				return command.targetedCommand(group);
 			}
 		}

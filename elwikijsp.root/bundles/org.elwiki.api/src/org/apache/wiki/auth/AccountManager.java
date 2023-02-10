@@ -18,19 +18,16 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.wiki.api.core.WikiContext;
+import java.security.Principal;
+
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.auth.user0.UserProfile;
 import org.elwiki.api.authorization.IGroupManager;
-
-import java.security.Principal;
 
 
 /**
@@ -144,5 +141,15 @@ public interface AccountManager extends IGroupManager {
      *  @throws WikiSecurityException If for reason the names cannot be fetched
      */
     Principal[] listWikiNames() throws WikiSecurityException;
+
+	String getGroupUid(String name);
+
+	/**
+	 * Returns user name according to specified UID.
+	 * 
+	 * @param uid
+	 * @return User name.
+	 */
+	String getUserName(String uid);
 
 }

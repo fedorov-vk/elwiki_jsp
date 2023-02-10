@@ -86,7 +86,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.GroupDatabase;
 import org.elwiki.api.authorization.IGroupManager;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.authorize.Messages;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.user.DummyUserDatabase;
@@ -225,7 +225,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	
 	/** Associates wiki sessions with profiles. */
 	private final Map<Session, UserProfile> m_profiles = new WeakHashMap<>();
-	
+
+	private final List<IGroupWiki> m_groups = new ArrayList<>();
+
 	// == CODE ================================================================
 
 	/**
@@ -298,7 +300,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		try {
 			this.m_database = this.classUserDatabase.getDeclaredConstructor().newInstance();
 			log.info("Attempting to load user database class " + this.m_database.getClass().getName());
-			this.m_database.initialize(this.m_engine, null);
+			this.m_database.initialize(this.m_engine, null); // :FVK: workaround - here load Groups, Users from JSON.
 			log.info("UserDatabase initialized.");
 		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | InstantiationException e) {
 			log.error("UserDatabase class " + this.classUserDatabase.getClass().getName() + " cannot be created.", e);
@@ -318,7 +320,15 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 				this.m_database = new DummyUserDatabase();
 			}
 		}
-		//getUserDatabase(); // :FVK: workaround - load Groups, Users from JSON.
+
+        /* Put all groups from the persistent store into the cache.
+         * :FVK: with UserAdmin service - groups are loaded when OSGi services started? 
+         */
+		for (final Group group : getNativeGroups()) {
+			// Add new group; fire GROUP_ADD event
+			m_groups.add(new GroupWiki(group, this));
+			//:FVK: fireEvent(WikiSecurityEvent.GROUP_ADD, group);
+		}
 
 		// Attach the PageManager as a listener
 		// TODO: it would be better if we did this in PageManager directly
@@ -672,6 +682,16 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		return getUserDatabase().getWikiNames();
 	}
 
+	@Override
+	public String getUserName(String uid) {
+		if( getUserAdmin().getRole(uid) instanceof User user) {
+			String name = (String)user.getProperties().get(UserDatabase.LOGIN_NAME);
+			return name;
+		}
+
+		return "";
+	}
+	
 	// -- implementation AccountManager --------------------------------(end)--
 
 	// -- implementation GroupManager --------------------------------(start)--
@@ -695,7 +715,11 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	}
 
 	@Override
-	public List<Group> getGroups() {
+	public List<IGroupWiki> getGroups() {
+		return this.m_groups;
+	}
+
+	protected List<Group> getNativeGroups() {
 		List<Group> groups = new ArrayList<>();
 		try {
 			for (Role role : getUserAdmin().getRoles(null)) {
@@ -741,7 +765,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	 * those in the existing group, the passed values override the old values.
 	 * <p>
 	 * This method does not commit the new Group to the GroupManager cache. To do that, use
-	 * {@link #setGroup(WikiSession, Group)}.
+	 * {@link #setGroup(WikiSession, IGroupWiki)}.
 	 * 
 	 * @param context
 	 *                the current wiki context
@@ -754,9 +778,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	 *                               if the group name isn't allowed, or if <code>create</code> is
 	 *                               <code>false</code> and the Group does not exist
 	 */
-	// :FVK: этот метод используется только в JSP файлах.
+	// :FVK: этот метод используется только для/(в) JSP файлах.
 	@Override
-	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException {
+	public IGroupWiki parseGroup(WikiContext context, boolean create) throws WikiSecurityException {
 		// Extract parameters
 		HttpServletRequest request = context.getHttpRequest();
 		String name = request.getParameter("group");
@@ -764,13 +788,13 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 		// Create the named group; we pass on any NoSuchPrincipalExceptions
 		// that may be thrown if create == false, or WikiSecurityExceptions
-		WrapGroup wrapGroup = null;
+		IGroupWiki groupWiki = null;
 		/*:FVK:
-		WrapGroup group = parseGroup(null, name, memberLine, create);
+		IGroupWiki group = parseGroup(null, name, memberLine, create);
 		*/
 		Object role = this.getUserAdmin().getUser(UserDatabase.GROUP_NAME, name);
 		if (role instanceof Group group) {
-			wrapGroup = new WrapGroup(group);
+			groupWiki = new GroupWiki(group, this);
 		} else {
 			// TODO: обработать отсутствие группы.
 		}
@@ -779,7 +803,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 			group.add(context.getWikiSession().getUserPrincipal());
 		}*/
 
-		return wrapGroup;
+		return groupWiki;
 	}
 
 	@Override
@@ -790,7 +814,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	@Override
 	//:FVK: этот метод используется в коде DeleteGroup.jsp.
-	public void removeGroup(WrapGroup index) throws WikiSecurityException {
+	public void removeGroup(IGroupWiki index) throws WikiSecurityException {
 		if (index == null) {
 			throw new IllegalArgumentException("Group cannot be null.");
 		}
@@ -810,7 +834,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	}
 
 	@Override
-	public void setGroup(Session session, WrapGroup group) throws WikiSecurityException {
+	public void setGroup(Session session, IGroupWiki group) throws WikiSecurityException {
 		// TODO: check for appropriate permissions
 
 		// If group already exists, delete it; fire GROUP_REMOVE event
@@ -872,7 +896,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	//? :FVK: этот метод используется -- в коде EditGroupCmdCode (из JSP файла).
 	//? :FVK: этот метод нигде используется -- в JSP файле.
 	@Override
-	public void validateGroup(WikiContext context, WrapGroup group) {
+	public void validateGroup(WikiContext context, IGroupWiki group) {
 		InputValidator validator = new InputValidator(IGroupManager.MESSAGES_KEY, context);
 
 		// Name cannot be null or one of the restricted names
@@ -884,10 +908,20 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 		// Member names must be "safe" strings
 		//:FVK: заменил Principal на String.
-		String[] members = group.members();
+		String[] members = group.getMemberNames();
 		for (String member : members) {
 			validator.validateNotNull(member, "Full name", InputValidator.ID);
 		}
+	}
+
+	@Override
+	public String getGroupUid(String name) {
+		String uid = null;
+		Object role = userAdminService.getUser(UserDatabase.GROUP_NAME, name);
+		if (role instanceof Group group) {
+			uid = group.getName();
+		}
+		return uid;
 	}
 
 	// -- implementation GroupManager ----------------------------------(end)--

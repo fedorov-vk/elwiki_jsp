@@ -22,7 +22,7 @@
 <%@ page import="java.util.Arrays" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ page import="org.elwiki.api.authorization.WrapGroup" %>
+<%@ page import="org.elwiki.api.authorization.IGroupWiki" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -37,13 +37,13 @@
   // Extract the group name and members
   String name = request.getParameter( "group" );
   //TODO: :FVK: разобраться с -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
-  WrapGroup group = (WrapGroup)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
+  IGroupWiki group = (IGroupWiki)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
   String[] members = {};
 
   if ( group != null )
   {
     name = group.getName();
-    members = group.members();
+    members = group.getMemberNames();
     Arrays.sort(members);
   }
 

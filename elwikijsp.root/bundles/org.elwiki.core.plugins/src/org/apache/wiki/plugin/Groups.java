@@ -34,6 +34,7 @@ import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.user0.UserDatabase;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.osgi.service.useradmin.Group;
 
 /**
@@ -61,14 +62,12 @@ public class Groups implements Plugin {
 		Engine engine = context.getEngine();
 		AccountManager accountManager = engine.getManager(AccountManager.class);
 		URLConstructor urlConstructor = engine.getManager(URLConstructor.class);
-		List<Group> groups = accountManager.getGroups();
-		//:FVK: Arrays.sort( groups, COMPARATOR );
-
+		List<IGroupWiki> groups = accountManager.getGroups();
+		//:FVK: TODO: Arrays.sort( groups, COMPARATOR );
 		List<String> listGroups = new ArrayList<>();
-		for (Group group : groups) {
+		for (IGroupWiki group : groups) {
 			StringBuilder str = new StringBuilder();
-			Dictionary<String, Object> groupProps = group.getProperties();
-			String name = (String) groupProps.get(UserDatabase.GROUP_NAME);
+			String name = group.getName();
 
 			// Make URL
 			String url = urlConstructor.makeURL(WikiContext.GROUP_VIEW, name, null);

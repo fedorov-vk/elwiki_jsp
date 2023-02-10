@@ -14,7 +14,7 @@ import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.services.ServicesRefs;
 
 public class EditGroupCmdCode extends CmdCode {
@@ -39,17 +39,17 @@ public class EditGroupCmdCode extends CmdCode {
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
-		WrapGroup group = null;
+		IGroupWiki groupWiki = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {
-			group = accountManager.parseGroup(wikiContext, false);
+			groupWiki = accountManager.parseGroup(wikiContext, false);
 			// pageContext.setAttribute( "Group", group, PageContext.REQUEST_SCOPE );
 
 			/* TODO: if group == null (undefined) - make redirect:
 	        wikiSession.addMessage( AccountManager.MESSAGES_KEY, "Parameter 'group' cannot be null." );
 	        response.sendRedirect( "Group.jsp" );*/        	
 
-			httpRequest.setAttribute("Group", group); //HACK: вместо pageContext.setAttribute() 
+			httpRequest.setAttribute("Group", groupWiki); //HACK: вместо pageContext.setAttribute() 
 		} catch (WikiSecurityException e) {
 			wikiSession.addMessage(AccountManager.MESSAGES_KEY, e.getMessage());
 			httpResponse.sendRedirect("Group.jsp");
@@ -59,19 +59,19 @@ public class EditGroupCmdCode extends CmdCode {
 		// :FVK: TODO:... проверить, рефакторизовать (выделить функционал групп).
 		if ("save".equals(httpRequest.getParameter("action"))) {
 			// Validate the group
-			accountManager.validateGroup(wikiContext, group);
+			accountManager.validateGroup(wikiContext, groupWiki);
 
 			// If no errors, save the group now
 			if (wikiSession.getMessages(AccountManager.MESSAGES_KEY).length == 0) {
 				try {
-					accountManager.setGroup(wikiSession, group);
+					accountManager.setGroup(wikiSession, groupWiki);
 				} catch (WikiSecurityException e) {
 					// Something went horribly wrong! Maybe it's an I/O error...
 					wikiSession.addMessage(AccountManager.MESSAGES_KEY, e.getMessage());
 				}
 			}
 			if (wikiSession.getMessages(AccountManager.MESSAGES_KEY).length == 0) {
-				httpResponse.sendRedirect("Group.jsp?group=" + group.getName());
+				httpResponse.sendRedirect("Group.jsp?group=" + groupWiki.getName());
 				return;
 			}
 		}

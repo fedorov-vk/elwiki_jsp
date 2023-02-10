@@ -8,10 +8,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.osgi.service.permissionadmin.PermissionInfo;
 
-public interface IGroupWiki {
+public interface IGroupWiki extends Comparable<IGroupWiki> {
 
+	/**
+	 * Returns <code>true</code> if a supplied Group is a built-in Group: {@link #ALL},
+	 * {@link #ANONYMOUS}, {@link #ASSERTED}, or {@link #AUTHENTICATED}.
+	 * 
+	 * @param group
+	 *             the role to check
+	 * @return the result of the check
+	 */
+	public static boolean isBuiltInGroup(GroupPrincipal group) {
+		String uid = group.getUid();
+		return GroupPrincipal.ALL_GROUP_UID.equals(uid) || GroupPrincipal.ANONYMOUS_GROUP_UID.equals(uid)
+				|| GroupPrincipal.ASSERTED_GROUP_UID.equals(uid) || GroupPrincipal.AUTHENTICATED_GROUP_UID.equals(uid);
+	}
+	
 	/**
 	 * Adds a Principal to the group.
 	 * 
@@ -73,16 +88,23 @@ public interface IGroupWiki {
 	/**
 	 * The name of the group. This is set in the class constructor.
 	 * 
-	 * @return the name of the Group
+	 * @return the name of the Group.
 	 */
 	String getName();
+
+	/**
+	 * The UID of the group. This is set in the class constructor.
+	 * 
+	 * @return the UID of the Group
+	 */
+	String getUid();
 
 	/**
 	 * Returns the GroupPrincipal that represents this Group.
 	 * 
 	 * @return the group principal
 	 */
-	Principal getPrincipal();
+	GroupPrincipal getPrincipal();
 
 	/**
 	 * Returns the wiki name.
@@ -109,6 +131,13 @@ public interface IGroupWiki {
 	 */
 	Principal[] members();
 
+	/**
+	 * Returns the names of the group members as an array of String.
+	 *
+	 * @return Names the members of group.
+	 */
+	String[] getMemberNames();
+	
 	/**
 	 * Removes a Principal from the group.
 	 * 
@@ -157,5 +186,7 @@ public interface IGroupWiki {
 	 * @see java.lang.Object#toString()
 	 */
 	String toString();
+
+	int compareTo(IGroupWiki obj);
 
 }

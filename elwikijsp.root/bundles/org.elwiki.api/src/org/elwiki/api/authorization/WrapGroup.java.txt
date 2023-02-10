@@ -107,7 +107,7 @@ public class WrapGroup {
 		Dictionary<String, Object> properties = group.getProperties();
 		m_name = (String) properties.get(UserDatabase.GROUP_NAME);
 		m_wiki = "foo_wiki"; // :FVK:
-		m_principal = new GroupPrincipal(m_name); // :FVK: удалить... (что это?)
+		m_principal = new GroupPrincipal(m_name, groupId); // :FVK: удалить... (это от JSPwiki...)
 
 		this.userAdmin = ApiActivator.getService(UserAdmin.class);
 	}

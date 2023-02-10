@@ -6,7 +6,7 @@
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editPreferences\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"editProfile\")",
                     "(org.elwiki.permissions.WikiPermission \"*\" \"login\")",
-                    "(org.elwiki.permissions.AllPermission \"*\" \"*\")"
+                    "(org.elwiki.permissions.AllPermission \"Admin\" \"*\")"
                    ],
     "uid": "00E38123-3FF8-4C9E-BC30-19190A2D07DC",
     "creator": "c7654a70-4451-4303-9a4b-7da13fddd1d5",

@@ -11,7 +11,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.elwiki.api.authorization.WrapGroup;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.services.ServicesRefs;
 
 public class DeleteGroupCmdCode extends CmdCode {
@@ -32,7 +32,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
 		AccountManager accountManager = ServicesRefs.getAccountManager();
-		WrapGroup group = null;
+		IGroupWiki group = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {
 			group = accountManager.parseGroup(wikiContext, false);

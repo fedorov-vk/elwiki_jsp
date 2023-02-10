@@ -36,7 +36,7 @@ import org.osgi.service.useradmin.Group;
 
 /**
  * <p>
- * Интерфейс частично обслуживает группы. (утилитарно, например, WrapGroup)
+ * Интерфейс частично обслуживает группы. (утилитарно, например, IGroupWiki)
  * <hr>
  * <p>
  * <em>Note: prior to JSPWiki 2.4.19, GroupManager was an interface; it is now a concrete, final
@@ -91,7 +91,7 @@ public interface IGroupManager {
 	 * @return an array of Principals representing the roles.
 	 */
 	//TODO: :FVK: remove full class name of Group.; RENAME getRoles -> getGroups.
-	List<org.osgi.service.useradmin.Group> getGroups();
+	List<IGroupWiki> getGroups();
 
 	/**
 	 * Looks up and returns a role Principal (GroupPrincipal) matching a given name. If a matching
@@ -132,7 +132,7 @@ public interface IGroupManager {
 	 */
 	//:FVK:org.osgi.service.useradmin.Group getGroup(String name) throws NoSuchPrincipalException;
 
-	public WrapGroup parseGroup(WikiContext context, boolean create) throws WikiSecurityException;
+	public IGroupWiki parseGroup(WikiContext context, boolean create) throws WikiSecurityException;
 	
 	/**
 	 * Extracts group name and members from passed parameters and populates an existing Group with
@@ -145,7 +145,7 @@ public interface IGroupManager {
 	 * those in the existing group, the passed values override the old values.
 	 * <p>
 	 * This method does not commit the new Group to the GroupManager cache. To do that, use
-	 * {@link #setGroup(WikiSession, GroupWiki)}.
+	 * {@link #setGroup(WikiSession, IGroupWiki)}.
 	 *
 	 * @param session
 	 *                   TODO
@@ -185,7 +185,7 @@ public interface IGroupManager {
 	 *                               if the Group cannot be removed by the back-end.
 	 * @see GroupDatabase#delete(GroupWiki)
 	 */
-	void removeGroup(WrapGroup index) throws WikiSecurityException;
+	void removeGroup(IGroupWiki index) throws WikiSecurityException;
 
 	/**
 	 * Saves the {@link GroupWiki} created by a user in a wiki session. This method registers the Group
@@ -222,7 +222,7 @@ public interface IGroupManager {
 	 * @throws WikiSecurityException
 	 *                               if the Group cannot be saved by the back-end.
 	 */
-	void setGroup(Session session, WrapGroup group) throws WikiSecurityException;
+	void setGroup(Session session, IGroupWiki group) throws WikiSecurityException;
 
 	/**
 	 * Returns useradmin OSGi group by specified name.
@@ -240,5 +240,5 @@ public interface IGroupManager {
 	 */
 	PermissionInfo[] getRolePermissionInfo(String roleName);
 
-	void validateGroup(WikiContext context, WrapGroup group);
+	void validateGroup(WikiContext context, IGroupWiki group);
 }
