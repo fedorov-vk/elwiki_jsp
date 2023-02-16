@@ -22,10 +22,7 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspTagException;
 
-import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -71,16 +68,13 @@ public class CheckVersionTag extends BaseWikiTag {
 	 * 
 	 * @param arg The mode to set.
 	 */
-	public void setMode(final String arg) {
-		if ("latest".equals(arg)) {
-			m_mode = VersionMode.LATEST;
-		} else if ("notfirst".equals(arg)) {
-			m_mode = VersionMode.NOTFIRST;
-		} else if ("first".equals(arg)) {
-			m_mode = VersionMode.FIRST;
-		} else {
-			m_mode = VersionMode.NOTLATEST;
-		}
+	public void setMode(String arg) {
+		this.m_mode = switch (arg) {
+		case "first" -> VersionMode.FIRST;
+		case "notfirst" -> VersionMode.NOTFIRST;
+		case "latest" -> VersionMode.LATEST;
+		default -> VersionMode.NOTLATEST;
+		};
 	}
 
 	/**
@@ -88,31 +82,17 @@ public class CheckVersionTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
-
-		if (page != null && ServicesRefs.getPageManager().pageExistsByName(page.getName())) {
-			final int version = page.getVersion();
-			final boolean include;
-			final WikiPage latest = ServicesRefs.getPageManager().getPage(page.getName());
-
-			switch (m_mode) {
-			case LATEST:
-				include = (version < 0) || (latest.getVersion() == version);
-				break;
-			case NOTLATEST:
-				include = (version > 0) && (latest.getVersion() != version);
-				break;
-			case FIRST:
-				include = (version == 1) || (version < 0 && latest.getVersion() == 1);
-				break;
-			case NOTFIRST:
-				include = version > 1;
-				break;
-			default:
-				throw new InternalWikiException("Mode which is not available!");
-			}
-			if (include) {
+		WikiPage page = m_wikiContext.getPage();
+		if (page != null) {
+			int version = page.getVersion();
+			int latestVersion = page.getLastContent().getVersion();
+			boolean isIncluding = switch (m_mode) {
+			case LATEST -> (version < 0) || (latestVersion == version);
+			case NOTLATEST -> (version > 0) && (latestVersion != version);
+			case FIRST -> (version == 1) || (version < 0 && latestVersion == 1);
+			case NOTFIRST -> version > 1;
+			};
+			if (isIncluding) {
 				return EVAL_BODY_INCLUDE;
 			}
 		}

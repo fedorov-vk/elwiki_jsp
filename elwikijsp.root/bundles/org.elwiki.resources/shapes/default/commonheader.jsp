@@ -133,11 +133,9 @@ String.I18N.PREFIX = "javascript.";
 <wiki:CheckRequestContext
   context='<%=ContextUtil.compose(WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD)%>'>
   <wiki:Permission permission="edit">
-    <wiki:PageType type="page">
       <link rel="alternate" type="application/x-wiki"
            href="<wiki:EditLink format='url' />"
           title="<fmt:message key='actions.edit.title'/>" />
-    </wiki:PageType>
   </wiki:Permission>
 </wiki:CheckRequestContext>
 

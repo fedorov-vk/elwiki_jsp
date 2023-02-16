@@ -111,11 +111,8 @@
 
 <ul class="nav nav-pills pull-right">
 
-    <c:set var="page">
-      <wiki:PageType type="page"><wiki:PageName/></wiki:PageType>
-      <wiki:PageType type="attachment"><wiki:ParentPageName/></wiki:PageType>
-    </c:set>
-    <c:set var="pageId"><wiki:PageId/></c:set>
+  <c:set var="page"><wiki:PageName/></c:set> <%-- :FVK: ? Are the variables: page, pageId - used ? --%>
+  <c:set var="pageId"><wiki:PageId/></c:set>
 
   <%-- view --%>
 
@@ -235,58 +232,40 @@
   </wiki:CheckRequestContext>
 
   <%-- edit --%>
-  <wiki:PageType type="page">
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
     WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
 	<li id="edit" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-      <wiki:PageType type="page">
         <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e" >
           <span class="icon-pencil"></span>
           <span><fmt:message key='actions.edit'/></span>
         </wiki:Link>
-      </wiki:PageType>
-      <wiki:PageType type="attachment">
-        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageName="<wiki:ParentPageName />" accessKey="e" >
-          <span class="icon-pencil"></span>
-          <span><fmt:message key='actions.edit'/></span>
-        </wiki:Link>
-      </wiki:PageType>
     </li>
   </wiki:CheckRequestContext>
-  </wiki:PageType>
 
   <%-- create page --%>
-  <wiki:PageType type="page">
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
     WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-      <wiki:PageType type="page">
         <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
           <wiki:Param name="redirect" value="${pageId}"/>
           <span class="icon-pencil"></span>
           <span>Create</span>
         </wiki:Link>
-      </wiki:PageType>
     </li>
   </wiki:CheckRequestContext>
-  </wiki:PageType>
 
   <%-- delete page --%>
-<%-- 
-  <wiki:PageType type="page">
+<%--:FVK: 
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
     Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-      <wiki:PageType type="page">
         <wiki:Link context="<%=WikiContext.PAGE_DELETE%>" pageId="<%=ctx.getPageId()%>" >
           <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
           <span class="icon-pencil"></span>
           <span>Create</span>
         </wiki:Link>
-      </wiki:PageType>
     </li>
   </wiki:CheckRequestContext>
-  </wiki:PageType>
  --%>
 
   <%-- help slimbox-link --%>
@@ -387,23 +366,11 @@
         WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD)%>'>
       <wiki:PageExists>
       <wiki:Permission permission="comment">
-        <wiki:PageType type="page">
           <li>
             <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${pageId}">
               <span class="icon-plus"></span> <fmt:message key="actions.comment" />
             </wiki:Link>
           </li>
-        </wiki:PageType>
-        <wiki:PageType type="attachment">
-          <li>
-            <%--
-            <wiki:Link pageName="<wiki:ParentPageName />" context="<%=WikiContext.PAGE_COMMENT%>" title="<fmt:message key='actions.comment.title' />">
-              <fmt:message key="actions.comment" />
-            </wiki:Link>
-            --%>
-            <wiki:LinkToParent><fmt:message key="actions.addcommenttoparent" /></wiki:LinkToParent>
-	      </li>
-        </wiki:PageType>
       </wiki:Permission>
       </wiki:PageExists>
       </wiki:CheckRequestContext>

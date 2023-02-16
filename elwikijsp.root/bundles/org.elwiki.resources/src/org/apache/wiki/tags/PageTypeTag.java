@@ -36,6 +36,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
+@Deprecated // :FVK: this tag is no longer used. (the use of "weblogentry" is not noticed.)
 public class PageTypeTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 1594079364766711229L;

@@ -35,11 +35,5 @@
 
   <%@ include file="/shapes/default/PageTab.jsp" %>
 
-  <wiki:PageType type="attachment">
-    <div><%-- insert the actual attachement, image, etc... --%>
-      <wiki:Translate>[<%= ContextUtil.findContext( pageContext ).getPage().getName() %>]</wiki:Translate>
-    </div>
-  </wiki:PageType>
-
 </div>
 <!-- ~~ END ~~ PageContent.jsp  -->

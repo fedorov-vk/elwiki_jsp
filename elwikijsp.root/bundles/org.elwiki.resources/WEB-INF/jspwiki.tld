@@ -599,16 +599,6 @@
 	</tag>
 
 	<tag>
-		<name>PageType</name>
-		<tag-class>org.apache.wiki.tags.PageTypeTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>type</name>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-
-	<tag>
 		<name>PageVersion</name>
 		<tag-class>org.apache.wiki.tags.PageVersionTag</tag-class>
 		<body-content>JSP</body-content>

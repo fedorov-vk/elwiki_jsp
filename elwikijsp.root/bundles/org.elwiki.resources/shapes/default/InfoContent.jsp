@@ -87,7 +87,6 @@
 
 <wiki:PageExists>
 
-<wiki:PageType type="page"> <%-- TODO: remove wiki:PageType tag. --%>
   <div class="form-frame">
   <p>
   <fmt:message key='info.lastmodified'>
@@ -279,7 +278,7 @@
       <c:set var="olddiff" value="${param.r1}" />
       <c:set var="newdiff" value="${param.r2}" />
       <c:set var="pageContents" value="<%=wikiPage.getPageContentsReversed()%>"/>
-      <c:set var="diffprovider" value='<%= ServicesRefs.getVariableManager().getVariable(ctx,"jspwiki.diffProvider") %>' />
+      <c:set var="diffprovider" value='<%=ServicesRefs.getVariableManager().getVariable(ctx,"jspwiki.diffProvider") %>' />
       <form action="<wiki:Link path='cmd.diff' format='url' />"
              class="diffbody form-inline"
             method="get" accept-charset="UTF-8">
@@ -318,8 +317,6 @@
     </wiki:CheckRequestContext>
 
   </div>
-
-</wiki:PageType>
 
 </wiki:PageExists>
 
