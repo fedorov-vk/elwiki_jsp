@@ -34,6 +34,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.0
  */
+@Deprecated // :FVK: this tag is no longer used.
 public class ParentPageNameTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = -5237880586223850672L;
