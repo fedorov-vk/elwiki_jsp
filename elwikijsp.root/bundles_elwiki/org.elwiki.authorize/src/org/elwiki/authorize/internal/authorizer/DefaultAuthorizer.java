@@ -5,11 +5,22 @@ import java.util.Properties;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.services.ServicesRefs;
 
 public class DefaultAuthorizer implements Authorizer {
+	
+	private @NonNull AccountManager accountManager;
+
+	public DefaultAuthorizer() {
+		super();
+		this.accountManager = ServicesRefs.Instance.getManager(AccountManager.class);
+	}
 
 	@Override
 	public Principal[] getRoles() {
@@ -19,9 +30,12 @@ public class DefaultAuthorizer implements Authorizer {
 
 	@Override
 	public Principal findRole(String role) {
-		Assert.isTrue(false, "code is not implemented.");
 		// TODO Auto-generated method stub
-		return null;
+		/*:FVK: следующий код - это заглушка, workaround */
+		Principal principal = this.accountManager.findRole(role);
+		//gp = new GroupPrincipal("Admin", uid);
+
+		return principal;
 	}
 
 	@Override
