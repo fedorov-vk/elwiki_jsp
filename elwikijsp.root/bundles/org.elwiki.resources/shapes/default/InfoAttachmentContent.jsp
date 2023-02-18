@@ -90,6 +90,31 @@
 --%>
 
 <%
+	Engine engine = ctx.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);
+	String attId = request.getParameter("id");
+	//FIXME: here pageAttachment - can be null (not found).
+	PageAttachment pageAttachment = pageManager.getPageAttachmentById(attId);
+%>
+<div>
+<h4 class="pull-left" id="info-attachment-name"><fmt:message key="info.attachment.name"/>:
+ <i><c:out value="<%=pageAttachment.getName()%>" escapeXml="true"/></i></h4>
+<form action="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_DELETE%>' pageId='<%=wikiPage.getId()%>' />"
+       class="form-group pull-right"
+          id="deletePageVersionForm"
+      method="post" accept-charset="<wiki:ContentEncoding />" >
+  <input type="hidden" name="idattach" value="<%=pageAttachment.getId()%>" />
+  <wiki:Permission permission="delete">
+    <input class="btn btn-danger" type="submit" name="delete-all" id="delete-all"
+      data-modal="+ .modal"
+           value="<fmt:message key='info.deleteattachment.submit' />" />
+    <div class="modal"><fmt:message key='info.confirmdelete'/></div>
+  </wiki:Permission>
+</form>
+</div>
+<hr width="0pt"> <%-- :FVK: workaround. layout hack --%>
+
+<%
   int MAXATTACHNAMELENGTH = 30;
 %>
 <c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
@@ -122,8 +147,8 @@
       <input class="form-control form-col-50" type="text" name="changenote" id="changenote" maxlength="80" size="60" />
     </div>
     <div class="form-group">
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.PAGE_INFO%>' format='url'/>" /><%-- *** --%>
-    <input type="hidden" name="page" value="<wiki:Variable var="pagename"/>" />
+    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.PAGE_INFO%>' format='url'/>" />
+    <input type="hidden" name="idpage" value="<%=ctx.getPageId()%>" />
     <input class="btn btn-success form-col-offset-20 form-col-50"
            type="submit" name="upload" id="upload" disabled="disabled" value="<fmt:message key='attach.add.submit'/>" />
     <%--<input type="hidden" name="action" value="upload" />--%>
@@ -139,25 +164,11 @@
 </wiki:Permission>
 
 
-<form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' ><wiki:Param name='tab' value='attach' /></wiki:Link>"
-           class="form-group"
-              id="deletePageVersionForm"
-          method="post" accept-charset="<wiki:ContentEncoding />" >
-  <wiki:Permission permission="delete">
-    <input class="btn btn-danger" type="submit" name="delete-all" id="delete-all"
-      data-modal="+ .modal"
-           value="<fmt:message key='info.deleteattachment.submit' />" />
-    <div class="modal"><fmt:message key='info.confirmdelete'/></div>
-  </wiki:Permission>
-</form>
-
-
 <%-- TODO why no pagination here - number of attach versions of one page limited ?--%>
   <h4 id="info-attachment-history"><fmt:message key='info.attachment.history' /></h4>
   <div class="slimbox-attachments table-filter-sort-condensed-striped">
   <table class="table" aria-describedby="info-attachment-history">
     <tr>
-      <th scope="col"><fmt:message key="info.attachment.name"/></th>
       <th scope="col"><fmt:message key="info.version"/></th>
       <th scope="col"><fmt:message key="info.date"/></th>
       <th scope="col"><fmt:message key="info.size"/></th>
@@ -170,16 +181,8 @@
       --%>
       <th scope="col"><fmt:message key="info.changenote"/></th>
     </tr>
-
 	
-<%-- <wiki:HistoryIterator id="hist"> --%>
 <%
-	Engine engine = ctx.getEngine();
-	PageManager pageManager = engine.getManager(PageManager.class);
-	String attId = request.getParameter("id");
-	//FIXME: here pageAttachment - can be null (not found).
-	PageAttachment pageAttachment = pageManager.getPageAttachmentById(attId);
-
 	EList<AttachmentContent> atts = pageAttachment.getAttachContents();
 	Iterator<AttachmentContent> iter = atts.iterator();
 	while (iter.hasNext()) {
@@ -189,9 +192,10 @@
 	<c:set var="attContent" value="<%=content%>" />
     <tr>
 
-      <td class="attach-name"><wiki:LinkTo version="${attContent.version}"><c:out value="${att.name}" /></wiki:LinkTo></td>
-
-      <td><c:out value="${attContent.version}"/></td>
+      <td class="attach-name">
+        <wiki:LinkTo version="${attContent.version}">
+        <c:out value="< ${attContent.version} >" /></wiki:LinkTo>
+      </td>
 
 	  <td class="nowrap" data-sortvalue="${attContent.creationDate.time}">
 	    <fmt:formatDate value="${attContent.creationDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
@@ -221,10 +225,7 @@
       <td class="changenote"><c:out value="${attContent.changeNote}"/></td>
 
     </tr>
-
 <% }%>
-<%-- </wiki:HistoryIterator> --%>
-
   </table>
   </div>
 

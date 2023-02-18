@@ -16,6 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 --%>
+<%@ page errorPage="/shapes/Error.jsp" %>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
@@ -24,15 +25,21 @@
 <%@ page import="org.apache.wiki.ui.admin.*" %>
 <%@ page import="org.apache.wiki.ui.admin0.*" %>
 <%@ page import="org.elwiki.services.ServicesRefs" %>
-<%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <!doctype html>
 <html lang="en">
 <head>
 <title>JSPWiki administration</title>
   <wiki:Include page="../default/commonheader.jsp"/>
+<!-- FIXME: CSS file replaces now by style tag  
   <link rel="stylesheet" media="screen, projection, print" type="text/css"
-        href="<wiki:Link format='url' templatefile='admin/admin.css'/>"/>
+        href="<wiki:Link format='url' templatefile='../admin/admin.css'/>"/>
+-->
+<style>
+#userlist { float:left; width: 30%; }
+#useredit { float:right; width: 65%; }
+#useractions { clear: both; }
+</style>
 </head>
 <body class="container context-view">
 <div id="wikibody">
@@ -42,7 +49,6 @@
 in your <code>jspwiki.properties</code> file.</div>
 
 <%
-    Engine wiki  = ServicesRefs.Instance;//:FVK: -- Wiki.engine().find( getServletConfig() );
     WikiContext ctx = ContextUtil.findContext(pageContext);
     AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
 %>
@@ -71,8 +77,6 @@ in your <code>jspwiki.properties</code> file.</div>
    </wiki:TabbedSection>
 
 <h3>Users</h3>
-<%--:FVK:
- --%>
    <wiki:Include page="UserManagement.jsp"/>
 
 <h3>Group</h3>

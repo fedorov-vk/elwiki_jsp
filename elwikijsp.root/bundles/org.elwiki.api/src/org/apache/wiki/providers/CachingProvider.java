@@ -618,4 +618,16 @@ public class CachingProvider implements PageProvider {
 		return null;
 	}
 
+	@Override
+	public void deleteAttachment(String attachmentId) throws ProviderException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PageAttachment getAttachmentById(String attachmentId) throws ProviderException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

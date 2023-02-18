@@ -35,16 +35,15 @@
 <%!
   public void jspInit()
   {
-	wiki = ServicesRefs.Instance; //:FVK: workaround.
+	log = Logger.getLogger("Admin_jsp");
   }
-  Logger log = Logger.getLogger("JSPWiki");
-  Engine wiki;
+  Logger log;
 %>
 <%
+    // Get created wiki context (and check for authorization - :FVK: see below).
+	WikiContext wikiContext = ContextUtil.findContext(pageContext);
+	Engine wiki = wikiContext.getEngine();
 	String bean = request.getParameter("bean");
-    Engine wiki = ServicesRefs.Instance;//:FVK: Wiki.engine().find( getServletConfig() );
-    // Create wiki context and check for authorization
-    WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.WIKI_ADMIN );
 
     //:FVK: надо вернуть код -- if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 

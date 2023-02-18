@@ -226,7 +226,7 @@ public interface PageProvider extends WikiProvider {
 	 * 
 	 * @param pageAttachmentId page attachment ID.
 	 * @return
-	 * @throws Exception TODO
+	 * @throws Exception if something goes wrong with the backend.
 	 */
 	PageAttachment getPageAttachmentById(String pageAttachmentId) throws Exception;
 
@@ -249,8 +249,26 @@ public interface PageProvider extends WikiProvider {
 	 * Returns a collection of pages that are not linked to in other pages.
 	 *
 	 * @return Collection of pages that are not linked to in other pages.
-	 * @throws ProviderException TODO
+	 * @throws ProviderException if something goes wrong with the backend.
 	 */
 	Collection<PageReference> getPageReferences() throws ProviderException;
 
+
+	/**
+	 * Returns the attachment corresponding to the attachment ID.
+	 * 
+	 * @param attachmentId ID of the required attachment.
+	 * @return PageAttachment or <code>null</code>.
+	 * @throws ProviderException if something goes wrong with the backend.
+	 */
+	PageAttachment getAttachmentById(String attachmentId) throws ProviderException;
+
+	/**
+	 * Removes the page attachment from the repository.
+	 * 
+	 * @param attachmentId ID to delete the specified attachment.
+	 * @throws ProviderException if something goes wrong with the backend.
+	 */
+	void deleteAttachment(String attachmentId) throws ProviderException;
+	
 }

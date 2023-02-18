@@ -16,16 +16,22 @@
     specific language governing permissions and limitations
     under the License.
 --%>
+<%@ page errorPage="/shapes/Error.jsp" %>
 
 <%@ page import="java.util.*" %>
+<%@ page import="java.security.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
-<%@ page errorPage="/Error.jsp" %>
+<%@ page import="org.apache.wiki.auth.*" %>
+
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
+
 <script>
 function refreshUserInfo()
 {
@@ -58,6 +64,15 @@ function addNew()
   idlist.selectedIndex = len;
 }
 </script>
+
+<%
+// Get created wiki context.
+WikiContext wikiContext = ContextUtil.findContext(pageContext);
+Engine engine = wikiContext.getEngine();
+AccountManager accountManager = engine.getManager(AccountManager.class);
+Principal[] users = accountManager.listWikiNames();
+%>
+
 <div>
    <p>
    This is a list of user accounts that exist in this system.
@@ -65,13 +80,13 @@ function addNew()
    <p><wiki:Messages/></p>
    <div id="userlist">
       <select name="userid" id="userid" size="16" onchange="javascript:refreshUserInfo()">
-         <c:forEach var="user" items="${engine.accountManager.userDatabase.wikiNames}">
+         <c:forEach var="user" items="<%=users%>">
             <option value="${user.name}"><c:out value="${user.name}" escapeXml="true"/></option>
          </c:forEach>
       </select>
    </div>
    <div id="useredit">
-   <form action="<wiki:Link jsp='admin/Admin.jsp' format='url'><wiki:Param name='tab-admin' value='users'/></wiki:Link>"
+   <form action="<wiki:Link context='<%=WikiContext.WIKI_ADMIN%>' format='url'><wiki:Param name='tab-admin' value='users'/></wiki:Link>"
        class="wikiform"
           id="adminuserform"
       method="post" accept-charset="<wiki:ContentEncoding/>"
@@ -83,8 +98,7 @@ function addNew()
      <tr>
        <th scope="row"><label for="loginname">Login name</label></th>
        <td>
-           <input type="text" name="loginname" id="loginname"
-                  size="20" value="" />
+           <input type="text" name="loginname" id="loginname" size="20" value="" />
        </td>
      </tr>
      <tr>
@@ -128,7 +142,6 @@ function addNew()
      <tr>
         <td><input type="submit" name="action" value="Save"/></td>
      </tr>
-
      </table>
    <div id="useractions">
      <input type="submit" name="action" value="Remove" data-modal="+ .modal" />

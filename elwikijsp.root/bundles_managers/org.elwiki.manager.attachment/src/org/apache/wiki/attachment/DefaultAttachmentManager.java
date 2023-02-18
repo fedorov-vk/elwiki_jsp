@@ -40,6 +40,7 @@ import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
+import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 //:FVK:import org.apache.wiki.attachment0.DynamicAttachment;
@@ -49,12 +50,15 @@ import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -348,4 +352,11 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         this.referenceManager.clearPageEntries( att.getPageAttachment().getName() );
     }
 
+    /** {@inheritDoc} */
+	@Override
+	public void deleteAttachmentById(String attachmentId) throws ProviderException {
+		PageProvider pageProvider = pageManager.getProvider();
+		pageProvider.deleteAttachment(attachmentId);
+	}
+    
 }

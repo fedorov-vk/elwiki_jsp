@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.Reference;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1693,6 +1695,83 @@ WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()-
 			throw new ProviderException(e);
 		} finally {
 			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
+
+	@Override
+	public PageAttachment getAttachmentById(String attachmentId) throws ProviderException {
+		if (attachmentId == null) {
+			return null;
+		}
+
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			CDOQuery query;
+			EClass eClassPageAttachment = Elwiki_dataPackage.eINSTANCE.getPageAttachment();
+			query = transaction.createQuery("ocl",
+					"PageAttachment.allInstances()->select(p:PageAttachment|p.id='" + attachmentId + "')",
+					eClassPageAttachment, false);
+			query.setParameter("cdoLazyExtents", Boolean.FALSE);
+
+			PageAttachment wikiPage = null;
+			List<PageAttachment> pages = query.getResult();
+			if (pages.size() > 0) {
+				wikiPage = pages.get(0);
+				CDOView view = PageProviderCdoActivator.getStorageCdo().getView();
+				wikiPage = (PageAttachment) view.getObject(wikiPage.cdoID());
+			}
+
+			return wikiPage;
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			if(msg.contains("Unrecognized variable"))
+			{// :FVK: workaround, when nothig any page exists.
+				// required - check before request - how much pages exists.
+				return null;
+			}
+			throw new ProviderException(e);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
+	@Override
+	public void deleteAttachment(String attachmentId) throws ProviderException {
+		PageAttachment att = getAttachmentById(attachmentId);
+		if (att == null) {
+			return;
+		}
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			PageAttachment attachment = transaction.getObject(att);
+
+			/* Remove attachment files. */
+			EList<AttachmentContent> contents = attachment.getAttachContents();
+			for (AttachmentContent attachmentContent : attachment.getAttachContents()) {
+				String fileName = attachmentContent.getPlace();
+				Files.deleteIfExists(Paths.get(fileName));
+			}
+
+			WikiPage wikiPage = attachment.getWikipage();
+			if (wikiPage != null) {
+				wikiPage.getAttachments().remove(attachment);
+			}
+
+			/* Remove attachment contents list. */
+			attachment.getAttachContents().clear();
+
+			transaction.commit();
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (!transaction.isClosed()) {
 				transaction.close();
 			}
 		}

@@ -48,8 +48,10 @@
        enctype="multipart/form-data" accept-charset="<wiki:ContentEncoding/>" >
 
     <h4><span class="icon-paper-clip"></span> <fmt:message key="attach.add"/></h4>
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url'/>" />
-    <input type="hidden" name="pageId" value="<%=ctx.getPageId()%>" />
+    <%--
+     --%>
+    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url' pageId='<%=wikiPage.getId()%>'/>" />
+    <input type="hidden" name="idpage" value="<%=ctx.getPageId()%>" />
     <input type="hidden" name="action" value="upload" />
 
     <wiki:Messages div="alert alert-danger" />
@@ -94,15 +96,10 @@
            class="hidden"
             name="deleteForm" id="deleteForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
-
-      <%--TODO: "nextpage" is not yet implemented in Delete.jsp
-      --%>
-      <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url'/>" />
       <input id="delete-all" name="delete-all" type="submit"
         data-modal="+ .modal"
              value="Delete" />
       <div class="modal"><fmt:message key='attach.deleteconfirm'/></div>
-
     </form>
   </wiki:Permission>
 
@@ -165,7 +162,12 @@
           <input type="button"
                 class="btn btn-danger btn-xs"
                 value="<fmt:message key='attach.delete'/>"
-                  src="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_DELETE%>' pageId='${pageAttachment.id}' />"
+                  src="<wiki:Link
+						format='url'
+						context='<%=WikiContext.ATTACHMENT_DELETE%>'
+						pageId='<%=wikiPage.getId()%>'>
+					  <wiki:Param name='idattach' value='<%=pageAttachment.getId()%>' />
+			  	  </wiki:Link>"
               onclick="document.deleteForm.action=this.src; document.deleteForm['delete-all'].click();" />
         </wiki:Permission>
       </td>

@@ -290,6 +290,14 @@ public interface AttachmentManager {
      */
     void deleteAttachment( AttachmentContent att ) throws ProviderException;
 
+	/**
+	 * Deletes all versions of the given attachment ID.
+	 *
+	 * @param attachmentId ID to delete the specified attachment.
+	 * @throws ProviderException if something goes wrong with the backend.
+	 */
+	void deleteAttachmentById(String attachmentId) throws ProviderException;
+
     /**
      *  Validates the filename and makes sure it is legal.  It trims and splits and replaces bad characters.
      *

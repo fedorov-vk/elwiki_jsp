@@ -431,8 +431,9 @@ public class AttachmentServlet extends HttpServlet {
 
 			for (FileItem item : items) {
 				if (item.isFormField()) {
-					switch (item.getFieldName()) {
-					case "pageId":
+					String fieldName = item.getFieldName();
+					switch (fieldName) {
+					case "idpage":
 						String pageId = item.getString("UTF-8");
 						wikiPage = this.pageManager.getPageById(pageId);
 						break;

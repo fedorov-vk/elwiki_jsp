@@ -139,11 +139,11 @@
   <%-- Edit.jsp relies on these being found.  So be careful, if you make changes. --%>
   <input type="hidden" name="page" value="<wiki:Variable var='pagename' />" />
   <input type="hidden" name="action" value="save" />
-  <%=t(SpamFilter.insertInputFields( pageContext%>
+  <%=SpamFilter.insertInputFields(pageContext)%>
   <input type="hidden" name="<%=SpamFilter.getHashFieldName(request)%>" value="${lastchange}" />
   <%-- This following field is only for the SpamFilter to catch bots which are just randomly filling all fields and submitting.
        Normal user should never see this field, nor type anything in it. --%>
-  <input class="hidden" type="text" name="<%=t(SpamFilter.getBotFieldName%>" id="<%=t(SpamFilter.getBotFieldName%>" value="" />
+  <input class="hidden" type="text" name="<%=SpamFilter.getBotFieldName()%>" id="<%=SpamFilter.getBotFieldName()%>" value="" />
 
 
   <div class="form-inline form-group">

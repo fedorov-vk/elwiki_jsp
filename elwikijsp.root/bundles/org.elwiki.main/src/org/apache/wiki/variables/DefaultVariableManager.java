@@ -295,6 +295,11 @@ public class DefaultVariableManager implements VariableManager {
             m_context=context;
         }
 
+        public String getPageid()
+        {
+            return m_context.getPage().getId();
+        }
+
         public String getPagename()
         {
             return m_context.getPage().getName();

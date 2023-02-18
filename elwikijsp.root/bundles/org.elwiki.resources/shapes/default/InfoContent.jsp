@@ -117,7 +117,7 @@
 
   <wiki:Permission permission="rename">
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=t(ctx.getPageId%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=ctx.getPageId()%>' />"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -137,7 +137,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=t(ctx.getPageId%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=ctx.getPageId()%>' />"
            class="form-group"
               id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >

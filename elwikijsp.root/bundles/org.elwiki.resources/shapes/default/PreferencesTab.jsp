@@ -39,12 +39,12 @@
   WikiContext prCtx = ContextUtil.findContext( pageContext );
   TemplateManager t = ServicesRefs.getTemplateManager();
 %>
-<c:set var="skins"       value="<%=t.listSkins(pageContext, prCtx.getShape() )%>" />
-<c:set var="languages"   value="<%= t.listLanguages(pageContext) %>" />
-<c:set var="timezones"   value="<%= t.listTimeZones(pageContext) %>" />
-<c:set var="timeformats" value="<%= t.listTimeFormats(pageContext) %>" />
-<c:set var="editors"     value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
-<c:set var="redirect"><wiki:Variable var='redirect' default='<%=prCtx.getConfiguration().getFrontPage() %>' /></c:set>
+<c:set var="skins"       value="<%=t.listSkins(pageContext, prCtx.getShape())%>" />
+<c:set var="languages"   value="<%=t.listLanguages(pageContext)%>" />
+<c:set var="timezones"   value="<%=t.listTimeZones(pageContext)%>" />
+<c:set var="timeformats" value="<%=t.listTimeFormats(pageContext)%>" />
+<c:set var="editors"     value="<%=ServicesRefs.getEditorManager().getEditorList()%>" />
+<c:set var="redirect"><wiki:Variable var='redirect' default='<%=prCtx.getConfiguration().getFrontPage()%>' /></c:set>
 
 <form action="<wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>
