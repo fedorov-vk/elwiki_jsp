@@ -39,28 +39,28 @@ public interface WorkflowManager extends WikiEventListener, Initializable {
     /** The name of the key from jspwiki.properties which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
     String WF_WP_SAVE_APPROVER = "workflow.saveWikiPage";
     /** The message key for storing the Decision text for saving a page.  Value is {@value}. */
-    String WF_WP_SAVE_DECISION_MESSAGE_KEY = "decision.saveWikiPage";
+    String WF_WP_SAVE_DECISION_MESSAGE_KEY = "wf.decision.saveWikiPage";
     /** The message key for rejecting the decision to save the page.  Value is {@value}. */
-    String WF_WP_SAVE_REJECT_MESSAGE_KEY = "notification.saveWikiPage.reject";
+    String WF_WP_SAVE_REJECT_MESSAGE_KEY = "wf.notification.saveWikiPage.reject";
     /** Fact name for storing the page name.  Value is {@value}. */
-    String WF_WP_SAVE_FACT_PAGE_NAME = "fact.pageName";
+    String WF_WP_SAVE_FACT_PAGE_NAME = "wf.fact.pageName";
     /** Fact name for storing a diff text. Value is {@value}. */
-    String WF_WP_SAVE_FACT_DIFF_TEXT = "fact.diffText";
+    String WF_WP_SAVE_FACT_DIFF_TEXT = "wf.fact.diffText";
     /** Fact name for storing the current text.  Value is {@value}. */
-    String WF_WP_SAVE_FACT_CURRENT_TEXT = "fact.currentText";
+    String WF_WP_SAVE_FACT_CURRENT_TEXT = "wf.fact.currentText";
     /** Fact name for storing the proposed (edited) text.  Value is {@value}. */
-    String WF_WP_SAVE_FACT_PROPOSED_TEXT = "fact.proposedText";
+    String WF_WP_SAVE_FACT_PROPOSED_TEXT = "wf.fact.proposedText";
     /** Fact name for storing whether the user is authenticated or not.  Value is {@value}. */
-    String WF_WP_SAVE_FACT_IS_AUTHENTICATED = "fact.isAuthenticated";
+    String WF_WP_SAVE_FACT_IS_AUTHENTICATED = "wf.fact.isAuthenticated";
 
     /** The workflow attribute which stores the user profile. */
     String WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE = "userProfile";
     /** The name of the key from jspwiki.properties which defines who shall approve the workflow of creating a user profile.  Value is <tt>{@value}</tt> */
     String WF_UP_CREATE_SAVE_APPROVER = "workflow.createUserProfile";
     /** The message key for storing the Decision text for saving a user profile.  Value is {@value}. */
-    String WF_UP_CREATE_SAVE_DECISION_MESSAGE_KEY = "decision.createUserProfile";
+    String WF_UP_CREATE_SAVE_DECISION_MESSAGE_KEY = "wf.decision.createUserProfile";
     /** Fact name for storing a the submitter name. Value is {@value}. */
-    String WF_UP_CREATE_SAVE_FACT_SUBMITTER = "fact.submitter";
+    String WF_UP_CREATE_SAVE_FACT_SUBMITTER = "wf.fact.submitter";
     /** Fact name for storing the preferences' login name. Value is {@value}. */
     String WF_UP_CREATE_SAVE_FACT_PREFS_LOGIN_NAME = "prefs.loginname";
     /** Fact name for storing the preferences' full name. Value is {@value}. */

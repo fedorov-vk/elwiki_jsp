@@ -87,14 +87,14 @@ public final class WorkflowBuilder {
      * If this parameter is <code>null</code>, the Decision will run as the first Step instead
      * @param decisionKey the message key in <code>default.properties</code> that contains
      * the text that will appear in approvers' workflow queues indicating they need to make
-     * a Decision; for example, <code>decision.saveWikiPage</code>. In the i18n message bundle
+     * a Decision; for example, <code>wf.decision.saveWikiPage</code>. In the i18n message bundle
      * file, this key might return text that reads "Approve page &lt;strong&gt;{2}&lt;/strong&gt;"
      * @param facts an array of {@link Fact} objects that will be shown to the approver
      * to aid decision-making. The facts will be displayed in the order supplied in the array
      * @param completionTask the Task that will run if the Decision is approved
      * @param rejectedMessageKey the message key in <code>default.properties</code> that contains
      * the text that will appear in the submitter's workflow queue if request was
-     * not approved; for example, <code>notification.saveWikiPage.reject</code>. In the
+     * not approved; for example, <code>wf.notification.saveWikiPage.reject</code>. In the
      * i18n message bundle file, this key might might return
      * text that reads "Your request to save page &lt;strong&gt;{2}&lt;/strong&gt; was rejected."
      * If this parameter is <code>null</code>, no message will be sent

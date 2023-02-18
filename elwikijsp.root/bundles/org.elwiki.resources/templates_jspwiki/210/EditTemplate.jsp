@@ -28,7 +28,7 @@
 <head>
   <title>
     <wiki:CheckRequestContext context="edit">
-    <fmt:message key="edit.title.edit">
+    <fmt:message key="et.edit.title.edit">
       <fmt:param><wiki:Variable var="ApplicationName" /></fmt:param>
       <fmt:param><wiki:PageName /></fmt:param>
     </fmt:message>

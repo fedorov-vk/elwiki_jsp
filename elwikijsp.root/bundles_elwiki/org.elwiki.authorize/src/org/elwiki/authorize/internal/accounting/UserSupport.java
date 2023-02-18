@@ -61,8 +61,8 @@ public abstract class UserSupport extends BasicAccountManager {
 
 	protected static final String SAVE_TASK_MESSAGE_KEY = "task.createUserProfile";
 	protected static final String SAVED_PROFILE = "userProfile";
-	protected static final String SAVE_DECISION_MESSAGE_KEY = "decision.createUserProfile";
-	protected static final String FACT_SUBMITTER = "fact.submitter";
+	protected static final String SAVE_DECISION_MESSAGE_KEY = "wf.decision.createUserProfile";
+	protected static final String FACT_SUBMITTER = "wf.fact.submitter";
 	protected static final String PREFS_LOGIN_NAME = "prefs.loginname";
 	protected static final String PREFS_FULL_NAME = "prefs.fullname";
 	protected static final String PREFS_EMAIL = "prefs.email";

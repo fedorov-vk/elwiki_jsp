@@ -87,7 +87,7 @@
               <input type="hidden" name="action" value="decide" />
               <input type="hidden" name="id" value="<c:out value='${decision.id}' />" />
               <select name="outcome" onchange="SubmitOutcomeIfSelected(this)">
-                <option value="-"><fmt:message key="select.one"/></option>
+                <option value="-"><fmt:message key="wf.select.one"/></option>
                 <c:forEach var="outcome" items="${decision.availableOutcomes}"><option value="${outcome.messageKey}"><fmt:message key="${outcome.messageKey}"/></option>
                 </c:forEach>
               </select>

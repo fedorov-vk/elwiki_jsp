@@ -111,7 +111,7 @@
       <label class="control-label form-col-20" for="files"><fmt:message key="attach.add.selectfile"/></label>
       <ul class="list-group form-col-50">
         <li class="list-group-item droppable">
-          <label>Select files <%--or drop them here!--%></label>
+          <label><fmt:message key="attach.add.filename"/></label>
           <input type="file" name="files" id="files" size="60"/>
           <a class="hidden delete btn btn-danger btn-xs pull-right">Delete</a>
         </li>

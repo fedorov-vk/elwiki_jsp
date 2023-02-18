@@ -56,18 +56,17 @@
 
     <%-- <p><fmt:message key="attach.add.info" /></p> --%>
     <div class="form-group">
-      <label class="control-label form-col-20" for="files"><fmt:message key="attach.add.selectfile"/></label>
-
+      <label class="control-label form-col-20" for="files"><fmt:message key="info.uploadnew.selectfiles.label"/></label>
       <ul class="list-group form-col-50">
         <li class="list-group-item droppable">
           <a class="hidden delete btn btn-danger btn-xs pull-right">Delete</a>
-          <label><fmt:message key="info.uploadnew.filename" /><span class='canDragAndDrop'><fmt:message key="info.uploadnew.candraganddrop"/></span></label>
+          <label><fmt:message key="info.uploadnew.selectfiles.button"/></label>
           <input type="file" name="files" id="files" size="60" multiple="multiple"/>
         </li>
       </ul>
     </div>
     <div class="form-group">
-      <label class="control-label form-col-20" for="changenote"><fmt:message key="attach.add.changenote"/></label>
+      <label class="control-label form-col-20" for="changenote"><fmt:message key="info.uploadnew.changenote"/></label>
       <input class="form-control form-col-50" type="text" name="changenote" id="changenote" maxlength="80" size="60" />
     </div>
     <div class="form-group">
