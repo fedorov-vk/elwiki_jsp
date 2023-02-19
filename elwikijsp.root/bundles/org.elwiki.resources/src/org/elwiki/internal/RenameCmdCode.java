@@ -33,9 +33,9 @@ public class RenameCmdCode extends CmdCode {
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse))
+		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
 			return;
-
+		}
 		if (wikiContext.getCommand().getTarget() == null) {
 			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;

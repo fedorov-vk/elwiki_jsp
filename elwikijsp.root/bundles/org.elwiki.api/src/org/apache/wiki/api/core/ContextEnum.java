@@ -66,7 +66,7 @@ public enum ContextEnum {
     WIKI_LOGOUT( "cmd.logout", "%u", "", null ),
     WIKI_MESSAGE( "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
     WIKI_PREFS( "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
-    WIKI_WORKFLOW( "Workflow.jsp", "%u", "", "WorkflowContent.jsp" ),
+    WIKI_WORKFLOW( "cmd.workflow", "%u", "", "WorkflowContent.jsp" ),
     WIKI_SCOPE( "cmd.scope", "%u", "", "ScopeContent.jsp" ),
 	WIKI_PERSIST_CONTENT( "cmd.persistContent", "%u", "",
 			// :FVK: workaround, this contentTemplate should be null,

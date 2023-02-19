@@ -157,7 +157,7 @@ public interface WikiContext extends Cloneable, Command {
 	String WIKI_PREFS = ContextEnum.WIKI_PREFS.getRequestContext();
 
 	/** User wants to view or administer workflows. */
-	String WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
+	String WIKI_WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
 
 	/** Persisting wiki content. */
 	String PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();

@@ -34,11 +34,15 @@ public class ScopeCmdCode extends CmdCode {
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		/*:FVK:
-		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
+			return;
+		}
 		*/
 
 		/*
-		if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+		if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
+			return;
+		}
 		if( wikiContext.getCommand().getTarget() == null ) {
 		    response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
 		    return;

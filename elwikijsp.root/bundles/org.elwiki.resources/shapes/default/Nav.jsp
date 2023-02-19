@@ -379,7 +379,7 @@
       <wiki:CheckRequestContext context='!workflow'>
       <wiki:UserCheck status="authenticated">
         <li>
-          <wiki:Link path="Workflow.jsp">
+          <wiki:Link context="<%=WikiContext.WIKI_WORKFLOW%>" >
             <fmt:message key='actions.workflow' />
           </wiki:Link>
         </li>
