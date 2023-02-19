@@ -291,7 +291,7 @@ public interface AttachmentManager {
     void deleteAttachment( AttachmentContent att ) throws ProviderException;
 
 	/**
-	 * Deletes all versions of the given attachment ID.
+	 * Deletes all versions of the attachment by given attachment ID.
 	 *
 	 * @param attachmentId ID to delete the specified attachment.
 	 * @throws ProviderException if something goes wrong with the backend.
@@ -324,5 +324,12 @@ public interface AttachmentManager {
         //  Remove any characters that might be a problem. Most importantly - characters that might stop processing of the URL.
         return StringUtils.replaceChars( filename, "#?\"'", "____" );
     }
+
+	/**
+	 * Release backend resources from present attachments files.
+	 *  
+	 * @param filesList attachments files.
+	 */
+	void releaseAttachmentStore(List<String> filesList);
 
 }

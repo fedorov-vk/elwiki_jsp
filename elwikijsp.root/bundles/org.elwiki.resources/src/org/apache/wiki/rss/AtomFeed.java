@@ -110,7 +110,7 @@ public class AtomFeed extends Feed {
                     for( final PageAttachment att : c ) {
                         final Element attEl = getElement( "link" );
                         attEl.setAttribute( "rel", "enclosure" );
-                        attEl.setAttribute( "href", engine.getURL( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), att.getName(), null ) );
+                        attEl.setAttribute( "href", engine.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), att.getName(), null ) );
 						AttachmentContent attContent = att.forLastContent();
 						long size = (attContent != null) ? attContent.getSize() : -1;
 						attEl.setAttribute("length", Long.toString(size));

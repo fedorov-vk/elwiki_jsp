@@ -143,7 +143,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                 //TODO: here porting code for JSPwiki "pageref instanceof PageAttachment" (Page -> PageAttachment):
 
 				String href = context
-						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext()
+						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOGET.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
                 Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
                 Element row = XhtmlUtil.element( XHTML.tr );

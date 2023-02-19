@@ -173,12 +173,15 @@ public interface PageProvider extends WikiProvider {
      *
      *  <P>The reason why this is named differently from deleteVersion() (logically, this method should be an overloaded version) is that
      *  I want to be absolutely sure I don't accidentally use the wrong method.  With overloading something like that happens sometimes...
+     *  <p>
+     *  Return operation status: =true - page removed successfully; =false - something went wrong.
      *
      *  @since 2.0.17.
      *  @param pageName Name of the page to be removed completely.
+     * @return result of the operation. True/False.
      *  @throws ProviderException If the page could not be removed for some reason.
      */
-    void deletePage( String pageName ) throws ProviderException;
+    boolean deletePage( String pageName ) throws ProviderException;
 
     /**
      * Move a page
@@ -264,11 +267,23 @@ public interface PageProvider extends WikiProvider {
 	PageAttachment getAttachmentById(String attachmentId) throws ProviderException;
 
 	/**
-	 * Removes the page attachment from the repository.
+	 * Removes the page attachment from the repository.<br/>
+	 * Return operation status: =true - attachment removed successfully; =false - something went wrong.
 	 * 
 	 * @param attachmentId ID to delete the specified attachment.
+	 * @return result of the operation. True/False.
 	 * @throws ProviderException if something goes wrong with the backend.
 	 */
-	void deleteAttachment(String attachmentId) throws ProviderException;
+	boolean deleteAttachment(String attachmentId) throws ProviderException;
+
+	/**
+	 * Removes the page attachment from the repository.<br/>
+	 * Return operation status: =true - attachment removed successfully; =false - something went wrong.
+	 * 
+	 * @param attachment The attachment to delete.
+	 * @return result of the operation. True/False.
+	 * @throws ProviderException if something goes wrong with the backend.
+	 */
+	boolean deleteAttachment(PageAttachment attachment) throws ProviderException;
 	
 }

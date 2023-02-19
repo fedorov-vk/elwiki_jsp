@@ -117,7 +117,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 		String forceDownload = "";
 
 		if (isattachment) {//TODO: разобраться с типом "присоединение"...
-			url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), pageName,
+			url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), pageName,
 					(getVersion() != null) ? "version=" + getVersion() : null);
 			linkclass = "attachment";
 

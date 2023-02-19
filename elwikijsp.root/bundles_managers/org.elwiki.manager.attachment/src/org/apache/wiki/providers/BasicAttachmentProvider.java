@@ -38,6 +38,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.IWikiPreferences;
@@ -96,7 +97,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 
 	private static final String ATTFILE_SUFFIX = ".dat";
 	
-	private IWikiConfiguration wikiconfiguration;
+	private IWikiConfiguration wikiConfiguration;
 	
     private Engine m_engine;
     
@@ -117,7 +118,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
         m_engine = engine;
-        wikiconfiguration = m_engine.getWikiConfiguration();
+        wikiConfiguration = m_engine.getWikiConfiguration();
     }
 
     /**
@@ -137,8 +138,8 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 	 */
     @Deprecated
     private File findAttachmentDir( final AttachmentContent att ) throws ProviderException {
-    	//:FVK: workaround. (here shoul added algotithm with hoerarhy of directories, for controling maximuum count of files in the one directory.)
-    	File f = this.wikiconfiguration.getAttachmentPath().toFile();
+    	//:FVK: workaround. (here shoul added algotithm with hierarhy of directories, for controling maximuum count of files in the one directory.)
+    	File f = this.wikiConfiguration.getAttachmentPath().toFile();
     	/*:FVK:
         File f = new File( findPageDir( att.getParentName() ), mangleName( att.getFileName() + ATTDIR_EXTENSION ) );
 
@@ -173,7 +174,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 		}
 
 		File newfile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, attDir);
-		attContent.setPlace(newfile.getCanonicalPath());
+		attContent.setPlace(newfile.getName());
 
 		try (final OutputStream out = new FileOutputStream(newfile)) {
 			log.info("Uploading attachment " + attName + " to page " + wikiPage.getName());
@@ -193,15 +194,13 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
     @Override
     public FileInputStream getAttachmentData( final AttachmentContent att ) throws IOException, ProviderException {
-        final File attDir = findAttachmentDir( att );
+        IPath attachmentDirectory = this.wikiConfiguration.getAttachmentPath();
         try {
-            String attachmentPlace = att.getPlace();
-			//:FVK: final File f = new File(attDir, attachmentPlace );
-            final File f = new File(attachmentPlace);
+            File f = attachmentDirectory.append(att.getPlace()).toFile();
             return new FileInputStream( f );
         } catch( final FileNotFoundException e ) {
             log.error( "File not found: " + e.getMessage() );
-            throw new ProviderException( "No such page was found." );
+            throw new ProviderException( "No such attachment was found." );
         }
     }
 

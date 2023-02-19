@@ -57,7 +57,7 @@ public class ShortViewURLConstructor extends ShortURLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) || name == null ) {
+            if( context.equals( ContextEnum.ATTACHMENT_DOGET.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) || name == null ) {
                 parameters = "?" + parameters;
             } else if( context.equals(ContextEnum.PAGE_NONE.getRequestContext()) ) {
                 parameters = (name.indexOf('?') != -1 ) ? "&amp;" : "?" + parameters;

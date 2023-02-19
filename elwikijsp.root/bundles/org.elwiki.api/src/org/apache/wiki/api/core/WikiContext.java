@@ -111,11 +111,15 @@ public interface WikiContext extends Cloneable, Command {
 
 	// WikiContext identifiers for operations with ATTACHMENT.
 
+	
+	/** User is downloading an attachment via attachment servlet. */
+	String ATTACHMENT_DOGET = ContextEnum.ATTACHMENT_DOGET.getRequestContext();
+	
+	/** User is uploading an attachment via attachment servlet. */
+	String ATTACHMENT_DOPOST= ContextEnum.ATTACHMENT_DOPOST.getRequestContext();
+
 	/** User is uploading something. */
 	String ATTACHMENT_UPLOAD = ContextEnum.ATTACHMENT_UPLOAD.getRequestContext();
-
-	/** User is downloading an attachment. */
-	String ATTACHMENT_DOWNLOAD = ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext();
 	
 	/** Inspect all versions of attached file. */
 	String ATTACHMENT_INFO = ContextEnum.ATTACHMENT_INFO.getRequestContext();

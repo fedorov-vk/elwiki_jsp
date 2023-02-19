@@ -521,7 +521,7 @@ public class CachingProvider implements PageProvider {
      *  {@inheritDoc}
      */
     @Override
-    public void deletePage( final String pageName ) throws ProviderException {
+    public boolean deletePage( final String pageName ) throws ProviderException {
         //  See note in deleteVersion().
         synchronized( this ) {
             m_cache.put( new Element( pageName, null ) );
@@ -529,6 +529,7 @@ public class CachingProvider implements PageProvider {
             m_historyCache.put( new Element( pageName, null ) );
             m_provider.deletePage( pageName );
         }
+        return true;
     }
 
     /**
@@ -619,15 +620,21 @@ public class CachingProvider implements PageProvider {
 	}
 
 	@Override
-	public void deleteAttachment(String attachmentId) throws ProviderException {
+	public boolean deleteAttachment(String attachmentId) throws ProviderException {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override
 	public PageAttachment getAttachmentById(String attachmentId) throws ProviderException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean deleteAttachment(PageAttachment attachment) throws ProviderException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

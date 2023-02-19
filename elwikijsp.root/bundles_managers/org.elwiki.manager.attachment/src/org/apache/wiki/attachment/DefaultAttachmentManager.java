@@ -50,11 +50,13 @@ import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.services.ServicesRefs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -99,6 +101,9 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
     // -- service handling ---------------------------(start)--
 
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+    
     @WikiServiceReference
     private PageManager pageManager;
 
@@ -356,7 +361,33 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 	@Override
 	public void deleteAttachmentById(String attachmentId) throws ProviderException {
 		PageProvider pageProvider = pageManager.getProvider();
-		pageProvider.deleteAttachment(attachmentId);
+		PageAttachment attachment = pageProvider.getAttachmentById(attachmentId);
+		if (attachment == null) {
+			return;
+		}
+
+		EList<AttachmentContent> attachContents = attachment.getAttachContents();
+		List<String> filesList = new ArrayList<>(attachContents.size());
+		for (AttachmentContent attachmentContent : attachContents) {
+			filesList.add(attachmentContent.getPlace());
+		}
+
+		if (pageProvider.deleteAttachment(attachment)) {
+			releaseAttachmentStore(filesList);
+		}
 	}
-    
+
+	@Override
+	public void releaseAttachmentStore(List<String> filesList) {
+		IPath attachmentDirectory = this.wikiConfiguration.getAttachmentPath();
+		/* Remove attachment files. */
+		for (String fileName : filesList) {
+			try {
+				Files.deleteIfExists(Paths.get(attachmentDirectory.append(fileName).toOSString()));
+			} catch (IOException e) {
+				log.error("Can't delete attachment content file " + fileName + ": " + e.getMessage());
+			}
+		}
+	}
+
 }

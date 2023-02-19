@@ -217,7 +217,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 				// Internal wiki link, but is it an attachment link?
 				if (page instanceof PageAttachment) {
-					url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), m_pageName);
+					url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), m_pageName);
 				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
 					// It's an internal Wiki link, but to a named section
 
@@ -241,7 +241,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 				// Switch context appropriately when attempting to view an
 				// attachment, but don't override the context setting otherwise
 				if (m_context == null || m_context.equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
-					ctx = ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext();
+					ctx = ContextEnum.ATTACHMENT_DOGET.getRequestContext();
 				}
 				url = engine.getURL(ctx, m_pageName, parms);
 				//:FVK: url = m_wikiContext.getURL( ctx, m_pageName, parms );

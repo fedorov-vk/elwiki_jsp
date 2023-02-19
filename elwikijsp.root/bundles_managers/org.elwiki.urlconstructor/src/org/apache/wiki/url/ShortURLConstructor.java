@@ -82,7 +82,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
             return doReplacement( viewurl + "?do=Preview", name );
         } else if( context.equals( ContextEnum.PAGE_EDIT.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=Edit", name );
-        } else if( context.equals( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext() ) ) {
+        } else if( context.equals( ContextEnum.ATTACHMENT_DOGET.getRequestContext() ) ) {
             return doReplacement( "%uattach/%n", name );
         } else if( context.equals( ContextEnum.PAGE_INFO.getRequestContext() ) ) {
             return doReplacement( viewurl + "?do=PageInfo", name );
@@ -126,7 +126,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) ) {
+            if( context.equals( ContextEnum.ATTACHMENT_DOGET.getRequestContext() ) || context.equals( ContextEnum.PAGE_VIEW.getRequestContext() ) ) {
                 parameters = "?" + parameters;
             } else if( context.equals(ContextEnum.PAGE_NONE.getRequestContext()) ) {
                 parameters = (name.indexOf('?') != -1 ) ? "&amp;" : "?" + parameters;

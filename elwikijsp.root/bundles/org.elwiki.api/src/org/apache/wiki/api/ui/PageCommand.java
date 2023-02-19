@@ -34,7 +34,7 @@ import java.security.Permission;
  */
 public final class PageCommand extends AbstractCommand {
 
-    public static final Command ATTACH = new PageCommand( ContextEnum.ATTACHMENT_DOWNLOAD, null, PagePermission.UPLOAD_ACTION );
+    public static final Command ATTACH = new PageCommand( ContextEnum.ATTACHMENT_DOGET, null, PagePermission.UPLOAD_ACTION );
     public static final Command COMMENT = new PageCommand( ContextEnum.PAGE_COMMENT, null, PagePermission.COMMENT_ACTION );
     public static final Command CONFLICT = new PageCommand( ContextEnum.PAGE_CONFLICT, null, PagePermission.VIEW_ACTION );
     public static final Command CREATE = new PageCommand( ContextEnum.PAGE_CREATE, null, PagePermission.EDIT_ACTION );

@@ -389,7 +389,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 		case INTERWIKI -> createAnchor(LinkType.INTERWIKI, link, text, section);
 		case ATTACHMENT -> {
 			Element el1;
-			final String attlink = m_context.getURL(ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), link);
+			final String attlink = m_context.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), link);
 			final String infolink = m_context.getURL(ContextEnum.PAGE_INFO.getRequestContext(), link);
 			final String imglink = m_context.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "images/attachment_small.png");
 			el1 = createAnchor(LinkType.ATTACHMENT, attlink, text, "");
@@ -1261,7 +1261,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 	collectLink( m_attachmentLinkCollectors, attachment );
 
                     if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
-                        attachment = m_context.getURL( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), attachment );
+                        attachment = m_context.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), attachment );
                         sb.append( handleImageLink( attachment, linkText, link.hasReference() ) );
                     } else {
                         makeLink( LinkType.ATTACHMENT, attachment, linkText, null, link.getAttributes() );

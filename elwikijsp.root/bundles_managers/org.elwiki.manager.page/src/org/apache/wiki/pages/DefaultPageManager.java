@@ -40,6 +40,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
@@ -154,6 +155,9 @@ public class DefaultPageManager implements PageManager, Initializable {
 	
 	@WikiServiceReference
 	private DifferenceManager differenceManager;
+
+	@WikiServiceReference
+	private AttachmentManager attachmentManager;
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -791,11 +795,21 @@ public class DefaultPageManager implements PageManager, Initializable {
      * @see org.apache.wiki.pages0.PageManager#deletePage(org.apache.wiki.api.core.WikiPage)
      */
     @Override
-    public void deletePage( final WikiPage page ) throws ProviderException {
-        fireEvent( WikiPageEvent.PAGE_DELETE_REQUEST, page.getName() );
-        m_provider.deletePage( page.getName() );
-        fireEvent( WikiPageEvent.PAGE_DELETED, page.getName() );
-    }
+	public void deletePage(final WikiPage page) throws ProviderException {
+		fireEvent(WikiPageEvent.PAGE_DELETE_REQUEST, page.getName());
+
+		List<String> attachmentPlace = new ArrayList<>();
+		for (PageAttachment att : page.getAttachments()) {
+			for (AttachmentContent content : att.getAttachContents()) {
+				attachmentPlace.add(content.getPlace());
+			}
+		}
+
+		if (m_provider.deletePage(page.getName())) {
+			attachmentManager.releaseAttachmentStore(attachmentPlace);
+			fireEvent(WikiPageEvent.PAGE_DELETED, page.getName());
+		}
+	}
 
     /**
      * This is a simple reaper thread that runs roughly every minute

@@ -50,7 +50,8 @@ public enum ContextEnum {
     PAGE_RSS( "rss.jsp", "%u", "", null ),
 
     ATTACHMENT_UPLOAD( "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
-    ATTACHMENT_DOWNLOAD( "attach", "%u", "/%n", null ),
+    ATTACHMENT_DOGET( "attach", "%u", "/%n", null ),
+    ATTACHMENT_DOPOST( "attach", "%u", "/%n", null ),
     ATTACHMENT_INFO( "cmd.infoAttachment", "%u", "?id=%n", "InfoAttachmentContent.jsp" ),
     ATTACHMENT_DELETE( "cmd.deleteAttachment", "%u", "?pageId=%n", null ),
 

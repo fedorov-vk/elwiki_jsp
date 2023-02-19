@@ -165,7 +165,7 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String makeURL( final String context, final String name, String parameters ) {
         if( parameters != null && parameters.length() > 0 ) {
-            if( context.equals( WikiContext.ATTACHMENT_DOWNLOAD ) ) {
+            if( context.equals( WikiContext.ATTACHMENT_DOGET ) ) {
                 parameters = "?" + parameters;
             } else if( context.equals( WikiContext.PAGE_NONE ) ) {
                 parameters = name.indexOf( '?' ) != -1 ? "&amp;" : "?" + parameters;
@@ -186,7 +186,7 @@ public class DefaultURLConstructor implements URLConstructor {
     @Override
     public String parsePage( final String context, final HttpServletRequest request, final Charset encoding ) {
         String pagereq = request.getParameter( "page" );
-        if( context.equals( WikiContext.ATTACHMENT_DOWNLOAD ) ) {
+        if( context.equals( WikiContext.ATTACHMENT_DOGET ) ) {
             pagereq = URLConstructor.parsePageFromURL( request, encoding );
         }
 

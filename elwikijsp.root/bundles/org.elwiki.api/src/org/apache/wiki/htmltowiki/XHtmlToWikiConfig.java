@@ -52,7 +52,7 @@ public class XHtmlToWikiConfig {
         //  NB: The logic here will fail if you add something else after the Wiki page name in VIEW or ATTACH
         m_wikiJspPage = wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), "" );
         m_editJspPage = wikiContext.getURL( ContextEnum.PAGE_EDIT.getRequestContext(), "" );
-        m_attachPage = wikiContext.getURL( ContextEnum.ATTACHMENT_DOWNLOAD.getRequestContext(), "" );
+        m_attachPage = wikiContext.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), "" );
         m_pageInfoJsp = wikiContext.getURL( ContextEnum.PAGE_INFO.getRequestContext(), "" );
     }
 

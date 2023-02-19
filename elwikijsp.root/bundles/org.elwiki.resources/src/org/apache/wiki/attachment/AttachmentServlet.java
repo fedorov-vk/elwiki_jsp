@@ -208,7 +208,7 @@ public class AttachmentServlet extends HttpServlet {
 	// FIXME: Messages would need to be localized somehow.
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOWNLOAD);
+		WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOGET);
 		String version = req.getParameter(HDR_VERSION);
 		String nextPage = req.getParameter("nextpage");
 		String attachmentName;//:FVK: = context.getPage().getName();
@@ -410,7 +410,7 @@ public class AttachmentServlet extends HttpServlet {
 			FileItemFactory factory = new DiskFileItemFactory();
 
 			// Create the context _before_ Multipart operations, otherwise strict servlet containers may fail when setting encoding.
-			WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOWNLOAD);
+			WikiContext context = Wiki.context().create(m_engine, req, WikiContext.ATTACHMENT_DOPOST);
 			UploadListener pl = new UploadListener();
 
 			this.progressManager.startProgress(pl, progressId);
