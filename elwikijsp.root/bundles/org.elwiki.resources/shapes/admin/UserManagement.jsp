@@ -30,7 +30,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <fmt:setLocale value="${prefs.Language}" />
-<fmt:setBundle basename="templates.default"/>
+<fmt:setBundle basename="shapes.default"/>
 
 <script>
 function refreshUserInfo()

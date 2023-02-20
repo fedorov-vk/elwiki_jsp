@@ -49,16 +49,6 @@ import org.elwiki.services.ServicesRefs;
  * <li>"notAuthenticated" - the body of the tag is included if the user is not
  * yet authenticated.</li>
  * </ul>
- *
- * <br/>If the old "exists" attribute is used, it corresponds as follows:
- * <ul>
- * <li><tt>exists="true" ==> status="known"
- * <li><tt>exists="false" ==> status="unknown"
- * </ul>
- *
- * It is NOT a good idea to use BOTH of the arguments.
- *
- * @since 2.0
  */
 public class UserCheckTag extends BaseWikiTag {
 
@@ -99,7 +89,7 @@ public class UserCheckTag extends BaseWikiTag {
 	 * 
 	 * @param status The status to be checked.
 	 */
-	public void setStatus(final String status) {
+	public void setStatus(String status) {
 		m_status = status.toLowerCase();
 	}
 
@@ -109,63 +99,29 @@ public class UserCheckTag extends BaseWikiTag {
 	 * @see org.apache.wiki.tags.BaseWikiTag#doWikiStartTag()
 	 */
 	@Override
-	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		final Session session = m_wikiContext.getWikiSession();
-		final IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
-		final boolean containerAuth = mgr.isContainerAuthenticated();
-		final boolean cookieAssertions = mgr.allowsCookieAssertions();
+	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
+		Session session = m_wikiContext.getWikiSession();
+		IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
+		boolean containerAuth = mgr.isContainerAuthenticated();
+		boolean cookieAssertions = mgr.allowsCookieAssertions();
 
+		int result = SKIP_BODY;
 		if (m_status != null) {
-			switch (m_status) {
-			case ANONYMOUS:
-				if (session.isAnonymous()) {
-					return EVAL_BODY_INCLUDE;
-				}
-				break;
-			case AUTHENTICATED:
-				if (session.isAuthenticated()) {
-					return EVAL_BODY_INCLUDE;
-				}
-				break;
-			case ASSERTED:
-				if (session.isAsserted()) {
-					return EVAL_BODY_INCLUDE;
-				}
-				break;
-			case ASSERTIONS_ALLOWED:
-				if (cookieAssertions) {
-					return EVAL_BODY_INCLUDE;
-				}
-				return SKIP_BODY;
-			case ASSERTIONS_NOT_ALLOWED:
-				if (!cookieAssertions) {
-					return EVAL_BODY_INCLUDE;
-				}
-				return SKIP_BODY;
-			case CONTAINER_AUTH:
-				if (containerAuth) {
-					return EVAL_BODY_INCLUDE;
-				}
-				return SKIP_BODY;
-			case CUSTOM_AUTH:
-				if (!containerAuth) {
-					return EVAL_BODY_INCLUDE;
-				}
-				return SKIP_BODY;
-			case KNOWN:
-				if (!session.isAnonymous()) {
-					return EVAL_BODY_INCLUDE;
-				}
-				return SKIP_BODY;
-			case NOT_AUTHENTICATED:
-				if (!session.isAuthenticated()) {
-					return EVAL_BODY_INCLUDE;
-				}
-				break;
-			}
+			result = switch (m_status) {
+			case ANONYMOUS -> (session.isAnonymous()) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case AUTHENTICATED -> (session.isAuthenticated()) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case ASSERTED -> (session.isAsserted()) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case ASSERTIONS_ALLOWED -> (cookieAssertions) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case ASSERTIONS_NOT_ALLOWED -> (!cookieAssertions) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case CONTAINER_AUTH -> (containerAuth) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case CUSTOM_AUTH -> (!containerAuth) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case KNOWN -> (!session.isAnonymous()) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			case NOT_AUTHENTICATED -> (!session.isAuthenticated()) ? EVAL_BODY_INCLUDE : SKIP_BODY;
+			default -> SKIP_BODY;
+			};
 		}
 
-		return SKIP_BODY;
+		return result;
 	}
 
 }

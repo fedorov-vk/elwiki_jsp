@@ -16,16 +16,16 @@
     specific language governing permissions and limitations
     under the License.
 --%>
-
-<%@ page errorPage="/Error.jsp" %>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page errorPage="/shapes/Error.jsp" %>
+<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
-<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
+<%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <fmt:setLocale value="${prefs.Language}" />
-<fmt:setBundle basename="templates.default"/>
+<fmt:setBundle basename="shapes.default"/>
 <div class="page-content table-filter-sort">
 
 <wiki:UserCheck status="authenticated">
@@ -48,13 +48,13 @@
   <p id="workflow-actor-instructions"><fmt:message key="workflow.actor.instructions"/></p>
 
   <table class="table table-striped table-condensed" aria-describedby="workflow-actor-instructions">
-    <thead><%-- 5/45/15/15/20--%>
+    <tr><%-- 5/45/15/15/20--%>
       <th scope="col"><fmt:message key="workflow.id"/></th>
       <th scope="col"><fmt:message key="workflow.item"/></th>
       <th scope="col"><fmt:message key="workflow.requester"/></th>
       <th scope="col"><fmt:message key="workflow.startTime"/></th>
       <th scope="col"><fmt:message key="workflow.actions"/></th>
-    </thead>
+    </tr>
     <tbody>
       <c:forEach var="decision" items="${decisions}">
         <tr>
@@ -81,7 +81,7 @@
 
           <%-- Possible actions (outcomes) --%>
           <td class="nowrap">
-            <form action="<wiki:Link jsp='Workflow.jsp' format='url'/>"
+            <form action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
                       id="decision.${decision.id}"
                   method="POST" accept-charset="UTF-8">
               <input type="hidden" name="action" value="decide" />
@@ -161,7 +161,7 @@
           <%-- Actions --%>
           <td>
             <form id="workflow.${workflow.id}"
-              action="<wiki:Link jsp='Workflow.jsp' format='url'/>"
+              action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
               method="POST" accept-charset="UTF-8">
               <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<fmt:message key="outcome.step.abort" />" />
               <input type="hidden" name="action" value="abort" />

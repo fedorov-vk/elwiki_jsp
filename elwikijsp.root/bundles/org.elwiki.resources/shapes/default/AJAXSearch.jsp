@@ -107,7 +107,7 @@
   String parm_start    = request.getParameter( "start");
   if( parm_start != null ) startitem = Integer.parseInt( parm_start ) ;
 
-  Collection list = (Collection)pageContext.getAttribute( "searchresults", PageContext.REQUEST_SCOPE );
+  Collection<?> list = (Collection<?>)pageContext.getAttribute( "searchresults", PageContext.REQUEST_SCOPE );
   if( startitem == -1 ) maxitems = list.size(); //show all
 %>
 
