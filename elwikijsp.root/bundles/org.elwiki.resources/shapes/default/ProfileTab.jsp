@@ -40,7 +40,7 @@
       action="<wiki:CheckRequestContext
      context='<%=WikiContext.WIKI_LOGIN%>'><wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='!login'><wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab'
+     context='<%=WikiContext.NONE_WIKI_LOGIN%>'><wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab'
        value='profile'/></wiki:Link></wiki:CheckRequestContext>"
        class=""
           id="editProfile">

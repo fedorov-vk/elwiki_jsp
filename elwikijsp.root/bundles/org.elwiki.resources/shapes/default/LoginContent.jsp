@@ -118,7 +118,7 @@
 <c:set var="lostpwTab" value="${param.tab == 'lostpassword' ? 'data-activePane': ''}"/>
 <h3 ${lostpwTab} id="section-lostpw"><fmt:message key="login.lostpw.tab"/></h3>
 
-<form action="<wiki:Link path='LostPassword.jsp' format='url'><wiki:Param name='tab' value='lostpassword'/></wiki:Link>"
+<form action="<wiki:Link context='<%=WikiContext.WIKI_LOSTPASSWORD%>' format='url'><wiki:Param name='tab' value='lostpassword'/></wiki:Link>"
           id="lostpw"
        class="login-form"
       method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -186,7 +186,7 @@
 <h3 ${registerTab} id="section-register"><fmt:message key="login.register.tab" /></h3>
 
 <%-- <wiki:Include page='ProfileTab.jsp'/> --%>
-<form action="<wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>"
+<form action="<wiki:Link context='<%=WikiContext.WIKI_LOGIN%>' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>"
           id="editProfile"
        class="login-form"
       method="post" accept-charset="UTF-8">

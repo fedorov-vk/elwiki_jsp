@@ -63,6 +63,7 @@ public enum ContextEnum {
     WIKI_FIND( "cmd.find", "%u", "", "FindContent.jsp" ),
     WIKI_INSTALL( "Install.jsp", "%u", "", null ),
     WIKI_LOGIN( "cmd.login", "%u", "?redirect=%n", "LoginContent.jsp" ),
+    WIKI_LOSTPASSWORD( "cmd.lostpassword", "%u", "?redirect=%n", "LoginContent.jsp" ),
     WIKI_LOGOUT( "cmd.logout", "%u", "", null ),
     WIKI_MESSAGE( "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
     WIKI_PREFS( "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),

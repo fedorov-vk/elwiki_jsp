@@ -19,6 +19,7 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 	//@formatter:off
 	private final Map<ContextEnum, CmdCode> context2cmdCode = Map.ofEntries(
 			Map.entry(ContextEnum.WIKI_LOGIN, new LoginCmdCode()),
+			Map.entry(ContextEnum.WIKI_LOSTPASSWORD, new LostpasswordCmdCode()),
 			Map.entry(ContextEnum.WIKI_LOGOUT, new LogoutCmdCode()),
 			Map.entry(ContextEnum.PAGE_CREATE, new CreatePageCmdCode()),
 			Map.entry(ContextEnum.PAGE_DELETE, new DeletePageCmdCode()),

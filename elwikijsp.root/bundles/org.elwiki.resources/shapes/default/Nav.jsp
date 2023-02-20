@@ -376,7 +376,7 @@
       </wiki:CheckRequestContext>
 
       <%-- WORKFLOW --%>
-      <wiki:CheckRequestContext context='!workflow'>
+      <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_WORKFLOW%>'>
       <wiki:UserCheck status="authenticated">
         <li>
           <wiki:Link context="<%=WikiContext.WIKI_WORKFLOW%>" >
@@ -406,7 +406,7 @@
       </wiki:CheckRequestContext>
 
       <%-- GROUPS : moved to the UserBox.jsp
-      <wiki:CheckRequestContext context='!creategroup' >
+      <wiki:CheckRequestContext context='<%=WikiContext.NONE_GROUP_CREATE%>' >
       <wiki:Permission permission="createGroups">
         <li>
           <wiki:Link path="cmd.createGroup" title="<fmt:message key='actions.creategroup.title'/>" >

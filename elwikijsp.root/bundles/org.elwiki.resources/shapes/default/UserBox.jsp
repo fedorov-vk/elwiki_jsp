@@ -67,8 +67,8 @@
       <%--
            user preferences button: preferences; groups
       --%>
-      <wiki:CheckRequestContext context='!prefs'>
-        <wiki:CheckRequestContext context='!preview'>
+      <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_PREFS%>'>
+        <wiki:CheckRequestContext context='<%=WikiContext.NONE_PAGE_PREVIEW%>'>
           <wiki:Link cssClass="btn btn-default btn-block" path="cmd.prefs">
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
@@ -86,7 +86,7 @@
            login button
       --%>
       <wiki:UserCheck status="notAuthenticated">
-        <wiki:CheckRequestContext context='!login'>
+        <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_LOGIN%>'>
         <wiki:Permission permission="login">
           <wiki:Link cssClass="btn btn-primary btn-block login" path="cmd.login">
             <wiki:Param name='redirect' value='${redirect}'/>
@@ -107,16 +107,11 @@
            logout button
       --%>
       <wiki:UserCheck status="authenticated">
-        <div>
-        <%-- <div class="modal">  :FVK: - если задавать верно, <div class="modal"> - то кнопка не выводится. --%>
-        <a href="<wiki:Link path='cmd.logout' format='url' />"
+        <a href="<wiki:Link context='<%=WikiContext.WIKI_LOGOUT%>' format='url' />"
           class="btn btn-default btn-block logout" data-modal=".modal">
-          <span class="icon-signout"></span>
-          <fmt:message key="actions.logout"/>
-          <fmt:message key='actions.confirmlogout'/>
+            <span class="icon-signout"></span> <fmt:message key="actions.logout"/>
+          <div class="modal"><fmt:message key='actions.confirmlogout'/></div>
         </a>
-        <%-- </div>  --%>
-        </div>
       </wiki:UserCheck>
     </li>
   </ul>

@@ -54,7 +54,7 @@ public class LoginCmdCode extends CmdCode {
 				httpRequest.getParameter("redirect") : wikiContext.getConfiguration().getFrontPage();
 		wikiContext.setVariable("redirect", requestRedirect);
 
-		// Are we saving the profile? (:FVK: - зачем эта ветка?)
+		// Are we saving the profile?
 		if ("saveProfile".equals(httpRequest.getParameter("action"))) {
 			AccountManager userMgr = ServicesRefs.getAccountManager();
 			UserProfile profile = userMgr.parseProfile(wikiContext);

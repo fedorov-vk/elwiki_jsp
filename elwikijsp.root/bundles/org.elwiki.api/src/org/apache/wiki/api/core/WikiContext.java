@@ -61,6 +61,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User wishes to create a new group */
 	String GROUP_CREATE = ContextEnum.GROUP_CREATE.getRequestContext();
+	String NONE_GROUP_CREATE = "!" + GROUP_CREATE;
 
 	/** User is editing an existing group. */
 	String GROUP_EDIT = ContextEnum.GROUP_EDIT.getRequestContext();
@@ -75,6 +76,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User is previewing the changes he just made. */
 	String PAGE_PREVIEW = ContextEnum.PAGE_PREVIEW.getRequestContext();
+	String NONE_PAGE_PREVIEW = "!" + PAGE_PREVIEW;
 
 	/** User is creating a page. */
 	String PAGE_CREATE = ContextEnum.PAGE_CREATE.getRequestContext();
@@ -146,7 +148,11 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User is preparing for a login/authentication. */
 	String WIKI_LOGIN = ContextEnum.WIKI_LOGIN.getRequestContext();
+	String NONE_WIKI_LOGIN = "!" + WIKI_LOGIN;
 
+	/** The user needs a password reset. */
+	String WIKI_LOSTPASSWORD = ContextEnum.WIKI_LOSTPASSWORD.getRequestContext();
+	
 	/** User is preparing to log out. */
 	String WIKI_LOGOUT = ContextEnum.WIKI_LOGOUT.getRequestContext();
 
@@ -155,9 +161,11 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User is editing preferences */
 	String WIKI_PREFS = ContextEnum.WIKI_PREFS.getRequestContext();
+	String NONE_WIKI_PREFS = "!" + WIKI_PREFS;
 
 	/** User wants to view or administer workflows. */
 	String WIKI_WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
+	String NONE_WIKI_WORKFLOW = "!" + WIKI_WORKFLOW; 
 
 	/** Persisting wiki content. */
 	String PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();

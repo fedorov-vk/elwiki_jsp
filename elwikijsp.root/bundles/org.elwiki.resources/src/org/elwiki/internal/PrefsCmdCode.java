@@ -34,8 +34,9 @@ import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.services.ServicesRefs;
 
 /**
+ * Code from webapp/UserPreferences.jsp (for ElWiki's PreferencesContent.jsp)<br/>
+ * Command "cmd.prefs".
  * @author v.fedorov
- * Code from webapp/UserPreferences.jsp (for ElWiki's PreferencesContent.jsp)
  */
 public class PrefsCmdCode extends CmdCode {
 
@@ -68,7 +69,9 @@ public class PrefsCmdCode extends CmdCode {
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		/*:FVK:
-		if(false == ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+		if(ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) == false) {
+			return;
+		}
 		*/
 
 		// Extract the user profile and action attributes
