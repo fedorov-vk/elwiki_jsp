@@ -46,6 +46,7 @@ public class DecisionQueue implements Serializable {
 
     /** Constructs a new DecisionQueue. */
     public DecisionQueue() {
+    	super();
     }
 
     /**
@@ -69,7 +70,7 @@ public class DecisionQueue implements Serializable {
     }
 
     /**
-     * Protected method that removes a Decision from the queue.
+     * Removes a Decision from the queue.
      *
      * @param decision the decision to remove
      */

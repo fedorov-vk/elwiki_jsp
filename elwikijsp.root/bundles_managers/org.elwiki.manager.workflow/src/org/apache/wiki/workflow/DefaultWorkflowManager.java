@@ -68,11 +68,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 factory = "elwiki.WorkflowManager.factory")
 public class DefaultWorkflowManager implements WorkflowManager {
 
-    private static final Logger LOG = Logger.getLogger( DefaultWorkflowManager.class );
-    static final String SERIALIZATION_FILE = "wkflmgr.ser";
+	private static final Logger log = Logger.getLogger( DefaultWorkflowManager.class );
 
-    /** We use this also a generic serialization id */
-    private static final long serialVersionUID = 6L;
+	/** We use this also a generic serialization id */
+	private static final long serialVersionUID = 6L;
+
+    static final String SERIALIZATION_FILE = "wkflmgr.ser";
 
     DecisionQueue m_queue = new DecisionQueue();
     Set< Workflow > m_workflows;
@@ -183,16 +184,16 @@ public class DefaultWorkflowManager implements WorkflowManager {
         try( final ObjectInputStream in = new ObjectInputStream( new BufferedInputStream( new FileInputStream( f ) ) ) ) {
             final long ver = in.readLong();
             if( ver != serialVersionUID ) {
-                LOG.warn( "File format has changed; Unable to recover workflows and decision queue from disk." );
+                log.warn( "File format has changed; Unable to recover workflows and decision queue from disk." );
             } else {
                 saved        = in.readLong();
                 m_workflows  = ( Set< Workflow > )in.readObject();
                 m_queue      = ( DecisionQueue )in.readObject();
                 m_completed  = ( List< Workflow > )in.readObject();
-                LOG.debug( "Read serialized data successfully in " + sw );
+                log.debug( "Read serialized data successfully in " + sw );
             }
         } catch( final IOException | ClassNotFoundException e ) {
-        	LOG.error( "unable to recover from disk workflows and decision queue: " + e.getMessage());
+        	log.error( "unable to recover from disk workflows and decision queue: " + e.getMessage());
         	// :FVK: TODO:
             // LOG.error( "unable to recover from disk workflows and decision queue: " + e.getMessage(), e );
         }
@@ -217,9 +218,9 @@ public class DefaultWorkflowManager implements WorkflowManager {
 
             sw.stop();
 
-            LOG.debug( "serialization done - took " + sw );
+            log.debug( "serialization done - took " + sw );
         } catch( final IOException ioe ) {
-        	LOG.error( "Unable to serialize!");
+        	log.error( "Unable to serialize!");
         	// :FVK: TODO:
             // LOG.error( "Unable to serialize!", ioe );
         }
@@ -370,7 +371,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
                 try {
                     w.restart();
                 } catch( final WikiException e ) {
-                    LOG.error( "restarting workflow #" + w.getId() + " caused " + e.getMessage(), e );
+                    log.error( "restarting workflow #" + w.getId() + " caused " + e.getMessage(), e );
                 }
             }
         }

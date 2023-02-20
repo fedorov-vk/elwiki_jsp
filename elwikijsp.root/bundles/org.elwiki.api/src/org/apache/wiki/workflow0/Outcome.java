@@ -21,7 +21,7 @@ package org.apache.wiki.workflow0;
 import java.io.Serializable;
 
 /**
- * Resolution of a workflow Step, such as "approve," "deny," "hold," "task error," or other potential resolutions.
+ * Resolution of a workflow Step, such as "approve", "deny", "hold", "task error" or other potential resolutions.
  *
  * @since 2.5
  */

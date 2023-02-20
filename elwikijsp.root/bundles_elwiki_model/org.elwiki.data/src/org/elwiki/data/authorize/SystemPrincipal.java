@@ -16,35 +16,34 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.workflow0;
+package org.elwiki.data.authorize;
 
 import java.security.Principal;
 
-
 /**
- * System users asociated with workflow Task steps.
+ * System users associated with workflow Task steps.
  */
 public final class SystemPrincipal implements Principal {
 
-    /** The JSPWiki system user */
-    public static final Principal SYSTEM_USER = new SystemPrincipal( "System User" );
+	/** The JSPWiki system user */
+	public static final Principal SYSTEM_USER = new SystemPrincipal("System User");
 
-    private final String m_name;
+	private final String m_name;
 
-    /**
-     * Private constructor to prevent direct instantiation.
-     *
-     * @param name the name of the Principal
-     */
-    private SystemPrincipal( final String name ) {
-        m_name = name;
-    }
+	/**
+	 * Private constructor to prevent direct instantiation.
+	 *
+	 * @param name the name of the Principal
+	 */
+	private SystemPrincipal(final String name) {
+		m_name = name;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getName() {
-        return m_name;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getName() {
+		return m_name;
+	}
 
 }

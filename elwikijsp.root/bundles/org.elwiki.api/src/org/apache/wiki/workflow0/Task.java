@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.Map;
 
+import org.elwiki.data.authorize.SystemPrincipal;
+
 
 /**
  * AbstractStep subclass that executes instructions, uninterrupted, and results in an Outcome. Concrete classes only need to implement

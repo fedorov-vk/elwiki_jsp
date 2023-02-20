@@ -7,7 +7,7 @@
 		<location path="D:\devj\dev_wikijsp\GIT\elwiki+jsp_2022-12\p2_repositories\additional-artifacts\target\repository" type="Directory"/>
 		<location path="D:\devj\dev_wikijsp\GIT\elwiki+jsp_2022-12\p2_repositories\from-eclipse\target\repository" type="Directory"/>
 		<location path="D:\devj\dev_wikijsp\GIT\elwiki+jsp_2022-12\p2_repositories\for-test-site\target\repository" type="Directory"/>
-		<location path="D:\Repositories\p2\eclipse\releases\2022-12" type="Directory"/>
+		<location path="C:\Users\v.fedorov\p2\eclipse\releases\2022-12" type="Directory"/>
 	</locations>
 	<includeBundles>
 		<plugin id="com.google.gson" version="2.9.1"/>
