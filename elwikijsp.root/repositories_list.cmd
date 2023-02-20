@@ -2,7 +2,7 @@
 ::
 :: This file defines the location of p2 repositories, needed to build ElWiki.
 ::
-set PLATFORM_REPO=D:/Repositories/p2/eclipse/releases/2022-12
+set PLATFORM_REPO=%USERPROFILE%/p2/eclipse/releases/2022-12
 
 set P2_REPO_PLACE=%~dp0\..\p2_repositories
 :: APACHETOOLS_REPO - probably not used anymore.
