@@ -25,7 +25,6 @@ Import-Package: javax.mail;version="1.4.0",
  org.apache.wiki.api.core,
  org.apache.wiki.api.exceptions,
  org.apache.wiki.auth,
- org.apache.wiki.auth.user0,
  org.apache.wiki.ui,
  org.apache.wiki.util,
  org.eclipse.jface.preference,
@@ -47,15 +46,10 @@ Export-Package: org.elwiki.authorize;
    org.elwiki.api.authorization.user,
    javax.security.auth,
    javax.security.auth.spi,
-   org.apache.log4j",
- org.elwiki.authorize.user;
-  uses:="org.elwiki.api,
-   org.eclipse.core.runtime,
-   org.osgi.service.useradmin,
-   org.elwiki.api.authorization.user,
    org.apache.log4j"
 Service-Component: OSGI-INF/elwiki.DefaultAclManager.xml,
  OSGI-INF/elwiki.DefaultAuthenticationManager.xml,
  OSGI-INF/elwiki.DefaultAuthorizationManager.xml,
- OSGI-INF/elwiki.DefaultAccountManager.xml
+ OSGI-INF/elwiki.DefaultAccountManager.xml,
+ OSGI-INF/elwiki.DefaultAccountRegistry.xml
 Bundle-ClassPath: .

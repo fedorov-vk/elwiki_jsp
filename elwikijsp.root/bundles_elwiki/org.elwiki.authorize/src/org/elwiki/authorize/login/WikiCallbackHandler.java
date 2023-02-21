@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.auth.AccountManager;
-import org.elwiki.authorize.internal.accounting.DefaultAccountManager;
+import org.apache.wiki.auth.AccountRegistry;
 import org.elwiki.services.ServicesRefs;
 
 
@@ -38,7 +38,7 @@ import org.elwiki.services.ServicesRefs;
  * handler is instantiated in
  * {@link org.apache.wiki.auth.IIAuthenticationManager#login(HttpServletRequest, Session)}.
  * If container-managed authentication is used, the {@link WebContainerCallbackHandler}is used
- * instead. This callback handler is designed to be used with {@link UserDatabaseLoginModule}.
+ * instead. This callback handler is designed to be used with {@link AccountRegistryLoginModule}.
  * 
  * @since 2.3
  */
@@ -80,8 +80,8 @@ public class WikiCallbackHandler implements CallbackHandler {
 				httpRequestCallback.setRequest(this.m_request);
 			} else if (callback instanceof WikiEngineCallback wikiEngineCallback) {
 				wikiEngineCallback.setEngine(this.m_engine);
-			} else if (callback instanceof UserDatabaseCallback userDatabaseCallback) {
-				userDatabaseCallback.setUserDatabase(ServicesRefs.getAccountManager().getUserDatabase() );
+			} else if (callback instanceof AccountRegistryCallback userDatabaseCallback) {
+				userDatabaseCallback.setAccountRegistry(this.m_engine.getManager(AccountRegistry.class));
 			} else if (callback instanceof NameCallback nameCallback) {
 				nameCallback.setName(this.m_username);
 			} else if (callback instanceof PasswordCallback passwordCallback) {

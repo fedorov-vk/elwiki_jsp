@@ -1,40 +1,17 @@
-/* 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+package org.apache.wiki.auth;
 
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.  
- */
-package org.apache.wiki.auth.user0;
-
-import org.osgi.service.useradmin.User;
 import java.security.Principal;
-import java.util.Properties;
 
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
-import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.auth.WikiSecurityException;
-import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.authorization.IGroupWiki;
+import org.osgi.service.useradmin.Group;
+import org.osgi.service.useradmin.User;
 
 /**
- * Defines an interface for loading, persisting and storing users.
- *
- * @since 2.3
+ * Defines an interface for loading, persisting and storing users and groups.
  */
-public interface UserDatabase {
+public interface AccountRegistry {
 
 	String UID = "uid";
 
@@ -58,6 +35,7 @@ public interface UserDatabase {
 
 	String GROUP_NAME = "groupName";
 	
+	
 	//TODO: :FVK: внести в свойства группы этот атрибут. Он будет означать зарезервированную, специальную не удаляемую группу.
 	String SPECIAL_GROUP = "specialGroup";
 	String GROUP_PERMISSIONS = "PERMISSIONS";
@@ -65,6 +43,21 @@ public interface UserDatabase {
 	String GROUP_CREATOR = "groupCreator";
 	String GROUP_MODIFIER = "groupModofier";
 
+	/**
+	 * Looks up and deletes a {@link GroupWiki} from the group database. If the group database
+	 * does not contain the supplied Group. this method throws a
+	 * {@link org.elwiki.core.api.exceptions.wiki.auth.NoSuchPrincipalException}. The method commits the
+	 * results of the delete to persistent storage.
+	 * 
+	 * @param group
+	 *            the group to remove
+	 * @throws WikiSecurityException
+	 *             if the database does not contain the supplied group (thrown as
+	 *             {@link org.elwiki.core.api.exceptions.wiki.auth.NoSuchPrincipalException}) or if the commit
+	 *             did not succeed
+	 */
+	void delete(IGroupWiki group) throws WikiSecurityException;
+	
     /**
      * Looks up and deletes the first {@link UserProfile} in the user database that matches a profile having a given login name. If the
      * user database does not contain a user with a matching attribute, throws a {@link NoSuchPrincipalException}. This method is intended
@@ -75,28 +68,33 @@ public interface UserDatabase {
      */
     void deleteByLoginName( String loginName ) throws NoSuchPrincipalException, WikiSecurityException;
 
-    /**
-     * <p>
-     * Looks up the Principals representing a user from the user database. These are defined as a set of Principals manufactured from the
-     * login name, full name, and wiki name. The order of the Principals returned is not significant. If the user database does not contain
-     * a user with the supplied identifier, throws a {@link NoSuchPrincipalException}.
-     * </p>
-     * <p>
-     * Note that if an implememtation wishes to mark one of the returned Principals as representing the user's common name, it should
-     * instantiate this Principal using {@link org.apache.wiki.auth.WikiPrincipal#WikiPrincipal(String, String)} with the <code>type</code>
-     * parameter set to {@link org.apache.wiki.auth.WikiPrincipal#WIKI_NAME}. The method
-     * {@link org.apache.wiki.api.core.Session#getUserPrincipal()} will return this principal as the "primary" principal. Note that this method
-     * can also be used to mark a WikiPrincipal as a login name or a wiki name.
-     * </p>
-     *
-     * @param identifier the name of the user to retrieve; this corresponds to value returned by the user profile's {@link UserProfile#getLoginName()} method.
-     * @return the array of Principals representing the user's identities
-     * @throws NoSuchPrincipalException If the user database does not contain user with the supplied identifier
-     */
+	/**
+	 * <p>
+	 * Looks up the Principals representing a user from the user database. These are defined as a set of
+	 * WikiPrincipals manufactured from the login name, full name, and wiki name. The order of the
+	 * Principals returned is not significant. If the user database does not contain a user with the
+	 * supplied identifier, throws a {@link NoSuchPrincipalException}.
+	 * </p>
+	 * <p>
+	 * Note that if an implememtation wishes to mark one of the returned Principals as representing the
+	 * user's common name, it should instantiate this Principal using
+	 * {@link org.apache.wiki.auth.WikiPrincipal#WikiPrincipal(String, String)} with the
+	 * <code>type</code> parameter set to {@link org.apache.wiki.auth.WikiPrincipal#WIKI_NAME}. The
+	 * method {@link org.apache.wiki.api.core.Session#getUserPrincipal()} will return this principal as
+	 * the "primary" principal. Note that this method can also be used to mark a WikiPrincipal as a
+	 * login name or a wiki name.
+	 * </p>
+	 *
+	 * @param identifier the name of the user to retrieve; this corresponds to value returned by the
+	 *                   user profile's {@link UserProfile#getLoginName()} method.
+	 * @return the array of Principals representing the user's identities
+	 * @throws NoSuchPrincipalException If the user database does not contain user with the supplied
+	 *                                  identifier
+	 */
     Principal[] getPrincipals( String identifier ) throws NoSuchPrincipalException;
 
     /**
-     * Returns all WikiNames that are stored in the UserDatabase as an array of Principal objects. If the database does not
+     * Returns all WikiNames that are stored in the AccountRegistry as an array of Principal objects. If the database does not
      * contain any profiles, this method will return a zero-length array.
      *
      * @return the WikiNames
@@ -125,10 +123,10 @@ public interface UserDatabase {
      * Looks up and returns the first {@link UserProfile} in the user database that matches a profile having a given login name. If the
      * user database does not contain a user with a matching attribute, throws a {@link NoSuchPrincipalException}.
      *
-     * @param index the login name of the desired user profile
+     * @param loginName the login name of the desired user profile
      * @return the user profile
      */
-    UserProfile findByLoginName( String index ) throws NoSuchPrincipalException;
+    UserProfile findByLoginName( String loginName ) throws NoSuchPrincipalException;
 
     /**
      * Looks up and returns the first {@link UserProfile} in the user database that matches a profile having a given unique ID (uid). If
@@ -157,9 +155,6 @@ public interface UserDatabase {
      * @return the user profile
      */
     UserProfile findByFullName( String index ) throws NoSuchPrincipalException;
-
-    /** Initializes the user database based on values from a Properties object. */
-    void initialize( Engine engine, Properties props ) throws NoRequiredPropertyException, WikiSecurityException;
 
     /**
      * Factory method that instantiates a new user profile. The {@link UserProfile#isNew()} method of profiles created using
@@ -205,6 +200,22 @@ public interface UserDatabase {
     //:FVK: TODO: rename into saveProfile()
     void save( UserProfile profile ) throws WikiSecurityException;
 
+	/**
+	 * Saves a Group to the AccountRegistry. Note that this method <em>must</em> fail, and
+	 * throw an <code>IllegalArgumentException</code>, if the proposed group is the same
+	 * name as one of the built-in Roles: e.g., Admin, Authenticated, etc. The database is
+	 * responsible for setting create/modify timestamps, upon a successful save, to the
+	 * Group. The method commits the results of the delete to persistent storage.
+	 * 
+	 * @param group
+	 *            the Group to save
+	 * @param modifier
+	 *            the user who saved the Group
+	 * @throws WikiSecurityException
+	 *             if the Group could not be saved successfully
+	 */
+	void save(IGroupWiki group, Principal modifier) throws WikiSecurityException;
+    
     /**
      * Determines whether a supplied user password is valid, given a login name and password. It is up to the implementing class to
      * determine how the comparison should be made. For example, the password might be hashed before comparing it to the value persisted
@@ -223,5 +234,20 @@ public interface UserDatabase {
 	String getUserIdByLoginName(String loginName);
 
 	String getUserIdByFullName(String fullName);
-	
+
+    /**
+     * Returns all wiki groups that are stored in the AccountRegistry as an array
+     * of Group objects. If the database does not contain any groups, this
+     * method will return a zero-length array. This method causes back-end
+     * storage to load the entire set of group; thus, it should be called
+     * infrequently (e.g., at initialization time). Note that this method should
+     * use the protected constructor {@link Group#Group(String, String)} rather
+     * than the various "parse" methods ({@link GroupManager#parseGroup(String, String, boolean)})
+     * to construct the group. This is so as not to flood GroupManager's event
+     * queue with spurious events.
+     * @return the wiki groups
+     * @throws WikiSecurityException if the groups cannot be returned by the back-end
+     */
+	IGroupWiki[] getGroups() throws WikiSecurityException;
+
 }

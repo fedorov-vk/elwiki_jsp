@@ -60,7 +60,7 @@ public final class WorkflowBuilder {
 
     /**
      * <p>Builds an approval workflow that requests approval from a named
-     * user, {@link org.apache.wiki.auth.authorize.Group} or
+     * user, {@link IGroupWiki} or
      * {@link org.elwiki.data.authorize.GroupPrincipal} before running a Task.</p>
      * <p>The Principal who approves the activity is determined by looking up
      * the property <code>jspwiki.approver.<var>workflowApproverKey</var></code>
@@ -101,6 +101,7 @@ public final class WorkflowBuilder {
      * @return the created workflow
      * @throws WikiException if the name of the approving user, Role or Group cannot be determined
      */
+    //@formatter:off
     public Workflow buildApprovalWorkflow( final Principal submitter,
                                            final String workflowApproverKey,
                                            final Step prepTask,
@@ -108,6 +109,7 @@ public final class WorkflowBuilder {
                                            final Fact[] facts,
                                            final Step completionTask,
                                            final String rejectedMessageKey ) throws WikiException {
+        //@formatter:on
         final WorkflowManager mgr = ServicesRefs.getWorkflowManager();
         final Workflow workflow = new Workflow( workflowApproverKey, submitter );
 

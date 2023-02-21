@@ -42,7 +42,7 @@ import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.EditorManager;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.HttpUtil;

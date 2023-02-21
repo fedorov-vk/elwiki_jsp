@@ -1,4 +1,4 @@
-package org.elwiki.authorize.internal.accounting;
+package org.elwiki.authorize.internal.account.manager;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Session;

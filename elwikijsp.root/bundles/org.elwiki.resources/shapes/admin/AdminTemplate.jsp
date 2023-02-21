@@ -29,7 +29,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>JSPWiki administration</title>
+<title>ElWiki Administration</title>
   <wiki:Include page="../default/commonheader.jsp"/>
 <!-- FIXME: CSS file replaces now by style tag  
   <link rel="stylesheet" media="screen, projection, print" type="text/css"

@@ -28,17 +28,16 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
-import org.apache.wiki.auth.AccountManager;
-import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
@@ -650,9 +649,8 @@ public class WikiContextImpl implements WikiContext, Command {
 		if (WikiCommand.INSTALL.equals(m_command)) {
 			// See if admin users exists
 			try {
-				final AccountManager userMgr = ServicesRefs.getAccountManager();
-				final UserDatabase userDb = userMgr.getUserDatabase();
-				userDb.findByLoginName(Installer.ADMIN_ID);
+				final AccountRegistry accountRegistry = this.m_engine.getManager(AccountRegistry.class);
+				accountRegistry.findByLoginName(Installer.ADMIN_ID);
 			} catch (final NoSuchPrincipalException e) {
 				return DUMMY_PERMISSION;
 			}

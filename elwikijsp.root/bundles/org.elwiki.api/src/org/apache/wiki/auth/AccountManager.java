@@ -25,10 +25,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.elwiki.api.authorization.IGroupManager;
-
 
 /**
  * Provides a facade for obtaining user information.
@@ -38,29 +35,19 @@ import org.elwiki.api.authorization.IGroupManager;
 public interface AccountManager extends IGroupManager {
 
     /** Message key for the "save profile" message. */
-    String PROP_DATABASE = "jspwiki.userdatabase";
-
+	@Deprecated // :FVK: так как пока понятие база - не рассматривается (только из-за совместимости с кодом JSPwiki)
+    String PROP_DATABASE = "jspwiki.userdatabase"; 
     String JSON_USERS = "users";
 
     /**
-     * Returns the UserDatabase employed by this Engine. The UserDatabase is lazily initialized by this method, if it does
-     * not exist yet. If the initialization fails, this method will use the inner class DummyUserDatabase as a default (which
-     * is enough to get JSPWiki running).
-     *
-     * @return the dummy user database
-     * @since 2.3
-     */
-    UserDatabase getUserDatabase();
-
-    /**
-     * <p>Retrieves the {@link org.apache.wiki.auth.user0.UserProfile} for the user in a session. If the user is authenticated, the
+     * <p>Retrieves the {@link org.apache.wiki.auth.UserProfile} for the user in a session. If the user is authenticated, the
      * UserProfile returned will be the one stored in the user database; if one does not exist, a new one will be initialized and returned.
      * If the user is anonymous or asserted, the UserProfile will <i>always</i> be newly initialized to prevent spoofing of identities.
-     * If a UserProfile needs to be initialized, its {@link org.apache.wiki.auth.user0.UserProfile#isNew()} method will return
+     * If a UserProfile needs to be initialized, its {@link org.apache.wiki.auth.UserProfile#isNew()} method will return
      * <code>true</code>, and its login name will will be set automatically if the user is authenticated. Note that this method does
      * not modify the retrieved (or newly created) profile otherwise; other fields in the user profile may be <code>null</code>.</p>
-     * <p>If a new UserProfile was created, but its {@link org.apache.wiki.auth.user0.UserProfile#isNew()} method returns
-     * <code>false</code>, this method throws an {@link IllegalStateException}. This is meant as a quality check for UserDatabase providers;
+     * <p>If a new UserProfile was created, but its {@link org.apache.wiki.auth.UserProfile#isNew()} method returns
+     * <code>false</code>, this method throws an {@link IllegalStateException}. This is meant as a quality check for AccountRegistry providers;
      * it should only be thrown if the implementation is faulty.</p>
      *
      * @param session the session, which may not be <code>null</code>
@@ -71,7 +58,7 @@ public interface AccountManager extends IGroupManager {
 
     /**
      * <p>
-     * Saves the {@link org.apache.wiki.auth.user0.UserProfile} for the user in a wiki session. This method verifies that a user profile to
+     * Saves the {@link org.apache.wiki.auth.UserProfile} for the user in a wiki session. This method verifies that a user profile to
      * be saved doesn't collide with existing profiles; that is, the login name or full name is already used by another profile. If the
      * profile collides, a <code>DuplicateUserException</code> is thrown. After saving the profile, the user database changes are committed,
      * and the user's credential set is refreshed; if custom authentication is used, this means the user will be automatically be logged in.

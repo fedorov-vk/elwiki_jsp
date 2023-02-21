@@ -107,7 +107,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	public boolean login() throws LoginException {
 		// Otherwise, let's go and look for the cookie!
 		HttpRequestCallback hcb = new HttpRequestCallback();
-		//UserDatabaseCallback ucb = new UserDatabaseCallback();
+		//AccountRegistryCallback ucb = new AccountRegistryCallback();
 		WikiEngineCallback wcb = new WikiEngineCallback();
 
 		Callback[] callbacks = new Callback[] { hcb, wcb };

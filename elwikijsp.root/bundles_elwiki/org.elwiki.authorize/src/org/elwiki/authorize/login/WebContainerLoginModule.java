@@ -47,7 +47,7 @@ import org.elwiki.data.authorize.WikiPrincipal;
  * <ol>
  * <li>{@link HttpRequestCallback} - supplies the Http request object, from which the getRemoteUser
  * and getUserPrincipal are extracted</li>
- * <li>{@link UserDatabaseCallback} - supplies the user database for looking up the value of
+ * <li>{@link AccountRegistryCallback} - supplies the user database for looking up the value of
  * getRemoteUser</li>
  * </ol>
  * <p>

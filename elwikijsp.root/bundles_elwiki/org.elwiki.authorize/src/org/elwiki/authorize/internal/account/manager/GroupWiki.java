@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.elwiki.authorize.internal.accounting;
+package org.elwiki.authorize.internal.account.manager;
 
 import java.security.Principal;
 import java.text.DateFormat;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.wiki.auth.AccountManager;
-import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.AccountRegistry;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.osgi.service.useradmin.Group;
@@ -104,7 +104,7 @@ public class GroupWiki implements IGroupWiki {
 		this.accountManager = accountManager;
 		this.nativeGroup = nativeGroup;
 		Dictionary<String, Object> properties = nativeGroup.getProperties();
-		this.m_name = (String) properties.get(UserDatabase.GROUP_NAME);
+		this.m_name = (String) properties.get(AccountRegistry.GROUP_NAME);
 		this.uid = nativeGroup.getName();
 		this.m_principal = new GroupPrincipal(this.m_name, this.uid);
 	}
@@ -183,8 +183,8 @@ public class GroupWiki implements IGroupWiki {
 	 */
 	@Override
 	public synchronized Date getCreated() {
-		String creationDate = (String) this.nativeGroup.getProperties().get(UserDatabase.CREATED);
-		DateFormat c_format = new SimpleDateFormat(UserDatabase.DATE_FORMAT);
+		String creationDate = (String) this.nativeGroup.getProperties().get(AccountRegistry.CREATED);
+		DateFormat c_format = new SimpleDateFormat(AccountRegistry.DATE_FORMAT);
 		Date result = null;
 		try {
 			result = c_format.parse(creationDate);
@@ -202,7 +202,7 @@ public class GroupWiki implements IGroupWiki {
 	 */
 	@Override
 	public synchronized String getCreator() {
-		String creatorUid = (String) this.nativeGroup.getProperties().get(UserDatabase.GROUP_CREATOR);
+		String creatorUid = (String) this.nativeGroup.getProperties().get(AccountRegistry.GROUP_CREATOR);
 		String creatorName = this.accountManager.getUserName(creatorUid);
 		return creatorName;
 	}
@@ -214,8 +214,8 @@ public class GroupWiki implements IGroupWiki {
 	 */
 	@Override
 	public synchronized Date getLastModifiedDate() {
-		String creationDate = (String) this.nativeGroup.getProperties().get(UserDatabase.LAST_MODIFIED);
-		DateFormat c_format = new SimpleDateFormat(UserDatabase.DATE_FORMAT);
+		String creationDate = (String) this.nativeGroup.getProperties().get(AccountRegistry.LAST_MODIFIED);
+		DateFormat c_format = new SimpleDateFormat(AccountRegistry.DATE_FORMAT);
 		Date result = null;
 		try {
 			result = c_format.parse(creationDate);
@@ -233,7 +233,7 @@ public class GroupWiki implements IGroupWiki {
 	 */
 	@Override
 	public synchronized String getModifier() {
-		String modifierUid = (String) this.nativeGroup.getProperties().get(UserDatabase.GROUP_MODIFIER);
+		String modifierUid = (String) this.nativeGroup.getProperties().get(AccountRegistry.GROUP_MODIFIER);
 		String modifierName = this.accountManager.getUserName(modifierUid);
 		return modifierName;
 	}
@@ -304,9 +304,9 @@ public class GroupWiki implements IGroupWiki {
 			for (org.osgi.service.useradmin.Role role : members) {
 				String member;
 				if (role instanceof Group group) {
-					member = (String) group.getProperties().get(UserDatabase.GROUP_NAME);
+					member = (String) group.getProperties().get(AccountRegistry.GROUP_NAME);
 				} else if (role instanceof User user) {
-					member = (String) user.getProperties().get(UserDatabase.LOGIN_NAME);
+					member = (String) user.getProperties().get(AccountRegistry.LOGIN_NAME);
 				} else if (role instanceof Role) {
 					member = role.getName();
 				} else {

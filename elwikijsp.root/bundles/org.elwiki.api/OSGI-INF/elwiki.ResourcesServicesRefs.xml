@@ -26,6 +26,7 @@
    <reference cardinality="1..1" field="factoryTemplateManager" interface="org.osgi.service.component.ComponentFactory" name="factoryTemplateManager" target="(component.factory=elwiki.TemplateManager.factory)"/>
    <reference cardinality="1..1" field="factoryUrlConstructor" interface="org.osgi.service.component.ComponentFactory" name="factoryUrlConstructor" target="(component.factory=elwiki.UrlConstructor.factory)"/>
    <reference cardinality="1..1" field="factoryAccountManager" interface="org.osgi.service.component.ComponentFactory" name="factoryAccountManager" target="(component.factory=elwiki.AccountManager.factory)"/>
+   <reference cardinality="1..1" field="factoryAccountRegistry" interface="org.osgi.service.component.ComponentFactory" name="factoryAccountRegistry" target="(component.factory=elwiki.AccountRegistry.factory)"/>
    <reference cardinality="1..1" field="factoryVariableManager" interface="org.osgi.service.component.ComponentFactory" name="factoryVariableManager" target="(component.factory=elwiki.VariableManager.factory)"/>
    <reference cardinality="1..1" field="factoryWikiAjaxDispatcher" interface="org.osgi.service.component.ComponentFactory" name="factoryWikiAjaxDispatcher" target="(component.factory=elwiki.WikiAjaxDispatcher.factory)"/>
    <reference cardinality="1..1" field="factoryWikiScopeManager" interface="org.osgi.service.component.ComponentFactory" name="factoryWikiScopeManager" target="(component.factory=elwiki.WikiScopeManager.factory)"/>

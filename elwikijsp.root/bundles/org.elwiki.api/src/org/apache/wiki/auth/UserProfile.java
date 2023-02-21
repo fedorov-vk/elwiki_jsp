@@ -16,13 +16,13 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.auth.user0;
+package org.apache.wiki.auth;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Class for representing wiki user information, such as the login name, full
@@ -90,7 +90,7 @@ public interface UserProfile extends IAdaptable, Serializable
      * Returns the user password for use with custom authentication. Note that
      * the password field is not meaningful for container authentication; the
      * user's private credentials are generally stored elsewhere. While it
-     * depends on the {@link UserDatabase}implementation, in most cases the
+     * depends on the {@link AccountRegistry}implementation, in most cases the
      * value returned by this method will be a password hash, not the password
      * itself.
      * @return the password
@@ -164,7 +164,7 @@ public interface UserProfile extends IAdaptable, Serializable
      * Sets the name by which the user logs in. The login name is used as the
      * username for custom authentication (see
      * {@link org.apache.wiki.auth.IIAuthenticationManager#login(org.apache.wiki.api.core.Session, javax.servlet.http.HttpServletRequest, String, String)},
-     * {@link org.apache.wiki.auth.login.UserDatabaseLoginModule}). The login
+     * {@link AccountRegistryLoginModule}). The login
      * name is typically a short name ("jannej"). In contrast, the wiki name is
      * typically of type FirstnameLastName ("JanneJalkanen").
      * @param name the login name
@@ -174,8 +174,8 @@ public interface UserProfile extends IAdaptable, Serializable
     /**
      * Sets the user's password for use with custom authentication. It is
      * <em>not</em> the responsibility of implementing classes to hash the
-     * password; that responsibility is borne by the UserDatabase implementation
-     * during save operations (see {@link UserDatabase#save(UserProfile)}).
+     * password; that responsibility is borne by the AccountRegistry implementation
+     * during save operations (see {@link AccountRegistry#save(UserProfile)}).
      * Note that the password field is not meaningful for container
      * authentication; the user's private credentials are generally stored
      * elsewhere.
@@ -184,7 +184,7 @@ public interface UserProfile extends IAdaptable, Serializable
     void setPassword(String arg );
 
     /**
-     * Sets the unique identifier for the user profile. Note that UserDatabase implementations
+     * Sets the unique identifier for the user profile. Note that AccountRegistry implementations
      * are required <em>not</em> to change the unique identifier after the initial save.
      * @param uid the unique identifier to set
      */

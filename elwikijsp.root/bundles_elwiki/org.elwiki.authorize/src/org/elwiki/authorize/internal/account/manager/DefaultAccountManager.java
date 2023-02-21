@@ -16,85 +16,55 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.elwiki.authorize.internal.accounting;
+package org.elwiki.authorize.internal.account.manager;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.wiki.ajax.AjaxUtil;
-import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
-import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.tasks.TasksManager;
+import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.ui.InputValidator;
-import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
-import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowBuilder;
 import org.apache.wiki.workflow0.WorkflowManager;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.GroupDatabase;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.authorize.Messages;
-import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.elwiki.authorize.user.DummyUserDatabase;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.permissions.WikiPermission;
-//import org.elwiki.utils.MailUtil;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.ComponentContext;
@@ -138,7 +108,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	public static class SaveUserProfileTask extends Task {
 		private static final long serialVersionUID = 4297004510105358843L;
 
-		private final UserDatabase m_db;
+		private final AccountRegistry m_db;
 		private final Engine m_engine;
 		private final Locale m_loc;
 
@@ -153,7 +123,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		public SaveUserProfileTask(Engine engine, Locale loc) {
 			super(SAVE_TASK_MESSAGE_KEY);
 			this.m_engine = engine;
-			this.m_db = engine.getApplicationSession().getAccountManager().getUserDatabase();
+			this.m_db = engine.getApplicationSession().getAccountManager().get User Database();
 			this.m_loc = loc;
 		}
 
@@ -203,30 +173,14 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	private static final String PARAM_PASSWORD = "password";
 	private static final String PARAM_LOGINNAME = "loginname";
 
-	
-	/** Property-идентификатор пользовательской БД. */
-	protected static final String PROP_DATABASE = "userdatabase";
-	
-	/** Extension's specific ID of default user database implementation. Current value - {@value} */
-	private static final String DEFAULT_DATABASE_ID = "UserAdminDatabase";
 	protected static final String NODE_ACCOUNTMANAGER = "node.accountManager";
 	
 	private ScopedPreferenceStore prefsAauth;
 	
 	private Engine m_engine;
 	
-	/** Presents the available implementations of UserDatabase. */
-	private Map<String, Class<? extends UserDatabase>> userDataBases;
-
-	private Class<? extends UserDatabase> classUserDatabase;
-	
-	/** The user database loads, manages and persists user identities */
-	private UserDatabase m_database;
-	
 	/** Associates wiki sessions with profiles. */
 	private final Map<Session, UserProfile> m_profiles = new WeakHashMap<>();
-
-	private final List<IGroupWiki> m_groups = new ArrayList<>();
 
 	// == CODE ================================================================
 
@@ -246,6 +200,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
+	@WikiServiceReference
+	private AccountRegistry accountRegistry;
+	
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
@@ -276,59 +233,14 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		}
 	}
 
-	public void initialize(final Engine engine) throws WikiException {
+	protected void initialize(final Engine engine) throws WikiException {
 		this.m_engine = engine;
-
+		
 		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
 
 		/*TODO: Replace with custom annotations. See JSPWIKI-566
 		WikiAjaxDispatcherServlet.registerServlet(JSON_USERS, new JSONUserModule(this), new AllPermission(null));
 		*/
-
-		this.userDataBases = ExtensionHandler.getUserDatabaseImplementations();
-		String dbId = this.prefsAauth.getString(PROP_DATABASE);
-		if (dbId.length() == 0) {
-			// get default UserDatabase.
-			dbId = DEFAULT_DATABASE_ID; // WORKARUND. -- такого идентификатора может не быть.
-		}
-		this.classUserDatabase = this.userDataBases.get(dbId);
-
-		Assert.isNotNull(this.classUserDatabase, "Undefined UserDatabase with ID = " + dbId);
-		
-		/* Attaching users database.
-		 */
-		try {
-			this.m_database = this.classUserDatabase.getDeclaredConstructor().newInstance();
-			log.info("Attempting to load user database class " + this.m_database.getClass().getName());
-			this.m_database.initialize(this.m_engine, null); // :FVK: workaround - here load Groups, Users from JSON.
-			log.info("UserDatabase initialized.");
-		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | InstantiationException e) {
-			log.error("UserDatabase class " + this.classUserDatabase.getClass().getName() + " cannot be created.", e);
-			// throw new WikiException("UserDatabase class " + this.classUserDatabase + " cannot be created.", e);
-		} catch (IllegalAccessException e) {
-			log.error("You are not allowed to user database class " + this.classUserDatabase.getClass().getName(), e);
-			// throw new WikiException("You are not allowed to user database class " + this.classUserDatabase, e);
-		} catch (WikiSecurityException e) {
-			log.error("Exception initializing user database: " + e.getMessage());
-		} catch (NoRequiredPropertyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (this.m_database == null) {
-				log.info(
-						"I could not create a database object you specified (or didn't specify), so I am falling back to a default.");
-				this.m_database = new DummyUserDatabase();
-			}
-		}
-
-        /* Put all groups from the persistent store into the cache.
-         * :FVK: with UserAdmin service - groups are loaded when OSGi services started? 
-         */
-		for (final Group group : getNativeGroups()) {
-			// Add new group; fire GROUP_ADD event
-			m_groups.add(new GroupWiki(group, this));
-			//:FVK: fireEvent(WikiSecurityEvent.GROUP_ADD, group);
-		}
 
 		// Attach the PageManager as a listener
 		// TODO: it would be better if we did this in PageManager directly
@@ -345,6 +257,18 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	
 	// -- service handling -----------------------------(end)--
 
+	static List<Group> getNativeGroups(UserAdmin userAdmin) throws InvalidSyntaxException {
+		List<Group> groups = new ArrayList<>();
+
+		for (Role role : userAdmin.getRoles(null)) {
+			if (role instanceof Group group) {
+				groups.add(group);
+			}
+		}
+
+		return groups;
+	}
+	
 	@Override
 	protected IWikiConfiguration getWikiConfiguration() {
 		return this.wikiConfiguration;
@@ -378,11 +302,6 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	// -- implementation AccountManager ------------------------------(start)--
 
 	@Override
-	public UserDatabase getUserDatabase() {
-		return this.m_database;
-	}
-
-	@Override
 	public UserProfile getUserProfile(Session session) {
 		// Look up cached user profile
 		UserProfile profile = this.m_profiles.get(session);
@@ -392,14 +311,14 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		// If user is authenticated, figure out if this is an existing profile.
 		if (session.isAuthenticated()) {
 			try {
-				profile = getUserDatabase().find(user);
+				profile = accountRegistry.find(user);
 				newProfile = false;
 			} catch (NoSuchPrincipalException e) {
 			}
 		}
 
 		if (newProfile) {
-			profile = getUserDatabase().newProfile(user);
+			profile = accountRegistry.newProfile(user);
 			if (!profile.isNew()) {
 				throw new IllegalStateException(
 						"New profile should be marked 'new'. Check your UserProfile implementation.");
@@ -430,14 +349,14 @@ public final class DefaultAccountManager extends GroupSupport implements Account
                                     oldProfile.getLoginName().equals( profile.getLoginName() ) );
         UserProfile otherProfile;
         try {
-            otherProfile = getUserDatabase().findByLoginName( profile.getLoginName() );
+            otherProfile = accountRegistry.findByLoginName( profile.getLoginName() );
             if( otherProfile != null && !otherProfile.equals( oldProfile ) ) {
                 throw new DuplicateUserException( "security.error.login.taken", profile.getLoginName() );
             }
         } catch( final NoSuchPrincipalException e ) {
         }
         try {
-            otherProfile = getUserDatabase().findByFullName( profile.getFullname() );
+            otherProfile = accountRegistry.findByFullName( profile.getFullname() );
             if( otherProfile != null && !otherProfile.equals( oldProfile ) ) {
                 throw new DuplicateUserException( "security.error.fullname.taken", profile.getFullname() );
             }
@@ -465,11 +384,11 @@ public final class DefaultAccountManager extends GroupSupport implements Account
         } else { // For existing accounts, just save the profile
             // If login name changed, rename it first
 			if (nameChanged && oldProfile != null && !oldProfile.getLoginName().equals(profile.getLoginName())) {
-				getUserDatabase().rename(oldProfile.getLoginName(), profile.getLoginName());
+				accountRegistry.rename(oldProfile.getLoginName(), profile.getLoginName());
 			}
 
             // Now, save the profile (userdatabase will take care of timestamps for us)
-            getUserDatabase().save( profile );
+            accountRegistry.save( profile );
 
             if( nameChanged ) {
                 // Fire an event if the login name or full name changed
@@ -641,7 +560,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	        // It's illegal to use as a full name someone else's login name
 	        try {
-	            otherProfile = getUserDatabase().find( fullName );
+	            otherProfile = accountRegistry.find( fullName );
 	            if( otherProfile != null && !profile.equals( otherProfile ) && !fullName.equals( otherProfile.getFullname() ) ) {
 	                final Object[] args = { fullName };
 	                session.addMessage( SESSION_MESSAGES, MessageFormat.format( rb.getString( "security.error.illegalfullname" ), args ) );
@@ -650,7 +569,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	        // It's illegal to use as a login name someone else's full name
 	        try {
-	            otherProfile = getUserDatabase().find( loginName );
+	            otherProfile = accountRegistry.find( loginName );
 	            if( otherProfile != null && !profile.equals( otherProfile ) && !loginName.equals( otherProfile.getLoginName() ) ) {
 	                final Object[] args = { loginName };
 	                session.addMessage( SESSION_MESSAGES, MessageFormat.format( rb.getString( "security.error.illegalloginname" ), args ) );
@@ -659,7 +578,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	        // It's illegal to use multiple accounts with the same email
 	        try {
-	            otherProfile = getUserDatabase().findByEmail( email );
+	            otherProfile = accountRegistry.findByEmail( email );
 	            if( otherProfile != null && !profile.getUid().equals( otherProfile.getUid() ) // Issue JSPWIKI-1042
 	                    && !profile.equals( otherProfile ) && StringUtils.lowerCase( email )
 	                    .equals( StringUtils.lowerCase( otherProfile.getEmail() ) ) ) {
@@ -679,19 +598,19 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@Override
 	// :FVK: Не используется в Java.
 	public Principal[] listWikiNames() throws WikiSecurityException {
-		return getUserDatabase().getWikiNames();
+		return accountRegistry.getWikiNames();
 	}
 
 	@Override
 	public String getUserName(String uid) {
 		if( getUserAdmin().getRole(uid) instanceof User user) {
-			String name = (String)user.getProperties().get(UserDatabase.LOGIN_NAME);
+			String name = (String)user.getProperties().get(AccountRegistry.LOGIN_NAME);
 			return name;
 		}
 
 		return "";
 	}
-	
+
 	// -- implementation AccountManager --------------------------------(end)--
 
 	// -- implementation GroupManager --------------------------------(start)--
@@ -715,23 +634,17 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	}
 
 	@Override
-	public List<IGroupWiki> getGroups() {
-		return this.m_groups;
-	}
-
-	protected List<Group> getNativeGroups() {
-		List<Group> groups = new ArrayList<>();
+	public List<IGroupWiki> getGroups() throws WikiSecurityException {
+		List<IGroupWiki> groups = new ArrayList<>();
 		try {
-			for (Role role : getUserAdmin().getRoles(null)) {
-				if (role instanceof Group group) {
-					groups.add(group);
-				}
+			for (Group group : getNativeGroups(getUserAdmin())) {
+				groups.add(new GroupWiki(group, this));
 			}
 		} catch (InvalidSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new WikiSecurityException("Fail getting groups of UserAdmin service.", e);
 		}
-		return groups; // :FVK: this.m_groups.keySet().toArray(new Principal[this.m_groups.size()]);
+
+		return groups;
 	}
 
 	@Override
@@ -740,7 +653,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		if (!(role instanceof Group group)) {
 			throw new IllegalArgumentException("Required role \"" + roleName + "\" is not founded as group of UserAdmin service.");
 		}
-		String allPermissions = (String) group.getProperties().get(UserDatabase.GROUP_PERMISSIONS);
+		String allPermissions = (String) group.getProperties().get(AccountRegistry.GROUP_PERMISSIONS);
 		List<PermissionInfo> listPi = new ArrayList<>();
 		String[] permissions = new Gson().fromJson(allPermissions, String[].class);
 		for(String encodedPermission : permissions) {
@@ -792,7 +705,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		/*:FVK:
 		IGroupWiki group = parseGroup(null, name, memberLine, create);
 		*/
-		Object role = this.getUserAdmin().getUser(UserDatabase.GROUP_NAME, name);
+		Object role = this.getUserAdmin().getUser(AccountRegistry.GROUP_NAME, name);
 		if (role instanceof Group group) {
 			groupWiki = new GroupWiki(group, this);
 		} else {
@@ -917,7 +830,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@Override
 	public String getGroupUid(String name) {
 		String uid = null;
-		Object role = userAdminService.getUser(UserDatabase.GROUP_NAME, name);
+		Object role = userAdminService.getUser(AccountRegistry.GROUP_NAME, name);
 		if (role instanceof Group group) {
 			uid = group.getName();
 		}

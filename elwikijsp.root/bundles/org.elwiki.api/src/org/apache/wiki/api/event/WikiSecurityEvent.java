@@ -101,7 +101,8 @@ public final class WikiSecurityEvent extends WikiEvent {
     /** When a wiki group is deleted. */
     public static final int   GROUP_REMOVE             = 47;
 
-    /** When all wiki groups are removed from GroupDatabase. */
+    //:FVK: пересмотреть, так как рефакторизованы Group-, User- Databases... 
+    /** When all wiki groups are removed from GroupDatabase. -- :FVK: AccountRegistry? */
     public static final int   GROUP_CLEAR_GROUPS       = 48;
 
     /** When access to a resource is allowed. */

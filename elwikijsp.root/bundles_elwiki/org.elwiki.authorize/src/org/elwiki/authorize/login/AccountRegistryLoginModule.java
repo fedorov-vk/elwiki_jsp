@@ -29,8 +29,8 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.data.authorize.WikiPrincipal;
 
@@ -42,8 +42,8 @@ import org.elwiki.data.authorize.WikiPrincipal;
  * <ol>
  * <li>{@link javax.security.auth.callback.NameCallback}- supplies the username</li>
  * <li>{@link javax.security.auth.callback.PasswordCallback}- supplies the password</li>
- * <li>{@link org.elwiki.authorize.login.core.auth.login.wiki.auth.login.UserDatabaseCallback}- supplies the
- * {@link org.elwiki.api.authorization.user.IUserDatabase.auth.user.wiki.auth.user.UserDatabase}</li>
+ * <li>{@link org.elwiki.authorize.login.AccountRegistryCallback.auth.login.wiki.auth.login.UserDatabaseCallback}- supplies the
+ * {@link AccountRegistry}</li>
  * </ol>
  * <p>
  * After authentication, a Principals based on the login name will be created and associated with the Subject.
@@ -51,9 +51,9 @@ import org.elwiki.data.authorize.WikiPrincipal;
  * 
  * @since 2.3
  */
-public class UserDatabaseLoginModule extends AbstractLoginModule {
+public class AccountRegistryLoginModule extends AbstractLoginModule {
 
-	private static final Logger log = Logger.getLogger(UserDatabaseLoginModule.class);
+	private static final Logger log = Logger.getLogger(AccountRegistryLoginModule.class);
 
 	/**
 	 * @see javax.security.auth.spi.LoginModule#login()
@@ -62,23 +62,23 @@ public class UserDatabaseLoginModule extends AbstractLoginModule {
 	 */
 	@Override
 	public boolean login() throws LoginException {
-		UserDatabaseCallback ucb = new UserDatabaseCallback();
+		AccountRegistryCallback ucb = new AccountRegistryCallback();
 		NameCallback ncb = new NameCallback("User name");
 		PasswordCallback pcb = new PasswordCallback("Password", false);
 		Callback[] callbacks = new Callback[] { ucb, ncb, pcb };
 		try {
 			this.m_handler.handle(callbacks);
-			UserDatabase db = ucb.getUserDatabase();
+			AccountRegistry accountRegistry = ucb.getAccountRegistry();
 			String username = ncb.getName();
 			String password = new String(pcb.getPassword());
 
 			// Look up the user and compare the password hash
-			if (db == null) {
+			if (accountRegistry == null) {
 				throw new FailedLoginException("No user database: check the callback handler code!");
 			}
-			UserProfile profile = db.findByLoginName(username);
+			UserProfile profile = accountRegistry.findByLoginName(username);
 			String storedPassword = profile.getPassword();
-			if (storedPassword.length() != 0 && db.validatePassword(profile, password)) {
+			if (storedPassword.length() != 0 && accountRegistry.validatePassword(profile, password)) {
 				if (log.isDebugEnabled()) {
 					log.debug("Logged in user database user " + username);
 				}

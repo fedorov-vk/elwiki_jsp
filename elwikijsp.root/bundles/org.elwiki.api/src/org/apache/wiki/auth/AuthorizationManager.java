@@ -60,7 +60,7 @@ import java.security.Principal;
  */
 public interface AuthorizationManager extends Initializable {
 
-    /** The default external Authorizer is the {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer} */
+    /** The default external Authorizer is the {@link WebContainerAuthorizer} */
     String DEFAULT_AUTHORIZER = "org.apache.wiki.auth.authorize.WebContainerAuthorizer";
 
     /** Property that supplies the security policy file name, in WEB-INF. */
@@ -88,7 +88,7 @@ public interface AuthorizationManager extends Initializable {
      * <p>
      * Note that when iterating through the Acl's list of authorized Principals, it is possible that one or more of the Acl's Principal
      * entries are of type <code>UnresolvedPrincipal</code>. This means that the last time the ACL was read, the Principal (user, built-in
-     * Role, authorizer Role, or wiki Group) could not be resolved: the Role was not valid, the user wasn't found in the UserDatabase, or
+     * Role, authorizer Role, or wiki Group) could not be resolved: the Role was not valid, the user wasn't found in the AccountRegistry, or
      * the Group wasn't known to (e.g., cached) in the GroupManager. If an <code>UnresolvedPrincipal</code> is encountered, this method
      * will attempt to resolve it first <em>before</em> checking to see if the Subject possesses this principal, by calling
      * {@link #resolvePrincipal(String)}. If the (re-)resolution does not succeed, the access check for the principal will fail by
@@ -228,9 +228,9 @@ public interface AuthorizationManager extends Initializable {
      * <ol>
      * <li>If the name matches one of the built-in {@link org.elwiki.data.authorize.GroupPrincipal} names, return that built-in Role</li>
      * <li>If the name matches one supplied by the current {@link org.elwiki.api.authorization.Authorizer}, return that Role</li>
-     * <li>If the name matches a group managed by the current {@link org.apache.wiki.auth.authorize.GroupManager}, return that Group</li>
-     * <li>Otherwise, assume that the name represents a user principal. Using the current {@link org.apache.wiki.auth.user.UserDatabase},
-     * find the first user who matches the supplied name by calling {@link org.apache.wiki.auth.user.UserDatabase#find(String)}.</li>
+     * <li>If the name matches a group managed by the current {@link AccountManager}, return that Group</li>
+     * <li>Otherwise, assume that the name represents a user principal. Using the current {@link AccountRegistry},
+     * find the first user who matches the supplied name by calling {@link AccountRegistry#find(String)}.</li>
      * <li>Finally, if a user cannot be found, manufacture and return a generic {@link org.apache.wiki.auth.acl.UnresolvedPrincipal}</li>
      * </ol>
      *

@@ -18,26 +18,6 @@
  */
 package org.apache.wiki.ui;
 
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.providers.AttachmentProvider;
-import org.apache.wiki.auth.AccountManager;
-import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.configuration.IWikiPreferences;
-import org.elwiki.resources.ResourcesActivator;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,6 +26,26 @@ import java.text.MessageFormat;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.api.providers.AttachmentProvider;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
+import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.configuration.IWikiPreferences;
+import org.elwiki.resources.ResourcesActivator;
+import org.elwiki.services.ServicesRefs;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * Manages JSPWiki installation on behalf of <code>admin/Install.jsp</code>. The contents of this class were previously part of
@@ -108,10 +108,9 @@ public class Installer {
      */
     public boolean adminExists() {
         // See if the admin user exists already
-        final AccountManager accountManager = ServicesRefs.getAccountManager();
-        final UserDatabase userDb = accountManager.getUserDatabase();
+        final AccountRegistry accountRegistry = this.m_engine.getManager(AccountRegistry.class);
         try {
-            userDb.findByLoginName( ADMIN_ID );
+            accountRegistry.findByLoginName( ADMIN_ID );
             return true;
         } catch ( final NoSuchPrincipalException e ) {
             return false;
@@ -133,20 +132,19 @@ public class Installer {
         }
         
         // See if the admin user exists already
-        final AccountManager accountManager = ServicesRefs.getAccountManager();
-        final UserDatabase userDb = accountManager.getUserDatabase();
+        final AccountRegistry accountRegistry = this.m_engine.getManager(AccountRegistry.class);
         String password = null;
         
         try {
-            userDb.findByLoginName( ADMIN_ID );
+            accountRegistry.findByLoginName( ADMIN_ID );
         } catch( final NoSuchPrincipalException e ) {
             // Create a random 12-character password
             password = TextUtil.generateRandomPassword();
-            final UserProfile profile = userDb.newProfile();
+            final UserProfile profile = accountRegistry.newProfile();
             profile.setLoginName( ADMIN_ID );
             profile.setFullname( ADMIN_NAME );
             profile.setPassword( password );
-            userDb.save( profile );
+            accountRegistry.save( profile );
         }
         
         // Create a new admin group

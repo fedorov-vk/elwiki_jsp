@@ -15,10 +15,11 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.services.ServicesRefs;
 
 public class LostpasswordCmdCode extends CmdCode {
@@ -56,7 +57,7 @@ public class LostpasswordCmdCode extends CmdCode {
     public boolean resetPassword( Engine wiki, HttpServletRequest request, ResourceBundle rb ) {
         // Reset pw for account name
         String name = request.getParameter( "name" );
-        UserDatabase userDatabase = ServicesRefs.getAccountManager().getUserDatabase();
+        @NonNull AccountRegistry accountRegistry = this.getEngine().getManager(AccountRegistry.class);
         boolean success = false;
 
         try {
@@ -71,7 +72,7 @@ public class LostpasswordCmdCode extends CmdCode {
              }
             */
             if( profile == null ) {
-                profile = userDatabase.findByEmail( name );
+                profile = accountRegistry.findByEmail( name );
             }
 
             String applicationName = wiki.getWikiConfiguration().getApplicationName();
@@ -96,7 +97,7 @@ public class LostpasswordCmdCode extends CmdCode {
             // Mail succeeded.  Now reset the password.
             // If this fails, we're kind of screwed, because we already emailed.
             profile.setPassword( randomPassword );
-            userDatabase.save( profile );
+            accountRegistry.save( profile );
             success = true;
         } catch( NoSuchPrincipalException e ) {
             Object[] args = { name };

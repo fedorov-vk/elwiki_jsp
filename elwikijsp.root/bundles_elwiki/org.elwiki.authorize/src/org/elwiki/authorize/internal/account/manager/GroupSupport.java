@@ -1,4 +1,4 @@
-package org.elwiki.authorize.internal.accounting;
+package org.elwiki.authorize.internal.account.manager;
 
 import java.security.Principal;
 
@@ -6,8 +6,8 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.InputValidator;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.data.authorize.WikiPrincipal;

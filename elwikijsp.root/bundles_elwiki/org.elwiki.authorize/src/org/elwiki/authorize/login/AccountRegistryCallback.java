@@ -20,17 +20,17 @@ package org.elwiki.authorize.login;
 
 import javax.security.auth.callback.Callback;
 
-import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.AccountRegistry;
 
 /**
- * Callback for requesting and supplying a wiki UserDatabase. This callback is used by LoginModules that need
+ * Callback for requesting and supplying a wiki AccountRegistry. This callback is used by LoginModules that need
  * access to a user database for looking up users by id.
  * 
  * @since 2.3
  */
-public class UserDatabaseCallback implements Callback {
+public class AccountRegistryCallback implements Callback {
 
-	private UserDatabase m_database;
+	private AccountRegistry accountRegistry;
 
 	/**
 	 * Returns the user database object. LoginModules call this method after a CallbackHandler sets the user
@@ -38,18 +38,18 @@ public class UserDatabaseCallback implements Callback {
 	 * 
 	 * @return the user database
 	 */
-	public UserDatabase getUserDatabase() {
-		return this.m_database;
+	public AccountRegistry getAccountRegistry() {
+		return this.accountRegistry;
 	}
 
 	/**
 	 * Sets the user database. CallbackHandler objects call this method..
 	 * 
-	 * @param database
+	 * @param accountRegistry
 	 *            the user database
 	 */
-	public void setUserDatabase(UserDatabase database) {
-		this.m_database = database;
+	public void setAccountRegistry(AccountRegistry accountRegistry) {
+		this.accountRegistry = accountRegistry;
 	}
 
 }

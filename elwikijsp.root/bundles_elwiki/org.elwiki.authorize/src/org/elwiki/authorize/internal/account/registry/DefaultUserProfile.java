@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.elwiki.authorize.user;
+package org.elwiki.authorize.internal.account.registry;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.UserProfile;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.annotation.NonNull;
 //:FVK:import org.elwiki.core.common.WikiSession;
@@ -37,7 +37,7 @@ import org.eclipse.jdt.annotation.NonNull;
  * 
  * @since 2.3
  */
-public final class DefaultUserProfile implements UserProfile {
+final class DefaultUserProfile implements UserProfile {
 
 	private static final long serialVersionUID = -5600466893735300647L;
 
@@ -114,7 +114,7 @@ public final class DefaultUserProfile implements UserProfile {
 	 * Returns the creation date
 	 * 
 	 * @return the creation date
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#getCreated()
+	 * @see org.apache.wiki.auth.user.core.auth.user.wiki.auth.user.UserProfile#getCreated()
 	 */
 	@Override
 	public Date getCreated() {
@@ -147,7 +147,7 @@ public final class DefaultUserProfile implements UserProfile {
 	 * Returns the last-modified date.
 	 * 
 	 * @return the last-modified date
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#getLastModifiedDate()
+	 * @see org.apache.wiki.auth.user.core.auth.user.wiki.auth.user.UserProfile#getLastModifiedDate()
 	 */
 	@Override
 	public Date getLastModifiedDate() {
@@ -168,7 +168,7 @@ public final class DefaultUserProfile implements UserProfile {
 	/**
 	 * Returns the user password for use with custom authentication. Note that the password
 	 * field is not meaningful for container authentication; the user's private credentials are
-	 * generally stored elsewhere. While it depends on the {@link IUserDatabase}implementation,
+	 * generally stored elsewhere. While it depends on the {@link AccountRegistry}implementation,
 	 * in most cases the value returned by this method will be a password hash, not the password
 	 * itself.
 	 * 
@@ -195,7 +195,7 @@ public final class DefaultUserProfile implements UserProfile {
 	 * Returns <code>true</code> if the user profile is new. This implementation checks whether
 	 * {@link #getLastModifiedDate()} returns <code>null</code> to determine the status.
 	 * 
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#isNew()
+	 * @see org.apache.wiki.auth.user.core.auth.user.wiki.auth.user.UserProfile#isNew()
 	 */
 	@Override
 	public boolean isNew() {
@@ -204,7 +204,7 @@ public final class DefaultUserProfile implements UserProfile {
 
 	/**
 	 * @param date the creation date
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#setCreated(java.util.Date)
+	 * @see org.apache.wiki.auth.user.core.auth.user.wiki.auth.user.UserProfile#setCreated(java.util.Date)
 	 */
 	@Override
 	public void setCreated(Date date) {
@@ -239,7 +239,7 @@ public final class DefaultUserProfile implements UserProfile {
 	 * Sets the last-modified date.
 	 * 
 	 * @param date the last-modified date
-	 * @see org.elwiki.api.authorization.user.core.auth.user.wiki.auth.user.UserProfile#setLastModified(java.util.Date)
+	 * @see org.apache.wiki.auth.user.core.auth.user.wiki.auth.user.UserProfile#setLastModified(java.util.Date)
 	 */
 	@Override
 	public void setLastModified(Date date) {
@@ -263,8 +263,8 @@ public final class DefaultUserProfile implements UserProfile {
 	/**
 	 * Sets the user's password for use with custom authentication. It is <em>not</em> the
 	 * responsibility of implementing classes to hash the password; that responsibility is borne
-	 * by the UserDatabase implementation during save operations (see
-	 * {@link IUserDatabase#saveProfile(UserProfile)}). Note that the password field is not
+	 * by the AccountRegistry implementation during save operations (see
+	 * {@link AccountRegistry#saveProfile(UserProfile)}). Note that the password field is not
 	 * meaningful for container authentication; the user's private credentials are generally
 	 * stored elsewhere.
 	 * 

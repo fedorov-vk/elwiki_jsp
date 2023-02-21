@@ -18,51 +18,36 @@
  */
 package org.apache.wiki.auth;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.KeyStore;
+import java.security.Permission;
+import java.security.Principal;
+import java.security.ProtectionDomain;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.security.auth.spi.LoginModule;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
-//import org.apache.wiki.auth.authorize.GroupDatabase;
-//:FVK: import org.apache.wiki.auth.authorize.WebContainerAuthorizer;
-import org.elwiki.permissions.AllPermission;
-import org.elwiki.permissions.GroupPermission;
-import org.elwiki.permissions.PermissionFactory;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.util.TextUtil;
-import org.apache.xpath.operations.Bool;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.permissions.AllPermission;
+import org.elwiki.permissions.GroupPermission;
+import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.permissions.WikiPermission;
 import org.elwiki.services.ServicesRefs;
 import org.freshcookies.security.policy.PolicyReader;
-import org.osgi.service.useradmin.Group;
-import org.osgi.service.useradmin.Role;
-
-import javax.security.auth.Subject;
-import javax.security.auth.spi.LoginModule;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.KeyStore;
-import java.security.Permission;
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Helper class for verifying JSPWiki's security configuration. Invoked by
@@ -72,6 +57,8 @@ import java.util.Set;
  */
 @SuppressWarnings({ "unused", "deprecation" })
 public final class SecurityVerifier {
+
+	private static final Logger log = Logger.getLogger(SecurityVerifier.class);
 
 	private Engine m_engine;
 
@@ -121,13 +108,13 @@ public final class SecurityVerifier {
 	public static final String INFO_DB = "Info.UserDatabase";
 
 	/** Message topic for group database errors. */
-	public static final String ERROR_GROUPS = "Error.GroupDatabase";
+	public static final String ERROR_GROUPS = "Error.AccountRegistry";
 
 	/** Message topic for group database warnings. */
-	public static final String WARNING_GROUPS = "Warning.GroupDatabase";
+	public static final String WARNING_GROUPS = "Warning.AccountRegistry";
 
 	/** Message topic for group database information messages. */
-	public static final String INFO_GROUPS = "Info.GroupDatabase";
+	public static final String INFO_GROUPS = "Info.AccountRegistry";
 
 	/** Message topic for JAAS information messages. */
 	public static final String INFO_JAAS = "Info.Jaas";
@@ -187,7 +174,13 @@ public final class SecurityVerifier {
 	public String policyRoleTable() {
 		/* */
 		//:FVK: get all wiki groups (also known as Principals)
-		List<IGroupWiki> groups1 = ServicesRefs.getAccountManager().getGroups();
+		List<IGroupWiki> groups1;
+		try {
+			groups1 = ServicesRefs.getAccountManager().getGroups();
+		} catch (WikiSecurityException e) {
+			log.error("Fail read groups list.", e);
+			groups1 = Collections.emptyList();
+		}
 		Collections.sort(groups1, IGroupWiki::compareTo);
 
 		/*:FVK:
@@ -468,16 +461,11 @@ public final class SecurityVerifier {
 	 * work as they should.
 	 */
 	protected void verifyGroupDatabase() {
-		Object mgr = null, db = null; // :FVK:
-		/*:FVK:
-		IGroupManager mgr = ServicesRefs.getAccountManager(); // GroupManager
-		GroupDatabase db = null;
-		try {
-		    db = ServicesRefs.getAccountManager().getGroupDatabase();
-		} catch ( WikiSecurityException e ) {
-		    m_session.addMessage( ERROR_GROUPS, "Could not retrieve AccountManager: " + e.getMessage() );
+		AccountManager mgr = this.m_engine.getManager(AccountManager.class);
+		AccountRegistry db = this.m_engine.getManager(AccountRegistry.class);
+		if(db == null) {
+		    m_session.addMessage( ERROR_GROUPS, "Could not retrieve AccountManager." );
 		}
-		*/
 
 		// Check for obvious error conditions
 		if (mgr == null || db == null) {
@@ -500,30 +488,30 @@ public final class SecurityVerifier {
 
 		// Now, see how many groups we have.
 		int oldGroupCount;
-		/*:FVK: 
+		/*:FVK:*/ 
 		try {
-		    Group[] groups = null; //:FVK: db.groups();
-		    oldGroupCount = groups.length;
+		    List<IGroupWiki> groups = mgr.getGroups();
+		    oldGroupCount = groups.size();
 		    m_session.addMessage( INFO_GROUPS, "The group database contains " + oldGroupCount + " groups." );
 		} catch( WikiSecurityException e ) {
 		    m_session.addMessage( ERROR_GROUPS, "Could not obtain a list of current groups: " + e.getMessage() );
 		    return;
 		}
-		*/
 
 		// Try adding a bogus group with random name
 		String name = "TestGroup" + System.currentTimeMillis();
 		IGroupWiki group;
-		/*:FVK: 
+ 
+		/*:FVK:
 		try {
 		    // Create dummy test group
 		    group = null; //:FVK: mgr.parseGroup( name, "", true );
 		    Principal user = new WikiPrincipal( "TestUser" );
 		    group.add( user );
 			db.save( group, new WikiPrincipal( "SecurityVerifier" ) );
-		
+
 		    // Make sure the group saved successfully
-		    if( db.groups().length == oldGroupCount ) {
+		    if( db.getGroups().length == oldGroupCount ) {
 		        m_session.addMessage( ERROR_GROUPS, "Could not add a test group to the database." );
 		        return;
 		    }
@@ -746,17 +734,17 @@ public final class SecurityVerifier {
 	 * work as they should.
 	 */
 	protected void verifyUserDatabase() {
-		UserDatabase db = ServicesRefs.getAccountManager().getUserDatabase();
+		AccountRegistry accountRegistry = this.m_engine.getManager(AccountRegistry.class);
 
 		// Check for obvious error conditions
-		if (db == null) {
+		if (accountRegistry == null) {
 			m_session.addMessage(ERROR_DB,
 					"UserDatabase is null; JSPWiki could not " + "initialize it. Check the error logs.");
 			return;
 		}
 
 		/*:FVK:
-		if ( db instanceof DummyUserDatabase )
+		if ( accountRegistry instanceof DummyUserDatabase )
 		{
 		    m_session.addMessage( ERROR_DB, "UserDatabase is DummyUserDatabase; JSPWiki " +
 		            "may not have been able to initialize the database you supplied in " +
@@ -766,12 +754,12 @@ public final class SecurityVerifier {
 
 		// Tell user what class of database this is.
 		m_session.addMessage(INFO_DB,
-				"UserDatabase is of type '" + db.getClass().getName() + "'. It appears to be initialized properly.");
+				"UserDatabase is of type '" + accountRegistry.getClass().getName() + "'. It appears to be initialized properly.");
 
 		// Now, see how many users we have.
 		int oldUserCount;
 		try {
-			Principal[] users = db.getWikiNames();
+			Principal[] users = accountRegistry.getWikiNames();
 			oldUserCount = users.length;
 			m_session.addMessage(INFO_DB, "The user database contains " + oldUserCount + " users.");
 		} catch (WikiSecurityException e) {
@@ -782,15 +770,15 @@ public final class SecurityVerifier {
 		// Try adding a bogus user with random name
 		String loginName = "TestUser" + System.currentTimeMillis();
 		try {
-			UserProfile profile = db.newProfile();
+			UserProfile profile = accountRegistry.newProfile();
 			profile.setEmail("jspwiki.tests@mailinator.com");
 			profile.setLoginName(loginName);
 			profile.setFullname("FullName" + loginName);
 			profile.setPassword("password");
-			db.save(profile);
+			accountRegistry.save(profile);
 
 			// Make sure the profile saved successfully
-			if (db.getWikiNames().length == oldUserCount) {
+			if (accountRegistry.getWikiNames().length == oldUserCount) {
 				m_session.addMessage(ERROR_DB, "Could not add a test user to the database.");
 				return;
 			}
@@ -802,8 +790,8 @@ public final class SecurityVerifier {
 
 		// Now delete the profile; should be back to old count
 		try {
-			db.deleteByLoginName(loginName);
-			if (db.getWikiNames().length != oldUserCount) {
+			accountRegistry.deleteByLoginName(loginName);
+			if (accountRegistry.getWikiNames().length != oldUserCount) {
 				m_session.addMessage(ERROR_DB, "Could not delete a test user from the database.");
 				return;
 			}

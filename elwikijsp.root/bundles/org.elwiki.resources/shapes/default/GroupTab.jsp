@@ -23,7 +23,6 @@
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.log4j.*" %>
-<%@ page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.api.authorization.IGroupWiki" %>

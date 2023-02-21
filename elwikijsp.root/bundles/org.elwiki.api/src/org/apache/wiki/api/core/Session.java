@@ -50,7 +50,7 @@ import org.osgi.service.useradmin.User;
  * <p>Session extends the {@link org.apache.wiki.api.event.WikiEventListener} interface and listens for group add/change/delete
  * events fired by event sources the Session is registered with: {@link org.apache.wiki.auth.IIAuthenticationManager},
  * {@link org.apache.wiki.auth.AccountManager}, so it can catch group events. Thus,
- * when a user is added to a {@link org.apache.wiki.auth.authorize.Group}, a corresponding {@link org.elwiki.data.authorize.GroupPrincipal} is
+ * when a user is added to a {@link IGroupWiki}, a corresponding {@link org.elwiki.data.authorize.GroupPrincipal} is
  * injected into the Subject's Principal set. Likewise, when the user is removed from the Group or the Group is deleted, the
  * GroupPrincipal is removed from the Subject. The effect that this strategy produces is extremely beneficial: when someone adds a user
  * to a wiki group, that user <em>immediately</em> gains the privileges associated with that group; he or she does not need to

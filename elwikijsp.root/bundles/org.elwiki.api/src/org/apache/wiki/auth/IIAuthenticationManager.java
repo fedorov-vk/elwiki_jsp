@@ -69,7 +69,7 @@ public interface IIAuthenticationManager extends Initializable {
     /**
      * Returns true if this Engine uses container-managed authentication. This method is used primarily for cosmetic purposes in the
      * JSP tier, and performs no meaningful security function per se. Delegates to
-     * {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#isContainerAuthorized()},
+     * {@link WebContainerAuthorizer#isContainerAuthorized()},
      * if used as the external authorizer; otherwise, returns <code>false</code>.
      *
      * @return <code>true</code> if the wiki's authentication is managed by the container, <code>false</code> otherwise
@@ -86,7 +86,7 @@ public interface IIAuthenticationManager extends Initializable {
      * container <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method fires event
      * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_AUTHENTICATED} with two parameters: a Principal representing the login principal,
      * and the current Session. In addition, if the authorizer is of type WebContainerAuthorizer, this method iterates through the
-     * container roles returned by {@link org.apache.wiki.auth.authorize.WebContainerAuthorizer#getGroups()}, tests for membership in each
+     * container roles returned by {@link WebContainerAuthorizer#getGroups()}, tests for membership in each
      * one, and adds those that pass to the Subject's principal set.</li>
      * <li>If, after checking for authentication, the Session is still Anonymous, this method next checks to see if the user has
      * "asserted" an identity by supplying an assertion cookie. If the user is found to be asserted, this method fires event
@@ -118,7 +118,7 @@ public interface IIAuthenticationManager extends Initializable {
      * Attempts to perform a Session login for the given username/password combination using JSPWiki's custom authentication mode. In
      * order to log in, the JAAS LoginModule supplied by the Engine property {@link #PROP_LOGIN_MODULE} will be instantiated, and its
      * {@link javax.security.auth.spi.LoginModule#initialize(Subject, CallbackHandler, Map, Map)} method will be invoked. By default,
-     * the {@link org.apache.wiki.auth.login.UserDatabaseLoginModule} class will be used. When the LoginModule's <code>initialize</code>
+     * the {@link AccountRegistryLoginModule} class will be used. When the LoginModule's <code>initialize</code>
      * method is invoked, an options Map populated by properties keys prefixed by {@link #PREFIX_LOGIN_MODULE_OPTIONS} will be passed as a
      * parameter.
      *

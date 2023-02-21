@@ -1,4 +1,3 @@
-<%@page import="org.apache.wiki.auth.user0.UserDatabase"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%--
     Licensed to the Apache Software Foundation (ASF) under one

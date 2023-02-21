@@ -18,60 +18,45 @@
  */
 package org.apache.wiki;
 
-import org.elwiki.IWikiConstants.AuthenticationStatus;
-import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.data.authorize.WikiPrincipal;
-import org.elwiki.services.ServicesRefs;
-
-import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.security.auth.Subject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
-import org.apache.wiki.auth.SessionMonitor;
-import org.apache.wiki.auth.AccountManager;
-import org.elwiki.data.authorize.GroupPrincipal;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.util.ThreadUtil;
+import org.elwiki.IWikiConstants.AuthenticationStatus;
+import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.data.authorize.WikiPrincipal;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.ComponentInstance;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
-import org.osgi.service.permissionadmin.PermissionInfo;
-import org.osgi.service.useradmin.Authorization;
 import org.osgi.service.useradmin.User;
 import org.osgi.service.useradmin.UserAdmin;
-import org.osgi.service.event.EventConstants;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 
 /**
  * <p>Default implementation for {@link Session}.</p>
@@ -473,7 +458,7 @@ public final class WikiSession implements Session, EventHandler {
                     final WikiSession sourcePNC = se.getSrc();
                     if( this.equals( sourcePNC ) && isAuthenticated()) {
                         // To prepare for refresh, set the new full name as the primary principal
-                        final UserProfile[] profiles = (org.apache.wiki.auth.user0.UserProfile[] )se.getTarget();
+                        final UserProfile[] profiles = (org.apache.wiki.auth.UserProfile[] )se.getTarget();
                         final UserProfile newProfile = profiles[ 1 ];
                         if( newProfile.getFullname() == null ) {
                             throw new IllegalStateException( "User profile FullName cannot be null." );
@@ -523,7 +508,7 @@ public final class WikiSession implements Session, EventHandler {
      * first calls the {@link GroupManager#getGroups()} to obtain the array of GroupPrincipals the authorizer knows about. Then, the
      * method {@link GroupManager#isUserInRole(Session, Principal)} is called for each Principal. If the user is a member of the
      * group, an equivalent GroupPrincipal is injected into the user's principal set. Existing GroupPrincipals are flushed and replaced.
-     * This method should generally be called after a user's {@link org.apache.wiki.auth.user0.UserProfile} is saved. If the wiki session
+     * This method should generally be called after a user's {@link org.apache.wiki.auth.UserProfile} is saved. If the wiki session
      * is null, or there is no matching user profile, the method returns silently.
      */
 	protected void injectGroupPrincipals() {
@@ -534,7 +519,7 @@ public final class WikiSession implements Session, EventHandler {
 		for (String roleItem : userAdminService.getAuthorization(this.getUser()).getRoles()) {
 			org.osgi.service.useradmin.Role role = userAdminService.getRole(roleItem);
 			if (role != null && role.getType() == org.osgi.service.useradmin.Role.GROUP) {
-				String name = (String) role.getProperties().get(UserDatabase.GROUP_NAME);
+				String name = (String) role.getProperties().get(AccountRegistry.GROUP_NAME);
 				GroupPrincipal group = new GroupPrincipal(name, role.getName());
 				m_subject.getPrincipals().add(group);
 			}
@@ -556,13 +541,13 @@ public final class WikiSession implements Session, EventHandler {
         }
 
         // Look up the user and go get the new Principals
-        final UserDatabase database = ServicesRefs.getAccountManager().getUserDatabase();
-        if( database == null ) {
+        final AccountRegistry accountRegistry = ServicesRefs.Instance.getManager(AccountRegistry.class);
+        if( accountRegistry == null ) {
             throw new IllegalStateException( "User database cannot be null." );
         }
         try {
-            final UserProfile profile = database.find( searchUid );
-            final Principal[] principals = database.getPrincipals( profile.getLoginName() );
+            final UserProfile profile = accountRegistry.find( searchUid );
+            final Principal[] principals = accountRegistry.getPrincipals( profile.getLoginName() );
             for( final Principal principal : principals ) {
                 // Add the Principal to the Subject
                 m_subject.getPrincipals().add( principal );

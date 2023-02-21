@@ -16,44 +16,33 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.elwiki.authorize.user;
+package org.elwiki.authorize.internal.account.registry;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.util.CryptoUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.service.useradmin.User;
 
 /**
- * Abstract UserDatabase class that provides convenience methods for finding profiles, building Principal collections and hashing passwords.
+ * Abstract AccountRegistry class that provides convenience methods for finding profiles, building Principal collections and hashing passwords.
  *
  * @since 2.3
  */
-public abstract class AbstractUserDatabase implements UserDatabase {
+public abstract class AbstractAccountRegistry implements AccountRegistry {
 
-	protected static final Logger log = Logger.getLogger(AbstractUserDatabase.class);
+	protected static final Logger log = Logger.getLogger(AbstractAccountRegistry.class);
 
-	/**
-	 * Looks up and returns the first {@link UserProfile}in the user database that whose login name, full
-	 * name, or wiki name matches the supplied string. This method provides a "forgiving" search algorithm for
-	 * resolving principal names when the exact profile attribute that supplied the name is unknown.
-	 * 
-	 * @param index
-	 *            the login name, full name, or wiki name
-	 * @see org.elwiki.api.authorization.user.IUserDatabase.auth.user.wiki.auth.user.UserDatabase#find(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public UserProfile find(final String index) throws NoSuchPrincipalException {
 		UserProfile profile = null;
@@ -94,7 +83,7 @@ public abstract class AbstractUserDatabase implements UserDatabase {
             return profile;
         }
 
-        /*:FVK: workaround */
+        /*:FVK: workaround
 		profile = newProfile();
 		// Retrieve basic attributes
 		profile.setUid((String) "52345-513452345-5234652");
@@ -104,34 +93,35 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 		profile.setEmail((String) "ru@ru.ru");
 		if(1==(2-1))
 		return profile;
+         */
         
         throw new NoSuchPrincipalException( "Not in database: " + index );
     }
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.auth.user0.UserDatabase#findByEmail(java.lang.String)
+     * @see AccountRegistry#findByEmail(java.lang.String)
      */
     @Override
     public abstract UserProfile findByEmail( String index ) throws NoSuchPrincipalException;
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.auth.user0.UserDatabase#findByFullName(java.lang.String)
+     * @see AccountRegistry#findByFullName(java.lang.String)
      */
     @Override
     public abstract UserProfile findByFullName( String index ) throws NoSuchPrincipalException;
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.auth.user0.UserDatabase#findByLoginName(java.lang.String)
+     * @see AccountRegistry#findByLoginName(java.lang.String)
      */
     @Override
     public abstract UserProfile findByLoginName( String index ) throws NoSuchPrincipalException;
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.auth.user0.UserDatabase#findByWikiName(java.lang.String)
+     * @see AccountRegistry#findByWikiName(java.lang.String)
      */
     @Override
     public abstract UserProfile findByWikiName( String index ) throws NoSuchPrincipalException;
@@ -139,21 +129,19 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 	/**
 	 * <p>
 	 * Looks up the Principals representing a user from the user database. These are defined as a set of
-	 * WikiPrincipals manufactured from the login name, full name, and wiki name. If the user database does
-	 * not contain a user with the supplied identifier, throws a {@link NoSuchPrincipalException}.
+	 * WikiPrincipals manufactured from the login name, full name, and wiki name. If the user database
+	 * does not contain a user with the supplied identifier, throws a {@link NoSuchPrincipalException}.
 	 * </p>
 	 * <p>
-	 * When this method creates WikiPrincipals, the Principal containing the user's full name is marked as
-	 * containing the common name (see
+	 * When this method creates WikiPrincipals, the Principal containing the user's full name is marked
+	 * as containing the common name (see
 	 * {@link org.elwiki.data.authorize.core.auth.wiki.auth.WikiPrincipal#WikiPrincipal(String, String)}).
 	 * 
-	 * @param identifier
-	 *            the name of the principal to retrieve; this corresponds to value returned by the user
-	 *            profile's {@link UserProfile#getLoginName()}method.
+	 * @param identifier the name of the principal to retrieve; this corresponds to value returned by
+	 *                   the user profile's {@link UserProfile#getLoginName()}method.
 	 * @return the array of Principals representing the user
-	 * @see org.elwiki.api.authorization.user.IUserDatabase.auth.user.wiki.auth.user.UserDatabase#getPrincipals(java.lang.String)
-	 * @throws NoSuchPrincipalException
-	 *             {@inheritDoc}
+	 * @see AccountRegistry#getPrincipals(java.lang.String)
+	 * @throws NoSuchPrincipalException {@inheritDoc}
 	 */
 	@Deprecated //:FVK: - переместить в профиль, или удалить вообще.
 	@Override
@@ -181,7 +169,7 @@ public abstract class AbstractUserDatabase implements UserDatabase {
     /**
      * {@inheritDoc}
      *
-     * @see org.apache.wiki.auth.user0.UserDatabase#initialize(org.apache.wiki.api.core.Engine, java.util.Properties)
+     * @see AccountRegistry#initialize(org.apache.wiki.api.core.Engine, java.util.Properties)
      */
 	/*:FVK:
     @Override
@@ -220,7 +208,7 @@ public abstract class AbstractUserDatabase implements UserDatabase {
 	 * @param password
 	 *            the user's password (obtained from user input, e.g., a web form)
 	 * @return <code>true</code> if the supplied user password matches the stored password
-	 * @see org.elwiki.api.authorization.user.IUserDatabase.auth.user.wiki.auth.user.UserDatabase#validatePassword(java.lang.String, java.lang.String)
+	 * @see AccountRegistry#validatePassword(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean validatePassword(UserProfile profile, String password) {

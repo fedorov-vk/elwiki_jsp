@@ -42,6 +42,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
@@ -238,7 +239,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         m_useAttachmentImage = m_context.getBooleanWikiProperty( PROP_USEATTACHMENTIMAGE, m_useAttachmentImage );
         m_allowHTML          = m_context.getBooleanWikiProperty( PROP_ALLOWHTML, m_allowHTML );
 
-        if( ServicesRefs.getAccountManager().getUserDatabase() == null || ServicesRefs.getAuthorizationManager() == null ) {
+        if( this.m_engine.getManager(AccountRegistry.class) == null || ServicesRefs.getAuthorizationManager() == null ) {
             disableAccessRules();
         }
 
@@ -1042,7 +1043,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             return m_currentElement;
         }
         final WikiPage page = m_context.getRealPage();
-        // UserDatabase db = m_context.getEngine().getUserDatabase();
+        // UserDatabase db = m_context.getEngine().getManager(AccountRegistry.class);
 
         if( ruleLine.startsWith( "{" ) ) {
             ruleLine = ruleLine.substring( 1 );

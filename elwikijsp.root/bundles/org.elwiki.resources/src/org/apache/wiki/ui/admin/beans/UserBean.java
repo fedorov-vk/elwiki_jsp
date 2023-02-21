@@ -23,8 +23,9 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.elwiki.services.ServicesRefs;
@@ -36,8 +37,11 @@ import java.util.Date;
 
 public class UserBean extends SimpleAdminBean {
 
+	Engine engine;
+	
     public UserBean( final Engine engine ) throws NotCompliantMBeanException  {
         super();
+        this.engine = engine;
     }
 
     @Override
@@ -58,6 +62,7 @@ public class UserBean extends SimpleAdminBean {
         final HttpServletRequest request = context.getHttpRequest();
         final Session session = context.getWikiSession();
         final AccountManager mgr = ServicesRefs.getAccountManager();
+        AccountRegistry accountRegistry = this.engine.getManager(AccountRegistry.class);
         final String loginid = request.getParameter( "loginid" );
         final String loginname = request.getParameter( "loginname" );
         final String fullname = request.getParameter( "fullname" );
@@ -67,7 +72,7 @@ public class UserBean extends SimpleAdminBean {
 
         if( request.getParameter( "action" ).equalsIgnoreCase( "remove" ) ) {
             try {
-                mgr.getUserDatabase().deleteByLoginName( loginid );
+            	accountRegistry.deleteByLoginName( loginid );
                 session.addMessage( "User profile " + loginid + " (" + fullname + ") has been deleted" );
             } catch( final NoSuchPrincipalException e ) {
                 session.addMessage( "User profile has already been removed" );
@@ -87,11 +92,11 @@ public class UserBean extends SimpleAdminBean {
         if( loginid.equals( "--New--" ) ) {
             // Create new user
 
-            p = mgr.getUserDatabase().newProfile();
+            p = accountRegistry.newProfile();
             p.setCreated( new Date() );
         } else {
             try {
-                p = mgr.getUserDatabase().findByLoginName( loginid );
+                p = accountRegistry.findByLoginName( loginid );
             } catch( final NoSuchPrincipalException e ) {
                 session.addMessage( "I could not find user profile " + loginid );
                 return "";
@@ -106,7 +111,7 @@ public class UserBean extends SimpleAdminBean {
         p.setLoginName( loginname );
 
         try {
-            mgr.getUserDatabase().save( p );
+        	accountRegistry.save( p );
         } catch( final WikiSecurityException e ) {
             session.addMessage( "Unable to save " + e.getMessage() );
         }

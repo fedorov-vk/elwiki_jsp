@@ -33,11 +33,9 @@ import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.ui.TemplateManager;
-//:FVK: import org.apache.wiki.auth.authorize.WebAuthorizer;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.TimedCounterList;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -54,7 +52,7 @@ import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.AnonymousLoginModule;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
-import org.elwiki.authorize.login.UserDatabaseLoginModule;
+import org.elwiki.authorize.login.AccountRegistryLoginModule;
 import org.elwiki.authorize.login.WebContainerCallbackHandler;
 import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
@@ -118,15 +116,15 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     private static final Logger log = Logger.getLogger( DefaultAuthenticationManager.class );
 
     /** Class (of type LoginModule) to use for custom authentication. */
-    protected Class< ? extends LoginModule > m_loginModuleClass = UserDatabaseLoginModule.class;
+    protected Class< ? extends LoginModule > m_loginModuleClass = AccountRegistryLoginModule.class;
 
     /** Options passed to {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)};
      * initialized by {@link #initialize(Engine, Properties)}. */
     protected Map< String, String > m_loginModuleOptions = new HashMap<>();
 
     /** The default {@link LoginModule} class name to use for custom authentication. */
-    private static final String DEFAULT_LOGIN_MODULE = UserDatabaseLoginModule.class.getCanonicalName(); 
-    		//:FVK: "org.apache.wiki.auth.login.UserDatabaseLoginModule";
+    private static final String DEFAULT_LOGIN_MODULE = AccountRegistryLoginModule.class.getCanonicalName(); 
+    		//:FVK: "org.apache.wiki.auth.login.AccountRegistryLoginModule";
 
     /** Static Boolean for lazily-initializing the "allows assertions" flag */
     private boolean m_allowsCookieAssertions = true;
@@ -151,7 +149,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	private final Map<String, Class<? extends LoginModule>> loginModuleClasses = new HashMap<>();
 
 	/** Class (of type LoginModule) to use for custom authentication. */
-	protected Class<? extends LoginModule> loginModuleClass = UserDatabaseLoginModule.class;
+	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
 
 	// -- service handling ---------------------------(start)--
 

@@ -1,7 +1,7 @@
 package org.elwiki.authorize.internal;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
@@ -44,7 +44,7 @@ public class IsGroupContainAdapterFactory implements IAdapterFactory {
 		if (adapterType == Boolean.class) {
 			GroupPermission groupPermission = (GroupPermission) adaptableObject;
 			String groupName = groupPermission.getGroup();
-			Role role = userAdminService.getUser(UserDatabase.GROUP_NAME, groupName);
+			Role role = userAdminService.getUser(AccountRegistry.GROUP_NAME, groupName);
 			String groupUid = (role != null) ? role.getName() : "";
 
 			WikiContext wikiContext = (WikiContext) ThreadUtil.getCurrentRequest().getAttribute(WikiContext.ATTR_WIKI_CONTEXT);

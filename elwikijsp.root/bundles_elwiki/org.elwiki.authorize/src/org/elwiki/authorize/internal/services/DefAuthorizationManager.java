@@ -63,10 +63,9 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.core.runtime.FileLocator;
@@ -90,17 +89,7 @@ import org.osgi.service.useradmin.UserAdmin;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
-//import org.elwiki.api.authorization.user.IUserDatabase;
-//import org.elwiki.api.authorization.user.UserProfile;
-//import org.elwiki.api.event.WikiEvent;
-//import org.elwiki.api.event.WikiEventListener;
-//import org.elwiki.api.event.WikiEventManager;
-//import org.elwiki.api.event.WikiSecurityEvent;
-//import org.elwiki.api.exceptions.NoRequiredPropertyException;
-//import org.elwiki.api.exceptions.NoSuchPrincipalException;
-//import org.elwiki.api.exceptions.WikiException;
-//import org.elwiki.api.exceptions.WikiSecurityException;
-import org.elwiki.authorize.internal.accounting.GroupWiki;
+import org.elwiki.authorize.internal.account.manager.GroupWiki;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.Aprincipal;
@@ -666,7 +655,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		// Ok, no luck---this must be a user principal
 		UserProfile profile = null;
-		IUserDatabase db = this.m_engine.getUserManager().getUserDatabase();
+		IUserDatabase db = this.m_engine.getUserManager().get User Database();
 		try {
 			profile = db.find(name);
 			return new WikiPrincipal(profile.getUid(), WikiPrincipal.USED_ID);

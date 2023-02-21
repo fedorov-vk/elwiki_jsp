@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.ISessionMonitor;
-import org.apache.wiki.auth.user0.UserDatabase;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiScopeManager;
 import org.osgi.service.component.ComponentContext;
@@ -97,7 +97,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
 		org.osgi.service.useradmin.User user = session.getUser();
 		if (user != null) {
 			Dictionary<String, Object> props = user.getProperties();
-			String userUid = (String) props.get(UserDatabase.UID);
+			String userUid = (String) props.get(AccountRegistry.UID);
 		}
 
 		return new String[] { "Books", "EMF", "BIRT&amp;Я", "MooTools&x", "12345 6789012345\67890" }; //:FVK: workaround.

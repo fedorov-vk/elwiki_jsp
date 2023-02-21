@@ -29,7 +29,6 @@
 <%@ page import="org.apache.wiki.Wiki"%>
 <%@ page import="org.apache.wiki.auth.*"%>
 <%@ page import="org.apache.wiki.auth.user.*"%>
-<%@ page import="org.apache.wiki.auth.user0.*" %>
 <%@ page import="org.apache.wiki.i18n.*"%>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
@@ -45,7 +44,7 @@
     public boolean resetPassword( Engine wiki, HttpServletRequest request, ResourceBundle rb ) {
         // Reset pw for account name
         String name = request.getParameter( "name" );
-        UserDatabase userDatabase = ServicesRefs.getAccountManager().getUserDatabase();
+        AccountRegistry userDatabase = ServicesRefs.Instance.getManager(AccountRegistry.class);
         boolean success = false;
 
         try {

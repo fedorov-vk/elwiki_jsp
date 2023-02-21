@@ -3,12 +3,11 @@
 <plugin>
    <extension-point id="loginModule" name="Login Module" schema="schema/LoginModule.exsd"/>
    <extension-point id="authorizer" name="Authorizer" schema="schema/authorizer.exsd"/>
-   <extension-point id="userProfileDatabase" name="User&apos;s wiki profiles database" schema="schema/userProfileDatabase.exsd"/>
    <extension
          point="org.elwiki.authorize.loginModule">
       <loginModule
-            class="org.elwiki.authorize.login.UserDatabaseLoginModule"
-            id="org.elwiki.authorize.login.UserDatabaseLoginModule">
+            class="org.elwiki.authorize.login.AccountRegistryLoginModule"
+            id="org.elwiki.authorize.login.AccountRegistryLoginModule">
       </loginModule>
    </extension>
    <extension
@@ -23,20 +22,9 @@
       </authorizer>
    </extension>
    <extension
-         point="org.elwiki.authorize.userProfileDatabase">
-      <dataBase
-            class="org.elwiki.authorize.user.XMLUserDatabase"
-            id="XMLUserDatabase">
-      </dataBase>
-      <dataBase
-            class="org.elwiki.authorize.user.UserAdminDatabase"
-            id="UserAdminDatabase">
-      </dataBase>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.apache.wiki.auth.user0.UserProfile"
+            adaptableType="org.apache.wiki.auth.UserProfile"
             class="org.elwiki.authorize.internal.Profile2UserAdapterFactory">
          <adapter
                type="org.osgi.service.useradmin.User">

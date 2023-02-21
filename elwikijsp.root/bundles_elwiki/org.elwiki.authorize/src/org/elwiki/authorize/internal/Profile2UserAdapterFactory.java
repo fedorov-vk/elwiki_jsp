@@ -1,6 +1,6 @@
 package org.elwiki.authorize.internal;
 
-import org.apache.wiki.auth.user0.UserProfile;
+import org.apache.wiki.auth.UserProfile;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.osgi.framework.BundleContext;

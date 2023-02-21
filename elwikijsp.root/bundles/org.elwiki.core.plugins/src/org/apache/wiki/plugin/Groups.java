@@ -21,21 +21,19 @@ package org.apache.wiki.plugin;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.AccountManager;
-import org.apache.wiki.auth.user0.UserDatabase;
+import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.osgi.service.useradmin.Group;
 
 /**
  * <p>
@@ -58,11 +56,17 @@ public class Groups implements Plugin {
 	 */
 	@Override
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
+		
 		// Retrieve groups, and sort by name
 		Engine engine = context.getEngine();
 		AccountManager accountManager = engine.getManager(AccountManager.class);
 		URLConstructor urlConstructor = engine.getManager(URLConstructor.class);
-		List<IGroupWiki> groups = accountManager.getGroups();
+		List<IGroupWiki> groups;
+		try {
+			groups = accountManager.getGroups();
+		} catch (WikiSecurityException e) {
+			throw new PluginException(e);
+		}
 		//:FVK: TODO: Arrays.sort( groups, COMPARATOR );
 		List<String> listGroups = new ArrayList<>();
 		for (IGroupWiki group : groups) {
@@ -80,6 +84,7 @@ public class Groups implements Plugin {
 
 		// Adding a comma and a space as separators.
 		return listGroups.stream().collect(Collectors.joining(", "));
+		
 	}
 
 }

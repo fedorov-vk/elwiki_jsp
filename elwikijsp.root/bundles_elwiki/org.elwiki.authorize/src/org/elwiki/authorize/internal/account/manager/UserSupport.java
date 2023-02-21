@@ -1,4 +1,4 @@
-package org.elwiki.authorize.internal.accounting;
+package org.elwiki.authorize.internal.account.manager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -30,9 +30,9 @@ import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.user0.UserDatabase;
-import org.apache.wiki.auth.user0.UserProfile;
 import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.InputValidator;
@@ -48,9 +48,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.elwiki.authorize.user.DummyUserDatabase;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.permissions.WikiPermission;
+import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 import org.osgi.service.useradmin.User;
 
@@ -123,8 +123,9 @@ public abstract class UserSupport extends BasicAccountManager {
          *  @throws NoSuchPrincipalException If such a name does not exist.
          */
         public UserProfile getUserInfo( final String uid ) throws NoSuchPrincipalException {
-            if( m_manager != null ) {
-                return m_manager.getUserDatabase().find( uid );
+        	AccountRegistry accountRegistry = ServicesRefs.Instance.getManager(AccountRegistry.class);
+            if( accountRegistry != null ) {
+                return accountRegistry.find( uid );
             }
 
             throw new IllegalStateException( "The manager is offline." );

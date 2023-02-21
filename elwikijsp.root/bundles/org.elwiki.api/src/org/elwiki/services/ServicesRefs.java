@@ -52,6 +52,7 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.filters0.FilterManager;
@@ -91,6 +92,7 @@ public class ServicesRefs implements Engine {
 	private static AuthorizationManager authorizationManager;
 	private static ProgressManager progressManager;
 	private static AccountManager accountManager;
+	private static AccountRegistry accountRegistry;
 	private static AdminBeanManager adminBeanManager;
 	private static IIAuthenticationManager authenticationManager;
 	private static RenderingManager renderingManager;
@@ -147,6 +149,9 @@ public class ServicesRefs implements Engine {
 
 	@Reference(target = "(component.factory=elwiki.AccountManager.factory)")
 	private ComponentFactory<AccountManager> factoryAccountManager;
+
+	@Reference(target = "(component.factory=elwiki.AccountRegistry.factory)")
+	private ComponentFactory<AccountRegistry> factoryAccountRegistry;
 
 	@Reference(target = "(component.factory=elwiki.AdminBeanManager.factory)")
 	private ComponentFactory<AdminBeanManager> factoryAdminBeanManager;
@@ -268,6 +273,8 @@ public class ServicesRefs implements Engine {
 				ServicesRefs.attachmentManager = this.factoryAttachmentManager.newInstance(properties).getInstance());
 		managers.put(AccountManager.class,
 				ServicesRefs.accountManager = this.factoryAccountManager.newInstance(properties).getInstance());
+		managers.put(AccountRegistry.class,
+				ServicesRefs.accountRegistry = this.factoryAccountRegistry.newInstance(properties).getInstance());
 		managers.put(FilterManager.class,
 				ServicesRefs.filterManager = this.factoryFilterManager.newInstance(properties).getInstance());
 		managers.put(IIAuthenticationManager.class,

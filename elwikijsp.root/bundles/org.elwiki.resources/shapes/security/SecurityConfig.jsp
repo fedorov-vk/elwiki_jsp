@@ -32,9 +32,10 @@
 <%!
   public void jspInit()
   {
+    Logger log = Logger.getLogger("SecurityConfig_jsp");
 	wiki = ServicesRefs.Instance; //:FVK: workaround.
   }
-  Logger log = Logger.getLogger("JSPWiki");
+  Logger log;
   Engine wiki;
   SecurityVerifier verifier;
 %>
@@ -48,9 +49,11 @@ WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.PAGE
 %>
 
 <head>
-  <title><wiki:Variable var="applicationname" />: JSPWiki Security Configuration Verifier</title>
+  <title><wiki:Variable var="applicationname" />: ElWiki Security Configuration Verifier</title>
   <base href="../"/>
+  <!--:FVK: is deprecated? Because "jspwiki.css" has been seen in the 210 template. 
   <link rel="stylesheet" media="screen, projection" type="text/css" href="<wiki:Link format="url" templatefile="jspwiki.css"/>"/>
+   -->
 </head>
 <body>
 <div id="wikibody" class="container-fixed">
@@ -104,7 +107,7 @@ WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.PAGE
 
 <!-- Notify users which JAAS configs we need to find -->
 <p>ElWiki подключает свой собственный JAAS для определения процесса аутентификации и не полагается на конфигурацию JRE.
-По умолчанию ElWiki настраивает свой стек входа в систему JAAS на использование UserDatabaseLoginModule.
+По умолчанию ElWiki настраивает свой стек входа в систему JAAS на использование AccountRegistryLoginModule.
 Вы можете указать пользовательский модуль входа, установив  <code>jspwiki.loginModule.class</code> в <code>jspwiki.properties</code>.</p>
 
 <wiki:Messages div="information" topic='<%=SecurityVerifier.INFO+"java.security.auth.login.config"%>' prefix="Good news: "/>
@@ -279,7 +282,14 @@ If the container requires that users accessing <code>Edit.jsp</code> possess the
 <wiki:Messages div="error" topic="<%=SecurityVerifier.ERROR_DB%>" prefix="We found some errors with your configuration: " />
 
 <h3>Group Database Configuration</h3>
-<p>The group database stores wiki groups. It's pretty important that it functions properly. We will try to determine what your current GroupDatabase implementation is, based on the current value of the <code>jspwiki.groupdatabase</code> property in your <code>jspwiki.properties</code> file. In addition, once we establish that the GroupDatabase has been initialized properly, we will try to add (then, delete) a random test group. If all of these things work they way they should, then you should have no problems with wiki group creation and editing.</p>
+<p>The group database stores wiki groups. It's pretty important that it functions properly.
+We will try to determine what your current AccountRegistry implementation is,
+ based on the current value of the <code>jspwiki.groupdatabase</code> property
+ in your <code>jspwiki.properties</code> file.
+In addition, once we establish that the AccountRegistry has been initialized properly,
+ we will try to add (then, delete) a random test group.
+If all of these things work they way they should, then you should have no problems
+ with wiki group creation and editing.</p>
 
 <wiki:Messages div="information" topic="<%=SecurityVerifier.INFO_GROUPS%>" prefix="Good news: "/>
 <wiki:Messages div="warning" topic="<%=SecurityVerifier.WARNING_GROUPS%>" prefix="We found some potential problems with your configuration: "/>
