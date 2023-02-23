@@ -31,6 +31,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEngineEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -80,6 +81,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.EventConstants;
 
 @Component(name = "elwiki.ResourcesServicesRefs", service = Engine.class, immediate = true)
 public class ServicesRefs implements Engine {

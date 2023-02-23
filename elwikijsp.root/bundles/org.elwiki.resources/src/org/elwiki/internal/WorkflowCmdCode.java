@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;

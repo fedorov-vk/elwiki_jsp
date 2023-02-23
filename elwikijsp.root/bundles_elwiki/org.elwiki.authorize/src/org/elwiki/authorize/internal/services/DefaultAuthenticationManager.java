@@ -378,9 +378,10 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
         // Execute the user's specified login module
         final Set< Principal > principals = this.doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
         if( principals.size() > 0 ) {
-			eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
-					ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-					ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
+			String httpSessionId = (request != null) ? request.getSession().getId() : "";
+			eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED,
+					Map.of(ElWikiEventsConstants.PROPERTY_KEY_TARGET, httpSessionId,
+							ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
         	{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
 				fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED, IIAuthenticationManager.getLoginPrincipal(principals), session);
 				for (final Principal principal : principals) {

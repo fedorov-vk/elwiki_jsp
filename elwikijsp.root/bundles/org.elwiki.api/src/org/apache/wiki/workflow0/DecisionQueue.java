@@ -19,15 +19,19 @@
 package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventEmitter;
 import org.apache.wiki.api.event.WorkflowEvent;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.internal.ApiActivator;
+import org.osgi.service.event.Event;
 
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -123,7 +127,9 @@ public class DecisionQueue implements Serializable {
             remove( decision );
         }
 
-        WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_DECIDE );
+		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_DECIDE,
+				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, decision)));
+        //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_DECIDE );
     }
 
     /**
@@ -137,7 +143,9 @@ public class DecisionQueue implements Serializable {
         if( decision.isReassignable() ) {
             decision.reassign( owner );
 
-            WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_REASSIGN );
+    		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REASSIGN,
+    				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, decision)));
+            //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_REASSIGN );//:FVK:deprecated.
             return;
         }
         throw new IllegalStateException( "Reassignments not allowed for this decision." );

@@ -18,9 +18,12 @@
  */
 package org.apache.wiki.workflow0;
 
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventEmitter;
 import org.apache.wiki.api.event.WorkflowEvent;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.internal.ApiActivator;
+import org.osgi.service.event.Event;
 
 import java.io.Serializable;
 import java.security.Principal;
@@ -227,7 +230,10 @@ public class Workflow implements Serializable {
         m_owner = owner;
         m_started = false;
         m_state = CREATED;
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.CREATED );
+
+        ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_CREATED,
+				Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.CREATED );//:FVK:deprecated.
     }
 
     /**
@@ -246,16 +252,20 @@ public class Workflow implements Serializable {
             throw new IllegalStateException( "The workflow has already completed." );
         }
 
-        if( m_currentStep != null ) {
-            if( m_currentStep instanceof Decision ) {
-                WikiEventEmitter.fireWorkflowEvent( m_currentStep, WorkflowEvent.DQ_REMOVAL );
-            }
-            m_currentStep.setOutcome( Outcome.STEP_ABORT );
-            m_history.addLast( m_currentStep );
-        }
-        m_state = ABORTED;
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.ABORTED );
-        cleanup();
+		if (m_currentStep != null) {
+			if (m_currentStep instanceof Decision) {
+				ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REMOVAL,
+						Map.of(ElWikiEventsConstants.PROPERTY_STEP, m_currentStep)));
+				//WikiEventEmitter.fireWorkflowEvent(m_currentStep, WorkflowEvent.DQ_REMOVAL);//:FVK:deprecated.
+			}
+			m_currentStep.setOutcome(Outcome.STEP_ABORT);
+			m_history.addLast(m_currentStep);
+		}
+		m_state = ABORTED;
+		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_ABORTED,
+				Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+		//WikiEventEmitter.fireWorkflowEvent(this, WorkflowEvent.ABORTED);//:FVK:deprecated.
+		cleanup();
     }
 
     /**
@@ -475,9 +485,16 @@ public class Workflow implements Serializable {
         if( m_state != WAITING ) {
             throw new IllegalStateException( "Workflow is not paused; cannot restart." );
         }
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );
-        m_state = RUNNING;
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );
+        ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_STARTED,
+        		Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );//:FVK:deprecated.
+
+		m_state = RUNNING;
+		
+		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_RUNNING,
+				Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );//:FVK:deprecated.
+
 
         // Process current step
         try {
@@ -537,11 +554,16 @@ public class Workflow implements Serializable {
         if( m_started ) {
             throw new IllegalStateException( "Workflow has already started." );
         }
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );
+        ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_STARTED,
+        		Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );//:FVK:deprecated.
         m_started = true;
         m_state = RUNNING;
 
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );
+		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_RUNNING,
+				Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );//:FVK:deprecated.
+
         // Mark the first step as the current one & add to history
         m_currentStep = m_firstStep;
         m_history.add( m_currentStep );
@@ -564,7 +586,9 @@ public class Workflow implements Serializable {
             throw new IllegalStateException( "Workflow is not running; cannot pause." );
         }
         m_state = WAITING;
-        WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.WAITING );
+		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_WAITING,
+				Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.WAITING );//:FVK:deprecated.
     }
 
     /**
@@ -582,7 +606,9 @@ public class Workflow implements Serializable {
     protected final synchronized void complete() {
         if( !isCompleted() ) {
             m_state = COMPLETED;
-            WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.COMPLETED );
+			ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_COMPLETED,
+					Map.of(ElWikiEventsConstants.PROPERTY_WORKFLOW, this)));
+            //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.COMPLETED );//:FVK:deprecated
             cleanup();
         }
     }

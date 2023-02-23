@@ -18,16 +18,34 @@
  */
 package org.apache.wiki.workflow;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventEmitter;
 import org.apache.wiki.api.event.WorkflowEvent;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.ui.EditorManager;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
 import org.apache.wiki.workflow0.Workflow;
@@ -39,24 +57,9 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * <p>
@@ -64,9 +67,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * users or groups expected to approve particular Workflows.
  * </p>
  */
-@Component(name = "elwiki.DefaultWorkflowManager", service = WorkflowManager.class, //
-factory = "elwiki.WorkflowManager.factory")
-public class DefaultWorkflowManager implements WorkflowManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultWorkflowManager",
+	service = { WorkflowManager.class, EventHandler.class },
+	factory = "elwiki.WorkflowManager.factory",
+	property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_WORKFLOW_ALL)
+//@formatter:on
+public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger( DefaultWorkflowManager.class );
 
@@ -105,7 +113,8 @@ public class DefaultWorkflowManager implements WorkflowManager {
      */
     @Activate
 	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
+    	Dictionary<String, Object> properties = componentContext.getProperties();
+		Object obj = properties.get(Engine.ENGINE_REFERENCE);
 		if (obj instanceof Engine engine) {
 			initialize(engine);
 		}
@@ -310,6 +319,7 @@ public class DefaultWorkflowManager implements WorkflowManager {
      * 
      * @param event the event passed to this listener
      */
+    @Deprecated
     @Override
     public void actionPerformed( final WikiEvent event ) {
         if( event instanceof WorkflowEvent ) {
@@ -380,5 +390,36 @@ public class DefaultWorkflowManager implements WorkflowManager {
     protected void addToDecisionQueue( final Decision decision ) {
         getDecisionQueue().add( decision );
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		log.debug("~~ ~~ ~~ Recevied event with topic: " + event.getTopic());
+
+		Workflow workflow = (Workflow) event.getProperty(ElWikiEventsConstants.PROPERTY_WORKFLOW);
+		Decision decision = (Decision) event.getProperty(ElWikiEventsConstants.PROPERTY_DECISION);
+
+		String topic = event.getTopic();
+		switch (topic) {
+		// Remove from manager
+		case ElWikiEventsConstants.TOPIC_WORKFLOW_ABORTED:
+		case ElWikiEventsConstants.TOPIC_WORKFLOW_COMPLETED:
+			remove(workflow);
+			break;
+		// Add to manager
+		case ElWikiEventsConstants.TOPIC_WORKFLOW_CREATED:
+			add(workflow);
+			break;
+		// Add to DecisionQueue
+		case ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_ADDITION:
+			addToDecisionQueue(decision);
+			break;
+		// Remove from DecisionQueue
+		case ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REMOVAL:
+			removeFromDecisionQueue(decision);
+			break;
+		}
+
+		serializeToDisk(new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE));
+	}
 
 }

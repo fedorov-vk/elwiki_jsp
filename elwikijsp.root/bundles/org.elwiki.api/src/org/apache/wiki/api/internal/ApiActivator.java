@@ -3,11 +3,14 @@ package org.apache.wiki.api.internal;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 
 public class ApiActivator implements BundleActivator {
 
 	private static BundleContext context;
+
+	private static EventAdmin eventAdmin;
 
 	public static BundleContext getContext() {
 		return context;
@@ -37,6 +40,13 @@ public class ApiActivator implements BundleActivator {
 			}
 		}
 		return null;
+	}
+
+	public static EventAdmin getEventAdmin() {
+		if(eventAdmin == null) {
+			eventAdmin = ApiActivator.getService(EventAdmin.class); //:FVK:workaround. Can be NULL.
+		}
+		return eventAdmin;
 	}
 
 }
