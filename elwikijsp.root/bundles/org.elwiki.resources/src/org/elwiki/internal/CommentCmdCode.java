@@ -20,10 +20,11 @@ import java.util.*;
 import org.elwiki_data.*;
 import org.apache.wiki.api.core.*;
 import org.apache.wiki.api.exceptions.RedirectException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
@@ -34,8 +35,9 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.DecisionRequiredException;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
-import org.elwiki.services.ServicesRefs;
 
 public class CommentCmdCode extends CmdCode {
 
@@ -47,12 +49,19 @@ public class CommentCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		HttpSession session = httpRequest.getSession();
 
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		PageManager pageManager = getEngine().getManager(PageManager.class);
+		
 		// Create wiki context and check for authorization
-		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
+		WikiContext wikiContext = getWikiContext();
 		Engine wiki = wikiContext.getEngine();
-	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) {
+		@NonNull FilterManager filterManager = wiki.getManager(FilterManager.class);
+		ISpamFilter spamFilter = filterManager.getSpamFilter();
+
+	    if( !authorizationManager.hasAccess( wikiContext, httpResponse ) ) {
 	    	return;
 	    }
 	    if( wikiContext.getCommand().getTarget() == null ) {
@@ -78,7 +87,7 @@ public class CommentCmdCode extends CmdCode {
 	    String changenote = TextUtil.replaceEntities( httpRequest.getParameter( "changenote" ) );
 
 	    WikiPage wikipage = wikiContext.getPage();
-	    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
+	    WikiPage latestversion = pageManager.getPage( pagereq );
 
 	    session.removeAttribute( EditorManager.REQ_EDITEDTEXT );
 
@@ -140,7 +149,7 @@ public class CommentCmdCode extends CmdCode {
 	        //  best place to check for concurrent changes.  It certainly
 	        //  is the best place to show errors, though.
 
-	        String spamhash = httpRequest.getParameter( SpamFilter.getHashFieldName(httpRequest) );
+	        String spamhash = httpRequest.getParameter( spamFilter.getHashFieldName(httpRequest) );
 
 	        /*:FVK: workaround - commented
 	        if( !SpamFilter.checkHash(wikiContext,pageContext) ) {
@@ -151,8 +160,8 @@ public class CommentCmdCode extends CmdCode {
 	        //
 	        //  We expire ALL locks at this moment, simply because someone has already broken it.
 	        //
-	        PageLock lock = ServicesRefs.getPageManager().getCurrentLock( wikipage );
-	        ServicesRefs.getPageManager().unlockPage( lock );
+	        PageLock lock = pageManager.getCurrentLock( wikipage );
+	        pageManager.unlockPage( lock );
 	        session.removeAttribute( "lock-"+pagereq );
 
 	        //
@@ -171,7 +180,7 @@ public class CommentCmdCode extends CmdCode {
 	        //
 	        //  Build comment part
 	        //
-	        StringBuffer pageText = new StringBuffer( ServicesRefs.getPageManager().getPureText( wikipage ));
+	        StringBuffer pageText = new StringBuffer( pageManager.getPureText( wikipage ));
 
 	        log.debug("Page initial contents are "+pageText.length()+" chars");
 
@@ -226,7 +235,6 @@ public class CommentCmdCode extends CmdCode {
 	            session.removeAttribute("author");
 	        }
 
-	        PageManager pageManager = ServicesRefs.getPageManager();
 	        try {
 	            wikiContext.setPage( modifiedPage );
 	            pageManager.saveText( wikiContext, pageText.toString(), storedUser, "" ); //:FVK: workaround: changenote == ""
@@ -253,7 +261,7 @@ public class CommentCmdCode extends CmdCode {
 	        PageLock lock = (PageLock) session.getAttribute( "lock-"+pagereq );
 
 	        if( lock != null ) {
-	            ServicesRefs.getPageManager().unlockPage( lock );
+	        	pageManager.unlockPage( lock );
 	            session.removeAttribute( "lock-"+pagereq );
 	        }
 	        httpResponse.sendRedirect( wikiContext.getViewURL(pagereq) );
@@ -281,7 +289,7 @@ public class CommentCmdCode extends CmdCode {
 	    //
 	    //  Attempt to lock the page.
 	    //
-	    PageLock lock = ServicesRefs.getPageManager().lockPage( wikipage, storedUser );
+	    PageLock lock = pageManager.lockPage( wikipage, storedUser );
 
 	    if( lock != null ) {
 	        session.setAttribute( "lock-"+pagereq, lock );

@@ -21,6 +21,7 @@ package org.apache.wiki.filters0;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.ModuleManager;
 
@@ -111,5 +112,7 @@ public interface FilterManager extends ModuleManager {
      * Notifies PageFilters to clean up their resources.
      */
     void destroy();
+
+	ISpamFilter getSpamFilter();
 
 }

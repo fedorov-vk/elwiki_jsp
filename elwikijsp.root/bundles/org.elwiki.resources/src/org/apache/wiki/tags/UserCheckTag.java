@@ -23,9 +23,9 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * Includes the content if an user check validates. 
@@ -100,10 +100,12 @@ public class UserCheckTag extends BaseWikiTag {
 	 */
 	@Override
 	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		Session session = m_wikiContext.getWikiSession();
-		IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
-		boolean containerAuth = mgr.isContainerAuthenticated();
-		boolean cookieAssertions = mgr.allowsCookieAssertions();
+		WikiContext wikiContext = getWikiContext();
+		Session session = wikiContext.getWikiSession();
+		IIAuthenticationManager authMgr = wikiContext.getEngine().getManager(IIAuthenticationManager.class);
+		
+		boolean containerAuth = authMgr.isContainerAuthenticated();
+		boolean cookieAssertions = authMgr.allowsCookieAssertions();
 
 		int result = SKIP_BODY;
 		if (m_status != null) {

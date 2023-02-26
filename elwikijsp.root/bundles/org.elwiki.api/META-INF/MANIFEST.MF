@@ -68,8 +68,10 @@ Export-Package: org.apache.wiki,
  org.apache.wiki.workflow0,
  org.elwiki.api,
  org.elwiki.api.authorization,
+ org.elwiki.api.component,
  org.elwiki.authorize.login,
  org.elwiki.services
-Service-Component: OSGI-INF/elwiki.ResourcesServicesRefs.xml,
+Service-Component: OSGI-INF/elwiki.BackgroundThreads.xml,
+ OSGI-INF/elwiki.InitTrigger.xml,
  OSGI-INF/elwiki.SessionMonitor.xml,
  OSGI-INF/refsSPI.xml

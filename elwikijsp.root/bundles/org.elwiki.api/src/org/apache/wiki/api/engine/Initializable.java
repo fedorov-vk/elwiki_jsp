@@ -27,6 +27,7 @@ import java.util.Properties;
 /**
  * Marker interface for Engine's components that can be initialized.
  */
+@Deprecated
 public interface Initializable {
 
     /**

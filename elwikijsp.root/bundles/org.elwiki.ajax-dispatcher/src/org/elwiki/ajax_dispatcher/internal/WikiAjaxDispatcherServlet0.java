@@ -37,13 +37,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -177,15 +178,19 @@ public class WikiAjaxDispatcherServlet0 extends HttpServlet {
     /**
      * Validate the permission of the {@link WikiAjaxServlet} using the {@link AuthorizationManager#checkPermission}
      *
-     * @param req the servlet request
+     * @param request the servlet request
      * @param container the container info of the servlet
      * @return true if permission is valid
      */
-    private boolean validatePermission( final HttpServletRequest req, final AjaxServletContainer container ) {
-        boolean valid = false;
+    private boolean validatePermission( final HttpServletRequest request, final AjaxServletContainer container ) {
+		Engine engine = ContextUtil.findContext(request).getEngine();
+		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
+		AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+
+		boolean valid = false;
         if( container != null ) {
-        	Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(req);
-            valid = ServicesRefs.getAuthorizationManager().checkPermission(wikiSession, container.permission );
+        	Session wikiSession = sessionMonitor.getWikiSession(request);
+            valid = authorizationManager.checkPermission(wikiSession, container.permission );
         }
         return valid;
     }

@@ -52,8 +52,15 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 
 	protected String m_pageName;
 	protected Iterator<T> m_iterator;
-	protected WikiContext m_wikiContext;
+	private WikiContext m_wikiContext;
 
+	protected WikiContext getWikiContext() {
+		if (m_wikiContext == null) {
+			m_wikiContext = ContextUtil.findContext(pageContext);
+		}
+		return m_wikiContext;
+	}
+	
 	/**
 	 * Sets the collection that is used to form the iteration.
 	 * 
@@ -94,7 +101,6 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	/** {@inheritDoc} */
 	@Override
 	public int doStartTag() {
-		m_wikiContext = ContextUtil.findContext(pageContext);
 		resetIterator();
 		if (m_iterator == null) {
 			return SKIP_BODY;
@@ -110,7 +116,7 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	 * Arg, I hate globals.
 	 */
 	private void buildContext() {
-		final WikiContext context = m_wikiContext.clone();
+		final WikiContext context = getWikiContext().clone();
 		final Object o = m_iterator.next();
 		if (o instanceof WikiPage wikiPage) {
 			context.setPage(wikiPage);
@@ -124,7 +130,7 @@ public abstract class BaseIteratorTag<T> extends BodyTagSupport implements TryCa
 	@Override
 	public int doEndTag() {
 		// Return back to the original.
-		pageContext.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, m_wikiContext, PageContext.REQUEST_SCOPE);
+		pageContext.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, getWikiContext(), PageContext.REQUEST_SCOPE);
 
 		return EVAL_PAGE;
 	}

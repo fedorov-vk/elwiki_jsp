@@ -22,7 +22,6 @@
 <%@ page import="org.apache.wiki.api.providers.WikiProvider" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
@@ -54,8 +53,8 @@
         <fmt:param>
           <%--<wiki:PageVersion/>--%>
           <select id="version" name="version" onchange="this.form.submit();" >
-<% 
-   int latestVersion = ServicesRefs.getPageManager().getPage( pagename, WikiProvider.LATEST_VERSION ).getVersion();
+<%
+int latestVersion = WikiEngine.getPageManager().getPage( pagename, WikiProvider.LATEST_VERSION ).getVersion();
    int thisVersion = p.getVersion();
 
    if( thisVersion == WikiProvider.LATEST_VERSION ) thisVersion = latestVersion; //should not happen

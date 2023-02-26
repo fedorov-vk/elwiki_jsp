@@ -18,61 +18,13 @@
  */
 package org.elwiki.authorize.internal.services;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
-import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.rss.RSSGenerator;
-import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.SessionMonitor;
-import org.apache.wiki.auth.UserProfile;
-import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.ui.TemplateManager;
-import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.util.TimedCounterList;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.authorization.Authorizer;
-import org.elwiki.api.authorization.WebAuthorizer;
-import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
-import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.elwiki.authorize.login.AnonymousLoginModule;
-import org.elwiki.authorize.login.CookieAssertionLoginModule;
-import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
-import org.elwiki.authorize.login.AccountRegistryLoginModule;
-import org.elwiki.authorize.login.WebContainerCallbackHandler;
-import org.elwiki.authorize.login.WebContainerLoginModule;
-import org.elwiki.authorize.login.WikiCallbackHandler;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.Bundle;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
-import org.osgi.service.permissionadmin.PermissionInfo;
-import org.osgi.service.useradmin.Authorization;
-import org.osgi.service.useradmin.Group;
-import org.osgi.service.useradmin.Role;
-import org.osgi.service.useradmin.User;
-import org.osgi.service.useradmin.UserAdmin;
-
-import com.google.gson.Gson;
+import java.lang.reflect.InvocationTargetException;
+import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -81,17 +33,49 @@ import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.ISessionMonitor;
+import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.util.TimedCounterList;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.authorization.WebAuthorizer;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
+import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
+import org.elwiki.authorize.login.AccountRegistryLoginModule;
+import org.elwiki.authorize.login.AnonymousLoginModule;
+import org.elwiki.authorize.login.CookieAssertionLoginModule;
+import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
+import org.elwiki.authorize.login.WebContainerCallbackHandler;
+import org.elwiki.authorize.login.WebContainerLoginModule;
+import org.elwiki.authorize.login.WikiCallbackHandler;
+import org.osgi.framework.Bundle;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+import org.osgi.service.useradmin.UserAdmin;
 
 /**
  * Default implementation for {@link IIAuthenticationManager}
@@ -103,10 +87,13 @@ import java.util.Set;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthenticationManager",
-	service = IIAuthenticationManager.class,
-	factory = "elwiki.AuthenticationManager.factory")
+	service = { IIAuthenticationManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements IIAuthenticationManager {
+public class DefaultAuthenticationManager implements IIAuthenticationManager, WikiManager, EventHandler {
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
     private static final long LASTLOGINS_CLEANUP_TIME = 10 * 60 * 1_000L; // Ten minutes
@@ -134,8 +121,6 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
     /** Static Boolean for lazily-initializing the "allows cookie authentication" flag */
     private boolean m_allowsCookieAuthentication = false;
 
-    private Engine m_engine = null;
-
     /** If true, logs the IP address of the editor */
     private boolean m_storeIPAddress = true;
 
@@ -151,16 +136,22 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	private UserAdmin userAdminService;
+	@Reference
+	volatile protected UserAdmin userAdminService;
 	
 	@Reference
-    EventAdmin eventAdmin;
+	volatile protected EventAdmin eventAdmin;
+
+	@WikiServiceReference
+    private Engine m_engine = null;
 
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
+
+	@WikiServiceReference
+	private ISessionMonitor sessionMonitor;
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -169,11 +160,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+    	//
 	}
 
 	@Deactivate
@@ -181,24 +169,22 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		//
 	}
 	
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
     
 	/**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initialize( final Engine engine ) throws WikiException {
-        m_engine = engine;
-        m_storeIPAddress = TextUtil.getBooleanProperty( engine.getWikiPreferences(), PROP_STOREIPADDRESS, m_storeIPAddress );
+	 * Initialises AuthenticationManager.
+	 */
+    public void initialize() throws WikiException {
+        m_storeIPAddress = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_STOREIPADDRESS, m_storeIPAddress );
 
         // Should we allow cookies for assertions? (default: yes)
-        m_allowsCookieAssertions = TextUtil.getBooleanProperty( engine.getWikiPreferences(), PROP_ALLOW_COOKIE_ASSERTIONS,true );
+        m_allowsCookieAssertions = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_ALLOW_COOKIE_ASSERTIONS,true );
 
         // Should we allow cookies for authentication? (default: no)
-        m_allowsCookieAuthentication = TextUtil.getBooleanProperty( engine.getWikiPreferences(), PROP_ALLOW_COOKIE_AUTH, false );
+        m_allowsCookieAuthentication = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_ALLOW_COOKIE_AUTH, false );
 
         // Should we throttle logins? (default: yes)
-        m_throttleLogins = TextUtil.getBooleanProperty( engine.getWikiPreferences(), PROP_LOGIN_THROTTLING, true );
+        m_throttleLogins = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_LOGIN_THROTTLING, true );
 
         // Look up the LoginModule class
         //final String loginModuleClassName = TextUtil.getStringProperty( props, PROP_LOGIN_MODULE, DEFAULT_LOGIN_MODULE );
@@ -214,7 +200,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 		this.loginModuleClass = getLoginModule(loginModuleClassName);
 
         // Initialize the LoginModule options
-        initLoginModuleOptions( engine.getWikiPreferences() );
+        initLoginModuleOptions( m_engine.getWikiPreferences() );
     }
 
 	/**
@@ -280,7 +266,7 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
      */
     @Override
 	public boolean login(final HttpServletRequest request) throws WikiSecurityException {
-    	final Session session = ServicesRefs.getSessionMonitor().getWikiSession(request);
+    	final Session session = sessionMonitor.getWikiSession(request);
     	return login(request, session);
     }
 
@@ -588,6 +574,21 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultAuthenticationManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

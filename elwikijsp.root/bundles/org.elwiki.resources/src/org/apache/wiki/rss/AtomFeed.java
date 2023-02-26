@@ -28,10 +28,8 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.rss.Entry;
-import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.api.rss.IEntry;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.output.Format;
@@ -76,7 +74,7 @@ public class AtomFeed extends Feed {
         return m_wikiContext.getConfiguration().getBaseURL(); // FIXME: This is not a feed id
     }
 
-    private String getEntryID( final Entry e )
+    private String getEntryID( final IEntry e )
     {
         return e.getURL(); // FIXME: Not really a feed id!
     }
@@ -84,12 +82,13 @@ public class AtomFeed extends Feed {
     private Collection<Element> getItems() {
         final ArrayList< Element > list = new ArrayList<>();
         final Engine engine = m_wikiContext.getEngine();
+        AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
         ServletContext servletContext = null;
         if( m_wikiContext.getHttpRequest() != null ) {
             servletContext = m_wikiContext.getHttpRequest().getSession().getServletContext();
         }
 
-        for( final Entry e : m_entries ) {
+        for( final IEntry e : m_entries ) {
             final WikiPage p = e.getPage();
             final Element entryEl = getElement( "entry" );
 
@@ -104,9 +103,9 @@ public class AtomFeed extends Feed {
             entryEl.addContent( getElement( "content" ).setAttribute( "type", "html" ).setText( e.getContent() ) );
 
             //  Check for enclosures
-            if( ServicesRefs.getAttachmentManager().hasAttachments( p ) && servletContext != null ) {
+            if( attachmentManager.hasAttachments( p ) && servletContext != null ) {
                 try {
-                    final List< PageAttachment > c = ServicesRefs.getAttachmentManager().listAttachments( p );
+                    final List< PageAttachment > c = attachmentManager.listAttachments( p );
                     for( final PageAttachment att : c ) {
                         final Element attEl = getElement( "link" );
                         attEl.setAttribute( "rel", "enclosure" );
@@ -140,7 +139,7 @@ public class AtomFeed extends Feed {
 
         Date lastModified = new Date(0L);
 
-        for( final Entry e : m_entries ) {
+        for( final IEntry e : m_entries ) {
             if( e.getPage().getLastModifiedDate().after( lastModified ) ) {
                 lastModified = e.getPage().getLastModifiedDate();
             }

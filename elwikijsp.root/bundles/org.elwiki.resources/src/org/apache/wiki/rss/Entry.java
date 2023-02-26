@@ -16,15 +16,16 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.api.rss;
+package org.apache.wiki.rss;
 
+import org.apache.wiki.api.rss.IEntry;
 import org.elwiki_data.WikiPage;
 
 
 /**
  * Represents an entry, that is, an unit of change, in a Feed.
  */
-public class Entry {
+public class Entry implements IEntry {
 
     private String m_content;
     private String m_url;
@@ -37,7 +38,8 @@ public class Entry {
      *
      * @param author Name of the author.
      */
-    public void setAuthor( final String author ) {
+    @Override
+	public void setAuthor( final String author ) {
         m_author = author;
     }
 
@@ -46,7 +48,8 @@ public class Entry {
      *
      * @return A String representing the author.
      */
-    public String getAuthor() {
+    @Override
+	public String getAuthor() {
         return m_author;
     }
 
@@ -55,7 +58,8 @@ public class Entry {
      *
      * @return The WikiPage to which this Entry refers to.
      */
-    public WikiPage getPage() {
+    @Override
+	public WikiPage getPage() {
         return m_page;
     }
 
@@ -64,7 +68,8 @@ public class Entry {
      *
      * @param p A valid WikiPage.
      */
-    public void setPage( final WikiPage p ) {
+    @Override
+	public void setPage( final WikiPage p ) {
         m_page = p;
     }
 
@@ -74,7 +79,8 @@ public class Entry {
      *
      * @param title A String description of the change.
      */
-    public void setTitle( final String title ) {
+    @Override
+	public void setTitle( final String title ) {
         m_title = title;
     }
 
@@ -83,7 +89,8 @@ public class Entry {
      *
      * @return The title set in setTitle.
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return m_title;
     }
 
@@ -92,7 +99,8 @@ public class Entry {
      *
      * @param url An absolute URL to the entry.
      */
-    public void setURL( final String url ) {
+    @Override
+	public void setURL( final String url ) {
         m_url = url;
     }
 
@@ -101,7 +109,8 @@ public class Entry {
      *
      * @return The URL.
      */
-    public String getURL() {
+    @Override
+	public String getURL() {
         return m_url;
     }
 
@@ -110,7 +119,8 @@ public class Entry {
      *
      * @param content A String of the content.
      */
-    public void setContent( final String content ) {
+    @Override
+	public void setContent( final String content ) {
         m_content = content;
     }
 
@@ -119,7 +129,8 @@ public class Entry {
      *
      * @return Whatever was set by setContent().
      */
-    public String getContent() {
+    @Override
+	public String getContent() {
         return m_content;
     }
 

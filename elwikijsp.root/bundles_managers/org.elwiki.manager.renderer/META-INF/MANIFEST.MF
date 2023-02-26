@@ -21,5 +21,6 @@ Require-Bundle: org.elwiki.api,
  net.sf.ehcache,
  org.elwiki.util,
  oro,
- org.jdom.2
+ org.jdom.2,
+ org.osgi.service.event
 Service-Component: OSGI-INF/elwiki.DefaultRenderingManager.xml

@@ -26,20 +26,19 @@
 <%@ page import="org.elwiki.api.authorization.IGroupManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_EDIT.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
     // Extract the current user, group name, members and action attributes
     Session wikiSession = wikiContext.getWikiSession();
-    IGroupManager groupMgr = ServicesRefs.getGroupManager();
+    IGroupManager groupMgr = WikiEngine.getGroupManager();
     WrapGroup group = null;
     /*:FVK: TODO:... передача редактируемой группы. */
     try
@@ -82,7 +81,7 @@
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager()
+    String contentPage = WikiEngine.getTemplateManager()
     		.findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ EditGroup.jsp -->

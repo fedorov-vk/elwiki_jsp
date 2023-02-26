@@ -27,11 +27,10 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.rss.Entry;
-import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.api.rss.IEntry;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.render0.RenderingManager;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -64,16 +63,18 @@ public class RSS20Feed extends Feed
 
     private List<Element> getItems()
     {
+    	final Engine engine = m_wikiContext.getEngine();
+    	AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
+
         final ArrayList<Element> list = new ArrayList<>();
         final SimpleDateFormat fmt = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
 
-        final Engine engine = m_wikiContext.getEngine();
         ServletContext servletContext = null;
 
         if( m_wikiContext.getHttpRequest() != null )
             servletContext = m_wikiContext.getHttpRequest().getSession().getServletContext();
 
-        for( final Entry e : m_entries ) {
+        for( final IEntry e : m_entries ) {
             final WikiPage p = e.getPage();
             final String url = e.getURL();
             final Element item = new Element( "item" );
@@ -84,9 +85,9 @@ public class RSS20Feed extends Feed
             //
             //  Attachments for enclosures
             //
-            if( ServicesRefs.getAttachmentManager().hasAttachments( p ) && servletContext != null ) {
+            if( attachmentManager.hasAttachments( p ) && servletContext != null ) {
                 try {
-                    final List< PageAttachment > c = ServicesRefs.getAttachmentManager().listAttachments( p );
+                    final List< PageAttachment > c = attachmentManager.listAttachments( p );
                     for( final PageAttachment att : c ) {
 						final Element attEl = new Element("enclosure");
 						attEl.setAttribute("url",
@@ -127,6 +128,7 @@ public class RSS20Feed extends Feed
     public String getString()
     {
         final Engine engine = m_wikiContext.getEngine();
+        VariableManager variableManager = engine.getManager(VariableManager.class);
         final Element root = new Element("rss");
         root.setAttribute("version","2.0");
 
@@ -146,10 +148,10 @@ public class RSS20Feed extends Feed
         channel.addContent( new Element("language").setText(getChannelLanguage()));
         channel.addContent( new Element("generator").setText("JSPWiki "+Release.VERSTR));
 
-        String mail = ServicesRefs.getVariableManager().getVariable(m_wikiContext,RSSGenerator.PROP_RSS_AUTHOREMAIL);
+        String mail = variableManager.getVariable(m_wikiContext,RSSGenerator.PROP_RSS_AUTHOREMAIL);
         if( mail != null )
         {
-            final String editor = ServicesRefs.getVariableManager().getVariable( m_wikiContext,RSSGenerator.PROP_RSS_AUTHOR );
+            final String editor = variableManager.getVariable( m_wikiContext,RSSGenerator.PROP_RSS_AUTHOR );
 
             if( editor != null )
                 mail = mail + " ("+editor+")";

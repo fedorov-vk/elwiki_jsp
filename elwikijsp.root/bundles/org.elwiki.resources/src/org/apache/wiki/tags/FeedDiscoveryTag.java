@@ -24,8 +24,9 @@ import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.rss.Feed;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -41,9 +42,10 @@ public class FeedDiscoveryTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final IWikiConfiguration config = m_wikiContext.getConfiguration();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		final IWikiConfiguration config = wikiContext.getConfiguration();
+		final WikiPage page = wikiContext.getPage();
 
 		final String encodedName = config.encodeName(page.getName());
 		final String rssURL = engine.getGlobalRSSURL();
@@ -51,7 +53,7 @@ public class FeedDiscoveryTag extends BaseWikiTag {
 				"page=" + encodedName + "&amp;mode=wiki");
 
 		if (rssURL != null) {
-			String siteName = Feed.getSiteName(m_wikiContext);
+			String siteName = Feed.getSiteName(wikiContext);
 			siteName = TextUtil.replaceEntities(siteName);
 
 			pageContext.getOut().print(

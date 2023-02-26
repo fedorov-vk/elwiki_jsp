@@ -19,6 +19,7 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 
 import javax.servlet.jsp.JspTagException;
@@ -45,17 +46,18 @@ public class UploadLinkTag extends BaseWikiLinkTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
+		WikiContext wikiContext = getWikiContext();
 		String pageName = m_pageName;
 		if (m_pageName == null) {
-			if (m_wikiContext.getPage() != null) {
-				pageName = m_wikiContext.getPage().getName();
+			if (wikiContext.getPage() != null) {
+				pageName = wikiContext.getPage().getName();
 			} else {
 				return SKIP_BODY;
 			}
 		}
 
 		final JspWriter out = pageContext.getOut();
-		final String url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_UPLOAD.getRequestContext(), pageName);
+		final String url = wikiContext.getURL(ContextEnum.ATTACHMENT_UPLOAD.getRequestContext(), pageName);
 		switch (m_format) {
 		case ANCHOR:
 			out.print("<a target=\"_new\" class=\"uploadlink\" href=\"" + url + "\">");

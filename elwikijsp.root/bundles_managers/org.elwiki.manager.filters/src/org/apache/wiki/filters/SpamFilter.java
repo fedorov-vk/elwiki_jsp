@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.filters0;
+package org.apache.wiki.filters;
 
 import net.sf.akismet.Akismet;
 import org.apache.commons.lang3.time.StopWatch;
@@ -37,9 +37,12 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.auth.UserProfile;
@@ -49,7 +52,6 @@ import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.suigeneris.jrcs.diff.Diff;
 import org.suigeneris.jrcs.diff.DifferentiationFailedException;
 import org.suigeneris.jrcs.diff.Revision;
@@ -112,7 +114,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  *  @since 2.1.112
  */
-public class SpamFilter extends BasePageFilter {
+public class SpamFilter extends BasePageFilter implements ISpamFilter {
 	
     private static final String ATTR_SPAMFILTER_SCORE = "spamfilter.score";
     private static final String REASON_REGEXP = "Regexp";
@@ -242,7 +244,8 @@ public class SpamFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public void initialize( final Engine engine ) {
+    public void initialize( final Engine engine ) throws FilterException {
+    	super.initialize(engine);
     	IPreferenceStore properties = engine.getWikiPreferences();
         m_forbiddenWordsPage = TextUtil.getStringProperty(properties, PROP_WORDLIST, m_forbiddenWordsPage );
         m_forbiddenIPsPage = TextUtil.getStringProperty(properties, PROP_IPLIST, m_forbiddenIPsPage);
@@ -596,7 +599,8 @@ public class SpamFilter extends BasePageFilter {
      *
      * @return A string
      */
-    public static String getBotFieldName() {
+    @Override
+	public String getBotFieldName() {
         return "submit_auth";
     }
 
@@ -681,14 +685,14 @@ public class SpamFilter extends BasePageFilter {
             boolean rebuild = false;
 
             //  Rebuild, if the spam words page, the attachment or the IP ban page has changed since.
-            final WikiPage sourceSpam = ServicesRefs.getPageManager().getPage( m_forbiddenWordsPage );
+            final WikiPage sourceSpam = super.pageManager.getPage( m_forbiddenWordsPage );
             if( sourceSpam != null ) {
                 if( m_spamPatterns == null || m_spamPatterns.isEmpty() || sourceSpam.getLastModifiedDate().after( m_lastRebuild ) ) {
                     rebuild = true;
                 }
             }
 
-            final AttachmentContent att = ServicesRefs.getAttachmentManager().getAttachmentContent( context, m_blacklist );
+            final AttachmentContent att = super.attachmentManager.getAttachmentContent( context, m_blacklist );
             if( att != null ) {
 				if (m_spamPatterns == null
 						|| m_spamPatterns.isEmpty() /*:FVK: || att.getLastModifiedDate().after( m_lastRebuild )*/ ) {
@@ -696,7 +700,7 @@ public class SpamFilter extends BasePageFilter {
                 }
             }
 
-            final WikiPage sourceIPs = ServicesRefs.getPageManager().getPage( m_forbiddenIPsPage );
+            final WikiPage sourceIPs = super.pageManager.getPage( m_forbiddenIPsPage );
             if( sourceIPs != null ) {
                 if( m_IPPatterns == null || m_IPPatterns.isEmpty() || sourceIPs.getLastModifiedDate().after( m_lastRebuild ) ) {
                     rebuild = true;
@@ -714,7 +718,7 @@ public class SpamFilter extends BasePageFilter {
                 log.info( "IP filter reloaded - recognizing " + m_IPPatterns.size() + " patterns from page " + m_forbiddenIPsPage );
 
                 if( att != null ) {
-                    final InputStream in = ServicesRefs.getAttachmentManager().getAttachmentStream(att);
+                    final InputStream in = super.attachmentManager.getAttachmentStream(att);
                     final StringWriter out = new StringWriter();
                     FileUtil.copyContents( new InputStreamReader( in, StandardCharsets.UTF_8 ), out );
                     final Collection< Pattern > blackList = parseBlacklist( out.toString() );
@@ -805,7 +809,7 @@ public class SpamFilter extends BasePageFilter {
      *  @param newText
      *  @return Empty string, if there is no change.
      */
-    private static Change getChange( final WikiContext context, final String newText ) {
+    private Change getChange( final WikiContext context, final String newText ) {
         final WikiPage page = context.getPage();
         final StringBuffer change = new StringBuffer();
         final Engine engine = context.getEngine();
@@ -814,7 +818,7 @@ public class SpamFilter extends BasePageFilter {
         final Change ch = new Change();
         
         try {
-            final String oldText = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+            final String oldText = super.pageManager.getPureText( page.getName(), WikiProvider.LATEST_VERSION );
             final String[] first  = Diff.stringToArray( oldText );
             final String[] second = Diff.stringToArray( newText );
             final Revision rev = Diff.diff( first, second, new MyersDiff() );
@@ -923,7 +927,8 @@ public class SpamFilter extends BasePageFilter {
      *  @return False, if this userprofile is suspect and should not be allowed to be added.
      *  @since 2.6.1
      */
-    public boolean isValidUserProfile( final WikiContext context, final UserProfile profile ) {
+    @Override
+	public boolean isValidUserProfile( final WikiContext context, final UserProfile profile ) {
         try {
             checkPatternList( context, profile.getEmail(), profile.getEmail() );
             checkPatternList( context, profile.getFullname(), profile.getFullname() );
@@ -945,7 +950,8 @@ public class SpamFilter extends BasePageFilter {
      *  @since 2.6
      *  @return A hash value for this page and session
      */
-    public static final String getSpamHash( final WikiPage page, final HttpServletRequest request ) {
+    @Override
+	public final String getSpamHash( final WikiPage page, final HttpServletRequest request ) {
         long lastModified = 0;
 
         if( page.getLastModifiedDate() != null ) {
@@ -964,7 +970,8 @@ public class SpamFilter extends BasePageFilter {
      *  @return The name to be used in the hash field
      *  @since  2.6
      */
-    public static final String getHashFieldName( final HttpServletRequest request ) {
+    @Override
+	public final String getHashFieldName( final HttpServletRequest request ) {
         String hash = null;
 
         if( request.getSession() != null ) {
@@ -999,7 +1006,7 @@ public class SpamFilter extends BasePageFilter {
      *  @throws IOException If redirection fails
      *  @since 2.6
      */
-    public static final boolean checkHash( final WikiContext context, final PageContext pageContext ) throws IOException {
+    public final boolean checkHash( final WikiContext context, final PageContext pageContext ) throws IOException {
         final String hashName = getHashFieldName( (HttpServletRequest)pageContext.getRequest() );
         if( pageContext.getRequest().getParameter(hashName) == null ) {
             if( pageContext.getAttribute( hashName ) == null ) {
@@ -1022,7 +1029,8 @@ public class SpamFilter extends BasePageFilter {
      * @param pageContext The PageContext
      * @return A HTML string which contains input fields for the SpamFilter.
      */
-    public static final String insertInputFields( final PageContext pageContext ) {
+    @Override
+	public final String insertInputFields( final PageContext pageContext ) {
         final WikiContext ctx = ContextUtil.findContext( pageContext );
         final IWikiConfiguration config = ctx.getConfiguration();
         final StringBuilder sb = new StringBuilder();

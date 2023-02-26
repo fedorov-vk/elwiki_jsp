@@ -23,6 +23,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -36,8 +37,9 @@ public class PageIdTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+        final Engine engine = wikiContext.getEngine();
+        final WikiPage page = wikiContext.getPage();
 
 		if (page != null) {
 			if (page instanceof PageAttachment) {

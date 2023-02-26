@@ -58,6 +58,9 @@ import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.PageProvider;
@@ -70,9 +73,10 @@ import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.BackgroundThreads;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,6 +107,9 @@ public class LuceneSearchProvider implements SearchProvider {
 
     private Engine m_engine;
     private ExecutorService searchExecutor;
+    private PageManager pageManager;
+    private AttachmentManager attachmentManager;
+    private AuthorizationManager authorizationManager;
 
     // Lucene properties.
 
@@ -141,20 +148,23 @@ public class LuceneSearchProvider implements SearchProvider {
     
     private static String c_punctuationSpaces = StringUtils.repeat(" ", TextUtil.PUNCTUATION_CHARS_ALLOWED.length() );
 
-    /**
+	/**
      *  {@inheritDoc}
      */
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException  {
-        m_engine = engine;
+        this.m_engine = engine;
+        this.pageManager = engine.getManager(PageManager.class);
+        this.attachmentManager = engine.getManager(AttachmentManager.class);
+        this.authorizationManager = engine.getManager(AuthorizationManager.class);
         searchExecutor = Executors.newCachedThreadPool();
 
 		IPath workDir = engine.getWikiConfiguration().getWorkDir();
 		m_luceneDirectory = workDir.append(LUCENE_DIR).toString();
 
         IPreferenceStore props = engine.getWikiPreferences();
-		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdater.INITIAL_DELAY );
-        final int indexDelay   = TextUtil.getIntegerProperty( props, PROP_LUCENE_INDEXDELAY, LuceneUpdater.INDEX_DELAY );
+		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdaterOLD.INITIAL_DELAY );
+        final int indexDelay   = TextUtil.getIntegerProperty( props, PROP_LUCENE_INDEXDELAY, LuceneUpdaterOLD.INDEX_DELAY );
 
         m_analyzerClass = TextUtil.getStringProperty( props, PROP_LUCENE_ANALYZER, m_analyzerClass );
         // FIXME: Just to be simple for now, we will do full reindex
@@ -180,11 +190,13 @@ public class LuceneSearchProvider implements SearchProvider {
             log.error("Problem while creating Lucene index - not using Lucene.", e);
         }
 
-        // Start the Lucene update thread, which waits first
-        // for a little while before starting to go through
-        // the Lucene "pages that need updating".
-        final LuceneUpdater updater = new LuceneUpdater( m_engine, this, initialDelay, indexDelay );
-        updater.start();
+		// Start the Lucene update thread, which waits first
+		// for a little while before starting to go through
+		// the Lucene "pages that need updating".
+		BackgroundThreads backgroundThreads = (BackgroundThreads) engine.getManager(BackgroundThreads.class);
+		Thread updater = backgroundThreads.createThread("JSPWiki Lucene Indexer", indexDelay,
+				new LuceneUpdater(engine, this, initialDelay));
+		updater.start();
     }
 
     /**
@@ -220,17 +232,17 @@ public class LuceneSearchProvider implements SearchProvider {
 
                 final Directory luceneDir = new NIOFSDirectory( dir.toPath() );
                 try( final IndexWriter writer = getIndexWriter( luceneDir ) ) {
-                    final Collection< WikiPage > allPages = ServicesRefs.getPageManager().getAllPages();
+                    final Collection< WikiPage > allPages = pageManager.getAllPages();
                     for( final WikiPage page : allPages ) {
                         try {
-                            final String text = ServicesRefs.getPageManager().getPageText( page.getName(), WikiProvider.LATEST_VERSION );
+                            final String text = pageManager.getPageText( page.getName(), WikiProvider.LATEST_VERSION );
                             luceneIndexPage( page, text, writer );
                         } catch( final IOException e ) {
                             log.warn( "Unable to index page " + page.getName() + ", continuing to next ", e );
                         }
                     }
 
-                    final Collection< PageAttachment > allAttachments = ServicesRefs.getAttachmentManager().getAllAttachments();
+                    final Collection< PageAttachment > allAttachments = attachmentManager.getAllAttachments();
                     for( final PageAttachment att : allAttachments ) {
                     	/*:FVK: 
                         try {
@@ -269,9 +281,8 @@ public class LuceneSearchProvider implements SearchProvider {
      *  @return the content of the Attachment as a String.
      */
     protected String getAttachmentContent( final String attachmentName, final int version ) {
-        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         try {
-            final AttachmentContent att = mgr.getAttachmentContent( attachmentName, version );
+            final AttachmentContent att = attachmentManager.getAttachmentContent( attachmentName, version );
             //FIXME: Find out why sometimes att is null
             if( att != null ) {
                 return getAttachmentContent( att );
@@ -289,7 +300,6 @@ public class LuceneSearchProvider implements SearchProvider {
      * This should be replaced /moved to Attachment search providers or some other 'pluggable' way to search attachments
      */
     protected String getAttachmentContent( final AttachmentContent att ) {
-        final AttachmentManager mgr = ServicesRefs.getAttachmentManager();
         //FIXME: Add attachment plugin structure
 
         final String filename = att.getPageAttachment().getName();
@@ -304,7 +314,7 @@ public class LuceneSearchProvider implements SearchProvider {
 
         String out = filename;
         if( searchSuffix ) {
-            try( final InputStream attStream = mgr.getAttachmentStream( att ); final StringWriter sout = new StringWriter() ) {
+            try( final InputStream attStream = attachmentManager.getAttachmentStream( att ); final StringWriter sout = new StringWriter() ) {
                 FileUtil.copyContents( new InputStreamReader( attStream ), sout );
                 out = out + " " + sout.toString();
             } catch( final ProviderException | IOException e ) {
@@ -403,7 +413,7 @@ public class LuceneSearchProvider implements SearchProvider {
 
         // Now add the names of the attachments of this page
         try {
-            final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( page );
+            final List< PageAttachment > attachments = attachmentManager.listAttachments( page );
             String attachmentNames = "";
 
             for( final PageAttachment att : attachments ) {
@@ -462,7 +472,7 @@ public class LuceneSearchProvider implements SearchProvider {
 				//FIXME: :FVK:
 			    //OLD CODE: text = getAttachmentContent( ( PageAttachment )page );
 			} else*/ {
-                text = ServicesRefs.getPageManager().getPureText( page );
+                text = pageManager.getPureText( page );
             }
 
             if( text != null ) {
@@ -516,18 +526,17 @@ public class LuceneSearchProvider implements SearchProvider {
             }
 
             final ScoreDoc[] hits = searcher.search(luceneQuery, MAX_SEARCH_HITS).scoreDocs;
-            final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
             list = new ArrayList<>(hits.length);
             for( final ScoreDoc hit : hits ) {
                 final int docID = hit.doc;
                 final Document doc = searcher.doc( docID );
                 final String pageName = doc.get( LUCENE_ID );
-                final WikiPage page = ServicesRefs.getPageManager().getPage( pageName, PageProvider.LATEST_VERSION );
+                final WikiPage page = pageManager.getPage( pageName, PageProvider.LATEST_VERSION );
 
                 if( page != null ) {
                     final PagePermission pp = new PagePermission( page, PagePermission.VIEW_ACTION );
-                    if( mgr.checkPermission( wikiContext.getWikiSession(), pp ) ) {
+                    if( authorizationManager.checkPermission( wikiContext.getWikiSession(), pp ) ) {
                         final int score = ( int )( hit.score * 100 );
 
                         // Get highlighted search contexts

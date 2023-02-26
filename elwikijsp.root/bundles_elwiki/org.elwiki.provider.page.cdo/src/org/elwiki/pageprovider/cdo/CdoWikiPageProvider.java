@@ -69,7 +69,6 @@ import org.elwiki.pageprovider.cdo.internal.bundle.PageProviderCdoActivator;
 //import org.elwiki.pageprovider.jspwiki.JdbcAttachmentProvider;
 //import org.elwiki.pageprovider.jspwiki.JdbcPageProvider;
 import org.elwiki.permissions.PermissionFactory;
-import org.elwiki.services.ServicesRefs;
 //import org.elwiki.utils.FileUtil;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
@@ -94,13 +93,16 @@ public class CdoWikiPageProvider implements PageProvider {
 
 	private IWikiConfiguration wikiConfiguration;
 
+	private Engine m_engine;
+
 	// == CODE ================================================================
 
 	/**
-	 * Default constructor.
+	 * Constructs CdoWikiPageProvider.
 	 */
-	public CdoWikiPageProvider() {
-		super();
+	public CdoWikiPageProvider(Engine engine) {
+		this.m_engine = engine;
+		this.wikiConfiguration = m_engine.getWikiConfiguration();
 	}
 
 	protected IWikiConfiguration getWikiConfiguration() {
@@ -1206,8 +1208,6 @@ public class CdoWikiPageProvider implements PageProvider {
 	@Deprecated
 	private List<String> unhandledPages = new ArrayList<>();
 
-	private Engine m_engine;
-
 	{
 		this.unhandledPages.add("ApprovalRequiredForPageChanges");
 		this.unhandledPages.add("ApprovalRequiredForUserProfiles");
@@ -1337,7 +1337,7 @@ public class CdoWikiPageProvider implements PageProvider {
 					pageAttachment.setChangeNote("");
 	
 					// Копирование данных
-					// IWikiConfiguration wikiConfiguration = ServicesRefs.getConfiguration();
+					// IWikiConfiguration wikiConfiguration = Engine.getConfiguration();
 					IPath dstPath = getWikiConfiguration().getAttachmentPath();
 	
 					File outputFile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, dstPath.toFile());
@@ -1404,7 +1404,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	//:FVK: @Override
 	public void putAcl(WikiPage page, String aclString) {
 		//:FVK: 
-		AclManager am = ServicesRefs.getAclManager();
+		AclManager am = m_engine.getManager(AclManager.class);
 
 		org.elwiki_data.Acl acl = null;
 		try {
@@ -1446,7 +1446,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 			while (fieldToks.hasMoreTokens()) {
 				String principalName = fieldToks.nextToken(",").trim();
-				Principal principal = ServicesRefs.getAuthorizationManager()
+				Principal principal = m_engine.getManager(AuthorizationManager.class)
 						.resolvePrincipal(principalName); //:FVK: Principal principal = this.m_auth.resolvePrincipal(principalName);
 				AclEntry oldEntry = acl.getEntry(principal);
 

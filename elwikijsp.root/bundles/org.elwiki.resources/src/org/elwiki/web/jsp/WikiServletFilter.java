@@ -30,7 +30,6 @@ import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
@@ -67,7 +66,7 @@ import java.io.PrintWriter;
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/attach/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)",
-		Constants.SERVICE_RANKING + "=1000"},
+		Constants.SERVICE_RANKING + ":Integer=1000"},
   scope=ServiceScope.PROTOTYPE,
   name = "part10.WikiServletFilter"
 )
@@ -170,8 +169,8 @@ public class WikiServletFilter implements Filter {
         if ( !isWrapped( request ) ) {
             // Prepare the Session
             try {
-            	ServicesRefs.getAuthenticationManager().login( httpRequest );
-                final Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(httpRequest);
+            	WikiEngine.getAuthenticationManager().login( httpRequest );
+                final Session wikiSession = WikiEngine.getSessionMonitor().getWikiSession(httpRequest);
                 httpRequest = new WikiRequestWrapper( m_engine, httpRequest );
                 if ( log.isDebugEnabled() ) {
                     log.debug( "Executed security filters for user=" + wikiSession.getLoginPrincipal().getName() + ", path=" + httpRequest.getRequestURI() );

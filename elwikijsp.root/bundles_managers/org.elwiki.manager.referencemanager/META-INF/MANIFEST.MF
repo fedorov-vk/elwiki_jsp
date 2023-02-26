@@ -12,7 +12,8 @@ Require-Bundle: org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",
  org.elwiki.api,
  org.elwiki.util,
- org.elwiki.data
+ org.elwiki.data,
+ org.osgi.service.event
 Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.osgi.service.component;version="1.4.0",

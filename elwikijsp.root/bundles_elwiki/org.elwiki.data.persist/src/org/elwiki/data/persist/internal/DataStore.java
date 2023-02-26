@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.IStorageCdo;
-import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.cdo.eresource.CDOResource;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
@@ -13,6 +12,7 @@ import org.eclipse.emf.cdo.view.CDOView;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.net4j.util.WrappedException;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.persist.IDataStore;
 import org.elwiki.data.persist.json.JsonDeserialiser;
@@ -23,22 +23,26 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 
 /**
- * Предоставляет доступ к CDO репозиторию.
+ * Provides access to the CDO repository.
  *  
  * @author vfedorov
  */
-@Component(name = "elwiki.StorageCdo", service = IStorageCdo.class, //
-		factory = "elwiki.StorageCdo.factory")
-public class DataStore extends Repository implements IDataStore, IStorageCdo {
+//@formatter:off
+@Component(
+	name = "elwiki.StorageCdo",
+	service = { IStorageCdo.class, WikiManager.class },
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DataStore extends Repository implements IDataStore, IStorageCdo, WikiManager {
 
 	protected static final Logger log = Logger.getLogger(DataStore.class);
-	
+
 	private static final String PAGES_STORE_PATH = "Pages/";
 
 	private PagesStore pagesStore;
-
 
 	/**
 	 * Instantiate DataStore.
@@ -47,15 +51,11 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
-
-	protected IWikiConfiguration getWikiConfiguration() {
-		return this.wikiConfiguration;
-	}
 
 	@Deprecated
 	@Activate
@@ -68,7 +68,7 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 		//
 	}
 	
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
 	private void createResource(String path, EObject eObject) {
 		CDOTransaction transaction = this.session.openTransaction();

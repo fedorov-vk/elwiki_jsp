@@ -22,9 +22,9 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -57,10 +57,11 @@ public class SessionsPlugin implements Plugin {
 	@Override
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		Engine engine = context.getEngine();
+		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
 		String prop = params.get(PARAM_PROP);
 
 		if ("users".equals(prop)) {
-			Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
+			Principal[] principals = sessionMonitor.userPrincipals();
 			StringBuilder s = new StringBuilder();
 			for (Principal principal : principals) {
 				s.append(principal.getName()).append(", ");
@@ -71,7 +72,7 @@ public class SessionsPlugin implements Plugin {
 
 		// show each user session only once (with a counter that indicates the number of sessions for each user)
 		if ("distinctUsers".equals(prop)) {
-			Principal[] principals = ServicesRefs.getSessionMonitor().userPrincipals();
+			Principal[] principals = sessionMonitor.userPrincipals();
 			// we do not assume that the principals are sorted, so first count them :
 			HashMap<String, Integer> distinctPrincipals = new HashMap<>();
 			for (Principal principal : principals) {
@@ -97,6 +98,6 @@ public class SessionsPlugin implements Plugin {
 
 		}
 
-		return String.valueOf(ServicesRefs.getSessionMonitor().sessions());
+		return String.valueOf(sessionMonitor.sessions());
 	}
 }

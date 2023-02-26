@@ -151,7 +151,7 @@ public interface RSSGenerator extends Initializable {
      *  @param feed A Feed to generate the feed to.
      *  @return feed.getString().
      */
-    String generateFullWikiRSS( WikiContext wikiContext, Feed feed );
+    String generateFullWikiRSS( WikiContext wikiContext, IFeed feed );
 
     /**
      * Create RSS/Atom as if this page was a wikipage (in contrast to Blog mode).
@@ -161,7 +161,7 @@ public interface RSSGenerator extends Initializable {
      * @param feed A Feed object to fill.
      * @return the RSS representation of the wiki context
      */
-    String generateWikiPageRSS( WikiContext wikiContext, List< WikiPage > changed, Feed feed );
+    String generateWikiPageRSS( WikiContext wikiContext, List< WikiPage > changed, IFeed feed );
 
     /**
      *  Creates RSS from modifications as if this page was a blog (using the WeblogPlugin).
@@ -171,7 +171,7 @@ public interface RSSGenerator extends Initializable {
      *  @param feed A valid Feed object.  The feed will be used to create the RSS/Atom, depending on which kind of an object you want to put in it.
      *  @return A String of valid RSS or Atom.
      */
-    String generateBlogRSS( WikiContext wikiContext, List< WikiPage > changed, Feed feed );
+    String generateBlogRSS( WikiContext wikiContext, List< WikiPage > changed, IFeed feed );
 
     /**
      *  Does the required formatting and entity replacement for XML.

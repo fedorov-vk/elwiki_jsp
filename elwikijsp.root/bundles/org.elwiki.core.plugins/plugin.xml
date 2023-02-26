@@ -30,7 +30,7 @@
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.PageViewPlugin"
+           class="org.apache.wiki.plugin.pageview.PageViewPlugin"
            id="PageViewPlugin">
      </wikiPlugin>
   </extension>

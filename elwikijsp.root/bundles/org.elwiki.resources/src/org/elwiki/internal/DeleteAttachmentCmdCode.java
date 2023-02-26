@@ -12,6 +12,7 @@ public class DeleteAttachmentCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		String attachmentId = (String) httpRequest.getParameter("idattach");
 

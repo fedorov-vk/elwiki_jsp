@@ -18,44 +18,6 @@
  */
 package org.apache.wiki.attachment;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-import org.apache.log4j.Logger;
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.attachment.IDynamicAttachment;
-import org.elwiki_data.WikiPage;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.elwiki_data.AttachmentContent;
-import org.elwiki_data.Elwiki_dataFactory;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.providers.AttachmentProvider;
-import org.apache.wiki.api.providers.PageProvider;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.api.search.SearchManager;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.parser0.MarkupParser;
-import org.apache.wiki.providers.BasicAttachmentProvider;
-import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.ClassUtil;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.common.util.EList;
-import org.elwiki.api.WikiServiceReference;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -65,7 +27,40 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.apache.wiki.api.attachment.IDynamicAttachment;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.providers.AttachmentProvider;
+import org.apache.wiki.api.providers.PageProvider;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.providers.BasicAttachmentProvider;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 /**
  *  Default implementation for {@link AttachmentManager}
@@ -74,17 +69,25 @@ import java.util.Properties;
  *
  *  @since 1.9.28
  */
-@Component(name = "elwiki.DefaultAttachmentManager", service = AttachmentManager.class, //
-		factory = "elwiki.AttachmentManager.factory")
-public class DefaultAttachmentManager implements AttachmentManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAttachmentManager",
+	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
+	scope = ServiceScope.SINGLETON,
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
+	})
+//@formatter:on
+public class DefaultAttachmentManager implements AttachmentManager, WikiManager, EventHandler {
 
     /** List of attachment types which are forced to be downloaded */
 	@Deprecated
     private String[] m_forceDownloadPatterns;
 
     private static final Logger log = Logger.getLogger( DefaultAttachmentManager.class );
+
     private AttachmentProvider m_provider;
-    private Engine m_engine;
+
     @Deprecated
     private CacheManager m_cacheManager = CacheManager.getInstance();
     @Deprecated
@@ -98,11 +101,14 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 		// TODO Auto-generated constructor stub
 	}
 
-    // -- service handling ---------------------------(start)--
+    // -- OSGi service handling ----------------------(start)--
 
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
-    
+
+    @WikiServiceReference
+    private Engine m_engine;
+
     @WikiServiceReference
     private PageManager pageManager;
 
@@ -116,29 +122,17 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
     
-    // -- service handling -----------------------------(end)--
+    // -- OSGi service handling ------------------------(end)--
 
 	/**
-     *  Creates a new AttachmentManager.  Note that creation will never fail, but it's quite likely that attachments do not function.
-     *  <p><b>DO NOT CREATE</b> an AttachmentManager on your own, unless you really know what you're doing. Just use
-     *  Wikiengine.getAttachmentManager) if you're making a module for JSPWiki.
-     *
-     *  @param engine The wikiengine that owns this attachment manager.
-     *  @param props A list of properties from which the AttachmentManager will seek its configuration. Typically this is the "jspwiki.properties".
-     */
+	 * Initialises AttachmentManager.
+	 */
     // FIXME: Perhaps this should fail somehow.
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-    //public DefaultAttachmentManager( final Engine engine, final Properties props ) {
-        m_engine = engine;
-
+	public void initialize() throws WikiException {
         try {
 			m_provider = new BasicAttachmentProvider(); 
 			m_provider.initialize( m_engine );
@@ -294,7 +288,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 
 		// Checks if the actual, real page exists without any modifications or aliases.
 		// We cannot store an attachment to a non-existent page.
-		if (wikiPage == null || !ServicesRefs.getPageManager().pageExists(wikiPage)) {
+		if (wikiPage == null || !pageManager.pageExists(wikiPage)) {
 			// the caller should catch the exception and use the exception text as an i18n key
 			throw new ProviderException("attach.parent.not.exist");
 		}
@@ -352,7 +346,7 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
         }
 
         m_provider.deleteAttachment( att );
-     // :FVK: ServicesRefs.getSearchManager().pageRemoved( att );
+     // :FVK: Engine.getSearchManager().pageRemoved( att );
         this.referenceManager.clearPageEntries( att.getPageAttachment().getName() );
     }
 
@@ -387,6 +381,21 @@ public class DefaultAttachmentManager implements AttachmentManager, Initializabl
 				log.error("Can't delete attachment content file " + fileName + ": " + e.getMessage());
 			}
 		}
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of SearchManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

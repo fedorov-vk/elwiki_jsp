@@ -14,11 +14,12 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.tags.BreadcrumbsTag;
 import org.apache.wiki.tags.BreadcrumbsTag.FixedQueue;
 import org.apache.wiki.util.HttpUtil;
-import org.elwiki.services.ServicesRefs;
 
 public class RenameCmdCode extends CmdCode {
 
@@ -31,9 +32,13 @@ public class RenameCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
+		
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 		if (wikiContext.getCommand().getTarget() == null) {
@@ -59,7 +64,8 @@ public class RenameCmdCode extends CmdCode {
 		try {
 			HttpSession session = httpRequest.getSession();
 			if (renameTo.length() > 0) {
-				String renamedTo = ServicesRefs.getPageRenamer().renamePage(wikiContext, renameFrom, renameTo,
+				PageRenamer pageRenamer = getEngine().getManager(PageRenamer.class);
+				String renamedTo = pageRenamer.renamePage(wikiContext, renameFrom, renameTo,
 						changeReferences);
 
 				FixedQueue trail = (FixedQueue) session.getAttribute(BreadcrumbsTag.BREADCRUMBTRAIL_KEY);

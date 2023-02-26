@@ -16,13 +16,14 @@
     specific language governing permissions and limitations
     under the License.  
 */
-package org.apache.wiki.parser0;
+package org.apache.wiki.parser;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.parser0.MarkupParser;
+import org.apache.wiki.parser0.WikiDocument;
 import org.jdom2.Text;
 
 /**
@@ -72,8 +73,9 @@ public class VariableContent extends Text {
         if( wysiwygEditorMode != null && wysiwygEditorMode ) {
             result = "[" + m_varName + "]";
         } else {
+        	VariableManager variableManager = context.getEngine().getManager(VariableManager.class);
             try {
-                result = ServicesRefs.getVariableManager().parseAndGetValue( context, m_varName );
+                result = variableManager.parseAndGetValue( context, m_varName );
             } catch( final NoSuchVariableException e ) {
                 result = MarkupParser.makeError( "No such variable: " + e.getMessage() ).getText(); 
             }

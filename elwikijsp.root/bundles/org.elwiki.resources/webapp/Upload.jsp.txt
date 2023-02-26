@@ -24,7 +24,7 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page errorPage="/Error.jsp" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
+<%@ page import="org.elwiki.services.WikiEngine" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
 <%! 
@@ -35,11 +35,11 @@
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     Context wikiContext = Wiki.context().create( wiki, request, ContextEnum.ATTACHMENT_UPLOAD.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     String pagereq = wikiContext.getName();
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "UploadTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "UploadTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 

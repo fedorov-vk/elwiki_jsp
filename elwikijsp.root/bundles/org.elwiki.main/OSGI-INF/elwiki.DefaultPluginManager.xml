@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.PluginManager.factory" name="elwiki.DefaultPluginManager">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.DefaultPluginManager">
+   <property name="event.topics" value="org/elwiki/events/init/*"/>
+   <service scope="singleton">
       <provide interface="org.apache.wiki.api.plugin.PluginManager"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.apache.wiki.plugin.DefaultPluginManager"/>
 </scr:component>

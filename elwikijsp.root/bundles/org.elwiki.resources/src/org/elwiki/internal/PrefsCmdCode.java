@@ -13,14 +13,16 @@ import org.elwiki_data.*;
 import org.apache.wiki.api.core.*;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.RedirectException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
@@ -31,7 +33,6 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * Code from webapp/UserPreferences.jsp (for ElWiki's PreferencesContent.jsp)<br/>
@@ -48,6 +49,9 @@ public class PrefsCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
+
+
 		/*
 		Enumeration<String> attrs = request.getAttributeNames();
 		Enumeration<String> params = request.getParameterNames();
@@ -68,14 +72,17 @@ public class PrefsCmdCode extends CmdCode {
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
+		@NonNull FilterManager filterManager = wiki.getManager(FilterManager.class);
+		ISpamFilter spamFilter = filterManager.getSpamFilter();
+
 		/*:FVK:
-		if(ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) == false) {
+		if(WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) == false) {
 			return;
 		}
 		*/
 
 		// Extract the user profile and action attributes
-		AccountManager userMgr = ServicesRefs.getAccountManager();
+		AccountManager userMgr = getEngine().getManager(AccountManager.class);
 		Session wikiSession = wikiContext.getWikiSession();
 
 		/* FIXME: Obsolete
@@ -138,8 +145,9 @@ public class PrefsCmdCode extends CmdCode {
 			String assertedName = httpRequest.getParameter("assertedName");
 			CookieAssertionLoginModule.setUserCookie(httpResponse, assertedName);
 
+			PageManager pageManager = getEngine().getManager(PageManager.class);
 			String redirectPage = httpRequest.getParameter("redirect");
-			if (!ServicesRefs.getPageManager().pageExistsByName(redirectPage)) {
+			if (!pageManager.pageExistsByName(redirectPage)) {
 				redirectPage = wiki.getWikiConfiguration().getFrontPage();
 			}
 			String viewUrl = ("cmd.prefs".equals(redirectPage)) ? "cmd.view" : wikiContext.getViewURL(redirectPage);
@@ -159,7 +167,7 @@ public class PrefsCmdCode extends CmdCode {
 		}
 
 		httpResponse.setContentType("text/html; charset=" + wiki.getContentEncoding());
-		// :FVK: String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext,
+		// :FVK: String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext,
 		// wikiContext.getShape(), "ViewTemplate.jsp" );
 	}
 

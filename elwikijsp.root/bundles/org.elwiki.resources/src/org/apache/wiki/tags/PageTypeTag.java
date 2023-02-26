@@ -53,7 +53,7 @@ public class PageTypeTag extends BaseWikiTag {
 	}
 
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = m_wikiContext.getPage();
+		final WikiPage page = getWikiContext().getPage();
 		if (page != null) {
 			if (m_type.equals("attachment") && page instanceof PageAttachment) {
 				return EVAL_BODY_INCLUDE;

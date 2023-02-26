@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspTagException;
 
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.elwiki_data.WikiPage;
@@ -36,7 +37,7 @@ public class NextVersionTag extends BaseWikiTag {
 	private static final long serialVersionUID = 8072981822263682521L;
 
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = m_wikiContext.getPage();
+		final WikiPage page = getWikiContext().getPage();
 		int version = page.getVersion();
 		if (version != WikiProvider.LATEST_VERSION) {
 			version++;

@@ -33,7 +33,6 @@ import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.InputValidator;
 import org.apache.wiki.workflow0.Decision;
@@ -41,8 +40,8 @@ import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Workflow;
-import org.apache.wiki.workflow0.WorkflowBuilder;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -50,7 +49,6 @@ import org.eclipse.core.runtime.Platform;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.permissions.WikiPermission;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 import org.osgi.service.useradmin.User;
 
@@ -79,7 +77,7 @@ public abstract class UserSupport extends BasicAccountManager {
      *  Even though this gets serialized whenever container shuts down/restarts, this gets reinstalled to the session when JSPWiki starts.
      *  This means that it's not actually necessary to save anything.
      */
-	//:FVK: - зачем это?
+	//:FVK: - зачем это? @Deprecated?
     public static final class JSONUserModule implements WikiAjaxServlet {
 
 		private volatile DefaultAccountManager m_manager;
@@ -123,12 +121,16 @@ public abstract class UserSupport extends BasicAccountManager {
          *  @throws NoSuchPrincipalException If such a name does not exist.
          */
         public UserProfile getUserInfo( final String uid ) throws NoSuchPrincipalException {
-        	AccountRegistry accountRegistry = ServicesRefs.Instance.getManager(AccountRegistry.class);
-            if( accountRegistry != null ) {
-                return accountRegistry.find( uid );
-            }
-
-            throw new IllegalStateException( "The manager is offline." );
+        	Assert.isTrue(false, "Code is not implemented.");
+        	return null;
+			/*:FVK: - commented code from JSPwiki.
+			AccountRegistry accountRegistry = Engine.Instance.getManager(AccountRegistry.class);
+			if( accountRegistry != null ) {
+			    return accountRegistry.find( uid );
+			}
+			
+			throw new IllegalStateException( "The manager is offline." );
+			*/
         }
     }
 

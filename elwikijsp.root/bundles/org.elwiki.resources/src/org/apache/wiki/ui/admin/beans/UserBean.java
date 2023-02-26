@@ -22,13 +22,13 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 import org.apache.wiki.ui.admin0.AdminBean;
-import org.elwiki.services.ServicesRefs;
 
 import javax.management.NotCompliantMBeanException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +61,7 @@ public class UserBean extends SimpleAdminBean {
     public String doPost( final WikiContext context ) {
         final HttpServletRequest request = context.getHttpRequest();
         final Session session = context.getWikiSession();
-        final AccountManager mgr = ServicesRefs.getAccountManager();
+        //:FVK: final AccountManager accountManager = super.m_engine.getManager(AccountManager.class);
         AccountRegistry accountRegistry = this.engine.getManager(AccountRegistry.class);
         final String loginid = request.getParameter( "loginid" );
         final String loginname = request.getParameter( "loginname" );

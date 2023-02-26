@@ -10,9 +10,6 @@ import org.apache.wiki.api.core.Session;
 
 public interface ISessionMonitor {
 
-	/** Reference identifier for Engine in the service activator parameters. */
-	String SESSION_MONITOR = "SESSION_MONITOR";
-
 	/**
 	 * Just looks for a WikiSession; does not create a new one.
 	 * This method may return <code>null</code>, <em>and

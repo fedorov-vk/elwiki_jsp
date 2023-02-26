@@ -30,7 +30,6 @@
 <%@ page import="org.apache.wiki.api.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.elwiki_data.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="java.security.Permission" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -40,45 +39,50 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext ctx = ContextUtil.findContext(pageContext);
-  WikiPage wikiPage = ctx.getPage();
-  int attCount = ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size();
-  String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
-  if( attCount != 0 ) attTitle += " (" + attCount + ")";
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);
+	AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
+	ProgressManager progressManager = engine.getManager(ProgressManager.class);
 
-  String creationAuthor ="";
+	WikiPage wikiPage = wikiContext.getPage();
+	int attCount = attachmentManager.listAttachments( wikiContext.getPage() ).size();
+	String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
+	if( attCount != 0 ) {
+		attTitle += " (" + attCount + ")";
+	}
 
-  //FIXME -- seems not to work correctly for attachments !!
-  WikiPage firstPage = ServicesRefs.getPageManager().getPage( wikiPage.getName(), 1 );
-  if( firstPage != null )
-  {
-    creationAuthor = firstPage.getAuthor();
+	String creationAuthor ="";
 
-    if( creationAuthor != null && creationAuthor.length() > 0 )
-    {
-      creationAuthor = TextUtil.replaceEntities(creationAuthor);
-    }
-    else
-    {
-      creationAuthor = Preferences.getBundle( ctx, InternationalizationManager.CORE_BUNDLE ).getString( "common.unknownauthor" );
-    }
-  }
+	//FIXME -- seems not to work correctly for attachments !!
+	WikiPage firstPage = pageManager.getPage( wikiPage.getName(), 1 );
+	if( firstPage != null ) {
+		creationAuthor = firstPage.getAuthor();
+		if( creationAuthor != null && creationAuthor.length() > 0 ) {
+			creationAuthor = TextUtil.replaceEntities(creationAuthor);
+		} else {
+			creationAuthor = Preferences.getBundle(wikiContext,
+				InternationalizationManager.CORE_BUNDLE).getString("common.unknownauthor");
+		}
+	}
 
-  int itemcount = 0;  //number of page versions
-  try
-  {
-    itemcount = wikiPage.getVersion(); /* highest version */
-  }
-  catch( Exception  e )  { /* dont care */ }
+	int itemcount = 0;  //number of page versions
+	try {
+		itemcount = wikiPage.getVersion(); /* highest version */
+	} catch( Exception  e )  { /* dont care */ }
 
-  int pagesize = 20;
-  int startitem = itemcount-1; /* itemcount==1-20 -> startitem=0-19 ... */
+	int pagesize = 20;
+	int startitem = itemcount-1; /* itemcount==1-20 -> startitem=0-19 ... */
 
-  String parm_start = (String)request.getParameter( "start" );
-  if( parm_start != null ) startitem = Integer.parseInt( parm_start ) ;
+	String parm_start = (String)request.getParameter( "start" );
+	if( parm_start != null ) {
+		startitem = Integer.parseInt( parm_start ) ;
+	}
 
-  /* round to start of block: 0-19 becomes 0; 20-39 becomes 20 ... */
-  if( startitem > -1 ) startitem = ( startitem / pagesize ) * pagesize;
+	/* round to start of block: 0-19 becomes 0; 20-39 becomes 20 ... */
+	if( startitem > -1 ) {
+		startitem = ( startitem / pagesize ) * pagesize;
+	}
 
   /* startitem drives the pagination logic */
   /* startitem=-1:show all; startitem=0:show block 1-20; startitem=20:block 21-40 ... */
@@ -90,8 +94,6 @@
 --%>
 
 <%
-	Engine engine = ctx.getEngine();
-	PageManager pageManager = engine.getManager(PageManager.class);
 	String attId = request.getParameter("id");
 	//FIXME: here pageAttachment - can be null (not found).
 	PageAttachment pageAttachment = pageManager.getPageAttachmentById(attId);
@@ -115,9 +117,9 @@
 <hr width="0pt"> <%-- :FVK: workaround. layout hack --%>
 
 <%
-  int MAXATTACHNAMELENGTH = 30;
+int MAXATTACHNAMELENGTH = 30;
 %>
-<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
+<c:set var="progressId" value="<%=progressManager.getNewProgressIdentifier()%>" />
 <wiki:Permission permission="upload">
 
 <!-- TODO: understand and release follow //wiki:Link path='attach'// :FVK:  -->
@@ -148,7 +150,7 @@
     </div>
     <div class="form-group">
     <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.PAGE_INFO%>' format='url'/>" />
-    <input type="hidden" name="idpage" value="<%=ctx.getPageId()%>" />
+    <input type="hidden" name="idpage" value="<%=wikiContext.getPageId()%>" />
     <input class="btn btn-success form-col-offset-20 form-col-50"
            type="submit" name="upload" id="upload" disabled="disabled" value="<fmt:message key='attach.add.submit'/>" />
     <%--<input type="hidden" name="action" value="upload" />--%>

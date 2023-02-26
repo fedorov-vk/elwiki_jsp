@@ -47,6 +47,7 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -57,6 +58,7 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.HttpUtil;
@@ -64,7 +66,6 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.PermissionFactory;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.WikiPage;
@@ -362,8 +363,9 @@ public class AttachmentServlet extends HttpServlet {
 			req.getSession().removeAttribute("msg");
 			res.sendRedirect(nextPage);
 		} catch (RedirectException e) {
-			//TODO: remove from here accessing into ServicesRefs.
-			Session session = ServicesRefs.getSessionMonitor().getWikiSession(req);
+			//TODO: remove from here accessing into WikiEngine.
+			Engine engine = ContextUtil.findContext(req).getEngine();
+			Session session = engine.getManager(ISessionMonitor.class).getWikiSession(req);
 			session.addMessage(e.getMessage());
 
 			req.getSession().setAttribute("msg", e.getMessage());

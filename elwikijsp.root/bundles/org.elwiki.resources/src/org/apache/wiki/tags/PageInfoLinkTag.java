@@ -25,8 +25,9 @@ import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -62,11 +63,13 @@ public class PageInfoLinkTag extends BaseWikiLinkTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
 		String pageName = m_pageName;
 
 		if (m_pageName == null) {
-			final WikiPage p = m_wikiContext.getPage();
+			final WikiPage p = wikiContext.getPage();
 			if (p != null) {
 				pageName = p.getName();
 			} else {
@@ -74,9 +77,9 @@ public class PageInfoLinkTag extends BaseWikiLinkTag {
 			}
 		}
 
-		if (ServicesRefs.getPageManager().pageExistsByName(pageName)) {
+		if (pageManager.pageExistsByName(pageName)) {
 			final JspWriter out = pageContext.getOut();
-			final String url = m_wikiContext.getURL(ContextEnum.PAGE_INFO.getRequestContext(), pageName);
+			final String url = wikiContext.getURL(ContextEnum.PAGE_INFO.getRequestContext(), pageName);
 
 			switch (m_format) {
 			case ANCHOR:

@@ -20,5 +20,6 @@ Bundle-Activator: org.elwiki.pagemanager.internal.bundle.PageManagerActivator
 Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.osgi.service.component;version="1.4.0",
- org.osgi.service.component.annotations;version="1.2.0"
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.osgi.service.event;version="1.4.1"
 Bundle-ActivationPolicy: lazy

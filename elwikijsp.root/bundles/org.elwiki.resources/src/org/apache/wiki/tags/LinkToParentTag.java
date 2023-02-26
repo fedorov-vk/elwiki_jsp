@@ -45,7 +45,7 @@ public class LinkToParentTag extends LinkToTag {
 	private static final long serialVersionUID = -3221811690118879748L;
 
 	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage p = m_wikiContext.getPage();
+		final WikiPage p = getWikiContext().getPage();
 
 		//TODO: разобраться, (заменить код?) - //p instanceof PageAttachment// :FVK:.
 		//  We just simply set the page to be our parent page and call the superclass.

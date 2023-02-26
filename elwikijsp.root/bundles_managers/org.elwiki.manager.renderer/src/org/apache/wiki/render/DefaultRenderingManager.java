@@ -18,25 +18,20 @@
  */
 package org.apache.wiki.render;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.AttachmentContent;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
@@ -54,20 +49,26 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.render0.WikiRenderer;
-import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.configuration.ScopedPreferenceStore;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.Properties;
-
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 /**
  *  This class provides a facade towards the differing rendering routines.  You should use the routines in this manager
@@ -79,9 +80,16 @@ import java.util.Properties;
  *
  *  @since  2.4
  */
-@Component(name = "elwiki.DefaultRenderingManager", service = RenderingManager.class, //
-		factory = "elwiki.RenderingManager.factory")
-public class DefaultRenderingManager implements RenderingManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultRenderingManager",
+	service = { RenderingManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultRenderingManager implements RenderingManager, WikiManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultRenderingManager.class );
 
@@ -95,8 +103,6 @@ public class DefaultRenderingManager implements RenderingManager {
     private static final String DEFAULT_RENDERER = XHTMLRenderer.class.getName();
     /** The name of the default WYSIWYG renderer. */
     private static final String DEFAULT_WYSIWYG_RENDERER = WysiwygEditingRenderer.class.getName();
-
-    private Engine m_engine;
 
     private boolean m_useCache = true;
     private final CacheManager m_cacheManager = CacheManager.getInstance();
@@ -112,21 +118,28 @@ public class DefaultRenderingManager implements RenderingManager {
     private Constructor< ? > m_rendererWysiwygConstructor;
     private String m_markupParserClass = DEFAULT_PARSER;
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
-    @WikiServiceReference
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
+
+	@WikiServiceReference
 	private AttachmentManager attachmentManager;
 
-    @WikiServiceReference
+	@WikiServiceReference
 	private FilterManager filterManager;
 
-    @WikiServiceReference
+	@WikiServiceReference
 	private PageManager pageManager;
-	
-    @WikiServiceReference
+
+	@WikiServiceReference
 	private ReferenceManager referenceManager;
 
-    @WikiServiceReference
+	@WikiServiceReference
 	private VariableManager variableManager;
 
 	/**
@@ -136,14 +149,11 @@ public class DefaultRenderingManager implements RenderingManager {
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
     /**
      *  {@inheritDoc}
@@ -151,10 +161,8 @@ public class DefaultRenderingManager implements RenderingManager {
      *  Checks for cache size settings, initializes the document cache. Looks for alternative WikiRenderers, initializes one, or the
      *  default XHTMLRenderer, for use.
      */
-    @Override
-    public void initialize( final Engine engine ) throws WikiException {
-        m_engine = engine;
-        IPreferenceStore properties = engine.getWikiPreferences();
+    public void initialize() throws WikiException {
+        IPreferenceStore properties = wikiConfiguration.getWikiPreferences();        
         m_markupParserClass = TextUtil.getStringProperty(properties, PROP_PARSER, DEFAULT_PARSER );
         /*:FVK:
         if( !ClassUtil.assignable( m_markupParserClass, MarkupParser.class.getName() ) ) {
@@ -166,7 +174,7 @@ public class DefaultRenderingManager implements RenderingManager {
         m_beautifyTitle  = TextUtil.getBooleanProperty( properties, PROP_BEAUTIFYTITLE, m_beautifyTitle );
         m_useCache = true; //:FVK: - removed option: TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
         if( m_useCache ) {
-            final String documentCacheName = engine.getWikiConfiguration().getApplicationName() + "." + DOCUMENTCACHE_NAME;
+            final String documentCacheName = wikiConfiguration.getApplicationName() + "." + DOCUMENTCACHE_NAME;
             if (m_cacheManager.cacheExists(documentCacheName)) {
                 m_documentCache = m_cacheManager.getCache(documentCacheName);
             } else {
@@ -522,6 +530,22 @@ public class DefaultRenderingManager implements RenderingManager {
             }
         }
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		//log.debug("~~ ~~ ~~ Recevied event with topic: " + event.getTopic());
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of RenderingManager.", e);
+			}
+			break;
+		}		
+	}
 
 }
  

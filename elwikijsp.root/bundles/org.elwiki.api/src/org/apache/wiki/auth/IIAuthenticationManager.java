@@ -18,22 +18,20 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
-import org.elwiki.data.authorize.GroupPrincipal;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
  * Manages authentication activities for a Engine: user login, logout, and credential refreshes. This class uses JAAS to determine how
@@ -46,7 +44,7 @@ import java.util.Set;
  * 
  * @since 2.3
  */
-public interface IIAuthenticationManager extends Initializable {
+public interface IIAuthenticationManager {
 
     /** If this jspwiki.properties property is <code>true</code>, logs the IP address of the editor on saving. */
     String PROP_STOREIPADDRESS = "jspwiki.storeIPAddress";

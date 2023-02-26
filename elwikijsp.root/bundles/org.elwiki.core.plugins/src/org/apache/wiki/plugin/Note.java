@@ -29,7 +29,6 @@ import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.services.ServicesRefs;
 
 import java.util.Map;
 

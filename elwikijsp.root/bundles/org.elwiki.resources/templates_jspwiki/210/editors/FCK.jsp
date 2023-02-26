@@ -31,7 +31,6 @@
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
@@ -57,20 +56,20 @@
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-	String clone = request.getParameter( "clone" );
+String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = WikiEngine.getPageManager().getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
+        AuthorizationManager mgr = WikiEngine.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
 
         try
         {
           if( mgr.checkPermission( context.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = WikiEngine.getPageManager().getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -79,15 +78,16 @@
 %>
 </wiki:NoSuchPage>
 <%
-    if( usertext == null )
+if( usertext == null )
     {
-        usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
-    }%>
+        usertext = WikiEngine.getPageManager().getPureText( context.getPage() );
+    }
+%>
 </wiki:CheckRequestContext>
 <%
-	if( usertext == null ) usertext = "";
+if( usertext == null ) usertext = "";
 
-   String pageAsHtml = StringEscapeUtils.escapeEcmaScript( ServicesRefs.getRenderingManager().getHTML( context, usertext ) );
+   String pageAsHtml = StringEscapeUtils.escapeEcmaScript( WikiEngine.getRenderingManager().getHTML( context, usertext ) );
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for FCK has been rendered.

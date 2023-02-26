@@ -148,12 +148,12 @@ public class ContentTag extends BaseWikiTag {
 	public final int doEndTag() throws JspException {
 		try {
 			// Check the overridden shapes first
-			final String requestContext = m_wikiContext.getRequestContext();
+			final String requestContext = getWikiContext().getRequestContext();
 			String contentTemplate = m_mappings.get(requestContext);
 
 			// If not found, use the defaults
 			if (contentTemplate == null) {
-				contentTemplate = m_wikiContext.getContentTemplate();
+				contentTemplate = getWikiContext().getContentTemplate();
 			}
 
 			// If still no, something fishy is going on

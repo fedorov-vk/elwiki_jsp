@@ -42,7 +42,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.IWikiPreferences;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -181,7 +180,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 			log.info("Saving attachment contents to " + newfile.getAbsolutePath());
 			FileUtil.copyContents(data, out);
 
-			PageManager pm = ServicesRefs.getPageManager();
+			PageManager pm = m_engine.getManager(PageManager.class);
 			pm.addAttachment(wikiPage, attContent, attName);
 		} catch (final Exception ex) {
 			log.error("Could not save attachment data: ", ex);

@@ -18,47 +18,6 @@
  */
 package org.apache.wiki.references;
 
-import org.apache.commons.lang3.time.StopWatch;
-import org.apache.log4j.Logger;
-import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.LinkCollector;
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.IStorageCdo;
-import org.apache.wiki.api.IStorageCdo.ITransactionalOperation;
-import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.PageAttachment;
-import org.elwiki_data.PageContent;
-import org.elwiki_data.PageReference;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
-import org.apache.wiki.api.exceptions.FilterException;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.filters.BasePageFilter;
-import org.apache.wiki.api.providers.PageProvider;
-import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.ui.TemplateManager;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.emf.cdo.transaction.CDOTransaction;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.WikiServiceReference;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -67,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -75,14 +33,43 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.log4j.Logger;
+import org.apache.wiki.InternalWikiException;
+import org.apache.wiki.LinkCollector;
+import org.apache.wiki.Wiki;
+import org.apache.wiki.api.IStorageCdo;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEvent;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.filters.BasePageFilter;
+import org.apache.wiki.api.providers.PageProvider;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /*
   BUGS
@@ -142,9 +129,18 @@ import java.util.TreeSet;
 // FIXME: The way that we save attributes is now a major booboo, and must be
 //        replace forthwith.  However, this is a workaround for the great deal
 //        of problems that occur here...
-@Component(name = "elwiki.DefaultReferenceManager", service = ReferenceManager.class, //
-		factory = "elwiki.ReferenceManager.factory")
-public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultReferenceManager",
+	service = { ReferenceManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//FVK: factory = "elwiki.ReferenceManager.factory")
+//@formatter:on
+public class DefaultReferenceManager extends BasePageFilter
+		implements ReferenceManager, WikiManager, EventHandler {
 
     /**
      *  Maps page wikiname to a Collection of pages it refers to. The Collection must contain Strings. The Collection may contain
@@ -181,18 +177,18 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         m_unmutableRefersTo   = Collections.unmodifiableMap( m_refersTo );
     }
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
-    @WikiServiceReference
-    PageManager pageManager;
+	@WikiServiceReference
+	private IStorageCdo storageCdo; //:FVK: - unused?
 
-    @WikiServiceReference
-    private IStorageCdo storageCdo; //:FVK: - unused?
-
+	@WikiServiceReference
+    protected Engine engine;
+	
 	/**
 	 * ReferenceManager initializer.
 	 * 
@@ -200,30 +196,41 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
+	protected void startup() throws WikiException {
+		//
+	}
+
+	// -- OSGi service handling ------------------------(end)--
+
+	protected void initialize() throws WikiException {
+		super.initialize(this.engine); //:FVK: workaround.
+	}
+
+	/**
+	 * Initializes the reference manager. Scans all existing WikiPages for internal links and adds
+	 * them to the ReferenceManager object.
+	 *
+	 * @throws WikiException If the reference manager initialization fails.
+	 */
+	private void initializeReferences() throws WikiException {
+		try {
+			final ArrayList<WikiPage> pages = new ArrayList<>();
+			pages.addAll(pageManager.getAllPages());
+			this.initialize(pages);
+		} catch (Exception e) {
+			throw new WikiException("Could not populate ReferenceManager.", e);
 		}
 	}
-    
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-		super.initialize(engine);
-		IPreferenceStore wikiPreferences = engine.getWikiPreferences();
-	}
-
-	// -- service handling -----------------------------(end)--
-
+	
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
      */
 	@Deprecated
     private void updatePageReferences( final WikiPage page ) throws ProviderException {
-        final String content = ServicesRefs.getPageManager().getPageText( page.getName(), PageProvider.LATEST_VERSION );
+        final String content = pageManager.getPageText( page.getName(), PageProvider.LATEST_VERSION );
         final Collection< String > links = scanWikiLinks( page, content );
         final TreeSet< String > res = new TreeSet<>( links );
-        final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( page );
+        final List< PageAttachment > attachments = attachmentManager.listAttachments( page );
         for( final PageAttachment att : attachments ) {
             res.add( att.getName() );
         }
@@ -269,7 +276,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
             for( final WikiPage page : pages ) {
                 if( !( page instanceof PageAttachment ) ) {
                     // Refresh with the latest copy
-                    final WikiPage wp = ServicesRefs.getPageManager().getPage( page.getName() );
+                    final WikiPage wp = pageManager.getPage( page.getName() );
 
                     if( wp.getLastModifiedDate() == null ) {
                         log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
@@ -310,7 +317,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         sw.stop();
         log.info( "Cross reference scan done in "+sw );
 
-        WikiEventManager.addWikiEventListener( ServicesRefs.getPageManager(), this );
+        WikiEventManager.addWikiEventListener( pageManager, this );
     }
 
     /**
@@ -500,7 +507,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 		WikiPage page = context.getPage();
 		LinkCollector localCollector = new LinkCollector();
 		LinkCollector unknownPagesCollector = new LinkCollector();
-		ServicesRefs.getRenderingManager().textToHTML(Wiki.context().create(ServicesRefs.Instance, page), content,
+		renderingManager.textToHTML(Wiki.context().create(m_engine, page), content,
 				localCollector, null, null, unknownPagesCollector, false, true);
 
 		Collection<String> referencedLinks = localCollector.getLinks();
@@ -520,7 +527,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     @Override
     public Collection< String > scanWikiLinks( final WikiPage page, final String pagedata ) {
         final LinkCollector localCollector = new LinkCollector();
-        ServicesRefs.getRenderingManager().textToHTML( Wiki.context().create( ServicesRefs.Instance, page ),
+        renderingManager.textToHTML( Wiki.context().create( m_engine, page ),
                                                                   pagedata,
                                                                   localCollector,
                                                                   null,
@@ -561,7 +568,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
                 // We won't put it back again if it becomes empty and does not exist.  It will be added
                 // later on anyway, if it becomes referenced again.
-                if( !( refBy.isEmpty() && !ServicesRefs.getPageManager().pageExistsByName( referredPageName ) ) ) {
+                if( !( refBy.isEmpty() && !pageManager.pageExistsByName( referredPageName ) ) ) {
                     m_referredBy.put( referredPageName, refBy );
                 }
             }
@@ -596,7 +603,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /*:FVK:
     @Owerride
     public void updateReferences( final WikiPage page ) {
-        final String pageData = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+        final String pageData = Engine.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
         updateReferences( page, scanWikiLinks( page, pageData ) );
     }*/
 
@@ -682,7 +689,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
             // If the page is referred to by no one AND it doesn't even exist, we might just as well forget about this
             // entry. It will be added again elsewhere if new references appear.
-            if( ( oldRefBy == null || oldRefBy.isEmpty() ) && !ServicesRefs.getPageManager().pageExistsByName( referredPage ) ) {
+            if( ( oldRefBy == null || oldRefBy.isEmpty() ) && !pageManager.pageExistsByName( referredPage ) ) {
                 m_referredBy.remove( referredPage );
             }
         }
@@ -799,7 +806,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         for( final Collection<String> refs : allReferences ) {
             if( refs != null ) {
                 for( final String aReference : refs ) {
-                    if( !ServicesRefs.getPageManager().pageExistsByName( aReference ) ) {
+                    if( !pageManager.pageExistsByName( aReference ) ) {
                         uncreated.add( aReference );
                     }
                 }
@@ -929,5 +936,27 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
             }
         }
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultReferenceManager.", e);
+			}
+			break;
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
+			try {
+				initializeReferences();
+			} catch (WikiException e) {
+				log.error("Failed initialization of references for DefaultReferenceManager.", e);
+			}
+			break;
+		}
+	}
 
 }

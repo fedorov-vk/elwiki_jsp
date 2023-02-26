@@ -7,7 +7,8 @@ Bundle-Activator: org.elwiki.manager.wikiscope.internal.ScopeActivator
 Bundle-Vendor: FVK
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.manager.wikiscope
-Import-Package: org.osgi.framework;version="1.3.0"
+Import-Package: org.elwiki.configuration,
+ org.osgi.framework;version="1.3.0"
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.osgi;bundle-version="3.17.100",
  org.eclipse.osgi.services;bundle-version="3.10.200",

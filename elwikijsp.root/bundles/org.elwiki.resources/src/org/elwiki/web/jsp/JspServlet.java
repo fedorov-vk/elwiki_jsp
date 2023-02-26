@@ -3,20 +3,23 @@ package org.elwiki.web.jsp;
 import javax.servlet.Servlet;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 //@formatter:off
 @Component(
-    service=Servlet.class,
-    property= {
+	name = "web.JspServlet",
+    service = Servlet.class,
+    property = {
     	HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/*",
     	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
     	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
-    scope=ServiceScope.PROTOTYPE,
-    name="web.JspServlet")
+//    reference = @Reference(name = "elwiki.Engine", service = Engine.class),
+    scope = ServiceScope.PROTOTYPE)
 //@formatter:on
 public class JspServlet extends JspServletWrapper {
 

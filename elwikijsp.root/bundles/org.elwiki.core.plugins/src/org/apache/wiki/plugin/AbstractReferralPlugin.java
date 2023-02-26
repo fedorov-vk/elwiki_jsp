@@ -33,6 +33,7 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.parser0.MarkupParser;
@@ -45,7 +46,6 @@ import org.apache.wiki.util.comparators.CollatorComparator;
 import org.apache.wiki.util.comparators.HumanComparator;
 import org.apache.wiki.util.comparators.JavaNaturalComparator;
 import org.apache.wiki.util.comparators.LocaleComparator;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -149,9 +149,10 @@ public abstract class AbstractReferralPlugin implements Plugin {
      */
     // FIXME: The compiled pattern strings should really be cached somehow.
     public void initialize( final WikiContext context, final Map<String, String> params ) throws PluginException {
-    	m_engine = context.getEngine();
-    	pageManager = m_engine.getManager(PageManager.class);
-    	renderingManager = m_engine.getManager(RenderingManager.class);
+    	this.m_engine = context.getEngine();
+    	this.pageManager = m_engine.getManager(PageManager.class);
+    	this.renderingManager = m_engine.getManager(RenderingManager.class);
+
     	m_dateFormat = Preferences.getDateFormat( context, TimeFormat.DATETIME );
     	m_maxwidth = TextUtil.parseIntParameter( params.get( PARAM_MAXWIDTH ), Integer.MAX_VALUE );
         if( m_maxwidth < 0 ) m_maxwidth = 0;
@@ -313,7 +314,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 //  if we want to show the last modified date of the most recently change page, we keep a "high watermark" here:
                 final WikiPage page;
                 if( m_lastModified ) {
-                    page = ServicesRefs.getPageManager().getPage( pageName );
+                    page = this.pageManager.getPage( pageName );
                     if( page != null ) {
                         final Date lastModPage = page.getLastModifiedDate();
                         if( log.isDebugEnabled() ) {
@@ -490,7 +491,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
         final String order = params.get( PARAM_SORTORDER );
         if( order == null || order.length() == 0 ) {
             // Use the configured comparator
-            m_sorter = ServicesRefs.getPageManager().getPageSorter();
+            m_sorter = this.pageManager.getPageSorter();
         } else if( order.equalsIgnoreCase( PARAM_SORTORDER_JAVA ) ) {
             // use Java "natural" ordering
             m_sorter = new PageSorter( JavaNaturalComparator.DEFAULT_JAVA_COMPARATOR );
@@ -507,7 +508,7 @@ public abstract class AbstractReferralPlugin implements Plugin {
                 m_sorter = new PageSorter( new CollatorComparator( collator ) );
             } catch( final ParseException pe ) {
                 log.info( "Failed to parse requested collator - using default ordering", pe );
-                m_sorter = ServicesRefs.getPageManager().getPageSorter();
+                m_sorter = this.pageManager.getPageSorter();
             }
         }
     }

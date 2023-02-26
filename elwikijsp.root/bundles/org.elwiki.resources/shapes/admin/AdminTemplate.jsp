@@ -24,7 +24,6 @@
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.ui.admin.*" %>
 <%@ page import="org.apache.wiki.ui.admin0.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <!doctype html>
 <html lang="en">
@@ -50,7 +49,7 @@ in your <code>jspwiki.properties</code> file.</div>
 
 <%
     WikiContext ctx = ContextUtil.findContext(pageContext);
-    AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
+    AdminBeanManager mgr = ctx.getEngine().getManager(AdminBeanManager.class);
 %>
 
 <div class="tabs admin">

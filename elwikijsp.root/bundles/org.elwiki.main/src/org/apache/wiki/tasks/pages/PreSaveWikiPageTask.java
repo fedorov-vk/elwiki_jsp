@@ -26,7 +26,6 @@ import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
-import org.elwiki.services.ServicesRefs;
 
 import java.security.Principal;
 
@@ -71,7 +70,8 @@ public class PreSaveWikiPageTask extends Task {
         }
 
         // Run the pre-save filters. If any exceptions, add error to list, abort, and redirect
-        final String saveText = ServicesRefs.getFilterManager().doPreSaveFiltering(m_context, m_proposedText);
+        FilterManager filterManager = m_context.getEngine().getManager(FilterManager.class);
+        final String saveText = filterManager.doPreSaveFiltering(m_context, m_proposedText);
 
         // Stash the wiki context, old and new text as workflow attributes
         getWorkflowContext().put( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, saveText );

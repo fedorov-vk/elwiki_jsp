@@ -30,7 +30,6 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.HttpUtil" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
@@ -39,10 +38,10 @@
 %>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_DELETE.getRequestContext() );
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
         return;
@@ -50,7 +49,7 @@
     String pagereq = wikiContext.getName();
 
     WikiPage wikipage      = wikiContext.getPage();
-    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
+    WikiPage latestversion = WikiEngine.getPageManager().getPage( pagereq );
 
     String delete = request.getParameter( "delete" );
     String deleteall = request.getParameter( "delete-all" );
@@ -69,7 +68,7 @@
     if( deleteall != null ) {
         log.info("Deleting page "+pagereq+". User="+request.getRemoteUser()+", host="+HttpUtil.getRemoteAddress(request) );
 
-        ServicesRefs.getPageManager().deletePage( pagereq );
+        WikiEngine.getPageManager().deletePage( pagereq );
 
         FixedQueue trail = (FixedQueue) session.getAttribute( BreadcrumbsTag.BREADCRUMBTRAIL_KEY );
         if( trail != null )
@@ -89,10 +88,10 @@
             if( paramName.startsWith("delver") ) {
                 int version = Integer.parseInt( paramName.substring(7) );
 
-                WikiPage p = ServicesRefs.getPageManager().getPage( pagereq, version );
+                WikiPage p = WikiEngine.getPageManager().getPage( pagereq, version );
 
                 log.debug("Deleting version "+version);
-                ServicesRefs.getPageManager().deleteVersion( p );
+                WikiEngine.getPageManager().deleteVersion( p );
             }
         }
 
@@ -106,6 +105,6 @@
     // Set the content type and include the response content
     // FIXME: not so.
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 

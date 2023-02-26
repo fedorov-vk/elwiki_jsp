@@ -21,7 +21,6 @@
 <%@ page errorPage="/shapes/Error.jsp" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -29,19 +28,19 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-	WikiContext ctx = ContextUtil.findContext( pageContext );
-    IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
-    String loginURL = "";
-
-    if( mgr.isContainerAuthenticated() ) {
-        loginURL = "j_security_check";
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	IIAuthenticationManager authenticationManager = engine.getManager(IIAuthenticationManager.class);
+	String loginURL = "";
+    if( authenticationManager.isContainerAuthenticated() ) {
+    	loginURL = "j_security_check";
     } else {
-        String redir = (String)ctx.getVariable("redirect");
-        if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
-        loginURL = ctx.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), redir );
+    	String redir = (String)wikiContext.getVariable("redirect");
+    	if( redir == null ) redir = wikiContext.getConfiguration().getFrontPage();
+    	loginURL = wikiContext.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), redir );
     }
 %>
-<c:set var="allowsCookieAuthentication" value="<%= mgr.allowsCookieAuthentication() %>" />
+<c:set var="allowsCookieAuthentication" value="<%= authenticationManager.allowsCookieAuthentication() %>" />
 <div class="page-content">
 
 <%-- Login functionality --%>

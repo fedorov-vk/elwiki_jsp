@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.StorageCdo.factory" name="elwiki.StorageCdo">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.StorageCdo">
+   <service scope="singleton">
       <provide interface="org.apache.wiki.api.IStorageCdo"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
    </service>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.data.persist.internal.DataStore"/>

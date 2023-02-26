@@ -32,15 +32,14 @@
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!
     Logger log = Logger.getLogger("JSPWiki");
 %>
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
-    IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
+Engine wiki = Wiki.engine().find( getServletConfig() );
+    IIAuthenticationManager mgr = WikiEngine.getAuthenticationManager();
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
     pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     Session wikiSession = wikiContext.getWikiSession();
@@ -53,7 +52,7 @@
 
     // Are we saving the profile?
     if( "saveProfile".equals(request.getParameter("action")) ) {
-        AccountManager userMgr = ServicesRefs.getAccountManager();
+        AccountManager userMgr = WikiEngine.getAccountManager();
         UserProfile profile = userMgr.parseProfile( wikiContext );
          
         // Validate the profile
@@ -66,7 +65,7 @@
                 CookieAssertionLoginModule.setUserCookie( response, profile.getFullname() );
             } catch( DuplicateUserException due ) {
                 // User collision! (full name or wiki name already taken)
-                wikiSession.addMessage( "profile", ServicesRefs.getInternationalizationManager()
+                wikiSession.addMessage( "profile", WikiEngine.getInternationalizationManager()
                 		                               .get( InternationalizationManager.CORE_BUNDLE,
                 		                            		 Preferences.getLocale( wikiContext ), 
                 		                            		 due.getMessage(), due.getArgs() ) );
@@ -152,7 +151,7 @@
 
         // If wiki page was "Login", redirect to main, otherwise use the page supplied
         String redirectPage = request.getParameter( "redirect" );
-        if( !ServicesRefs.getPageManager().pageExistsByName( redirectPage ) ) {
+        if( !WikiEngine.getPageManager().pageExistsByName( redirectPage ) ) {
            redirectPage = wikiContext.getConfiguration().getFrontPage();
         }
         String viewUrl = ( "Login".equals( redirectPage ) ) ? "Wiki.jsp" : wikiContext.getViewURL( redirectPage );

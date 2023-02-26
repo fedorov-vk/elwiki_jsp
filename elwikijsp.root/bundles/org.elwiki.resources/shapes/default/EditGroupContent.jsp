@@ -32,26 +32,23 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext grCtx = ContextUtil.findContext( pageContext );
+	WikiContext grCtx = ContextUtil.findContext( pageContext );
+	// Extract the group name and members
+	String name = request.getParameter( "group" );
+	//TODO: :FVK: разобраться с -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
+	IGroupWiki group = (IGroupWiki)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
+	String[] members = {};
 
-  // Extract the group name and members
-  String name = request.getParameter( "group" );
-  //TODO: :FVK: разобраться с -- getAttribute( "Group", PageContext.REQUEST_SCOPE )
-  IGroupWiki group = (IGroupWiki)pageContext.getAttribute( "Group", PageContext.REQUEST_SCOPE );
-  String[] members = {};
+	if ( group != null ) {
+		name = group.getName();
+		members = group.getMemberNames();
+		Arrays.sort(members);
+	}
 
-  if ( group != null )
-  {
-    name = group.getName();
-    members = group.getMemberNames();
-    Arrays.sort(members);
-  }
-
-  StringBuffer membersAsString = new StringBuffer();
-  for ( int i = 0; i < members.length; i++ )
-  {
-    membersAsString.append( members[i].trim() ).append( '\n' );
-  }
+	StringBuffer membersAsString = new StringBuffer();
+	for ( int i = 0; i < members.length; i++ ) {
+		membersAsString.append( members[i].trim() ).append( '\n' );
+	}
 %>
 <c:set var="name" value="<%= name%>" />
 <c:set var="members" value="<%= membersAsString%>" />

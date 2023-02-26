@@ -11,15 +11,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.services.ServicesRefs;
 
 public class DefaultAuthorizer implements Authorizer {
 	
 	private @NonNull AccountManager accountManager;
 
-	public DefaultAuthorizer() {
-		super();
-		this.accountManager = ServicesRefs.Instance.getManager(AccountManager.class);
+	public DefaultAuthorizer(Engine engine) {
+		this.accountManager = engine.getManager(AccountManager.class);
 	}
 
 	@Override

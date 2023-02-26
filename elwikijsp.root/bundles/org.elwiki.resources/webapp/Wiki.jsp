@@ -27,15 +27,15 @@
 <%@ page import="org.apache.wiki.util.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.elwiki_data.impl.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! Logger log = Logger.getLogger("JSPWiki"); %>
-<% Engine wiki = Wiki.engine().find( getServletConfig() );
+<%
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
 
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
     	return;
     }
     String pagereq = wikiContext.getName();
@@ -56,7 +56,7 @@
 
         // Set the content type and include the response content
         response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-        String contentPage = ServicesRefs.getTemplateManager()
+        String contentPage = WikiEngine.getTemplateManager()
         		.findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" /><%
     }

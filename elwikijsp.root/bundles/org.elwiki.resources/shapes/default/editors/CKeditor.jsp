@@ -24,6 +24,7 @@
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.filters0.*" %>
+<%@ page import="org.apache.wiki.api.filters.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.parser0.MarkupParser" %>
 <%@ page import="org.apache.wiki.render0.*" %>
@@ -31,7 +32,6 @@
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.elwiki_data.WikiPage" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -42,65 +42,68 @@
     This provides the WYSIWYG CKeditor for JSPWiki.
 --%>
 <%
-	WikiContext context = ContextUtil.findContext( pageContext );
-    Engine engine = context.getEngine();
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	PageManager pageManager = engine.getManager(PageManager.class);
+	RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+	EditorManager editorManager = engine.getManager(EditorManager.class);
+	ISpamFilter spamFilter = engine.getManager(FilterManager.class).getSpamFilter();
 
-    /* local download of CKeditor */
-    TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT,
-           context.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "scripts/ckeditor/ckeditor.js" ) );
+	/* local download of CKeditor */
+	TemplateManager.addResourceRequest( wikiContext, TemplateManager.RESOURCE_SCRIPT,
+		wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "scripts/ckeditor/ckeditor.js" ) );
 
     /*  Use CKEditor from a CDN
-    TemplateManager.addResourceRequest( context, TemplateManager.RESOURCE_SCRIPT, "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js" );
+    TemplateManager.addResourceRequest( wikiContext, TemplateManager.RESOURCE_SCRIPT, "//cdn.ckeditor.com/4.5.1/standard/ckeditor.js" );
     */
 
-    context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
-    context.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
+    wikiContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+    wikiContext.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
-    WikiPage wikiPage = context.getPage();
-    String originalCCLOption = (String)wikiPage.getAttributes().get(MarkupParser.PROP_CAMELCASELINKS );
-    wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, "false");
+	WikiPage wikiPage = wikiContext.getPage();
+	String originalCCLOption = (String)wikiPage.getAttributes().get(MarkupParser.PROP_CAMELCASELINKS );
+	wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, "false");
 
-    String usertext = ContextUtil.getEditedText(pageContext);
+	String usertext = ContextUtil.getEditedText(pageContext);
 %>
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
 <wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-	String clone = request.getParameter( "clone" );
+String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = pageManager.getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
-
         try
         {
-          if( mgr.checkPermission( context.getWikiSession(), pp ) )
+          if( authorizationManager.checkPermission( wikiContext.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = pageManager.getPureText( p );
           }
         }
-        catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
+        catch( Exception e ) {  /*:FVK: log.error( "Accessing clone page "+clone, e );*/ }
     }
   }
 %>
 </wiki:NoSuchPage>
 <%
-  if( usertext == null )
+if( usertext == null )
   {
-    usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
+    usertext = pageManager.getPureText( wikiContext.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
 <%
-    if( usertext == null ) usertext = "";
+if( usertext == null ) usertext = "";
 
     String pageAsHtml;
     try
     {
-        pageAsHtml = ServicesRefs.getRenderingManager().getHTML( context, usertext );
+        pageAsHtml = renderingManager.getHTML( wikiContext, usertext );
     }
         catch( Exception e )
     {
@@ -115,8 +118,8 @@
 
    // Disable the WYSIWYG_EDITOR_MODE and reset the other properties immediately
    // after the XHTML for CKeditor has been rendered.
-   context.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
-   context.setVariable( VariableManager.VAR_RUNFILTERS,  null );
+   wikiContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.FALSE );
+   wikiContext.setVariable( VariableManager.VAR_RUNFILTERS,  null );
    wikiPage.getAttributes().map().put(MarkupParser.PROP_CAMELCASELINKS, originalCCLOption);
 
    /*FFS not used
@@ -139,11 +142,11 @@
   <%-- Edit.jsp relies on these being found.  So be careful, if you make changes. --%>
   <input type="hidden" name="page" value="<wiki:Variable var='pagename' />" />
   <input type="hidden" name="action" value="save" />
-  <%=SpamFilter.insertInputFields(pageContext)%>
-  <input type="hidden" name="<%=SpamFilter.getHashFieldName(request)%>" value="${lastchange}" />
+  <%=spamFilter.insertInputFields(pageContext)%>
+  <input type="hidden" name="<%=spamFilter.getHashFieldName(request)%>" value="${lastchange}" />
   <%-- This following field is only for the SpamFilter to catch bots which are just randomly filling all fields and submitting.
        Normal user should never see this field, nor type anything in it. --%>
-  <input class="hidden" type="text" name="<%=SpamFilter.getBotFieldName()%>" id="<%=SpamFilter.getBotFieldName()%>" value="" />
+  <input class="hidden" type="text" name="<%=spamFilter.getBotFieldName()%>" id="<%=spamFilter.getBotFieldName()%>" value="" />
 
 
   <div class="form-inline form-group">
@@ -211,7 +214,7 @@
       </ul>
     </div>
 
-  <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
+  <c:set var="editors" value="<%=editorManager.getEditorList()%>" />
   <c:if test='${fn:length(editors)>1}'>
    <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

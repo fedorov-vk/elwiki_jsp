@@ -32,7 +32,7 @@ import java.nio.charset.Charset;
  *
  *  @since 2.2
  */
-public interface URLConstructor extends Initializable {
+public interface URLConstructor {
 
     /**
      *  Constructs the URL with a bunch of parameters.

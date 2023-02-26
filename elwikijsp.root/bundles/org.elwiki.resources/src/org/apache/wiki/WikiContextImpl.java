@@ -38,13 +38,14 @@ import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.PageCommand;
 import org.apache.wiki.api.ui.WikiCommand;
 import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 /*TODO: удалить engine в аргументах конструкоров и т.д. */
@@ -134,7 +135,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * @since 2.1.15.
 	 */
 	public WikiContextImpl(final Engine engine, final HttpServletRequest request, final String requestContext) {
-		this(engine, request, ServicesRefs.getCommandResolver().findCommand(request, requestContext));
+		this(engine, request, engine.getManager(CommandResolver.class).findCommand(request, requestContext));
 		if (!engine.isConfigured()) {
 			throw new InternalWikiException(
 					"Engine has not been properly started.  It is likely that the configuration is faulty.  Please check all logs for the possible reason.");
@@ -166,7 +167,8 @@ public class WikiContextImpl implements WikiContext, Command {
 
 		m_engine = engine;
 		m_request = request;
-		m_session = ServicesRefs.getSessionMonitor().getWikiSession(request);
+		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
+		m_session = sessionMonitor.getWikiSession(request);
 		m_command = command;
 
 		// If PageCommand, get the WikiPage
@@ -176,7 +178,8 @@ public class WikiContextImpl implements WikiContext, Command {
 
 		// If page not supplied, default to front page to avoid NPEs
 		if (m_page == null) {
-			m_page = (WikiPage) ServicesRefs.getPageManager().getPage(this.wikiConfiguration.getFrontPage());
+			PageManager pageManager = engine.getManager(PageManager.class);
+			m_page = (WikiPage) pageManager.getPage(this.wikiConfiguration.getFrontPage());
 
 			// Front page does not exist?
 			if (m_page == null) {
@@ -286,7 +289,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	@Override
 	public String getRedirectURL() {
 		final String pagename = m_page.getName();
-		String redirectURL = null; //:FVK: ServicesRefs.getCommandResolver().getSpecialPageReference(pagename);
+		String redirectURL = null; //:FVK: WikiEngine.getCommandResolver().getSpecialPageReference(pagename);
 		if (redirectURL == null) {
 			final String alias = m_page.getAlias();
 			/* TODO: :FVK: в `if` - добавил `&& !alias.isEmpty()` - чтоб не рестартовал вход через Wiki.jsp, без указания страницы. */
@@ -309,7 +312,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	/** {@inheritDoc} */
 	@Override
 	public Engine getEngine() {
-		return ServicesRefs.Instance; //:FVK: workaround. Это излишнее, потребитель сам может получить Engine.
+		return this.m_engine;
 	}
 
 	/**
@@ -691,7 +694,8 @@ public class WikiContextImpl implements WikiContext, Command {
 	 */
 	@Override
 	public boolean hasAdminPermissions() {
-		return ServicesRefs.getAuthorizationManager().checkPermission(getWikiSession(),
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+		return authorizationManager.checkPermission(getWikiSession(),
 				new AllPermission(wikiConfiguration.getApplicationName(), null));
 	}
 
@@ -753,7 +757,8 @@ public class WikiContextImpl implements WikiContext, Command {
 	 */
 	protected static Command findCommand(final Engine engine, final HttpServletRequest request, final WikiPage page) {
 		final String defaultContext = ContextEnum.PAGE_VIEW.getRequestContext();
-		Command command = ServicesRefs.getCommandResolver().findCommand(request, defaultContext);
+		CommandResolver commandResolver = engine.getManager(CommandResolver.class);
+		Command command = commandResolver.findCommand(request, defaultContext);
 		if (command instanceof PageCommand && page != null) {
 			command = command.targetedCommand(page);
 		}
@@ -771,8 +776,8 @@ public class WikiContextImpl implements WikiContext, Command {
 		if (requestContext == null) {
 			m_command = PageCommand.NONE;
 		} else {
-			final CommandResolver resolver = ServicesRefs.getCommandResolver();
-			m_command = resolver.findCommand(m_request, requestContext);
+			CommandResolver commandResolver = this.m_engine.getManager(CommandResolver.class);
+			m_command = commandResolver.findCommand(m_request, requestContext);
 		}
 
 		if (m_command instanceof PageCommand && m_page != null) {

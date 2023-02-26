@@ -14,10 +14,11 @@ import java.util.*;
 import org.elwiki_data.*;
 import org.apache.wiki.api.core.*;
 import org.apache.wiki.api.exceptions.RedirectException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
@@ -26,7 +27,7 @@ import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.DecisionRequiredException;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 
 
 public class EditCmdCode extends CmdCode {
@@ -43,12 +44,19 @@ public class EditCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		HttpSession session = httpRequest.getSession();
+
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		PageManager pageManager = getEngine().getManager(PageManager.class);
 
 	    // Get wiki context and check for authorization
 	    WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 	    Engine wiki = wikiContext.getEngine();
-	    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, httpResponse ) ) {
+		@NonNull FilterManager filterManager = wiki.getManager(FilterManager.class);
+		ISpamFilter spamFilter = filterManager.getSpamFilter();
+
+	    if( !authorizationManager.hasAccess( wikiContext, httpResponse ) ) {
 	        return;
 	    }
 	    if( wikiContext.getCommand().getTarget() == null ) {
@@ -75,7 +83,7 @@ public class EditCmdCode extends CmdCode {
 	    		//ContextUtil.getEditedText( pageContext );
 	    String link    = (String) session.getAttribute("link");
 	    		//TextUtil.replaceEntities( findParam( pageContext, "link") );
-	    String spamhash = (String) session.getAttribute(SpamFilter.getHashFieldName(httpRequest));
+	    String spamhash = (String) session.getAttribute(spamFilter.getHashFieldName(httpRequest));
 	    		//findParam( pageContext, SpamFilter.getHashFieldName(httpRequest) );
 	    String captcha = (String)session.getAttribute("captcha");
 
@@ -94,7 +102,7 @@ public class EditCmdCode extends CmdCode {
 	    }
 
 	    WikiPage wikipage = wikiContext.getPage();
-	    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
+	    WikiPage latestversion = pageManager.getPage( pagereq );
 
 	    if( latestversion == null ) {
 	        latestversion = wikiContext.getPage();
@@ -125,13 +133,12 @@ public class EditCmdCode extends CmdCode {
 	        }
 	        */
 
-	        PageManager pageManager = ServicesRefs.getPageManager();
 	        try {
 	    		// FIXME: I am not entirely sure if the JSP page is the
 	    		//  best place to check for concurrent changes.
 	    		// It certainly is the best place to show errors, though.
 
-	    		String h = SpamFilter.getSpamHash(latestversion, httpRequest);
+	    		String h = spamFilter.getSpamHash(latestversion, httpRequest);
 
 	    		/*:FVK:
 	    		if (!h.equals(spamhash)) {
@@ -203,7 +210,7 @@ public class EditCmdCode extends CmdCode {
 	    	    		session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
 
 	    	    	session.setAttribute("changenote", changenote != null ? changenote : "");
-	    	    	session.setAttribute(SpamFilter.getHashFieldName(httpRequest), spamhash);
+	    	    	session.setAttribute(spamFilter.getHashFieldName(httpRequest), spamhash);
 	    	    	httpResponse.sendRedirect(ex.getRedirect());
 	    	    	return;
 	    		}
@@ -233,7 +240,7 @@ public class EditCmdCode extends CmdCode {
 			log.debug("Cancelled editing " + pagereq);
 			PageLock lock = (PageLock) session.getAttribute("lock-" + pagereq);
 			if (lock != null) {
-				ServicesRefs.getPageManager().unlockPage(lock);
+				pageManager.unlockPage(lock);
 				session.removeAttribute("lock-" + pagereq);
 			}
 			httpResponse.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
@@ -249,7 +256,7 @@ public class EditCmdCode extends CmdCode {
 		//  the newest version is the one that is changed, we need to track
 		//  that instead of the edited version.
 		//
-		String lastchange = SpamFilter.getSpamHash(latestversion, httpRequest);
+		String lastchange = spamFilter.getSpamHash(latestversion, httpRequest);
 
 		/*:FVK:
 		pageContext.setAttribute("lastchange", lastchange, PageContext.REQUEST_SCOPE);
@@ -258,7 +265,7 @@ public class EditCmdCode extends CmdCode {
 		//
 		//  Attempt to lock the page.
 		//
-		PageLock lock = ServicesRefs.getPageManager().lockPage(wikipage, user);
+		PageLock lock = pageManager.lockPage(wikipage, user);
 		if (lock != null) {
 			session.setAttribute("lock-" + pagereq, lock);
 		}

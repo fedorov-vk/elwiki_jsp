@@ -38,7 +38,6 @@ import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
@@ -105,7 +104,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 		/* Do the actual work.
 		 */
         // FIXME: Should really have a since date on the getRecentChanges method.
-        Collection< WikiPage > changes = ServicesRefs.getPageManager().getRecentChanges();
+        Collection< WikiPage > changes = super.pageManager.getRecentChanges();
         changes = filterWikiPageCollection( changes );
         
         if ( changes != null ) {
@@ -145,7 +144,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
 				String href = context
 						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOGET.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
-                Element link = XhtmlUtil.link( href, ServicesRefs.getRenderingManager().beautifyTitle( pageref.getName() ) );
+                Element link = XhtmlUtil.link( href, super.renderingManager.beautifyTitle( pageref.getName() ) );
                 Element row = XhtmlUtil.element( XHTML.tr );
                 Element col = XhtmlUtil.element( XHTML.td );
                 col.setAttribute( XHTML.ATTR_width, "30%" );
@@ -189,7 +188,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                     authorinfo.setAttribute( XHTML.ATTR_class, "author" );
 
                     if( author != null ) {
-                        if( ServicesRefs.getPageManager().pageExistsByName( author ) ) {
+                        if( super.pageManager.pageExistsByName( author ) ) {
                             authorinfo.addContent( XhtmlUtil.link( context.getURL( WikiContext.PAGE_VIEW, author ), author ) );
                         } else {
                             authorinfo.addContent( author );

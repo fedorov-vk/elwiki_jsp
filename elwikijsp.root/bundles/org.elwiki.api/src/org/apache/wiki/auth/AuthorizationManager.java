@@ -58,7 +58,7 @@ import java.security.Principal;
  * @since 2.3
  * @see IIAuthenticationManager
  */
-public interface AuthorizationManager extends Initializable {
+public interface AuthorizationManager {
 
     /** The default external Authorizer is the {@link WebContainerAuthorizer} */
     String DEFAULT_AUTHORIZER = "org.apache.wiki.auth.authorize.WebContainerAuthorizer";

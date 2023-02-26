@@ -21,14 +21,14 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
-<%@ page import="org.apache.wiki.filters0.SpamFilter" %>
+<%@ page import="org.apache.wiki.api.filters.*" %>
+<%@ page import="org.apache.wiki.filters0.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.tags.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.api.ui.EditorManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -39,30 +39,31 @@
         This is a plain editor for JSPWiki.
 --%>
 <%
-   WikiContext context = ContextUtil.findContext( pageContext );
-   Engine engine = context.getEngine();
-
-   String usertext = ContextUtil.getEditedText( pageContext );
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	EditorManager editorManager = engine.getManager(EditorManager.class);
+	ISpamFilter spamFilter = engine.getManager(FilterManager.class).getSpamFilter();
+	String usertext = ContextUtil.getEditedText( pageContext );
 %>
 <wiki:RequestResource type="script" resource="scripts/haddock-edit.js" />
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
 <wiki:CheckRequestContext context="<%=WikiContext.PAGE_EDIT%>">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-  String clone = request.getParameter( "clone" );
+String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = pageManager.getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
-
         try
         {
-          if( mgr.checkPermission( context.getWikiSession(), pp ) )
+          if( authorizationManager.checkPermission( wikiContext.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = pageManager.getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -71,13 +72,15 @@
 %>
 </wiki:NoSuchPage>
 <%
-  if( usertext == null )
+if( usertext == null )
   {
-    usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
+    usertext = pageManager.getPureText( wikiContext.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
-<% if( usertext == null ) usertext = ""; %>
+<%
+if( usertext == null ) usertext = "";
+%>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:Link context='${context}' format='url'/>"
@@ -88,11 +91,11 @@
   <%-- Edit.jsp relies on these being found.  So be careful, if you make changes. --%>
   <input type="hidden" name="page" value="<wiki:Variable var='pagename' />" />
   <input type="hidden" name="action" value="save" />
-  <%=SpamFilter.insertInputFields( pageContext )%>
-  <input type="hidden" name="<%=SpamFilter.getHashFieldName(request)%>" value="${lastchange}" />
+  <%=spamFilter.insertInputFields( pageContext )%>
+  <input type="hidden" name="<%=spamFilter.getHashFieldName(request)%>" value="${lastchange}" />
   <%-- This following field is only for the SpamFilter to catch bots which are just randomly filling all fields and submitting.
        Normal user should never see this field, nor type anything in it. --%>
-  <input class="hidden" type="text" name="<%=SpamFilter.getBotFieldName()%>" id="<%=SpamFilter.getBotFieldName()%>" value="" />
+  <input class="hidden" type="text" name="<%=spamFilter.getBotFieldName()%>" id="<%=spamFilter.getBotFieldName()%>" value="" />
 
   <div class="snipe">
 
@@ -231,7 +234,7 @@
       </ul>
     </div>
 
-    <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
+    <c:set var="editors" value="<%=editorManager.getEditorList()%>" />
     <c:if test='${fn:length(editors) > 1}'>
     <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

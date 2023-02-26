@@ -19,11 +19,13 @@
 package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.FileLocator;
-import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
@@ -74,8 +76,9 @@ public class IncludeTag extends BaseWikiTag {
 	@Override
 	public final int doEndTag() throws JspException {
 		try {
-			TemplateManager templateManager = ServicesRefs.getTemplateManager();
-			final String page = templateManager.findJSP(pageContext, m_wikiContext.getShape(), m_page);
+			WikiContext wikiContext = getWikiContext();
+			TemplateManager templateManager = wikiContext.getEngine().getManager(TemplateManager.class);			
+			final String page = templateManager.findJSP(pageContext, wikiContext.getShape(), m_page);
 
 			if (page == null) {
 				pageContext.getOut().println("No template file called '" + TextUtil.replaceEntities(m_page) + "'");

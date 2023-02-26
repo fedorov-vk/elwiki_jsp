@@ -24,11 +24,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%!
-  Logger log;
-  public void jspInit()
-  {
-    log = Logger.getLogger("CommentContent_jsp");
-  }
+	Logger log;
+	public void jspInit()
+	{
+		log = Logger.getLogger("CommentContent_jsp");
+	}
 %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>

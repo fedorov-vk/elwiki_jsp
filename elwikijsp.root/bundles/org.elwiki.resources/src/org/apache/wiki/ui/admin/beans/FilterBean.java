@@ -21,9 +21,9 @@ package org.apache.wiki.ui.admin.beans;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.filters0.FilterManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
-import org.elwiki.services.ServicesRefs;
 import org.jdom2.Element;
 
 import javax.management.NotCompliantMBeanException;
@@ -57,7 +57,8 @@ public class FilterBean extends ModuleBean {
      */
     @Override
     protected Collection< WikiModuleInfo > modules() {
-        return ServicesRefs.getFilterManager().modules();
+    	FilterManager filterManager = super.m_engine.getManager(FilterManager.class);
+        return filterManager.modules();
     }
 
     /**

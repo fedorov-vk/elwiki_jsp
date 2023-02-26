@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.ProgressManager.factory" name="elwiki.DefaultProgressManager">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.DefaultProgressManager">
+   <property name="event.topics" value="org/elwiki/events/init/*"/>
+   <service scope="singleton">
       <provide interface="org.apache.wiki.api.ui.progress.ProgressManager"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.ui.progress.DefaultProgressManager"/>
 </scr:component>

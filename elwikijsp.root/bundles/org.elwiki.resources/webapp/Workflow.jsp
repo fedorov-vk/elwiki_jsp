@@ -33,7 +33,6 @@
 <%@ page import="org.apache.wiki.workflow0.Outcome" %>
 <%@ page import="org.apache.wiki.workflow0.Workflow" %>
 <%@ page import="org.apache.wiki.workflow0.WorkflowManager" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!
@@ -41,16 +40,16 @@
 %>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_WORKFLOW.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     
     // Extract the wiki session
     Session wikiSession = wikiContext.getWikiSession();
     
     // Get the current decisions
-    DecisionQueue dq = ServicesRefs.getWorkflowManager().getDecisionQueue();
+    DecisionQueue dq = WikiEngine.getWorkflowManager().getDecisionQueue();
 
     if( "decide".equals(request.getParameter("action")) )
     {
@@ -88,7 +87,7 @@
           // Extract parameters for decision ID & decision outcome
           int id = Integer.parseInt( request.getParameter( "id" ) );
           // Iterate through our owner decisions and see if we can find an ID match
-          Collection< Workflow > workflows = ServicesRefs.getWorkflowManager().getOwnerWorkflows(wikiSession);
+          Collection< Workflow > workflows = WikiEngine.getWorkflowManager().getOwnerWorkflows(wikiSession);
           for (Iterator< Workflow > it = workflows.iterator(); it.hasNext();)
           {
             Workflow w = it.next();
@@ -107,10 +106,10 @@
     
     // Stash the current decisions/workflows
     request.setAttribute("decisions",   dq.getActorDecisions(wikiSession));
-    request.setAttribute("workflows",   ServicesRefs.getWorkflowManager().getOwnerWorkflows( wikiSession ) );
+    request.setAttribute("workflows",   WikiEngine.getWorkflowManager().getOwnerWorkflows( wikiSession ) );
     request.setAttribute("wikiSession", wikiSession);
     
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 

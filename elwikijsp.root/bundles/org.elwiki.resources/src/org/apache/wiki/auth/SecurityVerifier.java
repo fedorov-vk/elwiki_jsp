@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.IGroupWiki;
@@ -46,7 +47,7 @@ import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.permissions.WikiPermission;
-import org.elwiki.services.ServicesRefs;
+
 import org.freshcookies.security.policy.PolicyReader;
 
 /**
@@ -172,11 +173,12 @@ public final class SecurityVerifier {
 	 * @return the formatted HTML table containing the result of the tests
 	 */
 	public String policyRoleTable() {
+		AccountManager accountManager = this.m_engine.getManager(AccountManager.class);
 		/* */
 		//:FVK: get all wiki groups (also known as Principals)
 		List<IGroupWiki> groups1;
 		try {
-			groups1 = ServicesRefs.getAccountManager().getGroups();
+			groups1 = accountManager.getGroups();
 		} catch (WikiSecurityException e) {
 			log.error("Fail read groups list.", e);
 			groups1 = Collections.emptyList();
@@ -184,7 +186,7 @@ public final class SecurityVerifier {
 		Collections.sort(groups1, IGroupWiki::compareTo);
 
 		/*:FVK:
-		AuthorizationManager authorizer = ServicesRefs.getAuthorizationManager();
+		AuthorizationManager authorizer = WikiEngine.getAuthorizationManager();
 		authorizer.allowedByLocalPolicy(m_policyPrincipals, null);
 		*/
 
@@ -335,7 +337,7 @@ public final class SecurityVerifier {
 	 * @throws WikiException if tests fail for unexpected reasons
 	 */
 	public String containerRoleTable() throws WikiException {
-		AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
 		Authorizer authorizer = authorizationManager.getAuthorizer();
 
 		// If authorizer not WebContainerAuthorizer, print error message
@@ -422,7 +424,8 @@ public final class SecurityVerifier {
 	 * @throws WikiException if the web authorizer cannot obtain the list of roles
 	 */
 	public Principal[] webContainerRoles() throws WikiException {
-		Authorizer authorizer = (Authorizer) ServicesRefs.getAuthorizationManager().getAuthorizer();
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+		Authorizer authorizer = (Authorizer) authorizationManager.getAuthorizer();
 		if (authorizer instanceof WebAuthorizer) {
 			return authorizer.getRoles();
 		}
@@ -437,7 +440,8 @@ public final class SecurityVerifier {
 	 * @throws WikiException if the web authorizer cannot verify the roles
 	 */
 	protected void verifyPolicyAndContainerRoles() throws WikiException {
-		Authorizer authorizer = ServicesRefs.getAuthorizationManager().getAuthorizer();
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+		Authorizer authorizer = authorizationManager.getAuthorizer();
 		Principal[] containerRoles = authorizer.getRoles();
 		boolean missing = false;
 		for (Principal principal : m_policyPrincipals) {
@@ -704,6 +708,8 @@ public final class SecurityVerifier {
 	 * @return the result, based on consultation with the active Java security policy
 	 */
 	protected boolean verifyStaticPermission(Principal principal, Permission permission) {
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+		
 		/*:FVK:
 		Subject subject = new Subject();
 		subject.getPrincipals().add( principal );
@@ -726,7 +732,7 @@ public final class SecurityVerifier {
 
 		// Check local policy
 		Principal[] principals = new Principal[] { principal };
-		return ServicesRefs.getAuthorizationManager().allowedByLocalPolicy(principals, permission);
+		return authorizationManager.allowedByLocalPolicy(principals, permission);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -21,40 +22,49 @@ import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.Role;
 import org.osgi.service.useradmin.User;
 import org.osgi.service.useradmin.UserAdmin;
 
-@Component(name = "elwiki.DefaultAccountRegistry", service = AccountRegistry.class, //
-		factory = "elwiki.AccountRegistry.factory")
-public final class DefaultAccountRegistry extends InitialAccountRegistry {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAccountRegistry",
+	service = { AccountRegistry.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public final class DefaultAccountRegistry extends InitialAccountRegistry
+		implements AccountRegistry, WikiManager, EventHandler {
 
 	protected static final Logger log = Logger.getLogger(DefaultAccountRegistry.class);
-
-	private Engine m_engine;
 
 	// == CODE ================================================================
 
 	/**
 	 * Constructs a new AccountRegistry instance.
-	 * 
-	 * @param engine
 	 */
 	public DefaultAccountRegistry() {
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
 	private UserAdmin userAdminService;
@@ -63,7 +73,10 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry {
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-	@Reference
+	@WikiServiceReference
+	private Engine m_engine;
+
+	@WikiServiceReference
 	private AccountManager accountManager;
 
 	/**
@@ -73,16 +86,17 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry {
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
 	}
 
-	protected void initialize(final Engine engine) throws WikiException {
-		this.m_engine = engine;
+	@Deactivate
+	protected void shutdown() {
+		//
+	}
 
+	// -- OSGi service handling ------------------------(end)--
+
+	protected void initialize() throws WikiException {
 		try {
 			/* Reading initialized custom user profiles, groups of users.
 			 * (:FVK: workaround.)
@@ -92,13 +106,6 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry {
 			log.error("Could not load Users & Groups data from JSON file of bundle.", e);
 		}
 	}
-
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-
-	// -- service handling -----------------------------(end)--
 
 	@Override
 	public UserAdmin getUserAdminService() {
@@ -319,6 +326,21 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of ProgressManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

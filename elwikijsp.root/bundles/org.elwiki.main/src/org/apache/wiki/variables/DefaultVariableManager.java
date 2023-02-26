@@ -18,14 +18,20 @@
  */
 package org.apache.wiki.variables;
 
+import java.lang.reflect.Method;
+import java.security.Principal;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.WikiContext;
-import org.elwiki_data.WikiPage;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
@@ -35,17 +41,15 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.ui.TemplateManager;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.lang.reflect.Method;
-import java.security.Principal;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Manages variables. Variables are case-insensitive. A list of all available
@@ -53,9 +57,16 @@ import java.util.ResourceBundle;
  *
  * @since 1.9.20.
  */
-@Component(name = "elwiki.DefaultVariableManager", service = VariableManager.class, //
-		factory = "elwiki.VariableManager.factory")
-public class DefaultVariableManager implements VariableManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultVariableManager",
+	service = { VariableManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultVariableManager implements VariableManager, WikiManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultVariableManager.class );
 
@@ -74,13 +85,22 @@ public class DefaultVariableManager implements VariableManager {
         super();
     }
 
-	// -- service handling ---------------------------(start)--
-    
+	// -- OSGi service handling ----------------------(start)--
+
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-    private IWikiConfiguration wikiConfiguration;
-	
-	// -- service handling -----------------------------(end)--
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private PageManager pageManager;
+
+	@WikiServiceReference
+	private AttachmentManager attachmentManager;
+
+	@WikiServiceReference
+	private FilterManager filterManager;
+
+	// -- OSGi service handling ------------------------(end)--
 
     /**
      *  {@inheritDoc}
@@ -320,24 +340,24 @@ public class DefaultVariableManager implements VariableManager {
         }
 
         public String getTotalpages() {
-            return Integer.toString( ServicesRefs.getPageManager().getTotalPageCount() );
+            return Integer.toString( pageManager.getTotalPageCount() );
         }
 
         public String getPageprovider() {
-            return ServicesRefs.getPageManager().getCurrentProvider();
+            return pageManager.getCurrentProvider();
         }
 
         public String getPageproviderdescription() {
-            return ServicesRefs.getPageManager().getProviderDescription();
+            return pageManager.getProviderDescription();
         }
 
         public String getAttachmentprovider() {
-            final WikiProvider p = ServicesRefs.getAttachmentManager().getCurrentProvider();
+            final WikiProvider p = attachmentManager.getCurrentProvider();
             return (p != null) ? p.getClass().getName() : "-";
         }
 
         public String getAttachmentproviderdescription() {
-            final WikiProvider p = ServicesRefs.getAttachmentManager().getCurrentProvider();
+            final WikiProvider p = attachmentManager.getCurrentProvider();
             return (p != null) ? p.getProviderInfo() : "-";
         }
 
@@ -409,8 +429,7 @@ public class DefaultVariableManager implements VariableManager {
         }
 
         public String getPagefilters() {
-            final FilterManager fm = ServicesRefs.getFilterManager();
-            final List< PageFilter > filters = fm.getFilterList();
+            final List< PageFilter > filters = filterManager.getFilterList();
             final StringBuilder sb = new StringBuilder();
             for( final PageFilter pf : filters ) {
                 final String f = pf.getClass().getName();
@@ -426,5 +445,12 @@ public class DefaultVariableManager implements VariableManager {
             return sb.toString();
         }
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		/*switch (topic) {
+		}*/
+	}
 
 }

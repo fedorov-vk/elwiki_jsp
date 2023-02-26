@@ -25,8 +25,9 @@ import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -75,17 +76,19 @@ public class EditLinkTag extends BaseWikiLinkTag {
 
 	@Override
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
+		WikiContext wikiContext = getWikiContext();
 		WikiPage page = null;
 		String versionString = "";
-		final Engine engine = m_wikiContext.getEngine();
+		final Engine engine = wikiContext.getEngine();
+		PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
 
 		//  Determine the page and the link.
 		if (m_pageId != null) {
-			page = ServicesRefs.getPageManager().getPageById(m_pageId);
+			page = pageManager.getPageById(m_pageId);
 		} else if (m_pageName != null) {
-			page = ServicesRefs.getPageManager().getPage(m_pageName);
+			page = pageManager.getPage(m_pageName);
 		} else {
-			page = m_wikiContext.getPage();
+			page = wikiContext.getPage();
 		}
 
 		if (page == null) {
@@ -112,11 +115,11 @@ public class EditLinkTag extends BaseWikiLinkTag {
 		switch (m_format) {
 		case ANCHOR:
 			out.print("<a href=\""
-					+ m_wikiContext.getURL(ContextEnum.PAGE_EDIT.getRequestContext(), pageId, versionString)
+					+ wikiContext.getURL(ContextEnum.PAGE_EDIT.getRequestContext(), pageId, versionString)
 					+ "\" accesskey=\"" + m_accesskey + "\" title=\"" + m_title + "\">");
 			break;
 		case URL:
-			out.print(m_wikiContext.getURL(ContextEnum.PAGE_EDIT.getRequestContext(), pageId, versionString));
+			out.print(wikiContext.getURL(ContextEnum.PAGE_EDIT.getRequestContext(), pageId, versionString));
 			break;
 		}
 

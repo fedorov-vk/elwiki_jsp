@@ -29,8 +29,6 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
-import org.elwiki.services.ServicesRefs;
-
 
 /**
  * Handles the actual page save and post-save actions. 
@@ -67,14 +65,17 @@ public class SaveWikiPageTask extends Task {
 
         final Engine engine = context.getEngine();
         final WikiPage page = context.getPage();
+        PageManager pageManager = engine.getManager(PageManager.class);
+        RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+        FilterManager filterManager = engine.getManager(FilterManager.class);
 
         // Let the rest of the engine handle actual saving.
-        ServicesRefs.getPageManager().putPageText( page, proposedText, this.author, this.changenote );
+        pageManager.putPageText( page, proposedText, this.author, this.changenote );
 
         // Refresh the context for post save filtering.
-        ServicesRefs.getPageManager().getPage( page.getName() );
-        ServicesRefs.getRenderingManager().textToHTML( context, proposedText );
-        ServicesRefs.getFilterManager().doPostSaveFiltering( context, proposedText );
+        pageManager.getPage( page.getName() );
+        renderingManager.textToHTML( context, proposedText );
+        filterManager.doPostSaveFiltering( context, proposedText );
 
         return Outcome.STEP_COMPLETE;
     }

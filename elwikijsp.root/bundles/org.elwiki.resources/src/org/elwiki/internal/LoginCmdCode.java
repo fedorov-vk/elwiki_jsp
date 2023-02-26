@@ -21,12 +21,13 @@ import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * @author v.fedorov
@@ -43,7 +44,13 @@ public class LoginCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
+		super.applyPrologue(httpRequest, httpResponse);
+		
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		AccountManager accountManager = getEngine().getManager(AccountManager.class);
+		PageManager pageManager = getEngine().getManager(PageManager.class);
+		
+		WikiContext wikiContext = getWikiContext();
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE - уже должен быть установлен.
 		// httpRequest.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();
@@ -56,24 +63,26 @@ public class LoginCmdCode extends CmdCode {
 
 		// Are we saving the profile?
 		if ("saveProfile".equals(httpRequest.getParameter("action"))) {
-			AccountManager userMgr = ServicesRefs.getAccountManager();
-			UserProfile profile = userMgr.parseProfile(wikiContext);
+			UserProfile profile = accountManager.parseProfile(wikiContext);
 
 			// Validate the profile
-			userMgr.validateProfile(wikiContext, profile);
+			accountManager.validateProfile(wikiContext, profile);
 
 			// If no errors, save the profile now & refresh the principal set!
 			if (wikiSession.getMessages("profile").length == 0) {
 				try {
-					userMgr.setUserProfile(wikiSession, profile);
+					accountManager.setUserProfile(wikiSession, profile);
 					CookieAssertionLoginModule.setUserCookie(httpResponse, profile.getFullname());
 				} catch (DuplicateUserException due) {
+					InternationalizationManager internationalizationManager = 
+							getEngine().getManager(InternationalizationManager.class);
+							
 					// User collision! (full name or wiki name already taken)
 					wikiSession.addMessage("profile",
-							ServicesRefs.getInternationalizationManager().get(InternationalizationManager.CORE_BUNDLE,
+							internationalizationManager.get(InternationalizationManager.CORE_BUNDLE,
 									Preferences.getLocale(wikiContext), due.getMessage(), due.getArgs()));
 				} catch (DecisionRequiredException e) {
-					String redirect = ServicesRefs.Instance.getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
+					String redirect = getEngine().getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
 							"ApprovalRequiredForUserProfiles", null);
 					httpResponse.sendRedirect(redirect);
 					return;
@@ -89,7 +98,7 @@ public class LoginCmdCode extends CmdCode {
 			}
 		}
 
-		IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
+		IIAuthenticationManager mgr = getEngine().getManager(IIAuthenticationManager.class);
 		// If NOT using container auth, perform all of the access control logic here...
 		// (Note: if using the container for auth, it will handle all of this for us.)
 		if (!mgr.isContainerAuthenticated()) {
@@ -153,12 +162,12 @@ public class LoginCmdCode extends CmdCode {
 			CookieAssertionLoginModule.setUserCookie(httpResponse, principal.getName());
 
 			if (remember != null) {
-				CookieAuthenticationLoginModule.setLoginCookie(ServicesRefs.Instance, httpResponse, principal.getName());
+				CookieAuthenticationLoginModule.setLoginCookie(getEngine(), httpResponse, principal.getName());
 			}
 
 			// If wiki page was "Login", redirect to main, otherwise use the page supplied
 			String redirectPageId = httpRequest.getParameter("redirect");
-			if (!ServicesRefs.getPageManager().pageExistsById(redirectPageId)) {
+			if (!pageManager.pageExistsById(redirectPageId)) {
 				redirectPageId = wikiContext.getConfiguration().getFrontPage();
 			}
 			String viewUrl = wikiContext.getViewURL(redirectPageId);

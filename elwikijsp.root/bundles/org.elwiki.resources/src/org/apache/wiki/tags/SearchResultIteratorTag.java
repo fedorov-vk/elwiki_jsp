@@ -93,7 +93,6 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 		}
 
 		m_count = 0;
-		m_wikiContext = (WikiContext) pageContext.getAttribute(WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE);
 
 		return nextResult();
 	}
@@ -105,8 +104,8 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 				return SKIP_BODY;
 
 			// Create a wiki context for the result (context represents the found page).
-			final Engine engine = m_wikiContext.getEngine();
-			final HttpServletRequest request = m_wikiContext.getHttpRequest();
+			final Engine engine = getWikiContext().getEngine();
+			final HttpServletRequest request = getWikiContext().getHttpRequest();
 			final Command command = PageCommand.VIEW.targetedCommand(r.getPage());
 			final WikiContext context = Wiki.context().create(engine, request, command);
 

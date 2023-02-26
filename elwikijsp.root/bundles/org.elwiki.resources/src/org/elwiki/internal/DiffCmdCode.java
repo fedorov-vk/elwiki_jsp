@@ -16,12 +16,12 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.tags.BreadcrumbsTag;
 import org.apache.wiki.tags.BreadcrumbsTag.FixedQueue;
 import org.apache.wiki.tags.InsertDiffTag;
 import org.apache.wiki.util.HttpUtil;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 public class DiffCmdCode extends CmdCode {
@@ -37,9 +37,12 @@ public class DiffCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 		if (wikiContext.getCommand().getTarget() == null) {
@@ -49,7 +52,7 @@ public class DiffCmdCode extends CmdCode {
 		String pagereq = wikiContext.getName();
 
 		/*:FVK:
-		w = WatchDog.getCurrentWatchDog( ServicesRefs.Instance );
+		w = WatchDog.getCurrentWatchDog( WikiEngine.Instance );
 		w.enterState("Generating INFO response",60);
 		*/
 

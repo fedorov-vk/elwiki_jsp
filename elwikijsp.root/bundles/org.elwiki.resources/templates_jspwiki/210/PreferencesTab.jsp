@@ -23,7 +23,6 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.preferences.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -36,7 +35,7 @@
 <%
 //FIXME: this should better move to UserPreferences.jsp but that doesn't seem to work. Ugh ?
   WikiContext c = ContextUtil.findContext( pageContext );
-  TemplateManager t = ServicesRefs.getTemplateManager();
+  TemplateManager t = WikiEngine.getTemplateManager();
   pageContext.setAttribute( "skins", t.listSkins(pageContext, c.getShape() ) );
   pageContext.setAttribute( "languages", t.listLanguages(pageContext) );
   pageContext.setAttribute( "timeformats", t.listTimeFormats(pageContext) );

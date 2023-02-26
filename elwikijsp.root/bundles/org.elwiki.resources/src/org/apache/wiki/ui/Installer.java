@@ -30,12 +30,14 @@ import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageManager;
@@ -43,7 +45,6 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
@@ -90,7 +91,9 @@ public class Installer {
 		}
 		
         // Get wiki session for this user
-        m_session = ServicesRefs.getSessionMonitor().getWikiSession(request);
+		Engine engine = ContextUtil.findContext(request).getEngine();
+		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
+        m_session = sessionMonitor.getWikiSession(request);
         
         // Get the file for properties
         m_propertyFile = new File(TMP_DIR, PROPFILENAME);

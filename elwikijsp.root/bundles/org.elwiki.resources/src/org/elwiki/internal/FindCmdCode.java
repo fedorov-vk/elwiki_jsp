@@ -17,10 +17,11 @@ import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
+import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.search.SearchResult;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.useradmin.Group;
 
@@ -39,11 +40,15 @@ public class FindCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Engine wiki = ServicesRefs.Instance;
+		super.applyPrologue(httpRequest, httpResponse);
+		Engine wiki = getEngine();
+
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		SearchManager searchManager = getEngine().getManager(SearchManager.class);
 
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 
@@ -56,7 +61,7 @@ public class FindCmdCode extends CmdCode {
 	        log.info("Searching for string "+query);
 
 	        try {
-	            list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
+	            list = searchManager.findPages( query, wikiContext );
 	            httpRequest.setAttribute( "searchresults", list); //, PageContext.REQUEST_SCOPE );
 	        } catch( Exception e ) {
 	            wikiContext.getWikiSession().addMessage( e.getMessage() );

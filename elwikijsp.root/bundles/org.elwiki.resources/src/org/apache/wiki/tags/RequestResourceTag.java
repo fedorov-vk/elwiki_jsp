@@ -60,7 +60,7 @@ public class RequestResourceTag extends BaseWikiTag {
 	@Override
 	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		if (m_type != null && m_resource != null) {
-			TemplateManager.addResourceRequest(m_wikiContext, m_type, m_resource);
+			TemplateManager.addResourceRequest(getWikiContext(), m_type, m_resource);
 		}
 
 		return SKIP_BODY;

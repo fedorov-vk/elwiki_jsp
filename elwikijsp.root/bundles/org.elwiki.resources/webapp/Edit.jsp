@@ -26,7 +26,7 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.util.HttpUtil" %>
-<%@ page import="org.apache.wiki.filters0.SpamFilter" %>
+<%@ page import="org.apache.wiki.filters.SpamFilter" %>
 <%@ page import="org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator" %>
 <%@ page import="org.apache.wiki.pages0.PageLock" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
@@ -35,7 +35,6 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <@ @ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
@@ -57,7 +56,7 @@
 Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_EDIT.getRequestContext() );
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) {
         return;
     }
     if( wikiContext.getCommand().getTarget() == null ) {
@@ -94,7 +93,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     }
 
     WikiPage wikipage = wikiContext.getPage();
-    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
+    WikiPage latestversion = WikiEngine.getPageManager().getPage( pagereq );
 
     if( latestversion == null ) {
         latestversion = wikiContext.getPage();
@@ -123,7 +122,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
             return;
         }
 
-        PageManager pageManager = ServicesRefs.getPageManager();
+        PageManager pageManager = WikiEngine.getPageManager();
         try {
     		// FIXME: I am not entirely sure if the JSP page is the
     		//  best place to check for concurrent changes.
@@ -211,7 +210,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 		session.setAttribute("link", link != null ? link : "");
 
 		if (htmlText != null) {
-			session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
+	session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
 		}
 
 		session.setAttribute("changenote", changenote != null ? changenote : "");
@@ -221,8 +220,8 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 		log.debug("Cancelled editing " + pagereq);
 		PageLock lock = (PageLock) session.getAttribute("lock-" + pagereq);
 		if (lock != null) {
-			ServicesRefs.getPageManager().unlockPage(lock);
-			session.removeAttribute("lock-" + pagereq);
+	WikiEngine.getPageManager().unlockPage(lock);
+	session.removeAttribute("lock-" + pagereq);
 		}
 		response.sendRedirect(wikiContext.getViewURL(pagereq));
 		return;
@@ -244,12 +243,12 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 	//
 	//  Attempt to lock the page.
 	//
-	PageLock lock = ServicesRefs.getPageManager().lockPage(wikipage, user);
+	PageLock lock = WikiEngine.getPageManager().lockPage(wikipage, user);
 	if (lock != null) {
 		session.setAttribute("lock-" + pagereq, lock);
 	}
 
-	String contentPage = ServicesRefs.getTemplateManager().findJSP(pageContext, wikiContext.getShape(),
+	String contentPage = WikiEngine.getTemplateManager().findJSP(pageContext, wikiContext.getShape(),
 	"EditTemplate.jsp");
 %><wiki:Include page="<%=contentPage%>" />
 <!-- ~~ END ~~ Edit.jsp -->

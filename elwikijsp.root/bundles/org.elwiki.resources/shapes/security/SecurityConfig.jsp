@@ -25,27 +25,29 @@
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <fmt:setLocale value="${prefs.Language}" />
 <%!
-  public void jspInit()
-  {
-    Logger log = Logger.getLogger("SecurityConfig_jsp");
-	wiki = ServicesRefs.Instance; //:FVK: workaround.
-  }
-  Logger log;
-  Engine wiki;
-  SecurityVerifier verifier;
+	Logger log;
+	public void jspInit()
+	{
+		Logger log = Logger.getLogger("SecurityConfig_jsp");
+	}
 %>
 <!doctype html>
 <html lang="<c:out value='${prefs.Language}' default='en'/>">
 <%
-WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.PAGE_NONE );
-  if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
-  response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-  verifier = new SecurityVerifier( wiki, wikiContext.getWikiSession() );
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+
+	//:FVK: ?? WikiContext wikiContext = Wiki.context().create( wiki, request, WikiContext.PAGE_NONE );
+	if(!authorizationManager.hasAccess( wikiContext, response )) {
+		return;
+	}
+	SecurityVerifier verifier = new SecurityVerifier(engine, wikiContext.getWikiSession());
+	response.setContentType("text/html; charset="+engine.getContentEncoding() ); 
 %>
 
 <head>

@@ -27,8 +27,12 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.osgi.service.component.ComponentContext;
@@ -36,6 +40,11 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * This provides service for registering HttpServlet classes. need to be registered using
@@ -46,30 +55,32 @@ import org.osgi.service.component.annotations.Reference;
 //@formatter:off
 @Component(
 	name = "elwiki.WikiAjaxDispatcher",
-	service = WikiAjaxDispatcher.class,
-	factory = WikiAjaxDispatcher.WIKI_AJAX_DISPATCHER_FACTORY)
+	service = { WikiAjaxDispatcher.class, WikiManager.class, EventHandler.class },
+	scope = ServiceScope.SINGLETON,
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
+	})
 //@formatter:on
-public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
+public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class);
 
-	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-	private IWikiConfiguration wikiConfiguration;
-
-	private Engine m_engine;
-
 	private static final Map<String, AjaxServletContainer> ajaxServlets = new ConcurrentHashMap<>();
+
 	private String PATH_AJAX = "/ajax/";
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
+
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	public Engine m_engine;
 
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
 	@Deactivate
@@ -77,18 +88,17 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
 	/**
 	 * This sets the AjaxPath to "/ajax/" as configured in "jspwiki.ajax.url.prefix". Note: Do not
 	 * change this without also changing the {@link WikiAjaxDispatcherServlet}
 	 * 
-	 * @param engine
 	 * @throws WikiException
 	 */
-	private void initialize(Engine engine) throws WikiException {
-		this.m_engine = engine;
-		PATH_AJAX = "/" + TextUtil.getStringProperty(m_engine.getWikiPreferences(), "jspwiki.ajax.url.prefix", "ajax")
+	private void initialize() throws WikiException {
+		IPreferenceStore prefs = this.wikiConfiguration.getWikiPreferences();
+		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax")
 				+ "/";
 		log.debug("«initialized» " + WikiAjaxDispatcherService.class.getSimpleName());
 	}
@@ -109,6 +119,21 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher {
 
 	static Map<String, AjaxServletContainer> getAjaxServlets() {
 		return ajaxServlets;
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of AjaxDispatcher.", e);
+			}
+			break;
+		}		
 	}
 
 }

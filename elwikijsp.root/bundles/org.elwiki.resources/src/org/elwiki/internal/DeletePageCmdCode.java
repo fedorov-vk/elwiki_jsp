@@ -26,6 +26,7 @@ public class DeletePageCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		Enumeration<String> paramsNames = httpRequest.getParameterNames();
 		//String targetPageId = httpRequest.getParameter("redirect");
 		//String action = httpRequest.getParameter("action");

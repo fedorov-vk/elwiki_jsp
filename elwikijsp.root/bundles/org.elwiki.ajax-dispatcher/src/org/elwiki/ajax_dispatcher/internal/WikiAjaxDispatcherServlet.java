@@ -36,12 +36,15 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.core.ContextUtil;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -55,12 +58,13 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  */
 //@formatter:off
 @Component(
-  service=Servlet.class,
-  property= {
-  	HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/ajax/*",
-  },
-  scope=ServiceScope.PROTOTYPE,
-  name="web.WikiAjaxDispatcherServlet")
+	name = "web.WikiAjaxDispatcherServlet",
+	service = Servlet.class,
+	property = {
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/ajax/*",
+	},
+//	reference = @Reference(name = "elwiki.Engine", service = Engine.class),
+	scope = ServiceScope.PROTOTYPE)
 //@formatter:on
 public class WikiAjaxDispatcherServlet extends HttpServlet {
 
@@ -71,6 +75,9 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@Reference
+	private Engine engine;
 
 	@Activate
 	protected void startup() {
@@ -121,6 +128,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 	 */
 	private void performAction(final HttpServletRequest req, final HttpServletResponse res)
 			throws IOException, ServletException {
+		
 		final String path = req.getRequestURI();
 		final String servletName = getServletName(path);
 		if (servletName != null) {
@@ -156,15 +164,18 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 	 * Validate the permission of the {@link WikiAjaxServlet} using the
 	 * {@link AuthorizationManager#checkPermission}
 	 *
-	 * @param req       the servlet request
+	 * @param request       the servlet request
 	 * @param container the container info of the servlet
 	 * @return true if permission is valid
 	 */
-	private boolean validatePermission(final HttpServletRequest req, final AjaxServletContainer container) {
+	private boolean validatePermission(final HttpServletRequest request, final AjaxServletContainer container) {
+		ISessionMonitor sessionMonitor = this.engine.getManager(ISessionMonitor.class);
+		AuthorizationManager authorizationManager = this.engine.getManager(AuthorizationManager.class);
+
 		boolean valid = false;
 		if (container != null) {
-			Session wikiSession = ServicesRefs.getSessionMonitor().getWikiSession(req);
-			valid = ServicesRefs.getAuthorizationManager().checkPermission(wikiSession, container.permission);
+			Session wikiSession = sessionMonitor.getWikiSession(request);
+			valid = authorizationManager.checkPermission(wikiSession, container.permission);
 		}
 		return valid;
 	}

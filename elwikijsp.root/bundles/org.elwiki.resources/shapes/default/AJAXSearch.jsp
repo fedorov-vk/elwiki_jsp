@@ -34,71 +34,55 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.api.search.SearchManager" %>
 <%@ page import="org.apache.wiki.ui.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
-<%!
-  Logger log;
-  Engine wiki;
-  public void jspInit()
-  {
-    log = Logger.getLogger("AJAXSearch_jsp");
-    wiki = ServicesRefs.Instance; //:FVK: workaround.
-  }
-%>
+<%!Logger log;
+
+	public void jspInit() {
+		log = Logger.getLogger("AJAXSearch_jsp");
+	}%>
 <%
-  WikiContext wikiContext;
-  /* ********************* actual start ********************* */
-  /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
-  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
-  if( wikiContext==null )
-  {
-	  wikiContext = Wiki.context().create(wiki, request, ContextEnum.WIKI_FIND.getRequestContext());
-	  request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
-  }
-  if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+	WikiContext wikiContext = ContextUtil.findContext(pageContext);
+	Engine engine = wikiContext.getEngine();
+	/* ********************* actual start ********************* */
+	/* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
+	if (wikiContext == null) {//:FVK: impossible. how? but the engine already readed from it.
+		wikiContext = Wiki.context().create(engine, request, ContextEnum.WIKI_FIND.getRequestContext());
+		request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
+	}
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	if (!authorizationManager.hasAccess(wikiContext, response)) {
+		return;
+	}
 
-  String query = request.getParameter( "query" );
+	String query = request.getParameter("query");
+	if ((query != null) && (!query.trim().equals(""))) {
+	  try {
+		SearchManager searchManager = engine.getManager(SearchManager.class);
+		Collection<SearchResult> list = searchManager.findPages(query, wikiContext);
+		// Filter down to only those that we actually have a permission to view
+		ArrayList<SearchResult> items = new ArrayList();
+		for (Iterator<SearchResult> i = list.iterator(); i.hasNext();) {
+			SearchResult r = i.next();
+			WikiPage p = r.getPage();
+			PagePermission pp = new PagePermission(p, PagePermission.VIEW_ACTION);
+			try {
+				if (authorizationManager.checkPermission(wikiContext.getWikiSession(), pp)) {
+					items.add(r);
+				}
+			} catch (Exception e) {
+				log.error("Searching for page " + p, e);
+			}
+		}
 
-  if( (query != null) && ( !query.trim().equals("") ) )
-  {
-    try
-    {
-      Collection< SearchResult > list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
-
-      //  Filter down to only those that we actually have a permission to view
-      AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
-
-      ArrayList< SearchResult > items = new ArrayList();
-
-      for( Iterator< SearchResult > i = list.iterator(); i.hasNext(); )
-      {
-        SearchResult r = i.next();
-
-        WikiPage p = r.getPage();
-
-        PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
-
-        try
-        {
-          if( mgr.checkPermission( wikiContext.getWikiSession(), pp ) )
-          {
-            items.add( r );
-          }
-        }
-        catch( Exception e ) { log.error( "Searching for page "+p, e ); }
-      }
-
-      pageContext.setAttribute( "searchresults", items, PageContext.REQUEST_SCOPE );
-    }
-    catch( Exception e )
-    {
-       wikiContext.getWikiSession().addMessage( e.getMessage() );
-    }
-  }
+		pageContext.setAttribute("searchresults", items, PageContext.REQUEST_SCOPE);
+	  } catch (Exception e) {
+		wikiContext.getWikiSession().addMessage(e.getMessage());
+	  }
+	}
 %>
 <%
   int startitem = 0; // first item to show

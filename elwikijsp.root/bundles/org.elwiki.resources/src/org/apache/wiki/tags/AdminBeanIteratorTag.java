@@ -24,7 +24,7 @@ import java.util.Collection;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Provides an iterator for all AdminBeans of a given type.
@@ -42,10 +42,9 @@ public class AdminBeanIteratorTag extends BaseIteratorTag {
 	 * @param type Type to set
 	 */
 	public void setType(final String type) {
-		if (m_wikiContext == null) {
-			m_wikiContext = ContextUtil.findContext(pageContext);
-		}
-		m_type = ServicesRefs.getAdminBeanManager().getTypeFromString(type);
+		@NonNull
+		AdminBeanManager adminBeanManager = getWikiContext().getEngine().getManager(AdminBeanManager.class);
+		m_type = adminBeanManager.getTypeFromString(type);
 	}
 
 	/**
@@ -53,8 +52,9 @@ public class AdminBeanIteratorTag extends BaseIteratorTag {
 	 */
 	@Override
 	public void resetIterator() {
-		final AdminBeanManager mgr = ServicesRefs.getAdminBeanManager();
-		final Collection<AdminBean> beans = mgr.getAllBeans();
+		@NonNull
+		AdminBeanManager adminBeanManager = getWikiContext().getEngine().getManager(AdminBeanManager.class);
+		final Collection<AdminBean> beans = adminBeanManager.getAllBeans();
 		final ArrayList<AdminBean> typedBeans = new ArrayList<>();
 		for (final AdminBean ab : beans) {
 			if (ab.getType() == m_type) {

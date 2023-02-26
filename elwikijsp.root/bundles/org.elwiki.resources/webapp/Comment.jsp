@@ -28,7 +28,7 @@
 <%@ page import="org.apache.wiki.api.exceptions.RedirectException" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
-<%@ page import="org.apache.wiki.filters0.SpamFilter" %>
+<%@ page import="org.apache.wiki.filters.SpamFilter" %>
 <%@ page import="org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator" %>
 <%@ page import="org.apache.wiki.pages0.PageLock" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
@@ -41,7 +41,6 @@
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.apache.wiki.workflow0.DecisionRequiredException" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ page import="javax.servlet.http.Cookie" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
@@ -67,7 +66,7 @@
 Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_COMMENT.getRequestContext() );
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
         return;
@@ -91,7 +90,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     String changenote = TextUtil.replaceEntities( request.getParameter( "changenote" ) );
 
     WikiPage wikipage = wikiContext.getPage();
-    WikiPage latestversion = ServicesRefs.getPageManager().getPage( pagereq );
+    WikiPage latestversion = WikiEngine.getPageManager().getPage( pagereq );
 
     session.removeAttribute( EditorManager.REQ_EDITEDTEXT );
 
@@ -161,8 +160,8 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
         //
         //  We expire ALL locks at this moment, simply because someone has already broken it.
         //
-        PageLock lock = ServicesRefs.getPageManager().getCurrentLock( wikipage );
-        ServicesRefs.getPageManager().unlockPage( lock );
+        PageLock lock = WikiEngine.getPageManager().getCurrentLock( wikipage );
+        WikiEngine.getPageManager().unlockPage( lock );
         session.removeAttribute( "lock-"+pagereq );
 
         //
@@ -181,7 +180,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
         //
         //  Build comment part
         //
-        StringBuffer pageText = new StringBuffer( ServicesRefs.getPageManager().getPureText( wikipage ));
+        StringBuffer pageText = new StringBuffer( WikiEngine.getPageManager().getPureText( wikipage ));
 
         log.debug("Page initial contents are "+pageText.length()+" chars");
 
@@ -236,7 +235,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
         try {
             wikiContext.setPage( modifiedPage );
-            ServicesRefs.getPageManager().saveText( wikiContext, pageText.toString() );
+            WikiEngine.getPageManager().saveText( wikiContext, pageText.toString() );
         } catch( DecisionRequiredException e ) {
         	String redirect = wikiContext.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), "ApprovalRequiredForPageChanges" );
             response.sendRedirect( redirect );
@@ -258,7 +257,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
         PageLock lock = (PageLock) session.getAttribute( "lock-"+pagereq );
 
         if( lock != null ) {
-            ServicesRefs.getPageManager().unlockPage( lock );
+            WikiEngine.getPageManager().unlockPage( lock );
             session.removeAttribute( "lock-"+pagereq );
         }
         response.sendRedirect( wikiContext.getViewURL(pagereq) );
@@ -284,7 +283,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     //
     //  Attempt to lock the page.
     //
-    PageLock lock = ServicesRefs.getPageManager().lockPage( wikipage, storedUser );
+    PageLock lock = WikiEngine.getPageManager().lockPage( wikipage, storedUser );
 
     if( lock != null ) {
         session.setAttribute( "lock-"+pagereq, lock );
@@ -295,5 +294,5 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     response.setHeader( "Cache-control", "max-age=0" );
     response.setDateHeader( "Expires", new Date().getTime() );
     response.setDateHeader( "Last-Modified", new Date().getTime() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "EditTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />

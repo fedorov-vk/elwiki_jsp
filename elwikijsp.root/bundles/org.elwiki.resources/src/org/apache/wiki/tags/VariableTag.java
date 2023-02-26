@@ -25,10 +25,12 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * Returns the value of an Wiki variable.
@@ -75,13 +77,16 @@ public class VariableTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		Engine engine = wikiContext.getEngine();
+		VariableManager variableManager = engine.getManager(VariableManager.class);
+
 		JspWriter out = pageContext.getOut();
 		String msg = null;
 		String value = null;
 
 		try {
-			value = ServicesRefs.getVariableManager().getValue(m_wikiContext, getVar());
+			value = variableManager.getValue(wikiContext, getVar());
 		} catch (final NoSuchVariableException e) {
 			msg = "No such variable: " + e.getMessage();
 		} catch (final IllegalArgumentException e) {

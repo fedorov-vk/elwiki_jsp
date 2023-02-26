@@ -18,10 +18,17 @@
  */
 package org.apache.wiki.ui;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
@@ -29,23 +36,17 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.apache.wiki.ui.internal.EditorActivator;
 import org.apache.wiki.util.XmlUtil;
-import org.elwiki.services.ServicesRefs;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.jdom2.Element;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under shapes/default/editors
@@ -65,19 +66,32 @@ import java.util.Set;
  *
  *  @since 2.4
  */
-@Component(name = "elwiki.DefaultEditorManager", service = EditorManager.class, //
-		factory = "elwiki.EditorManager.factory")
-public class DefaultEditorManager extends BaseModuleManager implements EditorManager {
-
-    private Map< String, WikiEditorInfo > m_editors;
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultEditorManager",
+	service = { EditorManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultEditorManager extends BaseModuleManager implements EditorManager, WikiManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultEditorManager.class );
 
+    private Map< String, WikiEditorInfo > m_editors;
+
+    /**
+     * Constructs the DefaultEditorManager instance.
+     */
     public DefaultEditorManager() {
         super();
     }
 
-	// -- service handling --------------------------< start --
+	// -- OSGi service handling --------------------( start )--
+
+    @WikiServiceReference
+    private VariableManager variableManager;
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -86,23 +100,18 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+    	//
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- OSGi service handling ----------------------( end )--
     
     /**
      * {@inheritDoc}
      *
      * Initializes the EditorManager.  It also registers any editors it can find.
      */
-    @Override
-    public void initialize( final Engine engine ) throws WikiException {
-    	m_engine = engine;
+    public void initialize() throws WikiException {
         registerEditors();
     }
 
@@ -140,7 +149,7 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
         if( editor == null ) {
             // or use the default editor in jspwiki.properties
             try {
-                editor = ServicesRefs.getVariableManager().getValue( context, PROP_EDITORTYPE );
+                editor = variableManager.getValue( context, PROP_EDITORTYPE );
             } catch( final NoSuchVariableException e ) {} // This is fine
         }
 
@@ -222,4 +231,19 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
         return m_editors.get( moduleName );
     }
 
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultEditorManager.", e);
+			}
+			break;
+		}		
+	}
+    
 }

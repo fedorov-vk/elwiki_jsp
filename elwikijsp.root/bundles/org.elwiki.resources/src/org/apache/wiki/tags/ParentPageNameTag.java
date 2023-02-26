@@ -23,8 +23,10 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.render0.RenderingManager;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -44,12 +46,13 @@ public class ParentPageNameTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		final WikiPage page = wikiContext.getPage();
 
 		if (page != null) {
 			if (page instanceof PageAttachment) {
-				//:FVK: pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( ((PageAttachment)page).getParentName()) );
+				//:FVK: pageContext.getOut().print( WikiEngine.getRenderingManager().beautifyTitle( ((PageAttachment)page).getParentName()) );
 				// TODO: release ...
 			} else {
 				String name = page.getName();
@@ -63,7 +66,9 @@ public class ParentPageNameTag extends BaseWikiTag {
 					name = name.substring(0, commentstart);
 				}
 
-				pageContext.getOut().print(ServicesRefs.getRenderingManager().beautifyTitle(name));
+				@NonNull
+				RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+				pageContext.getOut().print(renderingManager.beautifyTitle(name));
 			}
 		}
 

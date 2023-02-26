@@ -34,7 +34,6 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 
 <%!
     private Logger log = Logger.getLogger("JSPWiki");
@@ -56,16 +55,16 @@ if (m_cacheManager.cacheExists(cacheName)) {
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     WikiPage wikipage = wikiContext.getPage();
 
     // Redirect if RSS generation not on
-    if( ServicesRefs.getRssGenerator() == null ) {
+    if( WikiEngine.getRssGenerator() == null ) {
         response.sendError( 404, "RSS feeds are disabled at administrator request" );
         return;
     }
 
-    if( wikipage == null || !ServicesRefs.getPageManager().pageExistsByName( wikipage.getName() ) ) {
+    if( wikipage == null || !WikiEngine.getPageManager().pageExistsByName( wikipage.getName() ) ) {
         response.sendError( 404, "No such page " + wikipage.getName() );
         return;
     }
@@ -102,7 +101,7 @@ if (m_cacheManager.cacheExists(cacheName)) {
         WeblogPlugin plug = new WeblogPlugin();
         changed = plug.findBlogEntries( wiki, wikipage.getName(), new Date(0L), new Date() );
     } else {
-        changed = ServicesRefs.getPageManager().getVersionHistory( wikipage.getName() );
+        changed = WikiEngine.getPageManager().getVersionHistory( wikipage.getName() );
     }
     
     //
@@ -142,7 +141,7 @@ if (m_cacheManager.cacheExists(cacheName)) {
     if (element != null) {
       rss = (String) element.getObjectValue();
     } else { 
-        rss = ServicesRefs.getRssGenerator().generateFeed( wikiContext, changed, mode, type );
+        rss = WikiEngine.getRssGenerator().generateFeed( wikiContext, changed, mode, type );
         m_rssCache.put( new Element( hashKey, rss ) );
     }
     

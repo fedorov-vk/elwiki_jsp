@@ -82,7 +82,7 @@ public class CheckVersionTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		WikiPage page = m_wikiContext.getPage();
+		WikiPage page = getWikiContext().getPage();
 		if (page != null) {
 			int version = page.getVersion();
 			int latestVersion = page.getLastContent().getVersion();

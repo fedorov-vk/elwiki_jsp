@@ -56,7 +56,7 @@ public class CommentLinkTag extends BaseWikiLinkTag {
 		if (m_pageName == null) {
 			pageName = m_pageName;
 		} else {
-			page = m_wikiContext.getPage();
+			page = getWikiContext().getPage();
 			if (page == null) {
 				// You can't call this on the page itself anyways.
 				return SKIP_BODY;
@@ -81,7 +81,7 @@ public class CommentLinkTag extends BaseWikiLinkTag {
 	}
 
 	private String getCommentURL(final String pageName) {
-		return m_wikiContext.getURL(ContextEnum.PAGE_COMMENT.getRequestContext(), pageName);
+		return getWikiContext().getURL(ContextEnum.PAGE_COMMENT.getRequestContext(), pageName);
 	}
 
 }

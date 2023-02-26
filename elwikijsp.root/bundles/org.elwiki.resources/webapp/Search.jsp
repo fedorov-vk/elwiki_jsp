@@ -30,14 +30,13 @@
 <%@ page import="org.apache.wiki.api.search.SearchManager" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %><%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%! Logger log = Logger.getLogger("JSPWikiSearch"); %>
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     String pagereq = wikiContext.getName();
 
     // Get the search results
@@ -49,7 +48,7 @@
         log.info("Searching for string "+query);
 
         try {
-            list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
+            list = WikiEngine.getSearchManager().findPages( query, wikiContext );
             pageContext.setAttribute( "searchresults", list, PageContext.REQUEST_SCOPE );
         } catch( Exception e ) {
             wikiContext.getWikiSession().addMessage( e.getMessage() );
@@ -75,7 +74,7 @@
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" /><%
     log.debug("SEARCH COMPLETE");
 %>

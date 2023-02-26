@@ -19,6 +19,7 @@
 package org.apache.wiki.pages;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
@@ -69,9 +71,9 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
+import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Workflow;
-import org.apache.wiki.workflow0.WorkflowBuilder;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -80,10 +82,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.AttachmentContent;
@@ -97,6 +99,10 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 
 /**
@@ -108,19 +114,24 @@ import org.osgi.service.component.annotations.Reference;
  *
  * @since 2.0
  */
-@Component(name = "elwiki.DefaultPageManager", service = PageManager.class, //
-		factory = "elwiki.PageManager.factory")
-public class DefaultPageManager implements PageManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultPageManager",
+	service = { PageManager.class, WikiManager.class, EventHandler.class },
+	scope = ServiceScope.SINGLETON,
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
+	})
+//@formatter:on
+public class DefaultPageManager implements PageManager, WikiManager, EventHandler {
 
-    private static final Logger LOG = Logger.getLogger( DefaultPageManager.class );
+    private static final Logger log = Logger.getLogger( DefaultPageManager.class );
 
 	static final String JSON_PAGESHIERARCHY = "pageshierarchyTracker";
 
 	private static String ID_EXTENSION_PAGEPROVIDER = "pageProvider";
 
     private PageProvider m_provider;
-
-    private Engine m_engine;
 
     protected ConcurrentHashMap< String, PageLock > m_pageLocks = new ConcurrentHashMap<>();
 
@@ -138,26 +149,32 @@ public class DefaultPageManager implements PageManager, Initializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-    private IWikiConfiguration wikiConfiguration;
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
 
 	@WikiServiceReference
 	private AclManager aclManager;
-	
+
 	@WikiServiceReference
-    private ReferenceManager referenceManager;
-	
+	private ReferenceManager referenceManager;
+
 	@WikiServiceReference
 	private TasksManager tasksManager;
-	
+
 	@WikiServiceReference
 	private DifferenceManager differenceManager;
 
 	@WikiServiceReference
 	private AttachmentManager attachmentManager;
+
+	@WikiServiceReference
+	private WorkflowManager workflowManager;
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -166,24 +183,22 @@ public class DefaultPageManager implements PageManager, Initializable {
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 	
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-        m_engine = engine;
-        IPreferenceStore props = engine.getWikiPreferences();
+	/**
+	 * Initialises PageManager.
+	 */
+	public void initialize() throws WikiException {
+        IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 
         m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
 
-		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-    	wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker());
+		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
+    	wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker(this.m_engine));
 
         /*:FVK: - подключить CachingProvider
         final String classname;
@@ -244,12 +259,12 @@ public class DefaultPageManager implements PageManager, Initializable {
 						try {
 							clazzPageProvider = clazz.asSubclass(PageProvider.class);
 						} catch (ClassCastException e) {
-							LOG.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
+							log.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
 							throw new WikiException(
 									"Page provider " + className + " is not extends PageProvider interface.", e);
 						}
 					} catch (ClassNotFoundException e) {
-						LOG.fatal("Page provider " + className + " cannot be found.", e);
+						log.fatal("Page provider " + className + " cannot be found.", e);
 						throw new WikiException("Page provider " + className + " cannot be found.", e);
 					}
 					break; // -- finalize for --
@@ -263,18 +278,28 @@ public class DefaultPageManager implements PageManager, Initializable {
 					PROP_PAGEPROVIDER);
 		}
 
-		PageProvider pageProvider;
+		PageProvider pageProvider = null;
 		try {
-			pageProvider = clazzPageProvider.newInstance();
-		} catch (InstantiationException e) {
-			LOG.fatal("Page provider " + clazzPageProvider + " cannot be created.", e);
+			Class<?>[] parameterType = new Class[] { Engine.class };
+			pageProvider = clazzPageProvider.getDeclaredConstructor(parameterType).newInstance(this.m_engine);
+		} catch (InstantiationException | IllegalArgumentException e) {
+			log.fatal("Page provider " + clazzPageProvider + " cannot be created.", e);
 			throw new WikiException("Page provider " + clazzPageProvider + " cannot be created.", e);
 		} catch (IllegalAccessException e) {
-			LOG.fatal("You are not allowed to access page provider class " + clazzPageProvider, e);
+			log.fatal("You are not allowed to access page provider class " + clazzPageProvider, e);
 			throw new WikiException("You are not allowed to access page provider class " + clazzPageProvider, e);
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		LOG.debug("Loaded page provider from extension: " + pageProvider);
+		log.debug("Loaded page provider from extension: " + pageProvider);
 
 		return pageProvider;
 	}
@@ -307,26 +332,26 @@ public class DefaultPageManager implements PageManager, Initializable {
         pageSorter.initialize( props );
 
         try {
-            LOG.debug("Page provider class: '" + classname + "'");
+            log.debug("Page provider class: '" + classname + "'");
             final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
             m_provider = ( PageProvider ) providerclass.newInstance();
 
-            LOG.debug("Initializing page provider class " + m_provider);
+            log.debug("Initializing page provider class " + m_provider);
             m_provider.initialize(m_engine);
         } catch (final ClassNotFoundException e) {
-            LOG.error("Unable to locate provider class '" + classname + "' (" + e.getMessage() + ")", e);
+            log.error("Unable to locate provider class '" + classname + "' (" + e.getMessage() + ")", e);
             throw new WikiException("No provider class. (" + e.getMessage() + ")", e);
         } catch (final InstantiationException e) {
-            LOG.error("Unable to create provider class '" + classname + "' (" + e.getMessage() + ")", e);
+            log.error("Unable to create provider class '" + classname + "' (" + e.getMessage() + ")", e);
             throw new WikiException("Faulty provider class. (" + e.getMessage() + ")", e);
         } catch (final IllegalAccessException e) {
-            LOG.error("Illegal access to provider class '" + classname + "' (" + e.getMessage() + ")", e);
+            log.error("Illegal access to provider class '" + classname + "' (" + e.getMessage() + ")", e);
             throw new WikiException("Illegal provider class. (" + e.getMessage() + ")", e);
         } catch (final NoRequiredPropertyException e) {
-            LOG.error("Provider did not found a property it was looking for: " + e.getMessage(), e);
+            log.error("Provider did not found a property it was looking for: " + e.getMessage(), e);
             throw e;  // Same exception works.
         } catch (final IOException e) {
-            LOG.error("An I/O exception occurred while trying to create a new page provider: " + classname, e);
+            log.error("An I/O exception occurred while trying to create a new page provider: " + classname, e);
             throw new WikiException("Unable to start page provider: " + e.getMessage(), e);
         }
 
@@ -374,7 +399,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             text = m_provider.getPageText( pageName, version );
         } catch ( final RepositoryModifiedException e ) {
             //  This only occurs with the latest version.
-            LOG.info( "Repository has been modified externally while fetching page " + pageName );
+            log.info( "Repository has been modified externally while fetching page " + pageName );
 
             //  Empty the references and yay, it shall be recalculated
             final WikiPage p = m_provider.getPageInfo( pageName, version );
@@ -397,7 +422,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         try {
             result = getPageText( page, version );
         } catch( final ProviderException e ) {
-            LOG.error( "ProviderException getPureText for page " + page + " [version " + version + "]", e );
+            log.error( "ProviderException getPureText for page " + page + " [version " + version + "]", e );
         } finally {
             if( result == null ) {
                 result = "";
@@ -438,7 +463,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         // Create approval workflow for page save; add the diffed, proposed and old text versions as
         // Facts for the approver (if approval is required). If submitter is authenticated, any reject
         // messages will appear in his/her workflow inbox.
-        final WorkflowBuilder builder = WorkflowBuilder.getBuilder( m_engine );
+        final IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
         final Principal submitter = context.getCurrentUser();
         final Step prepTask = this.tasksManager.buildPreSaveWikiPageTask( context, proposedText );
         final Step completionTask = this.tasksManager.buildSaveWikiPageTask( context, author, changenote );
@@ -511,9 +536,9 @@ public class DefaultPageManager implements PageManager, Initializable {
             final Date d = new Date();
             lock = new PageLock( page, user, d, new Date( d.getTime() + m_expiryTime * 60 * 1000L ) );
             m_pageLocks.put( page.getName(), lock );
-            LOG.debug( "Locked page " + page.getName() + " for " + user );
+            log.debug( "Locked page " + page.getName() + " for " + user );
         } else {
-            LOG.debug( "Page " + page.getName() + " already locked by " + lock.getLocker() );
+            log.debug( "Page " + page.getName() + " already locked by " + lock.getLocker() );
             lock = null; // Nothing to return
         }
 
@@ -531,7 +556,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         }
 
         m_pageLocks.remove( lock.getPage() );
-        LOG.debug( "Unlocked page " + lock.getPage() );
+        log.debug( "Unlocked page " + lock.getPage() );
 
         fireEvent( WikiPageEvent.PAGE_UNLOCK, lock.getPage() );
     }
@@ -575,12 +600,12 @@ public class DefaultPageManager implements PageManager, Initializable {
                 p = null;
                 //:FVK: попытка загрузки прикрепления 
                 //:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                // p = ServicesRefs.getAttachmentManager().getAttachmentInfo( null, pagereq );
+                // p = Engine.getAttachmentManager().getAttachmentInfo( null, pagereq );
             }
 
             return p;
         } catch( final ProviderException e ) {
-            LOG.error( "Unable to fetch page info for \"" + pagereq + "\" [version: " + version + "]", e );
+            log.error( "Unable to fetch page info for \"" + pagereq + "\" [version: " + version + "]", e );
             return null;
         }
     }
@@ -601,7 +626,7 @@ public class DefaultPageManager implements PageManager, Initializable {
             page = m_provider.getPageInfo( pageName, version );
         } catch( final RepositoryModifiedException e ) {
             //  This only occurs with the latest version.
-            LOG.info( "Repository has been modified externally while fetching info for " + pageName );
+            log.info( "Repository has been modified externally while fetching info for " + pageName );
             page = m_provider.getPageInfo( pageName, version );
             if( page != null ) {
             	//:FVK:this.referenceManager.updateReferences( page );
@@ -628,10 +653,10 @@ public class DefaultPageManager implements PageManager, Initializable {
 
 			/*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
 			if( c == null ) {
-			    c = ( List< T > )ServicesRefs.getAttachmentManager().getVersionHistory( pageName );
+			    c = ( List< T > )Engine.getAttachmentManager().getVersionHistory( pageName );
 			}*/
 		} catch (final ProviderException e) {
-			LOG.error("ProviderException requesting version history for " + page.getName(), e);
+			log.error("ProviderException requesting version history for " + page.getName(), e);
 		}
 
 		return c;
@@ -665,7 +690,7 @@ public class DefaultPageManager implements PageManager, Initializable {
         try {
             return m_provider.getAllPages().size();
         } catch( final ProviderException e ) {
-            LOG.error( "Unable to count pages: ", e );
+            log.error( "Unable to count pages: ", e );
             return -1;
         }
     }
@@ -679,11 +704,11 @@ public class DefaultPageManager implements PageManager, Initializable {
         try {
             final TreeSet< WikiPage > sortedPages = new TreeSet<>( new PageTimeComparator() );
             sortedPages.addAll( getAllPages() );
-          //:FVK: sortedPages.addAll( ServicesRefs.getAttachmentManager().getAllAttachments() );
+          //:FVK: sortedPages.addAll( Engine.getAttachmentManager().getAllAttachments() );
 
             return sortedPages;
         } catch( final ProviderException e ) {
-            LOG.error( "Unable to fetch all pages: ", e );
+            log.error( "Unable to fetch all pages: ", e );
             return Collections.emptySet();
         }
     }
@@ -749,7 +774,7 @@ public class DefaultPageManager implements PageManager, Initializable {
     public void deleteVersion( final WikiPage page ) throws ProviderException {
     	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы. 
         if( page instanceof PageAttachment ) {
-            ServicesRefs.getAttachmentManager().deleteVersion( ( PageAttachment )page );
+            Engine.getAttachmentManager().deleteVersion( ( PageAttachment )page );
         } else */
     	{
         	//:FVK: m_provider.deleteVersion( page.getName(), page.getVersion() );
@@ -767,21 +792,21 @@ public class DefaultPageManager implements PageManager, Initializable {
         if( p != null ) {
         	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
             if( p instanceof PageAttachment ) {
-                ServicesRefs.getAttachmentManager().deleteAttachment( ( PageAttachment )p );
+                Engine.getAttachmentManager().deleteAttachment( ( PageAttachment )p );
             } else*/ 
             {
                 final Collection< String > refTo = this.referenceManager.findRefersTo( pageName );
                 // May return null, if the page does not exist or has not been indexed yet.
 
                 /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                if( ServicesRefs.getAttachmentManager().hasAttachments( p ) ) {
-                    final List< PageAttachment > attachments = ServicesRefs.getAttachmentManager().listAttachments( p );
+                if( Engine.getAttachmentManager().hasAttachments( p ) ) {
+                    final List< PageAttachment > attachments = Engine.getAttachmentManager().listAttachments( p );
                     for( final PageAttachment attachment : attachments ) {
                         if( refTo != null ) {
                             refTo.remove( attachment.getName() );
                         }
 
-                        ServicesRefs.getAttachmentManager().deleteAttachment( attachment );
+                        Engine.getAttachmentManager().deleteAttachment( attachment );
                     }
                 }*/
                 deletePage( p );
@@ -836,7 +861,7 @@ public class DefaultPageManager implements PageManager, Initializable {
                 if ( p.isExpired() ) {
                     i.remove();
 
-                    LOG.debug( "Reaped lock: " + p.getPage() +
+                    log.debug( "Reaped lock: " + p.getPage() +
                                " by " + p.getLocker() +
                                ", acquired " + p.getAcquisitionTime() +
                                ", and expired " + p.getExpiryTime() );
@@ -894,15 +919,15 @@ public class DefaultPageManager implements PageManager, Initializable {
                         try {
                             this.aclManager.setPermissions( page, page.getAcl() );
                         } catch( final WikiSecurityException e ) {
-                            LOG.error("Could not change page ACL for page " + page.getName() + ": " + e.getMessage(), e);
+                            log.error("Could not change page ACL for page " + page.getName() + ": " + e.getMessage(), e);
                         }
                         pagesChanged++;
                     }
                 }
-                LOG.info( "Profile name change for '" + newPrincipal.toString() + "' caused " + pagesChanged + " page ACLs to change also." );
+                log.info( "Profile name change for '" + newPrincipal.toString() + "' caused " + pagesChanged + " page ACLs to change also." );
             } catch( final ProviderException e ) {
                 // Oooo! This is really bad...
-                LOG.error( "Could not change user name in Page ACLs because of Provider error:" + e.getMessage(), e );
+                log.error( "Could not change user name in Page ACLs because of Provider error:" + e.getMessage(), e );
             }
         }
     }
@@ -1029,6 +1054,21 @@ public class DefaultPageManager implements PageManager, Initializable {
 		unreferencedPages.removeIf(page -> referencedId.contains(page.getId()));
 
 		return unreferencedPages;
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of PageManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

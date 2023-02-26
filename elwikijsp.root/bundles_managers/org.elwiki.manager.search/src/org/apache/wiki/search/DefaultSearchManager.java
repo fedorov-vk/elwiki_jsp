@@ -40,6 +40,7 @@ import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
@@ -55,14 +56,23 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.search.lucene.LuceneSearchProvider;
 import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.workflow0.Workflow;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 
 /**
@@ -70,9 +80,16 @@ import org.osgi.service.component.annotations.Reference;
  *
  *  @since 2.2.21.
  */
-@Component(name = "elwiki.DefaultSearchManager", service = SearchManager.class, //
-		factory = "elwiki.SearchManager.factory")
-public class DefaultSearchManager extends BasePageFilter implements SearchManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultSearchManager",
+	service = { SearchManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultSearchManager.class );
 
@@ -85,19 +102,23 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 		super();
 	}
 
-    // -- service handling ---------------------------(start)--
+    // -- OSGi service handling ----------------------(start)--
     
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-    private IWikiConfiguration wikiConfiguration;
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
-    private ReferenceManager referenceManager;
-	
-	@WikiServiceReference
-    private PageManager pageManager;
+	private Engine engine;
 
-    private WikiAjaxDispatcher wikiAjaxDispatcher;
+	@WikiServiceReference
+	private BackgroundThreads backgroundThreads;
+
+	@WikiServiceReference
+	private ReferenceManager referenceManager;
+
+	@WikiServiceReference
+	private WikiAjaxDispatcher wikiAjaxDispatcher;
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -106,16 +127,12 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class); 
-			initialize(engine);
-		}
+	protected void startup() {
+    	//
 	}
 
-	// -- service handling -----------------------------(end)--
-    
+	// -- OSGi service handling ------------------------(end)--
+
 	/**
      *  Provides a JSON AJAX API to the JSPWiki Search Engine.
      */
@@ -257,9 +274,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
     }
 
     /** {@inheritDoc} */
-    @Override
-    public void initialize(Engine engine ) throws WikiException {
-        super.initialize( engine );
+	public void initialize() throws WikiException {
+		super.initialize(this.engine); //:FVK: workaround.
         WikiEventManager.addWikiEventListener( this.pageManager, this );
 
         // TODO: Replace with custom annotations. See JSPWIKI-566
@@ -341,5 +357,20 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
             }
         }
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of SearchManager.", e);
+			}
+			break;
+		}		
+	}
 
 }

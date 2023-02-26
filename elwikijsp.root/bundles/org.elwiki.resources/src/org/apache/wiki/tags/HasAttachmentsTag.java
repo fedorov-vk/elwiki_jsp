@@ -42,11 +42,11 @@ public class HasAttachmentsTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		Engine engine = m_wikiContext.getEngine();
+		Engine engine = getWikiContext().getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
 		@NonNull
 		AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
-		WikiPage page = m_wikiContext.getPage();
+		WikiPage page = getWikiContext().getPage();
 
 		try {
 			if (page != null && pageManager.wikiPageExists(page) && attachmentManager.attachmentsEnabled()) {

@@ -23,8 +23,10 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -63,18 +65,21 @@ public class PageExistsTag extends BaseWikiTag {
 	}
 
 	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+        Engine engine = wikiContext.getEngine();
+        PageManager pageManager = engine.getManager(PageManager.class);
+
 		WikiPage page;
 
 		if (m_pageId != null) {
-			page = ServicesRefs.getPageManager().getPageById(m_pageId);
+			page = pageManager.getPageById(m_pageId);
 		} else if (m_pageName != null) {
-			page = ServicesRefs.getPageManager().getPage(m_pageName);
+			page = pageManager.getPage(m_pageName);
 		} else {
-			page = m_wikiContext.getPage();
+			page = wikiContext.getPage();
 		}
 
-		if (page != null && ServicesRefs.getPageManager().pageExistsById(page.getId())) {
+		if (page != null && pageManager.pageExistsById(page.getId())) {
 			return EVAL_BODY_INCLUDE;
 		}
 

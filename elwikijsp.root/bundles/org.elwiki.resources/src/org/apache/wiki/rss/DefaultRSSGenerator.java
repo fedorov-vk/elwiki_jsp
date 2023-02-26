@@ -28,18 +28,17 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.api.rss.Entry;
-import org.apache.wiki.api.rss.Feed;
+import org.apache.wiki.api.rss.IFeed;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.util.Iterator;
@@ -133,12 +132,13 @@ public class DefaultRSSGenerator implements RSSGenerator {
     }
 
     private String getPageDescription( final WikiPage page ) {
+    	RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
         final StringBuilder buf = new StringBuilder();
         final String author = getAuthor( page );
         final WikiContext ctx = Wiki.context().create( m_engine, page );
       /*:FVK:
         if( page.getVersion() > 1 ) {
-            final String diff = ServicesRefs.getDifferenceManager().getDiff( ctx,
+            final String diff = WikiEngine.getDifferenceManager().getDiff( ctx,
                                                                 page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
                                                                          page.getVersion() );
 
@@ -146,7 +146,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             buf.append( diff );
         } else*/ {
             buf.append( author ).append( " created this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
-            buf.append( ServicesRefs.getRenderingManager().getHTML( page.getName() ) );
+            buf.append( renderingManager.getHTML( page.getName() ) );
         }
 
         return buf.toString();
@@ -226,21 +226,24 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateFullWikiRSS( final WikiContext wikiContext, final Feed feed ) {
+    public String generateFullWikiRSS( final WikiContext wikiContext, final IFeed feed ) {
+    	PageManager pageManager = this.m_engine.getManager(PageManager.class);
+    	ISessionMonitor sessionMonitor = this.m_engine.getManager(ISessionMonitor.class);
+    	AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
         feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() );
         feed.setFeedURL( m_engine.getWikiConfiguration().getBaseURL() );
         feed.setChannelLanguage( m_channelLanguage );
         feed.setChannelDescription( m_channelDescription );
 
-        final Set< WikiPage > changed = ServicesRefs.getPageManager().getRecentChanges();
+        final Set< WikiPage > changed = pageManager.getRecentChanges();
 
-        final Session session = ServicesRefs.getSessionMonitor().createGuestSession(null);
+        final Session session = sessionMonitor.createGuestSession(null);
         int items = 0;
         for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
             final WikiPage page = i.next();
 
             //  Check if the anonymous user has view access to this page.
-            if( !ServicesRefs.getAuthorizationManager().checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
+            if( !authorizationManager.checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
                 // No permission, skip to the next one.
                 continue;
             }
@@ -267,17 +270,18 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateWikiPageRSS( final WikiContext wikiContext, final List< WikiPage > changed, final Feed feed ) {
+    public String generateWikiPageRSS( final WikiContext wikiContext, final List< WikiPage > changed, final IFeed feed ) {
+    	VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
         feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName()+": "+wikiContext.getPage().getName() );
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
-        final String language = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
+        final String language = variableManager.getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
 
         if( language != null ) {
             feed.setChannelLanguage( language );
         } else {
             feed.setChannelLanguage( m_channelLanguage );
         }
-        final String channelDescription = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
+        final String channelDescription = variableManager.getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
 
         if( channelDescription != null ) {
             feed.setChannelDescription( channelDescription );
@@ -314,12 +318,15 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public String generateBlogRSS( final WikiContext wikiContext, final List< WikiPage > changed, final Feed feed ) {
+    public String generateBlogRSS( final WikiContext wikiContext, final List< WikiPage > changed, final IFeed feed ) {
+    	VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
+    	PageManager pageManager = this.m_engine.getManager(PageManager.class);
+    	RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
         if( log.isDebugEnabled() ) {
             log.debug( "Generating RSS for blog, size=" + changed.size() );
         }
 
-        final String ctitle = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_TITLE );
+        final String ctitle = variableManager.getVariable( wikiContext, PROP_CHANNEL_TITLE );
         if( ctitle != null ) {
             feed.setChannelTitle( ctitle );
         } else {
@@ -328,14 +335,14 @@ public class DefaultRSSGenerator implements RSSGenerator {
 
         feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
 
-        final String language = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
+        final String language = variableManager.getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
         if( language != null ) {
             feed.setChannelLanguage( language );
         } else {
             feed.setChannelLanguage( m_channelLanguage );
         }
 
-        final String channelDescription = ServicesRefs.getVariableManager().getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
+        final String channelDescription = variableManager.getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
         if( channelDescription != null ) {
             feed.setChannelDescription( channelDescription );
         }
@@ -358,7 +365,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
             e.setURL( url );
 
             //  Title
-            String pageText = ServicesRefs.getPageManager().getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+            String pageText = pageManager.getPureText( page.getName(), WikiProvider.LATEST_VERSION );
 
             String title = "";
             final int firstLine = pageText.indexOf('\n');
@@ -384,7 +391,7 @@ public class DefaultRSSGenerator implements RSSGenerator {
                 if( maxlen > MAX_CHARACTERS ) {
                     maxlen = MAX_CHARACTERS;
                 }
-                pageText = ServicesRefs.getRenderingManager().textToHTML( wikiContext, pageText.substring( firstLine + 1, maxlen ).trim() );
+                pageText = renderingManager.textToHTML( wikiContext, pageText.substring( firstLine + 1, maxlen ).trim() );
                 if( maxlen == MAX_CHARACTERS ) {
                     pageText += "...";
                 }

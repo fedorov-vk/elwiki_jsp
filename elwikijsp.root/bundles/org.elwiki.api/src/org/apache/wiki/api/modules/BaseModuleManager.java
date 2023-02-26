@@ -18,33 +18,28 @@
  */
 package org.apache.wiki.api.modules;
 
-import org.apache.wiki.api.Release;
-import org.apache.wiki.api.core.Engine;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.wiki.api.Release;
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.api.WikiServiceReference;
 
 /**
  *  Superclass for all JSPWiki managers for modules (plugins, etc).
  */
 public abstract class BaseModuleManager implements ModuleManager {
 
-    protected Engine m_engine;
-
     private boolean m_loadIncompatibleModules = false;
 
-    /**
-     *  Constructs the ModuleManager.
-     *
-     *  @param engine The Engine which owns this manager.
-     */
-    /*:FVK:
-    public BaseModuleManager( final Engine engine ) {
-        m_engine = engine;
-    }*/
+	// -- OSGi service handling --------------------( start )--
+
+    @WikiServiceReference
+    protected Engine m_engine;
+
+	// -- OSGi service handling ----------------------( end )--
 
     /**
      *  Returns true, if the given module is compatible with this version of JSPWiki.

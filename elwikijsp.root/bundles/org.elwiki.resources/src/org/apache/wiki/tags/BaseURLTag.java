@@ -38,7 +38,7 @@ public class BaseURLTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		pageContext.getOut().print(m_wikiContext.getConfiguration().getBaseURL());
+		pageContext.getOut().print(getWikiContext().getConfiguration().getBaseURL());
 		return SKIP_BODY;
 	}
 

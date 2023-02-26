@@ -22,15 +22,12 @@ import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
@@ -40,51 +37,56 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.ui.TemplateManager;
-//import org.eclipse.rap.rwt.RWT;
-//import org.elwiki.api.IApplicationSession;
-//import org.elwiki.api.IAuthorizationManager;
-//import org.elwiki.api.IRenderingManager;
-//import org.elwiki.api.IWikiConstants;
-//import org.elwiki.api.IWikiContext;
-//import org.elwiki.api.IWikiEngine;
-//import org.elwiki.api.PageLock;
-//import org.elwiki.api.acl.AclManager;
-//import org.elwiki.api.exceptions.ProviderException;
-//import org.elwiki.api.exceptions.WikiSecurityException;
-//import org.elwiki.api.pagemanager.IPageManager;
-//import org.elwiki.api.release.FactoryWikiContext;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.data.authorize.PrincipalComparator;
+import org.elwiki.permissions.PermissionFactory;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataFactory;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.data.authorize.PrincipalComparator;
-import org.elwiki.permissions.PagePermission;
-import org.elwiki.permissions.PermissionFactory;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Default implementation that parses Acls from wiki page markup.
  *
  * @since 2.3
  */
-@Component(name = "elwiki.DefaultAclManager", service = AclManager.class, //
-		factory = "elwiki.AclManager.factory")
-public class DefaultAclManager implements AclManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAclManager",
+	service = { AclManager.class, WikiManager.class, EventHandler.class },
+	scope = ServiceScope.SINGLETON,
+	property = {
+		// EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
+	})
+//@formatter:on
+public class DefaultAclManager implements AclManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultAclManager.class);
 
+	// -- OSGi service handling ----------------------(start)--
+
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-	// -- service handling ---------------------------(start)--
+	@WikiServiceReference
+	Engine engine;
+
+	@WikiServiceReference
+	AuthorizationManager authorizationManager;
+
+	@WikiServiceReference
+	PageManager pageManager;
 
 	@Activate
 	protected void startup() {
@@ -96,7 +98,7 @@ public class DefaultAclManager implements AclManager {
 		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 	
 	/**
 	 * A helper method for parsing textual AccessControlLists.</br>
@@ -115,7 +117,6 @@ public class DefaultAclManager implements AclManager {
 	 */
 	@Override
 	public Acl parseAcl(WikiPage page, String ruleLine) throws WikiSecurityException {
-		AuthorizationManager authorizationManager = ServicesRefs.getAuthorizationManager();
 		Acl acl = page.getAcl();
 		if (acl == null) {
 			acl = Elwiki_dataFactory.eINSTANCE.createAcl();
@@ -233,7 +234,6 @@ public class DefaultAclManager implements AclManager {
 	 */
 	@Override
 	public void setPermissions(WikiPage page, Acl acl) throws WikiSecurityException {
-		PageManager pageManager = ServicesRefs.getPageManager();
 		// Forcibly expire any page locks
 		PageLock lock = pageManager.getCurrentLock(page);
 		if (lock != null) {
@@ -302,4 +302,12 @@ public class DefaultAclManager implements AclManager {
 		return s.toString();
 	}
 
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		/*switch (topic) {
+			break;
+		}*/
+	}
+	
 }

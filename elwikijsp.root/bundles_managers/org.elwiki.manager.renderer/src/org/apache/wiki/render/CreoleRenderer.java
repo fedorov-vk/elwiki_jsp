@@ -19,7 +19,7 @@
 package org.apache.wiki.render;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.parser0.PluginContent;
+import org.apache.wiki.parser.PluginContent;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.render0.WikiRenderer;
 import org.jdom2.Content;

@@ -32,7 +32,6 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -118,7 +117,9 @@ public class WeblogEntryPlugin implements Plugin {
     }
 
     private int findFreeEntry( final Engine engine, final String baseName, final String date ) throws ProviderException {
-        final Collection< WikiPage > everyone = ServicesRefs.getPageManager().getAllPages();
+    	PageManager pageManager = engine.getManager(PageManager.class);
+    	
+        final Collection< WikiPage > everyone = pageManager.getAllPages();
         final String startString = WeblogPlugin.makeEntryPage(baseName, date, "");
         int max = 0;
 
@@ -140,7 +141,7 @@ public class WeblogEntryPlugin implements Plugin {
         int idx = max + 1;
         while( idx < MAX_BLOG_ENTRIES ) {
             final WikiPage page = Wiki.contents().page( WeblogPlugin.makeEntryPage( baseName, date, Integer.toString( idx ) ) );
-            final PageLock lock = ServicesRefs.getPageManager().getCurrentLock(page);
+            final PageLock lock = pageManager.getCurrentLock(page);
             if (lock == null) {
                 break;
             }

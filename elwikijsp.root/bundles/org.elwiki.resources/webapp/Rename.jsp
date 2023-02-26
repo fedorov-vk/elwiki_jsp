@@ -31,7 +31,6 @@
 <%@ page import="org.apache.wiki.tags.BreadcrumbsTag.FixedQueue" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -41,10 +40,10 @@
 %>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
 	WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RENAME.getRequestContext() );
-	if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+	if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
         return;
@@ -69,7 +68,7 @@
     {
         if (renameTo.length() > 0)
         {
-            String renamedTo = ServicesRefs.getPageRenamer().renamePage(wikiContext, renameFrom, renameTo, changeReferences);
+            String renamedTo = WikiEngine.getPageRenamer().renamePage(wikiContext, renameFrom, renameTo, changeReferences);
 
             FixedQueue trail = (FixedQueue) session.getAttribute( BreadcrumbsTag.BREADCRUMBTRAIL_KEY );
             if( trail != null ) {
@@ -107,5 +106,5 @@
 
     pageContext.setAttribute( "renameto", TextUtil.replaceEntities( renameTo ), PageContext.REQUEST_SCOPE );
     response.setContentType("text/html; charset=" + wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />

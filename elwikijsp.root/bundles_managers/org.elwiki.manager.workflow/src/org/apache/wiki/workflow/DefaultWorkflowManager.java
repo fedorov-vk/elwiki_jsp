@@ -41,22 +41,28 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventEmitter;
 import org.apache.wiki.api.event.WorkflowEvent;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
+import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
@@ -70,11 +76,14 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultWorkflowManager",
-	service = { WorkflowManager.class, EventHandler.class },
-	factory = "elwiki.WorkflowManager.factory",
-	property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_WORKFLOW_ALL)
+	service = { WorkflowManager.class, WikiManager.class, EventHandler.class },
+	scope = ServiceScope.SINGLETON,
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,  
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_WORKFLOW_ALL
+	})
 //@formatter:on
-public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
+public class DefaultWorkflowManager implements WorkflowManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger( DefaultWorkflowManager.class );
 
@@ -87,8 +96,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
     Set< Workflow > m_workflows;
     final Map< String, Principal > m_approvers;
     List< Workflow > m_completed;
-    private Engine m_engine = null;
-
+    
     /**
      * Constructs a new WorkflowManager, with an empty workflow cache.
      */
@@ -99,11 +107,17 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
         WikiEventEmitter.attach( this );
     }
 
-	// -- service handling --------------------------< start --
+	// -- OSGi service handling --------------------( start )--
 
 	/** Stores configuration. */
-	@Reference // (cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine = null;
+
+	@WikiServiceReference
+	private AuthorizationManager authorizationManager;
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -112,16 +126,17 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-    	Dictionary<String, Object> properties = componentContext.getProperties();
-		Object obj = properties.get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+    	//
 	}
-    
-	// -- service handling ---------------------------- end >--
 
+	// -- OSGi service handling ----------------------( end )--
+
+    @Override
+    public IWorkflowBuilder getWorkflowBuilder() {
+    	return WorkflowBuilder.getBuilder(m_engine);
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -141,7 +156,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
     }
 
     /**
-     * {@inheritDoc}
+     * Initialises WorkflowManager.
      *
      * Any properties that begin with {@link #PROPERTY_APPROVER_PREFIX} will be assumed to be Decisions that require approval. For a given
      * property key, everything after the prefix denotes the Decision's message key. The property value indicates the Principal (Role,
@@ -149,11 +164,10 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
      * {@code jspwiki.approver.workflow.saveWikiPage=Admin}, the Decision's message key is <code>workflow.saveWikiPage</code>. The Principal
      * <code>Admin</code> will be resolved via {@link org.apache.wiki.auth.AuthorizationManager#resolvePrincipal(String)}.
      */
-    @Override
-    public void initialize( final Engine engine ) throws WikiException {
-        m_engine = engine;
+    public void initialize() throws WikiException {
+        IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
 
-        /*:FVK:
+        /*:FVK: TODO: !!!
         // Identify the workflows requiring approvals
         for( final Object o : props.keySet() ) {
             final String prop = ( String )o;
@@ -171,7 +185,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
         }
         */
 
-		String workDir = engine.getWikiConfiguration().getWorkDir().toString();
+		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
 		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
     }
 
@@ -256,7 +270,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
         // Try to resolve UnresolvedPrincipals
         if ( approver instanceof UnresolvedPrincipal ) {
             final String name = approver.getName();
-            approver = ServicesRefs.getAuthorizationManager().resolvePrincipal( name );
+            approver = this.authorizationManager.resolvePrincipal( name );
 
             // If still unresolved, throw exception; otherwise, freshen our cache
             if ( approver instanceof UnresolvedPrincipal ) {
@@ -393,13 +407,19 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
-		log.debug("~~ ~~ ~~ Recevied event with topic: " + event.getTopic());
-
 		Workflow workflow = (Workflow) event.getProperty(ElWikiEventsConstants.PROPERTY_WORKFLOW);
 		Decision decision = (Decision) event.getProperty(ElWikiEventsConstants.PROPERTY_DECISION);
 
 		String topic = event.getTopic();
 		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of SearchManager.", e);
+			}
+			break;		
 		// Remove from manager
 		case ElWikiEventsConstants.TOPIC_WORKFLOW_ABORTED:
 		case ElWikiEventsConstants.TOPIC_WORKFLOW_COMPLETED:

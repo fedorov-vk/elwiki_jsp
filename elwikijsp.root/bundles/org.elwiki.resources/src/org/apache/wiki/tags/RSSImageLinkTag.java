@@ -27,11 +27,12 @@ import javax.servlet.jsp.JspWriter;
 
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.preferences.Preferences;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Writes an image link to a JSPWiki RSS file. If RSS generation has been turned
@@ -92,10 +93,14 @@ public class RSSImageLinkTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		@NonNull
+		RSSGenerator rssGenerator = engine.getManager(RSSGenerator.class);
+		
 		final JspWriter out = pageContext.getOut();
-		final ResourceBundle rb = Preferences.getBundle(m_wikiContext, InternationalizationManager.CORE_BUNDLE);
-		if (ServicesRefs.getRssGenerator() != null && ServicesRefs.getRssGenerator().isEnabled()) {
+		final ResourceBundle rb = Preferences.getBundle(wikiContext, InternationalizationManager.CORE_BUNDLE);
+		if (rssGenerator != null && rssGenerator.isEnabled()) {
 			if (RSSGenerator.MODE_FULL.equals(m_mode)) {
 				final String rssURL = engine.getGlobalRSSURL();
 				if (rssURL != null) {
@@ -104,10 +109,10 @@ public class RSSImageLinkTag extends BaseWikiTag {
 					out.print("&nbsp;</a> ");
 				}
 			} else {
-				final String page = m_pageName != null ? m_pageName : m_wikiContext.getPage().getName();
+				final String page = m_pageName != null ? m_pageName : wikiContext.getPage().getName();
 				final String params = "page=" + page + "&mode=" + m_mode;
 				out.print("<a href='"
-						+ m_wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp", params));
+						+ wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp", params));
 				out.print("' class='feed'");
 				out.print(" title='" + MessageFormat.format(rb.getString("rss.title"), page) + "'>");
 				out.print("&nbsp;</a> ");

@@ -26,20 +26,19 @@
 <%@ page import="org.apache.wiki.auth.WikiSecurityException" %>
 <%@ page import="org.elwiki.api.authorization.IGroupManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
 <%!Logger log = Logger.getLogger("JSPWiki");%>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_DELETE.getRequestContext() );
-    if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response )) return;
+    if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
     Session wikiSession = wikiContext.getWikiSession();
-    IGroupManager groupMgr = ServicesRefs.getGroupManager();
+    IGroupManager groupMgr = WikiEngine.getGroupManager();
     String name = request.getParameter( "group" );
 
     if ( name == null )

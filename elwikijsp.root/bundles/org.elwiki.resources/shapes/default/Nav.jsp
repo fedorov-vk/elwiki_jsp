@@ -23,7 +23,6 @@
 <%@ page import="org.apache.wiki.api.attachment.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.tags.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -32,13 +31,16 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext ctx = ContextUtil.findContext( pageContext );
+	//:FVK: duplicate - WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	//:FVK: duplicate - Engine engine = wikiContext.getEngine();
+	//:FVK: duplicate - PageManager pageManager = engine.getManager(PageManager.class);
+	AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
 
-  String text = ServicesRefs.getPageManager().getText( ctx.getPage() );
-  StringTokenizer tokens = new StringTokenizer( text );
-  //avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
+	String text = pageManager.getText( wikiContext.getPage() );
+	StringTokenizer tokens = new StringTokenizer( text );
+	//avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
 %>
-<c:set var="attachments" value="<%= ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size() %>" />
+<c:set var="attachments" value="<%=attachmentManager.listAttachments( wikiContext.getPage() ).size()%>" />
 
 <c:set var="wordCount" value="<%= tokens.countTokens() %>" />
 <c:set var="readingTime" value="${wordCount / 228}" />
@@ -75,7 +77,7 @@
 
   <li id="cmd_scope">
     <wiki:Link path="cmd.scope" title="<fmt:message key='scope.cmd.title'/>" >
-      <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+      <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
       <fmt:message key='scope.cmd' />
       ${empty prefs.scopearea ? "All" : prefs.scopearea}
     </wiki:Link>
@@ -259,8 +261,8 @@
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
     Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
 	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-        <wiki:Link context="<%=WikiContext.PAGE_DELETE%>" pageId="<%=ctx.getPageId()%>" >
-          <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+        <wiki:Link context="<%=WikiContext.PAGE_DELETE%>" pageId="<%=wikiContext.getPageId()%>" >
+          <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
           <span class="icon-pencil"></span>
           <span>Create</span>
         </wiki:Link>
@@ -392,12 +394,12 @@
         <li class="divider"></li>
         <li>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
-            <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+            <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='save'/>
             Save wiki content
           </wiki:Link>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
-            <wiki:Param name='redirect' value='<%=ctx.getPageId()%>'/>
+            <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='load'/>
             Load wiki content
           </wiki:Link>

@@ -18,26 +18,32 @@
  */
 package org.apache.wiki.ui.progress;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.ui.progress.ProgressItem;
-import org.apache.wiki.api.ui.progress.ProgressManager;
-import org.elwiki.api.WikiServiceReference;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.ajax.WikiAjaxDispatcher;
+import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.ui.progress.ProgressItem;
+import org.apache.wiki.api.ui.progress.ProgressManager;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Manages progressing items. In general this class is used whenever JSPWiki is doing something
@@ -47,22 +53,32 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @since 2.6
  */
-@Component(name = "elwiki.DefaultProgressManager", service = ProgressManager.class, //
-		factory = "elwiki.ProgressManager.factory")
-public class DefaultProgressManager implements ProgressManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultProgressManager",
+	service = { ProgressManager.class, WikiManager.class, EventHandler.class},
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultProgressManager implements ProgressManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultProgressManager.class);
 
 	private final Map<String, ProgressItem> m_progressingTasks = new ConcurrentHashMap<>();
 
-	// -- service handling --------------------------< start --
+	// -- OSGi service handling --------------------( start )--
+
+    @WikiServiceReference
+    private Engine m_engine;
+
+    @WikiServiceReference
+    WikiAjaxDispatcher wikiAjaxDispatcher;
 
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+    	//
 	}
 
 	@Deactivate
@@ -70,15 +86,13 @@ public class DefaultProgressManager implements ProgressManager {
 		//
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- OSGi service handling ----------------------( end )--
 
-	private void initialize(Engine engine) {
-		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-		//
+	private void initialize() throws WikiException {
 		// TODO: Replace with custom annotations. See JSPWIKI-566
     	wikiAjaxDispatcher.registerServlet(JSON_PROGRESSTRACKER, new JSONTracker());
 	}
-	
+
 	/**
 	 * You can use this to get an unique process identifier.
 	 *
@@ -170,6 +184,21 @@ public class DefaultProgressManager implements ProgressManager {
 			log.debug("ProgressManager.doGet() DONE");
 		}
 
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of ProgressManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

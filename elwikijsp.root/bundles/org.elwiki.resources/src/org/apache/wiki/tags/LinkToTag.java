@@ -23,9 +23,11 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -79,17 +81,20 @@ public class LinkToTag extends BaseWikiLinkTag {
 
 	@Override
 	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
+		WikiContext wikiContext = getWikiContext();
 		String pageName = m_pageName;
 		String pageId = m_pageId;
 		boolean isattachment = false;
-
+		PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
+		AttachmentManager attachmentManager = wikiContext.getEngine().getManager(AttachmentManager.class);
+		
 		if (m_pageId != null) {
-			WikiPage page = ServicesRefs.getPageManager().getPageById(m_pageId);
+			WikiPage page = pageManager.getPageById(m_pageId);
 			if (page != null) {
 				pageName = m_pageName = page.getName();
 			}
 		} else if (m_pageName != null) {
-			WikiPage page = ServicesRefs.getPageManager().getPage(m_pageName);
+			WikiPage page = pageManager.getPage(m_pageName);
 			if (page != null) {
 				pageId = m_pageId = page.getId();
 			}
@@ -98,7 +103,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 		/*TODO: :FVK:. разобраться, (рассмотреть, модифицировать весь код ниже...), 1я проблема: (p instanceof PageAttachment).
 		 * так же из-за закомментированого фрагмента - проблема для создания ссылки по pageId - не создается, для несуществующей страницы wiki.
 		if (m_pageName == null) {
-			final WikiPage p = m_wikiContext.getPage();
+			final WikiPage p = wikiContext.getPage();
 
 			if (p != null) {
 				pageName = p.getName();
@@ -117,11 +122,11 @@ public class LinkToTag extends BaseWikiLinkTag {
 		String forceDownload = "";
 
 		if (isattachment) {//TODO: разобраться с типом "присоединение"...
-			url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), pageName,
+			url = wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), pageName,
 					(getVersion() != null) ? "version=" + getVersion() : null);
 			linkclass = "attachment";
 
-			if (ServicesRefs.getAttachmentManager().forceDownload(pageName)) {
+			if (attachmentManager.forceDownload(pageName)) {
 				forceDownload = "download ";
 			}
 
@@ -134,7 +139,7 @@ public class LinkToTag extends BaseWikiLinkTag {
 				params.append(params.length() > 0 ? "&amp;" : "").append("shape=").append(getTemplate());
 			}
 
-			url = m_wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString());
+			url = wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId, params.toString());
 			linkclass = "wikipage";
 		}
 

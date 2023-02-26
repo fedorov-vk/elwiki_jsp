@@ -20,16 +20,22 @@ package org.apache.wiki.i18n;
 
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.PluginManager;
+import org.elwiki.api.component.WikiManager;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ServiceScope;
 
 /**
  *  Manages all internationalization in JSPWiki.
  *
  *  @since 2.6
  */
-@Component(name = "elwiki.DefaultInternationalizationManager", service = InternationalizationManager.class, //
-		factory = "elwiki.InternationalizationManager.factory")
-public class DefaultInternationalizationManager implements InternationalizationManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultInternationalizationManager",
+	service = { InternationalizationManager.class, WikiManager.class },
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultInternationalizationManager implements InternationalizationManager, WikiManager {
 
     /**
      *  Constructs a new InternationalizationManager.

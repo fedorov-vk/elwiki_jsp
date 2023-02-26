@@ -35,8 +35,8 @@ public class ShortViewURLConstructor extends ShortURLConstructor {
     /**
      *  {@inheritDoc}
      */
-    @Override public void initialize( final Engine engine ) throws WikiException {
-        super.initialize( engine );
+    @Override public void initialize() throws WikiException {
+        super.initialize();
     }
     
     private String makeURL( final String context, final String name ) {

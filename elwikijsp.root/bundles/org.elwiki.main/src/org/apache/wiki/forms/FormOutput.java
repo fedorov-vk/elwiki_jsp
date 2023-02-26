@@ -27,7 +27,6 @@ import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.plugin.DefaultPluginManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FormUtil;
-import org.elwiki.services.ServicesRefs;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -115,7 +114,7 @@ public class FormOutput extends FormElement {
         String error = null;
         try {
             // The plugin _can_ modify the parameters, so we make sure they stay with us.
-            final PluginManager pm = ServicesRefs.getPluginManager();
+            PluginManager pm = ctx.getEngine().getManager(PluginManager.class);
             handlerOutput = pm.execute( ctx, handler, info.getSubmission() );
             info.setResult( handlerOutput );
             info.setStatus( FormInfo.EXECUTED );

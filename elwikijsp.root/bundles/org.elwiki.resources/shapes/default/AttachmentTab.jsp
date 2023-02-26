@@ -19,12 +19,12 @@
 <!-- ~~ START ~~ AttachmentTab.jsp -->
 <%@ page import="java.util.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.api.ui.progress.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.ui.progress.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="java.security.Permission" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -32,11 +32,13 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  int MAXATTACHNAMELENGTH = 30;
-  WikiContext ctx = ContextUtil.findContext(pageContext);
-  WikiPage wikiPage = ctx.getPage();
+	int MAXATTACHNAMELENGTH = 30;
+	WikiContext wikiContext = ContextUtil.findContext(pageContext);
+	Engine engine = wikiContext.getEngine();
+	WikiPage wikiPage = wikiContext.getPage();
+	ProgressManager progressManager = engine.getManager(ProgressManager.class);
 %>
-<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier()%>" />
+<c:set var="progressId" value="<%=progressManager.getNewProgressIdentifier()%>" />
 <div class="page-content">
 <wiki:Permission permission="upload">
 
@@ -51,7 +53,7 @@
     <%--
      --%>
     <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url' pageId='<%=wikiPage.getId()%>'/>" />
-    <input type="hidden" name="idpage" value="<%=ctx.getPageId()%>" />
+    <input type="hidden" name="idpage" value="<%=wikiContext.getPageId()%>" />
     <input type="hidden" name="action" value="upload" />
 
     <wiki:Messages div="alert alert-danger" />

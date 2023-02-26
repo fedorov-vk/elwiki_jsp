@@ -15,7 +15,6 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.services.ServicesRefs;
 
 public class EditGroupCmdCode extends CmdCode {
 
@@ -25,6 +24,7 @@ public class EditGroupCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
 		@NonNull

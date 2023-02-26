@@ -20,7 +20,6 @@
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -30,7 +29,7 @@
 <%
 String postURL = "";
     WikiContext ctx = ContextUtil.findContext( pageContext );
-    IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
+    IIAuthenticationManager mgr = WikiEngine.getAuthenticationManager();
 
     if( mgr.isContainerAuthenticated() )
     {

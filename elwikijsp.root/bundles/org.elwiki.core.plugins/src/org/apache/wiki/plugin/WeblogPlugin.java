@@ -37,7 +37,6 @@ import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -156,16 +155,25 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         return TextUtil.replaceString(DEFAULT_PAGEFORMAT,"%p",pageName)+date;
     }
 
+	private Engine engine;
+	private PageManager pageManager;
+	private RenderingManager renderingManager;
+	private ReferenceManager referenceManager;
+
     /**
      *  {@inheritDoc}
      */
     @Override
     public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
+    	this.engine = context.getEngine();
+    	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+    	this.pageManager = engine.getManager(PageManager.class);
+    	this.renderingManager = engine.getManager(RenderingManager.class);
+    	this.referenceManager = engine.getManager(ReferenceManager.class);
+
         final Calendar   startTime;
         final Calendar   stopTime;
         int        numDays = DEFAULT_DAYS;
-        final Engine engine = context.getEngine();
-        final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
 
         //
         //  Parse parameters.
@@ -251,7 +259,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
 
         for( final Iterator< WikiPage > i = blogEntries.iterator(); i.hasNext() && maxEntries-- > 0 ; ) {
             final WikiPage p = i.next();
-            if( mgr.checkPermission( context.getWikiSession(), new PagePermission(p, PagePermission.VIEW_ACTION) ) ) {
+            if( authorizationManager.checkPermission( context.getWikiSession(), new PagePermission(p, PagePermission.VIEW_ACTION) ) ) {
                 addEntryHTML( context, entryFormat, hasComments, sb, p, params );
             }
         }
@@ -273,7 +281,6 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      */
     private void addEntryHTML( final WikiContext context, final DateFormat entryFormat, final boolean hasComments,
                                final StringBuilder buffer, final WikiPage entry, final Map< String, String > params) {
-        final Engine engine = context.getEngine();
         final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
 
         buffer.append("<div class=\"weblogentry\">\n");
@@ -293,7 +300,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         final WikiContext entryCtx = context.clone();
         entryCtx.setPage( entry );
 
-        String html = ServicesRefs.getRenderingManager().getHTML( entryCtx, ServicesRefs.getPageManager().getPage( entry.getName() ) );
+        String html = this.renderingManager.getHTML( entryCtx, this.pageManager.getPage( entry.getName() ) );
 
         // Extract the first h1/h2/h3 as title, and replace with null
         buffer.append("<div class=\"weblogentrytitle\">\n");
@@ -346,13 +353,14 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
 
         String author = entry.getAuthor();
 
-        if( author != null ) {
-            if( ServicesRefs.getPageManager().pageExistsByName(author) ) {
-                author = "<a href=\""+entryCtx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), author )+"\">"+ServicesRefs.getRenderingManager().beautifyTitle(author)+"</a>";
-            }
-        } else {
-            author = "AnonymousCoward";
-        }
+		if (author != null) {
+			if (this.pageManager.pageExistsByName(author)) {
+				author = "<a href=\"" + entryCtx.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), author) + "\">"
+						+ this.renderingManager.beautifyTitle(author) + "</a>";
+			}
+		} else {
+			author = "AnonymousCoward";
+		}
 
         buffer.append( MessageFormat.format( rb.getString("weblogentryplugin.postedby"), author));
         buffer.append( "<a href=\"" + entryCtx.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), entry.getName() ) + "\">" + rb.getString("weblogentryplugin.permalink") + "</a>" );
@@ -381,7 +389,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
     }
 
     private int guessNumberOfComments( final Engine engine, final String commentpage ) {
-        final String pagedata = ServicesRefs.getPageManager().getPureText( commentpage, WikiProvider.LATEST_VERSION );
+        final String pagedata = this.pageManager.getPureText( commentpage, WikiProvider.LATEST_VERSION );
         if( pagedata == null || pagedata.trim().length() == 0 ) {
             return 0;
         }
@@ -399,9 +407,8 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  @param end   The end date which is the last to be considered
      *  @return a list of pages with their FIRST revisions.
      */
-    public List< WikiPage > findBlogEntries( final Engine engine, String baseName, final Date start, final Date end ) {
-        final PageManager mgr = ServicesRefs.getPageManager();
-        final Set< String > allPages = ServicesRefs.getReferenceManager().findCreated();
+    protected List< WikiPage > findBlogEntries( final Engine engine, String baseName, final Date start, final Date end ) {
+        final Set< String > allPages = this.referenceManager.findCreated();
         final ArrayList< WikiPage > result = new ArrayList<>();
 
         baseName = makeEntryPage( baseName );
@@ -409,7 +416,7 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
         for( final String pageName : allPages ) {
             if( pageName.startsWith( baseName ) ) {
                 try {
-                    final WikiPage firstVersion = mgr.getPageInfo( pageName, 1 );
+                    final WikiPage firstVersion = this.pageManager.getPageInfo( pageName, 1 );
                     final Date d = firstVersion.getLastModifiedDate();
 
                     if( d.after( start ) && d.before( end ) ) {

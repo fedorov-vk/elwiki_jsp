@@ -24,7 +24,6 @@
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="java.security.Permission" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -35,7 +34,7 @@
 int MAXATTACHNAMELENGTH = 30;
   WikiContext c = ContextUtil.findContext(pageContext);
 %>
-<c:set var="progressId" value="<%=ServicesRefs.getProgressManager().getNewProgressIdentifier() %>" />
+<c:set var="progressId" value="<%=WikiEngine.getProgressManager().getNewProgressIdentifier()%>" />
 <div class="page-content">
 <wiki:Permission permission="upload">
 

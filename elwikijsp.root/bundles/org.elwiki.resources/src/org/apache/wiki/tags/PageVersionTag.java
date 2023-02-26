@@ -36,7 +36,7 @@ public class PageVersionTag extends BaseWikiTag {
 	private static final long serialVersionUID = 0L;
 
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = m_wikiContext.getPage();
+		final WikiPage page = getWikiContext().getPage();
 		if (page != null) {
 			final int version = page.getVersion();
 			if (version > 0) {

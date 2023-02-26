@@ -18,56 +18,39 @@
  */
 package org.elwiki.authorize.internal.services;
 
-import java.security.AllPermission;
 import java.io.File;
-import java.io.FilePermission;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.AccessControlContext;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
-import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.WeakHashMap;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
-import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
-import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -75,46 +58,35 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jface.preference.IPreferenceStore;
-//import org.elwiki.api.IApplicationSession;
-//import org.elwiki.api.IAuthenticationManager;
-//import org.elwiki.api.IAuthorizationManager;
-//import org.elwiki.api.IElWikiSession;
-import org.osgi.service.useradmin.Group;
-import org.osgi.service.useradmin.UserAdmin;
-import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
-import org.elwiki.authorize.internal.account.manager.GroupWiki;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.Aprincipal;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
-import org.elwiki.data.authorize.WikiPrincipal;
-import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.permissions.WikiPermission;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.Acl;
 import org.elwiki_data.AclEntry;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.EventHandler;
-import org.osgi.service.permissionadmin.PermissionInfo;
+import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+import org.osgi.service.permissionadmin.PermissionInfo;
+//import org.elwiki.api.IApplicationSession;
+//import org.elwiki.api.IAuthenticationManager;
+//import org.elwiki.api.IAuthorizationManager;
+//import org.elwiki.api.IElWikiSession;
+import org.osgi.service.useradmin.Group;
 
 /**
  * <p>
@@ -163,11 +135,14 @@ import org.osgi.service.event.EventConstants;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthorizationManager",
-	service = {AuthorizationManager.class, EventHandler.class},
-	factory = "elwiki.AuthorizationManager.factory")
-	//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+	service = {AuthorizationManager.class, WikiManager.class, EventHandler.class},
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+	},
+	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, WikiEventListener, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, WikiManager, WikiEventListener, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
@@ -192,9 +167,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
-	private Engine m_engine;
-
-	
 	// == CODE ================================================================
 
 	/**
@@ -204,17 +176,23 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		//
 	}
 
-	// -- service handling ---------------------------(start)--
-	
+	// -- OSGi service handling ----------------------(start)--
+
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
 
 	@WikiServiceReference
 	private AccountManager accountManager;
 
 	@WikiServiceReference
 	private AclManager aclManager;
+
+	@WikiServiceReference
+	PageManager pageManager;
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -224,11 +202,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * @throws WikiException if the AuthorizationManager failed on startup.
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
 	}
 
 	/**
@@ -280,10 +254,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
 	 * to take care of role lookup operations.
 	 */
-	@Override
-	public void initialize(Engine engine1) throws WikiException {
+	public void initialize() throws WikiException {
 		log.debug("Initialize.");
-		this.m_engine = engine1;
 
 		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
 
@@ -350,21 +322,31 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
 		}
 
-		Authorizer authorizer;
+		Authorizer authorizer = null;
 		try {
-			authorizer = clazzAuthorizer.newInstance();
-		} catch (InstantiationException e) {
+			Class<?>[] parameterType = new Class[] { Engine.class };
+			authorizer = clazzAuthorizer.getDeclaredConstructor(parameterType).newInstance(this.m_engine);
+		} catch (InstantiationException  | IllegalArgumentException e) {
 			log.fatal("Authorizer " + clazzAuthorizer + " cannot be created.", e);
 			throw new WikiException("Authorizer " + clazzAuthorizer + " cannot be created.", e);
 		} catch (IllegalAccessException e) {
 			log.fatal("You are not allowed to access authorizer class " + clazzAuthorizer, e);
 			throw new WikiException("You are not allowed to access authorizer class " + clazzAuthorizer, e);
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return authorizer;
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
 	@Override
 	public boolean checkPermission(Session session, Permission permission) {
@@ -405,7 +387,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 		// If the page or ACL is null, it's allowed.
 		//
 		String pageName = ((PagePermission) permission).getPage();
-		WikiPage page = ServicesRefs.getPageManager().getPage(pageName);
+		WikiPage page = pageManager.getPage(pageName);
 		Acl acl = (page == null) ? null : this.aclManager.getPermissions(page);
 		if (page == null || acl == null || acl.getAclEntries().isEmpty()) {
 			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
@@ -648,7 +630,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 
 		/*:FVK:
 		// Check Groups
-		principal = ServicesRefs.getAccountManager().findRole(name); // IGroupManager.class
+		principal = Engine.getAccountManager().findRole(name); // IGroupManager.class
 		if (principal != null) {
 			return principal;
 		}
@@ -674,6 +656,14 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiEventL
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {//:FVK:
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of AjaxDispatcher.", e);
+			}
+			break;
 		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
 			break;
 		}

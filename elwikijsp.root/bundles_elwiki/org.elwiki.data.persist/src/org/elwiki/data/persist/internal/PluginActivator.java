@@ -3,7 +3,6 @@ package org.elwiki.data.persist.internal;
 import org.apache.wiki.api.IStorageCdo;
 import org.eclipse.core.runtime.jobs.Job;
 import org.elwiki.data.persist.IDataStore;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;

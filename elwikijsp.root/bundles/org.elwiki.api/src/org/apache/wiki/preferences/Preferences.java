@@ -26,12 +26,12 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -112,13 +112,14 @@ public class Preferences extends HashMap<String, String> {
 	// language preferences (like in a web cafe), the old preferences still remain in a site cookie.
 	public static void reloadPreferences(HttpServletRequest request) {
 		final Preferences prefs = new Preferences();
+		Engine engine = ContextUtil.findContext(request).getEngine();
 
 		// :FVK: - replaced: Properties props = PropertyReader.loadWebAppProps(
 		// pageContext.getServletContext() );
-		IPreferenceStore props = ServicesRefs.Instance.getWikiPreferences();
+		IPreferenceStore props = engine.getWikiPreferences();
 
 		final WikiContext ctx = ContextUtil.findContext(request);
-		InternationalizationManager i18lManager = ServicesRefs.getInternationalizationManager();
+		InternationalizationManager i18lManager = engine.getManager(InternationalizationManager.class);
 		final String dateFormat = i18lManager.get(InternationalizationManager.CORE_BUNDLE, getLocale(ctx),
 				"common.datetimeformat");
 
@@ -274,7 +275,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @since 2.8
 	 */
 	public static SimpleDateFormat getDateFormat(final WikiContext context, final TimeFormat tf) {
-		final InternationalizationManager imgr = ServicesRefs.getInternationalizationManager();
+		final InternationalizationManager imgr = context.getEngine().getManager(InternationalizationManager.class); 
 		final Locale clientLocale = getLocale(context);
 		final String prefTimeZone = getPreference(context, "TimeZone");
 		String prefDateFormat;
@@ -330,7 +331,7 @@ public class Preferences extends HashMap<String, String> {
 	 */
 	public static ResourceBundle getBundle(final WikiContext context, final String bundle) throws MissingResourceException {
 		final Locale loc = getLocale(context);
-		final InternationalizationManager i18n = ServicesRefs.getInternationalizationManager();
+		final InternationalizationManager i18n = context.getEngine().getManager(InternationalizationManager.class);
 		return i18n.getBundle(bundle, loc);
 	}
 

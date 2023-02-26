@@ -22,7 +22,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.modules.ModuleManager;
 
-
 /**
  *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under shapes/default/editors
  *  If you want your editor to include any scripts or something, you can simply request it by adding the following in your
@@ -41,7 +40,7 @@ import org.apache.wiki.api.modules.ModuleManager;
  *
  *  @since 2.4
  */
-public interface EditorManager extends ModuleManager, Initializable {
+public interface EditorManager extends ModuleManager {
 
     /** The property name for setting the editor. Current value is "jspwiki.editor" - not used anymore: replaced by defaultpref.template.editor */
     String PROP_EDITORTYPE = "jspwiki.editor";

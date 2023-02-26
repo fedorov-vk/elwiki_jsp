@@ -19,7 +19,6 @@
 <!-- ~~ START ~~ Header.jsp (shapes/default) --><%@
  page import="org.apache.wiki.api.core.*" %><%@
  page import="org.elwiki_data.WikiPage" %><%@
- page import="org.elwiki.services.ServicesRefs" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %><%@
@@ -28,9 +27,12 @@
 <fmt:setBundle basename="shapes.default"/>
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
 <%
-String wikiPageId = ServicesRefs.getPageManager().getMainPageId();
-WikiPage wikiPage = ServicesRefs.getPageManager().getPageById(wikiPageId);
-String pageName = (wikiPage!=null)? wikiPage.getName() : "<nod defined>";
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);
+	String wikiPageId = pageManager.getMainPageId();
+	WikiPage wikiPage = pageManager.getPageById(wikiPageId);
+	String pageName = (wikiPage!=null)? wikiPage.getName() : "<nod defined>";
 %>
 <c:set var="frontpageId" value="<%=wikiPageId%>" />
 <c:set var="frontpageName" value="<%=pageName%>" />

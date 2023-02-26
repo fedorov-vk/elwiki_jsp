@@ -34,7 +34,6 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.api.search.SearchManager" %>
 <%@ page import="org.apache.wiki.ui.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -53,7 +52,7 @@
   /* FIXME: too much hackin on this level -- should better happen in toplevel jsp's */
 
   WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_FIND.getRequestContext() );
-  if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+  if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
   String query = request.getParameter( "query");
 
@@ -61,10 +60,10 @@
   {
     try
     {
-      Collection< SearchResult > list = ServicesRefs.getSearchManager().findPages( query, wikiContext );
+      Collection< SearchResult > list = WikiEngine.getSearchManager().findPages( query, wikiContext );
 
       //  Filter down to only those that we actually have a permission to view
-      AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
+      AuthorizationManager mgr = WikiEngine.getAuthorizationManager();
 
       ArrayList< SearchResult > items = new ArrayList();
 

@@ -7,7 +7,6 @@ import org.apache.wiki.api.core.Command;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
-import org.elwiki.services.ServicesRefs;
 
 public class LogoutCmdCode extends CmdCode {
 
@@ -20,14 +19,15 @@ public class LogoutCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		IIAuthenticationManager mgr = ServicesRefs.getAuthenticationManager();
+		super.applyPrologue(httpRequest, httpResponse);
+		IIAuthenticationManager mgr = getEngine().getManager(IIAuthenticationManager.class);
 		mgr.logout(httpRequest);
 
 		// Clear the user cookie
 		CookieAssertionLoginModule.clearUserCookie(httpResponse);
 
 		// Delete the login cookie
-		CookieAuthenticationLoginModule.clearLoginCookie(ServicesRefs.Instance, httpRequest, httpResponse);
+		CookieAuthenticationLoginModule.clearLoginCookie(getEngine(), httpRequest, httpResponse);
 
 		// Redirect to the webroot
 		// TODO: Should redirect to a "goodbye" -page?

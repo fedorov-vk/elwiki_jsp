@@ -18,17 +18,17 @@
  */
 package org.apache.wiki.ui;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
@@ -36,24 +36,23 @@ import org.apache.wiki.api.ui.AllCommands;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.api.ui.PageCommand;
-import org.apache.wiki.api.ui.RedirectCommand;
 import org.apache.wiki.api.ui.WikiCommand;
 import org.apache.wiki.auth.AccountManager;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.services.ServicesRefs;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
 /**
  * <p>
@@ -62,11 +61,18 @@ import java.util.Map;
  *
  * @since 2.4.22
  */
-@Component(name = "elwiki.DefaultCommandResolver", service = CommandResolver.class, //
-		factory = "elwiki.CommandResolver.factory")
-public final class DefaultCommandResolver implements CommandResolver, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultCommandResolver",
+	service = { CommandResolver.class, WikiManager.class, EventHandler.class },
+	property = {
+		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public final class DefaultCommandResolver implements CommandResolver, WikiManager, EventHandler {
 
-	private static final Logger LOG = Logger.getLogger(DefaultCommandResolver.class);
+	private static final Logger log = Logger.getLogger(DefaultCommandResolver.class);
 
 	private static final String URL_CMD_PREFIX = "cmd.";
 
@@ -89,13 +95,14 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
-
-	private Engine m_engine;
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -113,19 +120,11 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	// -- service handling -----------------------------(end)--
-
-	@Override
-	public void initialize(Engine wikiEngine) throws WikiException {
-		m_engine = wikiEngine;
-	}
+	// -- OSGi service handling ------------------------(end)--
 
 	/**
 	 * {@inheritDoc}
@@ -287,7 +286,7 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 				}
 			}
 		} catch (final IOException | ProviderException e) {
-			LOG.error("Unable to create context", e);
+			log.error("Unable to create context", e);
 			throw new InternalWikiException("Big internal booboo, please check logs.", e);
 		}
 
@@ -321,4 +320,12 @@ public final class DefaultCommandResolver implements CommandResolver, Initializa
 		return wikipage;
 	}
 
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		/*switch (topic) {
+			break;
+		}*/
+	}
+	
 }

@@ -43,7 +43,8 @@ import org.osgi.framework.Constants;
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)",
-		Constants.SERVICE_RANKING + "=100"},
+		Constants.SERVICE_RANKING + ":Integer=100"
+		},
     scope=ServiceScope.PROTOTYPE,
     name = "web.JspServletFilter"
 )
@@ -136,7 +137,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			/* Authorize. (following code from prolog of JSPwiki JSP pages)
 			 */
 			/*TODO: :FVK: для Wiki.jsp, т.е. cmd.view
-			if (false == ServicesRefs.getAuthorizationManager().hasAccess(ThreadUtil.getCurrentRequest(), response)) {
+			if (false == WikiEngine.getAuthorizationManager().hasAccess(ThreadUtil.getCurrentRequest(), response)) {
 				return;
 			}
 			*/

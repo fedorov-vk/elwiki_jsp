@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.TemplateManager.factory" name="elwiki.DefaultTemplateManager">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.DefaultTemplateManager">
+   <service scope="singleton">
       <provide interface="org.apache.wiki.ui.TemplateManager"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
    </service>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.apache.wiki.ui0.DefaultTemplateManager"/>

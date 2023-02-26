@@ -29,15 +29,14 @@
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.api.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  WikiContext c = ContextUtil.findContext(pageContext);
+WikiContext c = ContextUtil.findContext(pageContext);
   WikiPage wikiPage = c.getPage();
-  int attCount = ServicesRefs.getAttachmentManager().listAttachments( c.getPage() ).size();
+  int attCount = WikiEngine.getAttachmentManager().listAttachments( c.getPage() ).size();
   String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
   if( attCount != 0 ) attTitle += " (" + attCount + ")";
 
@@ -47,7 +46,7 @@
   String creationAuthor ="";
 
   //FIXME -- seems not to work correctly for attachments !!
-  WikiPage firstPage = ServicesRefs.getPageManager().getPage( wikiPage.getName(), 1 );
+  WikiPage firstPage = WikiEngine.getPageManager().getPage( wikiPage.getName(), 1 );
   if( firstPage != null )
   {
     creationAuthor = firstPage.getAuthor();
@@ -215,10 +214,10 @@
       <%
       p
 
-            if( ( startitem == -1 ) ||
-                                     (  ( currentPage.getVersion() > startitem )
-                                     && ( currentPage.getVersion() <= startitem + pagesize ) ) )
-                                 {
+                  if( ( startitem == -1 ) ||
+                                           (  ( currentPage.getVersion() > startitem )
+                                           && ( currentPage.getVersion() <= startitem + pagesize ) ) )
+                                       {
       %>
       <tr>
         <td>
@@ -251,7 +250,7 @@
            <%
            p
 
-                      String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
+                                 String changenote = (String) currentPage.getAttribute( WikiPage.CHANGENOTE );
            %>
 		   <%=t((changenote==null) ? "" : changeno%>
          </td>
@@ -260,7 +259,7 @@
       <%
       p
 
-            }
+                  }
       %>
       </wiki:HistoryIterator>
 
@@ -281,7 +280,7 @@
 p
 
 int MAXATTACHNAMELENGTH = 30;
-  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier()
+  String progressId = WikiEngine.getProgressManager().getNewProgressIdentifier()
 %>
 
   <wiki:TabbedSection defaultTab="<%=t(tabPar%>">

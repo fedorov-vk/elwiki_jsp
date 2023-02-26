@@ -19,10 +19,9 @@
 package org.apache.wiki.rss;
 
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.rss.IEntry;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.rss.Entry;
-import org.apache.wiki.api.rss.Feed;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.util.XhtmlUtil;
 import org.jdom2.Element;
@@ -57,7 +56,7 @@ public class RSS10Feed extends Feed {
         final Element items = new Element( "items", NS_XMNLS );
         final Element rdfseq = new Element( "Seq", NS_RDF );
 
-        for( final Entry e : m_entries ) {
+        for( final IEntry e : m_entries ) {
             final String url = e.getURL();
             rdfseq.addContent( new Element( "li", NS_RDF ).setAttribute( "resource", url, NS_RDF ) );
         }
@@ -70,7 +69,7 @@ public class RSS10Feed extends Feed {
         final SimpleDateFormat iso8601fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         final Engine engine = m_wikiContext.getEngine();
 
-        for( final Entry entry : m_entries ) {
+        for( final IEntry entry : m_entries ) {
             final String url = entry.getURL();
 
             final Element item = new Element( "item", NS_XMNLS );

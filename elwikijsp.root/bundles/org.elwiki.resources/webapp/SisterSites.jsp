@@ -31,31 +31,30 @@
 <%@ page import="org.apache.wiki.api.references.ReferenceManager" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%!
     Logger log = Logger.getLogger("JSPWiki");
 %>
 <%
-    /*
+/*
      *  This JSP creates support for the SisterSites standard, as specified by
      *  http://usemod.com/cgi-bin/mb.pl?SisterSitesImplementationGuide
      */
     Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
-    Set< String > allPages = ServicesRefs.getReferenceManager().findCreated();
+    Set< String > allPages = WikiEngine.getReferenceManager().findCreated();
     
     response.setContentType("text/plain; charset=UTF-8");
     for( String pageName : allPages ) {
         // Let's not add attachments.
-        if( ServicesRefs.getAttachmentManager().getAttachmentInfoName( wikiContext, pageName ) != null ) continue;
+        if( WikiEngine.getAttachmentManager().getAttachmentInfoName( wikiContext, pageName ) != null ) continue;
 
-        WikiPage wikiPage = ServicesRefs.getPageManager().getPage( pageName );
+        WikiPage wikiPage = WikiEngine.getPageManager().getPage( pageName );
         if( wikiPage != null ) { // there's a possibility the wiki page may get deleted between the call to reference manager and now...
             PagePermission permission = PermissionFactory.getPagePermission( wikiPage, "view" );
-            boolean allowed = ServicesRefs.getAuthorizationManager().checkPermission( wikiContext.getWikiSession(), permission );
+            boolean allowed = WikiEngine.getAuthorizationManager().checkPermission( wikiContext.getWikiSession(), permission );
             if( allowed ) {
                 String url = wikiContext.getViewURL( pageName );
                 out.write( url + " " + pageName + "\n" );

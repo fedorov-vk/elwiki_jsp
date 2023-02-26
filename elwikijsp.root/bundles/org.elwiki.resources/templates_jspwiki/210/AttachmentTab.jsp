@@ -23,14 +23,13 @@
 <%@ page import="org.apache.wiki.ui.progress.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="java.security.Permission" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
 <%
-  int MAXATTACHNAMELENGTH = 30;
+int MAXATTACHNAMELENGTH = 30;
   WikiContext c = ContextUtil.findContext(pageContext);
-  String progressId = ServicesRefs.getProgressManager().getNewProgressIdentifier();
+  String progressId = WikiEngine.getProgressManager().getNewProgressIdentifier();
 %>
 
 <div id="addattachment">

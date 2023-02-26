@@ -16,11 +16,19 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.workflow0;
+package org.apache.wiki.workflow;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.workflow0.Decision;
+import org.apache.wiki.workflow0.Fact;
+import org.apache.wiki.workflow0.IWorkflowBuilder;
+import org.apache.wiki.workflow0.Outcome;
+import org.apache.wiki.workflow0.SimpleDecision;
+import org.apache.wiki.workflow0.SimpleNotification;
+import org.apache.wiki.workflow0.Step;
+import org.apache.wiki.workflow0.Workflow;
+import org.apache.wiki.workflow0.WorkflowManager;
 
 import java.security.Principal;
 import java.util.Map;
@@ -29,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Factory class that creates common Workflow instances such as a standard approval workflow.
  */
-public final class WorkflowBuilder {
+public final class WorkflowBuilder implements IWorkflowBuilder {
 
     private static final Map< Engine, WorkflowBuilder > BUILDERS = new ConcurrentHashMap<>();
     private final Engine m_engine;
@@ -49,7 +57,7 @@ public final class WorkflowBuilder {
      * @param engine the wiki engine
      * @return the workflow builder
      */
-    public static WorkflowBuilder getBuilder( final Engine engine ) {
+    public static IWorkflowBuilder getBuilder( final Engine engine ) {
         WorkflowBuilder builder = BUILDERS.get( engine );
         if ( builder == null ) {
             builder = new WorkflowBuilder( engine );
@@ -102,7 +110,8 @@ public final class WorkflowBuilder {
      * @throws WikiException if the name of the approving user, Role or Group cannot be determined
      */
     //@formatter:off
-    public Workflow buildApprovalWorkflow( final Principal submitter,
+    @Override
+	public Workflow buildApprovalWorkflow( final Principal submitter,
                                            final String workflowApproverKey,
                                            final Step prepTask,
                                            final String decisionKey,
@@ -110,7 +119,7 @@ public final class WorkflowBuilder {
                                            final Step completionTask,
                                            final String rejectedMessageKey ) throws WikiException {
         //@formatter:on
-        final WorkflowManager mgr = ServicesRefs.getWorkflowManager();
+        final WorkflowManager mgr = m_engine.getManager(WorkflowManager.class);
         final Workflow workflow = new Workflow( workflowApproverKey, submitter );
 
         // Is a Decision required to run the approve task?

@@ -30,7 +30,6 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-			//ReferenceManager refmgr = ServicesRefs.getReferenceManager();
+			//ReferenceManager refmgr = Engine.getReferenceManager();
 			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
 			StringBuilder result = new StringBuilder(256);
 

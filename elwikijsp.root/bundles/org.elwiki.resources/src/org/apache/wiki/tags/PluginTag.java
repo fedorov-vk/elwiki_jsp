@@ -26,9 +26,9 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.PluginManager;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * Inserts any Wiki plugin. The body of the tag becomes then the body for the
@@ -92,18 +92,19 @@ public class PluginTag extends BaseWikiBodyTag {
 
 	private String executePlugin(final String plugin, final String args, final String body)
 			throws PluginException, IOException {
-		final Engine engine = m_wikiContext.getEngine();
-		final PluginManager pm = ServicesRefs.getPluginManager();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		final PluginManager pluginManager = engine.getManager(PluginManager.class);
 
 		m_evaluated = true;
 
-		final Map<String, String> argmap = pm.parseArgs(args);
+		final Map<String, String> argmap = pluginManager.parseArgs(args);
 
 		if (body != null) {
 			argmap.put("_body", body);
 		}
 
-		return pm.execute(m_wikiContext, plugin, argmap);
+		return pluginManager.execute(wikiContext, plugin, argmap);
 	}
 
 	/**

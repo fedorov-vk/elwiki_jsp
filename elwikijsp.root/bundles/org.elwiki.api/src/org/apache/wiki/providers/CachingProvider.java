@@ -51,7 +51,6 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.TreeSet;
 
-
 /**
  *  Provides a caching page provider.  This class rests on top of a real provider class and provides a cache to speed things up.  Only
  *  if the cache copy of the page text has expired, we fetch it from the provider.
@@ -103,6 +102,15 @@ public class CachingProvider implements PageProvider {
     public static final int   DEFAULT_CACHECAPACITY   = 1000; // Good most wikis
     public static final int   DEFAULT_CACHETIMETOLIVESECONDS = 24*3600;
     public static final int   DEFAULT_CACHETIMETOIDLESECONDS = 24*3600;
+
+	// == CODE ================================================================
+
+	/**
+	 * Constructs CachingProvider.
+	 */
+	public CachingProvider(Engine engine) {
+		this.m_engine = engine;
+	}
 
     /**
      *  {@inheritDoc}
@@ -415,7 +423,7 @@ public class CachingProvider implements PageProvider {
     private void refreshMetadata( final WikiPage page ) {
     	/*:FVK: 
         if( page != null && !page.hasMetadata() ) {
-            final RenderingManager mgr = ServicesRefs.getRenderingManager();
+            final RenderingManager mgr = Engine.getRenderingManager();
             try {
                 final String data = m_provider.getPageText( page.getName(), page.getVersion() );
                 final WikiContext ctx = Wiki.context().create( m_engine, page );

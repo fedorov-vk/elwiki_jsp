@@ -16,10 +16,11 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.pages0.PageManager;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.WikiScopeManager;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 public class JSONWikiScopeTracker implements WikiAjaxServlet {
@@ -28,16 +29,19 @@ public class JSONWikiScopeTracker implements WikiAjaxServlet {
 
 	static final String JSON_WIKISCOPE = "wikiscope";
 
-	ServicesRefs engine;
+	Engine engine;
+
+	private PageManager pageManager;
 
 	private List<Map<String, Object>> listSpecialPages = new ArrayList<>();
 
 	/**
 	 * Creates instance of JSONWikiScopeTracker.
+	 * @param engine TODO
 	 */
-	public JSONWikiScopeTracker() {
-		super();
-		engine = ServicesRefs.Instance; //:FVK: workaround - hard coding for getting engine.
+	public JSONWikiScopeTracker(Engine engine) {
+		this.engine = engine;
+		this.pageManager = engine.getManager(PageManager.class);
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public class JSONWikiScopeTracker implements WikiAjaxServlet {
 			throws ServletException, IOException {
 		Collection<WikiPage> upperPages = null;
 		try {
-			upperPages = ServicesRefs.getPageManager().getUpperPages();
+			upperPages = this.pageManager.getUpperPages();
 		} catch (final ProviderException pe) {
 			log.error("Unable to retrieve list of upper pages", pe);
 			return;

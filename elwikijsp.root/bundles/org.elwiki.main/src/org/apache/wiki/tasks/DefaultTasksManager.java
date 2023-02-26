@@ -19,6 +19,8 @@
 package org.apache.wiki.tasks;
 
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.tasks.auth.SaveUserProfileTask;
@@ -26,16 +28,25 @@ import org.apache.wiki.tasks.pages.PreSaveWikiPageTask;
 import org.apache.wiki.tasks.pages.SaveWikiPageTask;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.workflow0.Step;
+import org.elwiki.api.component.WikiManager;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import java.util.Locale;
 
 /**
  * Default implementation for {@link TasksManager}.
  */
-@Component(name = "elwiki.DefaultTasksManager", service = TasksManager.class, //
-		factory = "elwiki.TasksManager.factory")
-public class DefaultTasksManager implements TasksManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultTasksManager",
+	service = { TasksManager.class, WikiManager.class },
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultTasksManager implements TasksManager, WikiManager {
 
     /**
      * {@inheritDoc}
@@ -60,5 +71,5 @@ public class DefaultTasksManager implements TasksManager {
     public Step buildSaveUserProfileTask( final Engine engine, final Locale loc ) {
         return new SaveUserProfileTask( engine, loc );
     }
-    
+
 }

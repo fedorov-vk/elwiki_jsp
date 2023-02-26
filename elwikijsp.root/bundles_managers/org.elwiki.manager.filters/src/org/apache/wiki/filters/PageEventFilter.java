@@ -55,7 +55,7 @@ public class PageEventFilter extends BasePageFilter {
      * Called whenever a new PageFilter is instantiated and reset.
      */
     @Override
-    public void initialize( final Engine engine ) throws WikiException {
+    public void initialize( final Engine engine ) throws FilterException {
         super.initialize( engine );
     }
 

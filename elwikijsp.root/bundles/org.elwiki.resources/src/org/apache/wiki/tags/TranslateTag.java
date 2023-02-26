@@ -25,7 +25,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.render0.RenderingManager;
 
 /**
  * Converts the body text into HTML content.
@@ -52,7 +52,8 @@ public class TranslateTag extends BodyTagSupport {
 
 			if (wikiText != null) {
 				wikiText = wikiText.trim();
-				final String result = ServicesRefs.getRenderingManager().textToHTML(context, wikiText);
+				RenderingManager renderingManager = context.getEngine().getManager(RenderingManager.class);
+				final String result = renderingManager.textToHTML(context, wikiText);
 				getPreviousOut().write(result);
 			}
 		} catch (final Exception e) {

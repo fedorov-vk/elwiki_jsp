@@ -107,7 +107,7 @@ public class WebContainerAuthorizer implements WebAuthorizer {
 	/**
 	 * Constructs a new instance of the WebContainerAuthorizer class.
 	 */
-	public WebContainerAuthorizer() {
+	public WebContainerAuthorizer(Engine engine) {
 		super();
 	}
 

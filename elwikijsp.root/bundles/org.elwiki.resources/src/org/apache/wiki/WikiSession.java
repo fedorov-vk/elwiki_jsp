@@ -37,23 +37,22 @@ import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.util.HttpUtil;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.useradmin.User;
 import org.osgi.service.useradmin.UserAdmin;
@@ -64,10 +63,13 @@ import org.osgi.service.useradmin.UserAdmin;
  * methods for managing WikiSessions for an entire wiki. These methods allow callers to find, query and remove WikiSession objects, and
  * to obtain a list of the current wiki session users.</p>
  */
-@Component (name = "elwiki.WikiSession", //
-		service = { org.apache.wiki.api.core.Session.class, EventHandler.class}, //
-		factory = "elwiki.WikiSession.factory" //
-		/*property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGIN*/)
+//@formatter:off
+@Component(
+	name = "elwiki.WikiSession",
+	service = { org.apache.wiki.api.core.Session.class, EventHandler.class },
+	property = { EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL },
+	factory = "elwiki.WikiSession.factory")
+//@formatter:on
 public final class WikiSession implements Session, EventHandler {
 
     private static final Logger log                   = Logger.getLogger( WikiSession.class );
@@ -115,25 +117,22 @@ public final class WikiSession implements Session, EventHandler {
 		this.m_cachedLocale = locale;		
 	}
     
-    // -- service handling ---------------------------(start)--
+    // -- OSGi service handling ----------------------(start)--
 
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private UserAdmin userAdminService;
 
+	@WikiServiceReference
 	private ISessionMonitor sessionMonitor;
-	
+
+	@WikiServiceReference
+	private AccountRegistry accountRegistry;
+
     /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
+     * This component activate routine. Does all the basic initialization.
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object sm = componentContext.getProperties().get(ISessionMonitor.SESSION_MONITOR);
-		if (sm instanceof ISessionMonitor sessionMonitor) {
-			this.sessionMonitor = sessionMonitor;
-		}
+	protected void startup() {
 		this.invalidate();
 	}
 
@@ -141,8 +140,8 @@ public final class WikiSession implements Session, EventHandler {
 	protected void shutdown() {
 		//
 	}
-	
-	// -- service handling -----------------------------(end)--
+
+	// -- OSGi service handling ------------------------(end)--
     
     /** {@inheritDoc} */
     @Override
@@ -541,7 +540,7 @@ public final class WikiSession implements Session, EventHandler {
         }
 
         // Look up the user and go get the new Principals
-        final AccountRegistry accountRegistry = ServicesRefs.Instance.getManager(AccountRegistry.class);
+        //:FVK: final AccountRegistry accountRegistry = WikiEngine.Instance.getManager(AccountRegistry.class);
         if( accountRegistry == null ) {
             throw new IllegalStateException( "User database cannot be null." );
         }

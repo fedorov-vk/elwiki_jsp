@@ -53,9 +53,6 @@ import org.elwiki_data.WikiPage;
  */
 public interface Engine {
 
-	/** Reference identifier for Engine in the service activator parameters. */
-	String ENGINE_REFERENCE = "ENGINE_REFERENCE";
-
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
 
@@ -125,6 +122,7 @@ public interface Engine {
      *
      *  @return The wiki properties
      */
+	@Deprecated
     IPreferenceStore getWikiPreferences();
 
     /**
@@ -293,11 +291,6 @@ public interface Engine {
      *  @return The previous attribute, if it existed.
      */
     < T > T removeAttribute( String key );
-
-    /**
-     * Signals that the Engine will be shut down by the servlet container.
-     */
-    void shutdown();
 
 	IWikiConfiguration getWikiConfiguration();
 

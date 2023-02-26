@@ -35,7 +35,6 @@ import org.apache.wiki.api.search.SearchResultComparator;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 import java.io.IOException;
 import java.util.Collection;
@@ -53,7 +52,12 @@ import java.util.TreeSet;
 public class BasicSearchProvider implements SearchProvider {
 
     private static final Logger log = Logger.getLogger( BasicSearchProvider.class );
+
     private Engine m_engine;
+
+	private PageManager pageManager;
+	private AttachmentManager attachmentManager;
+	private AuthorizationManager authorizationManager;
 
     /**
      *  {@inheritDoc}
@@ -61,6 +65,9 @@ public class BasicSearchProvider implements SearchProvider {
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
         m_engine = engine;
+        this.pageManager = engine.getManager(PageManager.class);
+        this.attachmentManager = engine.getManager(AttachmentManager.class);
+        this.authorizationManager = engine.getManager(AuthorizationManager.class);
     }
 
     /**
@@ -121,10 +128,10 @@ public class BasicSearchProvider implements SearchProvider {
     }
 
     private String attachmentNames( final WikiPage page ) {
-        if( ServicesRefs.getAttachmentManager().hasAttachments( page ) ) {
+        if( this.attachmentManager.hasAttachments( page ) ) {
             final List< PageAttachment > attachments;
             try {
-                attachments = ServicesRefs.getAttachmentManager().listAttachments( page );
+                attachments = this.attachmentManager.listAttachments( page );
             } catch( final ProviderException e ) {
                 log.error( "Unable to get attachments for page", e );
                 return "";
@@ -149,22 +156,20 @@ public class BasicSearchProvider implements SearchProvider {
         final SearchMatcher matcher = new SearchMatcher( m_engine, query );
         final Collection< WikiPage > allPages;
         try {
-            allPages = ServicesRefs.getPageManager().getAllPages();
+            allPages = pageManager.getAllPages();
         } catch( final ProviderException pe ) {
             log.error( "Unable to retrieve page list", pe );
             return null;
         }
 
-        final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
-
         for( final WikiPage page : allPages ) {
             try {
                 if( page != null ) {
                     final PagePermission pp = new PagePermission( page, PagePermission.VIEW_ACTION );
-                    if( wikiContext == null || mgr.checkPermission( wikiContext.getWikiSession(), pp ) ) {
+                    if( wikiContext == null || authorizationManager.checkPermission( wikiContext.getWikiSession(), pp ) ) {
                         final String pageName = page.getName();
                         final String pageContent =
-                        		ServicesRefs.getPageManager().getPageText( pageName, PageProvider.LATEST_VERSION ) + attachmentNames( page );
+                        		pageManager.getPageText( pageName, PageProvider.LATEST_VERSION ) + attachmentNames( page );
                         final SearchResult comparison = matcher.matchPageContent( pageName, pageContent );
                         if( comparison != null ) {
                             res.add( comparison );

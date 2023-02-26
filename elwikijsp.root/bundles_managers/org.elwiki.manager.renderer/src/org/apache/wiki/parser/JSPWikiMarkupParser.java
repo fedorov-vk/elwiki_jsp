@@ -51,14 +51,11 @@ import org.apache.wiki.parser0.HeadingListener;
 import org.apache.wiki.parser0.LinkParser;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.ParseException;
-import org.apache.wiki.parser0.PluginContent;
-import org.apache.wiki.parser0.VariableContent;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.services.ServicesRefs;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -191,6 +188,16 @@ public class JSPWikiMarkupParser extends MarkupParser {
     private Heading                m_lastHeading         = null;
 
     private static final String CAMELCASE_PATTERN     = "JSPWikiMarkupParser.camelCasePattern";
+    
+    private AccountRegistry accountRegistry;
+    
+    private AuthorizationManager authorizationManager;
+
+	private AttachmentManager attachmentManager;
+
+	private VariableManager variableManager;
+
+	private AclManager aclManager;
 
     /**
      *  Creates a markup parser.
@@ -202,6 +209,11 @@ public class JSPWikiMarkupParser extends MarkupParser {
     {
         super( context, in );
         initialize();
+        accountRegistry = this.m_engine.getManager(AccountRegistry.class);
+        authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+        attachmentManager = this.m_engine.getManager(AttachmentManager.class);
+        variableManager = this.m_engine.getManager(VariableManager.class);
+        aclManager = this.m_engine.getManager(AclManager.class);
     }
 
     // FIXME: parsers should be pooled for better performance.
@@ -239,7 +251,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         m_useAttachmentImage = m_context.getBooleanWikiProperty( PROP_USEATTACHMENTIMAGE, m_useAttachmentImage );
         m_allowHTML          = m_context.getBooleanWikiProperty( PROP_ALLOWHTML, m_allowHTML );
 
-        if( this.m_engine.getManager(AccountRegistry.class) == null || ServicesRefs.getAuthorizationManager() == null ) {
+        if( accountRegistry == null || authorizationManager == null ) {
             disableAccessRules();
         }
 
@@ -395,7 +407,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 			final String imglink = m_context.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "images/attachment_small.png");
 			el1 = createAnchor(LinkType.ATTACHMENT, attlink, text, "");
 
-			if (ServicesRefs.getAttachmentManager().forceDownload(attlink)) {
+			if (attachmentManager.forceDownload(attlink)) {
 				el1.setAttribute("download", "");
 			}
 
@@ -1058,7 +1070,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
 
         try {
-            final Acl acl = ServicesRefs.getAclManager().parseAcl( page, ruleLine );
+            final Acl acl = aclManager.parseAcl( page, ruleLine );
             //:FVK: workaround - отмена, т.к. ERROR: запись в CDO view is read-only // page.setAcl( acl );
 
             if( log.isDebugEnabled() ) {
@@ -1094,7 +1106,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             // log.debug("SET name='"+name+"', value='"+val+"'.");
 
             if( name.length() > 0 && val.length() > 0 ) {
-                val = ServicesRefs.getVariableManager().expandVariables( m_context, val );
+                val = variableManager.expandVariables( m_context, val );
                 m_context.getPage().setAttribute(name, val );
             }
         } catch( final Exception e ) {
@@ -1257,7 +1269,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 final int hashMark;
 
                 // Internal wiki link, but is it an attachment link?
-                String attachment = ServicesRefs.getAttachmentManager().getAttachmentName( m_context, linkRef );
+                String attachment = attachmentManager.getAttachmentName( m_context, linkRef );
                 if( attachment != null ) {
                 	collectLink( m_attachmentLinkCollectors, attachment );
 

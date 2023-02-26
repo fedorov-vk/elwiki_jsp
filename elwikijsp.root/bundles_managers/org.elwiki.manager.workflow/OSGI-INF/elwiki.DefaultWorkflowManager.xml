@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" factory="elwiki.WorkflowManager.factory" name="elwiki.DefaultWorkflowManager">
-   <property name="event.topics" value="org/elwiki/events/workflow/*"/>
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.DefaultWorkflowManager">
+   <property name="event.topics">org/elwiki/events/init/*
+org/elwiki/events/workflow/*
+   </property>
+   <service scope="singleton">
       <provide interface="org.apache.wiki.workflow0.WorkflowManager"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.workflow.DefaultWorkflowManager"/>

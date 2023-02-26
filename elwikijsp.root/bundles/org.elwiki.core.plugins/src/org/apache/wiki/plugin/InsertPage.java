@@ -31,10 +31,10 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.permissions.PermissionFactory;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -84,6 +84,7 @@ public class InsertPage implements Plugin {
 	/** This attribute is stashed in the WikiContext to make sure that we don't have circular references. */
 	public static final String ATTR_RECURSE = "org.apache.wiki.plugin.InsertPage.recurseCheck";
 
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -91,6 +92,8 @@ public class InsertPage implements Plugin {
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		Engine engine = context.getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
+		AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+		RenderingManager renderingManager = engine.getManager(RenderingManager.class);
 
 		StringBuilder res = new StringBuilder();
 
@@ -136,9 +139,7 @@ public class InsertPage implements Plugin {
 				}
 
 				// Check for permissions
-				AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
-
-				if (!mgr.checkPermission(context.getWikiSession(), PermissionFactory.getPagePermission(page, "view"))) {
+				if (!authorizationManager.checkPermission(context.getWikiSession(), PermissionFactory.getPagePermission(page, "view"))) {
 					res.append("<span class=\"error\">You do not have permission to view this included page.</span>");
 					return res.toString();
 				}
@@ -168,7 +169,7 @@ public class InsertPage implements Plugin {
 				WikiContext includedContext = context.clone();
 				includedContext.setPage(page);
 
-				String pageData = ServicesRefs.getPageManager().getPureText(page);
+				String pageData = pageManager.getPureText(page);
 				String moreLink = "";
 
 				if (section != -1) {
@@ -194,7 +195,7 @@ public class InsertPage implements Plugin {
 					res.append("\" data-once=\"" + cookieName);
 				res.append("\" >");
 
-				res.append(ServicesRefs.getRenderingManager().textToHTML(includedContext, pageData));
+				res.append(renderingManager.textToHTML(includedContext, pageData));
 				res.append(moreLink);
 
 				res.append("</div>");

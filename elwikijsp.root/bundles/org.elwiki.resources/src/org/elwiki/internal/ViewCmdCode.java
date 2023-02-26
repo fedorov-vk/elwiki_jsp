@@ -8,7 +8,6 @@ import org.apache.wiki.WatchDog;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextUtil;
-import org.elwiki.services.ServicesRefs;
 
 public class ViewCmdCode extends CmdCode {
 
@@ -20,6 +19,7 @@ public class ViewCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
 			throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		String pagereq = wikiContext.getName();
 
@@ -33,13 +33,13 @@ public class ViewCmdCode extends CmdCode {
 /*
 	    StopWatch sw = new StopWatch();
 	    sw.start();
-	    WatchDog w = WatchDog.getCurrentWatchDog( ServicesRefs.Instance );
+	    WatchDog w = WatchDog.getCurrentWatchDog( WikiEngine.Instance );
 	    try {
 	        w.enterState("Generating VIEW response for "+wikiContext.getPage(), 600); //:FVK: =60
 
 	        // Set the content type and include the response content
-	        response.setContentType("text/html; charset="+ServicesRefs.Instance.getContentEncoding() );
-	        String contentPage = ServicesRefs.getTemplateManager()
+	        response.setContentType("text/html; charset="+WikiEngine.Instance.getContentEncoding() );
+	        String contentPage = WikiEngine.getTemplateManager()
 	        		.findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 	    }
 	    finally {

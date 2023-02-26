@@ -26,16 +26,17 @@ import javax.servlet.jsp.JspTagException;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.permissions.WikiPermission;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -109,9 +110,10 @@ public class PermissionTag extends BaseWikiTag {
 	 * @return true if granted, false if not
 	 */
 	private boolean checkPermission(final String permission) {
-		final Session session = m_wikiContext.getWikiSession();
-		final WikiPage page = m_wikiContext.getPage();
-		final AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
+		WikiContext wikiContext = getWikiContext();
+		final Session session = wikiContext.getWikiSession();
+		final WikiPage page = wikiContext.getPage();
+		AuthorizationManager mgr = wikiContext.getEngine().getManager(AuthorizationManager.class);
 		boolean gotPermission = false;
 
 		//@formatter:off
@@ -125,7 +127,7 @@ public class PermissionTag extends BaseWikiTag {
 			VIEW_GROUP.equals(permission)
 		 || EDIT_GROUP.equals(permission)
 		 || DELETE_GROUP.equals(permission)) {
-			final Command command = m_wikiContext.getCommand();
+			final Command command = wikiContext.getCommand();
 			gotPermission = false;
 			if (command instanceof GroupCommand && command.getTarget() != null) {
 				final GroupPrincipal group = (GroupPrincipal) command.getTarget();
@@ -140,13 +142,14 @@ public class PermissionTag extends BaseWikiTag {
 			}
 		} else if (ALL_PERMISSION.equals(permission)) {
 			gotPermission = mgr.checkPermission(session,
-					new AllPermission(m_wikiContext.getEngine().getWikiConfiguration().getApplicationName(), null));
+					new AllPermission(wikiContext.getEngine().getWikiConfiguration().getApplicationName(), null));
 		} else if (page != null) {
 			//
 			//  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.
 			//
 			if (EDIT.equals(permission)) {
-				final WikiPage latest = ServicesRefs.getPageManager().getPage(page.getName());
+				PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
+				final WikiPage latest = pageManager.getPage(page.getName());
 				if (page.getVersion() != WikiProvider.LATEST_VERSION && latest.getVersion() != page.getVersion()) {
 					return false;
 				}

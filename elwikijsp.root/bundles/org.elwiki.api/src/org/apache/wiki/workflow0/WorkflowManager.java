@@ -34,7 +34,7 @@ import java.util.Set;
  * particular Workflows.
  * </p>
  */
-public interface WorkflowManager extends WikiEventListener, Initializable {
+public interface WorkflowManager extends WikiEventListener {
 
     /** The name of the key from jspwiki.properties which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
     String WF_WP_SAVE_APPROVER = "workflow.saveWikiPage";
@@ -71,6 +71,8 @@ public interface WorkflowManager extends WikiEventListener, Initializable {
     /** The prefix to use for looking up <code>jspwiki.properties</code> approval roles. */
     String PROPERTY_APPROVER_PREFIX = "jspwiki.approver.";
 
+    IWorkflowBuilder getWorkflowBuilder();
+    
     /**
      * Returns a collection of the currently active workflows.
      *

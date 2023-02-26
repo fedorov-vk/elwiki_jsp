@@ -10,12 +10,13 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
 import org.apache.wiki.workflow0.NoSuchOutcomeException;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Workflow;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.workflow0.WorkflowManager;
 
 public class WorkflowCmdCode extends CmdCode {
 
@@ -23,16 +24,20 @@ public class WorkflowCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		WorkflowManager workflowManager = getEngine().getManager(WorkflowManager.class);
+		
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 		// Extract the wiki session
 		Session wikiSession = wikiContext.getWikiSession();
 
 		// Get the current decisions
-		DecisionQueue dq = ServicesRefs.getWorkflowManager().getDecisionQueue();
+		DecisionQueue dq = workflowManager.getDecisionQueue();
 
 		if ("decide".equals(httpRequest.getParameter("action"))) {
 			try {
@@ -60,7 +65,7 @@ public class WorkflowCmdCode extends CmdCode {
 				// Extract parameters for decision ID & decision outcome
 				int id = Integer.parseInt(httpRequest.getParameter("id"));
 				// Iterate through our owner decisions and see if we can find an ID match
-				Collection<Workflow> workflows = ServicesRefs.getWorkflowManager().getOwnerWorkflows(wikiSession);
+				Collection<Workflow> workflows = workflowManager.getOwnerWorkflows(wikiSession);
 				for (Iterator<Workflow> it = workflows.iterator(); it.hasNext();) {
 					Workflow w = it.next();
 					if (w.getId() == id) {
@@ -75,7 +80,7 @@ public class WorkflowCmdCode extends CmdCode {
 
 		// Stash the current decisions/workflows
 		httpRequest.setAttribute("decisions", dq.getActorDecisions(wikiSession));
-		httpRequest.setAttribute("workflows", ServicesRefs.getWorkflowManager().getOwnerWorkflows(wikiSession));
+		httpRequest.setAttribute("workflows", workflowManager.getOwnerWorkflows(wikiSession));
 		httpRequest.setAttribute("wikiSession", wikiSession);
 
 		/*:FVK:

@@ -33,10 +33,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.tasks.TasksManager;
@@ -47,31 +49,36 @@ import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.filters0.FilterManager;
-import org.apache.wiki.filters0.SpamFilter;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.InputValidator;
 import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
+import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.Workflow;
-import org.apache.wiki.workflow0.WorkflowBuilder;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.permissions.WikiPermission;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.Role;
@@ -91,16 +98,23 @@ import com.google.gson.Gson;
  * {@link GroupDatabase}, which persists groups to permanent storage.
  * </p>
  */
-@Component(name = "elwiki.DefaultAccountManager", service = AccountManager.class, //
-		factory = "elwiki.AccountManager.factory")
-public final class DefaultAccountManager extends GroupSupport implements AccountManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAccountManager",
+	service = { AccountManager.class, WikiManager.class, EventHandler.class},
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public final class DefaultAccountManager extends GroupSupport implements AccountManager, WikiManager, EventHandler {
 
 	// -- workflow task inner classes -----------------------------------------
 
 	/**
 	 * Inner class that handles the actual profile save action. Instances of this class are assumed to
 	 * have been added to an approval workflow via
-	 * {@link org.apache.wiki.workflow.WorkflowBuilder#buildApprovalWorkflow(Principal, String, Task, String, org.apache.wiki.workflow.Fact[], Task, String)};
+	 * {@link org.apache.wiki.workflow.workflow.WorkflowBuilder#buildApprovalWorkflow(Principal, String, Task, String, org.apache.wiki.workflow.Fact[], Task, String)};
 	 * they will not function correctly otherwise.
 	 *
 	 */
@@ -177,8 +191,6 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	
 	private ScopedPreferenceStore prefsAauth;
 	
-	private Engine m_engine;
-	
 	/** Associates wiki sessions with profiles. */
 	private final Map<Session, UserProfile> m_profiles = new WeakHashMap<>();
 
@@ -191,14 +203,17 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
 	private UserAdmin userAdminService;
 
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
 
 	@WikiServiceReference
 	private AccountRegistry accountRegistry;
@@ -215,6 +230,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@WikiServiceReference
 	private FilterManager filterManager;
 
+	@WikiServiceReference
+	private WorkflowManager workflowManager;
+	
 	/**
 	 * This component activate routine. Does all the real initialization.
 	 *
@@ -226,16 +244,16 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		BundleContext bc = componentContext.getBundleContext();
 		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				bc.getBundle().getSymbolicName() + "/" + NODE_ACCOUNTMANAGER);
-
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
 	}
+	
+	@Deactivate
+	protected void shutdown() {
+		//
+	}
+	
+	// -- OSGi service handling ------------------------(end)--
 
-	protected void initialize(final Engine engine) throws WikiException {
-		this.m_engine = engine;
-		
+	protected void initialize() throws WikiException {
 		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
 
 		/*TODO: Replace with custom annotations. See JSPWIKI-566
@@ -250,13 +268,6 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
 	}
 	
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-	
-	// -- service handling -----------------------------(end)--
-
 	static List<Group> getNativeGroups(UserAdmin userAdmin) throws InvalidSyntaxException {
 		List<Group> groups = new ArrayList<>();
 
@@ -404,7 +415,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
     /** {@inheritDoc} */
 	@Override
 	public void startUserProfileCreationWorkflow(Session session, UserProfile profile) throws WikiException {
-        final WorkflowBuilder builder = WorkflowBuilder.getBuilder( m_engine );
+		final IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
         final Principal submitter = session.getUserPrincipal();
         final Step completionTask = getTasksManager().buildSaveUserProfileTask( m_engine, session.getLocale() );
 
@@ -515,17 +526,11 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
 
 	        //  Query the SpamFilter first
-	        final FilterManager fm = getFilterManager();
-	        final List< PageFilter > ls = fm.getFilterList();
-	        for( final PageFilter pf : ls ) {
-	            if( pf instanceof SpamFilter spamFilter) {
-	                if( !spamFilter.isValidUserProfile( context, profile ) ) {
-	                    session.addMessage( SESSION_MESSAGES, "Invalid userprofile" );
-	                    return;
-	                }
-	                break;
-	            }
-	        }
+			ISpamFilter spamFilter = getFilterManager().getSpamFilter();
+			if (!spamFilter.isValidUserProfile(context, profile)) {
+				session.addMessage(SESSION_MESSAGES, "Invalid userprofile");
+				return;
+			}
 
 	        // If container-managed auth and user not logged in, throw an error
 	        if ( getAuthenticationManager().isContainerAuthenticated()
@@ -839,4 +844,19 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	// -- implementation GroupManager ----------------------------------(end)--
 	
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of ProgressManager.", e);
+			}
+			break;
+		}		
+	}
+
 }

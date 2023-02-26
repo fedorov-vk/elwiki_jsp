@@ -27,7 +27,6 @@
 <%@ page import="org.apache.wiki.api.ui.EditorManager" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 
@@ -36,10 +35,10 @@
 %>
 
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Create wiki context and check for authorization
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_CONFLICT.getRequestContext() );
-    if( !ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     if( wikiContext.getCommand().getTarget() == null ) {
         response.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
         return;
@@ -51,7 +50,7 @@
     // Make the user and conflicting text presentable for display.
     usertext = StringEscapeUtils.escapeXml11( usertext );
 
-    String conflicttext = ServicesRefs.getPageManager().getText(pagereq);
+    String conflicttext = WikiEngine.getPageManager().getText(pagereq);
     conflicttext = StringEscapeUtils.escapeXml11( conflicttext );
 
     pageContext.setAttribute( "conflicttext", conflicttext, PageContext.REQUEST_SCOPE );
@@ -61,6 +60,6 @@
 
     // Set the content type and include the response content
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %><wiki:Include page="<%=contentPage%>" />
 

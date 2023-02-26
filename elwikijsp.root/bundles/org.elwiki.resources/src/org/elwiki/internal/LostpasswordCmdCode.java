@@ -16,11 +16,12 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
+import org.apache.wiki.auth.IIAuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
+import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elwiki.services.ServicesRefs;
 
 public class LostpasswordCmdCode extends CmdCode {
 
@@ -30,6 +31,7 @@ public class LostpasswordCmdCode extends CmdCode {
 	
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
 		Engine wiki = wikiContext.getEngine();
@@ -81,8 +83,9 @@ public class LostpasswordCmdCode extends CmdCode {
 
             // Try sending email first, as that is more likely to fail.
 
+            URLConstructor urlConstructor = getEngine().getManager(URLConstructor.class); 
             Object[] args = { profile.getLoginName(), randomPassword, request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort() +
-                             ServicesRefs.getUrlConstructor().makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), applicationName };
+            		urlConstructor.makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), applicationName };
 
             String mailMessage = MessageFormat.format( rb.getString( "lostpwd.newpassword.email" ), args );
 

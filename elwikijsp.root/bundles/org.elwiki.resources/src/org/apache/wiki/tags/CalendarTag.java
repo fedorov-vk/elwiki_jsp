@@ -34,11 +34,13 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -130,7 +132,7 @@ public class CalendarTag extends BaseWikiTag {
 	}
 
 	private String format(final String txt) {
-		final WikiPage p = m_wikiContext.getPage();
+		final WikiPage p = getWikiContext().getPage();
 		if (p != null) {
 			return TextUtil.replaceString(txt, "%p", p.getName());
 		}
@@ -142,18 +144,21 @@ public class CalendarTag extends BaseWikiTag {
 	 * Returns a link to the given day.
 	 */
 	private String getDayLink(final Calendar day) {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = getWikiContext().getEngine();
+		@NonNull
+		PageManager pageManager = engine.getManager(PageManager.class);
 		final String result;
 
 		if (m_pageFormat != null) {
 			final String pagename = m_pageFormat.format(day.getTime());
 
-			if (ServicesRefs.getPageManager().pageExistsByName(pagename)) {
+			if (pageManager.pageExistsByName(pagename)) {
 				if (m_urlFormat != null) {
 					final String url = m_urlFormat.format(day.getTime());
 					result = "<td class=\"link\"><a href=\"" + url + "\">" + day.get(Calendar.DATE) + "</a></td>";
 				} else {
-					result = "<td class=\"link\"><a href=\"" + m_wikiContext.getViewURL(pagename) + "\">"
+					result = "<td class=\"link\"><a href=\"" + wikiContext.getViewURL(pagename) + "\">"
 							+ day.get(Calendar.DATE) + "</a></td>";
 				}
 			} else {
@@ -192,6 +197,7 @@ public class CalendarTag extends BaseWikiTag {
 	}
 
 	private String getMonthNaviLink(final Calendar day, final String txt, String queryString) {
+		WikiContext wikiContext = getWikiContext();
 		final String result;
 		queryString = TextUtil.replaceEntities(queryString);
 		final Calendar nextMonth = Calendar.getInstance();
@@ -200,11 +206,11 @@ public class CalendarTag extends BaseWikiTag {
 		nextMonth.add(Calendar.MONTH, 1); // Now move to 1st day of next month
 
 		if (day.before(nextMonth)) {
-			final WikiPage thePage = m_wikiContext.getPage();
+			final WikiPage thePage = wikiContext.getPage();
 			final String pageId = thePage.getId();
 
 			final String calendarDate = m_dateFormat.format(day.getTime());
-			String url = m_wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId,
+			String url = wikiContext.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), pageId,
 					CALENDAR_DATE + "=" + calendarDate);
 
 			if (queryString != null && queryString.length() > 0) {
@@ -245,8 +251,9 @@ public class CalendarTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final IWikiConfiguration config = m_wikiContext.getConfiguration();
-		Session session = m_wikiContext.getWikiSession();
+		WikiContext wikiContext = getWikiContext();
+		final IWikiConfiguration config = wikiContext.getConfiguration();
+		Session session = wikiContext.getWikiSession();
 		Locale locale = session.getLocale();
 		final JspWriter out = pageContext.getOut();
 		final Calendar cal = Calendar.getInstance(locale);
@@ -281,7 +288,7 @@ public class CalendarTag extends BaseWikiTag {
 		nextCal.add(Calendar.MONTH, 1); // Now move to first day of next month
 
 		out.write("<table class=\"calendar\">\n");
-		final HttpServletRequest httpServletRequest = m_wikiContext.getHttpRequest();
+		final HttpServletRequest httpServletRequest = wikiContext.getHttpRequest();
 		final String queryString = HttpUtil.safeGetQueryString(httpServletRequest, config.getContentEncodingCs());
 		//@formatter:off
         out.write("<tr>" +

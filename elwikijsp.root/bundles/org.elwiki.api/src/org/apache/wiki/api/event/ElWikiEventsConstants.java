@@ -4,27 +4,40 @@ public interface ElWikiEventsConstants {
 
 	String TOPIC_BASE_ELWIKI = "org/elwiki/events";
 
+	/** All ElWiki events. (workaround) */
+	String TOPIC_ALL = TOPIC_BASE_ELWIKI + "/*";
+
+	/* == INITIALIZATION ==================================================== */
+
+	String TOPIC_INIT = TOPIC_BASE_ELWIKI + "/init";
+	String TOPIC_INIT_ALL = TOPIC_INIT + "/*";
+	String TOPIC_INIT_STAGE_ONE = TOPIC_INIT + "/STAGE_ONE";
+	String TOPIC_INIT_STAGE_TWO = TOPIC_INIT + "/STAGE_TWO";
+
+	String TOPIC_INIT_DONE = TOPIC_INIT + "/DONE";
+
+	/* == LOGGING =========================================================== */
+
 	String TOPIC_LOGGING = TOPIC_BASE_ELWIKI + "/logging";
 	String TOPIC_LOGGING_ALL = TOPIC_LOGGING + "/*";
-	
-	/** When a user first accesses JSPWiki, but before logging in or setting a cookie. */
-	String TOPIC_LOGIN_ANONYMOUS = TOPIC_LOGGING + "/TOPIC_LOGIN_ANONYMOUS";
-	
-	/** When a user sets a cookie to assert their identity. */
-	String TOPIC_LOGIN_ASSERTED = TOPIC_LOGGING + "/TOPIC_LOGIN_ASSERTED";
-	
-	/** When a user authenticates with a username and password, or via container auth. */
-	String TOPIC_LOGIN_AUTHENTICATED = TOPIC_LOGGING + "/TOPIC_LOGIN_AUTHENTICATED";
-	
-	/** When a user logs out. */
-	String TOPIC_LOGOUT = TOPIC_LOGGING + "/TOPIC_LOGOUT";
 
-	/** workaround */
-	String TOPIC_ALL = TOPIC_BASE_ELWIKI + "*";
+	/** When a user first accesses JSPWiki, but before logging in or setting a cookie. */
+	String TOPIC_LOGIN_ANONYMOUS = TOPIC_LOGGING + "/LOGIN_ANONYMOUS";
+
+	/** When a user sets a cookie to assert their identity. */
+	String TOPIC_LOGIN_ASSERTED = TOPIC_LOGGING + "/LOGIN_ASSERTED";
+
+	/** When a user authenticates with a username and password, or via container auth. */
+	String TOPIC_LOGIN_AUTHENTICATED = TOPIC_LOGGING + "/LOGIN_AUTHENTICATED";
+
+	/** When a user logs out. */
+	String TOPIC_LOGOUT = TOPIC_LOGGING + "/LOGOUT";
+
+	/* == WORKFLOW ========================================================== */
 
 	String TOPIC_WORKFLOW = TOPIC_BASE_ELWIKI + "/workflow";
 	String TOPIC_WORKFLOW_ALL = TOPIC_WORKFLOW + "/*";
-	
+
 	/** After Workflow instantiation. */
 	String TOPIC_WORKFLOW_CREATED = TOPIC_WORKFLOW + "/CREATED";
 
@@ -65,10 +78,14 @@ public interface ElWikiEventsConstants {
 	String PROPERTY_STEP = "step";
 	String PROPERTY_DECISION = "decision";
 
+	/* ====================================================================== */
+
 	/**
-	 * Передает идентификатор HttpSession, для тождественной идентификации соответствующей wiki-сесии.
+	 * Indicates the HttpSession identifier, for identification of the corresponding wiki-session for
+	 * sending events.
 	 */
 	String PROPERTY_KEY_TARGET = "target";
+
 	String PROPERTY_LOGIN_PRINCIPALS = "principal";
 
 }

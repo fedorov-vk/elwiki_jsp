@@ -160,7 +160,7 @@ public interface PageManager extends WikiEventListener {
      *  @param text    The Wiki markup for the page.
      *  @throws WikiException if the save operation encounters an error during the save operation. If the page-save
      *  operation requires approval, the exception will be of type {@link org.apache.wiki.workflow.DecisionRequiredException}.
-     *  Individual PageFilters, such as the {@link org.apache.wiki.filters.SpamFilter} may also throw a
+     *  Individual PageFilters, such as the {@link org.apache.wiki.filters.filters.SpamFilter} may also throw a
      *  {@link org.apache.wiki.api.exceptions.RedirectException}.
      */
 	void saveText(WikiContext context, String text, String author, String changenote) throws WikiException;

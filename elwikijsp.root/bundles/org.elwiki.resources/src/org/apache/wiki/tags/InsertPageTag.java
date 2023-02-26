@@ -20,11 +20,11 @@ package org.apache.wiki.tags;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
-import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
@@ -103,7 +103,10 @@ public class InsertPageTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
+		RenderingManager renderingManager = engine.getManager(RenderingManager.class);
 		WikiPage insertedPage;
 
 		//
@@ -113,14 +116,14 @@ public class InsertPageTag extends BaseWikiTag {
 		//
 
 		if (m_pageId != null) {
-			insertedPage = ServicesRefs.getPageManager().getPageById(m_pageId);
+			insertedPage = pageManager.getPageById(m_pageId);
 		} else if (m_pageName != null) {
-			insertedPage = ServicesRefs.getPageManager().getPage(m_pageName);
+			insertedPage = pageManager.getPage(m_pageName);
 		} else {
-			insertedPage = m_wikiContext.getPage();
+			insertedPage = wikiContext.getPage();
 			//:FVK: follow is old code - is this code required? since the page has already been got from the context.
 			/*
-			if (!ServicesRefs.getPageManager().wikiPageExists(insertedPage)) {
+			if (!WikiEngine.getPageManager().wikiPageExists(insertedPage)) {
 				return SKIP_BODY;
 			}
 			*/
@@ -134,18 +137,18 @@ public class InsertPageTag extends BaseWikiTag {
 					+ this.pageContext.getPage());
 
 			final JspWriter out = pageContext.getOut();
-			final WikiPage oldPage = m_wikiContext.setRealPage(insertedPage);
+			final WikiPage oldPage = wikiContext.setRealPage(insertedPage);
 
 			switch (m_mode) {
 			case HTML:
-				out.print(ServicesRefs.getRenderingManager().getHTML(m_wikiContext, insertedPage));
+				out.print(renderingManager.getHTML(wikiContext, insertedPage));
 				break;
 			case PLAIN:
-				out.print(ServicesRefs.getPageManager().getText(insertedPage));
+				out.print(pageManager.getText(insertedPage));
 				break;
 			}
 
-			m_wikiContext.setRealPage(oldPage);
+			wikiContext.setRealPage(oldPage);
 		}
 
 		return SKIP_BODY;

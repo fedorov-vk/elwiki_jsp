@@ -12,28 +12,40 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiScopeManager;
-import org.osgi.service.component.ComponentContext;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-@Component(name = "elwiki.WikiScopeManager", service = WikiScopeManager.class, //
-		factory = "elwiki.WikiScopeManager.factory")
-public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.WikiScopeManager",
+	service = { WikiScopeManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiScopeManagerImpl.class);
 
 	private static Gson gson = new Gson();
-
-	private Engine m_engine;	
 
 	/**
 	 * Defines the scope for wiki sessions:
@@ -53,7 +65,17 @@ public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
+
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine m_engine;
+
+	@WikiServiceReference
+	WikiAjaxDispatcher wikiAjaxDispatcher;
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -62,23 +84,22 @@ public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-		m_engine = engine;
-		IPreferenceStore props = engine.getWikiPreferences();
+	/**
+	 * Initializes WikiScopeManager.
+	 * 
+	 * @throws WikiException
+	 */
+	public void initialize() throws WikiException {
+		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 
-		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-		wikiAjaxDispatcher.registerServlet(JSONWikiScopeTracker.JSON_WIKISCOPE, new JSONWikiScopeTracker());
+		wikiAjaxDispatcher.registerServlet(JSONWikiScopeTracker.JSON_WIKISCOPE, new JSONWikiScopeTracker(m_engine));
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
 	@Override
 	public String getData() {
@@ -131,4 +152,20 @@ public class WikiScopeManagerImpl implements WikiScopeManager, Initializable {
 			}
 		}
 	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of WikiScopeManager.", e);
+			}
+			break;
+		}		
+	}
+
 }

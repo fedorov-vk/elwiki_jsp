@@ -28,7 +28,6 @@
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.commons.lang3.time.StopWatch" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <fmt:setLocale value="${prefs.Language}" />
@@ -42,19 +41,19 @@
 <%
     // Get created wiki context (and check for authorization - :FVK: see below).
 	WikiContext wikiContext = ContextUtil.findContext(pageContext);
-	Engine wiki = wikiContext.getEngine();
+	Engine engine = wikiContext.getEngine();
 	String bean = request.getParameter("bean");
 
-    //:FVK: надо вернуть код -- if(!ServicesRefs.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
+    //:FVK: надо вернуть код -- if(!Engine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
 
     // Set the content type and include the response content
-    response.setContentType("text/html; charset="+wiki.getContentEncoding() );
+    response.setContentType("text/html; charset="+engine.getContentEncoding() );
 
-    pageContext.setAttribute( "engine", wiki, PageContext.REQUEST_SCOPE );
+    pageContext.setAttribute( "engine", engine, PageContext.REQUEST_SCOPE );
     pageContext.setAttribute( "context", wikiContext, PageContext.REQUEST_SCOPE );
 
     if( request.getMethod().equalsIgnoreCase("post") && bean != null ) {
-    	AdminBean ab = ServicesRefs.getAdminBeanManager().findBean( bean );
+    	AdminBean ab = engine.getManager(AdminBeanManager.class).findBean( bean );
 
         if( ab != null ) {
             ab.doPost( wikiContext );
@@ -63,6 +62,6 @@
         }
     }
 
-    //:FVK: аргумент для <wiki:Include> -- String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
+    //:FVK: аргумент для <wiki:Include> -- String contentPage = Engine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "admin/AdminTemplate.jsp" );
 %>
 <wiki:Include page="AdminTemplate.jsp" />

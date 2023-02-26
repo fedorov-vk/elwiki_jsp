@@ -24,6 +24,7 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspTagException;
 
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
@@ -64,14 +65,15 @@ public class PageDateTag extends BaseWikiTag {
 	}
 
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final WikiPage page = wikiContext.getPage();
 		if (page != null) {
 			final Date d = page.getLastModifiedDate();
 			//  Date may be null if the page does not exist.
 			if (d != null) {
 				final SimpleDateFormat fmt;
 				if (m_format == null) {
-					fmt = Preferences.getDateFormat(m_wikiContext, TimeFormat.DATETIME);
+					fmt = Preferences.getDateFormat(wikiContext, TimeFormat.DATETIME);
 				} else {
 					fmt = new SimpleDateFormat(m_format);
 				}

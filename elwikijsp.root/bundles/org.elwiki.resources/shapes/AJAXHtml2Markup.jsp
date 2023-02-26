@@ -22,38 +22,40 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.htmltowiki.HtmlStringToWikiTranslator" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%!
-  Logger log;
-  Engine wiki;
-  public void jspInit()
-  {
-    log = Logger.getLogger("XHRHtml2Markup_jsp");
-    wiki = ServicesRefs.Instance; //:FVK: workaround.
-  }
+	Logger log;
+	public void jspInit()
+	{
+		log = Logger.getLogger("XHRHtml2Markup_jsp");
+	}
 %>
 <%
-WikiContext wikiContext;
-  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
-  if( wikiContext == null )
-  {
-    // Copied from a top-level jsp -- which would be a better place to put this 
-    wikiContext = Wiki.context().create(wiki, request, WikiContext.PAGE_VIEW);
-    request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
-  }
-  if( !ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response) ) return;
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	if( wikiContext == null )//:FVK: impossible. how? but the engine already readed from it.
+	{
+		// Copied from a top-level jsp -- which would be a better place to put this
+		wikiContext = Wiki.context().create(engine, request, WikiContext.PAGE_VIEW);
+		request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
+	}
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	if( !authorizationManager.hasAccess(wikiContext, response) ) {
+		return;
+	}
 
-  response.setContentType("text/html; charset="+wiki.getContentEncoding());
-  //response.setHeader( "Cache-control", "max-age=0" );
-  //response.setDateHeader( "Expires", new Date().getTime() );
-  //response.setDateHeader( "Last-Modified", new Date().getTime() );
+	response.setContentType("text/html; charset=" + engine.getContentEncoding());
+	//response.setHeader( "Cache-control", "max-age=0" );
+	//response.setDateHeader( "Expires", new Date().getTime() );
+	//response.setDateHeader( "Last-Modified", new Date().getTime() );
 
-  String htmlText = request.getParameter("htmlPageText");
+	String htmlText = request.getParameter("htmlPageText");
 
-  if( htmlText != null )
-  {
-%><%= new HtmlStringToWikiTranslator().translate(htmlText, wikiContext) %><%
-  }
+	if( htmlText != null )
+	{
+%>
+<%= new HtmlStringToWikiTranslator().translate(htmlText, wikiContext) %>
+<%
+	}
 %>

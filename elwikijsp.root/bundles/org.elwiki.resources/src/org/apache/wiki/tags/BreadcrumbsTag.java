@@ -28,11 +28,11 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Implement a "breadcrumb" (most recently visited) trail. This tag can be added
@@ -189,8 +189,11 @@ public class BreadcrumbsTag extends BaseWikiTag {
 	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		final HttpSession session = pageContext.getSession();
 		FixedQueue trail = (FixedQueue) session.getAttribute(BREADCRUMBTRAIL_KEY);
-		final String pageName = m_wikiContext.getPage().getName();
-		final String pageId = m_wikiContext.getPage().getId();
+		WikiContext wikiContext = getWikiContext();
+		@NonNull
+		PageManager pageManager = getWikiContext().getEngine().getManager(PageManager.class);
+		final String pageName = wikiContext.getPage().getName();
+		final String pageId = wikiContext.getPage().getId();
 
 		if (trail == null) {
 			trail = new FixedQueue(m_maxQueueSize);
@@ -198,14 +201,14 @@ public class BreadcrumbsTag extends BaseWikiTag {
 			//  check if page still exists (could be deleted/renamed by another user)
 			for (int i = 0; i < trail.size(); i++) {
 				String pageId1 = trail.get(i).id;
-				if (!ServicesRefs.getPageManager().pageExistsById(pageId1)) {
+				if (!pageManager.pageExistsById(pageId1)) {
 					trail.remove(i);
 				}
 			}
 		}
 
-		if (m_wikiContext.getRequestContext().equals(WikiContext.PAGE_VIEW)) {
-			if (ServicesRefs.getPageManager().pageExistsById(pageId)) {
+		if (wikiContext.getRequestContext().equals(WikiContext.PAGE_VIEW)) {
+			if (pageManager.pageExistsById(pageId)) {
 				if (trail.isEmpty()) {
 					trail.pushItem(new PageDescription(pageName, pageId));
 				} else {
@@ -234,7 +237,7 @@ public class BreadcrumbsTag extends BaseWikiTag {
 
 			//FIXME: I can't figure out how to detect the appropriate jsp page to put here, so I hard coded Wiki.jsp
 			//This breaks when you view an attachment metadata page
-			out.print("<a class=\"" + linkclass + "\" href=\"" + m_wikiContext.getViewURL(pageId1) + "\">"
+			out.print("<a class=\"" + linkclass + "\" href=\"" + wikiContext.getViewURL(pageId1) + "\">"
 					+ TextUtil.replaceEntities(pageName1) + "</a>");
 
 			if (i < queueSize - 2) {

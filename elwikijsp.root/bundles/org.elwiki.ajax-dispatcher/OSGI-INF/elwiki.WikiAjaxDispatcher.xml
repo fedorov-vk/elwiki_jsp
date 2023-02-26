@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.WikiAjaxDispatcher.factory" name="elwiki.WikiAjaxDispatcher">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.WikiAjaxDispatcher">
+   <property name="event.topics" value="org/elwiki/events/init/*"/>
+   <service scope="singleton">
       <provide interface="org.apache.wiki.ajax.WikiAjaxDispatcher"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.elwiki.ajax_dispatcher.internal.WikiAjaxDispatcherService"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>

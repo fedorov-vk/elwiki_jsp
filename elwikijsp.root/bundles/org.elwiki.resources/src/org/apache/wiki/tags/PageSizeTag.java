@@ -24,8 +24,9 @@ import javax.servlet.jsp.JspTagException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -40,15 +41,17 @@ public class PageSizeTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		final WikiPage page = wikiContext.getPage();
+		PageManager pageManager = engine.getManager(PageManager.class);
 
 		try {
 			if (page != null) {
 				long size = 123; //:WORKAROUND. FVK: page.getSize();
 
-				if (size == -1 && ServicesRefs.getPageManager().wikiPageExists(page)) { // should never happen with attachments
-					size = ServicesRefs.getPageManager().getPureText(page.getName(), page.getVersion()).length();
+				if (size == -1 && pageManager.wikiPageExists(page)) { // should never happen with attachments
+					size = pageManager.getPureText(page.getName(), page.getVersion()).length();
 					//:FVK: page.setSize( size );
 				}
 

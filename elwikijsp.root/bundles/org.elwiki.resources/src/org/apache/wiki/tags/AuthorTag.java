@@ -23,14 +23,16 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -60,24 +62,28 @@ public class AuthorTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final WikiPage page = wikiContext.getPage();
+		final Engine engine = wikiContext.getEngine();
+		@NonNull
+		PageManager pageManager = engine.getManager(PageManager.class);
 		String author = page.getAuthor();
 
 		if (author != null && !author.isBlank()) {
 			author = TextUtil.replaceEntities(author);
 
-			if (ServicesRefs.getPageManager().pageExistsByName(author) && !("plain".equalsIgnoreCase(m_format))) {
+			if (pageManager.pageExistsByName(author) && !("plain".equalsIgnoreCase(m_format))) {
+				@NonNull
+				RenderingManager renderingManager = engine.getManager(RenderingManager.class);
 				// FIXME: It's very boring to have to do this.  Slow, too.
-				final RenderingManager mgr = ServicesRefs.getRenderingManager();
-				final MarkupParser p = mgr.getParser(m_wikiContext, "[" + author + "|" + author + "]");
+				final MarkupParser p = renderingManager.getParser(wikiContext, "[" + author + "|" + author + "]");
 				final WikiDocument d = p.parse();
-				author = mgr.getHTML(m_wikiContext, d);
+				author = renderingManager.getHTML(wikiContext, d);
 			}
 
 			pageContext.getOut().print(author);
 		} else {
-			pageContext.getOut().print(Preferences.getBundle(m_wikiContext, InternationalizationManager.CORE_BUNDLE)
+			pageContext.getOut().print(Preferences.getBundle(wikiContext, InternationalizationManager.CORE_BUNDLE)
 					.getString("common.unknownauthor"));
 		}
 

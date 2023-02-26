@@ -39,7 +39,7 @@ public class PreviousVersionTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = m_wikiContext.getPage();
+		final WikiPage page = getWikiContext().getPage();
 		int version = page.getVersion();
 		version--;
 		if (version > 0) {

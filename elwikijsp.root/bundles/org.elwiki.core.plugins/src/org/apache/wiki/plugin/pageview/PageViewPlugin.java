@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.plugin;
+package org.apache.wiki.plugin.pageview;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -27,7 +27,6 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -42,9 +41,10 @@ import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.plugin.AbstractReferralPlugin;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -294,6 +294,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          */
         public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
             final Engine engine = context.getEngine();
+            RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+            ReferenceManager referenceManager = engine.getManager(ReferenceManager.class);
+            
             final WikiPage page = context.getPage();
             String result = STR_EMPTY;
 
@@ -329,7 +332,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                 Collection< String > referrers = null;
 
                 if( refer != null ) {
-                    final ReferenceManager refManager = ServicesRefs.getReferenceManager();
+                    final ReferenceManager refManager = referenceManager;
                     for( final String name : refManager.findCreated() ) {
                         boolean use = false;
                         for( int n = 0; !use && n < refer.length; n++ ) {
@@ -337,7 +340,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                         }
 
                         if( use ) {
-                            final Collection< String > refs = ServicesRefs.getReferenceManager().findReferrers( name );
+                            final Collection< String > refs = referenceManager.findReferrers( name );
                             if( refs != null && !refs.isEmpty() ) {
                                 if( referrers == null ) {
                                     referrers = new HashSet<>();
@@ -439,7 +442,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                             }
 
                             if( use ) {
-                                args[ 1 ] = ServicesRefs.getRenderingManager().beautifyTitle( name );
+                                args[ 1 ] = renderingManager.beautifyTitle( name );
                                 args[ 2 ] = entry.getValue();
 
                                 fmt.format( args, buf, null );
@@ -450,7 +453,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
                         buf.append( footer );
 
                         // let the engine render the list
-                        result = ServicesRefs.getRenderingManager().textToHTML( context, buf.toString() );
+                        result = renderingManager.textToHTML( context, buf.toString() );
                     }
                 }
             }
@@ -558,7 +561,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          * @param thrd thread that can be the current background thread.
          * @return boolean <code>true</code> if the thread is still the current background thread.
          */
-        private synchronized boolean isRunning( final Thread thrd )
+        synchronized boolean isRunning( final Thread thrd )
         {
             return m_initialized && thrd == m_pageCountSaveThread;
         }
@@ -624,40 +627,5 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
             return String.valueOf( m_count );
         }
 
-    }
-
-    /**
-     * Background thread storing the page counters.
-     */
-    static final class CounterSaveThread extends WikiBackgroundThread {
-
-        /** The page view manager. */
-        private final PageViewManager m_manager;
-
-        /**
-         * Create a wiki background thread to store the page counters.
-         * 
-         * @param engine The wiki engine.
-         * @param interval Delay in seconds between saves.
-         * @param pageViewManager page view manager.
-         */
-        public CounterSaveThread( final Engine engine, final int interval, final PageViewManager pageViewManager ) {
-            super( engine, interval );
-            if( pageViewManager == null ) {
-                throw new IllegalArgumentException( "Manager cannot be null" );
-            }
-
-            m_manager = pageViewManager;
-        }
-
-        /**
-         * Save the page counters to file.
-         */
-        @Override
-        public void backgroundTask() {
-            if( m_manager.isRunning( this ) ) {
-                m_manager.storeCounters();
-            }
-        }
     }
 }

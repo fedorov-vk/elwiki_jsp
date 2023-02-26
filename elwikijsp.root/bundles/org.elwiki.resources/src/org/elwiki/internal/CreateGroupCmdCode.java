@@ -14,9 +14,9 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.service.useradmin.Group;
 
 public class CreateGroupCmdCode extends CmdCode {
@@ -27,17 +27,20 @@ public class CreateGroupCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		Engine wiki = ServicesRefs.Instance;
+		super.applyPrologue(httpRequest, httpResponse);
+		Engine wiki = getEngine();
 
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
+		AccountManager accountManager = getEngine().getManager(AccountManager.class);
+		
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = Wiki.context().create(wiki, httpRequest, WikiContext.GROUP_EDIT);
-		if (!ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, httpResponse)) {
+		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
 			return;
 		}
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();
-		AccountManager accountManager = ServicesRefs.getAccountManager();
 		IGroupWiki groupWiki = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {

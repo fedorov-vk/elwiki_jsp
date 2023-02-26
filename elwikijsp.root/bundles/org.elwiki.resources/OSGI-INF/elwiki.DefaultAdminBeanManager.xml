@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.AdminBeanManager.factory" name="elwiki.DefaultAdminBeanManager">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.DefaultAdminBeanManager">
+   <property name="event.topics" value="org/elwiki/events/init/*"/>
+   <service scope="singleton">
       <provide interface="org.apache.wiki.ui.admin0.AdminBeanManager"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.ui.admin.DefaultAdminBeanManager"/>
 </scr:component>

@@ -18,27 +18,10 @@
  */
 package org.apache.wiki.ui.admin;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.Release;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEngineEvent;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.modules.ModuleManager;
-import org.apache.wiki.api.modules.WikiModuleInfo;
-import org.apache.wiki.api.ui.progress.ProgressManager;
-import org.apache.wiki.ui.admin.beans.CoreBean;
-import org.apache.wiki.ui.admin.beans.FilterBean;
-import org.apache.wiki.ui.admin.beans.PluginBean;
-import org.apache.wiki.ui.admin.beans.SearchManagerBean;
-import org.apache.wiki.ui.admin.beans.UserBean;
-import org.apache.wiki.ui.admin0.AdminBean;
-import org.apache.wiki.ui.admin0.AdminBeanManager;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.management.DynamicMBean;
 import javax.management.InstanceAlreadyExistsException;
@@ -48,12 +31,33 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.Release;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEvent;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.modules.ModuleManager;
+import org.apache.wiki.api.modules.WikiModuleInfo;
+import org.apache.wiki.ui.admin.beans.CoreBean;
+import org.apache.wiki.ui.admin.beans.FilterBean;
+import org.apache.wiki.ui.admin.beans.PluginBean;
+import org.apache.wiki.ui.admin.beans.SearchManagerBean;
+import org.apache.wiki.ui.admin.beans.UserBean;
+import org.apache.wiki.ui.admin0.AdminBean;
+import org.apache.wiki.ui.admin0.AdminBeanManager;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  *  Provides a manager class for all AdminBeans within JSPWiki.  This class also manages registration for any
@@ -61,16 +65,26 @@ import java.util.Properties;
  *
  *  @since  2.5.52
  */
-@Component(name = "elwiki.DefaultAdminBeanManager", service = AdminBeanManager.class, //
-		factory = "elwiki.AdminBeanManager.factory")
-public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultAdminBeanManager",
+	service = { AdminBeanManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultAdminBeanManager
+		implements AdminBeanManager, WikiManager, EventHandler, WikiEventListener {
 
-    private Engine m_engine;
     private ArrayList< AdminBean > m_allBeans;
     private MBeanServer m_mbeanServer;
 
     private static final Logger log = Logger.getLogger( DefaultAdminBeanManager.class );
 
+    /**
+     * Constructs a new AdminBeanManager instance.
+     */
     public DefaultAdminBeanManager() {
         log.info("Using JDK 1.5 Platform MBeanServer");
         m_mbeanServer = MBeanServerFactory15.getServer();
@@ -81,7 +95,10 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
         }
     }
     
-	// -- service handling --------------------------< start --
+	// -- OSGi service handling --------------------( start )--
+
+    @WikiServiceReference
+    private Engine m_engine;
 
 	@Activate
 	protected void startup() {
@@ -93,8 +110,13 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
 		//
 	}
 
-	// -- service handling ---------------------------- end >--
+	// -- OSGi service handling ----------------------( end )--
 
+	public void initialize() throws WikiException {
+        m_engine.addWikiEventListener( this );
+
+        reload();
+	}
 
     private String getJMXTitleString( final int title ) {
         switch( title ) {
@@ -269,11 +291,18 @@ public class DefaultAdminBeanManager implements WikiEventListener, AdminBeanMana
 	}
 
 	@Override
-	public void initialize(Engine engine) throws WikiException {
-        m_engine = engine;
-        m_engine.addWikiEventListener( this );
-
-        reload();
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of AdminBeanManager.", e);
+			}
+			break;
+		}		
 	}
 
 }

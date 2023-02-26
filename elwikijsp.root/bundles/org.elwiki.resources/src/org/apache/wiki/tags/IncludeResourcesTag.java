@@ -53,7 +53,7 @@ public class IncludeResourcesTag extends BaseWikiTag {
 	}
 
 	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
-		String marker = TemplateManager.getMarker(m_wikiContext, m_type);
+		String marker = TemplateManager.getMarker(getWikiContext(), m_type);
 
 		pageContext.getOut().println(marker);
 

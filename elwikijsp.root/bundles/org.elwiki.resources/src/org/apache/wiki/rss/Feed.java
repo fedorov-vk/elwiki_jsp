@@ -16,15 +16,16 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.api.rss;
+package org.apache.wiki.rss;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.api.rss.IEntry;
+import org.apache.wiki.api.rss.IFeed;
+import org.apache.wiki.api.rss.RSSGenerator;
 import org.apache.wiki.api.variables.VariableManager;
-import org.apache.wiki.api.rss.Entry;
-import org.elwiki.services.ServicesRefs;
 
 import javax.servlet.ServletContext;
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ import java.util.List;
 /**
  * Represents an abstract feed.
  */
-public abstract class Feed {
-    protected List<Entry> m_entries = new ArrayList<>();
+public abstract class Feed implements IFeed {
+    protected List<IEntry> m_entries = new ArrayList<>();
 
     protected String m_feedURL;
     protected String m_channelTitle;
@@ -58,11 +59,12 @@ public abstract class Feed {
      */
     public static String getSiteName( final WikiContext context ) {
         final Engine engine = context.getEngine();
+        VariableManager variableManager = engine.getManager(VariableManager.class);
 
         String blogname = null;
 
         try {
-            blogname = ServicesRefs.getVariableManager().getValue(context, VAR_BLOGNAME);
+            blogname = variableManager.getValue(context, VAR_BLOGNAME);
         } catch( final NoSuchVariableException e ) {
         }
 
@@ -103,70 +105,72 @@ public abstract class Feed {
      *
      * @param e The Entry to add.
      */
-    public void addEntry( final Entry e) {
+    @Override
+    public void addEntry( final IEntry e) {
         m_entries.add(e);
     }
 
     /**
-     * Returns the XML for the feed contents in a String format.  All subclasses must implement.
-     *
-     * @return valid XML, ready to be shoved out.
-     */
-    public abstract String getString();
-
-    /**
      * @return Returns the m_channelDescription.
      */
-    public String getChannelDescription() {
+    @Override
+	public String getChannelDescription() {
         return m_channelDescription;
     }
 
     /**
      * @param description The m_channelDescription to set.
      */
-    public void setChannelDescription( final String description) {
+    @Override
+	public void setChannelDescription( final String description) {
         m_channelDescription = description;
     }
 
     /**
      * @return Returns the m_channelLanguage.
      */
-    public String getChannelLanguage() {
+    @Override
+	public String getChannelLanguage() {
         return m_channelLanguage;
     }
 
     /**
      * @param language The m_channelLanguage to set.
      */
-    public void setChannelLanguage( final String language) {
+    @Override
+	public void setChannelLanguage( final String language) {
         m_channelLanguage = language;
     }
 
     /**
      * @return Returns the m_channelTitle.
      */
-    public String getChannelTitle() {
+    @Override
+	public String getChannelTitle() {
         return m_channelTitle;
     }
 
     /**
      * @param title The m_channelTitle to set.
      */
-    public void setChannelTitle( final String title) {
+    @Override
+	public void setChannelTitle( final String title) {
         m_channelTitle = title;
     }
 
     /**
      * @return Returns the m_feedURL.
      */
-    public String getFeedURL() {
+    @Override
+	public String getFeedURL() {
         return m_feedURL;
     }
 
     /**
      * @param feedurl The m_feedURL to set.
      */
-    public void setFeedURL( final String feedurl) {
+    @Override
+	public void setFeedURL( final String feedurl) {
         m_feedURL = feedurl;
     }
 

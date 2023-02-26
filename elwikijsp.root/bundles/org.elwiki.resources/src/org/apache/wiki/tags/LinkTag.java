@@ -30,15 +30,17 @@ import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.LinkParsingOperations;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -163,10 +165,12 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	 * @throws ProviderException
 	 */
 	private String figureOutURL() throws ProviderException {
+		WikiContext wikiContext = getWikiContext();
 		String url = null;
-		final Engine engine = m_wikiContext.getEngine();
-		final IWikiConfiguration config = m_wikiContext.getConfiguration();
+		final Engine engine = wikiContext.getEngine();
+		final IWikiConfiguration config = wikiContext.getConfiguration();
 		final WikiPage page;
+		PageManager pageManager = engine.getManager(PageManager.class);
 
 		String paramId = getId();
 		if (paramId != null) { // :FVK: workaround.
@@ -175,11 +179,11 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		}
 
 		if (m_pageId != null) {
-			page = ServicesRefs.getPageManager().getPageById(m_pageId);
+			page = pageManager.getPageById(m_pageId);
 		} else if (m_pageName != null) {
-			page = ServicesRefs.getPageManager().getPage(m_pageName);
+			page = pageManager.getPage(m_pageName);
 		} else {
-			page = m_wikiContext.getPage();
+			page = wikiContext.getPage();
 			if (page != null) {
 				m_pageName = page.getName();
 			}
@@ -192,11 +196,11 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 					"shapes/" + template + "/" + m_templatefile, params);
 		} else if (m_path != null) {
 			final String params = addParamsForRecipient(null, m_containedParams);
-			//:FVK: url = m_wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
+			//:FVK: url = wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), m_path, params);
 		} else if (m_ref != null) {
 			final int interwikipoint;
-			if (new LinkParsingOperations(m_wikiContext).isExternalLink(m_ref)) {
+			if (new LinkParsingOperations(wikiContext).isExternalLink(m_ref)) {
 				url = m_ref;
 			} else if ((interwikipoint = m_ref.indexOf(":")) != -1) {
 				final String extWiki = m_ref.substring(0, interwikipoint);
@@ -217,7 +221,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 				// Internal wiki link, but is it an attachment link?
 				if (page instanceof PageAttachment) {
-					url = m_wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), m_pageName);
+					url = wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), m_pageName);
 				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
 					// It's an internal Wiki link, but to a named section
 
@@ -244,7 +248,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 					ctx = ContextEnum.ATTACHMENT_DOGET.getRequestContext();
 				}
 				url = engine.getURL(ctx, m_pageName, parms);
-				//:FVK: url = m_wikiContext.getURL( ctx, m_pageName, parms );
+				//:FVK: url = wikiContext.getURL( ctx, m_pageName, parms );
 			} else {
 				url = makeBasicURL(m_context, m_pageName, parms);
 			}
@@ -283,34 +287,36 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	}
 
 	private String makeBasicURL(final String context, final String page, String parms) {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
 
 		if (context.equals(ContextEnum.PAGE_DIFF.getRequestContext())) {
 			int r1;
 			int r2;
 
 			if (DiffLinkTag.VER_LATEST.equals(getVersion())) {
-				final WikiPage latest = ServicesRefs.getPageManager().getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = pageManager.getPage(page, WikiProvider.LATEST_VERSION);
 
 				r1 = latest.getVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(getVersion())) {
-				r1 = m_wikiContext.getPage().getVersion() - 1;
+				r1 = wikiContext.getPage().getVersion() - 1;
 				r1 = Math.max(r1, 1);
 			} else if (DiffLinkTag.VER_CURRENT.equals(getVersion())) {
-				r1 = m_wikiContext.getPage().getVersion();
+				r1 = wikiContext.getPage().getVersion();
 			} else {
 				r1 = Integer.parseInt(getVersion());
 			}
 
 			if (DiffLinkTag.VER_LATEST.equals(m_compareToVersion)) {
-				final WikiPage latest = ServicesRefs.getPageManager().getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = pageManager.getPage(page, WikiProvider.LATEST_VERSION);
 
 				r2 = latest.getVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(m_compareToVersion)) {
-				r2 = m_wikiContext.getPage().getVersion() - 1;
+				r2 = wikiContext.getPage().getVersion() - 1;
 				r2 = Math.max(r2, 1);
 			} else if (DiffLinkTag.VER_CURRENT.equals(m_compareToVersion)) {
-				r2 = m_wikiContext.getPage().getVersion();
+				r2 = wikiContext.getPage().getVersion();
 			} else {
 				r2 = Integer.parseInt(m_compareToVersion);
 			}
@@ -353,8 +359,10 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			appender.accept("tabindex=", m_tabindex);
 
 			//TODO: пересмотреть код - страница не наследует Attach
-			if (m_pageName != null && ServicesRefs.getPageManager().getPage(m_pageName) instanceof PageAttachment) {
-				sb.append(ServicesRefs.getAttachmentManager().forceDownload(m_pageName) ? "download " : "");
+			PageManager pageManager = getWikiContext().getEngine().getManager(PageManager.class);
+			AttachmentManager attachmentManager = getWikiContext().getEngine().getManager(AttachmentManager.class);
+			if (m_pageName != null && pageManager.getPage(m_pageName) instanceof PageAttachment) {
+				sb.append(attachmentManager.forceDownload(m_pageName) ? "download " : "");
 			}
 
 			switch (m_format) {

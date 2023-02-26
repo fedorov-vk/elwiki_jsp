@@ -18,33 +18,6 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEngineEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.acl.AclManager;
-import org.apache.wiki.util.comparators.PrincipalComparator;
-import org.elwiki.api.WikiServiceReference;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.ComponentFactory;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.event.EventConstants;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,16 +26,47 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiEventManager;
+import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.util.comparators.PrincipalComparator;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.osgi.service.component.ComponentFactory;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  *  <p>Manages Sessions for different Engines.</p>
  *  <p>The Sessions are stored both in the remote user HttpSession and in the SessionMonitor for the Engine.
  *  This class must be configured as a session listener in the web.xml for the wiki web application.</p>
  */
-@Component (name = "elwiki.SessionMonitor", service = org.apache.wiki.auth.ISessionMonitor.class,
-	factory = "elwiki.SessionMonitor.factory")
-public final class SessionMonitor implements ISessionMonitor, HttpSessionListener {
+//@formatter:off
+@Component(
+	name = "elwiki.SessionMonitor",
+	service = { org.apache.wiki.auth.ISessionMonitor.class, WikiManager.class, EventHandler.class },
+	property = {
+		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpSessionListener, EventHandler {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
 
@@ -73,8 +77,6 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
     private final PrincipalComparator m_comparator = new PrincipalComparator();
 
-    private Engine m_engine = null;
-
     /**
      * Construct the SessionListener
      */
@@ -82,20 +84,20 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     	// empty.
     }
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
+
+    @Reference(target = "(component.factory=elwiki.WikiSession.factory)")
+    private ComponentFactory<Session> factoryWikiSession;
 
 	@WikiServiceReference
 	private IIAuthenticationManager authenticationManager;
-    
-	@Reference(target = "(component.factory=elwiki.WikiSession.factory)")
-	private ComponentFactory<AclManager> factoryWikiSession;
+
+	@WikiServiceReference
+	private Engine m_engine;
 
 	@Activate
-	protected void startup(ComponentContext componentContext) {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			this.m_engine = engine;
-		}
+	protected void startup() {
+		//
 	}
 
 	@Deactivate
@@ -103,7 +105,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 		// TODO:
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
     /**
      * Just looks for a WikiSession; does not create a new one.
@@ -290,16 +292,14 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 
 	/**
 	 * {@inheritDoc}
-	 * @param sid 
+	 * @param sessionId 
 	 */
 	@Override
-	public Session createGuestSession(String sid) {
+	public Session createGuestSession(String sessionId) {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put(SESSION_MONITOR, this);
-		properties.put(EventConstants.EVENT_TOPIC, ElWikiEventsConstants.TOPIC_LOGGING_ALL); //!!!:FVK:
-		if (sid != null) {
+		if (sessionId != null) {
 			properties.put(EventConstants.EVENT_FILTER,
-					"(" + ElWikiEventsConstants.PROPERTY_KEY_TARGET + "=" + sid + ")");
+					"(" + ElWikiEventsConstants.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
 		}
 
 		Session wikiSession = (Session) this.factoryWikiSession.newInstance(properties).getInstance();
@@ -307,9 +307,9 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 		// Add the session as listener for GroupManager, AuthManager, AccountManager events
 		//TODO: add listeners...
 		/*
-		//:FVK: final GroupManager groupMgr = ServicesRefs.getGroupManager();
-		final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
-		final AccountManager userMgr = ServicesRefs.getAccountManager();
+		//:FVK: final GroupManager groupMgr = Engine.getGroupManager();
+		final IIAuthenticationManager authMgr = Engine.getAuthenticationManager();
+		final AccountManager userMgr = Engine.getAccountManager();
 		//:FVK: groupMgr.addWikiEventListener( session );
 		authMgr.addWikiEventListener( session );
 		userMgr.addWikiEventListener( session );
@@ -335,4 +335,15 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
         }
 
         return session;
-    }}
+    }
+
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		/*switch (topic) {
+			break;
+		}*/
+	}
+
+}

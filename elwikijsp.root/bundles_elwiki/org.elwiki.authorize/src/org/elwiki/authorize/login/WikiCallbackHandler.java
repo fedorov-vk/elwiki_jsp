@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
-import org.elwiki.services.ServicesRefs;
-
 
 /**
  * Handles logins made from inside the wiki application, rather than via the web container. This

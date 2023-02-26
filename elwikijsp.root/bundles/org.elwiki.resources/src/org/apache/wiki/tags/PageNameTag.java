@@ -23,8 +23,10 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -39,15 +41,17 @@ public class PageNameTag extends BaseWikiTag {
 
     @Override
     public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-        final Engine engine = m_wikiContext.getEngine();
-        final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+        final Engine engine = wikiContext.getEngine();
+        final WikiPage page = wikiContext.getPage();
+        RenderingManager renderingManager = wikiContext.getEngine().getManager(RenderingManager.class);
 
         if( page != null ) {
             if( page instanceof PageAttachment ) {
             	//:FVK: было -- pageContext.getOut().print( TextUtil.replaceEntities( ((PageAttachment)page).getFileName() ) );
             	// TODO: реализовать ...
             } else {
-                pageContext.getOut().print( ServicesRefs.getRenderingManager().beautifyTitle( m_wikiContext.getName() ) );
+                pageContext.getOut().print( renderingManager.beautifyTitle( wikiContext.getName() ) );
             }
         }
 

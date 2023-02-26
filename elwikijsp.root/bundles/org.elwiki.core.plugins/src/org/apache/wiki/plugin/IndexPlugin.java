@@ -142,7 +142,7 @@ public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
 		Pattern excludePattern = exclude != null ? Pattern.compile(exclude) : Pattern.compile("\\p{Cntrl}"); // there are no control characters in page names
 		List<WikiPage> result = new ArrayList<>();
 		Collection<WikiPage> pages = pageManager.getAllPages();
-		//Set< String > pages = ServicesRefs.getReferenceManager().findCreated();
+		//Set< String > pages = Engine.getReferenceManager().findCreated();
 		for (WikiPage page : pages) {
 			String pageName = page.getName();
 			if (excludePattern.matcher(pageName).matches()) {

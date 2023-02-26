@@ -3,15 +3,21 @@ package org.elwiki.internal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.api.core.WikiContext;
 
 public abstract class CmdCode {
 
-	private final Engine engine;
+	private Engine engine;
+	private WikiContext wikiContext;
 
 	protected CmdCode() {
-		engine = ServicesRefs.Instance; // :FVK: workaround.
+		//
+	}
+
+	public WikiContext getWikiContext() {
+		return wikiContext;
 	}
 
 	public Engine getEngine() {
@@ -26,8 +32,8 @@ public abstract class CmdCode {
 	 * @throws Exception
 	 */
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.wikiContext = ContextUtil.findContext(httpRequest);
+		this.engine = wikiContext.getEngine();
 	}
 
 	/**

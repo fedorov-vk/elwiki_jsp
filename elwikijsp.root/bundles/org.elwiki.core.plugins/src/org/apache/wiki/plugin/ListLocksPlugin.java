@@ -18,13 +18,13 @@
  */
 package org.apache.wiki.plugin;
 
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
-import org.elwiki.services.ServicesRefs;
 
 import java.util.List;
 import java.util.Map;
@@ -39,14 +39,16 @@ import java.util.ResourceBundle;
  */
 public class ListLocksPlugin implements Plugin {
 
-    /**
+	/**
      *  {@inheritDoc}
      */
     @Override
     public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
+		Engine engine = context.getEngine();
+    	
     	final StringBuilder result = new StringBuilder();
-        final PageManager mgr = ServicesRefs.getPageManager();
-        final List< PageLock > locks = mgr.getActiveLocks();
+        final PageManager pageManager = engine.getManager(PageManager.class);
+        final List< PageLock > locks = pageManager.getActiveLocks();
         final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
         result.append("<table class=\"wikitable\">\n");
         result.append("<tr>\n");

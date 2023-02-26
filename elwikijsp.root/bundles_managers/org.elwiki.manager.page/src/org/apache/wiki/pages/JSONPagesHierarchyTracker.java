@@ -16,8 +16,9 @@ import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -39,14 +40,14 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 
 	private static final Logger log = Logger.getLogger(JSONPagesHierarchyTracker.class);
 
-	ServicesRefs engine;
+	Engine engine;
 
 	/**
 	 * Creates instance of JSONPagesHierarchyTracker.
 	 */
-	public JSONPagesHierarchyTracker() {
+	public JSONPagesHierarchyTracker(Engine engine) {
 		super();
-		engine = ServicesRefs.Instance; //:FVK: workaround - hard coding for getting engine.
+		this.engine = engine;
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 			List<String> params) throws ServletException, IOException {
 		Collection<WikiPage> upperPages = null;
 		try {
-			upperPages = ServicesRefs.getPageManager().getUpperPages();
+			upperPages = this.engine.getManager(PageManager.class).getUpperPages();
 		} catch (final ProviderException pe) {
 			log.error("Unable to retrieve list of upper pages", pe);
 			return;

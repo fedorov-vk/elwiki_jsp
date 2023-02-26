@@ -2,31 +2,37 @@ package org.apache.wiki.search.lucene;
 
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.WatchDog;
-import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.core.Engine;
+import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki_data.WikiPage;
 
 /**
  * Updater thread that updates Lucene indexes.
  */
-final class LuceneUpdater extends WikiBackgroundThread {
-    protected static final int INDEX_DELAY    = 5;
-    protected static final int INITIAL_DELAY = 60;
+public class LuceneUpdater extends Actor {
+
     private final LuceneSearchProvider m_provider;
-
     private int m_initialDelay;
-
     private WatchDog m_watchdog;
+	private Engine engine;
 
-    protected LuceneUpdater( final Engine engine, final LuceneSearchProvider provider, final int initialDelay, final int indexDelay ) {
-        super( engine, indexDelay );
+    /**
+     * @param engine
+     * @param provider
+     * @param initialDelay
+     * 
+     */
+    public LuceneUpdater(Engine engine, LuceneSearchProvider provider, int initialDelay) {
+    	this.engine = engine;
         m_provider = provider;
         m_initialDelay = initialDelay;
-        setName("JSPWiki Lucene Indexer");
-    }
+	}
 
-    @Override
-    public void startupTask() throws Exception {
+    private Engine getEngine() {
+		return this.engine;
+	}
+
+	public void startupTask() throws Exception {
         m_watchdog = WatchDog.getCurrentWatchDog( getEngine() );
 
         // Sleep initially...
@@ -42,8 +48,7 @@ final class LuceneUpdater extends WikiBackgroundThread {
         m_watchdog.exitState();
     }
 
-    @Override
-    public void backgroundTask() {
+	public void backgroundTask() throws Exception {
         //:FVK: m_watchdog.enterState("Emptying index queue", 60); //:FVK: TODO: remove constant '60'.
 
         synchronized ( m_provider.m_updates ) {
@@ -57,5 +62,4 @@ final class LuceneUpdater extends WikiBackgroundThread {
 
       //:FVK: m_watchdog.exitState();
     }
-
 }

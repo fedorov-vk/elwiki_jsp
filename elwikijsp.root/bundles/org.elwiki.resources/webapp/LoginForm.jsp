@@ -22,7 +22,6 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!
@@ -38,7 +37,7 @@
 
 %>
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
     // Retrieve the Login page context, then go and find the login form
 
     WikiContext wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
@@ -50,7 +49,7 @@
     }
     
     response.setContentType("text/html; charset="+wiki.getContentEncoding() );
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
                                                             
     log.debug("Login template content is: " + contentPage);
 %><wiki:Include page="<%=contentPage%>" />

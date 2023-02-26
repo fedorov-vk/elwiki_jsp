@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.SessionMonitor.factory" name="elwiki.SessionMonitor">
-   <service>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.SessionMonitor">
+   <service scope="singleton">
       <provide interface="org.apache.wiki.auth.ISessionMonitor"/>
+      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <reference cardinality="1..1" field="factoryWikiSession" interface="org.osgi.service.component.ComponentFactory" name="factoryWikiSession" target="(component.factory=elwiki.WikiSession.factory)"/>
    <implementation class="org.apache.wiki.auth.SessionMonitor"/>

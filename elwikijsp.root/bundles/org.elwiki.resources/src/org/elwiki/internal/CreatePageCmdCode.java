@@ -21,6 +21,7 @@ public class CreatePageCmdCode extends CmdCode {
 
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
+		super.applyPrologue(httpRequest, httpResponse);
 		String pageName = (String) httpRequest.getParameter("pageName");
 		String targetPageId = httpRequest.getParameter("redirect");
 		String action = httpRequest.getParameter("action");

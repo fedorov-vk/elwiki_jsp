@@ -29,10 +29,11 @@
 <%@ page import="org.apache.wiki.parser0.MarkupParser" %>
 <%@ page import="org.apache.wiki.render0.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
+<%@ page import="org.apache.wiki.api.filters.*" %>
+<%@ page import="org.apache.wiki.api.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
 <%@ page import="org.elwiki_data.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -64,17 +65,17 @@
 	String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = engine.getManager(PageManager.class).getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
+        AuthorizationManager mgr = engine.getManager(AuthorizationManager.class);
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
 
         try
         {
           if( mgr.checkPermission( context.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = engine.getManager(PageManager.class).getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -85,7 +86,7 @@
 <%
   if( usertext == null )
   {
-    usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
+    usertext = engine.getManager(PageManager.class).getPureText( context.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
@@ -95,7 +96,7 @@
     String pageAsHtml;
     try
     {
-        pageAsHtml = ServicesRefs.getRenderingManager().getHTML( context, usertext );
+        pageAsHtml = engine.getManager(RenderingManager.class).getHTML( context, usertext );
     }
         catch( Exception e )
     {
@@ -121,6 +122,9 @@
        protocol = "https://";
    }
    */
+   FilterManager filterManager = engine.getManager(FilterManager.class);
+   ISpamFilter SpamFilter = filterManager.getSpamFilter();
+   EditorManager editorManager = engine.getManager(EditorManager.class);
 %>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
@@ -206,7 +210,7 @@
       </ul>
     </div>
 
-    <c:set var="editors" value="<%=ServicesRefs.getEditorManager().getEditorList()%>" />
+    <c:set var="editors" value="<%=editorManager.getEditorList()%>" />
     <c:if test='${fn:length(editors)>1}'>
    <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

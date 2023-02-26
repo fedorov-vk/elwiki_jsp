@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.osgi.services;bundle-version="3.10.200",
  org.elwiki.configuration,
  org.elwiki.util,
  org.elwiki.data
-Import-Package: org.eclipse.jface.preference
+Import-Package: javax.servlet.jsp;version="2.3.3",
+ org.eclipse.jface.preference
 Service-Component: OSGI-INF/web.WikiAjaxDispatcherServlet.xml,
  OSGI-INF/elwiki.WikiAjaxDispatcher.xml
 Bundle-ActivationPolicy: lazy

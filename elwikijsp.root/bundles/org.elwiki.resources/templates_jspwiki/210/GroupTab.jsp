@@ -31,7 +31,6 @@
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ page import="org.apache.log4j.*" %>
 <%@ page errorPage="/Error.jsp" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="templates.default"/>
@@ -166,7 +165,7 @@
     if ( roles[i] instanceof GroupPrincipal ) /* bugfix */
     {
       String name = roles[i].getName();
-      Group group = ServicesRefs.getGroupManager().getGroup( name );
+      Group group = WikiEngine.getGroupManager().getGroup( name );
 
       %><%= printWikiGroupPutGroup( group, name, name.equals( groupname ), pageContext )  %><%
     }

@@ -27,7 +27,9 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.WikiContextImpl;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.WikiContext;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * This is a class that provides the same services as the WikiTagBase, but this
@@ -38,16 +40,22 @@ public abstract class BaseWikiBodyTag extends BodyTagSupport implements TryCatch
 	private static final long serialVersionUID = -6732266865112847897L;
 	private static final Logger log = Logger.getLogger(BaseWikiBodyTag.class);
 
-	protected WikiContextImpl m_wikiContext;
+	private WikiContextImpl m_wikiContext;
 
-	public int doStartTag() throws JspException {
-		try {
+	protected WikiContext getWikiContext()  {
+		if (m_wikiContext == null) {
 			m_wikiContext = (WikiContextImpl) pageContext.getAttribute(WikiContext.ATTR_WIKI_CONTEXT,
 					PageContext.REQUEST_SCOPE);
-			if (m_wikiContext == null) {
-				throw new JspException("WikiContext may not be NULL - serious internal problem!");
-			}
-
+            if( m_wikiContext == null ) {
+            	Assert.isTrue(false, "Internal error.");
+                //:FVK: throw new JspException("WikiContext may not be NULL - serious internal problem!");
+            }
+		}
+		return m_wikiContext;
+	}
+	
+	public int doStartTag() throws JspException {
+		try {
 			return doWikiStartTag();
 		} catch (final Exception e) {
 			log.error("Tag failed", e);

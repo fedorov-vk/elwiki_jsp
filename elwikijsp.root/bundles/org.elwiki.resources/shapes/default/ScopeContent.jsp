@@ -24,7 +24,6 @@
 <%@ page import="org.apache.commons.lang3.*" %>
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -32,13 +31,13 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK:
-  WikiContext ctx = ContextUtil.findContext( pageContext );
-  //String redir = (String)ctx.getVariable("redirect");
-  //if( redir == null ) redir = ctx.getConfiguration().getFrontPage();
+	//Context prCtx = engine.getCurrentContext(); //:FVK: ??
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	//String redir = (String)wikiContext.getVariable("redirect");
+	//if( redir == null ) redir = wikiContext.getConfiguration().getFrontPage();
 %>
 
-<c:set var="redirect"><wiki:Variable var='redirect' default='<%=ctx.getConfiguration().getFrontPage() %>' /></c:set>
+<c:set var="redirect"><wiki:Variable var='redirect' default='<%=wikiContext.getConfiguration().getFrontPage() %>' /></c:set>
 
 <div class="page-content">
 

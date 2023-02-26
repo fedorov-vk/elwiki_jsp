@@ -27,9 +27,11 @@ import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.core.runtime.Assert;
 
 /**
  *  Base class for JSPWiki tags.
@@ -44,7 +46,20 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
     private static final long serialVersionUID = -1409836349293777141L;
     private static final Logger log = Logger.getLogger( BaseWikiTag.class );
 
-    protected WikiContext m_wikiContext;
+    private WikiContext m_wikiContext;
+
+	protected WikiContext getWikiContext()  {
+		if (m_wikiContext == null) {
+			m_wikiContext = ContextUtil.findContext(pageContext);
+			//:FVK: here was the following code:
+			// m_wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
+            if( m_wikiContext == null ) {
+            	Assert.isTrue(false, "Internal error.");
+            	//:FVK: throw new JspTagException("WikiContext may not be NULL - serious internal problem!");
+            }
+		}
+		return m_wikiContext;
+	}
 
     /**
      * This method calls the parent setPageContext() but it also provides a way for a tag to initialize itself before
@@ -64,14 +79,9 @@ public abstract class BaseWikiTag extends TagSupport implements TryCatchFinally 
     public void initTag() {
         m_wikiContext = null;
     }
-    
+
     public int doStartTag() throws JspException {
         try {
-            m_wikiContext = ( WikiContext )pageContext.getAttribute( WikiContext.ATTR_WIKI_CONTEXT, PageContext.REQUEST_SCOPE );
-            if( m_wikiContext == null ) {
-                throw new JspException("WikiContext may not be NULL - serious internal problem!");
-            }
-
             return doWikiStartTag();
         } catch( final Exception e ) {
             throw new JspException( "Tag failed: " + e.getMessage(), e );

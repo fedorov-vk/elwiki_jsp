@@ -12,21 +12,18 @@
 <%@ page import="org.apache.wiki.util.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.elwiki_data.impl.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%!
-  Logger log;
-  //Engine wiki; 
-  public void jspInit()
-  {
-    //wiki = ServicesRefs.Instance; //:FVK: workaround.
-    log = Logger.getLogger("PageViewTemplate_jsp");
-  }
+	Logger log;
+	public void jspInit()
+	{
+		log = Logger.getLogger("PageViewTemplate_jsp");
+	}
 %>
 <%
-   log.debug("<-begin-> PageViewTemplate.jsp");
+	log.debug("<-begin-> PageViewTemplate.jsp");
 %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
@@ -53,6 +50,8 @@
 <!-- ~~ Page Head ~~ -->
 <body class="context-<wiki:Variable var='requestcontext' default='' />">
 <div class="container${prefs.Layout=='fixed' ? ' ' : '-fluid ' } ${prefs.Orientation} fixed-header">
+<%--
+ --%>
 <%@ include file="/shapes/default/Header.jsp" %>
 <!-- ~~ Page Middle ~~ -->
 <wiki:CheckRequestContext context="!<%=WikiContext.PAGE_EDIT%>">

@@ -26,6 +26,9 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.osgi.service.component.annotations.Reference;
+
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
 import java.util.Properties;
@@ -49,13 +52,17 @@ public class ShortURLConstructor extends DefaultURLConstructor {
      *  like - including an empty name.
      */
     public static final String PROP_PREFIX = "jspwiki.shortURLConstructor.prefix";
-    
+
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
     /** {@inheritDoc} */
-    @Override
-    public void initialize( final Engine engine ) throws WikiException {
-        super.initialize( engine );
+    public void initialize() throws WikiException {
+        super.initialize();
         
-        m_urlPrefix = TextUtil.getStringProperty( engine.getWikiPreferences(), PROP_PREFIX, null );
+        IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
+        m_urlPrefix = TextUtil.getStringProperty( prefs, PROP_PREFIX, null );
         
         if( m_urlPrefix == null ) {
             m_urlPrefix = DEFAULT_PREFIX;

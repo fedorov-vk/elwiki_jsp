@@ -27,7 +27,6 @@
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.preferences.*" %>
 <%@ page import="org.apache.wiki.api.ui.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -35,16 +34,18 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  //Context prCtx = ServicesRefs.getCurrentContext(); //:FVK:
-  WikiContext prCtx = ContextUtil.findContext( pageContext );
-  TemplateManager t = ServicesRefs.getTemplateManager();
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	//Context wikiContext = engine.getCurrentContext(); //:FVK: ??
+	Engine engine = wikiContext.getEngine();
+	TemplateManager tm = engine.getManager(TemplateManager.class);
+	EditorManager editorManager = engine.getManager(EditorManager.class);
 %>
-<c:set var="skins"       value="<%=t.listSkins(pageContext, prCtx.getShape())%>" />
-<c:set var="languages"   value="<%=t.listLanguages(pageContext)%>" />
-<c:set var="timezones"   value="<%=t.listTimeZones(pageContext)%>" />
-<c:set var="timeformats" value="<%=t.listTimeFormats(pageContext)%>" />
-<c:set var="editors"     value="<%=ServicesRefs.getEditorManager().getEditorList()%>" />
-<c:set var="redirect"><wiki:Variable var='redirect' default='<%=prCtx.getConfiguration().getFrontPage()%>' /></c:set>
+<c:set var="skins"       value="<%=tm.listSkins(pageContext, wikiContext.getShape())%>" />
+<c:set var="languages"   value="<%=tm.listLanguages(pageContext)%>" />
+<c:set var="timezones"   value="<%=tm.listTimeZones(pageContext)%>" />
+<c:set var="timeformats" value="<%=tm.listTimeFormats(pageContext)%>" />
+<c:set var="editors"     value="<%=editorManager.getEditorList()%>" />
+<c:set var="redirect"><wiki:Variable var='redirect' default='<%=wikiContext.getConfiguration().getFrontPage()%>' /></c:set>
 
 <form action="<wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab' value='prefs'/></wiki:Link>"
           id="preferences"  <%-- used by Prefs.js to set/reset the userpreferences cookie --%>

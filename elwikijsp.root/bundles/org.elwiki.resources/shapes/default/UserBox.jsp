@@ -26,9 +26,9 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext c = ContextUtil.findContext(pageContext);
+	//:FVK: duplicate - WikiContext wikiContext = ContextUtil.findContext(pageContext);
 %>
-<c:set var="redirect"><%= c.getPageId() %></c:set>
+<c:set var="redirect"><%=wikiContext.getPageId()%></c:set>
 <c:set var="username"><wiki:UserName /></c:set>
 <c:set var="useruid"><wiki:UserProfile property='uid' /></c:set>
 <c:set var="loginstatus"><wiki:Variable var='loginstatus'/></c:set>

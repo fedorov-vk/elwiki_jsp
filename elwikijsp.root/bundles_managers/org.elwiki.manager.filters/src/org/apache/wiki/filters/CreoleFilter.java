@@ -51,7 +51,7 @@ public class CreoleFilter extends BasePageFilter {
      *  {@inheritDoc}
      */
     @Override
-    public void initialize( final Engine engine ) throws WikiException {
+    public void initialize( final Engine engine ) throws FilterException {
         super.initialize( engine );
     }
 

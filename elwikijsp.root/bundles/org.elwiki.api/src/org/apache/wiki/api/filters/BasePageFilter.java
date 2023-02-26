@@ -18,17 +18,19 @@
  */
 package org.apache.wiki.api.filters;
 
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.exceptions.FilterException;
-import org.apache.wiki.api.exceptions.WikiException;
-
-import java.lang.reflect.Method;
-import java.util.Properties;
-
 import static org.apache.wiki.api.filters.FilterSupportOperations.executePageFilterPhase;
 import static org.apache.wiki.api.filters.FilterSupportOperations.methodOfNonPublicAPI;
 
+import java.lang.reflect.Method;
+
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.exceptions.FilterException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.render0.RenderingManager;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.WikiServiceReference;
 
 /**
  * Provides a base implementation of a PageFilter.  None of the callbacks do anything, so it is a good idea for you to extend from this
@@ -37,8 +39,11 @@ import static org.apache.wiki.api.filters.FilterSupportOperations.methodOfNonPub
 public class BasePageFilter implements PageFilter {
 
     protected Engine m_engine;
+	protected @NonNull PageManager pageManager;
+	protected @NonNull RenderingManager renderingManager;
+	protected @NonNull AttachmentManager attachmentManager;
 
-    /**
+	/**
      * Is called whenever the a new PageFilter is instantiated and reset.
      * If you override this, you should call super.initialize() first.
      * {@inheritDoc}
@@ -48,9 +53,13 @@ public class BasePageFilter implements PageFilter {
      *  @throws WikiException If the filter could not be initialized. If this is thrown, the filter is not added to the internal queues.
      */
     @Override
-    public void initialize( final Engine engine ) throws WikiException {
+    public void initialize(Engine engine) throws FilterException {
         m_engine = engine;
-//TODO: :FVK: - рефлексия. ? убрать ? 
+    	this.pageManager = m_engine.getManager(PageManager.class);
+    	this.attachmentManager = m_engine.getManager(AttachmentManager.class);
+    	this.renderingManager = m_engine.getManager(RenderingManager.class);
+        
+//TODO: :FVK: - рефлексия. ? убрать ?
         final Method m = methodOfNonPublicAPI( this, "initialize", "org.apache.wiki.WikiEngine", "java.util.Properties" );
         executePageFilterPhase( () -> null, m, this, engine );
     }

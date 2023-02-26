@@ -22,7 +22,6 @@ import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
-import org.elwiki.services.ServicesRefs;
 
 import javax.management.NotCompliantMBeanException;
 
@@ -45,7 +44,8 @@ public class CoreBean extends SimpleAdminBean {
      *  @return the page content
      */
     public int getPages() {
-        return ServicesRefs.getPageManager().getTotalPageCount();
+    	PageManager pageManager = super.m_engine.getManager(PageManager.class);
+        return pageManager.getTotalPageCount();
     }
 
     public String getPagesDescription() {

@@ -22,10 +22,12 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
@@ -37,12 +39,18 @@ import org.apache.wiki.util.PriorityList;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.jdom2.Element;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,6 +60,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -95,9 +104,16 @@ import java.util.Properties;
  *
  *  The &lt;filter> -sections define the filters.  For more information, please see the PageFilterConfiguration page in the JSPWiki distribution.
  */
-@Component(name = "elwiki.DefaultFilterManager", service = FilterManager.class, //
-		factory = "elwiki.FilterManager.factory")
-public class DefaultFilterManager extends BaseModuleManager implements FilterManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultFilterManager",
+	service = { FilterManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultFilterManager extends BaseModuleManager implements FilterManager, WikiManager, EventHandler {
 
     private PriorityList< PageFilter > m_pageFilters = new PriorityList<>();
 
@@ -119,7 +135,10 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     }
     */
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
+
+    @WikiServiceReference
+    private Engine m_engine;
 
 	/**
 	 * This component activate routine. Does all the real initialization.
@@ -128,14 +147,11 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
     
     /**
      *  Adds a page filter to the queue.  The priority defines in which order the page filters are run, the highest priority filters go
@@ -185,18 +201,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
         }
     }
 
-
     /**
      *  Initializes the filters from an XML file.
      *
      *  @param props The list of properties.  Typically jspwiki.properties
      *  @throws WikiException If something goes wrong.
      */
-    //protected void initialize( final Properties props ) throws WikiException {
-	protected void initialize(Engine engine) throws WikiException {
-		m_engine = engine;
+	protected void initialize() throws WikiException {
         InputStream xmlStream = null;
-        final String xmlFile = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_FILTERXML, null ) ;
+        final String xmlFile = TextUtil.getStringProperty(m_engine.getWikiPreferences(), PROP_FILTERXML, null ) ;
 
         try {
             registerFilters();
@@ -360,6 +373,14 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
         return m_pageFilters;
     }
 
+	@Override
+	public ISpamFilter getSpamFilter() {
+		PageFilter spamFilter = m_pageFilters.stream().filter(filter -> filter instanceof ISpamFilter).findFirst()
+				.orElse(null);
+
+		return (ISpamFilter) spamFilter;
+	}
+
     /**
      *
      * Notifies PageFilters to clean up their ressources.
@@ -445,5 +466,20 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
             return info;
         }
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultFilterManager.", e);
+			}
+			break;
+		}		
+	}
 
 }

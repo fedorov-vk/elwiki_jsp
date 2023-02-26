@@ -21,7 +21,6 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.apache.wiki.auth.user.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -32,7 +31,7 @@
 <%
 /* dateformatting not yet supported by wiki:UserProfile tag - diy */
   WikiContext wikiContext = ContextUtil.findContext(pageContext);
-  AccountManager manager = ServicesRefs.getAccountManager();
+  AccountManager manager = WikiEngine.getAccountManager();
   UserProfile profile = manager.getUserProfile( wikiContext.getWikiSession() );
 %>
 <form method="post" accept-charset="UTF-8"

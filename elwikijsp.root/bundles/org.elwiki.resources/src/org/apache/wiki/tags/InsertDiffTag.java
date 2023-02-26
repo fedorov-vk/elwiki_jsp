@@ -26,9 +26,11 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.diff.DifferenceManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Writes difference between two pages using a HTML table. If there is no
@@ -94,17 +96,19 @@ public class InsertDiffTag extends BaseWikiTag {
 	/** {@inheritDoc} */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
+		WikiContext wikiContext = getWikiContext();				
+		final Engine engine = wikiContext.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
 		final WikiContext ctx;
 
 		if (m_pageId != null) {
-			ctx = m_wikiContext.clone();
-			ctx.setPage(ServicesRefs.getPageManager().getPageById(m_pageId));
+			ctx = wikiContext.clone();
+			ctx.setPage(pageManager.getPageById(m_pageId));
 		} else if (m_pageName != null) {
-			ctx = m_wikiContext.clone();
-			ctx.setPage(ServicesRefs.getPageManager().getPage(m_pageName));
+			ctx = wikiContext.clone();
+			ctx.setPage(pageManager.getPage(m_pageName));
 		} else {
-			ctx = m_wikiContext;
+			ctx = wikiContext;
 		}
 
 		final Integer vernew = (Integer) pageContext.getAttribute(ATTR_NEWVERSION, PageContext.REQUEST_SCOPE);
@@ -113,8 +117,10 @@ public class InsertDiffTag extends BaseWikiTag {
 		log.debug("Request diff between version " + verold + " and " + vernew);
 
 		if (ctx.getPage() != null) {
-			final JspWriter out = pageContext.getOut();
-			final String diff = ServicesRefs.getDifferenceManager().getDiff(ctx, vernew.intValue(), verold.intValue());
+			JspWriter out = pageContext.getOut();
+			@NonNull
+			DifferenceManager differenceManager = engine.getManager(DifferenceManager.class);
+			String diff = differenceManager.getDiff(ctx, vernew.intValue(), verold.intValue());
 
 			if (diff.length() == 0) {
 				return EVAL_BODY_INCLUDE;

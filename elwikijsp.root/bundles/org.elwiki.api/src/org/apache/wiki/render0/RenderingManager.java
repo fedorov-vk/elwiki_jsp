@@ -43,7 +43,7 @@ import java.io.IOException;
  *
  *  @since  2.4
  */
-public interface RenderingManager extends RenderApi, WikiEventListener, InternalModule, Initializable {
+public interface RenderingManager extends RenderApi, WikiEventListener, InternalModule {
 
     /** markup parser property. */
     String PROP_PARSER = "jspwiki.renderingManager.markupParser";

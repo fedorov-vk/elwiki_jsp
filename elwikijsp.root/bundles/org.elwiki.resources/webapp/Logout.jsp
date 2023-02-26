@@ -22,10 +22,9 @@
 <%@page import="org.apache.wiki.auth.IIAuthenticationManager" %>
 <%@page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
 <%@page import="org.elwiki.authorize.login.CookieAuthenticationLoginModule"%>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%
-	Engine wiki = Wiki.engine().find( getServletConfig() );
-  ServicesRefs.getAuthenticationManager().logout( request );
+Engine wiki = Wiki.engine().find( getServletConfig() );
+  WikiEngine.getAuthenticationManager().logout( request );
 
   // Clear the user cookie
   CookieAssertionLoginModule.clearUserCookie( response );

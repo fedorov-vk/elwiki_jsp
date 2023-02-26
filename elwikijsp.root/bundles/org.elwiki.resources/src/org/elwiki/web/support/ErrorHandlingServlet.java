@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
 import org.elwiki.web.jsp.WikiJSPFilter;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
@@ -26,14 +28,15 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
  */
 //@formatter:off
 @Component(
-	service=Servlet.class,
+	name = "partErrorHandlingServlet",
+	service = Servlet.class,
 	property= {
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ERROR_PAGE + "=java.lang.Exception",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ERROR_PAGE + "=500",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
-	scope=ServiceScope.PROTOTYPE,
-	name="partErrorHandlingServlet")
+//	reference = @Reference(name = "elwiki.Engine", service = Engine.class),
+	scope=ServiceScope.PROTOTYPE)
 //@formatter:on
 public class ErrorHandlingServlet extends HttpServlet {
 

@@ -26,6 +26,7 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.Heading;
@@ -34,7 +35,6 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 
 import java.io.IOException;
 import java.util.Map;
@@ -156,6 +156,11 @@ public class TableOfContents implements Plugin, HeadingListener {
 	@Override
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		Engine engine = context.getEngine();
+		PageManager pageManager = engine.getManager(PageManager.class);
+		VariableManager variableManager = engine.getManager(VariableManager.class);
+		RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+		FilterManager filterManager = engine.getManager(FilterManager.class);
+		
 		WikiPage page = context.getPage();
 		ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
 
@@ -212,14 +217,13 @@ public class TableOfContents implements Plugin, HeadingListener {
 		}
 
 		try {
-			String wikiText = ServicesRefs.getPageManager().getPureText(page);
+			String wikiText = pageManager.getPureText(page);
 			boolean runFilters = "true".equals(
-					ServicesRefs.getVariableManager().getValue(context, VariableManager.VAR_RUNFILTERS, "true"));
+					variableManager.getValue(context, VariableManager.VAR_RUNFILTERS, "true"));
 
 			if (runFilters) {
 				try {
-					FilterManager fm = ServicesRefs.getFilterManager();
-					wikiText = fm.doPreTranslateFiltering(context, wikiText);
+					wikiText = filterManager.doPreTranslateFiltering(context, wikiText);
 
 				} catch (Exception e) {
 					log.error("Could not construct table of contents: Filter Error", e);
@@ -229,7 +233,7 @@ public class TableOfContents implements Plugin, HeadingListener {
 
 			context.setVariable(VAR_ALREADY_PROCESSING, "x");
 
-			MarkupParser parser = ServicesRefs.getRenderingManager().getParser(context, wikiText);
+			MarkupParser parser = renderingManager.getParser(context, wikiText);
 			parser.addHeadingListener(this);
 			parser.parse();
 

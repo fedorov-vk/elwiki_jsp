@@ -33,12 +33,13 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
+import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.elwiki.services.ServicesRefs;
 
 /**
  * <p>
@@ -113,8 +114,13 @@ public class UserProfileTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final AccountManager manager = ServicesRefs.getAccountManager();
-		final UserProfile profile = manager.getUserProfile(m_wikiContext.getWikiSession());
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = wikiContext.getEngine();
+		AccountManager accountManager = engine.getManager(AccountManager.class);
+		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
+		IIAuthenticationManager authMgr = engine.getManager(IIAuthenticationManager.class);
+		
+		final UserProfile profile = accountManager.getUserProfile(wikiContext.getWikiSession());
 		String result = null;
 
 		if (EXISTS.equals(m_prop) || NOT_NEW.equals(m_prop)) {
@@ -130,13 +136,13 @@ public class UserProfileTag extends BaseWikiTag {
 		} else if (FULLNAME.equals(m_prop)) {
 			result = profile.getFullname();
 		} else if (GROUPS.equals(m_prop)) {
-			result = printGroups(m_wikiContext);
+			result = printGroups(wikiContext);
 		} else if (LOGINNAME.equals(m_prop)) {
 			result = profile.getLoginName();
 		} else if (MODIFIED.equals(m_prop) && profile.getLastModifiedDate() != null) {
 			result = profile.getLastModifiedDate().toString();
 		} else if (ROLES.equals(m_prop)) {
-			result = printRoles(m_wikiContext);
+			result = printRoles(wikiContext);
 		} else if (WIKINAME.equals(m_prop)) {
 			result = profile.getWikiName();
 
@@ -144,9 +150,7 @@ public class UserProfileTag extends BaseWikiTag {
 				//
 				//  Default back to the declared user name
 				//
-				final Engine engine = this.m_wikiContext.getEngine();
-				final Session wikiSession = ServicesRefs.getSessionMonitor()
-						.getWikiSession((HttpServletRequest) pageContext.getRequest());
+				final Session wikiSession = sessionMonitor.getWikiSession((HttpServletRequest) pageContext.getRequest());
 				final Principal user = wikiSession.getUserPrincipal();
 
 				if (user != null) {
@@ -154,12 +158,10 @@ public class UserProfileTag extends BaseWikiTag {
 				}
 			}
 		} else if (CHANGE_PASSWORD.equals(m_prop) || CHANGE_LOGIN_NAME.equals(m_prop)) {
-			final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
 			if (!authMgr.isContainerAuthenticated()) {
 				return EVAL_BODY_INCLUDE;
 			}
 		} else if (NOT_CHANGE_PASSWORD.equals(m_prop) || NOT_CHANGE_LOGIN_NAME.equals(m_prop)) {
-			final IIAuthenticationManager authMgr = ServicesRefs.getAuthenticationManager();
 			if (authMgr.isContainerAuthenticated()) {
 				return EVAL_BODY_INCLUDE;
 			}

@@ -19,11 +19,12 @@
 package org.apache.wiki.tags;
 
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
-import org.elwiki.services.ServicesRefs;
+import org.eclipse.jdt.annotation.NonNull;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspTagException;
@@ -95,12 +96,14 @@ public class CheckLockTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Engine engine = m_wikiContext.getEngine();
-		final WikiPage page = m_wikiContext.getPage();
+		WikiContext wikiContext = getWikiContext();
+		final WikiPage page = wikiContext.getPage();
 
 		if (page != null) {
-			final PageManager mgr = ServicesRefs.getPageManager();
-			final PageLock lock = mgr.getCurrentLock(page);
+			final Engine engine = wikiContext.getEngine();
+			@NonNull
+			PageManager pageManager = engine.getManager(PageManager.class);
+			final PageLock lock = pageManager.getCurrentLock(page);
 			final HttpSession session = pageContext.getSession();
 			final PageLock userLock = (PageLock) session.getAttribute("lock-" + page.getName());
 			if ((lock != null && m_mode == LockState.LOCKED && lock != userLock)

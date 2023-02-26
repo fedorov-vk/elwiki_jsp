@@ -25,8 +25,10 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.ui.EditorManager;
-import org.elwiki.services.ServicesRefs;
+import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.ui.TemplateManager;
 
 /**
  * Creates an editor component with all the necessary parts to get it working.
@@ -48,13 +50,15 @@ public class EditorTag extends BaseWikiBodyTag {
 
 	@Override
 	public int doEndTag() throws JspException {
-		final Engine engine = m_wikiContext.getEngine();
-		final EditorManager mgr = ServicesRefs.getEditorManager();
-		final String editorPath = mgr.getEditorPath(m_wikiContext);
+		WikiContext wikiContext = getWikiContext();
+		final Engine engine = getWikiContext().getEngine();
+		TemplateManager templateManager = engine.getManager(TemplateManager.class);
+		EditorManager editorManager = engine.getManager(EditorManager.class);
+		final String editorPath = editorManager.getEditorPath(wikiContext);
 
 		try {
 			String page; 
-			page = ServicesRefs.getTemplateManager().findJSP( pageContext, m_wikiContext.getShape(), editorPath );
+			page = templateManager.findJSP( pageContext, wikiContext.getShape(), editorPath );
 			if (page == null) {
 				//FIXME: should be I18N ...
 				pageContext.getOut().println("Unable to find editor '" + editorPath + "'");

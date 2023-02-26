@@ -30,7 +30,6 @@
 <%@ page import="org.elwiki.permissions.GroupPermission" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -38,9 +37,9 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext wikiCtx = ContextUtil.findContext( pageContext );
-  AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
-  AccountManager accountManager = ServicesRefs.getAccountManager();
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	AccountManager accountManager = engine.getManager(AccountManager.class);
 %>
 <wiki:CheckRequestContext context="!<%=WikiContext.GROUP_CREATE%>"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
@@ -143,8 +142,8 @@
      <%
       	IGroupWiki group = (IGroupWiki)pageContext.getAttribute("group");
       	String grouName = group.getName();
-      	Session wikiSession = wikiCtx.getWikiSession();
-      	if( authMgr.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
+      	Session wikiSession = wikiContext.getWikiSession();
+      	if( authorizationManager.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
       %>
           <a class="btn btn-xs btn-primary"
              href="<wiki:Link context='<%=WikiContext.GROUP_EDIT%>' format='url' id='${group.uid}'/>">
@@ -152,7 +151,7 @@
           </a>
      <% } %>
      <%
-      	if( authMgr.checkPermission(wikiSession, new GroupPermission( grouName, "delete" )) ) {
+      	if( authorizationManager.checkPermission(wikiSession, new GroupPermission( grouName, "delete" )) ) {
       %>
         <button class="btn btn-xs btn-danger" type="button"
             onclick="document.deleteGroupForm.group.value ='${group.uid}';document.deleteGroupForm.ok.click();">

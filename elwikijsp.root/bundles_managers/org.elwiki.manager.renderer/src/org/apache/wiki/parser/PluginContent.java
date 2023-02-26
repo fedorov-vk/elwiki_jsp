@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
 */
-package org.apache.wiki.parser0;
+package org.apache.wiki.parser;
 
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MatchResult;
@@ -31,8 +31,9 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.plugin.PluginElement;
 import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.parser0.MarkupParser;
+import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
-import org.elwiki.services.ServicesRefs;
 import org.jdom2.Text;
 
 import java.io.IOException;
@@ -55,6 +56,8 @@ import java.util.ResourceBundle;
  */
 public class PluginContent extends Text implements PluginElement {
 
+	private static final Logger log = Logger.getLogger(PluginContent.class);
+
     private static final String BLANK = "";
     private static final String CMDLINE = "_cmdline";
     private static final String ELEMENT_BR = "<br/>";
@@ -65,7 +68,6 @@ public class PluginContent extends Text implements PluginElement {
     private static final String SPACE = " ";
 
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(PluginContent.class);
 
     private String m_pluginName;
     private Map< String, String > m_params;
@@ -156,17 +158,18 @@ public class PluginContent extends Text implements PluginElement {
                     return BLANK;
                 }
 
-                final Engine engine = context.getEngine();
+        		Engine engine = context.getEngine();
+        		VariableManager variableManager = engine.getManager(VariableManager.class);
+        		PluginManager pluginManager = engine.getManager(PluginManager.class);
                 final Map< String, String > parsedParams = new HashMap<>();
 
                 //  Parse any variable instances from the string
                 for( final Map.Entry< String, String > e : m_params.entrySet() ) {
                     String val = e.getValue();
-                    val = ServicesRefs.getVariableManager().expandVariables( context, val );
+                    val = variableManager.expandVariables( context, val );
                     parsedParams.put( e.getKey(), val );
                 }
-                final PluginManager pm = ServicesRefs.getPluginManager();
-                result = pm.execute( context, m_pluginName, parsedParams );
+                result = pluginManager.execute( context, m_pluginName, parsedParams );
             }
         } catch( final Exception e ) {
             if( wysiwygEditorMode ) {
@@ -187,11 +190,12 @@ public class PluginContent extends Text implements PluginElement {
     /**{@inheritDoc}*/
     @Override
     public void executeParse( final WikiContext context ) throws PluginException {
-        final PluginManager pm = ServicesRefs.getPluginManager();
-        if( pm.pluginsEnabled() ) {
+		Engine engine = context.getEngine();
+		PluginManager pluginManager = engine.getManager(PluginManager.class);
+        if( pluginManager.pluginsEnabled() ) {
             final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
             final Map< String, String > params = getParameters();
-            final Plugin plugin = pm.newWikiPlugin( getPluginName(), rb );
+            final Plugin plugin = pluginManager.newWikiPlugin( getPluginName(), rb );
             try {
                 if( plugin instanceof ParserStagePlugin parserStagePlugin) {
                 	parserStagePlugin.executeParser(this, context, params );
@@ -213,16 +217,17 @@ public class PluginContent extends Text implements PluginElement {
      * @since 2.10.0
      */
     public static PluginContent parsePluginLine( final WikiContext context, final String commandline, final int pos ) throws PluginException {
+		Engine engine = context.getEngine();
+		PluginManager pluginManager = engine.getManager(PluginManager.class);
         final PatternMatcher matcher = new Perl5Matcher();
 
         try {
-            final PluginManager pm = ServicesRefs.getPluginManager();
-            if( matcher.contains( commandline, pm.getPluginPattern() ) ) {
+            if( matcher.contains( commandline, pluginManager.getPluginPattern() ) ) {
                 final MatchResult res = matcher.getMatch();
                 final String plugin = res.group( 2 );
                 final String args = commandline.substring( res.endOffset( 0 ),
                                                            commandline.length() - ( commandline.charAt( commandline.length() - 1 ) == '}' ? 1 : 0 ) );
-                final Map< String, String > arglist = pm.parseArgs( args );
+                final Map< String, String > arglist = pluginManager.parseArgs( args );
 
                 // set wikitext bounds of plugin as '_bounds' parameter, e.g., [345,396]
                 if( pos != -1 ) {

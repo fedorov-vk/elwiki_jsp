@@ -34,7 +34,6 @@
 <%@ page import="org.apache.wiki.ui.TemplateManager" %>
 <%@ page import="org.apache.wiki.url0.URLConstructor"%>
 <%@ page import="org.apache.wiki.util.*"%>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp"%>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%!Logger log = Logger.getLogger( "JSPWiki" );
@@ -44,7 +43,7 @@
     public boolean resetPassword( Engine wiki, HttpServletRequest request, ResourceBundle rb ) {
         // Reset pw for account name
         String name = request.getParameter( "name" );
-        AccountRegistry userDatabase = ServicesRefs.Instance.getManager(AccountRegistry.class);
+        AccountRegistry userDatabase = WikiEngine.Instance.getManager(AccountRegistry.class);
         boolean success = false;
 
         try {
@@ -68,7 +67,7 @@
             // Try sending email first, as that is more likely to fail.
 
             Object[] args = { profile.getLoginName(), randomPassword, request.getScheme() + "://"+ request.getServerName() + ":" + request.getServerPort() +
-                             ServicesRefs.getUrlConstructor().makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), wiki.getApplicationName() };
+                             WikiEngine.getUrlConstructor().makeURL( ContextEnum.PAGE_NONE.getRequestContext(), "Login.jsp", "" ), wiki.getApplicationName() };
 
             String mailMessage = MessageFormat.format( rb.getString( "lostpwd.newpassword.email" ), args );
 
@@ -102,7 +101,7 @@
         return success;
     }%>
 <%
-    Engine wiki = Wiki.engine().find( getServletConfig() );
+Engine wiki = Wiki.engine().find( getServletConfig() );
 
     //Create wiki context like in Login.jsp:
     //don't check for access permissions: if you have lost your password you cannot login!
@@ -137,6 +136,6 @@
     response.setDateHeader( "Expires", new Date().getTime() );
     response.setDateHeader( "Last-Modified", new Date().getTime() );
 
-    String contentPage = ServicesRefs.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
+    String contentPage = WikiEngine.getTemplateManager().findJSP( pageContext, wikiContext.getShape(), "ViewTemplate.jsp" );
 %>
 <wiki:Include page="<%=contentPage%>" />

@@ -60,7 +60,7 @@ public class Wiki {
 		return new ContextDSL(contextSPI);
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	public void setContextSPI(ContextSPI contextSPI1) {
 		contextSPI = contextSPI1;
@@ -74,6 +74,6 @@ public class Wiki {
 		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
 }

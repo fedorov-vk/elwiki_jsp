@@ -22,7 +22,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.services.ServicesRefs;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 

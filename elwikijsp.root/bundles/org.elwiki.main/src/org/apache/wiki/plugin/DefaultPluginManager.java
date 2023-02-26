@@ -19,6 +19,23 @@
 
 package org.apache.wiki.plugin;
 
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServlet;
+
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,9 +49,9 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
@@ -42,39 +59,21 @@ import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.plugin.PluginManager;
-import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
-import org.apache.wiki.util.XHTML;
-import org.apache.wiki.util.XhtmlUtil;
-import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-
-import javax.servlet.http.HttpServlet;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  *  Manages plugin classes.  There exists a single instance of PluginManager
@@ -167,9 +166,16 @@ import java.util.StringTokenizer;
  *
  *  @since 1.6.1
  */
-@Component(name = "elwiki.DefaultPluginManager", service = PluginManager.class, //
-		factory = "elwiki.PluginManager.factory")
-public class DefaultPluginManager extends BaseModuleManager implements PluginManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultPluginManager",
+	service = { PluginManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultPluginManager extends BaseModuleManager implements PluginManager, WikiManager, EventHandler {
 
     private static final String PLUGIN_INSERT_PATTERN = "\\{?(INSERT)?\\s*([\\w\\._]+)[ \\t]*(WHERE)?[ \\t]*";
     private static final Logger log = Logger.getLogger( DefaultPluginManager.class );
@@ -190,8 +196,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 		super();
 	}
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+    
 	/**
 	 * This component activate routine. Does all the real initialization.
 	 * 
@@ -199,23 +209,17 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	 * @throws WikiException
 	 */
 	@Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+		//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 	
 	/**
-	 * @param engine Engine which owns this manager.
-	 * @param props  Contents of a "jspwiki.properties" file.
+	 * Initialises PluginManager.
 	 */
-	@Override
-	public void initialize(Engine engine) throws WikiException {
-		m_engine = engine;
-		IPreferenceStore props = engine.getWikiPreferences();
+	public void initialize() throws WikiException {
+		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 		
         final String packageNames = TextUtil.getStringProperty(props, Engine.PROP_SEARCHPATH, null );
         if ( packageNames != null ) {
@@ -763,5 +767,20 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         }
         return plugin;
     }
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultPluginManager.", e);
+			}
+			break;
+		}		
+	}
 
 }

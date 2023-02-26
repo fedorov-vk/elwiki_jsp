@@ -42,7 +42,10 @@ import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.core.ContextUtil;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.preferences.Preferences;
@@ -50,13 +53,15 @@ import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
 
 /**
  * This class takes care of managing JSPWiki shapes. This class also provides the
@@ -68,9 +73,13 @@ import org.osgi.service.component.annotations.Reference;
  * TODO: Распаковывать в каталог. Снята связь с WikiEngine, так как не требуется доступ по контексту
  * сервлета к локальному каталогу, доступ к каталогу через Bundle.
  */
-@Component(name = "elwiki.DefaultTemplateManager", service = TemplateManager.class, //
-		factory = "elwiki.TemplateManager.factory")
-public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultTemplateManager",
+	service = {TemplateManager.class, WikiManager.class},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager, WikiManager {
 
 	private static final Logger log = Logger.getLogger(DefaultTemplateManager.class);
 
@@ -84,10 +93,10 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 
 	private Bundle bundle;
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
-	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
+	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
 	/**
@@ -100,7 +109,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 		this.bundle = bc.getBundle();
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 	
 	/**
 	 * Returns the full name (/shapes/foo/bar) for: template=foo, name=bar.

@@ -21,14 +21,13 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
-<%@ page import="org.apache.wiki.filters0.SpamFilter" %>
+<%@ page import="org.apache.wiki.filters.SpamFilter" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.tags.*" %>
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.api.ui.EditorManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -49,20 +48,20 @@ WikiContext context = ContextUtil.findContext( pageContext );
 <wiki:CheckRequestContext context="edit">
 <wiki:NoSuchPage> <%-- this is a new page, check if we're cloning --%>
 <%
-	String clone = request.getParameter( "clone" );
+String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = WikiEngine.getPageManager().getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
+        AuthorizationManager mgr = WikiEngine.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
 
         try
         {
           if( mgr.checkPermission( context.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = WikiEngine.getPageManager().getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -71,13 +70,15 @@ WikiContext context = ContextUtil.findContext( pageContext );
 %>
 </wiki:NoSuchPage>
 <%
-  if( usertext == null )
+if( usertext == null )
   {
-    usertext = ServicesRefs.getPageManager().getPureText( context.getPage() );
+    usertext = WikiEngine.getPageManager().getPureText( context.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
-<% if( usertext == null ) usertext = "";  %>
+<%
+if( usertext == null ) usertext = "";
+%>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
       action="<wiki:Link context='${context}' format='url'/>"
@@ -230,7 +231,7 @@ WikiContext context = ContextUtil.findContext( pageContext );
       </ul>
     </div>
 
-    <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
+    <c:set var="editors" value="<%=WikiEngine.getEditorManager().getEditorList()%>" />
     <c:if test='${fn:length(editors) > 1}'>
     <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

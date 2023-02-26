@@ -23,31 +23,28 @@
 <%@ page import="org.apache.wiki.auth.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
-<%! 
-  Logger log;
-  Engine wiki;
+<%!Logger log;
   public void jspInit()
   {
     log = Logger.getLogger("AJAXPreview_jsp");
-    wiki = ServicesRefs.Instance; //:FVK: workaround.
-  }
-%>
+  }%>
 <%
-  WikiContext wikiContext;
-  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
-  if( wikiContext==null )
-  {
-    // Copied from a top-level jsp -- which would be a better place to put this 
-    wikiContext = Wiki.context().create(wiki, request, ContextEnum.PAGE_VIEW.getRequestContext());
-    request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
-  }
-  if( !ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response) ) return;
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	if( wikiContext==null )//:FVK: impossible. how? but the engine already readed from it.
+	{
+		// Copied from a top-level jsp -- which would be a better place to put this 
+		wikiContext = Wiki.context().create(engine, request, ContextEnum.PAGE_VIEW.getRequestContext());
+		request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
+	}
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	if( !authorizationManager.hasAccess(wikiContext, response) ) {
+		return;
+	}
+	String wikimarkup = request.getParameter("wikimarkup");
 
-  response.setContentType("text/html; charset="+wiki.getContentEncoding());
-
-  String wikimarkup = request.getParameter("wikimarkup");
+	response.setContentType("text/html; charset=" + engine.getContentEncoding());
 %>
 <wiki:Translate><%= wikimarkup %></wiki:Translate>

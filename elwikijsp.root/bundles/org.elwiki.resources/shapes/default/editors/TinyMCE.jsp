@@ -30,7 +30,6 @@
 <%@ page import="org.apache.wiki.ui.*" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.apache.wiki.api.variables.VariableManager" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="org.elwiki_data.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -47,17 +46,22 @@
     This provides the WYSIWYG TinyMCE for JSPWiki.
 --%>
 <%
-    WikiContext context = ContextUtil.findContext( pageContext );
-    Engine engine = servletContext.getEngine();
+	WikiContext context = ContextUtil.findContext( pageContext );
+	Engine engine = servletContext.getEngine();
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	PageManager pageManager = engine.getManager(PageManager.class);
+	EditorManager editorManager = engine.getManager(EditorManager.class);
+	RenderingManager renderingManager = engine.getManager(RenderingManager.class);
 
-    servletContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
-    servletContext.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
-    WikiPage wikiPage = servletContext.getPage();
-    String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
-    wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
+	servletContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
+	servletContext.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
-    String usertext = ContextUtil.getEditedText(pageContext);
+	WikiPage wikiPage = servletContext.getPage();
+	String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
+	wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
+
+	String usertext = ContextUtil.getEditedText(pageContext);
 %>
 
 <c:set var='context'><wiki:Variable var='requestcontext' /></c:set>
@@ -67,17 +71,15 @@
 String clone = request.getParameter( "clone" );
   if( clone != null )
   {
-    WikiPage p = ServicesRefs.getPageManager().getPage( clone );
+    WikiPage p = pageManager.getPage( clone );
     if( p != null )
     {
-        AuthorizationManager mgr = ServicesRefs.getAuthorizationManager();
         PagePermission pp = new PagePermission( p, PagePermission.VIEW_ACTION );
-
         try
         {
-          if( mgr.checkPermission( servletContext.getWikiSession(), pp ) )
+          if( authorizationManager.checkPermission( servletContext.getWikiSession(), pp ) )
           {
-            usertext = ServicesRefs.getPageManager().getPureText( p );
+            usertext = pageManager.getPureText( p );
           }
         }
         catch( Exception e ) {  /*log.error( "Accessing clone page "+clone, e );*/ }
@@ -88,7 +90,7 @@ String clone = request.getParameter( "clone" );
 <%
 if( usertext == null )
   {
-    usertext = ServicesRefs.getPageManager().getPureText( servletContext.getPage() );
+    usertext = pageManager.getPureText( servletContext.getPage() );
   }
 %>
 </wiki:CheckRequestContext>
@@ -98,7 +100,7 @@ if( usertext == null ) usertext = "";
     String pageAsHtml;
     try
     {
-        pageAsHtml = ServicesRefs.getRenderingManager().getHTML( servletContext, usertext );
+        pageAsHtml = renderingManager.getHTML( servletContext, usertext );
 
     }
         catch( Exception e )
@@ -210,7 +212,7 @@ if( usertext == null ) usertext = "";
       </ul>
     </div>
 
-    <c:set var="editors" value="<%= ServicesRefs.getEditorManager().getEditorList() %>" />
+    <c:set var="editors" value="<%=editorManager.getEditorList()%>" />
     <c:if test='${fn:length(editors)>1}'>
    <div class="btn-group config">
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>

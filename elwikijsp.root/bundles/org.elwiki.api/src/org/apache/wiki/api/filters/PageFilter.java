@@ -47,8 +47,17 @@ import static org.apache.wiki.api.filters.FilterSupportOperations.methodOfNonPub
  *  uses the public API, then the default callback is used. None of the default callbacks do anything, so it is a good idea for you to
  *  implement only methods that you need.</p>
  */
-public interface PageFilter extends Initializable {
+public interface PageFilter {
 
+    /**
+     *  Is called whenever the a new PageFilter is instantiated and reset.
+     *  
+     *  @param engine The Engine which owns this PageFilter
+     *  @param properties The properties ripped from filters.xml.
+     *  @throws FilterException If the filter could not be initialized. If this is thrown, the filter is not added to the internal queues.
+     */
+    void initialize( Engine engine ) throws FilterException;
+	
     /**
      *  This method is called whenever a page has been loaded from the provider, but not yet been sent through the markup-translation
      *  process.  Note that you cannot do HTML translation here, because it will be escaped.

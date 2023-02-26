@@ -30,7 +30,6 @@
 <%@ page import="org.elwiki.permissions.GroupPermission" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page errorPage="/Error.jsp" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -45,8 +44,8 @@ WikiContext c = ContextUtil.findContext( pageContext );
   //String name = request.getParameter( "group" );
   //Group group = (Group)pageContext.getAttribute( "Group",PageContext.REQUEST_SCOPE );
 
-  AuthorizationManager authMgr = ServicesRefs.getAuthorizationManager();
-  IGroupManager groupMgr = ServicesRefs.getGroupManager();
+  AuthorizationManager authMgr = WikiEngine.getAuthorizationManager();
+  IGroupManager groupMgr = WikiEngine.getGroupManager();
 
   List<org.osgi.service.useradmin.Group> groups1 = groupMgr.getGroups();
   Principal[] groups;

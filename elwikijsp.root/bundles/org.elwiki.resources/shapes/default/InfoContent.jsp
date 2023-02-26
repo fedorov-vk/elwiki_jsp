@@ -22,6 +22,7 @@
 <%@ page import="org.eclipse.emf.common.util.EList" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.auth.*" %>
+<%@ page import="org.apache.wiki.api.variables.*" %>
 <%@ page import="org.elwiki.authorize.login.*" %>
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.attachment.*" %>
@@ -32,7 +33,6 @@
 <%@ page import="org.apache.wiki.api.ui.progress.ProgressManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
 <%@ page import="org.elwiki_data.*" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ page import="java.security.Permission" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
@@ -42,48 +42,49 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-  WikiContext ctx = ContextUtil.findContext(pageContext);
-  WikiPage wikiPage = ctx.getPage();
-  int attCount = ServicesRefs.getAttachmentManager().listAttachments( ctx.getPage() ).size();
-  String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
-  if( attCount != 0 ) attTitle += " (" + attCount + ")";
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);
+	VariableManager variableManager = engine.getManager(VariableManager.class);
+	AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
 
-  String creationAuthor ="";
+	WikiPage wikiPage = wikiContext.getPage();
+	int attCount = attachmentManager.listAttachments( wikiContext.getPage() ).size();
+	String attTitle = LocaleSupport.getLocalizedMessage(pageContext, "attach.tab");
+	if( attCount != 0 ) {
+		attTitle += " (" + attCount + ")";
+	}
 
-  //FIXME -- seems not to work correctly for attachments !!
-  WikiPage firstPage = ServicesRefs.getPageManager().getPage( wikiPage.getName(), 1 );
-  if( firstPage != null )
-  {
-    creationAuthor = firstPage.getAuthor();
+	String creationAuthor ="";
 
-    if( creationAuthor != null && creationAuthor.length() > 0 )
-    {
-      creationAuthor = TextUtil.replaceEntities(creationAuthor);
-    }
-    else
-    {
-      creationAuthor = Preferences.getBundle( ctx, InternationalizationManager.CORE_BUNDLE ).getString( "common.unknownauthor" );
-    }
-  }
+	//FIXME -- seems not to work correctly for attachments !!
+	WikiPage firstPage = pageManager.getPage( wikiPage.getName(), 1 );
+	if( firstPage != null ) {
+		creationAuthor = firstPage.getAuthor();
+		if( creationAuthor != null && creationAuthor.length() > 0 ) {
+			creationAuthor = TextUtil.replaceEntities(creationAuthor);
+		} else {
+			creationAuthor = Preferences.getBundle(wikiContext,
+					InternationalizationManager.CORE_BUNDLE).getString("common.unknownauthor");
+		}
+	}
 
-  int itemcount = 0;  //number of page versions
-  try
-  {
-    itemcount = wikiPage.getVersion(); /* highest version */
-  }
-  catch( Exception  e )  { /* dont care */ }
+	int itemcount = 0;  //number of page versions
+	try {
+		itemcount = wikiPage.getVersion(); /* highest version */
+	} catch( Exception  e )  { /* dont care */ }
 
-  int pagesize = 20;
-  int startitem = itemcount-1; /* itemcount==1-20 -> startitem=0-19 ... */
+	int pagesize = 20;
+	int startitem = itemcount-1; /* itemcount==1-20 -> startitem=0-19 ... */
 
-  String parm_start = (String)request.getParameter( "start" );
-  if( parm_start != null ) startitem = Integer.parseInt( parm_start ) ;
+	String parm_start = (String)request.getParameter( "start" );
+	if( parm_start != null ) startitem = Integer.parseInt( parm_start ) ;
 
-  /* round to start of block: 0-19 becomes 0; 20-39 becomes 20 ... */
-  if( startitem > -1 ) startitem = ( startitem / pagesize ) * pagesize;
+	/* round to start of block: 0-19 becomes 0; 20-39 becomes 20 ... */
+	if( startitem > -1 ) startitem = ( startitem / pagesize ) * pagesize;
 
-  /* startitem drives the pagination logic */
-  /* startitem=-1:show all; startitem=0:show block 1-20; startitem=20:block 21-40 ... */
+	/* startitem drives the pagination logic */
+	/* startitem=-1:show all; startitem=0:show block 1-20; startitem=20:block 21-40 ... */
 %>
 <div class="page-content">
 
@@ -119,7 +120,7 @@
 
   <wiki:Permission permission="rename">
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=ctx.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=wikiContext.getPageId()%>' />"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -139,7 +140,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=ctx.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>' />"
            class="form-group"
               id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -161,7 +162,7 @@
 
     <wiki:SetPagination start="<%=startitem%>" total="<%=itemcount%>" pagesize="<%=pagesize%>" maxlinks="9"
                        fmtkey="info.pagination"
-                         href='<%=ctx.getURL(ContextEnum.PAGE_INFO.getRequestContext(), wikiPage.getName(), "start=%s")%>' />
+                         href='<%=wikiContext.getURL(ContextEnum.PAGE_INFO.getRequestContext(), wikiPage.getName(), "start=%s")%>' />
 
     <c:set var="first" value="<%=startitem%>"/>
     <c:set var="last" value="<%=startitem + pagesize%>"/>
@@ -199,11 +200,11 @@
         <td class="nowrap">
           <c:if test="${not status.last}">
             <c:set var="nextVersion" value="${pageContents[status.index+1].version}" />
-            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
+            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
           </c:if>
           ${not status.last && not status.first? '|' : ''}
           <c:if test="${not status.first}">
-            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=ctx.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
+            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
           </c:if>
         </td>
 
@@ -228,7 +229,7 @@
       <td>
         <div class="tree list-hover">
         <%
-        List<PageReference> inReferences = ServicesRefs.getPageManager().getPageReferrers(wikiPage.getId());
+        List<PageReference> inReferences = pageManager.getPageReferrers(wikiPage.getId());
         %>
         <c:set var="inReferences" value="<%=inReferences%>" />
         <c:if test="${empty inReferences}">
@@ -238,8 +239,8 @@
 		<%
 		for (PageReference pageReference : inReferences) {
 				String pageId = pageReference.getWikipage().getId();
-				String href = ctx.getURL( WikiContext.PAGE_VIEW, pageId );
-				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
+				String href = wikiContext.getURL( WikiContext.PAGE_VIEW, pageId );
+				WikiPage refPage = pageManager.getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
 				out.append(link);
@@ -261,8 +262,8 @@
 		<%
 		for (PageReference pageReference : outReferences) {
 				String pageId = pageReference.getPageId();
-				String href = ctx.getURL( WikiContext.PAGE_VIEW, pageId );
-				WikiPage refPage = ServicesRefs.getPageManager().getPageById(pageId);
+				String href = wikiContext.getURL( WikiContext.PAGE_VIEW, pageId );
+				WikiPage refPage = pageManager.getPageById(pageId);
 				String name = (refPage != null)? refPage.getName() : "unknown page";
 				String link = String.format("<li><a class=\"wikipage\" href=\"%s\">%s</a><br/>\n", href, name);
 				out.append(link);
@@ -280,7 +281,7 @@
       <c:set var="olddiff" value="${param.r1}" />
       <c:set var="newdiff" value="${param.r2}" />
       <c:set var="pageContents" value="<%=wikiPage.getPageContentsReversed()%>"/>
-      <c:set var="diffprovider" value='<%=ServicesRefs.getVariableManager().getVariable(ctx,"jspwiki.diffProvider") %>' />
+      <c:set var="diffprovider" value='<%=variableManager.getVariable(wikiContext,"jspwiki.diffProvider")%>' />
       <form action="<wiki:Link path='cmd.diff' format='url' />"
              class="diffbody form-inline"
             method="get" accept-charset="UTF-8">

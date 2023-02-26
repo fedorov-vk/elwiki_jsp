@@ -25,7 +25,6 @@ import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.ui.EditorManager;
 import org.apache.wiki.ui.Editor;
-import org.elwiki.services.ServicesRefs;
 
 /**
  *  Iterates through editors.
@@ -40,14 +39,13 @@ public class EditorIteratorTag extends BaseIteratorTag  {
 	/** {@inheritDoc} */
     @Override
     public final int doStartTag() {
-        m_wikiContext = ContextUtil.findContext(pageContext);
-        final Engine engine = m_wikiContext.getEngine();
-        final EditorManager mgr = ServicesRefs.getEditorManager();
-        final String[] editorList = mgr.getEditorList();
+        final Engine engine = getWikiContext().getEngine();
+        final EditorManager editorManager = engine.getManager(EditorManager.class);
+        final String[] editorList = editorManager.getEditorList();
         final Collection< Editor > editors = new ArrayList<>();
 
         for( final String editor : editorList ) {
-            editors.add( new Editor( m_wikiContext, editor ) );
+            editors.add( new Editor( getWikiContext(), editor ) );
         }
         setList( editors );
 

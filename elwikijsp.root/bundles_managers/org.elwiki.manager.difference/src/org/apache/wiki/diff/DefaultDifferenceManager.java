@@ -19,39 +19,43 @@
 
 package org.apache.wiki.diff;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.diff.DifferenceManager;
-import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.ui.TemplateManager;
-import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.services.ServicesRefs;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
-
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Load, initialize and delegate to the DiffProvider that will actually do the work.
  */
-@Component(name = "elwiki.DefaultDifferenceManager", service = DifferenceManager.class, //
-		factory = "elwiki.DifferenceManager.factory")
-public class DefaultDifferenceManager implements DifferenceManager, Initializable {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultDifferenceManager",
+	service = { DifferenceManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultDifferenceManager implements DifferenceManager, WikiManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultDifferenceManager.class );
 
@@ -77,11 +81,18 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
         log.info( "Using difference provider: " + m_provider.getProviderInfo() );
     }
 
-	// -- service handling ---------------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
     private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine engine;
+
+	@WikiServiceReference
+	private PageManager pageManager;
+
 
     /**
      * This component activate routine. Does all the real initialization.
@@ -90,17 +101,16 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
      * @throws WikiException
      */
     @Activate
-	protected void startup(ComponentContext componentContext) throws WikiException {
-		Object obj = componentContext.getProperties().get(Engine.ENGINE_REFERENCE);
-		if (obj instanceof Engine engine) {
-			initialize(engine);
-		}
+	protected void startup() throws WikiException {
+    	//
 	}
 
-	// -- service handling -----------------------------(end)--
+	// -- OSGi service handling ------------------------(end)--
 
-	@Override
-	public void initialize(Engine engine) throws WikiException {
+	/**
+	 * Initialises DifferenceManager.
+	 */
+	public void initialize() throws WikiException {
         loadProvider();
         initializeProvider( engine );
 
@@ -173,8 +183,8 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
     @Override
     public String getDiff( final WikiContext context, final int version1, final int version2 ) {
         final String page = context.getPage().getName();
-        String page1 = ServicesRefs.getPageManager().getPureText( page, version1 );
-        final String page2 = ServicesRefs.getPageManager().getPureText( page, version2 );
+        String page1 = pageManager.getPureText( page, version1 );
+        final String page2 = pageManager.getPureText( page, version2 );
 
         // Kludge to make diffs for new pages to work this way.
         if( version1 == PageProvider.LATEST_VERSION ) {
@@ -184,5 +194,19 @@ public class DefaultDifferenceManager implements DifferenceManager, Initializabl
         return makeDiff( context, page1, page2 );
     }
 
-}
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
+			try {
+				initialize();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultDifferenceManager.", e);
+			}
+			break;
+		}
+	}
 
+}

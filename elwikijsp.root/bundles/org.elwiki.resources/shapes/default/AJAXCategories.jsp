@@ -20,28 +20,23 @@
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
-<%!
-  Engine wiki;
-  public void jspInit()
-  {
-    wiki = ServicesRefs.Instance; //:FVK: workaround.
-  }
-%>
 <%
-  WikiContext wikiContext;
-  wikiContext = (WikiContext)request.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
-  if( wikiContext==null )
-  {
-    // Copied from a top-level jsp -- which would be a better place to put this 
-    wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_VIEW.getRequestContext() );
-    request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
-  }
-  if( !ServicesRefs.getAuthorizationManager().hasAccess(wikiContext, response) ) return;
-  String pagereq = wikiContext.getPage().getName();
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	if( wikiContext==null )//:FVK: impossible. how? but the engine already readed from it. 
+	{
+		// Copied from a top-level jsp -- which would be a better place to put this 
+		wikiContext = Wiki.context().create( engine, request, ContextEnum.PAGE_VIEW.getRequestContext() );
+		request.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
+	}
+	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
+	if( !authorizationManager.hasAccess(wikiContext, response) ) {
+		return;
+	}
+	String pagereq = wikiContext.getPage().getName();
 
-  response.setContentType("text/html; charset="+wiki.getContentEncoding());
+	response.setContentType("text/html; charset=" + engine.getContentEncoding());
 %>
 <div class='categoryTitle'><wiki:LinkTo><wiki:PageName /></wiki:LinkTo></div>
 <div class='categoryText'><wiki:Plugin plugin="ReferringPagesPlugin" args="max='20' before='*' after='\n' " /></div>

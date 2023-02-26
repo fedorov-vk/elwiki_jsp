@@ -22,7 +22,6 @@
 <%@ page import="org.elwiki_data.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.util.TextUtil" %>
-<%@ page import="org.elwiki.services.ServicesRefs" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -42,10 +41,12 @@
 <%-- If the page is an older version, then offer a note and a possibility to restore this version as the latest one. --%>
 <wiki:CheckVersion mode="notlatest">
   <%
-    WikiContext ctx = ContextUtil.findContext( pageContext );
+	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	Engine engine = wikiContext.getEngine();
+	PageManager pageManager = engine.getManager(PageManager.class);  
   %>
-  <c:set var="thisVersion" value="<%= ctx.getPage().getVersion() %>" />
-  <c:set var="latestVersion" value="<%= ServicesRefs.getPageManager().getPage( ctx.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion() %>" />
+  <c:set var="thisVersion" value="<%=wikiContext.getPage().getVersion()%>" />
+  <c:set var="latestVersion" value="<%=pageManager.getPage(wikiContext.getPage().getName(), WikiProvider.LATEST_VERSION).getVersion()%>" />
 
 <!-- TODO: understand and release follow //wiki:Link path='Wiki.jsp'// :FVK:  -->
   <form action="<wiki:Link format='url' path='Wiki.jsp'/>"

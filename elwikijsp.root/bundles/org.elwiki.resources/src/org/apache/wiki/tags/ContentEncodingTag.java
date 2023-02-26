@@ -39,7 +39,7 @@ public class ContentEncodingTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final IWikiConfiguration config = m_wikiContext.getConfiguration();
+		final IWikiConfiguration config = getWikiContext().getConfiguration();
 		pageContext.getOut().print(config.getContentEncodingCs());
 		return SKIP_BODY;
 	}
