@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" name="elwiki.InitTrigger">
-   <property name="event.topics" value="org/elwiki/events/*"/>
-   <service>
-      <provide interface="org.elwiki.services.InitTrigger"/>
-      <provide interface="org.osgi.service.event.EventHandler"/>
-   </service>
-   <implementation class="org.elwiki.services.InitTriggerImpl"/>
-</scr:component>

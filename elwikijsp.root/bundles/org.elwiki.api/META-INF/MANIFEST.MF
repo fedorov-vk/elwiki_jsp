@@ -72,6 +72,5 @@ Export-Package: org.apache.wiki,
  org.elwiki.authorize.login,
  org.elwiki.services
 Service-Component: OSGI-INF/elwiki.BackgroundThreads.xml,
- OSGI-INF/elwiki.InitTrigger.xml,
  OSGI-INF/elwiki.SessionMonitor.xml,
  OSGI-INF/refsSPI.xml
