@@ -37,7 +37,8 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	//:FVK: duplicate - WikiContext wikiContext = ContextUtil.findContext( pageContext );
+	//:FVK: duplicate - Engine engine = wikiContext.getEngine();
 	AuthorizationManager authorizationManager = engine.getManager(AuthorizationManager.class);
 	AccountManager accountManager = engine.getManager(AccountManager.class);
 %>

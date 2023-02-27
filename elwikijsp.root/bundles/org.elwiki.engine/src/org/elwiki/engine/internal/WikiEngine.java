@@ -247,7 +247,7 @@ public class WikiEngine implements Engine {
 	private void initialize() throws WikiException {
 		m_startTime = new Date();
 
-		log.info("*******************************************");
+		log.info("** initialization ** WikiEngine **");
 		log.info(Release.APPNAME + " " + Release.getVersionString() + " starting. Whee!");
 
 		log.debug("Java version: " + System.getProperty("java.runtime.version"));

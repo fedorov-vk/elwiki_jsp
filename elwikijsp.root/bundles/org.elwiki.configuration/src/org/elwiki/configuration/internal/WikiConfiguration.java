@@ -192,7 +192,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	// -- service support ---------------------------------
 
     protected void startup(BundleContext bc) {
-		log.debug("** Startup ** Configuration ** Service *****************************************");
+		log.debug("** Startup ** Configuration ** Service **");
 
 		/*
 		// Get customized preferences from file, if they are defined.

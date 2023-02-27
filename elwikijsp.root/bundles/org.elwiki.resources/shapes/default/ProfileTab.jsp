@@ -28,8 +28,8 @@
 <fmt:setBundle basename="shapes.default"/>
 <%
 	/* FIXME: dateformatting not yet supported by wiki:UserProfile tag - diy */
-	WikiContext wikiContext = ContextUtil.findContext(pageContext);
-	Engine engine = wikiContext.getEngine();
+	//:FVK: duplicate - WikiContext wikiContext = ContextUtil.findContext(pageContext);
+	//:FVK: duplicate - Engine engine = wikiContext.getEngine();
 	AccountManager accountManager = engine.getManager(AccountManager.class);
 	UserProfile profile = accountManager.getUserProfile(wikiContext.getWikiSession());
 %>
