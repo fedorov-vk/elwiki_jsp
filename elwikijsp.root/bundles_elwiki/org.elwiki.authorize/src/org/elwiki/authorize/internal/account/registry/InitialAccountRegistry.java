@@ -50,7 +50,6 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 
 	// -- implementation of AccountRegistry ------------------------------------
 
-
 	/** {@inheritDoc} */
 	@Override
 	public void save(IGroupWiki group, Principal modifier) throws WikiSecurityException {

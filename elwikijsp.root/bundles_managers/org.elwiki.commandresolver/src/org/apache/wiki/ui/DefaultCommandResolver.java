@@ -47,7 +47,6 @@ import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -65,9 +64,6 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultCommandResolver",
 	service = { CommandResolver.class, WikiManager.class, EventHandler.class },
-	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class DefaultCommandResolver implements CommandResolver, WikiManager, EventHandler {
@@ -112,16 +108,11 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 
 	@WikiServiceReference
 	private AccountManager accountManager;
-	
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
+
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
 	}
 
 	// -- OSGi service handling ------------------------(end)--

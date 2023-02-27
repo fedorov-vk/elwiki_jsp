@@ -137,45 +137,43 @@ import org.osgi.service.event.EventHandler;
 		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
-//FVK: factory = "elwiki.ReferenceManager.factory")
 //@formatter:on
-public class DefaultReferenceManager extends BasePageFilter
-		implements ReferenceManager, WikiManager, EventHandler {
+public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, WikiManager, EventHandler {
 
-    /**
-     *  Maps page wikiname to a Collection of pages it refers to. The Collection must contain Strings. The Collection may contain
-     *  names of non-existing pages.
-     */
-    private Map< String, Collection< String > > m_refersTo;
-    private Map< String, Collection< String > > m_unmutableRefersTo;
+	/**
+	 * Maps page wikiname to a Collection of pages it refers to. The Collection must contain Strings.
+	 * The Collection may contain names of non-existing pages.
+	 */
+	private Map<String, Collection<String>> m_refersTo;
+	private Map<String, Collection<String>> m_unmutableRefersTo;
 
-    /**
-     *  Maps page wikiname to a Set of referring pages. The Set must contain Strings. Non-existing pages (a reference exists, but
-     *  not a file for the page contents) may have an empty Set in m_referredBy.
-     */
-    private Map< String, Set< String > > m_referredBy;
-    private Map< String, Set< String > > m_unmutableReferredBy;
+	/**
+	 * Maps page wikiname to a Set of referring pages. The Set must contain Strings. Non-existing pages
+	 * (a reference exists, but not a file for the page contents) may have an empty Set in m_referredBy.
+	 */
+	private Map<String, Set<String>> m_referredBy;
+	private Map<String, Set<String>> m_unmutableReferredBy;
 
-    private static final Logger log = Logger.getLogger( DefaultReferenceManager.class);
-    private static final String SERIALIZATION_FILE = "refmgr.ser";
-    private static final String SERIALIZATION_DIR  = "refmgr-attr";
+	private static final Logger log = Logger.getLogger(DefaultReferenceManager.class);
+	private static final String SERIALIZATION_FILE = "refmgr.ser";
+	private static final String SERIALIZATION_DIR = "refmgr-attr";
 
-    /** We use this also a generic serialization id */
-    private static final long serialVersionUID = 4L;
+	/** We use this also a generic serialization id */
+	private static final long serialVersionUID = 4L;
 
-    /**
-     *  Builds a new ReferenceManager.
-     */
-    public DefaultReferenceManager() {
-        m_refersTo = new HashMap<>();
-        m_referredBy = new HashMap<>();
+	/**
+	 * Builds a new ReferenceManager.
+	 */
+	public DefaultReferenceManager() {
+		m_refersTo = new HashMap<>();
+		m_referredBy = new HashMap<>();
 
-        //
-        //  Create two maps that contain unmutable versions of the two basic maps.
-        //
-        m_unmutableReferredBy = Collections.unmodifiableMap( m_referredBy );
-        m_unmutableRefersTo   = Collections.unmodifiableMap( m_refersTo );
-    }
+		//
+		//  Create two maps that contain unmutable versions of the two basic maps.
+		//
+		m_unmutableReferredBy = Collections.unmodifiableMap(m_referredBy);
+		m_unmutableRefersTo = Collections.unmodifiableMap(m_refersTo);
+	}
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -187,32 +185,21 @@ public class DefaultReferenceManager extends BasePageFilter
 	private IStorageCdo storageCdo; //:FVK: - unused?
 
 	@WikiServiceReference
-    protected Engine engine;
-	
-	/**
-	 * ReferenceManager initializer.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
+	protected Engine engine;
 
-	// -- OSGi service handling ------------------------(end)--
-
-	protected void initialize() throws WikiException {
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
 		super.initialize(this.engine); //:FVK: workaround.
 	}
 
 	/**
-	 * Initializes the reference manager. Scans all existing WikiPages for internal links and adds
-	 * them to the ReferenceManager object.
+	 * Initializes the reference manager. Scans all existing WikiPages for internal links and adds them
+	 * to the ReferenceManager object.
 	 *
 	 * @throws WikiException If the reference manager initialization fails.
 	 */
-	private void initializeReferences() throws WikiException {
+	private void initializeStageTwo() throws WikiException {
 		try {
 			final ArrayList<WikiPage> pages = new ArrayList<>();
 			pages.addAll(pageManager.getAllPages());
@@ -221,7 +208,9 @@ public class DefaultReferenceManager extends BasePageFilter
 			throw new WikiException("Could not populate ReferenceManager.", e);
 		}
 	}
-	
+
+	// -- OSGi service handling ------------------------(end)--
+
 	/**
      *  Does a full reference update.  Does not sync; assumes that you do it afterwards.
      */
@@ -942,16 +931,9 @@ public class DefaultReferenceManager extends BasePageFilter
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultReferenceManager.", e);
-			}
-			break;
 		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
 			try {
-				initializeReferences();
+				initializeStageTwo();
 			} catch (WikiException e) {
 				log.error("Failed initialization of references for DefaultReferenceManager.", e);
 			}

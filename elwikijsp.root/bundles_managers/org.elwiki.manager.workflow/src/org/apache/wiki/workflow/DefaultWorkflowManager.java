@@ -28,8 +28,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +39,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventEmitter;
@@ -58,8 +55,6 @@ import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -79,33 +74,32 @@ import org.osgi.service.event.EventHandler;
 	service = { WorkflowManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON,
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,  
 		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_WORKFLOW_ALL
 	})
 //@formatter:on
 public class DefaultWorkflowManager implements WorkflowManager, WikiManager, EventHandler {
 
-	private static final Logger log = Logger.getLogger( DefaultWorkflowManager.class );
+	private static final Logger log = Logger.getLogger(DefaultWorkflowManager.class);
 
 	/** We use this also a generic serialization id */
 	private static final long serialVersionUID = 6L;
 
-    static final String SERIALIZATION_FILE = "wkflmgr.ser";
+	static final String SERIALIZATION_FILE = "wkflmgr.ser";
 
-    DecisionQueue m_queue = new DecisionQueue();
-    Set< Workflow > m_workflows;
-    final Map< String, Principal > m_approvers;
-    List< Workflow > m_completed;
-    
-    /**
-     * Constructs a new WorkflowManager, with an empty workflow cache.
-     */
-    public DefaultWorkflowManager() {
-        m_workflows = ConcurrentHashMap.newKeySet();
-        m_approvers = new ConcurrentHashMap<>();
-        m_completed = new CopyOnWriteArrayList<>();
-        WikiEventEmitter.attach( this );
-    }
+	DecisionQueue m_queue = new DecisionQueue();
+	Set<Workflow> m_workflows;
+	final Map<String, Principal> m_approvers;
+	List<Workflow> m_completed;
+
+	/**
+	 * Constructs a new WorkflowManager, with an empty workflow cache.
+	 */
+	public DefaultWorkflowManager() {
+		m_workflows = ConcurrentHashMap.newKeySet();
+		m_approvers = new ConcurrentHashMap<>();
+		m_completed = new CopyOnWriteArrayList<>();
+		WikiEventEmitter.attach(this);
+	}
 
 	// -- OSGi service handling --------------------( start )--
 
@@ -119,15 +113,41 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
-    /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-    @Activate
-	protected void startup() throws WikiException {
-    	//
+	/**
+	 * Initializes WorkflowManager.
+	 *
+	 * Any properties that begin with {@link #PROPERTY_APPROVER_PREFIX} will be assumed to be Decisions
+	 * that require approval. For a given property key, everything after the prefix denotes the
+	 * Decision's message key. The property value indicates the Principal (Role, GroupPrincipal,
+	 * WikiPrincipal) that must approve the Decision. For example, if the property key/value pair is
+	 * {@code jspwiki.approver.workflow.saveWikiPage=Admin}, the Decision's message key is
+	 * <code>workflow.saveWikiPage</code>. The Principal <code>Admin</code> will be resolved via
+	 * {@link org.apache.wiki.auth.AuthorizationManager#resolvePrincipal(String)}.
+	 */
+	@Override
+	public void initialize() throws WikiException {
+		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
+
+		/*:FVK: TODO: !!!
+		// Identify the workflows requiring approvals
+		for( final Object o : props.keySet() ) {
+		    final String prop = ( String )o;
+		    if( prop.startsWith( PROPERTY_APPROVER_PREFIX ) ) {
+		        // For the key, everything after the prefix is the workflow name
+		        final String key = prop.substring( PROPERTY_APPROVER_PREFIX.length() );
+		        if( key.length() > 0 ) {
+		            // Only use non-null/non-blank approvers
+		            final String approver = props.getProperty( prop );
+		            if( approver != null && approver.length() > 0 ) {
+		                m_approvers.put( key, new UnresolvedPrincipal( approver ) );
+		            }
+		        }
+		    }
+		}
+		*/
+
+		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
+		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
 	}
 
 	// -- OSGi service handling ----------------------( end )--
@@ -153,40 +173,6 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
     @Override
     public List< Workflow > getCompletedWorkflows() {
         return new CopyOnWriteArrayList< >( m_completed );
-    }
-
-    /**
-     * Initialises WorkflowManager.
-     *
-     * Any properties that begin with {@link #PROPERTY_APPROVER_PREFIX} will be assumed to be Decisions that require approval. For a given
-     * property key, everything after the prefix denotes the Decision's message key. The property value indicates the Principal (Role,
-     * GroupPrincipal, WikiPrincipal) that must approve the Decision. For example, if the property key/value pair is
-     * {@code jspwiki.approver.workflow.saveWikiPage=Admin}, the Decision's message key is <code>workflow.saveWikiPage</code>. The Principal
-     * <code>Admin</code> will be resolved via {@link org.apache.wiki.auth.AuthorizationManager#resolvePrincipal(String)}.
-     */
-    public void initialize() throws WikiException {
-        IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-
-        /*:FVK: TODO: !!!
-        // Identify the workflows requiring approvals
-        for( final Object o : props.keySet() ) {
-            final String prop = ( String )o;
-            if( prop.startsWith( PROPERTY_APPROVER_PREFIX ) ) {
-                // For the key, everything after the prefix is the workflow name
-                final String key = prop.substring( PROPERTY_APPROVER_PREFIX.length() );
-                if( key.length() > 0 ) {
-                    // Only use non-null/non-blank approvers
-                    final String approver = props.getProperty( prop );
-                    if( approver != null && approver.length() > 0 ) {
-                        m_approvers.put( key, new UnresolvedPrincipal( approver ) );
-                    }
-                }
-            }
-        }
-        */
-
-		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
-		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
     }
 
     /**
@@ -412,14 +398,6 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 
 		String topic = event.getTopic();
 		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of SearchManager.", e);
-			}
-			break;		
 		// Remove from manager
 		case ElWikiEventsConstants.TOPIC_WORKFLOW_ABORTED:
 		case ElWikiEventsConstants.TOPIC_WORKFLOW_COMPLETED:

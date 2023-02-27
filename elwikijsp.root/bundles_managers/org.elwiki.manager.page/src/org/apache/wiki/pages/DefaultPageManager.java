@@ -40,12 +40,10 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.diff.DifferenceManager;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
@@ -65,7 +63,6 @@ import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.pages0.PageTimeComparator;
-import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.workflow0.Decision;
@@ -95,13 +92,10 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 
@@ -118,33 +112,30 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultPageManager",
 	service = { PageManager.class, WikiManager.class, EventHandler.class },
-	scope = ServiceScope.SINGLETON,
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
-	})
+	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultPageManager implements PageManager, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( DefaultPageManager.class );
+	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 
 	static final String JSON_PAGESHIERARCHY = "pageshierarchyTracker";
 
 	private static String ID_EXTENSION_PAGEPROVIDER = "pageProvider";
 
-    private PageProvider m_provider;
+	private PageProvider m_provider;
 
-    protected ConcurrentHashMap< String, PageLock > m_pageLocks = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, PageLock> m_pageLocks = new ConcurrentHashMap<>();
 
-    private int m_expiryTime;
+	private int m_expiryTime;
 
-    private LockReaper m_reaper = null;
+	private LockReaper m_reaper = null;
 
-    private PageSorter pageSorter = new PageSorter();
-    
+	private PageSorter pageSorter = new PageSorter();
+
 	/**
-     * Create instance of DefaultPageManager.
-     */
-    public DefaultPageManager() {
+	 * Create instance of DefaultPageManager.
+	 */
+	public DefaultPageManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -176,56 +167,41 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	@WikiServiceReference
 	private WorkflowManager workflowManager;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
-
-	// -- OSGi service handling ------------------------(end)--
-	
-	/**
-	 * Initialises PageManager.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void initialize() throws WikiException {
-        IPreferenceStore props = wikiConfiguration.getWikiPreferences();
+		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 
-        m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
+		m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60);
 
 		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
-    	wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker(this.m_engine));
+		wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker(this.m_engine));
 
-        /*:FVK: - подключить CachingProvider
-        final String classname;
-        //  If user wants to use a cache, then we'll use the CachingProvider.
-        if( useCache ) {
-            classname = "org.apache.wiki.providers.CachingProvider";
-        } else {
-            classname = TextUtil.getRequiredProperty( props, PROP_PAGEPROVIDER );
-        }
-
-        pageSorter.initialize( props );
-
-        try {
-            LOG.debug("Page provider class: '" + classname + "'");
-
-            final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
-            m_provider = ( PageProvider ) providerclass.newInstance();
-
-            m_provider = new VersioningFileProvider(); 
-            		//new org.apache.wiki.providers.CachingProvider();
-
-            LOG.debug("Initializing page provider class " + m_provider);
-            m_provider.initialize(m_engine, props);
-        } catch (final ClassNotFoundException e) {
-        	...
-        */
-        
+		/*:FVK: - подключить CachingProvider
+		final String classname;
+		//  If user wants to use a cache, then we'll use the CachingProvider.
+		if( useCache ) {
+		    classname = "org.apache.wiki.providers.CachingProvider";
+		} else {
+		    classname = TextUtil.getRequiredProperty( props, PROP_PAGEPROVIDER );
+		}
+		
+		pageSorter.initialize( props );
+		
+		try {
+		    LOG.debug("Page provider class: '" + classname + "'");
+		
+		    final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
+		    m_provider = ( PageProvider ) providerclass.newInstance();
+		
+		    m_provider = new VersioningFileProvider(); 
+		    		//new org.apache.wiki.providers.CachingProvider();
+		
+		    LOG.debug("Initializing page provider class " + m_provider);
+		    m_provider.initialize(m_engine, props);
+		} catch (final ClassNotFoundException e) {
+			...
+		*/
 
 		try {
 			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
@@ -234,8 +210,10 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 		} catch (WikiException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}        
+		}
 	}
+
+	// -- OSGi service handling ------------------------(end)--
 
 	private PageProvider getPageProvider(String requiredId) throws WikiException {
 		//
@@ -1059,16 +1037,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of PageManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

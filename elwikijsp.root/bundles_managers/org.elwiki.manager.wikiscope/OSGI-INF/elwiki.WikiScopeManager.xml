@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.WikiScopeManager">
-   <property name="event.topics" value="org/elwiki/events/init/*"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.WikiScopeManager">
    <service scope="singleton">
       <provide interface="org.elwiki.api.WikiScopeManager"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>

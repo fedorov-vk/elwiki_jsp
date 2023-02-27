@@ -51,7 +51,6 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
@@ -63,16 +62,13 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -170,29 +166,26 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultPluginManager",
 	service = { PluginManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultPluginManager extends BaseModuleManager implements PluginManager, WikiManager, EventHandler {
 
-    private static final String PLUGIN_INSERT_PATTERN = "\\{?(INSERT)?\\s*([\\w\\._]+)[ \\t]*(WHERE)?[ \\t]*";
-    private static final Logger log = Logger.getLogger( DefaultPluginManager.class );
-    private static final String DEFAULT_FORMS_PACKAGE = "org.apache.wiki.forms";
+	private static final String PLUGIN_INSERT_PATTERN = "\\{?(INSERT)?\\s*([\\w\\._]+)[ \\t]*(WHERE)?[ \\t]*";
+	private static final Logger log = Logger.getLogger(DefaultPluginManager.class);
+	private static final String DEFAULT_FORMS_PACKAGE = "org.apache.wiki.forms";
 
-    private ArrayList< String > m_searchPath = new ArrayList<>();
-    private ArrayList< String > m_externalJars = new ArrayList<>();
-    private Pattern m_pluginPattern;
-    private boolean m_pluginsEnabled = true;
+	private ArrayList<String> m_searchPath = new ArrayList<>();
+	private ArrayList<String> m_externalJars = new ArrayList<>();
+	private Pattern m_pluginPattern;
+	private boolean m_pluginsEnabled = true;
 
-    /** Keeps a list of all known plugin classes. */
-    private Map< String, WikiPluginInfo > m_pluginClassMap = new HashMap<>();
+	/** Keeps a list of all known plugin classes. */
+	private Map<String, WikiPluginInfo> m_pluginClassMap = new HashMap<>();
 
 	/**
 	 * Creates instance of PluginManager.
 	 */
-    public DefaultPluginManager() {
+	public DefaultPluginManager() {
 		super();
 	}
 
@@ -201,23 +194,9 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
-    
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
 
-	// -- OSGi service handling ------------------------(end)--
-	
-	/**
-	 * Initialises PluginManager.
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void initialize() throws WikiException {
 		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 		
@@ -251,6 +230,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
             throw new InternalWikiException( "PluginManager patterns are broken" , e );
         }
 	}
+
+	// -- OSGi service handling ------------------------(end)--
 
     private void registerPlugins() {
         // Register all plugins which have created a resource containing its properties.
@@ -771,16 +752,9 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultPluginManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

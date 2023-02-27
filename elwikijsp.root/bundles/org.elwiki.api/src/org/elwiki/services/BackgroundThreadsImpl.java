@@ -61,23 +61,18 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 	@WikiServiceReference
 	Engine engine;
 
-    /**
-     * This component activate routine.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-	@Activate
-	protected void startup() {
-		//
-	}
-
 	/**
 	 * This component deactivate routine.
 	 */
 	@Deactivate
 	protected void shutdown() {
 		m_killMe = true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
 	}
 
 	// -- OSGi service handling ----------------------( end )--

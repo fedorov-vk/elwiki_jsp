@@ -18,24 +18,19 @@
  */
 package org.apache.wiki.tasks;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.exceptions.WikiException;
+import java.util.Locale;
+
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.tasks.auth.SaveUserProfileTask;
 import org.apache.wiki.tasks.pages.PreSaveWikiPageTask;
 import org.apache.wiki.tasks.pages.SaveWikiPageTask;
-import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.workflow0.Step;
 import org.elwiki.api.component.WikiManager;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
-
-import java.util.Locale;
 
 /**
  * Default implementation for {@link TasksManager}.
@@ -48,28 +43,38 @@ import java.util.Locale;
 //@formatter:on
 public class DefaultTasksManager implements TasksManager, WikiManager {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Step buildPreSaveWikiPageTask( final WikiContext context, final String proposedText ) {
-        return new PreSaveWikiPageTask( context, proposedText );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Step buildSaveWikiPageTask( final WikiContext context, String author, String changenote ) {
-        return new SaveWikiPageTask( context, author, changenote );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Step buildSaveUserProfileTask( final Engine engine, final Locale loc ) {
-        return new SaveUserProfileTask( engine, loc );
-    }
+	// -- OSGi service handling ----------------------(start)--
+
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
+	}
+
+	// -- OSGi service handling ------------------------(end)--
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Step buildPreSaveWikiPageTask(final WikiContext context, final String proposedText) {
+		return new PreSaveWikiPageTask(context, proposedText);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Step buildSaveWikiPageTask(final WikiContext context, String author, String changenote) {
+		return new SaveWikiPageTask(context, author, changenote);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Step buildSaveUserProfileTask(final Engine engine, final Locale loc) {
+		return new SaveUserProfileTask(engine, loc);
+	}
 
 }

@@ -26,9 +26,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
@@ -41,11 +39,9 @@ import org.apache.wiki.util.XmlUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.jdom2.Element;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -70,50 +66,33 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultEditorManager",
 	service = { EditorManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultEditorManager extends BaseModuleManager implements EditorManager, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( DefaultEditorManager.class );
+	private static final Logger log = Logger.getLogger(DefaultEditorManager.class);
 
-    private Map< String, WikiEditorInfo > m_editors;
+	private Map<String, WikiEditorInfo> m_editors;
 
-    /**
-     * Constructs the DefaultEditorManager instance.
-     */
-    public DefaultEditorManager() {
-        super();
-    }
+	/**
+	 * Constructs the DefaultEditorManager instance.
+	 */
+	public DefaultEditorManager() {
+		super();
+	}
 
 	// -- OSGi service handling --------------------( start )--
 
-    @WikiServiceReference
-    private VariableManager variableManager;
+	@WikiServiceReference
+	private VariableManager variableManager;
 
-    /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-    @Activate
-	protected void startup() throws WikiException {
-    	//
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		registerEditors();
 	}
 
 	// -- OSGi service handling ----------------------( end )--
-    
-    /**
-     * {@inheritDoc}
-     *
-     * Initializes the EditorManager.  It also registers any editors it can find.
-     */
-    public void initialize() throws WikiException {
-        registerEditors();
-    }
 
     /** This method goes through the jspwiki_module.xml files and hunts for editors. Any editors found are put in the registry. */
     private void registerEditors() {
@@ -234,16 +213,9 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultEditorManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
     
 }

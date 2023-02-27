@@ -32,6 +32,7 @@ import java.util.regex.Matcher;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
@@ -47,9 +48,7 @@ import org.elwiki_data.AclEntry;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
@@ -88,14 +87,10 @@ public class DefaultAclManager implements AclManager, WikiManager, EventHandler 
 	@WikiServiceReference
 	PageManager pageManager;
 
-	@Activate
-	protected void startup() {
-		//
-	}
-
-	@Deactivate
-	protected void shutdown() {
-		//
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
 	}
 
 	// -- OSGi service handling ------------------------(end)--

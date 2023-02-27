@@ -12,7 +12,6 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.ISessionMonitor;
@@ -21,12 +20,10 @@ import org.elwiki.api.WikiScopeManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 import com.google.gson.Gson;
@@ -36,9 +33,6 @@ import com.google.gson.reflect.TypeToken;
 @Component(
 	name = "elwiki.WikiScopeManager",
 	service = { WikiScopeManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, EventHandler {
@@ -49,12 +43,13 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 
 	/**
 	 * Defines the scope for wiki sessions:
-	 * <code>&lt;session, &lt;pageId, selectionStatus&gt;&gt;</code>. For the session, In the case
-	 * of defining an scope area - a map of page ids is stored.
+	 * <code>&lt;session, &lt;pageId, selectionStatus&gt;&gt;</code>. For the session, In the case of
+	 * defining an scope area - a map of page ids is stored.
 	 * <p>
 	 * For example, map of pages <code>&lt;pageId, selectionStatus&gt;</code>:
 	 * <code>{1000:1, 1002:2, 1003:2, 1004:2, 1013:2}</code><br/>
-	 * The selection status is: =2 - page is selected; =1 - only some children of page are selected for scope.
+	 * The selection status is: =2 - page is selected; =1 - only some children of page are selected for
+	 * scope.
 	 */
 	private Map<Session, Map<String, Integer>> scopePages = new WeakHashMap();
 
@@ -78,21 +73,11 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	WikiAjaxDispatcher wikiAjaxDispatcher;
 
 	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
-
-	/**
 	 * Initializes WikiScopeManager.
 	 * 
 	 * @throws WikiException
 	 */
+	@Override
 	public void initialize() throws WikiException {
 		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
 
@@ -156,16 +141,9 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of WikiScopeManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

@@ -1,13 +1,17 @@
 package org.elwiki.engine.internal;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -96,16 +100,15 @@ public class WikiEngine implements Engine {
 		}
 
 		int counterOfRegistered = 0;
-		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
-		boolean isRequiredRssGenerator = TextUtil.getBooleanProperty(preferences, RSSGenerator.PROP_GENERATE_RSS,
-				false);
-
+		boolean isRequiredRssGenerator = TextUtil.getBooleanProperty(//
+				this.wikiConfiguration.getWikiPreferences(),
+				RSSGenerator.PROP_GENERATE_RSS, false);
 		for (ServiceReference<?> ref : refs) {
 			@SuppressWarnings("unchecked")
 			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
 			Class<?> clazz = service.getClass();
-			if (clazz.isInstance(RSSGenerator.class) && !isRequiredRssGenerator) {
-				continue;
+			if (RSSGenerator.class.isAssignableFrom(clazz) && !isRequiredRssGenerator) {
+				continue; // to skip any RSSGenerator component.
 			}
 			counterOfRegistered++;
 			Class<?>[] interfaces = clazz.getInterfaces();
@@ -269,6 +272,13 @@ public class WikiEngine implements Engine {
 
 		log.debug("◄►initialization◄► STAGE ONE.");
 		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE, Collections.emptyMap()));
+
+		Set<Object> managers = new HashSet<>(this.managers.values());
+		for(Object managerInstance : managers) {
+			if(managerInstance instanceof WikiManager wikiManager) {
+				wikiManager.initialize();
+			}
+		}
 
 		log.debug("◄►initialization◄► STAGE TWO.");
 		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO, Collections.emptyMap()));

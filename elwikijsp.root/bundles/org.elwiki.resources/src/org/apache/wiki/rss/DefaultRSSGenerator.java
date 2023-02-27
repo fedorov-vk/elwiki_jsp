@@ -18,15 +18,19 @@
  */
 package org.apache.wiki.rss;
 
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.diff.DifferenceManager;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.rss.IFeed;
 import org.apache.wiki.api.rss.RSSGenerator;
@@ -38,14 +42,18 @@ import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
-
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * Default implementation for {@link RSSGenerator}.
@@ -53,357 +61,394 @@ import java.util.Set;
  * {@inheritDoc}
  */
 // FIXME: Limit diff and page content size.
-//TODO: RSS generator.
-public class DefaultRSSGenerator implements RSSGenerator {
+//@formatter:off
+@Component(
+	name = "elwiki.DefaultRSSGenerator",
+	service = { RSSGenerator.class, WikiManager.class, EventHandler.class  },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	},
+	scope = ServiceScope.SINGLETON)
+//@formatter:on
+public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( DefaultRSSGenerator.class );
-    private Engine m_engine;
+	private static final Logger log = Logger.getLogger(DefaultRSSGenerator.class);
 
-    /** The RSS file to generate. */
-    private String m_rssFile;
-    private String m_channelDescription = "";
-    private String m_channelLanguage = "en-us";
-    private boolean m_enabled = true;
+	/** The RSS file to generate. */
+	private String m_rssFile;
+	private String m_channelDescription = "";
+	private String m_channelLanguage = "en-us";
+	private boolean m_enabled = true;
 
-    private static final int MAX_CHARACTERS = Integer.MAX_VALUE-1;
+	private static final int MAX_CHARACTERS = Integer.MAX_VALUE - 1;
 
-    /**
-     *  Builds the RSS generator for a given Engine.
-     *
-     *  @param engine The Engine.
-     *  @param properties The properties.
-     */
-    public DefaultRSSGenerator( final Engine engine ) {
-        m_engine = engine;
-        IPreferenceStore properties = engine.getWikiPreferences();
-        m_channelDescription = TextUtil.getStringProperty(properties, PROP_CHANNEL_DESCRIPTION, m_channelDescription );
-        m_channelLanguage = TextUtil.getStringProperty(properties, PROP_CHANNEL_LANGUAGE, m_channelLanguage );
-        m_rssFile = TextUtil.getStringProperty( properties, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf" );
-    }
+	/**
+	 * Constructs the RSS generator.
+	 */
+	public DefaultRSSGenerator() {
+		super();
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * Start the RSS generator & generator thread
-     */
-    @Override
-    public void initialize( final Engine engine ) {
-        final File rssFile;
-        if( m_rssFile.startsWith( File.separator ) ) { // honor absolute pathnames
-            rssFile = new File( m_rssFile );
-        } else { // relative path names are anchored from the webapp root path
-            rssFile = new File( engine.getRootPath(), m_rssFile );
-        }
-        final int rssInterval = TextUtil.getIntegerProperty( engine.getWikiPreferences(), DefaultRSSGenerator.PROP_INTERVAL, 3600 );
-        final RSSThread rssThread = new RSSThread( engine, rssFile, rssInterval );
-        rssThread.start();
-    }
+	// -- OSGi service handling ----------------------(start)--
 
-    private String getAuthor( final WikiPage page ) {
-        String author = page.getAuthor();
-        if( author == null ) {
-            author = "An unknown author";
-        }
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
 
-        return author;
-    }
+	@WikiServiceReference
+	private Engine m_engine;
 
-    private String getAttachmentDescription( final PageAttachment att ) {
-        final String author = ":FVK:"; //:FVK: getAuthor( att );
-        final StringBuilder sb = new StringBuilder();
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
+		m_channelDescription = TextUtil.getStringProperty(preferences, PROP_CHANNEL_DESCRIPTION, m_channelDescription);
+		m_channelLanguage = TextUtil.getStringProperty(preferences, PROP_CHANNEL_LANGUAGE, m_channelLanguage);
+		m_rssFile = TextUtil.getStringProperty(preferences, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf");
+	}
 
-        /*:FVK:
-        if( att.getVersion() != 1 ) {
-        	//:FVK: sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModifiedDate() );
-        } else {
-        	//:FVK: sb.append( author ).append( " created this attachment on " ).append( att.getLastModifiedDate() );
-        }
-        */
+	/**
+	 * Starts the RSS generator & generator thread.
+	 *
+	 * @throws WikiException
+	 */
+	private void initializeStageTwo() throws WikiException {
+		final File rssFile;
+		if (m_rssFile.startsWith(File.separator)) { // honor absolute pathnames
+			rssFile = new File(m_rssFile);
+		} else { // relative path names are anchored from the webapp root path
+			rssFile = new File(m_engine.getRootPath(), m_rssFile);
+		}
+		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
+		final int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
+		final RSSThread rssThread = new RSSThread(m_engine, rssFile, rssInterval);
+		rssThread.start();
+	}
 
-        sb.append( "<br /><hr /><br />" )
-          .append( "Parent page: <a href=\"" )
-        //:FVK: .append( m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), att.getParentName(), null ) )
-        //:FVK: .append( "\">" ).append( att.getParentName() ).append( "</a><br />" )
-          .append( "Info page: <a href=\"" )
-          .append( m_engine.getURL( ContextEnum.PAGE_INFO.getRequestContext(), att.getName(), null ) )
-          .append( "\">" ).append( att.getName() ).append( "</a>" );
+	// -- OSGi service handling ------------------------(end)--
 
-        return sb.toString();
-    }
+	private String getAuthor(final WikiPage page) {
+		String author = page.getAuthor();
+		if (author == null) {
+			author = "An unknown author";
+		}
 
-    private String getPageDescription( final WikiPage page ) {
-    	RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
-        final StringBuilder buf = new StringBuilder();
-        final String author = getAuthor( page );
-        final WikiContext ctx = Wiki.context().create( m_engine, page );
-      /*:FVK:
-        if( page.getVersion() > 1 ) {
-            final String diff = WikiEngine.getDifferenceManager().getDiff( ctx,
-                                                                page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
-                                                                         page.getVersion() );
+		return author;
+	}
 
-            buf.append( author ).append( " changed this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
-            buf.append( diff );
-        } else*/ {
-            buf.append( author ).append( " created this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
-            buf.append( renderingManager.getHTML( page.getName() ) );
-        }
+	private String getAttachmentDescription(final PageAttachment att) {
+		final String author = ":FVK:"; //:FVK: getAuthor( att );
+		final StringBuilder sb = new StringBuilder();
 
-        return buf.toString();
-    }
+		/*:FVK:
+		if( att.getVersion() != 1 ) {
+			//:FVK: sb.append( author ).append( " uploaded a new version of this attachment on " ).append( att.getLastModifiedDate() );
+		} else {
+			//:FVK: sb.append( author ).append( " created this attachment on " ).append( att.getLastModifiedDate() );
+		}
+		*/
 
-    private String getEntryDescription( final WikiPage page ) {
-        final String res;
-        if( page instanceof PageAttachment ) {
-            res = getAttachmentDescription( (PageAttachment)page );
-        } else {
-            res = getPageDescription( page );
-        }
+		sb.append("<br /><hr /><br />").append("Parent page: <a href=\"")
+				//:FVK: .append( m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), att.getParentName(), null ) )
+				//:FVK: .append( "\">" ).append( att.getParentName() ).append( "</a><br />" )
+				.append("Info page: <a href=\"")
+				.append(m_engine.getURL(ContextEnum.PAGE_INFO.getRequestContext(), att.getName(), null)).append("\">")
+				.append(att.getName()).append("</a>");
 
-        return res;
-    }
+		return sb.toString();
+	}
 
-    // FIXME: This should probably return something more intelligent
-    private String getEntryTitle( final WikiPage page ) {
-        return ":FVK:"; //:FVK: page.getName() + ", version " + page.getVersion();
-    }
+	private String getPageDescription(final WikiPage page) {
+		RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
+		final StringBuilder buf = new StringBuilder();
+		final String author = getAuthor(page);
+		final WikiContext ctx = Wiki.context().create(m_engine, page);
+		/*:FVK:
+		if( page.getVersion() > 1 ) {
+		    final String diff = WikiEngine.getDifferenceManager().getDiff( ctx,
+		                                                        page.getVersion() - 1, // FIXME: Will fail when non-contiguous versions
+		                                                                 page.getVersion() );
+		
+		    buf.append( author ).append( " changed this page on " ).append( page.getLastModifiedDate() ).append( ":<br /><hr /><br />" );
+		    buf.append( diff );
+		} else*/ {
+			buf.append(author).append(" created this page on ").append(page.getLastModifiedDate())
+					.append(":<br /><hr /><br />");
+			buf.append(renderingManager.getHTML(page.getName()));
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public String generate() {
-        final WikiContext context = Wiki.context().create( m_engine, Wiki.contents().page( "__DUMMY" ) );
-        context.setRequestContext( ContextEnum.PAGE_RSS.getRequestContext() );
-        final Feed feed = new RSS10Feed( context );
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + generateFullWikiRSS( context, feed );
-    }
+		return buf.toString();
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public String generateFeed( final WikiContext wikiContext, final List< WikiPage > changed, final String mode, final String type ) throws IllegalArgumentException {
-        final Feed feed;
-        final String res;
+	private String getEntryDescription(final WikiPage page) {
+		final String res;
+		if (page instanceof PageAttachment) {
+			res = getAttachmentDescription((PageAttachment) page);
+		} else {
+			res = getPageDescription(page);
+		}
 
-        if( ATOM.equals(type) ) {
-            feed = new AtomFeed( wikiContext );
-        } else if( RSS20.equals( type ) ) {
-            feed = new RSS20Feed( wikiContext );
-        } else {
-            feed = new RSS10Feed( wikiContext );
-        }
+		return res;
+	}
 
-        feed.setMode( mode );
+	// FIXME: This should probably return something more intelligent
+	private String getEntryTitle(final WikiPage page) {
+		return ":FVK:"; //:FVK: page.getName() + ", version " + page.getVersion();
+	}
 
-        if( MODE_BLOG.equals( mode ) ) {
-            res = generateBlogRSS( wikiContext, changed, feed );
-        } else if( MODE_FULL.equals(mode) ) {
-            res = generateFullWikiRSS( wikiContext, feed );
-        } else if( MODE_WIKI.equals(mode) ) {
-            res = generateWikiPageRSS( wikiContext, changed, feed );
-        } else {
-            throw new IllegalArgumentException( "Invalid value for feed mode: "+mode );
-        }
+	/** {@inheritDoc} */
+	@Override
+	public String generate() {
+		final WikiContext context = Wiki.context().create(m_engine, Wiki.contents().page("__DUMMY"));
+		context.setRequestContext(ContextEnum.PAGE_RSS.getRequestContext());
+		final Feed feed = new RSS10Feed(context);
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + generateFullWikiRSS(context, feed);
+	}
 
-        return res;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String generateFeed(final WikiContext wikiContext, final List<WikiPage> changed, final String mode,
+			final String type) throws IllegalArgumentException {
+		final Feed feed;
+		final String res;
 
-    /** {@inheritDoc} */
-    @Override
-    public synchronized boolean isEnabled() {
-        return m_enabled;
-    }
+		if (ATOM.equals(type)) {
+			feed = new AtomFeed(wikiContext);
+		} else if (RSS20.equals(type)) {
+			feed = new RSS20Feed(wikiContext);
+		} else {
+			feed = new RSS10Feed(wikiContext);
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public synchronized void setEnabled( final boolean enabled ) {
-        m_enabled = enabled;
-    }
+		feed.setMode(mode);
 
-    /** {@inheritDoc} */
-    @Override
-    public String getRssFile() {
-        return m_rssFile;
-    }
+		if (MODE_BLOG.equals(mode)) {
+			res = generateBlogRSS(wikiContext, changed, feed);
+		} else if (MODE_FULL.equals(mode)) {
+			res = generateFullWikiRSS(wikiContext, feed);
+		} else if (MODE_WIKI.equals(mode)) {
+			res = generateWikiPageRSS(wikiContext, changed, feed);
+		} else {
+			throw new IllegalArgumentException("Invalid value for feed mode: " + mode);
+		}
 
-    /** {@inheritDoc} */
-    @Override
-    public String generateFullWikiRSS( final WikiContext wikiContext, final IFeed feed ) {
-    	PageManager pageManager = this.m_engine.getManager(PageManager.class);
-    	ISessionMonitor sessionMonitor = this.m_engine.getManager(ISessionMonitor.class);
-    	AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
-        feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() );
-        feed.setFeedURL( m_engine.getWikiConfiguration().getBaseURL() );
-        feed.setChannelLanguage( m_channelLanguage );
-        feed.setChannelDescription( m_channelDescription );
+		return res;
+	}
 
-        final Set< WikiPage > changed = pageManager.getRecentChanges();
+	/** {@inheritDoc} */
+	@Override
+	public synchronized boolean isEnabled() {
+		return m_enabled;
+	}
 
-        final Session session = sessionMonitor.createGuestSession(null);
-        int items = 0;
-        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final WikiPage page = i.next();
+	/** {@inheritDoc} */
+	@Override
+	public synchronized void setEnabled(final boolean enabled) {
+		m_enabled = enabled;
+	}
 
-            //  Check if the anonymous user has view access to this page.
-            if( !authorizationManager.checkPermission(session, new PagePermission(page,PagePermission.VIEW_ACTION) ) ) {
-                // No permission, skip to the next one.
-                continue;
-            }
+	/** {@inheritDoc} */
+	@Override
+	public String getRssFile() {
+		return m_rssFile;
+	}
 
-            final String url;
-            if( page instanceof PageAttachment ) {
-                url = m_engine.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), page.getName(),null );
-            } else {
-                url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), null );
-            }
+	/** {@inheritDoc} */
+	@Override
+	public String generateFullWikiRSS(final WikiContext wikiContext, final IFeed feed) {
+		PageManager pageManager = this.m_engine.getManager(PageManager.class);
+		ISessionMonitor sessionMonitor = this.m_engine.getManager(ISessionMonitor.class);
+		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
+		feed.setChannelTitle(m_engine.getWikiConfiguration().getApplicationName());
+		feed.setFeedURL(m_engine.getWikiConfiguration().getBaseURL());
+		feed.setChannelLanguage(m_channelLanguage);
+		feed.setChannelDescription(m_channelDescription);
 
-            final Entry e = new Entry();
-            e.setPage( page );
-            e.setURL( url );
-            e.setTitle( page.getName() );
-            e.setContent( getEntryDescription(page) );
-            e.setAuthor( getAuthor(page) );
+		final Set<WikiPage> changed = pageManager.getRecentChanges();
 
-            feed.addEntry( e );
-        }
+		final Session session = sessionMonitor.createGuestSession(null);
+		int items = 0;
+		for (final Iterator<WikiPage> i = changed.iterator(); i.hasNext() && items < 15; items++) {
+			final WikiPage page = i.next();
 
-        return feed.getString();
-    }
+			//  Check if the anonymous user has view access to this page.
+			if (!authorizationManager.checkPermission(session, new PagePermission(page, PagePermission.VIEW_ACTION))) {
+				// No permission, skip to the next one.
+				continue;
+			}
 
-    /** {@inheritDoc} */
-    @Override
-    public String generateWikiPageRSS( final WikiContext wikiContext, final List< WikiPage > changed, final IFeed feed ) {
-    	VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
-        feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName()+": "+wikiContext.getPage().getName() );
-        feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
-        final String language = variableManager.getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
+			final String url;
+			if (page instanceof PageAttachment) {
+				url = m_engine.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), page.getName(), null);
+			} else {
+				url = m_engine.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), null);
+			}
 
-        if( language != null ) {
-            feed.setChannelLanguage( language );
-        } else {
-            feed.setChannelLanguage( m_channelLanguage );
-        }
-        final String channelDescription = variableManager.getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
+			final Entry e = new Entry();
+			e.setPage(page);
+			e.setURL(url);
+			e.setTitle(page.getName());
+			e.setContent(getEntryDescription(page));
+			e.setAuthor(getAuthor(page));
 
-        if( channelDescription != null ) {
-            feed.setChannelDescription( channelDescription );
-        }
+			feed.addEntry(e);
+		}
 
-        changed.sort( new PageTimeComparator() );
+		return feed.getString();
+	}
 
-        int items = 0;
-        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final WikiPage page = i.next();
-            final Entry e = new Entry();
-            e.setPage( page );
-            String url;
+	/** {@inheritDoc} */
+	@Override
+	public String generateWikiPageRSS(final WikiContext wikiContext, final List<WikiPage> changed, final IFeed feed) {
+		VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
+		feed.setChannelTitle(
+				m_engine.getWikiConfiguration().getApplicationName() + ": " + wikiContext.getPage().getName());
+		feed.setFeedURL(wikiContext.getViewURL(wikiContext.getPage().getName()));
+		final String language = variableManager.getVariable(wikiContext, PROP_CHANNEL_LANGUAGE);
 
-            if( page instanceof PageAttachment ) {
-                url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(), "version=" + page.getVersion() );
-            } else {
-                url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), "version=" + page.getVersion() );
-            }
+		if (language != null) {
+			feed.setChannelLanguage(language);
+		} else {
+			feed.setChannelLanguage(m_channelLanguage);
+		}
+		final String channelDescription = variableManager.getVariable(wikiContext, PROP_CHANNEL_DESCRIPTION);
 
-            // Unfortunately, this is needed because the code will again go through replacement conversion
-            url = TextUtil.replaceString( url, "&amp;", "&" );
-            e.setURL( url );
-            e.setTitle( getEntryTitle(page) );
-            e.setContent( getEntryDescription(page) );
-            e.setAuthor( getAuthor(page) );
+		if (channelDescription != null) {
+			feed.setChannelDescription(channelDescription);
+		}
 
-            feed.addEntry( e );
-        }
+		changed.sort(new PageTimeComparator());
 
-        return feed.getString();
-    }
+		int items = 0;
+		for (final Iterator<WikiPage> i = changed.iterator(); i.hasNext() && items < 15; items++) {
+			final WikiPage page = i.next();
+			final Entry e = new Entry();
+			e.setPage(page);
+			String url;
 
+			if (page instanceof PageAttachment) {
+				url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_ATTACH.getRequestContext(), page.getName(), "version=" + page.getVersion() );
+			} else {
+				url = ":FVK:"; //:FVK: m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), "version=" + page.getVersion() );
+			}
 
-    /** {@inheritDoc} */
-    @Override
-    public String generateBlogRSS( final WikiContext wikiContext, final List< WikiPage > changed, final IFeed feed ) {
-    	VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
-    	PageManager pageManager = this.m_engine.getManager(PageManager.class);
-    	RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
-        if( log.isDebugEnabled() ) {
-            log.debug( "Generating RSS for blog, size=" + changed.size() );
-        }
+			// Unfortunately, this is needed because the code will again go through replacement conversion
+			url = TextUtil.replaceString(url, "&amp;", "&");
+			e.setURL(url);
+			e.setTitle(getEntryTitle(page));
+			e.setContent(getEntryDescription(page));
+			e.setAuthor(getAuthor(page));
 
-        final String ctitle = variableManager.getVariable( wikiContext, PROP_CHANNEL_TITLE );
-        if( ctitle != null ) {
-            feed.setChannelTitle( ctitle );
-        } else {
-            feed.setChannelTitle( m_engine.getWikiConfiguration().getApplicationName() + ":" + wikiContext.getPage().getName() );
-        }
+			feed.addEntry(e);
+		}
 
-        feed.setFeedURL( wikiContext.getViewURL( wikiContext.getPage().getName() ) );
+		return feed.getString();
+	}
 
-        final String language = variableManager.getVariable( wikiContext, PROP_CHANNEL_LANGUAGE );
-        if( language != null ) {
-            feed.setChannelLanguage( language );
-        } else {
-            feed.setChannelLanguage( m_channelLanguage );
-        }
+	/** {@inheritDoc} */
+	@Override
+	public String generateBlogRSS(final WikiContext wikiContext, final List<WikiPage> changed, final IFeed feed) {
+		VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
+		PageManager pageManager = this.m_engine.getManager(PageManager.class);
+		RenderingManager renderingManager = this.m_engine.getManager(RenderingManager.class);
+		if (log.isDebugEnabled()) {
+			log.debug("Generating RSS for blog, size=" + changed.size());
+		}
 
-        final String channelDescription = variableManager.getVariable( wikiContext, PROP_CHANNEL_DESCRIPTION );
-        if( channelDescription != null ) {
-            feed.setChannelDescription( channelDescription );
-        }
+		final String ctitle = variableManager.getVariable(wikiContext, PROP_CHANNEL_TITLE);
+		if (ctitle != null) {
+			feed.setChannelTitle(ctitle);
+		} else {
+			feed.setChannelTitle(
+					m_engine.getWikiConfiguration().getApplicationName() + ":" + wikiContext.getPage().getName());
+		}
 
-        changed.sort( new PageTimeComparator() );
+		feed.setFeedURL(wikiContext.getViewURL(wikiContext.getPage().getName()));
 
-        int items = 0;
-        for( final Iterator< WikiPage > i = changed.iterator(); i.hasNext() && items < 15; items++ ) {
-            final WikiPage page = i.next();
-            final Entry e = new Entry();
-            e.setPage( page );
-            final String url;
+		final String language = variableManager.getVariable(wikiContext, PROP_CHANNEL_LANGUAGE);
+		if (language != null) {
+			feed.setChannelLanguage(language);
+		} else {
+			feed.setChannelLanguage(m_channelLanguage);
+		}
 
-            if( page instanceof PageAttachment ) {
-                url = m_engine.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), page.getName(),null );
-            } else {
-                url = m_engine.getURL( ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(),null );
-            }
+		final String channelDescription = variableManager.getVariable(wikiContext, PROP_CHANNEL_DESCRIPTION);
+		if (channelDescription != null) {
+			feed.setChannelDescription(channelDescription);
+		}
 
-            e.setURL( url );
+		changed.sort(new PageTimeComparator());
 
-            //  Title
-            String pageText = pageManager.getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+		int items = 0;
+		for (final Iterator<WikiPage> i = changed.iterator(); i.hasNext() && items < 15; items++) {
+			final WikiPage page = i.next();
+			final Entry e = new Entry();
+			e.setPage(page);
+			final String url;
 
-            String title = "";
-            final int firstLine = pageText.indexOf('\n');
+			if (page instanceof PageAttachment) {
+				url = m_engine.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), page.getName(), null);
+			} else {
+				url = m_engine.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), page.getName(), null);
+			}
 
-            if( firstLine > 0 ) {
-                title = pageText.substring( 0, firstLine ).trim();
-            }
+			e.setURL(url);
 
-            if( title.length() == 0 ) {
-                title = page.getName();
-            }
+			//  Title
+			String pageText = pageManager.getPureText(page.getName(), WikiProvider.LATEST_VERSION);
 
-            // Remove wiki formatting
-            while( title.startsWith("!") ) {
-                title = title.substring(1);
-            }
+			String title = "";
+			final int firstLine = pageText.indexOf('\n');
 
-            e.setTitle( title );
+			if (firstLine > 0) {
+				title = pageText.substring(0, firstLine).trim();
+			}
 
-            //  Description
-            if( firstLine > 0 ) {
-                int maxlen = pageText.length();
-                if( maxlen > MAX_CHARACTERS ) {
-                    maxlen = MAX_CHARACTERS;
-                }
-                pageText = renderingManager.textToHTML( wikiContext, pageText.substring( firstLine + 1, maxlen ).trim() );
-                if( maxlen == MAX_CHARACTERS ) {
-                    pageText += "...";
-                }
-                e.setContent( pageText );
-            } else {
-                e.setContent( title );
-            }
-            e.setAuthor( getAuthor(page) );
-            feed.addEntry( e );
-        }
+			if (title.length() == 0) {
+				title = page.getName();
+			}
 
-        return feed.getString();
-    }
+			// Remove wiki formatting
+			while (title.startsWith("!")) {
+				title = title.substring(1);
+			}
+
+			e.setTitle(title);
+
+			//  Description
+			if (firstLine > 0) {
+				int maxlen = pageText.length();
+				if (maxlen > MAX_CHARACTERS) {
+					maxlen = MAX_CHARACTERS;
+				}
+				pageText = renderingManager.textToHTML(wikiContext, pageText.substring(firstLine + 1, maxlen).trim());
+				if (maxlen == MAX_CHARACTERS) {
+					pageText += "...";
+				}
+				e.setContent(pageText);
+			} else {
+				e.setContent(title);
+			}
+			e.setAuthor(getAuthor(page));
+			feed.addEntry(e);
+		}
+
+		return feed.getString();
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
+			try {
+				initializeStageTwo();
+			} catch (WikiException e) {
+				log.error("Failed initialization of DefaultRSSGeneratorManager.", e);
+			}
+			break;
+		}
+	}
 
 }

@@ -26,7 +26,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.diff.DifferenceManager;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
@@ -35,12 +34,10 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -50,42 +47,26 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultDifferenceManager",
 	service = { DifferenceManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultDifferenceManager implements DifferenceManager, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( DefaultDifferenceManager.class );
+	private static final Logger log = Logger.getLogger(DefaultDifferenceManager.class);
 
-    private DiffProvider m_provider;
-
-    /**
-     * Creates instance of DefaultDifferenceManager.
-     */
-    public DefaultDifferenceManager() {
-		super();
-	}
+	private DiffProvider m_provider;
 
 	/**
-     * Creates a new DifferenceManager for the given engine.
-     *
-     * @param engine The Engine.
-     * @param props  A set of properties.
-     */
-    public DefaultDifferenceManager( final Engine engine ) {
-        loadProvider();
-        initializeProvider( engine );
-
-        log.info( "Using difference provider: " + m_provider.getProviderInfo() );
-    }
+	 * Creates instance of DefaultDifferenceManager.
+	 */
+	public DefaultDifferenceManager() {
+		super();
+	}
 
 	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-    private IWikiConfiguration wikiConfiguration;
+	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
 	private Engine engine;
@@ -93,29 +74,16 @@ public class DefaultDifferenceManager implements DifferenceManager, WikiManager,
 	@WikiServiceReference
 	private PageManager pageManager;
 
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		loadProvider();
+		initializeProvider(engine);
 
-    /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-    @Activate
-	protected void startup() throws WikiException {
-    	//
+		log.info("Using difference provider: " + m_provider.getProviderInfo());
 	}
 
 	// -- OSGi service handling ------------------------(end)--
-
-	/**
-	 * Initialises DifferenceManager.
-	 */
-	public void initialize() throws WikiException {
-        loadProvider();
-        initializeProvider( engine );
-
-        log.info( "Using difference provider: " + m_provider.getProviderInfo() );
-	}
 
     private void loadProvider() {
         final String providerClassName = TextUtil.getStringProperty(
@@ -197,16 +165,9 @@ public class DefaultDifferenceManager implements DifferenceManager, WikiManager,
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultDifferenceManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}
+		}*/
 	}
 
 }

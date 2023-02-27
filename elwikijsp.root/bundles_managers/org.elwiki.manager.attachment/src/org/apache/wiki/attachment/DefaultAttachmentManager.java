@@ -33,7 +33,6 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.attachment.IDynamicAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -50,12 +49,10 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 import net.sf.ehcache.Cache;
@@ -73,79 +70,64 @@ import net.sf.ehcache.Element;
 @Component(
 	name = "elwiki.DefaultAttachmentManager",
 	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
-	scope = ServiceScope.SINGLETON,
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
-	})
+	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultAttachmentManager implements AttachmentManager, WikiManager, EventHandler {
 
-    /** List of attachment types which are forced to be downloaded */
+	/** List of attachment types which are forced to be downloaded */
 	@Deprecated
-    private String[] m_forceDownloadPatterns;
+	private String[] m_forceDownloadPatterns;
 
-    private static final Logger log = Logger.getLogger( DefaultAttachmentManager.class );
+	private static final Logger log = Logger.getLogger(DefaultAttachmentManager.class);
 
-    private AttachmentProvider m_provider;
+	private AttachmentProvider m_provider;
 
-    @Deprecated
-    private CacheManager m_cacheManager = CacheManager.getInstance();
-    @Deprecated
-    private Cache m_dynamicAttachments;
+	@Deprecated
+	private CacheManager m_cacheManager = CacheManager.getInstance();
+	@Deprecated
+	private Cache m_dynamicAttachments;
 
 	/**
-     * Creates instance of DefaultAttachmentManager.
-     */
-    public DefaultAttachmentManager() {
+	 * Creates instance of DefaultAttachmentManager.
+	 */
+	public DefaultAttachmentManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-    // -- OSGi service handling ----------------------(start)--
+	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-    @WikiServiceReference
-    private Engine m_engine;
+	@WikiServiceReference
+	private Engine m_engine;
 
-    @WikiServiceReference
-    private PageManager pageManager;
+	@WikiServiceReference
+	private PageManager pageManager;
 
-    @WikiServiceReference
-    private ReferenceManager referenceManager;
+	@WikiServiceReference
+	private ReferenceManager referenceManager;
 
-    /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-    @Activate
-	protected void startup() throws WikiException {
-		//
-	}
-    
-    // -- OSGi service handling ------------------------(end)--
-
-	/**
-	 * Initialises AttachmentManager.
-	 */
-    // FIXME: Perhaps this should fail somehow.
+	/** {@inheritDoc} */
+	// FIXME: Perhaps this should fail somehow.
+	@Override
 	public void initialize() throws WikiException {
-        try {
-			m_provider = new BasicAttachmentProvider(); 
-			m_provider.initialize( m_engine );
+		try {
+			m_provider = new BasicAttachmentProvider();
+			m_provider.initialize(m_engine);
 		} catch (NoRequiredPropertyException e1) {
-            log.error( "Attachment provider did not find a property that it needed: " + e1.getMessage(), e1 );
-            m_provider = null; // No, it did not work.
+			log.error("Attachment provider did not find a property that it needed: " + e1.getMessage(), e1);
+			m_provider = null; // No, it did not work.
 		} catch (IOException e1) {
-            log.error( "Attachment provider reports IO error", e1 );
-            m_provider = null;
+			log.error("Attachment provider reports IO error", e1);
+			m_provider = null;
 		}
 
 		m_forceDownloadPatterns = new String[0];
-    }
+	}
+
+	// -- OSGi service handling ------------------------(end)--
 
 	/** {@inheritDoc} */
     @Override
@@ -386,16 +368,9 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of SearchManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

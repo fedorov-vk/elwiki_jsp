@@ -45,9 +45,7 @@ import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
@@ -62,10 +60,7 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultPageRenamer",
 	service = { PageRenamer.class, WikiManager.class, EventHandler.class },
-	scope = ServiceScope.SINGLETON,
-	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
-	})
+	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandler {
 
@@ -77,24 +72,20 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 	@WikiServiceReference
 	private PageManager pageManager;
-	
+
 	@WikiServiceReference
 	private AttachmentManager attachmentManager;
 
 	@WikiServiceReference
 	private ReferenceManager referenceManager;
-	
+
 	@WikiServiceReference
 	private SearchManager searchManager;
-	
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
 
-	@Deactivate
-	protected void shutdown() {
-		//
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
 	}
 
 	// -- OSGi service handling ----------------------( end )--

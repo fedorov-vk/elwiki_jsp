@@ -45,9 +45,6 @@ import org.osgi.service.useradmin.UserAdmin;
 @Component(
 	name = "elwiki.DefaultAccountRegistry",
 	service = { AccountRegistry.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class DefaultAccountRegistry extends InitialAccountRegistry
@@ -79,24 +76,9 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	@WikiServiceReference
 	private AccountManager accountManager;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 *
-	 * @param componentContext
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-	}
-
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-
-	// -- OSGi service handling ------------------------(end)--
-
-	protected void initialize() throws WikiException {
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
 		try {
 			/* Reading initialized custom user profiles, groups of users.
 			 * (:FVK: workaround.)
@@ -106,6 +88,8 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 			log.error("Could not load Users & Groups data from JSON file of bundle.", e);
 		}
 	}
+
+	// -- OSGi service handling ------------------------(end)--
 
 	@Override
 	public UserAdmin getUserAdminService() {
@@ -331,16 +315,9 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of ProgressManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/
 	}
 
 }

@@ -66,9 +66,7 @@ import org.elwiki.authorize.login.WebContainerCallbackHandler;
 import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
 import org.osgi.framework.Bundle;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
@@ -88,9 +86,6 @@ import org.osgi.service.useradmin.UserAdmin;
 @Component(
 	name = "elwiki.DefaultAuthenticationManager",
 	service = { IIAuthenticationManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultAuthenticationManager implements IIAuthenticationManager, WikiManager, EventHandler {
@@ -153,27 +148,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 	@WikiServiceReference
 	private ISessionMonitor sessionMonitor;
 
-    /**
-     * This component activate routine. Does all the real initialization.
-     * 
-     * @param componentContext
-     * @throws WikiException
-     */
-    @Activate
-	protected void startup() throws WikiException {
-    	//
-	}
-
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-	
-	// -- OSGi service handling ------------------------(end)--
-    
-	/**
-	 * Initialises AuthenticationManager.
-	 */
+	/** {@inheritDoc} */
+	@Override
     public void initialize() throws WikiException {
         m_storeIPAddress = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_STOREIPADDRESS, m_storeIPAddress );
 
@@ -202,6 +178,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
         // Initialize the LoginModule options
         initLoginModuleOptions( m_engine.getWikiPreferences() );
     }
+
+	// -- OSGi service handling ------------------------(end)--
 
 	/**
 	 * Looks up the LoginModule class, via extension point "org.elwiki.authorize.loginModule".
@@ -579,16 +557,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultAuthenticationManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/
 	}
 
 }

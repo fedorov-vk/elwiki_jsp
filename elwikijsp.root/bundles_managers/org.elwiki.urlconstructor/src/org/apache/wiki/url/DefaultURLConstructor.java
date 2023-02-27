@@ -18,33 +18,26 @@
  */
 package org.apache.wiki.url;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.CommandResolver;
-import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 
 /**
@@ -55,9 +48,6 @@ import java.nio.charset.Charset;
 @Component(
 	name = "elwiki.DefaultUrlConstructor",
 	service = { URLConstructor.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultURLConstructor implements URLConstructor, WikiManager, EventHandler {
@@ -73,26 +63,14 @@ public class DefaultURLConstructor implements URLConstructor, WikiManager, Event
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 * 
-	 * @param componentContext passed the Engine.
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
 	}
 
 	// -- OSGi service handling ------------------------(end)--
 
-	/**
-	 * Initialises AuthenticationManager.
-	 */
-	public void initialize() throws WikiException {
-		m_pathPrefix = this.wikiConfiguration.getBaseURL() + "/";
-	}
-    
     /**
      *  Does replacement of some particular variables.  The variables are:
      *
@@ -221,16 +199,9 @@ public class DefaultURLConstructor implements URLConstructor, WikiManager, Event
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultURLConstructor.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

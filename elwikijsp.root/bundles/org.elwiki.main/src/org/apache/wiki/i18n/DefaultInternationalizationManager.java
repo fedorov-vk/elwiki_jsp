@@ -18,16 +18,16 @@
  */
 package org.apache.wiki.i18n;
 
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.elwiki.api.component.WikiManager;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 
 /**
- *  Manages all internationalization in JSPWiki.
+ * Manages all internationalization in JSPWiki.
  *
- *  @since 2.6
+ * @since 2.6
  */
 //@formatter:off
 @Component(
@@ -37,10 +37,20 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:on
 public class DefaultInternationalizationManager implements InternationalizationManager, WikiManager {
 
-    /**
-     *  Constructs a new InternationalizationManager.
-     */
-    public DefaultInternationalizationManager( ) {
-    }
+	/**
+	 * Constructs a new InternationalizationManager.
+	 */
+	public DefaultInternationalizationManager() {
+	}
+
+	// -- OSGi service handling ----------------------(start)--
+
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
+	}
+
+	// -- OSGi service handling ------------------------(end)--
 
 }

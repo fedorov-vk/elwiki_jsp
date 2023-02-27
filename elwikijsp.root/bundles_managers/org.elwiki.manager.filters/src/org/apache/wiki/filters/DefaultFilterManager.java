@@ -18,11 +18,19 @@
  */
 package org.apache.wiki.filters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiPageEvent;
 import org.apache.wiki.api.exceptions.FilterException;
@@ -33,35 +41,17 @@ import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.filters.internal.FiltersActivator;
 import org.apache.wiki.filters0.FilterManager;
-import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.PriorityList;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.configuration.ScopedPreferenceStore;
 import org.jdom2.Element;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
 
 
 /**
@@ -108,9 +98,6 @@ import java.util.Properties;
 @Component(
 	name = "elwiki.DefaultFilterManager",
 	service = { FilterManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultFilterManager extends BaseModuleManager implements FilterManager, WikiManager, EventHandler {
@@ -140,74 +127,14 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     @WikiServiceReference
     private Engine m_engine;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 *
-	 * @param componentContext
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
-
-	// -- OSGi service handling ------------------------(end)--
-    
     /**
-     *  Adds a page filter to the queue.  The priority defines in which order the page filters are run, the highest priority filters go
-     *  in the queue first.
-     *  <p>
-     *  In case two filters have the same priority, their execution order is the insertion order.
+     * {@inheritDoc}
+     * <p>
+     * Initializes the filters from an XML file.
      *
-     *  @since 2.1.44.
-     *  @param f PageFilter to add
-     *  @param priority The priority in which position to add it in.
-     *  @throws IllegalArgumentException If the PageFilter is null or invalid.
-     */
-    @Override
-    public void addPageFilter( final PageFilter f, final int priority ) throws IllegalArgumentException {
-        if( f == null ) {
-            throw new IllegalArgumentException("Attempt to provide a null filter - this should never happen.  Please check your configuration (or if you're a developer, check your own code.)");
-        }
-
-        m_pageFilters.add( f, priority );
-    }
-
-    private void initPageFilter( final String className, final Properties props ) {
-        try {
-            final PageFilterInfo info = m_filterClassMap.get( className );
-            if( info != null && !checkCompatibility( info ) ) {
-                log.warn( "Filter '" + info.getName() + "' not compatible with this version of JSPWiki" );
-                return;
-            }
-
-            final int priority = 0; // FIXME: Currently fixed.
-            final Class< ? > cl = ClassUtil.findClass( "org.apache.wiki.filters", className );
-            final PageFilter filter = (PageFilter)cl.newInstance();
-			filter.initialize( m_engine );
-
-            addPageFilter( filter, priority );
-            log.info("Added page filter "+cl.getName()+" with priority "+priority);
-        } catch( final ClassNotFoundException e ) {
-            log.error("Unable to find the filter class: "+className);
-        } catch( final InstantiationException e ) {
-            log.error("Cannot create filter class: "+className);
-        } catch( final IllegalAccessException e ) {
-            log.error("You are not allowed to access class: "+className);
-        } catch( final ClassCastException e ) {
-            log.error("Suggested class is not a PageFilter: "+className);
-        } catch( final WikiException e ) {
-            log.error("Filter "+className+" failed to initialize itself.", e);
-        }
-    }
-
-    /**
-     *  Initializes the filters from an XML file.
-     *
-     *  @param props The list of properties.  Typically jspwiki.properties
      *  @throws WikiException If something goes wrong.
      */
-	protected void initialize() throws WikiException {
+	public void initialize() throws WikiException {
         InputStream xmlStream = null;
         final String xmlFile = TextUtil.getStringProperty(m_engine.getWikiPreferences(), PROP_FILTERXML, null ) ;
 
@@ -256,6 +183,56 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
             } catch( final IOException ioe ) {
                 // ignore
             }
+        }
+    }
+    
+	// -- OSGi service handling ------------------------(end)--
+    
+    /**
+     *  Adds a page filter to the queue.  The priority defines in which order the page filters are run, the highest priority filters go
+     *  in the queue first.
+     *  <p>
+     *  In case two filters have the same priority, their execution order is the insertion order.
+     *
+     *  @since 2.1.44.
+     *  @param f PageFilter to add
+     *  @param priority The priority in which position to add it in.
+     *  @throws IllegalArgumentException If the PageFilter is null or invalid.
+     */
+    @Override
+    public void addPageFilter( final PageFilter f, final int priority ) throws IllegalArgumentException {
+        if( f == null ) {
+            throw new IllegalArgumentException("Attempt to provide a null filter - this should never happen.  Please check your configuration (or if you're a developer, check your own code.)");
+        }
+
+        m_pageFilters.add( f, priority );
+    }
+
+    private void initPageFilter( final String className, final Properties props ) {
+        try {
+            final PageFilterInfo info = m_filterClassMap.get( className );
+            if( info != null && !checkCompatibility( info ) ) {
+                log.warn( "Filter '" + info.getName() + "' not compatible with this version of JSPWiki" );
+                return;
+            }
+
+            final int priority = 0; // FIXME: Currently fixed.
+            final Class< ? > cl = ClassUtil.findClass( "org.apache.wiki.filters", className );
+            final PageFilter filter = (PageFilter)cl.newInstance();
+			filter.initialize( m_engine );
+
+            addPageFilter( filter, priority );
+            log.info("Added page filter "+cl.getName()+" with priority "+priority);
+        } catch( final ClassNotFoundException e ) {
+            log.error("Unable to find the filter class: "+className);
+        } catch( final InstantiationException e ) {
+            log.error("Cannot create filter class: "+className);
+        } catch( final IllegalAccessException e ) {
+            log.error("You are not allowed to access class: "+className);
+        } catch( final ClassCastException e ) {
+            log.error("Suggested class is not a PageFilter: "+className);
+        } catch( final WikiException e ) {
+            log.error("Filter "+className+" failed to initialize itself.", e);
         }
     }
 
@@ -470,16 +447,9 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of DefaultFilterManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

@@ -136,10 +136,9 @@ import org.osgi.service.useradmin.Group;
 @Component(
 	name = "elwiki.DefaultAuthorizationManager",
 	service = {AuthorizationManager.class, WikiManager.class, EventHandler.class},
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+	//property = {
 		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
-	},
+	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefAuthorizationManager implements AuthorizationManager, WikiManager, WikiEventListener, EventHandler {
@@ -158,8 +157,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/** Name of the default security policy file, as bundle resource. */
 	protected static final String DEFAULT_POLICY = "jspwiki.policy";
 
-	private static final Class<?>[] permissionMethodArgs = new Class[] {String.class, String.class};
-	
+	private static final Class<?>[] permissionMethodArgs = new Class[] { String.class, String.class };
+
 	private final Map<String, Class<? extends Authorizer>> authorizerClasses = new HashMap<>();
 
 	private Authorizer m_authorizer = null;
@@ -195,14 +194,32 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	PageManager pageManager;
 
 	/**
-	 * This component activate routine. Does all the real initialization.
-	 * Initializes security policy of AuthorizationManager.
+	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
 	 * 
-	 * @param componentContext
-	 * @throws WikiException if the AuthorizationManager failed on startup.
+	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
+	 * to take care of role lookup operations.
 	 */
-	@Activate
-	protected void startup() throws WikiException {
+	@Override
+	public void initialize() throws WikiException {
+		log.debug("Initialize.");
+
+		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
+
+		//
+		//  JAAS authorization continues.
+		//
+		String authorizerName = properties.getString(PROP_AUTHORIZER);
+		if (authorizerName.length() == 0) {
+			authorizerName = DEFAULT_AUTHORIZER;
+		}
+		this.m_authorizer = getAuthorizerImplementation(authorizerName);
+		/*:FVK:
+		this.m_authorizer.initialize(this.m_engine);
+
+		// Make the AuthorizationManager listen for WikiEvents
+		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
+		m_engine.getAuthenticationManager().addWikiEventListener(this);
+		*/
 	}
 
 	/**
@@ -241,39 +258,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		}
 
 		return null;
-	}
-	
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-
-	/**
-	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
-	 * 
-	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
-	 * to take care of role lookup operations.
-	 */
-	public void initialize() throws WikiException {
-		log.debug("Initialize.");
-
-		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
-
-		//
-		//  JAAS authorization continues.
-		//
-		String authorizerName = properties.getString(PROP_AUTHORIZER);
-		if (authorizerName.length() == 0) {
-			authorizerName = DEFAULT_AUTHORIZER;
-		}
-		this.m_authorizer = getAuthorizerImplementation(authorizerName);
-		/*:FVK:
-		this.m_authorizer.initialize(this.m_engine);
-
-		// Make the AuthorizationManager listen for WikiEvents
-		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
-		m_engine.getAuthenticationManager().addWikiEventListener(this);
-		*/
 	}
 
 	/**
@@ -653,29 +637,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	// -- events processing ---------------------------------------------------
 
 	@Override
-	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		switch (topic) {//:FVK:
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of AjaxDispatcher.", e);
-			}
-			break;
-		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
-			break;
-		}
-		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
-			break;
-		}
-		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED:
-			break;
-		}
-	}
-
-	@Override
 	public /*:FVK: synchronized*/ void addWikiEventListener(WikiEventListener listener) {
 		WikiEventManager.addWikiEventListener(this, listener);
 	}
@@ -740,5 +701,20 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
         return allowed;
 		 */
 	}
-	
+
+	@Override
+	public void handleEvent(Event event) {
+		String topic = event.getTopic();
+		switch (topic) {//:FVK:
+		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
+			break;
+		}
+		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
+			break;
+		}
+		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED:
+			break;
+		}
+	}
+
 }

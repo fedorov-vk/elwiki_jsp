@@ -31,18 +31,14 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -57,9 +53,6 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultProgressManager",
 	service = { ProgressManager.class, WikiManager.class, EventHandler.class},
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultProgressManager implements ProgressManager, WikiManager, EventHandler {
@@ -70,28 +63,20 @@ public class DefaultProgressManager implements ProgressManager, WikiManager, Eve
 
 	// -- OSGi service handling --------------------( start )--
 
-    @WikiServiceReference
-    private Engine m_engine;
+	@WikiServiceReference
+	private Engine m_engine;
 
-    @WikiServiceReference
-    WikiAjaxDispatcher wikiAjaxDispatcher;
+	@WikiServiceReference
+	WikiAjaxDispatcher wikiAjaxDispatcher;
 
-    @Activate
-	protected void startup() throws WikiException {
-    	//
-	}
-
-	@Deactivate
-	public void shutdown() {
-		//
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// TODO: Replace with custom annotations. See JSPWIKI-566
+		wikiAjaxDispatcher.registerServlet(JSON_PROGRESSTRACKER, new JSONTracker());
 	}
 
 	// -- OSGi service handling ----------------------( end )--
-
-	private void initialize() throws WikiException {
-		// TODO: Replace with custom annotations. See JSPWIKI-566
-    	wikiAjaxDispatcher.registerServlet(JSON_PROGRESSTRACKER, new JSONTracker());
-	}
 
 	/**
 	 * You can use this to get an unique process identifier.
@@ -189,16 +174,9 @@ public class DefaultProgressManager implements ProgressManager, WikiManager, Eve
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of ProgressManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

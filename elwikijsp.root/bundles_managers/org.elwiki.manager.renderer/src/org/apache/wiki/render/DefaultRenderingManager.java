@@ -84,9 +84,6 @@ import net.sf.ehcache.Element;
 @Component(
 	name = "elwiki.DefaultRenderingManager",
 	service = { RenderingManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultRenderingManager implements RenderingManager, WikiManager, EventHandler {
@@ -142,25 +139,13 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
 	@WikiServiceReference
 	private VariableManager variableManager;
 
-	/**
-	 * This component activate routine. Does all the real initialization.
-	 *
-	 * @param componentContext
-	 * @throws WikiException
-	 */
-	@Activate
-	protected void startup() throws WikiException {
-		//
-	}
-
-	// -- OSGi service handling ------------------------(end)--
-
     /**
      *  {@inheritDoc}
      *
      *  Checks for cache size settings, initializes the document cache. Looks for alternative WikiRenderers, initializes one, or the
      *  default XHTMLRenderer, for use.
      */
+	@Override
     public void initialize() throws WikiException {
         IPreferenceStore properties = wikiConfiguration.getWikiPreferences();        
         m_markupParserClass = TextUtil.getStringProperty(properties, PROP_PARSER, DEFAULT_PARSER );
@@ -195,6 +180,8 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
 
         WikiEventManager.getInstance().addWikiEventListener( this.filterManager,this );
     }
+
+	// -- OSGi service handling ------------------------(end)--
 
     private Constructor< ? > initRenderer( final String renderImplName, final Class< ? >[] rendererParams ) throws WikiException {
         Constructor< ? > c = null;
@@ -535,16 +522,9 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
 	public void handleEvent(Event event) {
 		//log.debug("~~ ~~ ~~ Recevied event with topic: " + event.getTopic());
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of RenderingManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/		
 	}
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" name="elwiki.BackgroundThreads">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="shutdown" name="elwiki.BackgroundThreads">
    <service scope="singleton">
       <provide interface="org.elwiki.api.BackgroundThreads"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>

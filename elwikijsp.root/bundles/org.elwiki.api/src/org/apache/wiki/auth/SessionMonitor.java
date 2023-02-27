@@ -39,11 +39,11 @@ import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.osgi.service.component.ComponentFactory;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
@@ -61,9 +61,6 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.SessionMonitor",
 	service = { org.apache.wiki.auth.ISessionMonitor.class, WikiManager.class, EventHandler.class },
-	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpSessionListener, EventHandler {
@@ -95,16 +92,17 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
 	@WikiServiceReference
 	private Engine m_engine;
 
-	@Activate
-	protected void startup() {
-		//
-	}
-
 	@Deactivate
 	public void shutdown() {
 		// TODO:
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
+	}
+	
 	// -- OSGi service handling ------------------------(end)--
 
     /**

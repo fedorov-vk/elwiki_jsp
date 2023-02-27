@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.IStorageCdo;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.cdo.eresource.CDOResource;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
@@ -57,17 +58,12 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-	@Deprecated
-	@Activate
-	protected void startup() {
-		//:FVK:	StorageCdoActivator.setStorageCdo(this);
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used	.	
 	}
 
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-	
 	// -- OSGi service handling ------------------------(end)--
 
 	private void createResource(String path, EObject eObject) {

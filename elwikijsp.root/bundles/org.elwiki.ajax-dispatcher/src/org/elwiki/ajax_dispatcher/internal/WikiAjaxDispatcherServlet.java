@@ -36,10 +36,8 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.util.TextUtil;
@@ -63,7 +61,6 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 	property = {
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_PATTERN + "=/ajax/*",
 	},
-//	reference = @Reference(name = "elwiki.Engine", service = Engine.class),
 	scope = ServiceScope.PROTOTYPE)
 //@formatter:on
 public class WikiAjaxDispatcherServlet extends HttpServlet {

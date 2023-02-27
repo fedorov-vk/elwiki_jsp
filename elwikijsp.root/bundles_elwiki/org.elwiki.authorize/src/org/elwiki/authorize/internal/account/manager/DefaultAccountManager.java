@@ -102,9 +102,6 @@ import com.google.gson.Gson;
 @Component(
 	name = "elwiki.DefaultAccountManager",
 	service = { AccountManager.class, WikiManager.class, EventHandler.class},
-	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class DefaultAccountManager extends GroupSupport implements AccountManager, WikiManager, EventHandler {
@@ -217,7 +214,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	@WikiServiceReference
 	private AccountRegistry accountRegistry;
-	
+
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
@@ -232,9 +229,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
 	@WikiServiceReference
 	private WorkflowManager workflowManager;
-	
+
 	/**
-	 * This component activate routine. Does all the real initialization.
+	 * This component activate routine. Initializes basic stuff.
 	 *
 	 * @param componentContext
 	 * @throws WikiException
@@ -245,15 +242,10 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		this.prefsAauth = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				bc.getBundle().getSymbolicName() + "/" + NODE_ACCOUNTMANAGER);
 	}
-	
-	@Deactivate
-	protected void shutdown() {
-		//
-	}
-	
-	// -- OSGi service handling ------------------------(end)--
 
-	protected void initialize() throws WikiException {
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
 		//:FVK: this.m_engine = this.applicationSession.getWikiEngine();
 
 		/*TODO: Replace with custom annotations. See JSPWIKI-566
@@ -267,7 +259,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		//TODO: Replace with custom annotations. See JSPWIKI-566
 		// :FVK: WikiAjaxDispatcherServlet.registerServlet( JSON_USERS, new JSONUserModule(this), new AllPermission(null));
 	}
-	
+
+	// -- OSGi service handling ------------------------(end)--
+
 	static List<Group> getNativeGroups(UserAdmin userAdmin) throws InvalidSyntaxException {
 		List<Group> groups = new ArrayList<>();
 
@@ -847,16 +841,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		switch (topic) {
-		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE:
-			try {
-				initialize();
-			} catch (WikiException e) {
-				log.error("Failed initialization of ProgressManager.", e);
-			}
+		/*switch (topic) {
 			break;
-		}		
+		}*/
 	}
 
 }

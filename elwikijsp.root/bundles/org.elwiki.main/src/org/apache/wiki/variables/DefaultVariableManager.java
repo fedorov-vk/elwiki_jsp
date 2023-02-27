@@ -33,6 +33,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.modules.InternalModule;
@@ -61,29 +62,25 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultVariableManager",
 	service = { VariableManager.class, WikiManager.class, EventHandler.class },
-	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
-	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultVariableManager implements VariableManager, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( DefaultVariableManager.class );
+	private static final Logger log = Logger.getLogger(DefaultVariableManager.class);
 
-    /**
-     *  Contains a list of those properties that shall never be shown. Put names here in lower case.
-     */
-    static final String[] THE_BIG_NO_NO_LIST = {
-        "jspwiki.auth.masterpassword"
-    };
-	
-    /**
-     *  Creates a VariableManager object using the property list given.
-     *  @param props The properties.
-     */
-    public DefaultVariableManager() {
-        super();
-    }
+	/**
+	 * Contains a list of those properties that shall never be shown. Put names here in lower case.
+	 */
+	static final String[] THE_BIG_NO_NO_LIST = { "jspwiki.auth.masterpassword" };
+
+	/**
+	 * Creates a VariableManager object using the property list given.
+	 * 
+	 * @param props The properties.
+	 */
+	public DefaultVariableManager() {
+		super();
+	}
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -99,6 +96,12 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 
 	@WikiServiceReference
 	private FilterManager filterManager;
+
+	/** {@inheritDoc} */
+	@Override
+	public void initialize() throws WikiException {
+		// doesn't used.
+	}
 
 	// -- OSGi service handling ------------------------(end)--
 
