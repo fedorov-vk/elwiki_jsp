@@ -48,6 +48,8 @@ import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -98,13 +100,26 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 	@WikiServiceReference
 	private Engine m_engine;
 
+	/** Indicate enabling/disabling of RSSGenerator manager. */
+	private boolean isRequiredRssGenerator = false;
+
+	@Activate
+	protected void startup(ComponentContext componentContext) {
+		isRequiredRssGenerator = TextUtil.getBooleanProperty(//
+				this.wikiConfiguration.getWikiPreferences(),
+				RSSGenerator.PROP_GENERATE_RSS, false);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-		m_channelDescription = TextUtil.getStringProperty(preferences, PROP_CHANNEL_DESCRIPTION, m_channelDescription);
-		m_channelLanguage = TextUtil.getStringProperty(preferences, PROP_CHANNEL_LANGUAGE, m_channelLanguage);
-		m_rssFile = TextUtil.getStringProperty(preferences, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf");
+		if (isRequiredRssGenerator) {
+			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
+			m_channelDescription = TextUtil.getStringProperty(preferences, PROP_CHANNEL_DESCRIPTION,
+					m_channelDescription);
+			m_channelLanguage = TextUtil.getStringProperty(preferences, PROP_CHANNEL_LANGUAGE, m_channelLanguage);
+			m_rssFile = TextUtil.getStringProperty(preferences, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf");
+		}
 	}
 
 	/**
@@ -113,16 +128,18 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 	 * @throws WikiException
 	 */
 	private void initializeStageTwo() throws WikiException {
-		final File rssFile;
-		if (m_rssFile.startsWith(File.separator)) { // honor absolute pathnames
-			rssFile = new File(m_rssFile);
-		} else { // relative path names are anchored from the webapp root path
-			rssFile = new File(m_engine.getRootPath(), m_rssFile);
+		if (isRequiredRssGenerator) {
+			final File rssFile;
+			if (m_rssFile.startsWith(File.separator)) { // honor absolute pathnames
+				rssFile = new File(m_rssFile);
+			} else { // relative path names are anchored from the webapp root path
+				rssFile = new File(m_engine.getRootPath(), m_rssFile);
+			}
+			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
+			final int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
+			final RSSThread rssThread = new RSSThread(m_engine, rssFile, rssInterval);
+			rssThread.start();
 		}
-		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-		final int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
-		final RSSThread rssThread = new RSSThread(m_engine, rssFile, rssInterval);
-		rssThread.start();
 	}
 
 	// -- OSGi service handling ------------------------(end)--

@@ -18,12 +18,11 @@
  */
 package org.apache.wiki.api.rss;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.util.TextUtil;
-
 import java.util.List;
+
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki_data.WikiPage;
 
 /**
  *  The master class for generating different kinds of Feeds (including RSS1.0, 2.0 and Atom).

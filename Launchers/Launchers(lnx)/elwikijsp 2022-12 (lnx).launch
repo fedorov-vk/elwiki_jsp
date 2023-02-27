@@ -141,33 +141,33 @@
         <setEntry value="xmlrpc@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="org.elwiki.ajax-dispatcher@default:default"/>
+        <setEntry value="org.elwiki.ajax-dispatcher@4:default"/>
         <setEntry value="org.elwiki.api@default:default"/>
-        <setEntry value="org.elwiki.authorize@default:default"/>
-        <setEntry value="org.elwiki.commandresolver@default:default"/>
+        <setEntry value="org.elwiki.authorize@4:default"/>
+        <setEntry value="org.elwiki.commandresolver@4:default"/>
         <setEntry value="org.elwiki.configuration@default:default"/>
         <setEntry value="org.elwiki.core.plugins@default:default"/>
-        <setEntry value="org.elwiki.data.persist@default:default"/>
+        <setEntry value="org.elwiki.data.persist@4:default"/>
         <setEntry value="org.elwiki.data@default:default"/>
         <setEntry value="org.elwiki.engine@5:default"/>
         <setEntry value="org.elwiki.event@default:default"/>
         <setEntry value="org.elwiki.log4.definition@default:false"/>
-        <setEntry value="org.elwiki.main@default:default"/>
-        <setEntry value="org.elwiki.manager.attachment@default:default"/>
-        <setEntry value="org.elwiki.manager.difference@default:default"/>
-        <setEntry value="org.elwiki.manager.editor@default:default"/>
-        <setEntry value="org.elwiki.manager.filters@default:default"/>
-        <setEntry value="org.elwiki.manager.page@default:default"/>
-        <setEntry value="org.elwiki.manager.pagerenamer@default:default"/>
-        <setEntry value="org.elwiki.manager.referencemanager@default:default"/>
-        <setEntry value="org.elwiki.manager.renderer@default:default"/>
-        <setEntry value="org.elwiki.manager.search@default:default"/>
-        <setEntry value="org.elwiki.manager.wikiscope@default:default"/>
-        <setEntry value="org.elwiki.manager.workflow@default:default"/>
-        <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
-        <setEntry value="org.elwiki.resources@default:default"/>
-        <setEntry value="org.elwiki.urlconstructor@default:default"/>
-        <setEntry value="org.elwiki.util@default:default"/>
+        <setEntry value="org.elwiki.main@4:default"/>
+        <setEntry value="org.elwiki.manager.attachment@4:default"/>
+        <setEntry value="org.elwiki.manager.difference@4:default"/>
+        <setEntry value="org.elwiki.manager.editor@4:default"/>
+        <setEntry value="org.elwiki.manager.filters@4:default"/>
+        <setEntry value="org.elwiki.manager.page@4:default"/>
+        <setEntry value="org.elwiki.manager.pagerenamer@4:default"/>
+        <setEntry value="org.elwiki.manager.referencemanager@4:default"/>
+        <setEntry value="org.elwiki.manager.renderer@4:default"/>
+        <setEntry value="org.elwiki.manager.search@4:default"/>
+        <setEntry value="org.elwiki.manager.wikiscope@4:default"/>
+        <setEntry value="org.elwiki.manager.workflow@4:default"/>
+        <setEntry value="org.elwiki.provider.page.cdo@4:default"/>
+        <setEntry value="org.elwiki.resources@4:default"/>
+        <setEntry value="org.elwiki.urlconstructor@4:default"/>
+        <setEntry value="org.elwiki.util@4:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="timestamp" value="1673902169233"/>

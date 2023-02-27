@@ -18,14 +18,12 @@
  */
 package org.apache.wiki.auth.acl;
 
-import org.elwiki_data.Acl;
-import org.elwiki_data.WikiPage;
-
 import java.util.regex.Pattern;
 
-import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.permissions.PagePermission;
+import org.elwiki_data.Acl;
+import org.elwiki_data.WikiPage;
 
 /**
  *  Specifies how to parse and return ACLs from wiki pages.

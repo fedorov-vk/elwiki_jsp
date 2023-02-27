@@ -18,18 +18,15 @@
  */
 package org.apache.wiki.api.filters;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.exceptions.FilterException;
-import org.apache.wiki.api.exceptions.WikiException;
-
-import java.lang.reflect.Method;
-import java.util.Properties;
-
 import static org.apache.wiki.api.filters.FilterSupportOperations.executePageFilterPhase;
 import static org.apache.wiki.api.filters.FilterSupportOperations.methodOfNonPublicAPI;
 
+import java.lang.reflect.Method;
+
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.FilterException;
+import org.apache.wiki.api.exceptions.WikiException;
 
 /**
  *  <p>Provides a definition for a page filter. A page filter is a class that can be used to transform the WikiPage content being saved or

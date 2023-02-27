@@ -19,7 +19,6 @@
 package org.apache.wiki.api.ui;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.modules.ModuleManager;
 
 /**

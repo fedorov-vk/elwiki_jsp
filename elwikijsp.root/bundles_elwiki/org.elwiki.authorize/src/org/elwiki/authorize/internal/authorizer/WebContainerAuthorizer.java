@@ -18,49 +18,23 @@
  */
 package org.elwiki.authorize.internal.authorizer;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Plugin;
 import org.elwiki.api.authorization.WebAuthorizer;
-//import org.elwiki.api.IApplicationSession;
-//import org.elwiki.api.IElWikiSession;
-//import org.elwiki.api.IWikiEngine;
-//import org.elwiki.api.event.WikiEvent;
-//import org.elwiki.api.event.WikiEventListener;
-//import org.elwiki.api.exceptions.InternalWikiException;
-//import org.elwiki.api.exceptions.NoSuchPrincipalException;
-//import org.elwiki.api.exceptions.WikiSecurityException;
-import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -68,7 +42,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPath;
-import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.service.useradmin.Group;
 //import org.xml.sax.EntityResolver;
 //import org.xml.sax.InputSource;

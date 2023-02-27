@@ -1,7 +1,6 @@
 package org.elwiki.engine.internal;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -10,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
@@ -100,16 +98,11 @@ public class WikiEngine implements Engine {
 		}
 
 		int counterOfRegistered = 0;
-		boolean isRequiredRssGenerator = TextUtil.getBooleanProperty(//
-				this.wikiConfiguration.getWikiPreferences(),
-				RSSGenerator.PROP_GENERATE_RSS, false);
 		for (ServiceReference<?> ref : refs) {
 			@SuppressWarnings("unchecked")
 			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
 			Class<?> clazz = service.getClass();
-			if (RSSGenerator.class.isAssignableFrom(clazz) && !isRequiredRssGenerator) {
-				continue; // to skip any RSSGenerator component.
-			}
+			// log.debug(" ~~ clazz: " + clazz.getSimpleName());
 			counterOfRegistered++;
 			Class<?>[] interfaces = clazz.getInterfaces();
 			for (Class<?> iface : interfaces) {
@@ -128,8 +121,9 @@ public class WikiEngine implements Engine {
 			initialize();
 			log.info("Root path for this Wiki is: '" + m_rootPath + "'");
 		} catch (final Exception e) {
-			final String msg = Release.APPNAME + ": Unable to initialise service. " + e.getMessage();
-			throw new WikiException(msg, e);
+			log.error("Failer WikiEngine activate. Intialization stage errored.", e);
+			//:FVK: final String msg = Release.APPNAME + ": Unable to initialise service. " + e.getMessage();
+			//throw new WikiException(msg, e);
 		}
 	}
 
@@ -276,7 +270,11 @@ public class WikiEngine implements Engine {
 		Set<Object> managers = new HashSet<>(this.managers.values());
 		for(Object managerInstance : managers) {
 			if(managerInstance instanceof WikiManager wikiManager) {
-				wikiManager.initialize();
+				try {
+					wikiManager.initialize();
+				} catch (Exception e) {
+					log.error("Failed intialization of " + managerInstance.getClass().getSimpleName(), e);
+				}
 			}
 		}
 

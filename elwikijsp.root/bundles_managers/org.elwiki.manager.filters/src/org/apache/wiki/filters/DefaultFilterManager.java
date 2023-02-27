@@ -47,8 +47,10 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
@@ -124,6 +126,10 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 
 	// -- OSGi service handling ----------------------(start)--
 
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+    
     @WikiServiceReference
     private Engine m_engine;
 
@@ -136,7 +142,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
 	public void initialize() throws WikiException {
         InputStream xmlStream = null;
-        final String xmlFile = TextUtil.getStringProperty(m_engine.getWikiPreferences(), PROP_FILTERXML, null ) ;
+		final String xmlFile = TextUtil.getStringProperty(wikiConfiguration.getWikiPreferences(), PROP_FILTERXML, null);
 
         try {
             registerFilters();
@@ -402,6 +408,10 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     }
 
     private void registerFilters() {
+    	{//:FVK: workaround. (due to SpamFilter now has interface...)
+    		addPageFilter(new SpamFilter(), -999);
+    	}
+    	
         log.info( "Registering filters" );
         final List< Element > filters = XmlUtil.parse(FiltersActivator.getContext().getBundle(), PLUGIN_RESOURCE_LOCATION, "/modules/filter" );
 

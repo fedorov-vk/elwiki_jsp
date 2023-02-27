@@ -18,20 +18,20 @@
  */
 package org.apache.wiki.auth;
 
-import org.apache.wiki.api.core.WikiContext;
+import java.io.IOException;
+import java.security.AccessController;
+import java.security.Permission;
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.event.WikiEventManager;
 import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.AccessController;
-import java.security.Permission;
-import java.security.Principal;
 
 
 /**

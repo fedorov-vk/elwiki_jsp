@@ -163,8 +163,8 @@ public class LuceneSearchProvider implements SearchProvider {
 		m_luceneDirectory = workDir.append(LUCENE_DIR).toString();
 
         IPreferenceStore props = engine.getWikiPreferences();
-		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdaterOLD.INITIAL_DELAY );
-        final int indexDelay   = TextUtil.getIntegerProperty( props, PROP_LUCENE_INDEXDELAY, LuceneUpdaterOLD.INDEX_DELAY );
+		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdater.INITIAL_DELAY );
+        final int indexDelay   = TextUtil.getIntegerProperty( props, PROP_LUCENE_INDEXDELAY, LuceneUpdater.INDEX_DELAY );
 
         m_analyzerClass = TextUtil.getStringProperty( props, PROP_LUCENE_ANALYZER, m_analyzerClass );
         // FIXME: Just to be simple for now, we will do full reindex

@@ -35,6 +35,7 @@ import javax.management.ObjectName;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.event.WikiEngineEvent;
 import org.apache.wiki.api.event.WikiEvent;
 import org.apache.wiki.api.event.WikiEventListener;
@@ -50,11 +51,10 @@ import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -68,7 +68,7 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultAdminBeanManager",
 	service = { AdminBeanManager.class, WikiManager.class, EventHandler.class },
 	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -101,7 +101,9 @@ public class DefaultAdminBeanManager implements AdminBeanManager, WikiManager, E
 	@Override
 	public void initialize() throws WikiException {
 		m_engine.addWikiEventListener(this);
+	}
 
+	private void initializeStageTwo() throws WikiException {
 		reload();
 	}
 
@@ -282,9 +284,16 @@ public class DefaultAdminBeanManager implements AdminBeanManager, WikiManager, E
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		/*switch (topic) {
+		switch (topic) {
+		// Initialize.
+		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
+			try {
+				initializeStageTwo();
+			} catch (WikiException e) {
+				log.error("Failed initialization of references for DefaultAdminBeanManager.", e);
+			}
 			break;
-		}*/
+		}
 	}
 
 }

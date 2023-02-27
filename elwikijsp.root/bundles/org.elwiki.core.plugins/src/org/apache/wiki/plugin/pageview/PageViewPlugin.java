@@ -18,34 +18,6 @@
  */
 package org.apache.wiki.plugin.pageview;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Logger;
-import org.apache.oro.text.GlobCompiler;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.event.WikiEngineEvent;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiPageEvent;
-import org.apache.wiki.api.event.WikiPageRenameEvent;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.InitializablePlugin;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginManager;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.plugin.AbstractReferralPlugin;
-import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.TextUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -62,6 +34,32 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.apache.oro.text.GlobCompiler;
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.PatternCompiler;
+import org.apache.oro.text.regex.PatternMatcher;
+import org.apache.oro.text.regex.Perl5Matcher;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.event.WikiEngineEvent;
+import org.apache.wiki.api.event.WikiEvent;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageRenameEvent;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.plugin.InitializablePlugin;
+import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.api.plugin.PluginManager;
+import org.apache.wiki.api.references.ReferenceManager;
+import org.apache.wiki.plugin.AbstractReferralPlugin;
+import org.apache.wiki.render0.RenderingManager;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki_data.WikiPage;
 
 /**
  * This plugin counts the number of times a page has been viewed.<br/>

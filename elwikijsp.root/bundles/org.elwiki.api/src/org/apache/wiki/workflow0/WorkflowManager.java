@@ -18,15 +18,13 @@
  */
 package org.apache.wiki.workflow0;
 
-import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.engine.Initializable;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.exceptions.WikiException;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.event.WikiEventListener;
+import org.apache.wiki.api.exceptions.WikiException;
 
 /**
  * <p>

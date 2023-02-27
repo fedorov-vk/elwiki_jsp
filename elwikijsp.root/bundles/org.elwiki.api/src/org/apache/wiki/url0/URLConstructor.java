@@ -18,12 +18,10 @@
  */
 package org.apache.wiki.url0;
 
-import org.apache.wiki.api.engine.Initializable;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *  Provides an interface through which JSPWiki constructs URLs. JSPWiki calls the methods of this interface whenever an URL

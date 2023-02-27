@@ -18,20 +18,18 @@
  */
 package org.apache.wiki.render0;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.engine.Initializable;
 import org.apache.wiki.api.engine.RenderApi;
 import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
-
-import java.io.IOException;
-
+import org.elwiki_data.WikiPage;
 
 /**
  *  This class provides a facade towards the differing rendering routines.  You should use the routines in this manager
