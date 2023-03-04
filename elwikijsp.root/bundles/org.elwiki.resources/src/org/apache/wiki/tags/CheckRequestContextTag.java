@@ -43,6 +43,7 @@ import javax.servlet.jsp.JspTagException;
  */
 public class CheckRequestContextTag extends BaseWikiTag {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(CheckRequestContextTag.class);
 
 	private static final long serialVersionUID = 0L;

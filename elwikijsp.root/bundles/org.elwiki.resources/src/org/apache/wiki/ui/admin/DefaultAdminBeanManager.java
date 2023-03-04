@@ -169,10 +169,10 @@ public class DefaultAdminBeanManager implements AdminBeanManager, WikiManager, E
 			try {
 				if (abname != null && abname.length() > 0) {
 					final Class<?> abclass = Class.forName(abname);
-					final AdminBean ab = (AdminBean) abclass.newInstance();
+					final AdminBean ab = (AdminBean) abclass.getDeclaredConstructor().newInstance();
 					registerAdminBean(ab);
 				}
-			} catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			} catch (final Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		}

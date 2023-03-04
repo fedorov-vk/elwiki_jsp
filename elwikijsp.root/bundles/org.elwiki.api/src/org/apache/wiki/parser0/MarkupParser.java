@@ -55,8 +55,8 @@ public abstract class MarkupParser {
     /** Current position in reader stream. */
     private int m_pos = -1;
 
+    protected IWikiConfiguration wikiConfig;
     protected Engine m_engine;
-    protected IWikiConfiguration config;
     protected WikiContext m_context;
 
 	/** Optionally stores internal wikilinks. */
@@ -154,7 +154,7 @@ public abstract class MarkupParser {
      */
     protected MarkupParser( final WikiContext context, final Reader in ) {
         m_engine = context.getEngine();
-        this.config = context.getConfiguration();
+        this.wikiConfig = context.getConfiguration();
         m_context = context;
         m_linkParsingOperations = new LinkParsingOperations( m_context );
         setInputReader( in );

@@ -24,7 +24,8 @@ Import-Package: java.io;resolution:=optional,
  org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.elwiki.permissions,
- org.elwiki_data
+ org.elwiki_data,
+ org.osgi.framework;version="1.10.0"
 Require-Bundle: org.eclipse.osgi.services;bundle-version="3.11.100",
  org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",

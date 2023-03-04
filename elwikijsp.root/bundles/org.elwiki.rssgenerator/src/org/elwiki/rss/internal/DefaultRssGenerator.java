@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
 import java.io.File;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ import org.apache.wiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.rss.IFeed;
-import org.apache.wiki.api.rss.RSSGenerator;
+import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
@@ -60,23 +60,23 @@ import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
- * Default implementation for {@link RSSGenerator}.
+ * Default implementation for {@link RssGenerator}.
  *
  * {@inheritDoc}
  */
 // FIXME: Limit diff and page content size.
 //@formatter:off
 @Component(
-	name = "elwiki.DefaultRSSGenerator",
-	service = { RSSGenerator.class, WikiManager.class, EventHandler.class  },
+	name = "elwiki.DefaultRssGenerator",
+	service = { RssGenerator.class, WikiManager.class, EventHandler.class  },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHandler {
+public class DefaultRssGenerator implements RssGenerator, WikiManager, EventHandler {
 
-	private static final Logger log = Logger.getLogger(DefaultRSSGenerator.class);
+	private static final Logger log = Logger.getLogger(DefaultRssGenerator.class);
 
 	/** The RSS file to generate. */
 	private String m_rssFile;
@@ -89,7 +89,7 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 	/**
 	 * Constructs the RSS generator.
 	 */
-	public DefaultRSSGenerator() {
+	public DefaultRssGenerator() {
 		super();
 	}
 
@@ -109,7 +109,7 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 	protected void startup(ComponentContext componentContext) {
 		isRequiredRssGenerator = TextUtil.getBooleanProperty(//
 				this.wikiConfiguration.getWikiPreferences(),
-				RSSGenerator.PROP_GENERATE_RSS, false);
+				RssGenerator.PROP_GENERATE_RSS, false);
 	}
 
 	/** {@inheritDoc} */
@@ -120,7 +120,7 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 			m_channelDescription = TextUtil.getStringProperty(preferences, PROP_CHANNEL_DESCRIPTION,
 					m_channelDescription);
 			m_channelLanguage = TextUtil.getStringProperty(preferences, PROP_CHANNEL_LANGUAGE, m_channelLanguage);
-			m_rssFile = TextUtil.getStringProperty(preferences, DefaultRSSGenerator.PROP_RSSFILE, "rss.rdf");
+			m_rssFile = TextUtil.getStringProperty(preferences, DefaultRssGenerator.PROP_RSSFILE, "rss.rdf");
 		}
 	}
 
@@ -138,7 +138,7 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 				rssFile = new File(m_engine.getRootPath(), m_rssFile);
 			}
 			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-			int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
+			int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRssGenerator.PROP_INTERVAL, 3600);
 
 			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 			Actor rssActor = new RssActor(m_engine, rssFile);

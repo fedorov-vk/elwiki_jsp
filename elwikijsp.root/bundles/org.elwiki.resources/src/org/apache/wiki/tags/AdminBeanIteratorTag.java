@@ -21,7 +21,6 @@ package org.apache.wiki.tags;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.eclipse.jdt.annotation.NonNull;
@@ -30,7 +29,7 @@ import org.eclipse.jdt.annotation.NonNull;
  * Provides an iterator for all AdminBeans of a given type.
  *
  */
-public class AdminBeanIteratorTag extends BaseIteratorTag {
+public class AdminBeanIteratorTag extends BaseIteratorTag<AdminBean> {
 
 	private static final long serialVersionUID = -2043505811106523815L;
 

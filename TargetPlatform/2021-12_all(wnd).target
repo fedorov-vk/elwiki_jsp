@@ -27,7 +27,6 @@
 		<plugin id="org.apache.commons.codec"/>
 		<plugin id="org.apache.commons.commons-fileupload"/>
 		<plugin id="org.apache.commons.io"/>
-		<plugin id="org.apache.commons.lang3"/>
 		<plugin id="org.apache.commons.logging"/>
 		<plugin id="org.apache.felix.gogo.command" version="1.1.2.v20221112-0806"/>
 		<plugin id="org.apache.felix.gogo.runtime"/>
@@ -136,5 +135,9 @@
 		<plugin id="org.apache.lucene.sandbox.source"/>
 		<plugin id="org.apache.lucene.analysis-common"/>
 		<plugin id="org.apache.lucene.analysis-common.source"/>
+		<plugin id="org.apache.commons.lang3" version="3.12.0"/>
+		<plugin id="org.apache.commons.lang3.source"/>
+		<plugin id="org.apache.commons.commons-text"/>
+		<plugin id="org.apache.commons.commons-text.source"/>
 	</includeBundles>
 </target>

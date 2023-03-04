@@ -19,7 +19,7 @@
 package org.apache.wiki.parser;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
@@ -232,7 +232,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
 
         //  Set the properties.
-        IPreferenceStore props = m_engine.getWikiPreferences();
+        IPreferenceStore props = wikiConfig.getWikiPreferences();
         final String cclinks = ":FVK:"; //:FVK: m_context.getPage().getAttribute( PROP_CAMELCASELINKS );
 
         if( cclinks != null ) {
@@ -857,7 +857,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
     private String makeHeadingAnchor( final String baseName, String title, final Heading hd ) throws IOException {
         hd.m_titleText = title;
         title = MarkupParser.wikifyLink( title );
-			hd.m_titleSection = this.config.encodeName(title);
+			hd.m_titleSection = this.wikiConfig.encodeName(title);
 
         if( m_titleSectionCounter.containsKey( hd.m_titleSection ) ) {
             final Integer count = m_titleSectionCounter.get( hd.m_titleSection ) + 1;
@@ -867,7 +867,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             m_titleSectionCounter.put( hd.m_titleSection, 1 );
         }
 
-        hd.m_titleAnchor = "section-" + this.config.encodeName( baseName ) + "-" + hd.m_titleSection;
+        hd.m_titleAnchor = "section-" + this.wikiConfig.encodeName( baseName ) + "-" + hd.m_titleSection;
         hd.m_titleAnchor = hd.m_titleAnchor.replace( '%', '_' );
         hd.m_titleAnchor = hd.m_titleAnchor.replace( '/', '_' );
 
@@ -1291,7 +1291,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
                     final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
                     if( matchedLink != null ) {
-                        String sectref = "section-" + this.config.encodeName( matchedLink + "-" + wikifyLink( namedSection ) );
+                        String sectref = "section-" + this.wikiConfig.encodeName( matchedLink + "-" + wikifyLink( namedSection ) );
                         sectref = sectref.replace( '%', '_' );
                         makeLink( LinkType.READ, matchedLink, linkText, sectref, link.getAttributes() );
                     } else {

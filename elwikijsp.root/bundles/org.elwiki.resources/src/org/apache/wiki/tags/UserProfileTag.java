@@ -27,16 +27,15 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
+import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.data.authorize.GroupPrincipal;

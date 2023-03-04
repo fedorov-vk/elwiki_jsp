@@ -18,22 +18,20 @@
  */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.wiki.api.core.WikiContext;
+import java.util.Date;
+
+import javax.management.NotCompliantMBeanException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
-import org.apache.wiki.api.ui.progress.ProgressManager;
-import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
 import org.apache.wiki.ui.admin0.AdminBean;
-
-import javax.management.NotCompliantMBeanException;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-
 
 public class UserBean extends SimpleAdminBean {
 

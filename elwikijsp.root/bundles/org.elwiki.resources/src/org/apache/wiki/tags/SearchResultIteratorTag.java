@@ -49,7 +49,7 @@ import org.apache.wiki.api.ui.PageCommand;
  * @since 2.0
  */
 // FIXME: Shares MUCH too much in common with IteratorTag.  Must refactor.
-public class SearchResultIteratorTag extends BaseIteratorTag {
+public class SearchResultIteratorTag extends BaseIteratorTag<SearchResult> {
 
 	private static final long serialVersionUID = 2710478241806938763L;
 
@@ -79,8 +79,9 @@ public class SearchResultIteratorTag extends BaseIteratorTag {
 	public final int doStartTag() {
 		//  Do lazy eval if the search results have not been set.
 		if (m_iterator == null) {
-			final Collection<?> searchresults = (Collection<?>) pageContext.getAttribute("searchresults",
-					PageContext.REQUEST_SCOPE);
+			@SuppressWarnings("unchecked")
+			final Collection<SearchResult> searchresults = (Collection<SearchResult>) pageContext
+					.getAttribute("searchresults", PageContext.REQUEST_SCOPE);
 			setList(searchresults);
 
 			int skip = 0;

@@ -46,6 +46,7 @@ import java.util.jar.JarFile;
  *
  *  @since 2.1.29.
  */
+@Deprecated
 public final class ClassUtil {
 
     private static final Logger log = Logger.getLogger(ClassUtil.class);

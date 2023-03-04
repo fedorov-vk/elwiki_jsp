@@ -18,20 +18,30 @@
  */
 package org.apache.wiki.rpc.atom;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.variables.VariableManager;
+import org.apache.wiki.api.rss.IFeed;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.plugin.WeblogEntryPlugin;
 import org.apache.wiki.plugin.WeblogPlugin;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
+import org.elwiki_data.WikiPage;
 import org.intabulas.sandler.Sandler;
 import org.intabulas.sandler.SyndicationFactory;
 import org.intabulas.sandler.elements.Content;
@@ -43,16 +53,6 @@ import org.intabulas.sandler.elements.impl.LinkImpl;
 import org.intabulas.sandler.exceptions.FeedMarshallException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
-
 
 /**
  *  Handles incoming requests for the Atom API.  This class uses the "sandler" Atom API implementation.
@@ -250,7 +250,7 @@ public class AtomAPIServlet extends HttpServlet {
 
             final String encodedName = TextUtil.urlEncodeUTF8( p.getName() );
             final WikiContext context = Wiki.context().create( m_engine, p );
-            final String title = TextUtil.replaceEntities( org.apache.wiki.rss.Feed.getSiteName( context ) );
+            final String title = TextUtil.replaceEntities( IFeed.getSiteName( context ) );
             final Link postlink = createLink( "service.post", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );
             final Link editlink = createLink( "service.edit", this.wikiConfiguration.getBaseURL() + "atom/" + encodedName, title );
             final Link feedlink = createLink( "service.feed", this.wikiConfiguration.getBaseURL() + "atom.jsp?page=" + encodedName, title );

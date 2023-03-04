@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wiki.api.core.WikiContext;
@@ -24,7 +24,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.rss.IEntry;
 import org.apache.wiki.api.rss.IFeed;
-import org.apache.wiki.api.rss.RSSGenerator;
+import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.api.variables.VariableManager;
 
 import javax.servlet.ServletContext;
@@ -35,7 +35,8 @@ import java.util.List;
  * Represents an abstract feed.
  */
 public abstract class Feed implements IFeed {
-    protected List<IEntry> m_entries = new ArrayList<>();
+
+	protected List<IEntry> m_entries = new ArrayList<>();
 
     protected String m_feedURL;
     protected String m_channelTitle;
@@ -44,36 +45,7 @@ public abstract class Feed implements IFeed {
 
     protected WikiContext m_wikiContext;
 
-    protected String m_mode = RSSGenerator.MODE_WIKI;
-
-    /**
-     * Wiki variable storing the blog's name.
-     */
-    public static final String VAR_BLOGNAME = "blogname";
-
-    /**
-     * Figure out a site name for a feed.
-     *
-     * @param context the wiki context
-     * @return the site name
-     */
-    public static String getSiteName( final WikiContext context ) {
-        final Engine engine = context.getEngine();
-        VariableManager variableManager = engine.getManager(VariableManager.class);
-
-        String blogname = null;
-
-        try {
-            blogname = variableManager.getValue(context, VAR_BLOGNAME);
-        } catch( final NoSuchVariableException e ) {
-        }
-
-        if (blogname == null) {
-            blogname = engine.getWikiConfiguration().getApplicationName() + ": " + context.getPage().getName();
-        }
-
-        return blogname;
-    }
+    protected String m_mode = RssGenerator.MODE_WIKI;
 
     /**
      * Create a new Feed for a particular WikiContext.
@@ -87,9 +59,9 @@ public abstract class Feed implements IFeed {
     /**
      * Set the mode of the Feed.  It can be any of the following:
      * <ul>
-     * <li>{@link RSSGenerator#MODE_WIKI} - to create a wiki diff list per page.</li>
-     * <li>{@link RSSGenerator#MODE_BLOG} - to assume that the Entries are blog entries.</li>
-     * <li>{@link RSSGenerator#MODE_FULL} - to create a wiki diff list for the entire blog.</li>
+     * <li>{@link RssGenerator#MODE_WIKI} - to create a wiki diff list per page.</li>
+     * <li>{@link RssGenerator#MODE_BLOG} - to assume that the Entries are blog entries.</li>
+     * <li>{@link RssGenerator#MODE_FULL} - to create a wiki diff list for the entire blog.</li>
      * </ul>
      * As the Entry list itself is generated elsewhere, this mostly just affects the way
      * that the layout and metadata for each entry is generated.

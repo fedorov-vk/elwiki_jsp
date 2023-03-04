@@ -18,17 +18,16 @@
 */
 package org.apache.wiki.ui.admin.beans;
 
+import java.util.Collection;
+
+import javax.management.NotCompliantMBeanException;
+
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.filters0.FilterManager;
-import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.jdom2.Element;
-
-import javax.management.NotCompliantMBeanException;
-import java.util.Collection;
-
 
 public class FilterBean extends ModuleBean {
 

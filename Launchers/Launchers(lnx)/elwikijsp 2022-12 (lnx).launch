@@ -41,6 +41,7 @@
         <setEntry value="net.sourceforge.sandler@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.commons-fileupload@default:default"/>
+        <setEntry value="org.apache.commons.commons-text@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
@@ -166,11 +167,12 @@
         <setEntry value="org.elwiki.manager.workflow@default:default"/>
         <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
         <setEntry value="org.elwiki.resources@default:default"/>
+        <setEntry value="org.elwiki.rssgenerator@default:default"/>
         <setEntry value="org.elwiki.urlconstructor@default:default"/>
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1673902169233"/>
+    <stringAttribute key="timestamp" value="1677945039963"/>
     <booleanAttribute key="tracing" value="false"/>
     <mapAttribute key="tracingOptions">
         <mapEntry key="com.ibm.datatools.core.ui/debug" value="true"/>

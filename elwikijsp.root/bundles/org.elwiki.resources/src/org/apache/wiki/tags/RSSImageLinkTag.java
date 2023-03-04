@@ -30,7 +30,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.rss.RSSGenerator;
+import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.preferences.Preferences;
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -62,7 +62,7 @@ public class RSSImageLinkTag extends BaseWikiTag {
 	public void initTag() {
 		super.initTag();
 		m_title = null;
-		m_mode = RSSGenerator.MODE_FULL;
+		m_mode = RssGenerator.MODE_FULL;
 		m_pageName = null;
 	}
 
@@ -96,12 +96,12 @@ public class RSSImageLinkTag extends BaseWikiTag {
 		WikiContext wikiContext = getWikiContext();
 		final Engine engine = wikiContext.getEngine();
 		@NonNull
-		RSSGenerator rssGenerator = engine.getManager(RSSGenerator.class);
+		RssGenerator rssGenerator = engine.getManager(RssGenerator.class);
 		
 		final JspWriter out = pageContext.getOut();
 		final ResourceBundle rb = Preferences.getBundle(wikiContext, InternationalizationManager.CORE_BUNDLE);
 		if (rssGenerator != null && rssGenerator.isEnabled()) {
-			if (RSSGenerator.MODE_FULL.equals(m_mode)) {
+			if (RssGenerator.MODE_FULL.equals(m_mode)) {
 				final String rssURL = engine.getGlobalRSSURL();
 				if (rssURL != null) {
 					out.print("<a class=\"feed\" href=\"" + rssURL);

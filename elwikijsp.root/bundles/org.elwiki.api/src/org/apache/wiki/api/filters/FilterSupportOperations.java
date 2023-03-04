@@ -58,10 +58,12 @@ class FilterSupportOperations {
         return null;
     }
 
-    static < R > R executePageFilterPhase( final Supplier< R > s, final Method m, final PageFilter pf, final Object... params ) {
+	static < R > R executePageFilterPhase( final Supplier< R > s, final Method m, final PageFilter pf, final Object... params ) {
         if( m != null ) {
             try {
-                return ( R )m.invoke( pf, params );
+            	@SuppressWarnings("unchecked")
+            	R result = ( R )m.invoke( pf, params );
+                return result;
             } catch( final IllegalAccessException | InvocationTargetException e ) {
                 LOG.warn( "Problems using filter adapter: " + e.getMessage(), e );
             }

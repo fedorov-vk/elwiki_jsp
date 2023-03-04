@@ -27,7 +27,6 @@ import javax.servlet.jsp.tagext.TryCatchFinally;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.WikiContextImpl;
-import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.WikiContext;
 import org.eclipse.core.runtime.Assert;
 

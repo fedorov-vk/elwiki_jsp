@@ -1,4 +1,4 @@
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.log4j.Logger;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.rss.RSSGenerator;
+import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.util.FileUtil;
 import org.elwiki.api.BackgroundThreads.Actor;
 
@@ -26,7 +26,7 @@ public class RssActor extends Actor {
 
 	private final Engine engine;
 	private final File m_rssFile;
-	private final RSSGenerator m_generator;
+	private final RssGenerator m_generator;
 	private WatchDog m_watchdog;
 
 	/**
@@ -38,7 +38,7 @@ public class RssActor extends Actor {
 	 */
 	public RssActor(Engine engine, File rssFile) {
 		this.engine = engine;
-		this.m_generator = engine.getManager(RSSGenerator.class);
+		this.m_generator = engine.getManager(RssGenerator.class);
 		this.m_rssFile = rssFile;
 	}
 

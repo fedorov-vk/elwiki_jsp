@@ -16,11 +16,10 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
 import org.apache.wiki.api.rss.IEntry;
 import org.elwiki_data.WikiPage;
-
 
 /**
  * Represents an entry, that is, an unit of change, in a Feed.

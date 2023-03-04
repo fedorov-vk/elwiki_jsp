@@ -18,7 +18,7 @@
 */
 package org.apache.wiki.parser;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
@@ -81,7 +81,7 @@ public class VariableContent extends Text {
             }
         }
 
-        return StringEscapeUtils.escapeXml( result ); //:FVK: escapeXml11
+        return StringEscapeUtils.escapeXml11( result );
     }
 
     /**

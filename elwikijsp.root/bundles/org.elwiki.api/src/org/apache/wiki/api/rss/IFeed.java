@@ -1,6 +1,14 @@
 package org.apache.wiki.api.rss;
 
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.NoSuchVariableException;
+import org.apache.wiki.api.variables.VariableManager;
+
 public interface IFeed {
+
+	/** Wiki variable storing the blog's name. */
+    public static final String VAR_BLOGNAME = "blogname";
 
     /**
      * Adds a new Entry to the Feed, at the end of the list.
@@ -55,5 +63,29 @@ public interface IFeed {
 	 * @param feedurl The m_feedURL to set.
 	 */
 	void setFeedURL(String feedurl);
+
+    /**
+     * Figure out a site name for a feed.
+     *
+     * @param context the wiki context
+     * @return the site name
+     */
+    public static String getSiteName( final WikiContext context ) {
+        final Engine engine = context.getEngine();
+        VariableManager variableManager = engine.getManager(VariableManager.class);
+
+        String blogname = null;
+
+        try {
+            blogname = variableManager.getValue(context, VAR_BLOGNAME);
+        } catch( final NoSuchVariableException e ) {
+        }
+
+        if (blogname == null) {
+            blogname = engine.getWikiConfiguration().getApplicationName() + ": " + context.getPage().getName();
+        }
+
+        return blogname;
+    }
 
 }

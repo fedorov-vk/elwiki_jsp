@@ -25,7 +25,7 @@ import org.apache.wiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.api.rss.RSSGenerator;
+import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.filters0.FilterManager;
@@ -398,7 +398,7 @@ public class WikiEngine implements Engine {
 	/** {@inheritDoc} */
 	@Override
 	public String getGlobalRSSURL() {
-		final RSSGenerator rssGenerator = this.getManager(RSSGenerator.class);
+		final RssGenerator rssGenerator = this.getManager(RssGenerator.class);
 		if (rssGenerator != null && rssGenerator.isEnabled()) {
 			return this.wikiConfiguration.getBaseURL() + "/" + rssGenerator.getRssFile();
 		}

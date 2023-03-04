@@ -16,32 +16,33 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.wiki.api.Release;
-import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.AttachmentContent;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.rss.IEntry;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.wiki.api.Release;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.rss.IEntry;
+import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 /**
  *  Provides an Atom 1.0 standard feed, with enclosures.

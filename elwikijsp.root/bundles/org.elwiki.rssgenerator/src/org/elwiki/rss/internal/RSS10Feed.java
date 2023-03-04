@@ -16,20 +16,19 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.rss;
-
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.rss.IEntry;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.util.XhtmlUtil;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+package org.elwiki.rss.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.rss.IEntry;
+import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki_data.WikiPage;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 /**
  * Provides an implementation of an RSS 1.0 feed.  In addition, this class is

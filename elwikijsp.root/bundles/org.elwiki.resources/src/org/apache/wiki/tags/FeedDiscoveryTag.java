@@ -26,7 +26,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.rss.Feed;
+import org.apache.wiki.api.rss.IFeed;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -53,7 +53,7 @@ public class FeedDiscoveryTag extends BaseWikiTag {
 				"page=" + encodedName + "&amp;mode=wiki");
 
 		if (rssURL != null) {
-			String siteName = Feed.getSiteName(wikiContext);
+			String siteName = IFeed.getSiteName(wikiContext);
 			siteName = TextUtil.replaceEntities(siteName);
 
 			pageContext.getOut().print(

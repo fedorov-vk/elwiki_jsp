@@ -76,21 +76,21 @@ if (m_cacheManager.cacheExists(cacheName)) {
     String      mode        = request.getParameter("mode");
     String      type        = request.getParameter("type");
     
-    if( mode == null || !(mode.equals(RSSGenerator.MODE_BLOG) || mode.equals(RSSGenerator.MODE_WIKI)) ) {
-    	   mode = RSSGenerator.MODE_BLOG;
+    if( mode == null || !(mode.equals(RssGenerator.MODE_BLOG) || mode.equals(RssGenerator.MODE_WIKI)) ) {
+    	   mode = RssGenerator.MODE_BLOG;
     }
-    if( type == null || !(type.equals(RSSGenerator.RSS10) || type.equals(RSSGenerator.RSS20) || type.equals(RSSGenerator.ATOM ) ) ) {
-    	   type = RSSGenerator.RSS20;
+    if( type == null || !(type.equals(RssGenerator.RSS10) || type.equals(RssGenerator.RSS20) || type.equals(RssGenerator.ATOM ) ) ) {
+    	   type = RssGenerator.RSS20;
     }
     // Set the content type and include the response content
-    response.setContentType( RSSGenerator.getContentType(type)+"; charset=UTF-8");
+    response.setContentType( RssGenerator.getContentType(type)+"; charset=UTF-8");
 
     StringBuffer result = new StringBuffer();
     SimpleDateFormat iso8601fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     Properties properties = wiki.getWikiPreferences();
-    String channelDescription = TextUtil.getRequiredProperty( properties, RSSGenerator.PROP_CHANNEL_DESCRIPTION );
-    String channelLanguage    = TextUtil.getRequiredProperty( properties, RSSGenerator.PROP_CHANNEL_LANGUAGE );
+    String channelDescription = TextUtil.getRequiredProperty( properties, RssGenerator.PROP_CHANNEL_DESCRIPTION );
+    String channelLanguage    = TextUtil.getRequiredProperty( properties, RssGenerator.PROP_CHANNEL_LANGUAGE );
 
     //
     //  Now, list items.

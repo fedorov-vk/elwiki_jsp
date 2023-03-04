@@ -38,7 +38,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since  1.7.5.
  */
-public interface RSSGenerator {
+public interface RssGenerator {
 
     /** Parameter value to represent RSS 1.0 feeds.  Value is <tt>{@value}</tt>. */
     String RSS10 = "rss10";

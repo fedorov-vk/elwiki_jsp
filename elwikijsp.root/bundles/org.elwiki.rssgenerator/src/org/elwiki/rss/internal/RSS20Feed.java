@@ -16,32 +16,32 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.rss;
+package org.elwiki.rss.internal;
 
-import org.apache.wiki.api.Release;
-import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.AttachmentContent;
-import org.elwiki_data.PageAttachment;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.ContextEnum;
-import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.rss.IEntry;
-import org.apache.wiki.api.rss.RSSGenerator;
-import org.apache.wiki.api.variables.VariableManager;
-import org.apache.wiki.render0.RenderingManager;
-import org.jdom2.Element;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import org.apache.wiki.api.Release;
+import org.apache.wiki.api.attachment.AttachmentManager;
+import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.rss.IEntry;
+import org.apache.wiki.api.rss.RssGenerator;
+import org.apache.wiki.api.variables.VariableManager;
+import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.PageAttachment;
+import org.elwiki_data.WikiPage;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 /**
  *  Represents an RSS 2.0 feed (with enclosures).  This feed provides no
@@ -148,10 +148,10 @@ public class RSS20Feed extends Feed
         channel.addContent( new Element("language").setText(getChannelLanguage()));
         channel.addContent( new Element("generator").setText("JSPWiki "+Release.VERSTR));
 
-        String mail = variableManager.getVariable(m_wikiContext,RSSGenerator.PROP_RSS_AUTHOREMAIL);
+        String mail = variableManager.getVariable(m_wikiContext,RssGenerator.PROP_RSS_AUTHOREMAIL);
         if( mail != null )
         {
-            final String editor = variableManager.getVariable( m_wikiContext,RSSGenerator.PROP_RSS_AUTHOR );
+            final String editor = variableManager.getVariable( m_wikiContext,RssGenerator.PROP_RSS_AUTHOR );
 
             if( editor != null )
                 mail = mail + " ("+editor+")";

@@ -18,14 +18,6 @@
  */
 package org.apache.wiki.htmltowiki;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.jdom2.Attribute;
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.Text;
-import org.jdom2.xpath.XPathFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -36,7 +28,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.text.StringEscapeUtils;
+import org.jdom2.Attribute;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Text;
+import org.jdom2.xpath.XPathFactory;
 
 /**
  * Converting XHtml to Wiki Markup.  This is the class which does all of the heavy loading.
@@ -691,61 +691,48 @@ public class XHtmlElementToWikiTranslator
         }
     }
 
-    private void printImage( Element base )
-    {
-        Element child = getXPathElement( base, "TBODY/TR/TD/*" );
-        if( child == null )
-        {
-            child = base;
-        }
-        Element img;
-        String href;
-        Map<Object,Object> map = new ForgetNullValuesLinkedHashMap<>();
-        if( child.getName().equals( "A" ) )
-        {
-            img = child.getChild( "IMG" );
-            href = child.getAttributeValue( "href" );
-        }
-        else
-        {
-            img = child;
-            href = null;
-        }
-        if( img == null )
-        {
-            return;
-        }
-        String src = trimLink( img.getAttributeValue( "src" ) );
-        if( src == null )
-        {
-            return;
-        }
-        map.put( "align", base.getAttributeValue( "align" ) );
-        map.put( "height", img.getAttributeValue( "height" ) );
-        map.put( "width", img.getAttributeValue( "width" ) );
-        map.put( "alt", img.getAttributeValue( "alt" ) );
-        map.put( "caption", emptyToNull( ( Element )XPathFactory.instance().compile(  "CAPTION" ).evaluateFirst( base ) ) );
-        map.put( "link", href );
-        map.put( "border", img.getAttributeValue( "border" ) );
-        map.put( "style", base.getAttributeValue( "style" ) );
-        if( map.size() > 0 )
-        {
-            m_out.print( "[{Image src='" + src + "'" );
-            for( Iterator i = map.entrySet().iterator(); i.hasNext(); )
-            {
-                Map.Entry entry = (Map.Entry)i.next();
-                if( !entry.getValue().equals( "" ) )
-                {
-                    m_out.print( " " + entry.getKey() + "='" + entry.getValue() + "'" );
-                }
-            }
-            m_out.print( "}]" );
-        }
-        else
-        {
-            m_out.print( "[" + src + "]" );
-        }
-    }
+	private void printImage(Element base) {
+		Element child = getXPathElement(base, "TBODY/TR/TD/*");
+		if (child == null) {
+			child = base;
+		}
+		Element img;
+		String href;
+		Map<String, String> map = new ForgetNullValuesLinkedHashMap<>();
+		if (child.getName().equals("A")) {
+			img = child.getChild("IMG");
+			href = child.getAttributeValue("href");
+		} else {
+			img = child;
+			href = null;
+		}
+		if (img == null) {
+			return;
+		}
+		String src = trimLink(img.getAttributeValue("src"));
+		if (src == null) {
+			return;
+		}
+		map.put("align", base.getAttributeValue("align"));
+		map.put("height", img.getAttributeValue("height"));
+		map.put("width", img.getAttributeValue("width"));
+		map.put("alt", img.getAttributeValue("alt"));
+		map.put("caption", emptyToNull((Element) XPathFactory.instance().compile("CAPTION").evaluateFirst(base)));
+		map.put("link", href);
+		map.put("border", img.getAttributeValue("border"));
+		map.put("style", base.getAttributeValue("style"));
+		if (map.size() > 0) {
+			m_out.print("[{Image src='" + src + "'");
+			for(Entry<String, String> entry : map.entrySet()) {
+				if (!entry.getValue().equals("")) {
+					m_out.print(" " + entry.getKey() + "='" + entry.getValue() + "'");
+				}
+			}
+			m_out.print("}]");
+		} else {
+			m_out.print("[" + src + "]");
+		}
+	}
 
     Element getXPathElement( final Element base, final String expression ) {
         final List< ? > nodes = XPathFactory.instance().compile( expression ).evaluate( base );
@@ -885,24 +872,21 @@ public class XHtmlElementToWikiTranslator
         return attributesMap;
     }
 
-    /**
-     * Converts the entries in the map to a string for use in a wiki link.
-     */
-    private String augmentedWikiLinkMapToString( Map attributesMap )
-    {
-    	StringBuilder sb = new StringBuilder();
+	/**
+	 * Converts the entries in the map to a string for use in a wiki link.
+	 */
+	private String augmentedWikiLinkMapToString(Map<String, String> attributesMap) {
+		StringBuilder sb = new StringBuilder();
 
-        for ( Iterator itr = attributesMap.entrySet().iterator(); itr.hasNext(); )
-        {
-            Map.Entry entry = (Map.Entry)itr.next();
-            String attributeName = (String)entry.getKey();
-            String attributeValue = (String)entry.getValue();
+		for (Entry<String, String> entry : attributesMap.entrySet()) {
+			String attributeName = (String) entry.getKey();
+			String attributeValue = (String) entry.getValue();
 
-            sb.append( " " + attributeName + "='" + attributeValue + "'" );
-        }
+			sb.append(" " + attributeName + "='" + attributeValue + "'");
+		}
 
-        return sb.toString().trim();
-    }
+		return sb.toString().trim();
+	}
 
     private Map< Object, Object > getStylePropertiesLowerCase( Element base ) throws IOException
     {
