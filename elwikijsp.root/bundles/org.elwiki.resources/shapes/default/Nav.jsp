@@ -290,18 +290,17 @@
     <wiki:PageExists>
 
       <%-- View RAW page source --%>
-      <li>
-      
+      <li>      
         <wiki:CheckVersion mode="latest">
-          <wiki:Link pageId="${pageId}">
+          <wiki:Link cssClass="slimbox-link" pageId="${pageId}">
             <wiki:Param name='shape' value='raw'/>
-            <span style="float:left; width: 18px; margin-left:-5px;">ℹ</span><fmt:message key='actions.page.rawpage' />
+            <fmt:message key='actions.page.rawpage' />
           </wiki:Link>
         </wiki:CheckVersion>
         <wiki:CheckVersion mode="notlatest">
-          <wiki:Link version='${param.version}' pageId="${pageId}">
+          <wiki:Link cssClass="slimbox-link" version='${param.version}' pageId="${pageId}">
             <wiki:Param name='shape' value='raw'/>
-            <span style="float:left; width: 18px; margin-left:-5px;">ℹ</span><fmt:message key='actions.page.rawpage' />
+            <fmt:message key='actions.page.rawpage' />
           </wiki:Link>
         </wiki:CheckVersion>
       </li>
@@ -311,13 +310,13 @@
         <wiki:CheckVersion mode="latest">
           <wiki:Link pageId="${pageId}">
             <wiki:Param name='shape' value='reader'/>
-            <span style="float:left; width: 18px; margin-left:-5px;">📰</span><fmt:message key='actions.page.showreaderview' />
+            <fmt:message key='actions.page.showreaderview' />
           </wiki:Link>
         </wiki:CheckVersion>
         <wiki:CheckVersion mode="notlatest">
           <wiki:Link cssClass="interwiki" version="${param.version}" pageId="${pageId}">
             <wiki:Param name='shape' value='reader'/>
-            <span style="float:left; width: 18px; margin-left:-5px;">📰</span><fmt:message key='actions.page.showreaderview' />
+            <fmt:message key='actions.page.showreaderview' />
           </wiki:Link>
         </wiki:CheckVersion>
       </li>
@@ -328,7 +327,7 @@
       <wiki:Permission permission="comment">
         <li>
           <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${pageId}">
-            <span style="float:left; width: 18px; margin-left:-5px;">☝</span><fmt:message key="actions.page.comment" />
+            <fmt:message key="actions.page.comment" /> 📑
           </wiki:Link>
         </li>
       </wiki:Permission>
@@ -341,15 +340,15 @@
       <%-- edit page --%>
       <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
         <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e">
-          <span style="float:left; width: 18px; margin-left:-5px;">✎</span><fmt:message key='actions.page.edit'/>
+          <span style="float:left; width: 23px; margin-left:-5px;">✎</span><fmt:message key='actions.page.edit'/>
         </wiki:Link>
       </li>
 
       <%-- create page --%>
-      <li class="<wiki:Permission permission='!create'>disabled</wiki:Permission>">
+      <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
         <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
           <wiki:Param name="redirect" value="${pageId}"/>
-          <span style="float:left; width: 18px; margin-left:-5px;">🆕</span><fmt:message key='actions.page.create'/>
+          <span style="float:left; width: 23px; margin-left:-5px;">🆕</span><fmt:message key='actions.page.create'/>
         </wiki:Link>
       </li>
 
@@ -362,7 +361,7 @@
                 type="submit" name="deletepage" id="cmdDeletePage"
                style="margin-left:-5px; width:100%; padding:3px 20px; text-align:left; border-style: none;" <%-- :FVK: workaround --%>
           data-modal="+ .modal"
-               value="❌&nbsp;<fmt:message key='actions.page.delete'/>" />
+               value="❌&nbsp;&nbsp;<fmt:message key='actions.page.delete'/>" />
         <div class="modal"><fmt:message key='info.confirmdelete'/></div>
       </form>
       </wiki:PageExists>
@@ -384,7 +383,7 @@
       <wiki:UserCheck status="authenticated">
         <li>
           <wiki:Link context="<%=WikiContext.WIKI_WORKFLOW%>" >
-            <fmt:message key='actions.workflow' />
+            🔃 <fmt:message key='actions.workflow' />
           </wiki:Link>
         </li>
         <li class="divider"></li>
@@ -398,12 +397,12 @@
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='save'/>
-            Save wiki content
+               ⤵ Save wiki content
           </wiki:Link>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='load'/>
-            Load wiki content
+                ⤴ Load wiki content
           </wiki:Link>
          </li>
          <li class="divider "></li>
