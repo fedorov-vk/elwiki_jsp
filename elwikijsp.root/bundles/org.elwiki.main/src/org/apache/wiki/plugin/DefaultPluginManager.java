@@ -62,6 +62,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
@@ -194,6 +195,9 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+    @WikiServiceReference
+    protected Engine m_engine;
 
 	/** {@inheritDoc} */
 	@Override
@@ -751,8 +755,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

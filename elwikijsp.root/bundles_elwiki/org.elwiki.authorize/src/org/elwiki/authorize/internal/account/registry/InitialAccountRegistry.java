@@ -19,7 +19,6 @@ import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.Role;
 import org.osgi.service.useradmin.User;
-import org.osgi.service.useradmin.UserAdmin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,8 +45,6 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 
 	// == CODE ================================================================
 
-	public abstract UserAdmin getUserAdminService();
-
 	// -- implementation of AccountRegistry ------------------------------------
 
 	/** {@inheritDoc} */
@@ -56,14 +53,14 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 		// TODO Auto-generated method stub
 		Assert.isTrue(false, "Code is not implemented.");
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void save(UserProfile profile) throws WikiSecurityException {
 		DateFormat c_format = new SimpleDateFormat(DATE_FORMAT);
 		String uid = profile.getUid();
 		String loginName = profile.getLoginName();
-		User user = getUserAdminService().getUser(LOGIN_NAME, loginName);
+		User user = getUserAdmin().getUser(LOGIN_NAME, loginName);
 
 		Date modDate = new Date(System.currentTimeMillis());
 		if (user == null) {
@@ -71,7 +68,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 
 			// Create new user node
 			log.info("Creating new user: " + loginName);
-			user = (User) getUserAdminService().createRole(uid, Role.USER);
+			user = (User) getUserAdmin().createRole(uid, Role.USER);
 			if (user == null) {
 				throw new WikiSecurityException("Wrong (alredy exists) the UID: " + uid);
 			}
@@ -107,7 +104,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 
 	// -- code of initialization from JSON file -------------------------------
 
-	//:FVK: workaround. (loading Users and Groups information from JSON bundle's file)
+	//:FVK: workaround. (loading Users and Groups information from bundle's JSON file)
 	protected void loadInitialAccounts() throws Exception {
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
@@ -127,7 +124,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 		 */
 		for (DefaultUserProfile profile : data.users) {
 			String login = profile.getLoginName();
-			if (getUserAdminService().getUser(LOGIN_NAME, login) == null) {
+			if (getUserAdmin().getUser(LOGIN_NAME, login) == null) {
 				try {
 					this.save(profile);
 				} catch (Exception e) {
@@ -141,9 +138,9 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 		for (GroupContent groupData : data.groups) {
 			String groupUid = groupData.uid;
 			Group group;
-			if ((group = (Group) getUserAdminService().getRole(groupUid)) == null) {
+			if ((group = (Group) getUserAdmin().getRole(groupUid)) == null) {
 				try {
-					group = (Group) getUserAdminService().createRole(groupUid, Role.GROUP);
+					group = (Group) getUserAdmin().createRole(groupUid, Role.GROUP);
 					Dictionary<String, Object> groupProps = group.getProperties();
 					groupProps.put(GROUP_NAME, groupData.name);
 					groupProps.put(GROUP_PERMISSIONS, gson.toJson(groupData.permissions));
@@ -162,7 +159,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 			}
 			if (groupData.users != null) {
 				for (String userGUID : groupData.users) {
-					User user = getUserAdminService().getUser(UID, userGUID);
+					User user = getUserAdmin().getUser(UID, userGUID);
 					if (user != null) {
 						group.addMember(user);
 					}
@@ -170,7 +167,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 			}
 			if (groupData.roles != null) {
 				for (String roleGUID : groupData.roles) {
-					Role role = getUserAdminService().getRole(roleGUID);
+					Role role = getUserAdmin().getRole(roleGUID);
 					if (role != null) {
 						group.addMember(role);
 					}

@@ -35,10 +35,8 @@ import javax.servlet.http.HttpSessionListener;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.event.WikiEventTopic;
+import org.apache.wiki.api.event.WikiSecurityEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.WikiServiceReference;
@@ -49,6 +47,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
@@ -82,12 +81,15 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
     }
 
 	// -- OSGi service handling ----------------------(start)--
+	
+	@Reference
+	volatile protected EventAdmin eventAdmin;
 
     @Reference(target = "(component.factory=elwiki.WikiSession.factory)")
     private ComponentFactory<Session> factoryWikiSession;
 
 	@WikiServiceReference
-	private IIAuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@WikiServiceReference
 	private Engine m_engine;
@@ -100,7 +102,7 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothong to do.
 	}
 	
 	// -- OSGi service handling ------------------------(end)--
@@ -111,18 +113,18 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
      * callers should check for this value</em>.
      *
      *  @param session the user's HTTP session
-     *  @return the WikiSession, if found
+     *  @return the WikiSession, if found. Can be null.
      */
 	@Override
     public Session findSession( final HttpSession session ) {
         Session wikiSession = null;
-        final String sid = ( session == null ) ? "(null)" : session.getId();
-        final Session storedSession = m_sessions.get( sid );
+        final String sessionId = ( session == null ) ? "(null)" : session.getId();
+        final Session storedSession = m_sessions.get( sessionId );
 
         // If the weak reference returns a wiki session, return it
         if( storedSession != null ) {
             if( log.isDebugEnabled() ) {
-                log.debug( "Looking up WikiSession for session ID=" + sid + "... found it" );
+                log.debug( "Looking up WikiSession for session ID=" + sessionId + "... found it" );
             }
             wikiSession = storedSession;
         }
@@ -209,40 +211,6 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
     }
 
     /**
-     * Registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     * @since 2.4.75
-     */
-    public final synchronized void addWikiEventListener( final WikiEventListener listener ) {
-        WikiEventManager.addWikiEventListener( this, listener );
-    }
-
-    /**
-     * Un-registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     * @since 2.4.75
-     */
-    public final synchronized void removeWikiEventListener( final WikiEventListener listener ) {
-        WikiEventManager.removeWikiEventListener( this, listener );
-    }
-
-    /**
-     * Fires a WikiSecurityEvent to all registered listeners.
-     *
-     * @param type  the event type
-     * @param principal the user principal associated with this session
-     * @param session the wiki session
-     * @since 2.4.75
-     */
-    protected final void fireEvent( final int type, final Principal principal, final Session session ) {
-        if( WikiEventManager.isListening( this ) ) {
-            WikiEventManager.fireEvent( this, new WikiSecurityEvent( this, type, principal, session ) );
-        }
-    }
-
-    /**
      * Fires when the web container creates a new HTTP session.
      * 
      * @param se the HTTP session event
@@ -265,7 +233,8 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
 		this.remove(session);
 		log.debug("Removed session " + session.getId() + ".");
 		if (storedSession != null) {
-			fireEvent(WikiSecurityEvent.SESSION_EXPIRED, storedSession.getLoginPrincipal(), storedSession);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_SESSION_EXPIRED,
+					Map.of(WikiSecurityEventTopic.PROPERTY_SESSION, storedSession)));
 		}
 	}
 
@@ -297,7 +266,7 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		if (sessionId != null) {
 			properties.put(EventConstants.EVENT_FILTER,
-					"(" + ElWikiEventsConstants.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
+					"(" + WikiEventTopic.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
 		}
 
 		Session wikiSession = (Session) this.factoryWikiSession.newInstance(properties).getInstance();
@@ -335,11 +304,20 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
         return session;
     }
 
+	@Override
+	public String getSessionId(Session session) {
+		String sessionId = null;
+		synchronized (m_sessions) {
+			sessionId = m_sessions.entrySet().stream().filter(entry -> session.equals(entry.getValue()))
+					.map(Map.Entry::getKey).findFirst().get();
+		}
+		return sessionId;
+	}
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

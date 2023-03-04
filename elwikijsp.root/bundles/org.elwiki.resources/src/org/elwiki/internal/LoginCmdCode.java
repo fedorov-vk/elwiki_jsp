@@ -18,7 +18,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -98,7 +98,7 @@ public class LoginCmdCode extends CmdCode {
 			}
 		}
 
-		IIAuthenticationManager mgr = getEngine().getManager(IIAuthenticationManager.class);
+		AuthenticationManager mgr = getEngine().getManager(AuthenticationManager.class);
 		// If NOT using container auth, perform all of the access control logic here...
 		// (Note: if using the container for auth, it will handle all of this for us.)
 		if (!mgr.isContainerAuthenticated()) {

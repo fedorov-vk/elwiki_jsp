@@ -1,6 +1,7 @@
 package org.elwiki.internal;
 
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,18 +76,19 @@ public class DeletePageCmdCode extends CmdCode {
 	        */
 	    }
 
-	    /*{
+	    {//delete page.
 			WikiContext m_wikiContext = (WikiContext) httpRequest.getAttribute(WikiContext.ATTR_WIKI_CONTEXT);
 			final Engine engine = m_wikiContext.getEngine();
 			@NonNull
 			PageManager pageManager = engine.getManager(PageManager.class);
-			pageManager.deletePageById();
+			//pageManager.deletePageById(pageId);
+			WikiPage page = pageManager.getPageById(pageId);
+			String targetPageId = page.getParent().getId();
+			pageManager.deletePage(page);
 
-			String redirectedUrl;
-			redirectedUrl = "cmd.edit?pageId=" + newPage.getId();
-
-			response.sendRedirect(redirectedUrl);
-		}*/
+			String redirectedUrl = "cmd.view?pageId=" + targetPageId;
+			httpResponse.sendRedirect(redirectedUrl);
+		}
 	}
 
 	public void applyEpilogue() {

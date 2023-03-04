@@ -90,7 +90,7 @@ public class DefaultAclManager implements AclManager, WikiManager, EventHandler 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--
@@ -299,8 +299,8 @@ public class DefaultAclManager implements AclManager, WikiManager, EventHandler 
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

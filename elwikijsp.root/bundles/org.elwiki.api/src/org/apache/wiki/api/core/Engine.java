@@ -33,7 +33,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
@@ -252,20 +251,6 @@ public interface Engine {
      *  @throws ProviderException If something goes wrong in the backend.
      */
     String getFinalPageName( String page ) throws ProviderException;
-
-    /**
-     * Registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     */
-    void addWikiEventListener( WikiEventListener listener );
-
-    /**
-     * Un-registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     */
-    void removeWikiEventListener( WikiEventListener listener );
 
     /**
      * Adds an attribute to the engine for the duration of this engine.  The value is not persisted.

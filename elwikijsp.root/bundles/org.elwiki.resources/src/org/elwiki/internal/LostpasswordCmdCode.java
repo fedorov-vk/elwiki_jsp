@@ -16,7 +16,7 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.MailUtil;

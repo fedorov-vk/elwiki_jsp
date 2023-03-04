@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.WikiException;
 
 /**
@@ -32,7 +31,7 @@ import org.apache.wiki.api.exceptions.WikiException;
  * particular Workflows.
  * </p>
  */
-public interface WorkflowManager extends WikiEventListener {
+public interface WorkflowManager {
 
     /** The name of the key from jspwiki.properties which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
     String WF_WP_SAVE_APPROVER = "workflow.saveWikiPage";

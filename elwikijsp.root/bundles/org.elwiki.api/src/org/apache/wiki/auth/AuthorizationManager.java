@@ -27,9 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
 
@@ -56,7 +53,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * <p>See the implementation on {@link #checkPermission(Session, Permission)} method for more information on the authorization logic.</p>
  *
  * @since 2.3
- * @see IIAuthenticationManager
+ * @see AuthenticationManager
  */
 public interface AuthorizationManager {
 
@@ -119,7 +116,7 @@ public interface AuthorizationManager {
      * @return <code>true</code> if the Subject supplied with the WikiContext posesses the Role or GroupPrincipal, <code>false</code> otherwise
      */
     default boolean isUserInRole( final Session session, final Principal principal ) {
-        if ( session == null || principal == null || IIAuthenticationManager.isUserPrincipal( principal ) ) {
+        if ( session == null || principal == null || AuthenticationManager.isUserPrincipal( principal ) ) {
             return false;
         }
 
@@ -129,7 +126,7 @@ public interface AuthorizationManager {
 		}
 
         // Only authenticated users can possess groups or custom roles
-        if ( session.isAuthenticated() && IIAuthenticationManager.isRolePrincipal( principal ) ) {
+        if ( session.isAuthenticated() && AuthenticationManager.isRolePrincipal( principal ) ) {
             return session.hasPrincipal( principal );
         }
         return false;
@@ -238,36 +235,5 @@ public interface AuthorizationManager {
      * @return the fully-resolved Principal
      */
     Principal resolvePrincipal( final String name );
-
-
-    // events processing .......................................................
-
-    /**
-     * Registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     */
-    void addWikiEventListener( WikiEventListener listener );
-
-    /**
-     * Un-registers a WikiEventListener with this instance.
-     *
-     * @param listener the event listener
-     */
-    void removeWikiEventListener( final WikiEventListener listener );
-
-    /**
-     * Fires a WikiSecurityEvent of the provided type, user, and permission to all registered listeners.
-     *
-     * @see org.apache.wiki.api.event.WikiSecurityEvent
-     * @param type        the event type to be fired
-     * @param user        the user associated with the event
-     * @param permission  the permission the subject must possess
-     */
-    default void fireEvent( final int type, final Principal user, final Object permission ) {
-        if( WikiEventManager.isListening( this ) ) {
-            WikiEventManager.fireEvent( this, new WikiSecurityEvent( this, type, user, permission ) );
-        }
-    }
 
 }

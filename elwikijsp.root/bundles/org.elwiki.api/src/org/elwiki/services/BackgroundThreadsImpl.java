@@ -21,12 +21,10 @@ package org.elwiki.services;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.event.WikiEngineEvent;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -34,10 +32,8 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
 /**
- * Abstract Thread subclass that operates in the background; when it detects the
- * {@link WikiEngineEvent#SHUTDOWN} event, it terminates itself. Subclasses of this method need only
- * implement the method {@link #backgroundTask()}, instead of the normal {@link Thread#run()}, and
- * provide a constructor that passes the Engine and sleep interval. This class is thread-safe.
+ * This component creates and operates of threads presented by subclassing Actor. When it detects
+ * the {@link SHUTDOWN} event, it terminates all threads.
  */
 //@formatter:off
 @Component(
@@ -50,11 +46,11 @@ import org.osgi.service.event.EventHandler;
 //@formatter:on
 public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, EventHandler {
 
-    private static final Logger log = Logger.getLogger( BackgroundThreadsImpl.class );
+	private static final Logger log = Logger.getLogger(BackgroundThreadsImpl.class);
 
-    private static final long POLLING_INTERVAL = 1_000L;
+	private static final long POLLING_INTERVAL = 1_000L;
 
-    private volatile boolean m_killMe = false;
+	private volatile boolean m_killMe = false;
 
 	// -- OSGi service handling --------------------( start )--
 
@@ -72,7 +68,7 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ----------------------( end )--
@@ -84,12 +80,12 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 		thread.setDaemon(false);
 		return thread;
 	}
-	
+
 	protected class BackgrounThread extends Thread {
 
-	    private int m_interval;
-	    private Actor actor;
-		
+		private final int m_interval;
+		private final Actor actor;
+
 		/**
 		 * @param sleepInterval the interval between invocations of task action.
 		 * @param actor
@@ -98,13 +94,15 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 			this.m_interval = sleepInterval;
 			this.actor = actor;
 		}
-		
+
 		/**
 		 * Runs the background thread's {@link #backgroundTask()} method at the interval specified at
-		 * construction. The thread will initially pause for a full sleep interval before starting, after
-		 * which it will execute {@link #startupTask()}. This method will cleanly terminate the thread if it
-		 * has previously been marked as dead, before which it will execute {@link #shutdownTask()}. If any
-		 * of the three methods return an exception, it will be re-thrown as a
+		 * construction. <br/>
+		 * The thread will initially pause for a full sleep interval before starting, after which it will
+		 * execute {@link #startupTask()}. This method will cleanly terminate the thread if it has
+		 * previously been marked as dead, before which it will execute {@link #shutdownTask()}.
+		 * <p/>
+		 * If any of the three methods return an exception, it will be re-thrown as a
 		 * {@link org.apache.wiki.InternalWikiException}.
 		 * 
 		 * @see java.lang.Thread#run()
@@ -118,7 +116,7 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 				actor.startupTask();
 
 				// Perform the background task; check every second for thread death
-				while (!m_killMe) {
+				while (!m_killMe && actor.isAlive()) {
 					// Perform the background task
 					// log.debug( "Running background task: " + name + "." );
 					actor.backgroundTask();
@@ -149,14 +147,14 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 				throw new InternalWikiException(t.getMessage(), t);
 			}
 		}
-	}   
+	}
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}
-	
+
 }

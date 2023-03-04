@@ -31,11 +31,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -57,8 +53,6 @@ import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -84,6 +78,9 @@ import net.sf.ehcache.Element;
 @Component(
 	name = "elwiki.DefaultRenderingManager",
 	service = { RenderingManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN,
+	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultRenderingManager implements RenderingManager, WikiManager, EventHandler {
@@ -177,8 +174,6 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
         m_rendererWysiwygConstructor = initRenderer( renderWysiwygImplName, rendererParams );
 
         log.info( "Rendering content with " + renderImplName + "." );
-
-        WikiEventManager.getInstance().addWikiEventListener( this.filterManager,this );
     }
 
 	// -- OSGi service handling ------------------------(end)--
@@ -480,51 +475,41 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>Flushes the document cache in response to a POST_SAVE_BEGIN event.
-     *
-     * @see WikiEventListener#actionPerformed(WikiEvent)
-     */
-    @Override
-    public void actionPerformed( final WikiEvent event ) {
-        log.debug( "event received: " + event.toString() );
-        if( m_useCache ) {
-            if( ( event instanceof WikiPageEvent wikiPageEvent)
-            		&& ( event.getType() == WikiPageEvent.POST_SAVE_BEGIN ) ) {
-                if( m_documentCache != null ) {
-                    final String pageName = wikiPageEvent.getPageName();
-                    m_documentCache.remove( pageName );
-                    final Collection< String > referringPages = this.referenceManager.findReferrers( pageName );
-
-                    //
-                    //  Flush also those pages that refer to this page (if an nonexistent page
-                    //  appears, we need to flush the HTML that refers to the now-existent page)
-                    //
-                    if( referringPages != null ) {
-                        for( final String page : referringPages ) {
-                            if( log.isDebugEnabled() ) {
-                                log.debug( "Flushing latest version of " + page );
-                            }
-                            // as there is a new version of the page expire both plugin and pluginless versions of the old page
-                            m_documentCache.remove( page + VERSION_DELIMITER + PageProvider.LATEST_VERSION  + VERSION_DELIMITER + Boolean.FALSE );
-                            m_documentCache.remove( page + VERSION_DELIMITER + PageProvider.LATEST_VERSION  + VERSION_DELIMITER + Boolean.TRUE );
-                            m_documentCache.remove( page + VERSION_DELIMITER + PageProvider.LATEST_VERSION  + VERSION_DELIMITER + null );
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 	@Override
 	public void handleEvent(Event event) {
-		//log.debug("~~ ~~ ~~ Recevied event with topic: " + event.getTopic());
 		String topic = event.getTopic();
-		/*switch (topic) {
+		switch (topic) {
+		case WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN:
+			if (m_useCache) {
+				/* Flushes the document cache in response to a POST_SAVE_BEGIN event. */
+				WikiContext context = (WikiContext) event.getProperty(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT);
+				WikiPage wikiPage = context.getPage();
+				if (m_documentCache != null) {
+					final String pageName = wikiPage.getName();
+					m_documentCache.remove(pageName);
+					final Collection<String> referringPages = this.referenceManager.findReferrers(pageName);
+					//
+					//  Flush also those pages that refer to this page (if an nonexistent page
+					//  appears, we need to flush the HTML that refers to the now-existent page)
+					//
+					if (referringPages != null) {
+						for (final String page : referringPages) {
+							if (log.isDebugEnabled()) {
+								log.debug("Flushing latest version of " + page);
+							}
+							// as there is a new version of the page expire both plugin and pluginless versions of the old page
+							m_documentCache.remove(page + VERSION_DELIMITER + PageProvider.LATEST_VERSION
+									+ VERSION_DELIMITER + Boolean.FALSE);
+							m_documentCache.remove(page + VERSION_DELIMITER + PageProvider.LATEST_VERSION
+									+ VERSION_DELIMITER + Boolean.TRUE);
+							m_documentCache.remove(
+									page + VERSION_DELIMITER + PageProvider.LATEST_VERSION + VERSION_DELIMITER + null);
+						}
+					}
+				}
+			}
 			break;
-		}*/		
+		}		
 	}
 
 }

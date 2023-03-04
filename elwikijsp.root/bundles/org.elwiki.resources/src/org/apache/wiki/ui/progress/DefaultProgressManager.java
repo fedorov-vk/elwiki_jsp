@@ -173,8 +173,8 @@ public class DefaultProgressManager implements ProgressManager, WikiManager, Eve
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

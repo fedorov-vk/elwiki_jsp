@@ -48,7 +48,7 @@ public class DefaultTasksManager implements TasksManager, WikiManager {
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--

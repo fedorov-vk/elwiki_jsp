@@ -41,13 +41,4 @@ public interface PageRenamer {
      */
     String renamePage( WikiContext context, String renameFrom, String renameTo, boolean changeReferrers ) throws WikiException;
 
-    /**
-     * Fires a WikiPageRenameEvent to all registered listeners. Currently not used internally by JSPWiki itself, but you can use it for
-     * something else.
-     *
-     * @param oldName the former page name
-     * @param newName the new page name
-     */
-    void firePageRenameEvent( String oldName, String newName );
-
 }

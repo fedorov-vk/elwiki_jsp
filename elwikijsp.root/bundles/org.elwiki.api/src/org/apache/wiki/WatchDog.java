@@ -18,15 +18,17 @@
  */
 package org.apache.wiki;
 
-import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Engine;
-
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.Engine;
+import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.BackgroundThreads.Actor;
 
 /**
  *  WatchDog is a general system watchdog.  You can attach any Watchable or a Thread object to it, and it will notify you
@@ -49,11 +51,11 @@ public final class WatchDog {
     private final Stack< State > m_stateStack = new Stack<>();
     private boolean m_enabled = true;
     private Engine m_engine;
+	private WatchDogActor c_watcherActor;
 
     private static final Logger log = Logger.getLogger( WatchDog.class );
 
     private static Map< Integer, WeakReference< WatchDog > > c_kennel = new ConcurrentHashMap<>();
-    private static WikiBackgroundThread c_watcherThread;
 
     /**
      *  Returns the current watchdog for the current thread. This is the preferred method of getting you a Watchdog, since it
@@ -91,9 +93,12 @@ public final class WatchDog {
         m_watchable = watch;
 
         synchronized( WatchDog.class ) {
-            if( c_watcherThread == null ) {
-                c_watcherThread = new WatchDogThread( engine );
-                c_watcherThread.start();
+            if( c_watcherActor == null ) {
+				BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
+				c_watcherActor = new WatchDogActor();
+				String threadName = "WatchDog for '" + m_engine.getWikiConfiguration().getApplicationName() + "'";
+				Thread watcherThread = backgroundThreads.createThread(threadName, CHECK_INTERVAL, c_watcherActor);
+				watcherThread.start();
             }
         }
     }
@@ -137,8 +142,12 @@ public final class WatchDog {
         synchronized( WatchDog.class ) {
             if( !m_enabled ) {
                 m_enabled = true;
-                c_watcherThread = new WatchDogThread( m_engine );
-                c_watcherThread.start();
+                
+				BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
+				c_watcherActor = new WatchDogActor();
+				String threadName = "WatchDog for '" + m_engine.getWikiConfiguration().getApplicationName() + "'";
+				Thread watcherThread = backgroundThreads.createThread(threadName, CHECK_INTERVAL, c_watcherActor);
+				watcherThread.start();
             }
         }
     }
@@ -150,8 +159,8 @@ public final class WatchDog {
         synchronized( WatchDog.class ) {
             if( m_enabled ) {
                 m_enabled = false;
-                c_watcherThread.shutdown();
-                c_watcherThread = null;
+                c_watcherActor.shutdownTask();
+                c_watcherActor = null;
             }
         }
     }
@@ -319,21 +328,13 @@ public final class WatchDog {
         }
     }
 
+    /** How often the watchdog thread should wake up (in seconds) */
+    private static final int CHECK_INTERVAL = 30;
+    
     /**
-     *  This is the chief watchdog thread.
+     *  This is the chief watchdog actor.
      */
-    private static class WatchDogThread extends WikiBackgroundThread {
-        /** How often the watchdog thread should wake up (in seconds) */
-        private static final int CHECK_INTERVAL = 30;
-
-        public WatchDogThread( final Engine engine ) {
-            super( engine, CHECK_INTERVAL );
-            setName( "WatchDog for '" + engine.getWikiConfiguration().getApplicationName() + "'" );
-        }
-
-        @Override
-        public void startupTask() {
-        }
+    private static class WatchDogActor extends Actor {
 
         @Override
         public void shutdownTask() {
@@ -366,7 +367,6 @@ public final class WatchDog {
 
             WatchDog.scrub();
         }
-
     }
 
     /**

@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -36,13 +37,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.event.WikiEventTopic;
+import org.apache.wiki.api.event.WikiLoginEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TextUtil;
@@ -71,12 +70,11 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.useradmin.UserAdmin;
 
 /**
- * Default implementation for {@link IIAuthenticationManager}
+ * Default implementation for {@link AuthenticationManager}
  *
  * {@inheritDoc}
  * 
@@ -85,10 +83,10 @@ import org.osgi.service.useradmin.UserAdmin;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthenticationManager",
-	service = { IIAuthenticationManager.class, WikiManager.class, EventHandler.class },
+	service = { AuthenticationManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements IIAuthenticationManager, WikiManager, EventHandler {
+public class DefaultAuthenticationManager implements AuthenticationManager, WikiManager, EventHandler {
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
     private static final long LASTLOGINS_CLEANUP_TIME = 10 * 60 * 1_000L; // Ten minutes
@@ -134,10 +132,10 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
-	volatile protected UserAdmin userAdminService;
+	protected UserAdmin userAdminService;
 	
 	@Reference
-	volatile protected EventAdmin eventAdmin;
+	protected EventAdmin eventAdmin;
 
 	@WikiServiceReference
     private Engine m_engine = null;
@@ -177,6 +175,35 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 
         // Initialize the LoginModule options
         initLoginModuleOptions( m_engine.getWikiPreferences() );
+    }
+
+    /**
+     * Initializes the options Map supplied to the configured LoginModule every time it is invoked. The properties and values extracted from
+     * <code>jspwiki.properties</code> are of the form <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where
+     * <var>param</var> is the key name, and <var>value</var> is the value.
+     *
+     * @param props the properties used to initialize JSPWiki
+     * @throws IllegalArgumentException if any of the keys are duplicated
+     */
+    private void initLoginModuleOptions( IPreferenceStore props ) {
+    	/*:FVK:
+        for( final Object key : props.keySet() ) {
+            final String propName = key.toString();
+            if( propName.startsWith( PREFIX_LOGIN_MODULE_OPTIONS ) ) {
+                // Extract the option name and value
+                final String optionKey = propName.substring( PREFIX_LOGIN_MODULE_OPTIONS.length() ).trim();
+                if( optionKey.length() > 0 ) {
+                    final String optionValue = props.getProperty( propName );
+
+                    // Make sure the key is unique before stashing the key/value pair
+                    if ( m_loginModuleOptions.containsKey( optionKey ) ) {
+                        throw new IllegalArgumentException( "JAAS LoginModule key " + propName + " cannot be specified twice!" );
+                    }
+                    m_loginModuleOptions.put( optionKey, optionValue );
+                }
+            }
+        }
+        */
     }
 
 	// -- OSGi service handling ------------------------(end)--
@@ -271,16 +298,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 			// If the container logged the user in successfully,
 			// tell the Session (and add all of the Principals)
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
-						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-				{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
-					fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED,
-							IIAuthenticationManager.getLoginPrincipal(principals), session);
-					for (final Principal principal : principals) {
-						fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, principal, session);
-					}
-				}
+				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
+						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
 
 				// Add all appropriate Authorizer roles
 				injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), request);
@@ -294,12 +314,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 			// Execute the cookie assertion login module
 			final Set<Principal> principals = this.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED, Map.of( //
-						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-				{//:FVK: устаревший код. @Deprecated
-					fireEvent(WikiSecurityEvent.LOGIN_ASSERTED, IIAuthenticationManager.getLoginPrincipal(principals), session);
-				}
+				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ASSERTED, Map.of( //
+						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -308,12 +325,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 		if (session.isAnonymous()) {
 			final Set<Principal> principals = this.doJAASLogin(AnonymousLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS, Map.of( //
-						ElWikiEventsConstants.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-				{// :FVK: устаревший код. @Deprecated
-					fireEvent(WikiSecurityEvent.LOGIN_ANONYMOUS, IIAuthenticationManager.getLoginPrincipal(principals), session);
-				}
+				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ANONYMOUS, Map.of( //
+						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -343,15 +357,9 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
         final Set< Principal > principals = this.doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
         if( principals.size() > 0 ) {
 			String httpSessionId = (request != null) ? request.getSession().getId() : "";
-			eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED,
-					Map.of(ElWikiEventsConstants.PROPERTY_KEY_TARGET, httpSessionId,
-							ElWikiEventsConstants.PROPERTY_LOGIN_PRINCIPALS, principals)));
-        	{//:FVK: устаревший код. PRINCIPAL_ADD - не использовать. @Deprecated
-				fireEvent(WikiSecurityEvent.LOGIN_AUTHENTICATED, IIAuthenticationManager.getLoginPrincipal(principals), session);
-				for (final Principal principal : principals) {
-					fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, principal, session);
-				}
-        	}
+			eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED,
+					Map.of(WikiEventTopic.PROPERTY_KEY_TARGET, httpSessionId,
+							WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
 
             // Add all appropriate Authorizer roles
             injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), null );
@@ -397,8 +405,8 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 
 		HttpSession httpSession = request.getSession();
 		String httpSessionId = (httpSession != null) ? httpSession.getId() : null;
-		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_LOGOUT, Map.of( //
-				ElWikiEventsConstants.PROPERTY_KEY_TARGET, httpSessionId)));
+		eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGOUT, Map.of( //
+				WikiEventTopic.PROPERTY_KEY_TARGET, httpSessionId)));
 
 		// We need to flush the HTTP session too
 		if (httpSession != null) {
@@ -472,53 +480,6 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
         return Collections.emptySet();
     }
 
-    // events processing .......................................................
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void addWikiEventListener( final WikiEventListener listener ) {
-        WikiEventManager.addWikiEventListener( this, listener );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void removeWikiEventListener( final WikiEventListener listener ) {
-        WikiEventManager.removeWikiEventListener( this, listener );
-    }
-
-    /**
-     * Initializes the options Map supplied to the configured LoginModule every time it is invoked. The properties and values extracted from
-     * <code>jspwiki.properties</code> are of the form <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where
-     * <var>param</var> is the key name, and <var>value</var> is the value.
-     *
-     * @param props the properties used to initialize JSPWiki
-     * @throws IllegalArgumentException if any of the keys are duplicated
-     */
-    private void initLoginModuleOptions( IPreferenceStore props ) {
-    	/*:FVK:
-        for( final Object key : props.keySet() ) {
-            final String propName = key.toString();
-            if( propName.startsWith( PREFIX_LOGIN_MODULE_OPTIONS ) ) {
-                // Extract the option name and value
-                final String optionKey = propName.substring( PREFIX_LOGIN_MODULE_OPTIONS.length() ).trim();
-                if( optionKey.length() > 0 ) {
-                    final String optionValue = props.getProperty( propName );
-
-                    // Make sure the key is unique before stashing the key/value pair
-                    if ( m_loginModuleOptions.containsKey( optionKey ) ) {
-                        throw new IllegalArgumentException( "JAAS LoginModule key " + propName + " cannot be specified twice!" );
-                    }
-                    m_loginModuleOptions.put( optionKey, optionValue );
-                }
-            }
-        }
-        */
-    }
-
     /**
      * After successful login, this method is called to inject authorized role Principals into the Session. To determine which roles
      * should be injected, the configured Authorizer is queried for the roles it knows about by calling  {@link Authorizer#getRoles()}.
@@ -531,12 +492,13 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
      * @param authorizer the Engine's configured Authorizer
      * @param request the user's HTTP session, which may be <code>null</code>
      */
-    private void injectAuthorizerRoles( final Session session, final Authorizer authorizer, final HttpServletRequest request ) {
+	private void injectAuthorizerRoles(Session session, Authorizer authorizer, HttpServletRequest request) {
+		Set<Principal> principals = new HashSet<>();
 		// Test each role the authorizer knows about
 		for (final Principal role : authorizer.getRoles()) {
 			// Test the Authorizer
 			if (authorizer.isUserInRole(session, role)) {
-				fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, role, session);
+				principals.add(role);
 				if (log.isDebugEnabled()) {
 					log.debug("Added authorizer role " + role.getName() + ".");
 				}
@@ -545,19 +507,25 @@ public class DefaultAuthenticationManager implements IIAuthenticationManager, Wi
 			else if (request != null && authorizer instanceof WebAuthorizer) {
 				final WebAuthorizer wa = (WebAuthorizer) authorizer;
 				if (wa.isUserInRole(request, role)) {
-					fireEvent(WikiSecurityEvent.PRINCIPAL_ADD, role, session);
+					principals.add(role);
 					if (log.isDebugEnabled()) {
 						log.debug("Added container role " + role.getName() + ".");
 					}
 				}
 			}
 		}
+		if (request != null) {
+			String wikiSessionId = request.getSession().getId();
+			eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_PRINCIPALS_ADD, Map.of( //
+					WikiEventTopic.PROPERTY_KEY_TARGET, wikiSessionId, //
+					WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+		}
 	}
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

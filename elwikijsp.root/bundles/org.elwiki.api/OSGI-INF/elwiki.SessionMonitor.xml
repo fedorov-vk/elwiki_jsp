@@ -5,6 +5,7 @@
       <provide interface="org.elwiki.api.component.WikiManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
+   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin" policy="dynamic"/>
    <reference cardinality="1..1" field="factoryWikiSession" interface="org.osgi.service.component.ComponentFactory" name="factoryWikiSession" target="(component.factory=elwiki.WikiSession.factory)"/>
    <implementation class="org.apache.wiki.auth.SessionMonitor"/>
 </scr:component>

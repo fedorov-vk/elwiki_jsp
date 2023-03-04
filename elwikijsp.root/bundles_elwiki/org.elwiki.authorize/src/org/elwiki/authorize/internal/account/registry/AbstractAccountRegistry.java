@@ -31,7 +31,9 @@ import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.util.CryptoUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.data.authorize.WikiPrincipal;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.useradmin.User;
+import org.osgi.service.useradmin.UserAdmin;
 
 /**
  * Abstract AccountRegistry class that provides convenience methods for finding profiles, building Principal collections and hashing passwords.
@@ -41,6 +43,8 @@ import org.osgi.service.useradmin.User;
 public abstract class AbstractAccountRegistry implements AccountRegistry {
 
 	protected static final Logger log = Logger.getLogger(AbstractAccountRegistry.class);
+
+	protected abstract UserAdmin getUserAdmin();
 
 	/** {@inheritDoc} */
 	@Override

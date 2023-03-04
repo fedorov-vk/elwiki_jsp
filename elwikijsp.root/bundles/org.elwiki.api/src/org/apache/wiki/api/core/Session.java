@@ -25,42 +25,42 @@ import java.util.Locale;
 
 import javax.security.auth.Subject;
 
-import org.apache.wiki.api.event.WikiEventListener;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.osgi.service.useradmin.User;
 
-
 /**
- * <p>Represents a long-running wiki session, with an associated user Principal, user Subject, and authentication status. The sesion
- * is initialized with minimal, default-deny values: authentication is set to <code>false</code>, and the user principal is set to
- * <code>null</code>.</p>
- * <p>The Session allows callers to:</p>
- * <ul>
- *   <li>Obtain the authentication status of the user via
- *     {@link #isAnonymous()} and {@link #isAuthenticated()}</li>
- *   <li>Query the session for Principals representing the
- *     user's identity via {@link #getLoginPrincipal()},
- *     {@link #getUserPrincipal()} and {@link #getPrincipals()}</li>
- *   <li>Store, retrieve and clear UI messages via
- *     {@link #addMessage(String)}, {@link #getMessages(String)}
- *     and {@link #clearMessages(String)}</li>
- * </ul>
- * <p>To keep track of the Principals each user posseses, each Session stores a JAAS Subject. Various login processes add or
- * remove Principals when users authenticate or log out.</p>
- * <p>Session extends the {@link org.apache.wiki.api.event.WikiEventListener} interface and listens for group add/change/delete
- * events fired by event sources the Session is registered with: {@link org.apache.wiki.auth.IIAuthenticationManager},
- * {@link org.apache.wiki.auth.AccountManager}, so it can catch group events. Thus,
- * when a user is added to a {@link IGroupWiki}, a corresponding {@link org.elwiki.data.authorize.GroupPrincipal} is
- * injected into the Subject's Principal set. Likewise, when the user is removed from the Group or the Group is deleted, the
- * GroupPrincipal is removed from the Subject. The effect that this strategy produces is extremely beneficial: when someone adds a user
- * to a wiki group, that user <em>immediately</em> gains the privileges associated with that group; he or she does not need to
- * re-authenticate.
+ * <p>
+ * Represents a long-running wiki session, with an associated user Principal, user Subject, and
+ * authentication status. The sesion is initialized with minimal, default-deny values:
+ * authentication is set to <code>false</code>, and the user principal is set to <code>null</code>.
  * </p>
- * <p>In addition to methods for examining individual <code>Session</code> objects, this class also contains a number of static
- * methods for managing Sessions for an entire wiki. These methods allow callers to find, query and remove Session objects, and
- * to obtain a list of the current wiki session users.</p>
+ * <p>
+ * The Session allows callers to:
+ * </p>
+ * <ul>
+ * <li>Obtain the authentication status of the user via {@link #isAnonymous()} and
+ * {@link #isAuthenticated()}</li>
+ * <li>Query the session for Principals representing the user's identity via
+ * {@link #getLoginPrincipal()}, {@link #getUserPrincipal()} and {@link #getPrincipals()}</li>
+ * <li>Store, retrieve and clear UI messages via {@link #addMessage(String)},
+ * {@link #getMessages(String)} and {@link #clearMessages(String)}</li>
+ * </ul>
+ * <p>
+ * To keep track of the Principals each user posseses, each Session stores a JAAS Subject. Various
+ * login processes add or remove Principals when users authenticate or log out.
+ * </p>
+ * <p>
+ * Implementation of Session extends the {@link org.osgi.service.event.EventHandler} interface and
+ * listens for group add/change/delete event topics are registered for {$link
+ * org.osgi.service.event.EventAdmin}, so it can catch group events. Thus, when a user is added to a
+ * {@link IGroupWiki}, a corresponding {@link GroupPrincipal} is injected into the Subject's
+ * Principal set. Likewise, when the user is removed from the Group or the Group is deleted, the
+ * GroupPrincipal is removed from the Subject. The effect that this strategy produces is extremely
+ * beneficial: when someone adds a user to a wiki group, that user <em>immediately</em> gains the
+ * privileges associated with that group; he or she does not need to re-authenticate.
+ * </p>
  */
-public interface Session extends WikiEventListener {
+public interface Session {
 
     /**
      * Returns <code>true</code> if the user is considered asserted via a session cookie; that is, the Subject contains the Principal
@@ -179,7 +179,7 @@ public interface Session extends WikiEventListener {
      * aren't of type Role or of type GroupPrincipal. This is a defensive copy.
      *
      * @return Returns the user principal
-     * @see org.apache.wiki.auth.IIAuthenticationManager#isUserPrincipal(Principal)
+     * @see org.apache.wiki.auth.AuthenticationManager#isUserPrincipal(Principal)
      */
     Principal[] getPrincipals();
 
@@ -227,6 +227,7 @@ public interface Session extends WikiEventListener {
      * @return the result of the privileged action; may be <code>null</code>
      * @throws java.security.AccessControlException if the action is not permitted by the security policy
      */
+    @Deprecated
     static Object doPrivileged( final Session session, final PrivilegedAction<?> action ) throws AccessControlException {
         return Subject.doAsPrivileged( session.getSubject(), action, null );
     }

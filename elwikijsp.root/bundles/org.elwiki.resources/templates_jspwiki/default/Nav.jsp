@@ -199,13 +199,13 @@ WikiContext c = ContextUtil.findContext( pageContext );
       <wiki:PageType type="page">
         <wiki:Link context="edit" accessKey="e" >
           <span class="icon-pencil"></span>
-          <span><fmt:message key='actions.edit'/></span>
+          <span><fmt:message key='actions.page.edit'/></span>
         </wiki:Link>
       </wiki:PageType>
       <wiki:PageType type="attachment">
         <wiki:Link context="edit" page="<wiki:ParentPageName />" accessKey="e" >
           <span class="icon-pencil"></span>
-          <span><fmt:message key='actions.edit'/></span>
+          <span><fmt:message key='actions.page.edit'/></span>
         </wiki:Link>
       </wiki:PageType>
     </li>

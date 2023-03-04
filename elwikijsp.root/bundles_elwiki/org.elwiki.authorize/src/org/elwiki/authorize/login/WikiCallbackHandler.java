@@ -34,7 +34,7 @@ import org.apache.wiki.auth.AccountRegistry;
 /**
  * Handles logins made from inside the wiki application, rather than via the web container. This
  * handler is instantiated in
- * {@link org.apache.wiki.auth.IIAuthenticationManager#login(HttpServletRequest, Session)}.
+ * {@link org.apache.wiki.auth.AuthenticationManager#login(HttpServletRequest, Session)}.
  * If container-managed authentication is used, the {@link WebContainerCallbackHandler}is used
  * instead. This callback handler is designed to be used with {@link AccountRegistryLoginModule}.
  * 

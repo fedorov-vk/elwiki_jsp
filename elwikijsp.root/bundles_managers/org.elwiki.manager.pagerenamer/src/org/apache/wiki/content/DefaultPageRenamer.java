@@ -20,6 +20,7 @@ package org.apache.wiki.content;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -29,8 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageRenameEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.references.ReferenceManager;
@@ -46,8 +46,10 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -70,6 +72,9 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 	// -- OSGi service handling --------------------( start )--
 
+    @Reference
+    EventAdmin eventAdmin;
+
 	@WikiServiceReference
 	private PageManager pageManager;
 
@@ -85,7 +90,7 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ----------------------( end )--
@@ -178,24 +183,12 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 			// :FVK: Engine.getSearchManager().reindexPage( att );
 		}
 
-		firePageRenameEvent(renameFrom, renameToClean);
-
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_RENAMED,
+				Map.of(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME, renameFrom,
+						WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME, renameToClean)));
+		
 		// Done, return the new name.
 		return renameToClean;
-	}
-
-	/**
-	 * Fires a WikiPageRenameEvent to all registered listeners. Currently not used internally by
-	 * JSPWiki itself, but you can use it for something else.
-	 *
-	 * @param oldName the former page name
-	 * @param newName the new page name
-	 */
-	@Override
-	public void firePageRenameEvent(final String oldName, final String newName) {
-		if (WikiEventManager.isListening(this)) {
-			WikiEventManager.fireEvent(this, new WikiPageRenameEvent(this, oldName, newName));
-		}
 	}
 
 	/**
@@ -406,8 +399,8 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

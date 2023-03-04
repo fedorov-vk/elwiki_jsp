@@ -233,43 +233,6 @@
   </wiki:PageExists>
   </wiki:CheckRequestContext>
 
-  <%-- edit --%>
-  <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
-	<li id="edit" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e" >
-          <span class="icon-pencil"></span>
-          <span><fmt:message key='actions.edit'/></span>
-        </wiki:Link>
-    </li>
-  </wiki:CheckRequestContext>
-
-  <%-- create page --%>
-  <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME)%>'>
-	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-        <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
-          <wiki:Param name="redirect" value="${pageId}"/>
-          <span class="icon-pencil"></span>
-          <span>Create</span>
-        </wiki:Link>
-    </li>
-  </wiki:CheckRequestContext>
-
-  <%-- delete page --%>
-<%--:FVK: 
-  <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-    Context.PAGE_VIEW, Context.PAGE_INFO, Context.PAGE_DIFF, Context.ATTACHMENT_UPLOAD, Context.PAGE_RENAME)%>'>
-	<li id="menuCreatePage" class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
-        <wiki:Link context="<%=WikiContext.PAGE_DELETE%>" pageId="<%=wikiContext.getPageId()%>" >
-          <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
-          <span class="icon-pencil"></span>
-          <span>Create</span>
-        </wiki:Link>
-    </li>
-  </wiki:CheckRequestContext>
- --%>
-
   <%-- help slimbox-link --%>
   <wiki:CheckRequestContext context='<%=WikiContext.WIKI_FIND%>'>
   <li>
@@ -314,6 +277,98 @@
   --%>
   </wiki:CheckRequestContext>
 
+  <%-- page actions menu --%>
+  <wiki:CheckRequestContext context='<%=ContextUtil.compose(
+    WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_PREVIEW)%>' >
+  <li id="page-actions" tabindex="0">
+    <a href="#">
+        <span class="icon-ellipsis-v"></span>
+        <span><fmt:message key="actions.page"/></span>
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu pull-right" data-hover-parent="li">
+    <wiki:PageExists>
+
+      <%-- View RAW page source --%>
+      <li>
+      
+        <wiki:CheckVersion mode="latest">
+          <wiki:Link pageId="${pageId}">
+            <wiki:Param name='shape' value='raw'/>
+            <span style="float:left; width: 18px; margin-left:-5px;">ℹ</span><fmt:message key='actions.page.rawpage' />
+          </wiki:Link>
+        </wiki:CheckVersion>
+        <wiki:CheckVersion mode="notlatest">
+          <wiki:Link version='${param.version}' pageId="${pageId}">
+            <wiki:Param name='shape' value='raw'/>
+            <span style="float:left; width: 18px; margin-left:-5px;">ℹ</span><fmt:message key='actions.page.rawpage' />
+          </wiki:Link>
+        </wiki:CheckVersion>
+      </li>
+
+      <%-- Show Reader View --%>
+      <li>
+        <wiki:CheckVersion mode="latest">
+          <wiki:Link pageId="${pageId}">
+            <wiki:Param name='shape' value='reader'/>
+            <span style="float:left; width: 18px; margin-left:-5px;">📰</span><fmt:message key='actions.page.showreaderview' />
+          </wiki:Link>
+        </wiki:CheckVersion>
+        <wiki:CheckVersion mode="notlatest">
+          <wiki:Link cssClass="interwiki" version="${param.version}" pageId="${pageId}">
+            <wiki:Param name='shape' value='reader'/>
+            <span style="float:left; width: 18px; margin-left:-5px;">📰</span><fmt:message key='actions.page.showreaderview' />
+          </wiki:Link>
+        </wiki:CheckVersion>
+      </li>
+
+      <%-- ADD COMMENT --%>
+      <wiki:CheckRequestContext context='<%=WikiContext.NONE_PAGE_PREVIEW%>'>
+      <wiki:PageExists>
+      <wiki:Permission permission="comment">
+        <li>
+          <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${pageId}">
+            <span style="float:left; width: 18px; margin-left:-5px;">☝</span><fmt:message key="actions.page.comment" />
+          </wiki:Link>
+        </li>
+      </wiki:Permission>
+      </wiki:PageExists>
+      </wiki:CheckRequestContext>
+
+      <li class="divider"></li>
+      <li>
+
+      <%-- edit page --%>
+      <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
+        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e">
+          <span style="float:left; width: 18px; margin-left:-5px;">✎</span><fmt:message key='actions.page.edit'/>
+        </wiki:Link>
+      </li>
+
+      <%-- create page --%>
+      <li class="<wiki:Permission permission='!create'>disabled</wiki:Permission>">
+        <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
+          <wiki:Param name="redirect" value="${pageId}"/>
+          <span style="float:left; width: 18px; margin-left:-5px;">🆕</span><fmt:message key='actions.page.create'/>
+        </wiki:Link>
+      </li>
+
+      <%-- delete page --%>
+      <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>' />"
+             class="form-group "
+                id="cmdDeletePageForm"
+            method="post" accept-charset="<wiki:ContentEncoding />" >
+        <input class="btn btn-default <wiki:Permission permission='!delete'>disabled</wiki:Permission>"
+                type="submit" name="deletepage" id="cmdDeletePage"
+               style="margin-left:-5px; width:100%; padding:3px 20px; text-align:left; border-style: none;" <%-- :FVK: workaround --%>
+          data-modal="+ .modal"
+               value="❌&nbsp;<fmt:message key='actions.page.delete'/>" />
+        <div class="modal"><fmt:message key='info.confirmdelete'/></div>
+      </form>
+      </wiki:PageExists>
+    </ul>
+  </li>
+  </wiki:CheckRequestContext>
 
   <%-- more menu --%>
   <li id="more" tabindex="0">
@@ -323,59 +378,6 @@
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu pull-right" data-hover-parent="li">
-      <wiki:PageExists>
-      <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-        WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_PREVIEW)%>' >
-
-        <%-- VIEW RAW PAGE SOURCE --%>
-        <li>
-          <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="slimbox-link" pageId="${pageId}">
-              <wiki:Param name='shape' value='raw'/>
-              <fmt:message key='actions.rawpage' />
-            </wiki:Link>
-          </wiki:CheckVersion>
-          <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="slimbox-link" version='${param.version}' pageId="${pageId}">
-              <wiki:Param name='shape' value='raw'/>
-              <fmt:message key='actions.rawpage' />
-            </wiki:Link>
-          </wiki:CheckVersion>
-        </li>
-
-        <%-- Show Reader View --%>
-        <li>
-          <wiki:CheckVersion mode="latest">
-            <wiki:Link cssClass="interwiki" pageId="${pageId}">
-              <wiki:Param name='shape' value='reader'/>
-              <fmt:message key='actions.showreaderview' />
-            </wiki:Link>
-          </wiki:CheckVersion>
-          <wiki:CheckVersion mode="notlatest">
-            <wiki:Link cssClass="interwiki" version="${param.version}" pageId="${pageId}">
-              <wiki:Param name='shape' value='reader'/>
-              <fmt:message key='actions.showreaderview' />
-            </wiki:Link>
-          </wiki:CheckVersion>
-        </li>
-
-      </wiki:CheckRequestContext>
-      </wiki:PageExists>
-
-
-      <%-- ADD COMMENT --%>
-      <wiki:CheckRequestContext context='<%=ContextUtil.compose(
-        WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD)%>'>
-      <wiki:PageExists>
-      <wiki:Permission permission="comment">
-          <li>
-            <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${pageId}">
-              <span class="icon-plus"></span> <fmt:message key="actions.comment" />
-            </wiki:Link>
-          </li>
-      </wiki:Permission>
-      </wiki:PageExists>
-      </wiki:CheckRequestContext>
 
       <%-- WORKFLOW --%>
       <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_WORKFLOW%>'>
@@ -385,13 +387,13 @@
             <fmt:message key='actions.workflow' />
           </wiki:Link>
         </li>
+        <li class="divider"></li>
       </wiki:UserCheck>
       </wiki:CheckRequestContext>
 
       <%-- Persisting wiki content --%>
       <wiki:CheckRequestContext context="<%=WikiContext.PAGE_VIEW%>">      
       <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
-        <li class="divider"></li>
         <li>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
@@ -403,8 +405,9 @@
             <wiki:Param name='action' value='load'/>
             Load wiki content
           </wiki:Link>
-        </li>
-      </wiki:Permission>
+         </li>
+         <li class="divider "></li>
+       </wiki:Permission>
       </wiki:CheckRequestContext>
 
       <%-- GROUPS : moved to the UserBox.jsp
@@ -425,13 +428,17 @@
         <wiki:CheckRequestContext context='<%=ContextUtil.compose(
           WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.GROUP_CREATE)%>'>
 	      <wiki:PageExists>
+	      <%--
             <li class="divider "></li>
+	       --%>
           </wiki:PageExists>
         </wiki:CheckRequestContext>
 
         <wiki:CheckRequestContext context='<%=ContextUtil.compose(WikiContext.WIKI_PREFS, WikiContext.PAGE_EDIT)%>'>
           <wiki:UserCheck status="authenticated">
+          <%--
             <li class="divider "></li>
+           --%>
           </wiki:UserCheck>
         </wiki:CheckRequestContext>
 

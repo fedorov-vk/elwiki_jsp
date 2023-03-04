@@ -249,7 +249,7 @@ final class DefaultUserProfile implements UserProfile {
 	/**
 	 * Sets the name by which the user logs in. The login name is used as the username for
 	 * custom authentication (see
-	 * {@link org.elwiki.authorize.internal.services.IIAuthenticationManager.auth.wiki.auth.AuthenticationManager#login(WikiSession,HttpServletRequest, String, String)}).
+	 * {@link org.elwiki.authorize.internal.services.AuthenticationManager#login(WikiSession,HttpServletRequest, String, String)}).
 	 * The login name is typically a short name ("jannej"). In contrast, the wiki name is
 	 * typically of type FirstnameLastName ("JanneJalkanen").
 	 * 

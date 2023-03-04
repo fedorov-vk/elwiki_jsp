@@ -34,13 +34,6 @@ public abstract class BaseModuleManager implements ModuleManager {
 
     private boolean m_loadIncompatibleModules = false;
 
-	// -- OSGi service handling --------------------( start )--
-
-    @WikiServiceReference
-    protected Engine m_engine;
-
-	// -- OSGi service handling ----------------------( end )--
-
     /**
      *  Returns true, if the given module is compatible with this version of JSPWiki.
      *

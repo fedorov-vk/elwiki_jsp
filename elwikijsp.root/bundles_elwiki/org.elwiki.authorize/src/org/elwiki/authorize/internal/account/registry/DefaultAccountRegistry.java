@@ -13,7 +13,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -28,13 +27,10 @@ import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.Role;
@@ -64,7 +60,7 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
-	private UserAdmin userAdminService;
+	protected UserAdmin userAdminService;
 
 	/** Stores configuration. */
 	@Reference
@@ -92,8 +88,8 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	// -- OSGi service handling ------------------------(end)--
 
 	@Override
-	public UserAdmin getUserAdminService() {
-		return this.userAdminService;
+	protected UserAdmin getUserAdmin() {
+		return userAdminService;
 	}
 
 	// -- implementation of AccountRegistry ------------------------------------
@@ -106,11 +102,11 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 
 	@Override
 	public void deleteByLoginName(String loginName) throws NoSuchPrincipalException, WikiSecurityException {
-		User user = getUserAdminService().getUser(LOGIN_NAME, loginName);
+		User user = userAdminService.getUser(LOGIN_NAME, loginName);
 		if (user == null) {
 			throw new NoSuchPrincipalException("Not in database: " + loginName);
 		}
-		if (!getUserAdminService().removeRole(user.getName())) {
+		if (!userAdminService.removeRole(user.getName())) {
 			throw new NoSuchPrincipalException("Could't removed from database: " + loginName);
 		}
 	}
@@ -134,7 +130,7 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 		try {
 			// convert to lower case if we have to do a case insensitive compare of email.
 			String checkedValue = (matchAttribute.equals(EMAIL)) ? StringUtils.lowerCase(value) : value;
-			User user = getUserAdminService().getUser(matchAttribute, checkedValue);
+			User user = userAdminService.getUser(matchAttribute, checkedValue);
 			if (user != null) {
 				UserProfile profile = newProfile();
 				// Retrieve basic attributes
@@ -216,13 +212,13 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	public void rename(String loginName, String newName)
 			throws NoSuchPrincipalException, DuplicateUserException, WikiSecurityException {
 		// Get the existing user; if not found, throws NoSuchPrincipalException.
-		User user = getUserAdminService().getUser(LOGIN_NAME, loginName);
+		User user = userAdminService.getUser(LOGIN_NAME, loginName);
 		if (user == null) {
 			throw new NoSuchPrincipalException("Not in database: " + loginName);
 		}
 
 		// Get user with the proposed name; if found, it's a collision
-		User tryUser = getUserAdminService().getUser(LOGIN_NAME, newName);
+		User tryUser = userAdminService.getUser(LOGIN_NAME, newName);
 		if (tryUser != null) {
 			throw new DuplicateUserException("security.error.cannot.rename", newName);
 		}
@@ -245,7 +241,7 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 
 	@Override
 	public String getUserIdByFullName(String fullName) {
-		User user = getUserAdminService().getUser(FULL_NAME, fullName);
+		User user = userAdminService.getUser(FULL_NAME, fullName);
 		if (user != null) {
 			return user.getName();
 		}
@@ -254,7 +250,7 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 
 	@Override
 	public String getUserIdByLoginName(String loginName) {
-		User user = getUserAdminService().getUser(LOGIN_NAME, loginName);
+		User user = userAdminService.getUser(LOGIN_NAME, loginName);
 		if (user != null) {
 			return user.getName();
 		}
@@ -265,7 +261,7 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 	public Principal[] getWikiNames() throws WikiSecurityException {
 		SortedSet<Principal> principals = new TreeSet<Principal>();
 		try {
-			Role[] roles = getUserAdminService().getRoles(null); // :FVK: workaround. (возможно лучше использовать фильтр, см. UserAdmin описание)
+			Role[] roles = userAdminService.getRoles(null); // :FVK: workaround. (возможно лучше использовать фильтр, см. UserAdmin описание)
 			for (Role role : roles) {
 				if (role instanceof User user && !(role instanceof Group)) {
 					String login = (String) user.getProperties().get(LOGIN_NAME);
@@ -314,8 +310,8 @@ public final class DefaultAccountRegistry extends InitialAccountRegistry
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

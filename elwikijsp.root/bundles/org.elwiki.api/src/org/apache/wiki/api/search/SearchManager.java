@@ -18,16 +18,14 @@
  */
 package org.apache.wiki.api.search;
 
+import java.io.IOException;
+import java.util.Collection;
+
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.InternalModule;
-import org.apache.wiki.api.search.SearchProvider;
-
-import java.io.IOException;
-import java.util.Collection;
+import org.elwiki_data.WikiPage;
 
 
 /**
@@ -35,7 +33,7 @@ import java.util.Collection;
  *
  *  @since 2.2.21.
  */
-public interface SearchManager extends PageFilter, InternalModule, WikiEventListener {
+public interface SearchManager extends PageFilter, InternalModule {
 
     String DEFAULT_SEARCHPROVIDER = "org.apache.wiki.search.lucene.LuceneSearchProvider";
 

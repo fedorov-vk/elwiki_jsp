@@ -20,9 +20,7 @@ import org.elwiki.data.persist.json.JsonDeserialiser;
 import org.elwiki.data.persist.json.JsonSerialiser;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PagesStore;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
@@ -61,7 +59,7 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used	.	
+		// nothing to do.	
 	}
 
 	// -- OSGi service handling ------------------------(end)--

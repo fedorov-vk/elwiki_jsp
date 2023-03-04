@@ -39,10 +39,9 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
+import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.api.references.ReferenceManager;
@@ -62,8 +61,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-
 
 /**
  *  Manages searching the Wiki.
@@ -74,6 +73,10 @@ import org.osgi.service.event.EventHandler;
 @Component(
 	name = "elwiki.DefaultSearchManager",
 	service = { SearchManager.class, WikiManager.class, EventHandler.class },
+	property = {
+		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
+		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_REINDEX,
+	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiManager, EventHandler {
@@ -111,7 +114,6 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	@Override
 	public void initialize() throws WikiException {
 		super.initialize(this.engine); //:FVK: workaround.
-		WikiEventManager.addWikiEventListener(this.pageManager, this);
 
 		// TODO: Replace with custom annotations. See JSPWIKI-566
 		wikiAjaxDispatcher.registerServlet(JSON_SEARCH, new JSONSearch());
@@ -315,32 +317,36 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
         return m_searchProvider;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void actionPerformed( final WikiEvent event ) {
-        if( event instanceof WikiPageEvent wikiPageEvent) {
-            final String pageName = wikiPageEvent.getPageName();
-            if( event.getType() == WikiPageEvent.PAGE_DELETE_REQUEST ) {
-                final WikiPage p = this.pageManager.getPage( pageName );
-                if( p != null ) {
-                    pageRemoved( p );
-                }
-            }
-            if( event.getType() == WikiPageEvent.PAGE_REINDEX ) {
-                final WikiPage p = this.pageManager.getPage( pageName );
-                if( p != null ) {
-                    reindexPage( p );
-                }
-            }
-        }
-    }
-
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		/*switch (topic) {
+		switch (topic) {
+		case WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST: {
+			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+			try {
+				WikiPage p;
+				p = this.pageManager.getPageById(pageId);
+				if (p != null) {
+					pageRemoved(p);
+				}
+			} catch (ProviderException e) {
+				log.error("Failed retrieve page by its id.", e);
+			}
 			break;
-		}*/		
+		}
+		case WikiPageEventTopic.TOPIC_PAGE_REINDEX:{
+			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+			try {
+				WikiPage p = this.pageManager.getPageById(pageId);
+				if (p != null) {
+					reindexPage(p);
+				}
+			} catch (ProviderException e) {
+				log.error("Failed retrieve page by its id.", e);
+			}
+			break;
+		}
+		}
 	}
 
 }

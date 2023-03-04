@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.DefaultRenderingManager">
+   <property name="event.topics" value="org/elwiki/events/page/POST_SAVE_BEGIN"/>
    <service scope="singleton">
       <provide interface="org.apache.wiki.render0.RenderingManager"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>

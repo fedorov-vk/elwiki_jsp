@@ -112,4 +112,12 @@ public interface ISessionMonitor {
 	 */
 	Session createGuestSession(String sid);
 
+	/**
+	 * Returns ID os specified wiki session.
+	 * 
+	 * @param session wiki session.
+	 * @return ID of specified wiki session.
+	 */
+	String getSessionId(Session session);
+
 }

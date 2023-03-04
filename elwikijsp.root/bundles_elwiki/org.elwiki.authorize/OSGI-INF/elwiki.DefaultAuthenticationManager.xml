@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.DefaultAuthenticationManager">
    <service scope="singleton">
-      <provide interface="org.apache.wiki.auth.IIAuthenticationManager"/>
+      <provide interface="org.apache.wiki.auth.AuthenticationManager"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
-   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin" policy="dynamic"/>
-   <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService" policy="dynamic"/>
+   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
+   <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService"/>
    <implementation class="org.elwiki.authorize.internal.services.DefaultAuthenticationManager"/>
 </scr:component>

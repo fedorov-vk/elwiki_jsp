@@ -39,10 +39,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventEmitter;
-import org.apache.wiki.api.event.WorkflowEvent;
+import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.Decision;
@@ -74,7 +71,7 @@ import org.osgi.service.event.EventHandler;
 	service = { WorkflowManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON,
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_WORKFLOW_ALL
+		EventConstants.EVENT_TOPIC + "=" + WikiWorkflowEventTopic.TOPIC_WORKFLOW_ALL
 	})
 //@formatter:on
 public class DefaultWorkflowManager implements WorkflowManager, WikiManager, EventHandler {
@@ -98,7 +95,6 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 		m_workflows = ConcurrentHashMap.newKeySet();
 		m_approvers = new ConcurrentHashMap<>();
 		m_completed = new CopyOnWriteArrayList<>();
-		WikiEventEmitter.attach(this);
 	}
 
 	// -- OSGi service handling --------------------( start )--
@@ -312,41 +308,6 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
     }
 
     /**
-     * Listens for {@link WorkflowEvent} objects emitted by Workflows. In particular, this method listens for {@link WorkflowEvent#CREATED},
-     * {@link WorkflowEvent#ABORTED}, {@link WorkflowEvent#COMPLETED} and {@link WorkflowEvent#DQ_REMOVAL} events. If a workflow is created,
-     * it is automatically added to the cache. If one is aborted or completed, it is automatically removed. If a removal from decision queue
-     * is issued, the current step from workflow, which is assumed to be a {@link Decision}, is removed from the {@link DecisionQueue}.
-     * 
-     * @param event the event passed to this listener
-     */
-    @Deprecated
-    @Override
-    public void actionPerformed( final WikiEvent event ) {
-        if( event instanceof WorkflowEvent ) {
-        	Object eventSource = event.getSrc();
-            if( eventSource instanceof Workflow workflow) {
-                switch( event.getType() ) {
-                // Remove from manager
-                case WorkflowEvent.ABORTED   :
-                case WorkflowEvent.COMPLETED : remove( workflow ); break;
-                // Add to manager
-                case WorkflowEvent.CREATED   : add( workflow ); break;
-                default: break;
-                }
-            } else if( eventSource instanceof Decision decision) {
-                switch( event.getType() ) {
-                // Add to DecisionQueue
-                case WorkflowEvent.DQ_ADDITION : addToDecisionQueue( decision ); break;
-                // Remove from DecisionQueue
-                case WorkflowEvent.DQ_REMOVAL  : removeFromDecisionQueue( decision ); break;
-                default: break;
-                }
-            }
-			serializeToDisk(new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE));
-        }
-    }
-
-    /**
      * Protected helper method that adds a newly created Workflow to the cache, and sets its {@code workflowManager} and
      * {@code Id} properties if not set.
      *
@@ -391,28 +352,38 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
         getDecisionQueue().add( decision );
     }
 
+	/**
+	 * Listens for {@link WikiWorkflowEventTopic} objects emitted by Workflows. In particular, this
+	 * method listens for {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_CREATED},
+	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_ABORTED},
+	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_COMPLETED} and
+	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_DQ_REMOVAL} events. If a workflow is created, it is
+	 * automatically added to the cache. If one is aborted or completed, it is automatically removed. If
+	 * a removal from decision queue is issued, the current step from workflow, which is assumed to be a
+	 * {@link Decision}, is removed from the {@link DecisionQueue}.
+	 */
 	@Override
 	public void handleEvent(Event event) {
-		Workflow workflow = (Workflow) event.getProperty(ElWikiEventsConstants.PROPERTY_WORKFLOW);
-		Decision decision = (Decision) event.getProperty(ElWikiEventsConstants.PROPERTY_DECISION);
+		Workflow workflow = (Workflow) event.getProperty(WikiWorkflowEventTopic.PROPERTY_WORKFLOW);
+		Decision decision = (Decision) event.getProperty(WikiWorkflowEventTopic.PROPERTY_DECISION);
 
 		String topic = event.getTopic();
 		switch (topic) {
 		// Remove from manager
-		case ElWikiEventsConstants.TOPIC_WORKFLOW_ABORTED:
-		case ElWikiEventsConstants.TOPIC_WORKFLOW_COMPLETED:
+		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_ABORTED:
+		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_COMPLETED:
 			remove(workflow);
 			break;
 		// Add to manager
-		case ElWikiEventsConstants.TOPIC_WORKFLOW_CREATED:
+		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED:
 			add(workflow);
 			break;
 		// Add to DecisionQueue
-		case ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_ADDITION:
+		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_ADDITION:
 			addToDecisionQueue(decision);
 			break;
 		// Remove from DecisionQueue
-		case ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REMOVAL:
+		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL:
 			removeFromDecisionQueue(decision);
 			break;
 		}

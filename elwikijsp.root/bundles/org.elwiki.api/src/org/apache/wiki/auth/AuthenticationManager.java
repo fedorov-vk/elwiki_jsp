@@ -28,9 +28,6 @@ import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
@@ -44,7 +41,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * 
  * @since 2.3
  */
-public interface IIAuthenticationManager {
+public interface AuthenticationManager {
 
     /** If this jspwiki.properties property is <code>true</code>, logs the IP address of the editor on saving. */
     String PROP_STOREIPADDRESS = "jspwiki.storeIPAddress";
@@ -74,36 +71,41 @@ public interface IIAuthenticationManager {
      */
     boolean isContainerAuthenticated();
 
-    /**
-     * <p>Logs in the user by attempting to populate a Session Subject from a web servlet request by examining the request
-     * for the presence of container credentials and user cookies. The processing logic is as follows:
-     * </p>
-     * <ul>
-     * <li>If the Session had previously been unauthenticated, check to see if user has subsequently authenticated. To be considered
-     * "authenticated," the request must supply one of the following (in order of preference): the container <code>userPrincipal</code>,
-     * container <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_AUTHENTICATED} with two parameters: a Principal representing the login principal,
-     * and the current Session. In addition, if the authorizer is of type WebContainerAuthorizer, this method iterates through the
-     * container roles returned by {@link WebContainerAuthorizer#getGroups()}, tests for membership in each
-     * one, and adds those that pass to the Subject's principal set.</li>
-     * <li>If, after checking for authentication, the Session is still Anonymous, this method next checks to see if the user has
-     * "asserted" an identity by supplying an assertion cookie. If the user is found to be asserted, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ASSERTED} with two parameters: <code>WikiPrincipal(<em>cookievalue</em>)</code>,
-     * and the current Session.</li>
-     * <li>If, after checking for authenticated and asserted status, the  Session is <em>still</em> anonymous, this method fires event
-     * {@link org.apache.wiki.api.event.WikiSecurityEvent#LOGIN_ANONYMOUS} with two parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>,
-     * and the current Session </li>
-     * </ul>
-     *
-     * @param request servlet request for this user
-     * @return always returns <code>true</code> (because anonymous login, at least, will always succeed)
-     * @throws org.apache.wiki.auth.WikiSecurityException if the user cannot be logged in for any reason
-     * @since 2.3
-     */
+	/**
+	 * <p>
+	 * Logs in the user by attempting to populate a Session Subject from a web servlet request by
+	 * examining the request for the presence of container credentials and user cookies. The processing
+	 * logic is as follows:
+	 * </p>
+	 * <ul>
+	 * <li>If the Session had previously been unauthenticated, check to see if user has subsequently
+	 * authenticated. To be considered "authenticated," the request must supply one of the following (in
+	 * order of preference): the container <code>userPrincipal</code>, container
+	 * <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method
+	 * fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_AUTHENTICATED} with two parameters: a
+	 * Principals representing the login principal, and the ID of current Session. In addition, if the
+	 * authorizer is of type WebContainerAuthorizer, this method iterates through the container roles
+	 * returned by {@link WebContainerAuthorizer#getGroups()}, tests for membership in each one, and
+	 * adds those that pass to the Subject's principal set.</li>
+	 * <li>If, after checking for authentication, the Session is still Anonymous, this method next
+	 * checks to see if the user has "asserted" an identity by supplying an assertion cookie. If the
+	 * user is found to be asserted, this method fires event
+	 * {@link WikiLoginEventTopic#TOPIC_LOGIN_ASSERTED} with two parameters:
+	 * <code>WikiPrincipal(<em>cookievalue</em>)</code>, and the ID of current Session.</li>
+	 * <li>If, after checking for authenticated and asserted status, the Session is <em>still</em>
+	 * anonymous, this method fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_ANONYMOUS} with two
+	 * parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>, and the ID of current
+	 * Session</li>
+	 * </ul>
+	 *
+	 * @param request servlet request for this user
+	 * @return always returns <code>true</code> (because anonymous login, at least, will always succeed)
+	 * @throws org.apache.wiki.auth.WikiSecurityException if the user cannot be logged in for any reason
+	 */
 	boolean login(HttpServletRequest request) throws WikiSecurityException;
 
 	/**
-	 * The same as {@link IIAuthenticationManager#login(HttpServletRequest)} with session specified directly for authenticate. 
+	 * The same as {@link AuthenticationManager#login(HttpServletRequest)} with session specified directly for authenticate. 
      * 
 	 * @param request servlet request for this user
 	 * @param session WikiSession which should be authenticated
@@ -182,6 +184,7 @@ public interface IIAuthenticationManager {
      * @param principals the principal set
      * @return the login principal
      */
+    @Deprecated
     static Principal getLoginPrincipal(Collection< Principal > principals ) {
 		for (final Principal principal : principals) {
 			if (isUserPrincipal(principal)) {
@@ -189,36 +192,6 @@ public interface IIAuthenticationManager {
 			}
 		}
 		return null;
-    }
-
-    // events processing .......................................................
-
-    /**
-     * Registers a WikiEventListener with this instance. This is a convenience method.
-     *
-     * @param listener the event listener
-     */
-    void addWikiEventListener( WikiEventListener listener );
-
-    /**
-     * Un-registers a WikiEventListener with this instance. This is a convenience method.
-     *
-     * @param listener the event listener
-     */
-    void removeWikiEventListener( final WikiEventListener listener );
-
-    /**
-     *  Fires a WikiSecurityEvent of the provided type, Principal and target Object to all registered listeners.
-     *
-     * @see org.apache.wiki.api.event.WikiSecurityEvent
-     * @param type       the event type to be fired
-     * @param principal  the subject of the event, which may be <code>null</code>
-     * @param target     the changed Object, which may be <code>null</code>
-     */
-    default void fireEvent( final int type, final Principal principal, final Object target ) {
-        if ( WikiEventManager.isListening( this ) ) {
-            WikiEventManager.fireEvent( this, new WikiSecurityEvent( this, type, principal, target ) );
-        }
     }
 
 }

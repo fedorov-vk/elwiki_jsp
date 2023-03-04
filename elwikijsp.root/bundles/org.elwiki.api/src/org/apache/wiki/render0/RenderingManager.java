@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.LinkCollector;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.RenderApi;
-import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.parser0.MarkupParser;
@@ -41,7 +40,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since  2.4
  */
-public interface RenderingManager extends RenderApi, WikiEventListener, InternalModule {
+public interface RenderingManager extends RenderApi, InternalModule {
 
     /** markup parser property. */
     String PROP_PARSER = "jspwiki.renderingManager.markupParser";

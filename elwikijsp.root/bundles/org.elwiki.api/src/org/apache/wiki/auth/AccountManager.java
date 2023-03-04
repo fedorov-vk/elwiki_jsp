@@ -22,7 +22,6 @@ import java.security.Principal;
 
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiSecurityEvent;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.authorization.IGroupManager;
@@ -56,35 +55,43 @@ public interface AccountManager extends IGroupManager {
      */
     UserProfile getUserProfile( Session session );
 
-    /**
-     * <p>
-     * Saves the {@link org.apache.wiki.auth.UserProfile} for the user in a wiki session. This method verifies that a user profile to
-     * be saved doesn't collide with existing profiles; that is, the login name or full name is already used by another profile. If the
-     * profile collides, a <code>DuplicateUserException</code> is thrown. After saving the profile, the user database changes are committed,
-     * and the user's credential set is refreshed; if custom authentication is used, this means the user will be automatically be logged in.
-     * </p>
-     * <p>
-     * When the user's profile is saved successfully, this method fires a {@link WikiSecurityEvent#PROFILE_SAVE} event with the Session
-     * as the source and the UserProfile as target. For existing profiles, if the user's full name changes, this method also fires a
-     * "name changed" event ({@link WikiSecurityEvent#PROFILE_NAME_CHANGED}) with the Session as the source and an array containing
-     * the old and new UserProfiles, respectively. The <code>NAME_CHANGED</code> event allows the GroupManager and PageManager can change
-     * group memberships and ACLs if needed.
-     * </p>
-     * <p>
-     * Note that Sessions normally attach event listeners to the AccountManager, so changes to the profile will automatically cause the
-     * correct Principals to be reloaded into the current Session's Subject.
-     * </p>
-     *
-     * @param session the wiki session, which may not be <code>null</code>
-     * @param profile the user profile, which may not be <code>null</code>
-     * @throws DuplicateUserException if the proposed profile's login name or full name collides with another
-     * @throws WikiException if the save fails for some reason. If the current user does not have
-     * permission to save the profile, this will be a {@link org.apache.wiki.auth.WikiSecurityException};
-     * if if the user profile must be approved before it can be saved, it will be a
-     * {@link org.apache.wiki.workflow0.DecisionRequiredException}. All other WikiException
-     * indicate a condition that is not normal is probably due to mis-configuration
-     */
-    void setUserProfile( Session session, UserProfile profile ) throws DuplicateUserException, WikiException;
+	/**
+	 * <p>
+	 * Saves the {@link org.apache.wiki.auth.UserProfile} for the user in a wiki session. This method
+	 * verifies that a user profile to be saved doesn't collide with existing profiles; that is, the
+	 * login name or full name is already used by another profile. If the profile collides, a
+	 * <code>DuplicateUserException</code> is thrown. After saving the profile, the user database
+	 * changes are committed, and the user's credential set is refreshed; if custom authentication is
+	 * used, this means the user will be automatically be logged in.
+	 * </p>
+	 * <p>
+	 * When the user's profile is saved successfully, this method fires a
+	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_SAVE} event with the Session as the source and
+	 * the UserProfile as target. For existing profiles, if the user's full name changes, this method
+	 * also fires a "name changed" event
+	 * ({@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_NAME_CHANGED}) with the Session as the source
+	 * and an array containing the old and new UserProfiles, respectively. The <code>NAME_CHANGED</code>
+	 * event allows the GroupManager and PageManager can change group memberships and ACLs if needed.
+	 * </p>
+	 * <p>
+	 * Note that Sessions normally attach event listeners to the AccountManager, so changes to the
+	 * profile will automatically cause the correct Principals to be reloaded into the current Session's
+	 * Subject.
+	 * </p>
+	 *
+	 * @param session the wiki session, which may not be <code>null</code>
+	 * @param profile the user profile, which may not be <code>null</code>
+	 * @throws DuplicateUserException if the proposed profile's login name or full name collides with
+	 *                                another
+	 * @throws WikiException          if the save fails for some reason. If the current user does not
+	 *                                have permission to save the profile, this will be a
+	 *                                {@link org.apache.wiki.auth.WikiSecurityException}; if if the user
+	 *                                profile must be approved before it can be saved, it will be a
+	 *                                {@link org.apache.wiki.workflow0.DecisionRequiredException}. All
+	 *                                other WikiException indicate a condition that is not normal is
+	 *                                probably due to mis-configuration
+	 */
+	   void setUserProfile( Session session, UserProfile profile ) throws DuplicateUserException, WikiException;
 
     void startUserProfileCreationWorkflow( Session session, UserProfile profile ) throws WikiException;
 

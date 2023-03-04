@@ -31,7 +31,7 @@
 	<li>
         <wiki:PageType type="page">
           <a href="<wiki:EditLink format='url' />" accesskey="e"  class="action edit"
-            title="<fmt:message key='actions.edit.title'/>" ><fmt:message key='actions.edit'/></a>
+            title="<fmt:message key='actions.edit.title'/>" ><fmt:message key='actions.page.edit'/></a>
         </wiki:PageType>
         <wiki:PageType type="attachment">
           <a href="<wiki:BaseURL/>Edit.jsp?page=<wiki:ParentPageName />" accesskey="e" class="action edit"

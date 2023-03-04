@@ -100,7 +100,7 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--
@@ -451,8 +451,8 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 		}*/
 	}
 

@@ -33,8 +33,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.event.WikiEventTopic;
+import org.apache.wiki.api.event.WikiSecurityEventTopic;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -45,7 +45,8 @@ import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
+import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.filters0.FilterManager;
@@ -66,6 +67,7 @@ import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
+import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.WikiPermission;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -77,6 +79,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.permissionadmin.PermissionInfo;
@@ -104,7 +107,7 @@ import com.google.gson.Gson;
 	service = { AccountManager.class, WikiManager.class, EventHandler.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class DefaultAccountManager extends GroupSupport implements AccountManager, WikiManager, EventHandler {
+public final class DefaultAccountManager extends UserSupport implements AccountManager, WikiManager, EventHandler {
 
 	// -- workflow task inner classes -----------------------------------------
 
@@ -205,6 +208,9 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	@Reference
 	private UserAdmin userAdminService;
 
+	@Reference
+	private EventAdmin eventAdmin;
+	
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
@@ -213,13 +219,16 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	private Engine m_engine;
 
 	@WikiServiceReference
+	private ISessionMonitor sessionMonitor;
+	
+	@WikiServiceReference
 	private AccountRegistry accountRegistry;
 
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
 
 	@WikiServiceReference
-	private IIAuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
 	@WikiServiceReference
 	private TasksManager tasksManager;
@@ -285,7 +294,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 	}
 
 	@Override
-	protected IIAuthenticationManager getAuthenticationManager() {
+	protected AuthenticationManager getAuthenticationManager() {
 		return authenticationManager;
 	}
 
@@ -375,7 +384,7 @@ public final class DefaultAccountManager extends GroupSupport implements Account
             // If the profile doesn't need approval, then just log the user in
 
             try {
-                final IIAuthenticationManager mgr = getAuthenticationManager();
+                final AuthenticationManager mgr = getAuthenticationManager();
                 if( !mgr.isContainerAuthenticated() ) {
                     mgr.loginAsserted( session, null, profile.getLoginName(), profile.getPassword() );
                 }
@@ -385,7 +394,10 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 
             // Alert all listeners that the profile changed...
             // ...this will cause credentials to be reloaded in the wiki session
-            fireEvent( WikiSecurityEvent.PROFILE_SAVE, session, profile );
+            String sesionId = sessionMonitor.getSessionId(session);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_SAVE, Map.of( //
+					WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
+					WikiSecurityEventTopic.PROPERTY_PROFILE, profile)));
         } else { // For existing accounts, just save the profile
             // If login name changed, rename it first
 			if (nameChanged && oldProfile != null && !oldProfile.getLoginName().equals(profile.getLoginName())) {
@@ -398,10 +410,16 @@ public final class DefaultAccountManager extends GroupSupport implements Account
             if( nameChanged ) {
                 // Fire an event if the login name or full name changed
                 final UserProfile[] profiles = new UserProfile[] { oldProfile, profile };
-                fireEvent( WikiSecurityEvent.PROFILE_NAME_CHANGED, session, profiles );
+                String sesionId = sessionMonitor.getSessionId(session);
+				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED, Map.of( //
+						WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
+						WikiSecurityEventTopic.PROPERTY_PROFILES, profiles)));
             } else {
                 // Fire an event that says we have new a new profile (new principals)
-                fireEvent( WikiSecurityEvent.PROFILE_SAVE, session, profile );
+                String sesionId = sessionMonitor.getSessionId(session);
+    			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_SAVE, Map.of( //
+    					WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
+    					WikiSecurityEventTopic.PROPERTY_PROFILE, profile)));
             }
         }
 	}
@@ -770,7 +788,8 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		/*synchronized (this.m_groups) {
 			this.m_groups.put(group.getPrincipal(), group);
 		}*/
-		fireEvent(WikiSecurityEvent.GROUP_ADD, group);
+		
+//		fireEvent(WikiSecurityEvent.GROUP_ADD, group);
 
 		// Save the group to back-end database; if it fails,
 		// roll back to previous state. Note that the back-end
@@ -836,14 +855,83 @@ public final class DefaultAccountManager extends GroupSupport implements Account
 		return uid;
 	}
 
+	/**
+	 * Checks if a String is blank or a restricted Group name, and if it is, appends an error to the
+	 * WikiSession's message list.
+	 * 
+	 * @param context
+	 *                the wiki context.
+	 * @param name
+	 *                the Group name to test.
+	 * @throws WikiSecurityException
+	 *                               if <code>session</code> is <code>null</code> or the Group name
+	 *                               is illegal.
+	 * @see Group#RESTRICTED_GROUPNAMES
+	 */
+	protected void checkGroupName(WikiContext context, String name) throws WikiSecurityException {
+		//TODO: groups cannot have the same name as a user
+
+		// Name cannot be null
+		InputValidator validator = new InputValidator(IGroupManager.MESSAGES_KEY, context);
+		validator.validateNotNull(name, "Group name");
+
+		// Name cannot be one of the restricted names either
+		//:FVK:		if (ArrayUtils.contains(Group.RESTRICTED_GROUPNAMES, name)) {
+		//			throw new WikiSecurityException("The group name '" + name + "' is illegal. Choose another.");
+		//		}
+	}
+
 	// -- implementation GroupManager ----------------------------------(end)--
-	
+
+	/**
+	 * Listens for {@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_NAME_CHANGED}
+	 * events. If a user profile's name changes, each group is inspected. If an entry contains a
+	 * name that has changed, it is replaced with the new one. No group events are emitted as a
+	 * consequence of this method, because the group memberships are still the same; it is only the
+	 * representations of the names within that are changing.
+	 * 
+	 * @param event
+	 *              the incoming event
+	 */
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		/*switch (topic) {
+		switch (topic) {
+		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED: {
+			UserProfile[] profiles = (UserProfile[])event.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+			Principal[] oldPrincipals = new Principal[] { //
+					new WikiPrincipal(profiles[0].getLoginName()), //
+					new WikiPrincipal(profiles[0].getFullname()), //
+					new WikiPrincipal(profiles[0].getWikiName()) };
+			final Principal newPrincipal = new WikiPrincipal(profiles[1].getFullname());
+
+			// Examine each group
+			int groupsChanged = 0;
+			// здесь сохраняется изменение в группе, при изменении профиля пользователя. 
+			//:FVK:			try {
+			//				for (Group group : this.m_groupDatabase.groups()) {
+			//					boolean groupChanged = false;
+			//					for (Principal oldPrincipal : oldPrincipals) {
+			//						if (group.isMember(oldPrincipal)) {
+			//							group.remove(oldPrincipal);
+			//							group.add(newPrincipal);
+			//							groupChanged = true;
+			//						}
+			//					}
+			//					if (groupChanged) {
+			//						setGroup(session, group);
+			//						groupsChanged++;
+			//					}
+			//				}
+			//			} catch (WikiException e) {
+			//				// Oooo! This is really bad...
+			//				log.error("Could not change user name in Group lists because of GroupDatabase error:" + e.getMessage());
+			//			}
+			log.info("Profile name change for '" + newPrincipal.toString() + "' caused " + groupsChanged
+					+ " groups to change also.");
+		}
 			break;
-		}*/
+		}
 	}
 
 }

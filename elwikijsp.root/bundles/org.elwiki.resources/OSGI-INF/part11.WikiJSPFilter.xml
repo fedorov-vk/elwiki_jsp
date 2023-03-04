@@ -3,6 +3,7 @@
    <property name="osgi.http.whiteboard.filter.pattern" value="/wiki/*"/>
    <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <property name="service.ranking" type="Integer" value="1100"/>
+   <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin"/>
    <reference cardinality="1..1" field="m_engine" interface="org.apache.wiki.api.core.Engine" name="m_engine"/>
    <implementation class="org.elwiki.web.jsp.WikiJSPFilter"/>
 </scr:component>

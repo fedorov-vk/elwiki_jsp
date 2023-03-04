@@ -21,8 +21,6 @@ package org.apache.wiki.ui.admin0;
 
 import java.util.List;
 
-import org.apache.wiki.api.event.WikiEvent;
-
 public interface AdminBeanManager {
 
 	/**
@@ -41,13 +39,6 @@ public interface AdminBeanManager {
 	 *  @return An AdminBean, or null, if no such bean is found.
 	 */
 	AdminBean findBean(String id);
-
-	/**
-	 *  Unregisters AdminBeans upon SHUTDOWN event.
-	 *
-	 *  @param event the WikiEvent
-	 */
-	void actionPerformed(WikiEvent event);
 	
 	/**
      *  Returns the type identifier for a string type.

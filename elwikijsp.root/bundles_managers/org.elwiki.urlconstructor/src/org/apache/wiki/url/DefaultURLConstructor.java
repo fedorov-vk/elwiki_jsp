@@ -54,11 +54,14 @@ public class DefaultURLConstructor implements URLConstructor, WikiManager, Event
 
     private static final Logger log = Logger.getLogger( DefaultURLConstructor.class );
 
-    /** Contains the absolute path of the JSPWiki Web application without the actual servlet (which is the m_urlPrefix). */
+	/**
+	 * Contains the absolute path of the JSPWiki Web application without the actual servlet (which is
+	 * the m_urlPrefix).
+	 */
     protected String m_pathPrefix = "";
 
 	// -- OSGi service handling ----------------------(start)--
-    
+
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
@@ -198,8 +201,8 @@ public class DefaultURLConstructor implements URLConstructor, WikiManager, Event
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

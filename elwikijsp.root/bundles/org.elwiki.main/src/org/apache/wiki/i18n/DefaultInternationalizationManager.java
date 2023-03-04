@@ -41,6 +41,7 @@ public class DefaultInternationalizationManager implements InternationalizationM
 	 * Constructs a new InternationalizationManager.
 	 */
 	public DefaultInternationalizationManager() {
+		super();
 	}
 
 	// -- OSGi service handling ----------------------(start)--
@@ -48,7 +49,7 @@ public class DefaultInternationalizationManager implements InternationalizationM
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--

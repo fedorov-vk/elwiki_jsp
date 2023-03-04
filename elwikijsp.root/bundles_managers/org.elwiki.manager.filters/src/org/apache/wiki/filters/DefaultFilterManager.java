@@ -31,8 +31,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.ISpamFilter;
@@ -53,6 +52,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventHandler;
 
 
@@ -126,10 +126,13 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 
 	// -- OSGi service handling ----------------------(start)--
 
+    @Reference
+    EventAdmin eventAdmin;
+
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
-    
+
     @WikiServiceReference
     private Engine m_engine;
 
@@ -274,12 +277,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPreTranslateFiltering( final WikiContext context, String pageData ) throws FilterException {
-        fireEvent( WikiPageEvent.PRE_TRANSLATE_BEGIN, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_TRANSLATE_BEGIN,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+
         for( final PageFilter f : m_pageFilters ) {
             pageData = f.preTranslate( context, pageData );
         }
 
-        fireEvent( WikiPageEvent.PRE_TRANSLATE_END, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_TRANSLATE_END,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
 
         return pageData;
     }
@@ -295,12 +301,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPostTranslateFiltering( final WikiContext context, String htmlData ) throws FilterException {
-        fireEvent( WikiPageEvent.POST_TRANSLATE_BEGIN, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_TRANSLATE_BEGIN,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+
         for( final PageFilter f : m_pageFilters ) {
             htmlData = f.postTranslate( context, htmlData );
         }
 
-        fireEvent( WikiPageEvent.POST_TRANSLATE_END, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_TRANSLATE_END,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
 
         return htmlData;
     }
@@ -316,12 +325,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPreSaveFiltering( final WikiContext context, String pageData ) throws FilterException {
-        fireEvent( WikiPageEvent.PRE_SAVE_BEGIN, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_SAVE_BEGIN,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+
         for( final PageFilter f : m_pageFilters ) {
             pageData = f.preSave( context, pageData );
         }
 
-        fireEvent( WikiPageEvent.PRE_SAVE_END, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_SAVE_END,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
 
         return pageData;
     }
@@ -335,13 +347,16 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public void doPostSaveFiltering( final WikiContext context, final String pageData ) throws WikiException {
-        fireEvent( WikiPageEvent.POST_SAVE_BEGIN, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+
         for( final PageFilter f : m_pageFilters ) {
             // log.info("POSTSAVE: "+f.toString() );
             f.postSave( context, pageData );
         }
 
-        fireEvent( WikiPageEvent.POST_SAVE_END, context );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_END,
+				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
     }
 
     /**
@@ -376,21 +391,6 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
         }
     }
 
-    // events processing .......................................................
-
-    /**
-     *  Fires a WikiPageEvent of the provided type and WikiContext. Invalid WikiPageEvent types are ignored.
-     *
-     * @see org.apache.wiki.api.event.WikiPageEvent
-     * @param type      the WikiPageEvent type to be fired.
-     * @param context   the WikiContext of the event.
-     */
-    public void fireEvent( final int type, final WikiContext context ) {
-        if( WikiEventManager.isListening(this ) && WikiPageEvent.isValidType( type ) )  {
-            WikiEventManager.fireEvent(this, new WikiPageEvent( m_engine, type, context.getPage().getName() ) );
-        }
-    }
-
     /**
      *  {@inheritDoc}
      */
@@ -409,7 +409,14 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 
     private void registerFilters() {
     	{//:FVK: workaround. (due to SpamFilter now has interface...)
-    		addPageFilter(new SpamFilter(), -999);
+    		SpamFilter sf = new SpamFilter();
+    		try {
+				sf.initialize(m_engine);
+				addPageFilter(sf, -999);
+			} catch (FilterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	
         log.info( "Registering filters" );
@@ -456,8 +463,8 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

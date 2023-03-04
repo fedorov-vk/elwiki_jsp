@@ -17,7 +17,7 @@ import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;

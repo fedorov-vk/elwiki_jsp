@@ -69,7 +69,10 @@ public class PluginsManager {
 		Class<? extends Plugin> result;
 		
 		String PREFIX = "org.apache.wiki.plugin.";
-		if (pluginId.startsWith(PREFIX)) {
+		//:FVK: workaround - плагин в другом пакете
+		if (pluginId.startsWith("org.apache.wiki.plugin.pageview.")) {
+			pluginId = pluginId.replace("org.apache.wiki.plugin.pageview.", "");
+		} else if (pluginId.startsWith(PREFIX)) {
 			pluginId = pluginId.replace(PREFIX, "");
 		}
 		result = this.pluginClasses.get(pluginId);

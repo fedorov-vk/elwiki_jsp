@@ -112,7 +112,7 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--
@@ -313,8 +313,8 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/
 	}

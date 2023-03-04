@@ -51,7 +51,6 @@ import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -194,7 +193,7 @@ public class LuceneSearchProvider implements SearchProvider {
 		// for a little while before starting to go through
 		// the Lucene "pages that need updating".
 		BackgroundThreads backgroundThreads = (BackgroundThreads) engine.getManager(BackgroundThreads.class);
-		Thread updater = backgroundThreads.createThread("JSPWiki Lucene Indexer", indexDelay,
+		Thread updater = backgroundThreads.createThread("ElWiki Lucene Indexer", indexDelay,
 				new LuceneUpdater(engine, this, initialDelay));
 		updater.start();
     }

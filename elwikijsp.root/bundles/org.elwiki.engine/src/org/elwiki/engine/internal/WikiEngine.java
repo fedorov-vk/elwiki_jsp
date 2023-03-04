@@ -21,11 +21,7 @@ import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEngineEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.references.ReferenceManager;
@@ -265,7 +261,7 @@ public class WikiEngine implements Engine {
 		}
 
 		log.debug("◄►initialization◄► STAGE ONE.");
-		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_INIT_STAGE_ONE, Collections.emptyMap()));
+		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
 
 		Set<Object> managers = new HashSet<>(this.managers.values());
 		for(Object managerInstance : managers) {
@@ -279,7 +275,7 @@ public class WikiEngine implements Engine {
 		}
 
 		log.debug("◄►initialization◄► STAGE TWO.");
-		eventAdmin.sendEvent(new Event(ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO, Collections.emptyMap()));
+		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO, Collections.emptyMap()));
 
 		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
 
@@ -455,40 +451,6 @@ public class WikiEngine implements Engine {
 	@Override
 	public String getRootPath() {
 		return m_rootPath;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final synchronized void addWikiEventListener(final WikiEventListener listener) {
-		WikiEventManager.addWikiEventListener(this, listener);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final synchronized void removeWikiEventListener(final WikiEventListener listener) {
-		WikiEventManager.removeWikiEventListener(this, listener);
-	}
-
-	/**
-	 * Fires a WikiEngineEvent to all registered listeners.
-	 *
-	 * @param type the event type
-	 */
-	protected final void fireEvent(final int type) {
-		if (WikiEventManager.isListening(this)) {
-			WikiEventManager.fireEvent(this, new WikiEngineEvent(this, type));
-		}
-	}
-
-	/**
-	 * Fires a WikiPageEvent to all registered listeners.
-	 *
-	 * @param type the event type
-	 */
-	protected final void firePageEvent(final int type, final String pageName) {
-		if (WikiEventManager.isListening(this)) {
-			WikiEventManager.fireEvent(this, new WikiPageEvent(this, type, pageName));
-		}
 	}
 
 	/** {@inheritDoc} */

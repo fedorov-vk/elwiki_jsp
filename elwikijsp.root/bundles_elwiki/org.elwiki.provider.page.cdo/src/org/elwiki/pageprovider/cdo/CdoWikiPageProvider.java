@@ -130,32 +130,13 @@ public class CdoWikiPageProvider implements PageProvider {
 		return "CDO provider";
 	}
 
-	/**
-	 * Поиск PageContent страницы с самой большой версией.
-	 * 
-	 * @param page Требуемая страница.
-	 * @return Возможен <code>null</code>.
-	 */
-	private PageContent getMaximalVersionContent(WikiPage page) {
-		PageContent result = null;
-		int currentVersion = -1;
-		for (PageContent pageContent : page.getPageContents()) {
-			int contentVersion = pageContent.getVersion();
-			if (currentVersion < contentVersion) {
-				result = pageContent;
-				currentVersion = contentVersion;
-			}
-		}
-		return result;
-	}
-
 	@Override
 	public void putPageText(WikiPage page, String text, String author, String changenote) throws ProviderException {
 		// PageContent[] ca = page.getCa();
 		// ca[0] = Elwiki_dataFactory.eINSTANCE.createPageContent();
 
 		// Записать данные (выполнить транзакцию).
-		PageContent pc = getMaximalVersionContent(page);
+		PageContent pc = page.getLastContent();
 		int version = (pc != null) ? pc.getVersion() + 1 : 1;
 		pc = Elwiki_dataFactory.eINSTANCE.createPageContent();
 		pc.setVersion(version);
@@ -434,7 +415,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		String content = "";
 		if (version == WikiProvider.LATEST_VERSION) {
-			PageContent pc = getMaximalVersionContent(page1);
+			PageContent pc = page1.getLastContent();
 			if (pc != null) {
 				content = pc.getContent();
 			}

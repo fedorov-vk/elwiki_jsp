@@ -48,10 +48,8 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiEngineEventTopic;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
@@ -134,7 +132,8 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultReferenceManager",
 	service = { ReferenceManager.class, WikiManager.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
+		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETED,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -305,8 +304,6 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         sw.stop();
         log.info( "Cross reference scan done in "+sw );
-
-        WikiEventManager.addWikiEventListener( pageManager, this );
     }
 
     /**
@@ -916,27 +913,23 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     /**
      *  {@inheritDoc}
      */
-    @Override
-	public void actionPerformed( final WikiEvent event ) {
-        if( event instanceof WikiPageEvent && event.getType() == WikiPageEvent.PAGE_DELETED ) {
-            final String pageName = ( ( WikiPageEvent ) event ).getPageName();
-            if( pageName != null ) {
-                pageRemoved( pageName );
-            }
-        }
-    }
-
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
+		case WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO:
 			try {
 				initializeStageTwo();
 			} catch (WikiException e) {
 				log.error("Failed initialization of references for DefaultReferenceManager.", e);
 			}
+			break;
+		case WikiPageEventTopic.TOPIC_PAGE_DELETED:
+			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+            if( pageId != null ) {
+                pageRemoved( pageId );
+            }
 			break;
 		}
 	}

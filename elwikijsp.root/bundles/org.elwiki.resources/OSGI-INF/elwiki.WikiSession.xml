@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.WikiSession.factory" name="elwiki.WikiSession">
-   <property name="event.topics" value="org/elwiki/events/logging/*"/>
+   <property name="event.topics">org/elwiki/events/logging/*
+org/elwiki/events/secur/*
+   </property>
    <service>
       <provide interface="org.apache.wiki.api.core.Session"/>
       <provide interface="org.osgi.service.event.EventHandler"/>

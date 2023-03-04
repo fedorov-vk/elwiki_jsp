@@ -18,9 +18,7 @@
  */
 package org.apache.wiki.workflow0;
 
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEventEmitter;
-import org.apache.wiki.api.event.WorkflowEvent;
+import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
 import org.osgi.service.event.Event;
@@ -110,8 +108,8 @@ public abstract class Decision extends AbstractStep {
      */
     public void decide( final Outcome outcome ) throws WikiException {
         super.setOutcome( outcome );
-		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REMOVAL,
-				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
+				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, this)));
         //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.DQ_REMOVAL );//:FVK:deprecated.
     }
 
@@ -129,8 +127,8 @@ public abstract class Decision extends AbstractStep {
         }
 
         // Put decision in the DecisionQueue
-		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_ADDITION,
-				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_ADDITION,
+				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, this)));
         //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.DQ_ADDITION );//:FVK:deprecated.
 
         // Indicate we are waiting for user input

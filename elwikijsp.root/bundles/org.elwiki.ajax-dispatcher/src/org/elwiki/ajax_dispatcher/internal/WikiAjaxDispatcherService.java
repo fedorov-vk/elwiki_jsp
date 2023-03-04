@@ -107,8 +107,8 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManage
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

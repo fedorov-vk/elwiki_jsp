@@ -5,6 +5,8 @@ Bundle-SymbolicName: org.elwiki.core.plugins;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.core.plugins
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.elwiki.plugins.internal.PluginsActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.osgi.services;bundle-version="3.8.0",

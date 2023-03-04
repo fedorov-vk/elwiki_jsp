@@ -21,7 +21,7 @@
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.Wiki" %>
-<%@ page import="org.apache.wiki.auth.IIAuthenticationManager" %>
+<%@ page import="org.apache.wiki.auth.AuthenticationManager" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
 <%@ page import="org.apache.wiki.ui.Installer" %>

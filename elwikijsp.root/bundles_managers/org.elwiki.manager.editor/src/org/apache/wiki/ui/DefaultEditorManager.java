@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -83,6 +84,9 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
 
 	// -- OSGi service handling --------------------( start )--
 
+    @WikiServiceReference
+    protected Engine m_engine;
+	
 	@WikiServiceReference
 	private VariableManager variableManager;
 
@@ -212,8 +216,8 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

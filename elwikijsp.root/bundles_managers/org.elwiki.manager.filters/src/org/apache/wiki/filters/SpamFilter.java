@@ -239,7 +239,6 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
      */
     private static final long HASH_DELAY = 24;
 
-
     /**
      *  {@inheritDoc}
      */

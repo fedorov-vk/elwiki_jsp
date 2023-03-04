@@ -27,7 +27,9 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Dictionary;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,11 +48,8 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEngineEvent;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiPageEvent;
-import org.apache.wiki.api.event.WikiPageRenameEvent;
+import org.apache.wiki.api.event.WikiEngineEventTopic;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.InitializablePlugin;
 import org.apache.wiki.api.plugin.Plugin;
@@ -59,7 +58,14 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.plugin.AbstractReferralPlugin;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 /**
  * This plugin counts the number of times a page has been viewed.<br/>
@@ -173,7 +179,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
     /**
      * Page view manager, handling all storage.
      */
-    public final class PageViewManager implements WikiEventListener {
+    public final class PageViewManager implements EventHandler {
         /** Are we initialized? */
         private boolean m_initialized = false;
 
@@ -186,8 +192,8 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
         /** Are all changes stored? */
         private boolean m_dirty = false;
 
-        /** The page count storage background thread. */
-        private Thread m_pageCountSaveThread = null;
+        /** The page count storage actor of background thread. */
+        private CounterSaveActor m_pageCounterSaveActor = null;
 
         /** The work directory. */
         private String m_workDir = null;
@@ -199,6 +205,8 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
             return ( v1 == v2 ) ? ( ( String )o1 ).compareTo( ( String )o2 ) : ( v1 < v2 ) ? 1 : -1;
         };
 
+    	private ServiceRegistration<?> serviceRegistration;
+        
         /**
          * Initialize the page view manager.
          * 
@@ -207,7 +215,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
         public synchronized void initialize( final Engine engine ) {
             log.info( "initializing PageView Manager" );
             m_workDir = engine.getWikiConfiguration().getWorkDir().toString();
-            engine.addWikiEventListener( this );
+
             if( m_counters == null ) {
                 // Load the counters into a collection
                 m_storage = new Properties();
@@ -217,10 +225,23 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
             }
 
             // backup counters every 5 minutes
-            if( m_pageCountSaveThread == null ) {
-                m_pageCountSaveThread = new CounterSaveThread( engine, 5 * STORAGE_INTERVAL, this );
-                m_pageCountSaveThread.start();
-            }
+			if (m_pageCounterSaveActor == null) {
+				BackgroundThreads backgroundThreads = (BackgroundThreads) engine.getManager(BackgroundThreads.class);
+				m_pageCounterSaveActor = new CounterSaveActor(this);
+				Thread pageCountSaveThread = backgroundThreads.createThread("PageViewPluginActor", 5 * STORAGE_INTERVAL,
+						m_pageCounterSaveActor);
+				pageCountSaveThread.start();
+			}
+
+			/* Register this for listen events from EventAdmin. */
+			String[] topics = new String[] { //
+					WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN, //
+					WikiPageEventTopic.TOPIC_PAGE_RENAMED, //
+					WikiPageEventTopic.TOPIC_PAGE_DELETED, //
+			};
+			Dictionary<String, Object> properties = new Hashtable<String, Object>();
+			properties.put(EventConstants.EVENT_TOPIC, topics);
+			serviceRegistration = PluginsActivator.getContext().registerService(EventHandler.class.getName(), this, properties);
 
             m_initialized = true;
         }
@@ -229,6 +250,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
          * Handle the shutdown event via the page counter thread.
          */
         private synchronized void handleShutdown() {
+            /* Unregister this from EventAdmin. */
+        	PluginsActivator.getContext().ungetService(serviceRegistration.getReference());
+        	
             log.info( "handleShutdown: The counter store thread was shut down." );
 
             cleanup();
@@ -247,40 +271,36 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
 
             m_initialized = false;
 
-            m_pageCountSaveThread = null;
+            m_pageCounterSaveActor = null;
         }
 
-        /**
-         * Inspect wiki events for shutdown.
-         * 
-         * @param event The wiki event to inspect.
-         */
-        @Override
-        public void actionPerformed( final WikiEvent event ) {
-            if( event instanceof WikiEngineEvent ) {
-                if( event.getType() == WikiEngineEvent.SHUTDOWN ) {
-                    log.info( "Detected wiki engine shutdown" );
-                    handleShutdown();
-                }
-            } else if( ( event instanceof WikiPageRenameEvent wikiPageRenameEvent)
-            		&& ( event.getType() == WikiPageRenameEvent.PAGE_RENAMED ) ) {
-                final String oldPageName = wikiPageRenameEvent.getOldPageName();
-                final String newPageName = wikiPageRenameEvent.getNewPageName();
-                final Counter oldCounter = m_counters.get( oldPageName );
-                if( oldCounter != null ) {
-                    m_storage.remove( oldPageName );
-                    m_counters.put( newPageName, oldCounter );
-                    m_storage.setProperty( newPageName, oldCounter.toString() );
-                    m_counters.remove( oldPageName );
-                    m_dirty = true;
-                }
-            } else if( ( event instanceof WikiPageEvent wikiPageEvent )
-            		&& ( event.getType() == WikiPageEvent.PAGE_DELETED ) ) {
-                final String pageName = wikiPageEvent.getPageName();
-                m_storage.remove( pageName );
-                m_counters.remove( pageName );
-            }
-        }
+    	@Override
+		public void handleEvent(Event event) {
+			String topic = event.getTopic();
+			switch (topic) {
+			case WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN:
+				log.info("Detected wiki engine shutdown");
+				handleShutdown();
+				break;
+			case WikiPageEventTopic.TOPIC_PAGE_RENAMED:
+				String oldPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME);
+				String newPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME);
+				Counter oldCounter = m_counters.get(oldPageName);
+				if (oldCounter != null) {
+					m_storage.remove(oldPageName);
+					m_counters.put(newPageName, oldCounter);
+					m_storage.setProperty(newPageName, oldCounter.toString());
+					m_counters.remove(oldPageName);
+					m_dirty = true;
+				}
+				break;
+			case WikiPageEventTopic.TOPIC_PAGE_DELETED:
+				String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+				m_storage.remove(pageId);
+				m_counters.remove(pageId);
+				break;
+			}
+		}
 
         /**
          * Count a page hit, present a pages' counter or output a list of page counts.
@@ -554,14 +574,14 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
         }
 
         /**
-         * Is the given thread still current?
+         * Is the given actor of thread still current?
          *
-         * @param thrd thread that can be the current background thread.
+         * @param actor of thread that can be the current background thread.
          * @return boolean <code>true</code> if the thread is still the current background thread.
          */
-        synchronized boolean isRunning( final Thread thrd )
+        synchronized boolean isRunning( Actor actor )
         {
-            return m_initialized && thrd == m_pageCountSaveThread;
+            return m_initialized && actor == m_pageCounterSaveActor;
         }
 
     }
@@ -626,4 +646,5 @@ public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, In
         }
 
     }
+
 }

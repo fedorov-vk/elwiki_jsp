@@ -93,7 +93,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	}
 
 	protected void saveScope() {
-
+		//
 	}
 
 	@Override
@@ -140,8 +140,8 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

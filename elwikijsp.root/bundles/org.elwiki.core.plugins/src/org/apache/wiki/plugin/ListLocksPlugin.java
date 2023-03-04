@@ -63,7 +63,7 @@ public class ListLocksPlugin implements Plugin {
             int rowNum = 1;
             for( final PageLock lock : locks ) {
                 result.append( rowNum % 2 != 0 ? "<tr class=\"odd\">" : "<tr>" );
-                result.append( "<td>" + lock.getPage() + "</td>" );
+                result.append( "<td>" + lock.getPageId() + "</td>" );
                 result.append( "<td>" + lock.getLocker() + "</td>" );
                 result.append( "<td>" + Preferences.renderDate( context, lock.getAcquisitionTime(), Preferences.TimeFormat.DATETIME ) + "</td>" );
                 result.append( "<td>" + Preferences.renderDate( context, lock.getExpiryTime(), Preferences.TimeFormat.DATETIME ) + "</td>" );

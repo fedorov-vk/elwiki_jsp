@@ -19,7 +19,7 @@
 
 <%@page import="org.apache.wiki.api.core.Engine" %>
 <%@page import="org.apache.wiki.Wiki" %>
-<%@page import="org.apache.wiki.auth.IIAuthenticationManager" %>
+<%@page import="org.apache.wiki.auth.AuthenticationManager" %>
 <%@page import="org.elwiki.authorize.login.CookieAssertionLoginModule" %>
 <%@page import="org.elwiki.authorize.login.CookieAuthenticationLoginModule"%>
 <%

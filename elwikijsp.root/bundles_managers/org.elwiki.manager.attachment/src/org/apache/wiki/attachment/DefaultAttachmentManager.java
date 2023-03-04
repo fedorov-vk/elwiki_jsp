@@ -367,8 +367,8 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		/*switch (topic) {
+		/*String topic = event.getTopic();
+		switch (topic) {
 			break;
 		}*/		
 	}

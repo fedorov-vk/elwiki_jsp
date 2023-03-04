@@ -18,136 +18,134 @@
  */
 package org.apache.wiki.ui.admin.beans;
 
-import org.apache.wiki.WikiBackgroundThread;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.plugin.PluginManager;
+import java.util.Collection;
+
+import javax.management.NotCompliantMBeanException;
+
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.admin.SimpleAdminBean;
-
-import javax.management.NotCompliantMBeanException;
-import java.util.Collection;
-
+import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki_data.WikiPage;
 
 /**
- * The SearchManagerBean is a simple AdminBean interface to the SearchManager.  It currently can be used to force a reload of all of the pages.
+ * The SearchManagerBean is a simple AdminBean interface to the SearchManager. It currently can be
+ * used to force a reload of all of the pages.
  *
- *  @since 2.6
+ * @since 2.6
  */
 public class SearchManagerBean extends SimpleAdminBean {
 
-    private static final String PROGRESS_ID = "searchmanagerbean.reindexer";
-    private static final String[] METHODS = { "reload" };
+	private static final String PROGRESS_ID = "searchmanagerbean.reindexer";
+	private static final String[] METHODS = { "reload" };
 
-    // private static Logger log = Logger.getLogger( SearchManagerBean.class );
+	// private static Logger log = Logger.getLogger( SearchManagerBean.class );
 
-    private WikiBackgroundThread m_updater;
+	private Thread m_updater;
 
-    public SearchManagerBean( final Engine engine ) throws NotCompliantMBeanException {
-        super();
-        initialize( engine );
-    }
+	public SearchManagerBean(final Engine engine) throws NotCompliantMBeanException {
+		super();
+		initialize(engine);
+	}
 
-    @Override
-    public String[] getAttributeNames()
-    {
-        return new String[0];
-    }
+	@Override
+	public String[] getAttributeNames() {
+		return new String[0];
+	}
 
-    @Override
-    public String[] getMethodNames()
-    {
-        return METHODS;
-    }
+	@Override
+	public String[] getMethodNames() {
+		return METHODS;
+	}
 
-    @Override
-    public String getTitle()
-    {
-        return "Search manager";
-    }
+	@Override
+	public String getTitle() {
+		return "Search manager";
+	}
 
-    /**
-     *  Starts a background thread which goes through all the pages and adds them to the reindex queue.
-     *  <p>
-     *  This method prevents itself from being called twice.
-     */
-    public synchronized void reload() {
-    	final PageManager pageManager = super.m_engine.getManager(PageManager.class);
-    	final SearchManager searchManager = super.m_engine.getManager(SearchManager.class);
-    	final ProgressManager progressManager = super.m_engine.getManager(ProgressManager.class);
-    	
-        if( m_updater == null ) {
-            m_updater = new WikiBackgroundThread( m_engine, 0 ) {
+	@Override
+	public int getType() {
+		return CORE;
+	}
 
-                int m_count;
-                int m_max;
+	@Override
+	public String doGet(final WikiContext context) {
+		if (m_updater != null) {
+			final ProgressManager progressManager = super.m_engine.getManager(ProgressManager.class);
+			return "Update already in progress (" + progressManager.getProgress(PROGRESS_ID) + "%)";
+		}
 
-                @Override
-                public void startupTask() throws Exception {
-                    super.startupTask();
+		return "<input type='submit' id='searchmanagerbean-reload' name='searchmanagerbean-reload' value='Force index reload'/>"
+				+ "<div class='description'>Forces JSPWiki search engine to reindex all pages.  Use this if you think some pages are not being found even if they should.</div>";
+	}
 
-                    setName( "Reindexer started" );
-                }
+	@Override
+	public String doPost(final WikiContext context) {
+		final String val = context.getHttpParameter("searchmanagerbean-reload");
+		if (val != null) {
+			reload();
+			context.getWikiSession().addMessage("Started reload of all indexed pages...");
+			return "";
+		}
 
-                @Override
-                public void backgroundTask() throws Exception {
-                    final Collection< WikiPage > allPages = pageManager.getAllPages();
-                    m_max = allPages.size();
-                    final ProgressItem pi = new ProgressItem() {
+		return doGet(context);
+	}
 
-                        @Override
-                        public int getProgress() {
-                            return 100 * m_count / m_max;
-                        }
-                    };
-                    progressManager.startProgress( pi, PROGRESS_ID );
+	/**
+	 * Starts a background thread which goes through all the pages and adds them to the reindex queue.
+	 * <p>
+	 * This method prevents itself from being called twice.
+	 */
+	public synchronized void reload() {
+		if (m_updater == null) {
+			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
+			Actor rssActor = new PagesReindexingActor(m_engine);
+			m_updater = backgroundThreads.createThread("ElWiki Reindexer", 0, rssActor);
+			m_updater.start();
+		}
+	}
 
-                    for( final WikiPage page : allPages ) {
-                        searchManager.reindexPage( page );
-                        m_count++;
-                    }
+	protected class PagesReindexingActor extends Actor {
+		int m_count;
+		int m_max;
 
-                    progressManager.stopProgress( PROGRESS_ID );
-                    shutdown();
-                    m_updater = null;
-                }
+		private final PageManager pageManager;
+		private final SearchManager searchManager;
+		private final ProgressManager progressManager;
 
-            };
+		public PagesReindexingActor(Engine engine) {
+			this.pageManager = engine.getManager(PageManager.class);
+			this.searchManager = engine.getManager(SearchManager.class);
+			this.progressManager = m_engine.getManager(ProgressManager.class);
+		}
 
-            m_updater.start();
-        }
-    }
+		@Override
+		public void backgroundTask() throws Exception {
+			final Collection<WikiPage> allPages = pageManager.getAllPages();
+			m_max = allPages.size();
+			final ProgressItem pi = new ProgressItem() {
 
-    @Override
-    public int getType() {
-        return CORE;
-    }
+				@Override
+				public int getProgress() {
+					return 100 * m_count / m_max;
+				}
+			};
+			progressManager.startProgress(pi, PROGRESS_ID);
 
-    @Override
-    public String doGet( final WikiContext context ) {
-        if( m_updater != null ) {
-        	final ProgressManager progressManager = super.m_engine.getManager(ProgressManager.class);
-            return "Update already in progress ("+ progressManager.getProgress(PROGRESS_ID)+ "%)";
-        }
+			for (final WikiPage page : allPages) {
+				searchManager.reindexPage(page);
+				m_count++;
+			}
 
-        return "<input type='submit' id='searchmanagerbean-reload' name='searchmanagerbean-reload' value='Force index reload'/>"+
-               "<div class='description'>Forces JSPWiki search engine to reindex all pages.  Use this if you think some pages are not being found even if they should.</div>";
-    }
-
-    @Override
-    public String doPost( final WikiContext context ) {
-        final String val = context.getHttpParameter( "searchmanagerbean-reload" );
-        if( val != null ) {
-            reload();
-            context.getWikiSession().addMessage( "Started reload of all indexed pages..." );
-            return "";
-        }
-
-        return doGet( context );
-    }
+			progressManager.stopProgress(PROGRESS_ID);
+			shutdown();
+			m_updater = null;
+		}
+	}
 
 }

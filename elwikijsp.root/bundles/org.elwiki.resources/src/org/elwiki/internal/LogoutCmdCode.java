@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.elwiki.authorize.login.CookieAssertionLoginModule;
 import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
 
@@ -20,7 +20,7 @@ public class LogoutCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		super.applyPrologue(httpRequest, httpResponse);
-		IIAuthenticationManager mgr = getEngine().getManager(IIAuthenticationManager.class);
+		AuthenticationManager mgr = getEngine().getManager(AuthenticationManager.class);
 		mgr.logout(httpRequest);
 
 		// Clear the user cookie

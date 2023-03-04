@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -38,16 +39,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.WikiBackgroundThread;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.diff.DifferenceManager;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
-import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
+import org.apache.wiki.api.event.WikiSecurityEventTopic;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RepositoryModifiedException;
@@ -78,6 +76,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -96,8 +96,8 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventHandler;
-
 
 /**
  * Manages the WikiPages. This class functions as an unified interface towards the page providers. It handles initialization
@@ -120,6 +120,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	static final String JSON_PAGESHIERARCHY = "pageshierarchyTracker";
 
+	/** Idle lock reaping interval. Seconds.*/
+	private static final int LOCK_REAPING_INTERVAL = 60;
+
 	private static String ID_EXTENSION_PAGEPROVIDER = "pageProvider";
 
 	private PageProvider m_provider;
@@ -128,7 +131,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	private int m_expiryTime;
 
-	private LockReaper m_reaper = null;
+	private Thread m_reaper = null;
 
 	private PageSorter pageSorter = new PageSorter();
 
@@ -142,6 +145,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	// -- OSGi service handling ----------------------(start)--
 
+    @Reference
+    EventAdmin eventAdmin;
+	
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
@@ -383,7 +389,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
             final WikiPage p = m_provider.getPageInfo( pageName, version );
 
           //:FVK:this.referenceManager.updateReferences( p );
-            fireEvent( WikiPageEvent.PAGE_REINDEX, p.getName() );
+    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REINDEX,
+    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, p.getId())));
             text = m_provider.getPageText( pageName, version );
         }
 
@@ -409,14 +416,35 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         return result;
     }
 
+	@Override
+	public String getText(String pageName, int version) {
+		final String result = getPureText(pageName, version);
+		return TextUtil.replaceEntities(result);
+	}
+
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.pages0.PageManager#getText(String, int)
+     * @see org.apache.wiki.pages0.PageManager#getText(WikiPage, int)
      */
     @Override
-    public String getText( final String page, final int version ) {
-        final String result = getPureText( page, version );
-        return TextUtil.replaceEntities( result );
+    public String getText(WikiPage page, int version) {
+        //:FVK: --old code-- final String result = getPureText( page, version );
+		String content = "";
+		if (version == WikiProvider.LATEST_VERSION) {
+			PageContent pc = page.getLastContent();
+			if (pc != null) {
+				content = pc.getContent();
+			}
+		} else {
+			for (PageContent pageContent : page.getPageContents()) {
+				if (pageContent.getVersion() == version) {
+					content = pageContent.getContent();
+					break;
+				}
+			}
+		}
+    	
+        return TextUtil.replaceEntities( content );
     }
 
 	@Override
@@ -490,21 +518,26 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
         m_provider.putPageText(page, content, author, changenote);
     }
-
+    
     /**
      * {@inheritDoc}
      * @see org.apache.wiki.pages0.PageManager#lockPage(org.apache.wiki.api.core.WikiPage, java.lang.String)
      */
     @Override
     public PageLock lockPage( final WikiPage page, final String user ) {
-        if( m_reaper == null ) {
-            //  Start the lock reaper lazily.  We don't want to start it in the constructor, because starting threads in constructors
-            //  is a bad idea when it comes to inheritance.  Besides, laziness is a virtue.
-            m_reaper = new LockReaper( m_engine );
-            m_reaper.start();
-        }
+		if (m_reaper == null) {
+			// Start the lock reaper lazily.
+			// We don't want to start it in the constructor, because starting threads in constructors
+			// is a bad idea when it comes to inheritance.  Besides, laziness is a virtue.
+			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
+			LockReaperActor lockReaperActor = new LockReaperActor();
+			m_reaper = backgroundThreads.createThread("ElWiki Lock Reaper", LOCK_REAPING_INTERVAL, lockReaperActor);
+			m_reaper.start();
+		}
 
-        fireEvent( WikiPageEvent.PAGE_LOCK, page.getName() ); // prior to or after actual lock?
+        // how - prior to or after actual lock?
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_LOCK,
+				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, page.getId())));
         PageLock lock = m_pageLocks.get( page.getName() );
 
         if( lock == null ) {
@@ -533,10 +566,11 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
             return;
         }
 
-        m_pageLocks.remove( lock.getPage() );
-        log.debug( "Unlocked page " + lock.getPage() );
+        m_pageLocks.remove( lock.getPageId() );
+        log.debug( "Unlocked page " + lock.getPageId() );
 
-        fireEvent( WikiPageEvent.PAGE_UNLOCK, lock.getPage() );
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_UNLOCK,
+				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, lock.getPageId())));
     }
 
     /**
@@ -767,6 +801,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
     @Override
     public void deletePage( final String pageName ) throws ProviderException {
         final WikiPage p = getPage( pageName );
+        String pageId = p.getId();
+
         if( p != null ) {
         	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
             if( p instanceof PageAttachment ) {
@@ -788,7 +824,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
                     }
                 }*/
                 deletePage( p );
-                fireEvent( WikiPageEvent.PAGE_DELETED, pageName );
+                
+        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
+        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
             }
         }
     }
@@ -799,7 +837,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
      */
     @Override
 	public void deletePage(final WikiPage page) throws ProviderException {
-		fireEvent(WikiPageEvent.PAGE_DELETE_REQUEST, page.getName());
+        String pageId = page.getId();
+		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
+				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
 
 		List<String> attachmentPlace = new ArrayList<>();
 		for (PageAttachment att : page.getAttachments()) {
@@ -810,105 +850,40 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 		if (m_provider.deletePage(page.getName())) {
 			attachmentManager.releaseAttachmentStore(attachmentPlace);
-			fireEvent(WikiPageEvent.PAGE_DELETED, page.getName());
+    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
+    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
 		}
 	}
 
-    /**
-     * This is a simple reaper thread that runs roughly every minute
-     * or so (it's not really that important, as long as it runs),
-     * and removes all locks that have expired.
-     */
-    private class LockReaper extends WikiBackgroundThread {
-        /**
-         * Create a LockReaper for a given engine.
-         *
-         * @param engine Engine to own this thread.
-         */
-        public LockReaper( final Engine engine) {
-            super( engine, 60 );
-            setName( "JSPWiki Lock Reaper" );
-        }
+	/**
+	 * This is a simple reaper thread that runs roughly every minute or so (it's not really that
+	 * important, as long as it runs), and removes all locks that have expired.
+	 */
+	private class LockReaperActor extends Actor {
 
-        @Override
-        public void backgroundTask() {
-            final Collection< PageLock > entries = m_pageLocks.values();
-            for( final Iterator<PageLock> i = entries.iterator(); i.hasNext(); ) {
-                final PageLock p = i.next();
+		/**
+		 * Create a LockReaper.
+		 */
+		public LockReaperActor() {
 
-                if ( p.isExpired() ) {
-                    i.remove();
+		}
 
-                    log.debug( "Reaped lock: " + p.getPage() +
-                               " by " + p.getLocker() +
-                               ", acquired " + p.getAcquisitionTime() +
-                               ", and expired " + p.getExpiryTime() );
-                }
-            }
-        }
-    }
+		@Override
+		public void backgroundTask() throws Exception {
+			final Collection<PageLock> entries = m_pageLocks.values();
+			for (final Iterator<PageLock> i = entries.iterator(); i.hasNext();) {
+				final PageLock p = i.next();
 
-    // events processing .......................................................
+				if (p.isExpired()) {
+					i.remove();
 
-    /**
-     * Fires a WikiPageEvent of the provided type and page name
-     * to all registered listeners.
-     *
-     * @param type     the event type to be fired
-     * @param pagename the wiki page name as a String
-     * @see org.apache.wiki.api.event.WikiPageEvent
-     */
-    protected final void fireEvent( final int type, final String pagename ) {
-        if( WikiEventManager.isListening( this ) ) {
-            WikiEventManager.fireEvent( this, new WikiPageEvent( m_engine, type, pagename ) );
-        }
-    }
+					log.debug("Reaped lock: " + p.getPageId() + " by " + p.getLocker() + ", acquired "
+							+ p.getAcquisitionTime() + ", and expired " + p.getExpiryTime());
+				}
+			}
+		}
 
-    /**
-     * Listens for {@link org.apache.wiki.api.event.WikiSecurityEvent#PROFILE_NAME_CHANGED}
-     * events. If a user profile's name changes, each page ACL is inspected. If an entry contains
-     * a name that has changed, it is replaced with the new one. No events are emitted
-     * as a consequence of this method, because the page contents are still the same; it is
-     * only the representations of the names within the ACL that are changing.
-     *
-     * @param event The event
-     */
-    @Override
-    public void actionPerformed( final WikiEvent event ) {
-        if( !( event instanceof WikiSecurityEvent se) ) {
-            return;
-        }
-
-        if( se.getType() == WikiSecurityEvent.PROFILE_NAME_CHANGED ) {
-            final UserProfile[] profiles = (UserProfile[]) se.getTarget();
-            final Principal[] oldPrincipals = new Principal[] { new WikiPrincipal( profiles[ 0 ].getLoginName() ),
-                                                                new WikiPrincipal( profiles[ 0 ].getFullname()),
-                                                                new WikiPrincipal( profiles[ 0 ].getWikiName() ) };
-            final Principal newPrincipal = new WikiPrincipal( profiles[ 1 ].getFullname() );
-
-            // Examine each page ACL
-            try {
-                int pagesChanged = 0;
-                final Collection< WikiPage > pages = getAllPages();
-                for( final WikiPage page : pages ) {
-                    final boolean aclChanged = changeAcl( page, oldPrincipals, newPrincipal );
-                    if( aclChanged ) {
-                        // If the Acl needed changing, change it now
-                        try {
-                            this.aclManager.setPermissions( page, page.getAcl() );
-                        } catch( final WikiSecurityException e ) {
-                            log.error("Could not change page ACL for page " + page.getName() + ": " + e.getMessage(), e);
-                        }
-                        pagesChanged++;
-                    }
-                }
-                log.info( "Profile name change for '" + newPrincipal.toString() + "' caused " + pagesChanged + " page ACLs to change also." );
-            } catch( final ProviderException e ) {
-                // Oooo! This is really bad...
-                log.error( "Could not change user name in Page ACLs because of Provider error:" + e.getMessage(), e );
-            }
-        }
-    }
+	}
 
     /**
      * For a single wiki page, replaces all Acl entries matching a supplied array of Principals with a new Principal.
@@ -1034,12 +1009,48 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 		return unreferencedPages;
 	}
 
+	/**
+     * Listens for {@link WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED}
+     * events. If a user profile's name changes, each page ACL is inspected. If an entry contains
+     * a name that has changed, it is replaced with the new one. No events are emitted
+     * as a consequence of this method, because the page contents are still the same; it is
+     * only the representations of the names within the ACL that are changing.
+	 */
 	@Override
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
-		/*switch (topic) {
+		switch (topic) {
+		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED:
+			UserProfile[] profiles = (UserProfile[])event.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+			Principal[] oldPrincipals = new Principal[] { //
+					new WikiPrincipal(profiles[0].getLoginName()), //
+					new WikiPrincipal(profiles[0].getFullname()), //
+					new WikiPrincipal(profiles[0].getWikiName()) };
+			final Principal newPrincipal = new WikiPrincipal(profiles[1].getFullname());
+
+            // Examine each page ACL
+            try {
+                int pagesChanged = 0;
+                final Collection< WikiPage > pages = getAllPages();
+                for( final WikiPage page : pages ) {
+                    final boolean aclChanged = changeAcl( page, oldPrincipals, newPrincipal );
+                    if( aclChanged ) {
+                        // If the Acl needed changing, change it now
+                        try {
+                            this.aclManager.setPermissions( page, page.getAcl() );
+                        } catch( final WikiSecurityException e ) {
+                            log.error("Could not change page ACL for page " + page.getName() + ": " + e.getMessage(), e);
+                        }
+                        pagesChanged++;
+                    }
+                }
+                log.info( "Profile name change for '" + newPrincipal.toString() + "' caused " + pagesChanged + " page ACLs to change also." );
+            } catch( final ProviderException e ) {
+                // Oooo! This is really bad...
+                log.error( "Could not change user name in Page ACLs because of Provider error:" + e.getMessage(), e );
+            }
 			break;
-		}*/		
+		}		
 	}
 
 }

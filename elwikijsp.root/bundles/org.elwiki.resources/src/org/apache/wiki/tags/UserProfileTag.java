@@ -32,7 +32,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.pages0.PageManager;
@@ -118,7 +118,7 @@ public class UserProfileTag extends BaseWikiTag {
 		final Engine engine = wikiContext.getEngine();
 		AccountManager accountManager = engine.getManager(AccountManager.class);
 		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
-		IIAuthenticationManager authMgr = engine.getManager(IIAuthenticationManager.class);
+		AuthenticationManager authMgr = engine.getManager(AuthenticationManager.class);
 		
 		final UserProfile profile = accountManager.getUserProfile(wikiContext.getWikiSession());
 		String result = null;

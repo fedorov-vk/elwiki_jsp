@@ -19,7 +19,6 @@
 package org.apache.wiki.api.references;
 
 import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.event.WikiEventListener;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.InternalModule;
@@ -42,7 +41,7 @@ import java.util.Set;
  *  The owning class must take responsibility of filling in any pre-existing information, probably by loading each and every WikiPage
  *  and calling this class to update the references when created.
  */
-public interface ReferenceManager extends PageFilter, InternalModule, WikiEventListener {
+public interface ReferenceManager extends PageFilter, InternalModule {
 
     /**
      *  Initializes the entire reference manager with the initial set of pages from the collection.

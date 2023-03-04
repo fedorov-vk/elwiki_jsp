@@ -2,7 +2,32 @@ package org.elwiki.api;
 
 public interface BackgroundThreads {
 
+	/**
+	 * Abstract subclass that operates in the background; a subclassed class are controlled by
+	 * BackgroundThreads component. When component detects the {@link SHUTDOWN} event, it terminates all
+	 * background tasks.
+	 * <p>
+	 * Subclasses of this method need only implement the method {@link #backgroundTask()}, instead of
+	 * the normal {@link Thread#run()}. The sleep interval is specified for BackgroundThreads for
+	 * creating thread instance.
+	 * <p>
+	 * This class is thread-safe.
+	 */
 	public abstract class Actor {
+
+		private volatile boolean isAlive = true;
+
+		final public boolean isAlive() {
+			return isAlive;
+		};
+
+		/**
+		 * Requests the shutdown of this background thread. Note that the shutdown is not immediate.
+		 */
+		final protected void shutdown() {
+			this.isAlive = false;
+		}
+
 		/**
 		 * Abstract method that performs the actual work for this background thread; subclasses must
 		 * implement this method.
@@ -32,12 +57,12 @@ public interface BackgroundThreads {
 	}
 
 	/**
-	 * Constructs a new instance of this background thread with a specified sleep interval, and adds the
-	 * new instance to the wiki engine's event listeners.
-	 * @param name thread name.
+	 * Constructs a new instance of this background thread with a specified sleep interval.
+	 *
+	 * @param name          thread name.
 	 * @param sleepInterval the interval between invocations of the thread's {@link Thread#run()}
 	 *                      method, in seconds.
-	 * @param actor instance.
+	 * @param actor         instance.
 	 * 
 	 * @return Created thread instance.
 	 */

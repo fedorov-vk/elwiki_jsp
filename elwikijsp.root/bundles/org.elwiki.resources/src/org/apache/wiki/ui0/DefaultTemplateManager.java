@@ -42,6 +42,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.ContextUtil;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
@@ -50,6 +51,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.framework.Bundle;
@@ -95,6 +97,9 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
+    @WikiServiceReference
+    protected Engine m_engine;
+
 	/**
 	 * DefaultTemplateManager initializer.
 	 * 
@@ -108,7 +113,7 @@ public class DefaultTemplateManager extends BaseModuleManager implements Templat
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// doesn't used.
+		// nothing to do.
 	}
 
 	// -- OSGi service handling ------------------------(end)--

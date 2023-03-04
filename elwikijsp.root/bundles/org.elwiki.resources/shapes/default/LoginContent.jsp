@@ -28,9 +28,9 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%
-	WikiContext wikiContext = ContextUtil.findContext( pageContext );
+WikiContext wikiContext = ContextUtil.findContext( pageContext );
 	Engine engine = wikiContext.getEngine();
-	IIAuthenticationManager authenticationManager = engine.getManager(IIAuthenticationManager.class);
+	AuthenticationManager authenticationManager = engine.getManager(AuthenticationManager.class);
 	String loginURL = "";
     if( authenticationManager.isContainerAuthenticated() ) {
     	loginURL = "j_security_check";

@@ -57,7 +57,7 @@
 	servletContext.setVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE, Boolean.TRUE );
 	servletContext.setVariable( VariableManager.VAR_RUNFILTERS,  "false" );
 
-	WikiPage wikiPage = servletContext.getPage();
+	WikiPage wikiPage = servletContext.getPageId();
 	String originalCCLOption = (String)wikiPage.getAttribute( MarkupParser.PROP_CAMELCASELINKS );
 	wikiPage.setAttribute( MarkupParser.PROP_CAMELCASELINKS, "false" );
 
@@ -90,7 +90,7 @@ String clone = request.getParameter( "clone" );
 <%
 if( usertext == null )
   {
-    usertext = pageManager.getPureText( servletContext.getPage() );
+    usertext = pageManager.getPureText( servletContext.getPageId() );
   }
 %>
 </wiki:CheckRequestContext>

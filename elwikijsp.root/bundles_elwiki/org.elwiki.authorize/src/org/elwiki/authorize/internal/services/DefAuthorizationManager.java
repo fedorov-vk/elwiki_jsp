@@ -38,16 +38,14 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEvent;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiSecurityEvent;
+import org.apache.wiki.api.event.WikiEventTopic;
+import org.apache.wiki.api.event.WikiLoginEventTopic;
+import org.apache.wiki.api.event.WikiSecurityEventTopic;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.IIAuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageManager;
@@ -79,6 +77,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.permissionadmin.PermissionInfo;
@@ -129,7 +128,7 @@ import org.osgi.service.useradmin.Group;
  * authorization logic.
  * </p>
  * 
- * @see AuthenticationManager
+ * @see AuthorizationManager
  */
 @SuppressWarnings("unused")
 //@formatter:off
@@ -141,7 +140,7 @@ import org.osgi.service.useradmin.Group;
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, WikiManager, WikiEventListener, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
@@ -176,6 +175,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	}
 
 	// -- OSGi service handling ----------------------(start)--
+
+	@Reference
+	protected EventAdmin eventAdmin;
 
 	/** Stores configuration. */
 	@Reference
@@ -338,7 +340,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		//  A slight sanity check.
 		//
 		if (session == null || permission == null) {
-			fireEvent(WikiSecurityEvent.ACCESS_DENIED, null, permission);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
+					WikiSecurityEventTopic.PROPERTY_USER, null, //
+					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 		
@@ -349,7 +353,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 				this.wikiConfiguration.getApplicationName(), null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
+					WikiSecurityEventTopic.PROPERTY_USER, user, //
+					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -357,13 +363,17 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		// granted by policy, return false.
 		boolean hasPolicyPermission = checkStaticPermission(session, permission);
 		if (!hasPolicyPermission) {
-			fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
+					WikiSecurityEventTopic.PROPERTY_USER, user, //
+					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 
 		// If this isn't a PagePermission, it's allowed
 		if (!(permission instanceof PagePermission)) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
+					WikiSecurityEventTopic.PROPERTY_USER, user, //
+					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -374,7 +384,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		WikiPage page = pageManager.getPage(pageName);
 		Acl acl = (page == null) ? null : this.aclManager.getPermissions(page);
 		if (page == null || acl == null || acl.getAclEntries().isEmpty()) {
-			fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
+			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
+					WikiSecurityEventTopic.PROPERTY_USER, user, //
+					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 		
@@ -403,12 +415,16 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 			}
 
 			if (hasRoleOrPrincipal(session, aclPrincipal)) {
-				fireEvent(WikiSecurityEvent.ACCESS_ALLOWED, user, permission);
+				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
+						WikiSecurityEventTopic.PROPERTY_USER, user, //
+						WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 				return true;
 			}
 		}
 
-		fireEvent(WikiSecurityEvent.ACCESS_DENIED, user, permission);
+		eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
+				WikiSecurityEventTopic.PROPERTY_USER, user, //
+				WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 		return false;
 	}
 
@@ -417,7 +433,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	 */
 	@Override
 	public boolean isUserInRole(Session session, Principal principal) {
-		if (session == null || principal == null || IIAuthenticationManager.isUserPrincipal(principal)) {
+		if (session == null || principal == null || AuthenticationManager.isUserPrincipal(principal)) {
 			return false;
 		}
 
@@ -427,7 +443,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		}
 
 		// Only authenticated users can possess groups or custom roles
-		if (session.isAuthenticated() && IIAuthenticationManager.isRolePrincipal(principal)) {
+		if (session.isAuthenticated() && AuthenticationManager.isRolePrincipal(principal)) {
 			return session.hasPrincipal(principal);
 		}
 
@@ -480,14 +496,14 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		}
 
 		// If principal is role, delegate to isUserInRole
-		if (IIAuthenticationManager.isRolePrincipal(principal)) {
+		if (AuthenticationManager.isRolePrincipal(principal)) {
 			return isUserInRole(session, principal);
 		}
 
 		// We must be looking for a user principal, assuming that the user
 		// has been properly logged in.
 		// So just look for a name match.
-		if (session.isAuthenticated() && IIAuthenticationManager.isUserPrincipal(principal)) {
+		if (session.isAuthenticated() && AuthenticationManager.isUserPrincipal(principal)) {
 			String principalName = principal.getName();
 			Principal[] userPrincipals = session.getPrincipals();
 			for (Principal userPrincipal : userPrincipals) {
@@ -634,41 +650,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		return new UnresolvedPrincipal(groupName);
 	}
 
-	// -- events processing ---------------------------------------------------
-
-	@Override
-	public /*:FVK: synchronized*/ void addWikiEventListener(WikiEventListener listener) {
-		WikiEventManager.addWikiEventListener(this, listener);
-	}
-
-	@Override
-	public /*:FVK: synchronized*/ void removeWikiEventListener(WikiEventListener listener) {
-		WikiEventManager.removeWikiEventListener(this, listener);
-	}
-
-	/**
-	 * Fires a WikiSecurityEvent of the provided type, user, and permission to all registered
-	 * listeners.
-	 *
-	 * @see org.apache.wiki.event.WikiSecurityEvent
-	 * @param type
-	 *                   the event type to be fired
-	 * @param user
-	 *                   the user associated with the event
-	 * @param permission
-	 *                   the permission the subject must possess
-	 */
-	public void fireEvent(int type, Principal user, Object permission) {
-		if (WikiEventManager.isListening(this)) {
-			WikiEventManager.fireEvent(this, new WikiSecurityEvent(this, type, user, permission));
-		}
-	}
-
-	@Deprecated
-	@Override
-	public void actionPerformed(WikiEvent event) {
-	}
-
 	@Override
 	public boolean hasAccess(WikiContext context, HttpServletResponse response, boolean redirect) throws IOException {
         //:FVK: final boolean allowed = checkPermission( context.getWikiSession(), context.requiredPermission() );
@@ -704,17 +685,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 
 	@Override
 	public void handleEvent(Event event) {
-		String topic = event.getTopic();
-		switch (topic) {//:FVK:
-		case ElWikiEventsConstants.TOPIC_LOGIN_ANONYMOUS: {
-			break;
-		}
-		case ElWikiEventsConstants.TOPIC_LOGIN_ASSERTED: {
-			break;
-		}
-		case ElWikiEventsConstants.TOPIC_LOGIN_AUTHENTICATED:
-			break;
-		}
+		/*String topic = event.getTopic();
+		switch (topic) {
+		}*/
 	}
 
 }

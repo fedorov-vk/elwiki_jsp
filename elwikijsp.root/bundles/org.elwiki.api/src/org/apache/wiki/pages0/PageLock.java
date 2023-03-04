@@ -33,7 +33,7 @@ public class PageLock implements Serializable {
 
     private static final long serialVersionUID = 0L;
 
-    private String m_page;
+    private String m_pageId;
     private String m_locker;
     private Date m_lockAcquired;
     private Date m_lockExpiry;
@@ -47,7 +47,7 @@ public class PageLock implements Serializable {
      * @param expiry   The timestamp when the lock expires.
      */
     public PageLock( final WikiPage page, final String locker, final Date acquired, final Date expiry ) {
-        m_page = page.getName();
+        m_pageId = page.getId();
         m_locker = locker;
         m_lockAcquired = ( Date )acquired.clone();
         m_lockExpiry = ( Date )expiry.clone();
@@ -58,8 +58,8 @@ public class PageLock implements Serializable {
      *
      * @return The name of the page.
      */
-    public String getPage() {
-        return m_page;
+    public String getPageId() {
+        return m_pageId;
     }
 
     /**

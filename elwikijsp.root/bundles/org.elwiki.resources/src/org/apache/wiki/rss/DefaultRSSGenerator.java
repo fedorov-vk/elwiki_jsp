@@ -29,7 +29,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
+import org.apache.wiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.rss.IFeed;
@@ -42,6 +42,8 @@ import org.apache.wiki.pages0.PageTimeComparator;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -68,7 +70,7 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultRSSGenerator",
 	service = { RSSGenerator.class, WikiManager.class, EventHandler.class  },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -136,9 +138,15 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 				rssFile = new File(m_engine.getRootPath(), m_rssFile);
 			}
 			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-			final int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
-			final RSSThread rssThread = new RSSThread(m_engine, rssFile, rssInterval);
+			int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRSSGenerator.PROP_INTERVAL, 3600);
+
+			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
+			Actor rssActor = new RssActor(m_engine, rssFile);
+			Thread rssThread = backgroundThreads.createThread("ElWiki RSS Generator", rssInterval, rssActor);
 			rssThread.start();
+
+			log.debug("RSS file will be at " + rssFile.getAbsolutePath());
+			log.debug("RSS refresh interval (seconds): " + rssInterval);
 		}
 	}
 
@@ -458,7 +466,7 @@ public class DefaultRSSGenerator implements RSSGenerator, WikiManager, EventHand
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case ElWikiEventsConstants.TOPIC_INIT_STAGE_TWO:
+		case WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO:
 			try {
 				initializeStageTwo();
 			} catch (WikiException e) {

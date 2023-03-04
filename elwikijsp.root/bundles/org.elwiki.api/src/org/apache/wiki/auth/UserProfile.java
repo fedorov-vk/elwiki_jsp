@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * name, wiki name, and e-mail address. Note that since 2.6 the wiki name is
  * required to be automatically computed from the full name.
  * As of 2.8, user profiles can store custom key/value String/Serializable attributes, and store
- * a unique ID. Locks are checked by {@link org.apache.wiki.auth.IIAuthenticationManager};
+ * a unique ID. Locks are checked by {@link org.apache.wiki.auth.AuthenticationManager};
  * if a profile is locked, the user cannot log with that profile.
  * @since 2.3
  */
@@ -163,7 +163,7 @@ public interface UserProfile extends IAdaptable, Serializable
     /**
      * Sets the name by which the user logs in. The login name is used as the
      * username for custom authentication (see
-     * {@link org.apache.wiki.auth.IIAuthenticationManager#login(org.apache.wiki.api.core.Session, javax.servlet.http.HttpServletRequest, String, String)},
+     * {@link org.apache.wiki.auth.AuthenticationManager#login(org.apache.wiki.api.core.Session, javax.servlet.http.HttpServletRequest, String, String)},
      * {@link AccountRegistryLoginModule}). The login
      * name is typically a short name ("jannej"). In contrast, the wiki name is
      * typically of type FirstnameLastName ("JanneJalkanen").

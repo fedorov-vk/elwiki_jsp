@@ -18,24 +18,23 @@
  */
 package org.apache.wiki.pages0;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.providers.PageProvider;
+import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.event.WikiEventListener;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.providers.PageProvider;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-
-public interface PageManager extends WikiEventListener {
+public interface PageManager {
 
     /** The property value for setting the current page provider.  Value is {@value}. */
     String PROP_PAGEPROVIDER = "jspwiki.pageProvider";
@@ -118,7 +117,9 @@ public interface PageManager extends WikiEventListener {
      * @param version  Version of the page to fetch
      * @return WikiText.
      */
-    String getText( String page, int version );
+    String getText( WikiPage page, int version );
+
+    String getText( String pageName, int version );
 
     /**
      *  Returns the un-HTMLized text of the latest version of a page. This method also replaces the &lt; and &amp; -characters with
@@ -144,7 +145,7 @@ public interface PageManager extends WikiEventListener {
      *  @see PageManager#getPureText(WikiPage)
      */
     default String getText( final WikiPage page ) {
-        return getText( page.getName(), page.getVersion() );
+        return getText( page, page.getVersion() );
     }
 
     /**

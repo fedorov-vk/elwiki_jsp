@@ -19,9 +19,7 @@
 package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.ElWikiEventsConstants;
-import org.apache.wiki.api.event.WikiEventEmitter;
-import org.apache.wiki.api.event.WorkflowEvent;
+import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
 import org.osgi.service.event.Event;
@@ -127,8 +125,8 @@ public class DecisionQueue implements Serializable {
             remove( decision );
         }
 
-		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_DECIDE,
-				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, decision)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_DECIDE,
+				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
         //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_DECIDE );
     }
 
@@ -143,8 +141,8 @@ public class DecisionQueue implements Serializable {
         if( decision.isReassignable() ) {
             decision.reassign( owner );
 
-    		ApiActivator.getEventAdmin().sendEvent(new Event(ElWikiEventsConstants.TOPIC_WORKFLOW_DQ_REASSIGN,
-    				Map.of(ElWikiEventsConstants.PROPERTY_DECISION, decision)));
+    		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REASSIGN,
+    				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
             //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_REASSIGN );//:FVK:deprecated.
             return;
         }

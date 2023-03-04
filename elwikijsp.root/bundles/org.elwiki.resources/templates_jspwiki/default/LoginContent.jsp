@@ -29,7 +29,7 @@
 <fmt:setBundle basename="templates.default"/>
 <%
 WikiContext ctx = ContextUtil.findContext( pageContext );
-    IIAuthenticationManager mgr = WikiEngine.getAuthenticationManager();
+    AuthenticationManager mgr = WikiEngine.getAuthenticationManager();
     String loginURL = "";
 
     if( mgr.isContainerAuthenticated() ) {

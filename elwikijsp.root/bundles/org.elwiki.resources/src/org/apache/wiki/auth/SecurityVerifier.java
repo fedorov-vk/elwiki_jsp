@@ -547,15 +547,15 @@ public final class SecurityVerifier {
 	/**
 	 * Verfies the JAAS configuration. The configuration is valid if value of the
 	 * <code>jspwiki.properties<code> property
-	 * {@value org.apache.wiki.auth.IIAuthenticationManager#PROP_LOGIN_MODULE} resolves to a valid class
+	 * {@value org.apache.wiki.auth.AuthenticationManager#PROP_LOGIN_MODULE} resolves to a valid class
 	 * on the classpath.
 	 */
 	protected void verifyJaas() {
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
 		String jaasClass = TextUtil.getStringProperty(m_engine.getWikiPreferences(),
-				IIAuthenticationManager.PROP_LOGIN_MODULE, null);
+				AuthenticationManager.PROP_LOGIN_MODULE, null);
 		if (jaasClass == null || jaasClass.length() == 0) {
-			m_session.addMessage(ERROR_JAAS, "The value of the '" + IIAuthenticationManager.PROP_LOGIN_MODULE
+			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.PROP_LOGIN_MODULE
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
 					+ "on the classpath.");
 			return;
@@ -564,7 +564,7 @@ public final class SecurityVerifier {
 		// See if we can find the LoginModule on the classpath
 		Class<?> c = null;
 		try {
-			m_session.addMessage(INFO_JAAS, "The property '" + IIAuthenticationManager.PROP_LOGIN_MODULE
+			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManager.PROP_LOGIN_MODULE
 					+ "' specified the class '" + jaasClass + ".'");
 			c = Class.forName(jaasClass);
 

@@ -10,7 +10,6 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.Authorizer;
-import org.elwiki.data.authorize.GroupPrincipal;
 
 public class DefaultAuthorizer implements Authorizer {
 	

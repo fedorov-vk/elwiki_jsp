@@ -39,7 +39,7 @@
 %>
 <%
 Engine wiki = Wiki.engine().find( getServletConfig() );
-    IIAuthenticationManager mgr = WikiEngine.getAuthenticationManager();
+    AuthenticationManager mgr = WikiEngine.getAuthenticationManager();
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
     pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
     Session wikiSession = wikiContext.getWikiSession();

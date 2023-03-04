@@ -23,8 +23,7 @@ import org.apache.log4j.NDC;
 import org.apache.wiki.WatchDog;
 import org.apache.wiki.WikiContextImpl;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.event.WikiEventManager;
-import org.apache.wiki.api.event.WikiPageEvent;
+import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
@@ -35,6 +34,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import javax.servlet.FilterChain;
@@ -55,6 +56,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 
 /**
@@ -91,11 +93,14 @@ import java.nio.charset.Charset;
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
-@Deprecated
+@Deprecated//:FVK: --!!!-- он шлет Event TOPIC_PAGE_REQUESTED 
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
 
+    @Reference
+    EventAdmin eventAdmin;
+    
     @Reference
     private Engine m_engine;
 
@@ -125,7 +130,8 @@ public class WikiJSPFilter extends WikiServletFilter {
 
             // fire PAGE_REQUESTED event
             final String pagename = URLConstructor.parsePageFromURL( ( HttpServletRequest )request, Charset.forName( response.getCharacterEncoding() ) );
-            fireEvent( WikiPageEvent.PAGE_REQUESTED, pagename );
+    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REQUESTED,
+    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
             super.doFilter( request, responseWrapper, chain );
 
             // The response is now complete. Lets replace the markers now.
@@ -152,8 +158,8 @@ public class WikiJSPFilter extends WikiServletFilter {
                 }
 
                 // fire PAGE_DELIVERED event
-                fireEvent( WikiPageEvent.PAGE_DELIVERED, pagename );
-
+        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELIVERED,
+        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
             } finally {
                 w.exitState();
             }
@@ -322,22 +328,6 @@ public class WikiJSPFilter extends WikiServletFilter {
              }
         }
 
-    }
-
-    // events processing .......................................................
-
-    /**
-     *  Fires a WikiPageEvent of the provided type and page name
-     *  to all registered listeners of the current Engine.
-     *
-     * @see org.apache.wiki.api.event.WikiPageEvent
-     * @param type       the event type to be fired
-     * @param pagename   the wiki page name as a String
-     */
-    protected final void fireEvent( final int type, final String pagename ) {
-        if( WikiEventManager.isListening( m_engine ) ) {
-            WikiEventManager.fireEvent( m_engine, new WikiPageEvent( m_engine, type, pagename ) );
-        }
     }
 
 }
