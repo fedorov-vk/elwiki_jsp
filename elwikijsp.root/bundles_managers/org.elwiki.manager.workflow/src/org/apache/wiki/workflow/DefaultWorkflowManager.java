@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
@@ -84,8 +85,12 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 	static final String SERIALIZATION_FILE = "wkflmgr.ser";
 
 	DecisionQueue m_queue = new DecisionQueue();
+
 	Set<Workflow> m_workflows;
+
+	/** Stores: <approve action, UID of approver>. */
 	final Map<String, Principal> m_approvers;
+
 	List<Workflow> m_completed;
 
 	/**
@@ -122,26 +127,20 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 	 */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-
-		/*:FVK: TODO: !!!
-		// Identify the workflows requiring approvals
-		for( final Object o : props.keySet() ) {
-		    final String prop = ( String )o;
-		    if( prop.startsWith( PROPERTY_APPROVER_PREFIX ) ) {
-		        // For the key, everything after the prefix is the workflow name
-		        final String key = prop.substring( PROPERTY_APPROVER_PREFIX.length() );
-		        if( key.length() > 0 ) {
-		            // Only use non-null/non-blank approvers
-		            final String approver = props.getProperty( prop );
-		            if( approver != null && approver.length() > 0 ) {
-		                m_approvers.put( key, new UnresolvedPrincipal( approver ) );
-		            }
-		        }
-		    }
-		}
-		*/
-
+		IPreferenceStore prefsApprovers = wikiConfiguration.getApprovers();
+		Consumer<String> optionReader = new Consumer<String>() {
+			@Override
+			public void accept(String action) {
+				String approver = prefsApprovers.getString(action);
+				if (approver != null && approver.length() > 0) {
+					m_approvers.put(action, new UnresolvedPrincipal(approver));
+				}
+			}
+		};
+		// Get the workflows requiring approvals
+		optionReader.accept(WorkflowManager.WF_WP_SAVE_APPROVER);
+		optionReader.accept(WorkflowManager.WF_UP_CREATE_SAVE_APPROVER);
+		
 		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
 		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
 	}

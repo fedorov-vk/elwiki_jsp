@@ -67,6 +67,7 @@ import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
+import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.WikiPermission;
 import org.osgi.framework.BundleContext;
@@ -424,39 +425,37 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
         }
 	}
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public void startUserProfileCreationWorkflow(Session session, UserProfile profile) throws WikiException {
-		final IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
-        final Principal submitter = session.getUserPrincipal();
-        final Step completionTask = getTasksManager().buildSaveUserProfileTask( m_engine, session.getLocale() );
+		IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
+		Principal submitter = session.getUserPrincipal();
+		Step completionTask = getTasksManager().buildSaveUserProfileTask(m_engine, session.getLocale());
 
-        // Add user profile attribute as Facts for the approver (if required)
-        final boolean hasEmail = profile.getEmail() != null;
-        final Fact[] facts = new Fact[ hasEmail ? 4 : 3 ];
-        facts[ 0 ] = new Fact( WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_FULL_NAME, profile.getFullname() );
-        facts[ 1 ] = new Fact( WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_LOGIN_NAME, profile.getLoginName() );
-        facts[ 2 ] = new Fact( WorkflowManager.WF_UP_CREATE_SAVE_FACT_SUBMITTER, submitter.getName() );
-        if ( hasEmail ) {
-            facts[ 3 ] = new Fact( WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_EMAIL, profile.getEmail() );
-        }
-        final Workflow workflow = builder.buildApprovalWorkflow( submitter,
-                                                                 WorkflowManager.WF_UP_CREATE_SAVE_APPROVER,
-                                                                 null,
-                                                                 WorkflowManager.WF_UP_CREATE_SAVE_DECISION_MESSAGE_KEY,
-                                                                 facts,
-                                                                 completionTask,
-                                                                 null );
+		// Add user profile attribute as Facts for the approver (if required)
+		boolean hasEmail = profile.getEmail() != null;
+		Fact[] facts = new Fact[hasEmail ? 4 : 3];
+		facts[0] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_FULL_NAME, profile.getFullname());
+		facts[1] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_LOGIN_NAME, profile.getLoginName());
+		facts[2] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_SUBMITTER, submitter.getName());
+		if (hasEmail) {
+			facts[3] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_EMAIL, profile.getEmail());
+		}
+		Workflow workflow = builder.buildApprovalWorkflow(submitter, //
+				WorkflowManager.WF_UP_CREATE_SAVE_APPROVER, //
+				null, //
+				WorkflowManager.WF_UP_CREATE_SAVE_DECISION_MESSAGE_KEY, //
+				facts, completionTask, null);
 
-        workflow.setAttribute( WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE, profile );
-        workflow.start();
+		workflow.setAttribute(WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE, profile);
+		workflow.start();
 
-        final boolean approvalRequired = workflow.getCurrentStep() instanceof Decision;
+		boolean approvalRequired = workflow.getCurrentStep() instanceof Decision;
 
-        // If the profile requires approval, redirect user to message page
-        if ( approvalRequired ) {
-            throw new DecisionRequiredException( "This profile must be approved before it becomes active" );
-        }
+		// If the profile requires approval, redirect user to message page
+		if (approvalRequired) {
+			throw new DecisionRequiredException("This profile must be approved before it becomes active");
+		}
 	}
 
 	/**
@@ -634,12 +633,11 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	
 	@Override
 	public Principal findRole(String roleName) {
-		/*try {
-		Group group = getGroup(roleName);
-		return group.getPrincipal();
-	} catch (NoSuchPrincipalException e) {
-		return null;
-	}*/
+		String uid = getGroupUid(roleName);
+		if (uid != null) {
+			return new GroupPrincipal(roleName, uid);
+		}
+
 		return null;
 	}
 

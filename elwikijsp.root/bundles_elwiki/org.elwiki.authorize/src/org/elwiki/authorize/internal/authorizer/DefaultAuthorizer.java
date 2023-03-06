@@ -27,10 +27,8 @@ public class DefaultAuthorizer implements Authorizer {
 
 	@Override
 	public Principal findRole(String role) {
-		// TODO Auto-generated method stub
-		/*:FVK: следующий код - это заглушка, workaround */
 		Principal principal = this.accountManager.findRole(role);
-		//gp = new GroupPrincipal("Admin", uid);
+		//--OLDCODE-- gp = new GroupPrincipal("Admin", uid);
 
 		return principal;
 	}

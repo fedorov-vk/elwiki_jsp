@@ -79,7 +79,8 @@ public class WorkflowCmdCode extends CmdCode {
 		}
 
 		// Stash the current decisions/workflows
-		httpRequest.setAttribute("decisions", dq.getActorDecisions(wikiSession));
+		Collection<Decision> workflows = dq.getActorDecisions(wikiSession);
+		httpRequest.setAttribute("decisions", workflows);
 		httpRequest.setAttribute("workflows", workflowManager.getOwnerWorkflows(wikiSession));
 		httpRequest.setAttribute("wikiSession", wikiSession);
 

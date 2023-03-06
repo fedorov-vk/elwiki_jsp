@@ -38,9 +38,10 @@ public class SimpleDecision extends Decision {
      * @param workflowContext the parent workflow context to set
      * @param messageKey the message key that describes the Decision, which will be presented in the UI
      * @param actor the Principal (<em>e.g.</em>, WikiPrincipal, GroupPrincipal, Role) who will decide
+     * @param submitter TODO
      */
-    public SimpleDecision( final int workflowId, final Map< String, Serializable > workflowContext, final String messageKey, final Principal actor ) {
-        super( workflowId, workflowContext, messageKey, actor, Outcome.DECISION_APPROVE );
+    public SimpleDecision( int workflowId, Map< String, Serializable > workflowContext, String messageKey, Principal actor, Principal submitter ) {
+        super( workflowId, workflowContext, messageKey, actor, submitter, Outcome.DECISION_APPROVE );
 
         // Add the other default outcomes
         super.addSuccessor( Outcome.DECISION_DENY, null );

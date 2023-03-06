@@ -219,19 +219,18 @@ public class Workflow implements Serializable {
      * @param owner the Principal who owns the Workflow. Typically, this is the user who created and submitted it
      */
     public Workflow( final String messageKey, final Principal owner ) {
-        m_attributes = new ConcurrentHashMap<>();
-        m_currentStep = null;
-        m_history = new LinkedList<>();
-        m_id = idsCounter.getAndIncrement();
-        m_key = messageKey;
-        m_messageArgs = new ArrayList<>();
-        m_owner = owner;
-        m_started = false;
-        m_state = CREATED;
+		m_attributes = new ConcurrentHashMap<>();
+		m_currentStep = null;
+		m_history = new LinkedList<>();
+		m_id = idsCounter.getAndIncrement();
+		m_key = messageKey;
+		m_messageArgs = new ArrayList<>();
+		m_owner = owner;
+		m_started = false;
+		m_state = CREATED;
 
-        ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED,
+		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.CREATED );//:FVK:deprecated.
     }
 
     /**
@@ -254,7 +253,6 @@ public class Workflow implements Serializable {
 			if (m_currentStep instanceof Decision) {
 				ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
 						Map.of(WikiWorkflowEventTopic.PROPERTY_STEP, m_currentStep)));
-				//WikiEventEmitter.fireWorkflowEvent(m_currentStep, WorkflowEvent.DQ_REMOVAL);//:FVK:deprecated.
 			}
 			m_currentStep.setOutcome(Outcome.STEP_ABORT);
 			m_history.addLast(m_currentStep);

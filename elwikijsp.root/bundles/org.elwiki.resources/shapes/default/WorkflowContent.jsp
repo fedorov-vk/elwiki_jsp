@@ -60,27 +60,27 @@
         <tr>
 
           <%-- Workflow ID --%>
-          <td>${decision.workflow.id}</td>
+          <td rowspan=2><span class="badge" style="background:SlateGray;">${decision.workflowId}</span></td>
 
           <%-- Name of item --%>
-          <td>
+          <td style="background:AliceBlue;">
             <fmt:message key="${decision.messageKey}">
-              <c:forEach var="messageArg" items="${decision.messageArguments}">
+              <c:forEach var="messageArg" items="${decision.facts}">
                 <fmt:param>${messageArg}</fmt:param>
               </c:forEach>
             </fmt:message>
           </td>
 
-          <%-- Requester --%>
-          <td>${decision.owner.name}</td>
+          <%-- Requester: decision.actor.name --%>
+          <td style="background:AliceBlue;">${decision.submitter.name}</td>
 
           <%-- When did the actor start this step? --%>
-          <td>
+          <td style="background:AliceBlue;">
             <fmt:formatDate value="${decision.startTime}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
 		  </td>
 
           <%-- Possible actions (outcomes) --%>
-          <td class="nowrap">
+          <td class="nowrap" style="background:AliceBlue;">
             <form action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
                       id="decision.${decision.id}"
                   method="POST" accept-charset="UTF-8">
@@ -98,12 +98,15 @@
 
         <c:if test="${!empty decision.facts}">
         <tr class="workflow-details">
-          <td colspan="5">
-                <c:forEach var="fact" items="${decision.facts}">
-                  <p><fmt:message key="${fact.messageKey}" /></p>
-                    <pre><c:out escapeXml="false" value="${fn:trim(fact.value)}" /></pre>
-                    <%-- may contain a full dump for a version diff,  ico save-wiki-page   approval flow --%>
-                </c:forEach>
+          <td colspan=4>
+          	<dl class="page-content">
+            <c:forEach var="fact" items="${decision.facts}">
+              <dt style="font-weight:normal; font-family:monospace; text-decoration:underline;">
+                <fmt:message key="${fact.messageKey}" /></dt>
+              <dd style="margin-left:0;"><pre><c:out escapeXml="false" value="${fn:trim(fact.value)}" /></pre></dd>
+                <%-- may contain a full dump for a version diff,  ico save-wiki-page   approval flow --%>
+            </c:forEach>
+            </dl>
           </td>
         </tr>
         </c:if>
@@ -128,21 +131,21 @@
   <p id="workflow-owner-instructions"><fmt:message key="workflow.owner.instructions"/></p>
 
   <table class="table" aria-describedby="workflow-owner-instructions">
-    <thead>
+    <tr>
       <th scope="col"><fmt:message key="workflow.id"/></th>
       <th scope="col"><fmt:message key="workflow.item"/></th>
       <th scope="col"><fmt:message key="workflow.actor"/></th>
       <th scope="col"><fmt:message key="workflow.startTime"/></th>
       <th scope="col"><fmt:message key="workflow.actions"/></th>
-    </thead>
+    </tr>
     <tbody>
       <c:forEach var="workflow" items="${workflows}">
         <tr>
           <%-- Workflow ID --%>
-          <td>${workflow.id}</td>
+          <td><span class="badge" style="background:SlateGray;">${workflow.id}</span></td>
 
           <%-- Name of item --%>
-          <td>
+          <td style="background:AliceBlue;">
             <fmt:message key="${workflow.messageKey}">
               <c:forEach var="messageArg" items="${workflow.messageArguments}">
                 <fmt:param><c:out value="${messageArg}"/></fmt:param>
@@ -151,15 +154,15 @@
           </td >
 
           <%-- Current actor --%>
-          <td>${workflow.currentActor.name}</td>
+          <td style="background:AliceBlue;">${workflow.currentActor.name}</td>
 
           <%-- When did the actor start this step? --%>
-          <td>
+          <td style="background:AliceBlue;">
             <fmt:formatDate value="${workflow.currentStep.startTime}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
           </td>
 
           <%-- Actions --%>
-          <td>
+          <td style="background:AliceBlue;">
             <form id="workflow.${workflow.id}"
               action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
               method="POST" accept-charset="UTF-8">

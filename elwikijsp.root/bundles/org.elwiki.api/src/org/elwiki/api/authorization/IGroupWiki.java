@@ -1,37 +1,16 @@
 package org.elwiki.api.authorization;
 
-import java.lang.reflect.Constructor;
-import java.security.Permission;
-import java.security.Permissions;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.elwiki.data.authorize.GroupPrincipal;
-import org.osgi.service.permissionadmin.PermissionInfo;
 
 public interface IGroupWiki extends Comparable<IGroupWiki> {
 
 	/**
-	 * Returns <code>true</code> if a supplied Group is a built-in Group: {@link #ALL},
-	 * {@link #ANONYMOUS}, {@link #ASSERTED}, or {@link #AUTHENTICATED}.
-	 * 
-	 * @param group
-	 *             the role to check
-	 * @return the result of the check
-	 */
-	public static boolean isBuiltInGroup(GroupPrincipal group) {
-		String uid = group.getUid();
-		return GroupPrincipal.ALL_GROUP_UID.equals(uid) || GroupPrincipal.ANONYMOUS_GROUP_UID.equals(uid)
-				|| GroupPrincipal.ASSERTED_GROUP_UID.equals(uid) || GroupPrincipal.AUTHENTICATED_GROUP_UID.equals(uid);
-	}
-	
-	/**
 	 * Adds a Principal to the group.
 	 * 
-	 * @param user
-	 *            the principal to add
+	 * @param user the principal to add
 	 * @return <code>true</code> if the operation was successful
 	 */
 	boolean add(Principal user);
@@ -44,8 +23,7 @@ public interface IGroupWiki extends Comparable<IGroupWiki> {
 	/**
 	 * Two DefaultGroups are equal if they contain identical member Principals and have the same name.
 	 * 
-	 * @param o
-	 *            the object to compare
+	 * @param o the object to compare
 	 * @return the comparison
 	 */
 	boolean equals(Object o);
@@ -115,11 +93,10 @@ public interface IGroupWiki extends Comparable<IGroupWiki> {
 
 	/**
 	 * Returns <code>true</code> if a Principal is a member of the group. Specifically, the Principal's
-	 * <code>getName()</code> method must return the same value as one of the Principals in the group member
-	 * list. The Principal's type does <em>not</em> need to match.
+	 * <code>getName()</code> method must return the same value as one of the Principals in the group
+	 * member list. The Principal's type does <em>not</em> need to match.
 	 * 
-	 * @param principal
-	 *            the principal about whom membeship status is sought
+	 * @param principal the principal about whom membeship status is sought
 	 * @return the result of the operation
 	 */
 	boolean isMember(Principal principal);
@@ -137,12 +114,11 @@ public interface IGroupWiki extends Comparable<IGroupWiki> {
 	 * @return Names the members of group.
 	 */
 	String[] getMemberNames();
-	
+
 	/**
 	 * Removes a Principal from the group.
 	 * 
-	 * @param user
-	 *            the principal to remove
+	 * @param user the principal to remove
 	 * @return <code>true</code> if the operation was successful
 	 */
 	boolean remove(Principal user1);
@@ -150,32 +126,28 @@ public interface IGroupWiki extends Comparable<IGroupWiki> {
 	/**
 	 * Sets the created date.
 	 * 
-	 * @param date
-	 *            the creation date
+	 * @param date the creation date
 	 */
 	void setCreated(Date date);
 
 	/**
 	 * Sets the creator of this Group.
 	 * 
-	 * @param creator
-	 *            the creator
+	 * @param creator the creator
 	 */
 	void setCreator(String creator);
 
 	/**
 	 * Sets the last-modified date
 	 * 
-	 * @param date
-	 *            the last-modified date
+	 * @param date the last-modified date
 	 */
 	void setLastModified(Date date);
 
 	/**
 	 * Sets the name of the user who last modified this group.
 	 * 
-	 * @param modifier
-	 *            the modifier
+	 * @param modifier the modifier
 	 */
 	void setModifier(String modifier);
 

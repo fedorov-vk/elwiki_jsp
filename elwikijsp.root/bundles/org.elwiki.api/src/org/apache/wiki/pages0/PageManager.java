@@ -108,16 +108,17 @@ public interface PageManager {
         return getPureText( page.getName(), page.getVersion() );
     }
 
-    /**
-     *  Returns the un-HTMLized text of the given version of a page. This method also replaces the &lt; and &amp; -characters with
-     *  their respective HTML entities, thus making it suitable for inclusion on an HTML page.  If you want to have the page text
-     *  without any conversions, use {@link #getPureText(String, int)}.
-     *
-     * @param page WikiName of the page to fetch
-     * @param version  Version of the page to fetch
-     * @return WikiText.
-     */
-    String getText( WikiPage page, int version );
+	/**
+	 * Returns the un-HTMLized text of the given version of a page. This method also replaces the &lt;
+	 * and &amp; -characters with their respective HTML entities, thus making it suitable for inclusion
+	 * on an HTML page. If you want to have the page text without any conversions, use
+	 * {@link #getPureText(String, int)}.
+	 *
+	 * @param page    WikiName of the page to fetch
+	 * @param version Version of the page to fetch
+	 * @return WikiText.
+	 */
+	String getText(WikiPage page, int version);
 
     String getText( String pageName, int version );
 
@@ -148,22 +149,24 @@ public interface PageManager {
         return getText( page, page.getVersion() );
     }
 
-    /**
-     *  Writes the WikiText of a page into the page repository. If the <code>jspwiki.properties</code> file contains
-     *  the property <code>jspwiki.approver.workflow.saveWikiPage</code> and its value resolves to a valid user,
-     *  {@link IGroupWiki} or {@link org.elwiki.data.authorize.GroupPrincipal}, this method will
-     *  place a {@link org.apache.wiki.workflow.Decision} in the approver's workflow inbox and throw a
-     *  {@link org.apache.wiki.workflow.DecisionRequiredException}. If the submitting user is authenticated and the
-     *  page save is rejected, a notification will be placed in the user's decision queue.
-     *
-     *  @since 2.1.28, moved to PageManager on 2.11.0
-     *  @param context The current WikiContext
-     *  @param text    The Wiki markup for the page.
-     *  @throws WikiException if the save operation encounters an error during the save operation. If the page-save
-     *  operation requires approval, the exception will be of type {@link org.apache.wiki.workflow.DecisionRequiredException}.
-     *  Individual PageFilters, such as the {@link org.apache.wiki.filters.filters.SpamFilter} may also throw a
-     *  {@link org.apache.wiki.api.exceptions.RedirectException}.
-     */
+	/**
+	 * Writes the WikiText of a page into the page repository. If the <code>jspwiki.properties</code>
+	 * file contains the property <code>jspwiki.approver.workflow.saveWikiPage</code> and its value
+	 * resolves to a valid user, {@link IGroupWiki} or {@link org.elwiki.data.authorize.GroupPrincipal},
+	 * this method will place a {@link org.apache.wiki.workflow.Decision} in the approver's workflow
+	 * inbox and throw a {@link org.apache.wiki.workflow.DecisionRequiredException}. If the submitting
+	 * user is authenticated and the page save is rejected, a notification will be placed in the user's
+	 * decision queue.
+	 *
+	 * @since 2.1.28, moved to PageManager on 2.11.0
+	 * @param context The current WikiContext
+	 * @param text    The Wiki markup for the page.
+	 * @throws WikiException if the save operation encounters an error during the save operation. If the
+	 *                       page-save operation requires approval, the exception will be of type
+	 *                       {@link org.apache.wiki.workflow.DecisionRequiredException}. Individual
+	 *                       PageFilters, such as the {@link org.apache.wiki.filters.filters.SpamFilter}
+	 *                       may also throw a {@link org.apache.wiki.api.exceptions.RedirectException}.
+	 */
 	void saveText(WikiContext context, String text, String author, String changenote) throws WikiException;
 
     /**

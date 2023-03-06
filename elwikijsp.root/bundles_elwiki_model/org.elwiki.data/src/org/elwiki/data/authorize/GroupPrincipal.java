@@ -20,12 +20,11 @@ package org.elwiki.data.authorize;
 
 /**
  * Immutable Principal that represents a Group. GroupPrincipals are injected into a Subject's
- * principal list at the time of authentication (login), and serve as proxies for Group objects
- * for the purposes of making Java 2 security policy decisions. We add GroupPrincipals instead
- * of the actual Groups because calling classes should never be able to obtain a mutable object
- * (Group memberships can be changed by callers). Administrators who wish to grant privileges to
- * specific wiki groups via the security policy file should always specify principals of type
- * GroupPrincipal.
+ * principal list at the time of authentication (login), and serve as proxies for Group objects for
+ * the purposes of making Java 2 security policy decisions. We add GroupPrincipals instead of the
+ * actual Groups because calling classes should never be able to obtain a mutable object (Group
+ * memberships can be changed by callers). Administrators who wish to grant privileges to specific
+ * wiki groups via the security policy file should always specify principals of type GroupPrincipal.
  * 
  * @see org.elwiki.api.authorization.Group
  * @since 2.3.79
@@ -56,7 +55,7 @@ public final class GroupPrincipal extends Aprincipal implements Comparable<Group
 	 * Constructs a new GroupPrincipal object with a supplied name.
 	 *
 	 * @param groupName the wiki group; cannot be <code>null</code>
-	 * @param groupUid the UID of group; cannot be <code>null</code>
+	 * @param groupUid  the UID of group; cannot be <code>null</code>
 	 */
 	public GroupPrincipal(String groupName, String groupUid) throws IllegalArgumentException {
 		super(groupName, groupUid);
@@ -72,25 +71,30 @@ public final class GroupPrincipal extends Aprincipal implements Comparable<Group
 	 * Returns <code>true</code> if a supplied Group is a built-in Group: {@link #ALL},
 	 * {@link #ANONYMOUS}, {@link #ASSERTED}, or {@link #AUTHENTICATED}.
 	 * 
-	 * @param group
-	 *             the role to check
+	 * @param group the role to check
 	 * @return the result of the check
 	 */
 	public static boolean isBuiltInGroup(GroupPrincipal group) {
-		return group.equals(ALL) || group.equals(ANONYMOUS) || group.equals(ASSERTED) || group.equals(AUTHENTICATED);
+		String uid = group.getUid();
+		return GroupPrincipal.ALL_GROUP_UID.equals(uid) //
+				|| GroupPrincipal.ANONYMOUS_GROUP_UID.equals(uid) //
+				|| GroupPrincipal.ASSERTED_GROUP_UID.equals(uid) //
+				|| GroupPrincipal.AUTHENTICATED_GROUP_UID.equals(uid);
 	}
 
 	/**
-	 * Two GroupPrincipals are equal if their names are equal.
+	 * Two GroupPrincipals are equal if their UIDs are equal.
 	 * 
 	 * @param obj the object to compare
-	 * @return <code>true</code> if both objects are of type GroupPrincipal and have identical names
+	 * @return <code>true</code> if both objects are of type GroupPrincipal and have identical UIDs
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof GroupPrincipal groupPrincipal) {
-			return this.getName().equals(groupPrincipal.getName());
+			String thisUid = this.getUid();
+			String objUid = groupPrincipal.getUid();
+			return thisUid.equals(objUid);
 		}
 		return false;
 	}

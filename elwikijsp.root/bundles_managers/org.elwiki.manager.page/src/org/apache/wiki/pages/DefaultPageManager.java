@@ -424,7 +424,6 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
     /**
      * {@inheritDoc}
-     * @see org.apache.wiki.pages0.PageManager#getText(WikiPage, int)
      */
     @Override
     public String getText(WikiPage page, int version) {
@@ -448,17 +447,17 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
     }
 
 	@Override
-    public void saveText( final WikiContext context, final String text, String author, String changenote ) throws WikiException {
+	public void saveText(WikiContext context, String text, String author, String changenote) throws WikiException {
         // Check if page data actually changed; bail if not
-        final WikiPage page = context.getPage();
-        final String oldText = getPureText( page );
-        final String proposedText = TextUtil.normalizePostData( text );
+        WikiPage page = context.getPage();
+        String oldText = getPureText( page );
+        String proposedText = TextUtil.normalizePostData( text );
         if ( oldText != null && oldText.equals( proposedText ) ) {
             return;
         }
 
         // Check if creation of empty pages is allowed; bail if not
-		final boolean allowEmpty = TextUtil.getBooleanProperty(
+		boolean allowEmpty = TextUtil.getBooleanProperty(
 				this.wikiConfiguration.getWikiPreferences(),
 				Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
 				false);
@@ -469,26 +468,24 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         // Create approval workflow for page save; add the diffed, proposed and old text versions as
         // Facts for the approver (if approval is required). If submitter is authenticated, any reject
         // messages will appear in his/her workflow inbox.
-        final IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
-        final Principal submitter = context.getCurrentUser();
-        final Step prepTask = this.tasksManager.buildPreSaveWikiPageTask( context, proposedText );
-        final Step completionTask = this.tasksManager.buildSaveWikiPageTask( context, author, changenote );
-        final String diffText = this.differenceManager.makeDiff( context, oldText, proposedText );
-        final boolean isAuthenticated = context.getWikiSession().isAuthenticated();
-        final Fact[] facts = new Fact[ 5 ];
+        IWorkflowBuilder builder = workflowManager.getWorkflowBuilder();
+        Principal submitter = context.getCurrentUser();
+        Step prepTask = this.tasksManager.buildPreSaveWikiPageTask( context, proposedText );
+        Step completionTask = this.tasksManager.buildSaveWikiPageTask( context, author, changenote );
+        String diffText = this.differenceManager.makeDiff( context, oldText, proposedText );
+        boolean isAuthenticated = context.getWikiSession().isAuthenticated();
+        Fact[] facts = new Fact[ 5 ];
         facts[ 0 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_PAGE_NAME, page.getName() );
         facts[ 1 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_DIFF_TEXT, diffText );
         facts[ 2 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, proposedText );
         facts[ 3 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_CURRENT_TEXT, oldText);
         facts[ 4 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_IS_AUTHENTICATED, isAuthenticated );
-        final String rejectKey = isAuthenticated ? WorkflowManager.WF_WP_SAVE_REJECT_MESSAGE_KEY : null;
-        final Workflow workflow = builder.buildApprovalWorkflow( submitter,
-                                                                 WorkflowManager.WF_WP_SAVE_APPROVER,
-                                                                 prepTask,
-                                                                 WorkflowManager.WF_WP_SAVE_DECISION_MESSAGE_KEY,
-                                                                 facts,
-                                                                 completionTask,
-                                                                 rejectKey );
+        String rejectKey = isAuthenticated ? WorkflowManager.WF_WP_SAVE_REJECT_MESSAGE_KEY : null;
+		Workflow workflow = builder.buildApprovalWorkflow(submitter, //
+				WorkflowManager.WF_WP_SAVE_APPROVER, //
+				prepTask, //
+				WorkflowManager.WF_WP_SAVE_DECISION_MESSAGE_KEY, //
+				facts, completionTask, rejectKey);
         workflow.start();
 
         // Let callers know if the page-save requires approval

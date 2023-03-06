@@ -55,6 +55,8 @@ public abstract class Decision extends AbstractStep {
 
     private Principal m_actor;
 
+    private Principal m_submitter;
+
     private int m_id;
 
     private final Outcome m_defaultOutcome;
@@ -68,11 +70,13 @@ public abstract class Decision extends AbstractStep {
      * @param workflowContext the parent workflow context to set
      * @param messageKey the i18n message key that represents the message the actor will see
      * @param actor the Principal (<em>e.g.</em>, a WikiPrincipal, Role, GroupPrincipal) who is required to select an appropriate Outcome
+     * @param submitter TODO
      * @param defaultOutcome the Outcome that the user interface will recommend as the default choice
      */
-    public Decision( final int workflowId, final Map< String, Serializable > workflowContext, final String messageKey, final Principal actor, final Outcome defaultOutcome ) {
+    public Decision( final int workflowId, final Map< String, Serializable > workflowContext, final String messageKey, final Principal actor, Principal submitter, final Outcome defaultOutcome ) {
         super( workflowId, workflowContext, messageKey );
         m_actor = actor;
+        m_submitter = submitter;
         m_defaultOutcome = defaultOutcome;
         m_facts = new ArrayList<>();
         addSuccessor( defaultOutcome, null );
@@ -110,7 +114,6 @@ public abstract class Decision extends AbstractStep {
         super.setOutcome( outcome );
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.DQ_REMOVAL );//:FVK:deprecated.
     }
 
     /**
@@ -135,12 +138,20 @@ public abstract class Decision extends AbstractStep {
         return Outcome.STEP_CONTINUE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Principal getActor() {
-        return m_actor;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final Principal getActor() {
+		return m_actor;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final Principal getSubmitter() {
+		return m_submitter;
+	}
 
     /**
      * Returns the default or suggested outcome, which must be one of those returned by {@link #getAvailableOutcomes()}. This method is

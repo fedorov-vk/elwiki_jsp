@@ -345,7 +345,7 @@
       </li>
 
       <%-- create page --%>
-      <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
+      <li class="<wiki:Permission permission='!createPages'>disabled</wiki:Permission>">
         <wiki:Link context="<%=WikiContext.PAGE_CREATE%>" pageId="${pageId}" >
           <wiki:Param name="redirect" value="${pageId}"/>
           <span style="float:left; width: 23px; margin-left:-5px;">🆕</span><fmt:message key='actions.page.create'/>
@@ -361,7 +361,7 @@
                 type="submit" name="deletepage" id="cmdDeletePage"
                style="margin-left:-5px; width:100%; padding:3px 20px; text-align:left; border-style: none;" <%-- :FVK: workaround --%>
           data-modal="+ .modal"
-               value="❌&nbsp;&nbsp;<fmt:message key='actions.page.delete'/>" />
+               value="❌&nbsp;<fmt:message key='actions.page.delete'/>" />
         <div class="modal"><fmt:message key='info.confirmdelete'/></div>
       </form>
       </wiki:PageExists>

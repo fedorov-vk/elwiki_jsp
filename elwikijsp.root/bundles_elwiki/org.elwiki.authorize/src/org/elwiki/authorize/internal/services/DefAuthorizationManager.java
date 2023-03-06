@@ -613,7 +613,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	@Override
 	public Principal resolvePrincipal(String groupName) {
 		GroupPrincipal role;
-		Principal principal;
+		Principal principal = null;
 
 		// Check built-in Roles first
 		String uid = this.accountManager.getGroupUid(groupName); //:FVK: workaround - get group by its name, for take group UID

@@ -94,6 +94,8 @@ public interface IWikiConfiguration {
 	 */
 	public Collection<String> getAllInlinedImagePatterns();
 
+	IPreferenceStore getApprovers();
+
 	public String getInterWikiURL(String extWiki);
 
 	/**
@@ -153,6 +155,7 @@ public interface IWikiConfiguration {
      *  @return The Base URL.
      */
     String getBaseURL();
-    
+
     void setBaseURL(String baseURL);
+
 }

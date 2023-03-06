@@ -76,8 +76,13 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** Workbench's workspace area. */
 	private final IPath pathWorkspace;
 
+	/** Wiki configuration preferences store. */
 	private final IPreferenceStore prefs;
 
+	/** Approvers preferences store. */
+	private final IPreferenceStore prefsApprovers;
+
+	/** InterWiki references preferences store. */
 	private final IPreferenceStore prefsInterWikiRef;
 
 	/**
@@ -101,6 +106,8 @@ public class WikiConfiguration implements IWikiConfiguration {
 		}
 
 		this.prefs = new ScopedPreferenceStore(InstanceScope.INSTANCE, cfgBundleName);
+		this.prefsApprovers = new ScopedPreferenceStore(InstanceScope.INSTANCE,
+				cfgBundleName + "/" + IWikiPreferences.NODE_APPROVERS_REFERENCES);
 		this.prefsInterWikiRef = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				cfgBundleName + "/" + IWikiPreferences.NODE_INTERWIKI_REFERENCES);
 
@@ -317,6 +324,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	 * @throws BackingStoreException
 	 * @throws IllegalStateException
 	 */
+	@Deprecated
 	private void preferencesCopy(Preferences srcPrefs, Preferences dstPrefs)
 			throws BackingStoreException, IllegalStateException {
 		String[] prefsKeys = srcPrefs.keys();
@@ -385,6 +393,11 @@ public class WikiConfiguration implements IWikiConfiguration {
 	public Collection<String> getAllInlinedImagePatterns() {
 		String patternsSeq = this.prefs.getString(IWikiPreferences.NODE_INLINE_PATTERNS);
 		return Arrays.asList(patternsSeq.split(","));
+	}
+
+	@Override
+	public IPreferenceStore getApprovers() {
+		return this.prefsApprovers;
 	}
 
 	@Override

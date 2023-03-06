@@ -10,6 +10,8 @@ public interface IWikiPreferences {
 	/** Property node for set of inline image patterns. Current value - {@value} */
 	String NODE_INLINE_PATTERNS = "node.translatorReader.inlinePatterns";
 
+	String NODE_APPROVERS_REFERENCES = "node.approvers";
+
 	/** Property node for set of any interwiki references. Current value - {@value} */
 	String NODE_INTERWIKI_REFERENCES = "node.interWikiRefs";
 
