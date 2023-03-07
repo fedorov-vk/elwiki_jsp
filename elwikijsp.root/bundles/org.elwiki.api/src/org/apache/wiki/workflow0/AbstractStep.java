@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @since 2.5
  */
-public abstract class AbstractStep implements Step {
+abstract class AbstractStep implements Step {
 
     private static final long serialVersionUID = 8635678679349653768L;
 
@@ -116,11 +116,6 @@ public abstract class AbstractStep implements Step {
     public final List< String > getErrors() {
         return Collections.unmodifiableList( m_errors );
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public abstract Outcome execute() throws WikiException;
 
     /**
      * {@inheritDoc}
@@ -222,6 +217,7 @@ public abstract class AbstractStep implements Step {
         this.workflowContext = workflowContext;
     }
 
+    @Override
     public int getWorkflowId() {
         return workflowId;
     }

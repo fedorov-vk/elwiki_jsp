@@ -43,8 +43,8 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionQueue;
+import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
@@ -86,9 +86,10 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 
 	DecisionQueue m_queue = new DecisionQueue();
 
+	/** A set of Wiki workflows. */
 	Set<Workflow> m_workflows;
 
-	/** Stores: <approve action, UID of approver>. */
+	/** A set of approver roles: &lt;approver key, Principal of approver&gt;. */
 	final Map<String, Principal> m_approvers;
 
 	List<Workflow> m_completed;
@@ -230,38 +231,41 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean requiresApproval( final String messageKey ) {
-        return  m_approvers.containsKey( messageKey );
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean requiresApproval(String messageKey) {
+		return m_approvers.containsKey(messageKey);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Principal getApprover( final String messageKey ) throws WikiException {
-        Principal approver = m_approvers.get( messageKey );
-        if ( approver == null ) {
-            throw new WikiException( "Workflow '" + messageKey + "' does not require approval." );
-        }
+	/**
+	 * {@inheritDoc}<br/>
+	 * This particular implementation returns the GroupPrincipal according to message key, or thrown
+	 * WikiException if specified group is not resolved.
+	 */
+	@Override
+	public Principal getApprover(String messageKey) throws WikiException {
+		Principal approversGroup = m_approvers.get(messageKey);
+		if (approversGroup == null) {
+			throw new WikiException("Workflow '" + messageKey + "' does not require approval.");
+		}
 
-        // Try to resolve UnresolvedPrincipals
-        if ( approver instanceof UnresolvedPrincipal ) {
-            final String name = approver.getName();
-            approver = this.authorizationManager.resolvePrincipal( name );
+		// Try to resolve UnresolvedPrincipals
+		if (approversGroup instanceof UnresolvedPrincipal) {
+			String name = approversGroup.getName();
+			approversGroup = this.authorizationManager.resolvePrincipal(name);
 
-            // If still unresolved, throw exception; otherwise, freshen our cache
-            if ( approver instanceof UnresolvedPrincipal ) {
-                throw new WikiException( "Workflow approver '" + name + "' cannot not be resolved." );
-            }
+			// If still unresolved, throw exception; otherwise, freshen our cache
+			if (approversGroup instanceof UnresolvedPrincipal) {
+				throw new WikiException("Workflow approver '" + name + "' cannot not be resolved.");
+			}
 
-            m_approvers.put( messageKey, approver );
-        }
-        return approver;
-    }
+			m_approvers.put(messageKey, approversGroup);
+		}
+
+		return approversGroup;
+	}
 
     /**
      * Protected helper method that returns the associated Engine

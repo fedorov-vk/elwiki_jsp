@@ -27,7 +27,7 @@ import java.util.Map;
  * Decision subclass that includes two available Outcomes: {@link Outcome#DECISION_APPROVE} or {@link Outcome#DECISION_DENY}.
  * The Decision is reassignable, and the default Outcome is {@link Outcome#DECISION_APPROVE}.
  */
-public class SimpleDecision extends Decision {
+public class SimpleDecision extends AbstractDecision {
 
     private static final long serialVersionUID = 8192213077644617341L;
 

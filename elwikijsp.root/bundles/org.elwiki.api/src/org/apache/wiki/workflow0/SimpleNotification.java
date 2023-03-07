@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @since 2.5
  */
-public final class SimpleNotification extends Decision {
+public final class SimpleNotification extends AbstractDecision {
 
     private static final long serialVersionUID = -3392947495169819527L;
 

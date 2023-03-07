@@ -94,8 +94,7 @@ public interface WorkflowManager {
 
     /**
      * Looks up and resolves the actor who approves a Decision for a particular Workflow, based on the Workflow's message key.
-     * If not found, or if Principal is Unresolved, throws WikiException. This particular implementation always returns the
-     * GroupPrincipal <code>Admin</code>
+     * If not found, or if Principal is Unresolved, throws WikiException.
      *
      * @param messageKey the Decision's message key
      * @return the actor who approves Decisions

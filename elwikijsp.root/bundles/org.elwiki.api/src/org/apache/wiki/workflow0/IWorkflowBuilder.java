@@ -33,9 +33,8 @@ public interface IWorkflowBuilder {
 	 * 
 	 * @param submitter           the user submitting the request
 	 * @param workflowApproverKey the key that names the user, Group or Role who must approve the
-	 *                            request. The key is looked up in <code>jspwiki.properties</code>, and
-	 *                            is derived by prepending <code>jspwiki.approver</code> to the value of
-	 *                            <code>workflowApproverKey</code>
+	 *                            request. The role by this key is looked up in section of wiki
+	 *                            configuration, which is presented by <code>getApprovers</code> method.
 	 * @param prepTask            the initial task that should run before the Decision step is
 	 *                            processed. If this parameter is <code>null</code>, the Decision will
 	 *                            run as the first Step instead

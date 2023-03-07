@@ -22,7 +22,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 
 /**
  * Exception thrown when an activity -- that would otherwise complete silently --
- * cannot complete because a workflow {@link Decision} is required. The message
+ * cannot complete because a workflow {@link AbstractDecision} is required. The message
  * string should be a human-readable, internationalized String explaining why
  * the activity could not complete, or that the activity has been queued for 
  * review.

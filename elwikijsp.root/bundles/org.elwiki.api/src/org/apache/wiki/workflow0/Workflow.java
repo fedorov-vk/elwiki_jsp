@@ -51,13 +51,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * IllegalStateException. Callers can place the Workflow into the WAITING state by calling {@link #waitstate()}.</li>
  * <li><strong>{@link #WAITING}</strong>: when the Workflow has temporarily paused, for example because of a pending Decision. Once the
  * responsible actor decides what to do, the caller can change the Workflow back to the RUNNING state by calling the {@link #restart()}
- * method (this is done automatically by the Decision class, for instance, when the {@link Decision#decide(Outcome)} method is invoked)</li>
+ * method (this is done automatically by the Decision class, for instance, when the {@link AbstractDecision#decide(Outcome)} method is invoked)</li>
  * <li><strong>{@link #COMPLETED}</strong>: after the Workflow has finished processing all Steps, without errors.</li>
  * <li><strong>{@link #ABORTED}</strong>: if a Step has elected to abort the Workflow.</li>
  * </ul>
  * <h2>Steps and processing algorithm</h2>
  * <p>
- * Workflow Step objects can be of type {@link Decision}, {@link Task} or other Step subclasses. Decisions require user input, while Tasks
+ * Workflow Step objects can be of type {@link AbstractDecision}, {@link Task} or other Step subclasses. Decisions require user input, while Tasks
  * do not. See the {@link Step} class for more details.
  * </p>
  * <p>
@@ -250,7 +250,7 @@ public class Workflow implements Serializable {
         }
 
 		if (m_currentStep != null) {
-			if (m_currentStep instanceof Decision) {
+			if (m_currentStep instanceof AbstractDecision) {
 				ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
 						Map.of(WikiWorkflowEventTopic.PROPERTY_STEP, m_currentStep)));
 			}
@@ -260,7 +260,7 @@ public class Workflow implements Serializable {
 		m_state = ABORTED;
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_ABORTED,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-		//WikiEventEmitter.fireWorkflowEvent(this, WorkflowEvent.ABORTED);//:FVK:deprecated.
+
 		cleanup();
     }
 
@@ -483,14 +483,10 @@ public class Workflow implements Serializable {
         }
         ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_STARTED,
         		Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );//:FVK:deprecated.
 
 		m_state = RUNNING;
-		
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_RUNNING,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );//:FVK:deprecated.
-
 
         // Process current step
         try {
@@ -536,42 +532,42 @@ public class Workflow implements Serializable {
         this.m_id = id;
     }
 
-    /**
-     * Starts the Workflow and sets the state to {@link #RUNNING}. If the Workflow has already been started (or previously aborted), this
-     * method returns an {@linkplain IllegalStateException}. If any of the Steps in this Workflow throw a WikiException, the Workflow will
-     * abort and propagate the exception to callers.
-     *
-     * @throws WikiException if the current Step's {@link Step#start()} method throws an exception of any kind
-     */
-    public final synchronized void start() throws WikiException {
-        if( m_state == ABORTED ) {
-            throw new IllegalStateException( "Workflow cannot be started; it has already been aborted." );
-        }
-        if( m_started ) {
-            throw new IllegalStateException( "Workflow has already started." );
-        }
-        ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_STARTED,
-        		Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.STARTED );//:FVK:deprecated.
-        m_started = true;
-        m_state = RUNNING;
+	/**
+	 * Starts the Workflow and sets the state to {@link #RUNNING}. If the Workflow has already been
+	 * started (or previously aborted), this method returns an {@linkplain IllegalStateException}. If
+	 * any of the Steps in this Workflow throw a WikiException, the Workflow will abort and propagate
+	 * the exception to callers.
+	 *
+	 * @throws WikiException if the current Step's {@link Step#start()} method throws an exception of
+	 *                       any kind
+	 */
+	public final synchronized void start() throws WikiException {
+		if (m_state == ABORTED) {
+			throw new IllegalStateException("Workflow cannot be started; it has already been aborted.");
+		}
+		if (m_started) {
+			throw new IllegalStateException("Workflow has already started.");
+		}
+		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_STARTED,
+				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		m_started = true;
+		m_state = RUNNING;
 
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_RUNNING,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.RUNNING );//:FVK:deprecated.
 
-        // Mark the first step as the current one & add to history
-        m_currentStep = m_firstStep;
-        m_history.add( m_currentStep );
+		// Mark the first step as the current one & add to history
+		m_currentStep = m_firstStep;
+		m_history.add(m_currentStep);
 
-        // Process current step
-        try {
-            processCurrentStep();
-        } catch( final WikiException e ) {
-            abort();
-            throw e;
-        }
-    }
+		// Process current step
+		try {
+			processCurrentStep();
+		} catch (WikiException e) {
+			abort();
+			throw e;
+		}
+	}
 
     /**
      * Sets the Workflow in the {@link #WAITING} state. If the Workflow is not running or has already been paused, this method throws an
@@ -584,7 +580,6 @@ public class Workflow implements Serializable {
         m_state = WAITING;
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_WAITING,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-        //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.WAITING );//:FVK:deprecated.
     }
 
     /**
@@ -604,7 +599,7 @@ public class Workflow implements Serializable {
             m_state = COMPLETED;
 			ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_COMPLETED,
 					Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
-            //WikiEventEmitter.fireWorkflowEvent( this, WorkflowEvent.COMPLETED );//:FVK:deprecated
+
             cleanup();
         }
     }

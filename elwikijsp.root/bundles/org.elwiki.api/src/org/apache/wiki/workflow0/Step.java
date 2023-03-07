@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * <p>
- * Discrete unit of work in a Workflow, such as a {@link Decision} or a {@link Task}. Decisions require user input, while Tasks do not.
+ * Discrete unit of work in a Workflow, such as a {@link AbstractDecision} or a {@link Task}. Decisions require user input, while Tasks do not.
  * All Steps, however, possess these properties:
  * </p>
  * <ul>
@@ -189,5 +189,7 @@ public interface Step extends Serializable {
      * @param workflowContext the parent workflow context to set
      */
     void setWorkflow( final int workflowId, final Map< String, Serializable > workflowContext );
+
+	int getWorkflowId();
 
 }

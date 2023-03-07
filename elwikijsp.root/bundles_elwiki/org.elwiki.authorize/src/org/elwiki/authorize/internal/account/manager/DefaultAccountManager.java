@@ -52,9 +52,9 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.InputValidator;
-import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
+import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Task;
@@ -450,10 +450,10 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 		workflow.setAttribute(WorkflowManager.WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE, profile);
 		workflow.start();
 
-		boolean approvalRequired = workflow.getCurrentStep() instanceof Decision;
+		boolean isApprovalRequired = workflow.getCurrentStep() instanceof Decision;
 
 		// If the profile requires approval, redirect user to message page
-		if (approvalRequired) {
+		if (isApprovalRequired) {
 			throw new DecisionRequiredException("This profile must be approved before it becomes active");
 		}
 	}

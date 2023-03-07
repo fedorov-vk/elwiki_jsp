@@ -68,7 +68,7 @@ public class DecisionQueue implements Serializable {
      * @return the pending decisions 
      */
     protected Decision[] decisions() {
-        return m_queue.toArray( new Decision[ m_queue.size() ] );
+        return m_queue.toArray( new AbstractDecision[ m_queue.size() ] );
     }
 
     /**
@@ -82,7 +82,7 @@ public class DecisionQueue implements Serializable {
 
     /**
      * Returns a Collection representing the current Decisions that pertain to a users's Session. The Decisions are obtained by iterating
-     * through the Session's Principals and selecting those Decisions whose {@link Decision#getActor()} value match. If the session
+     * through the Session's Principals and selecting those Decisions whose {@link AbstractDecision#getActor()} value match. If the session
      * is not authenticated, this method returns an empty Collection.
      *
      * @param session the wiki session
@@ -112,7 +112,7 @@ public class DecisionQueue implements Serializable {
     }
 
     /**
-     * Attempts to complete a Decision by calling {@link Decision#decide(Outcome)}. This will cause the Step immediately following the
+     * Attempts to complete a Decision by calling {@link AbstractDecision#decide(Outcome)}. This will cause the Step immediately following the
      * Decision (if any) to start. If the decision completes successfully, this method also removes the completed decision from the queue.
      *
      * @param decision the Decision for which the Outcome will be supplied
@@ -127,7 +127,6 @@ public class DecisionQueue implements Serializable {
 
 		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_DECIDE,
 				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
-        //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_DECIDE );
     }
 
     /**
@@ -143,7 +142,7 @@ public class DecisionQueue implements Serializable {
 
     		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REASSIGN,
     				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
-            //WikiEventEmitter.fireWorkflowEvent( decision, WorkflowEvent.DQ_REASSIGN );//:FVK:deprecated.
+
             return;
         }
         throw new IllegalStateException( "Reassignments not allowed for this decision." );

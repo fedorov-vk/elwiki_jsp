@@ -32,7 +32,6 @@ import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.InputValidator;
-import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
 import org.apache.wiki.workflow0.Step;
