@@ -18,126 +18,76 @@
  */
 package org.apache.wiki.workflow0;
 
-import java.io.Serializable;
+public enum Outcome {
+	//@formatter:off
+	
+	/** Complete workflow step (without errors) */
+	STEP_COMPLETE("outcome.step.complete", true),
+	
+	/** Terminate workflow step (without errors) */
+	STEP_ABORT("outcome.step.abort", true),
 
-/**
- * Resolution of a workflow Step, such as "approve", "deny", "hold", "task error" or other potential resolutions.
- *
- * @since 2.5
- */
-public final class Outcome implements Serializable {
+	/** Continue workflow step (without errors) */
+	STEP_CONTINUE("outcome.step.continue", false),
 
-    private static final long serialVersionUID = -338361947886288073L;
+	/** Acknowledge the Decision. */
+	DECISION_ACKNOWLEDGE("outcome.decision.acknowledge", true),
 
-    /** Complete workflow step (without errors) */
-    public static final Outcome STEP_COMPLETE = new Outcome( "outcome.step.complete", true );
+	/** Approve the Decision (and complete the step). */
+	DECISION_APPROVE("outcome.decision.approve", true),
 
-    /** Terminate workflow step (without errors) */
-    public static final Outcome STEP_ABORT = new Outcome( "outcome.step.abort", true );
+	/** Deny the Decision (and complete the step). */
+	DECISION_DENY("outcome.decision.deny", true),
 
-    /** Continue workflow step (without errors) */
-    public static final Outcome STEP_CONTINUE = new Outcome( "outcome.step.continue", false );
+	/** Put the Decision on hold (and pause the step). */
+	DECISION_HOLD("outcome.decision.hold", false),
 
-    /** Acknowlege the Decision. */
-    public static final Outcome DECISION_ACKNOWLEDGE = new Outcome( "outcome.decision.acknowledge", true );
+	/** Reassign the Decision to another actor (and pause the step). */
+	DECISION_REASSIGN("outcome.decision.reassign", false);
+	//@formatter:on
 
-    /** Approve the Decision (and complete the step). */
-    public static final Outcome DECISION_APPROVE = new Outcome( "outcome.decision.approve", true );
+	private final String m_key;
+	private final boolean m_completion;
 
-    /** Deny the Decision (and complete the step). */
-    public static final Outcome DECISION_DENY = new Outcome( "outcome.decision.deny", true );
+	Outcome(String key, boolean completion) {
+		m_key = key;
+		m_completion = completion;
+	}
 
-    /** Put the Decision on hold (and pause the step). */
-    public static final Outcome DECISION_HOLD = new Outcome( "outcome.decision.hold", false );
+	/**
+	 * Returns <code>true</code> if this Outcome represents a completion condition for a Step.
+	 *
+	 * @return the result
+	 */
+	public boolean isCompletion() {
+		return m_completion;
+	}
 
-    /** Reassign the Decision to another actor (and pause the step). */
-    public static final Outcome DECISION_REASSIGN = new Outcome( "outcome.decision.reassign", false );
+	/**
+	 * The i18n key for this outcome, which is prefixed by <code>outcome.</code>. If calling classes
+	 * wish to return a locale-specific name for this task (such as "approve this request"), they can
+	 * use this method to obtain the correct key suffix.
+	 *
+	 * @return the i18n key for this outcome
+	 */
+	public String getMessageKey() {
+		return m_key;
+	}
 
-    private static final Outcome[] OUTCOMES = new Outcome[] { STEP_COMPLETE, STEP_ABORT, STEP_CONTINUE, DECISION_ACKNOWLEDGE,
-                                                              DECISION_APPROVE, DECISION_DENY, DECISION_HOLD, DECISION_REASSIGN };
-
-    private final String m_key;
-
-    private final boolean m_completion;
-
-    /**
-     * Private constructor to prevent direct instantiation.
-     *
-     * @param key message key for the Outcome
-     * @param completion whether this Outcome should be interpreted as the logical completion of a Step.
-     */
-    private Outcome( final String key, final boolean completion ) {
-        if ( key == null ) {
-            throw new IllegalArgumentException( "Key cannot be null." );
-        }
-        m_key = key;
-        m_completion = completion;
-    }
-
-    /**
-     * Returns <code>true</code> if this Outcome represents a completion condition for a Step.
-     *
-     * @return the result
-     */
-    public boolean isCompletion() {
-        return m_completion;
-    }
-
-    /**
-     * The i18n key for this outcome, which is prefixed by <code>outcome.</code>. If calling classes wish to return a locale-specific
-     * name for this task (such as "approve this request"), they can use this method to obtain the correct key suffix.
-     *
-     * @return the i18n key for this outcome
-     */
-    public String getMessageKey() {
-        return m_key;
-    }
-
-    /**
-     * The hashcode of an Outcome is identical to the hashcode of its message key, multiplied by 2 if it is a "completion" Outcome.
-     *
-     * @return the hash code
-     */
-    public int hashCode() {
-        return m_key.hashCode() * ( m_completion ? 1 : 2 );
-    }
-
-    /**
-     * Two Outcome objects are equal if their message keys are equal.
-     *
-     * @param obj the object to test
-     * @return <code>true</code> if logically equal, <code>false</code> if not
-     */
-    public boolean equals( final Object obj ) {
-        if( !( obj instanceof Outcome outcome) ) {
-            return false;
-        }
-        return m_key.equals( outcome.getMessageKey() );
-    }
-
-    /**
-     * Returns a named Outcome. If an Outcome matching the supplied key is not found, this method throws a {@link NoSuchOutcomeException}.
-     *
-     * @param key the name of the outcome
-     * @return the Outcome
-     * @throws NoSuchOutcomeException if an Outcome matching the key isn't found.
-     */
-    public static Outcome forName( final String key ) throws NoSuchOutcomeException {
-        if( key != null ) {
-            for( final Outcome outcome : OUTCOMES ) {
-                if( outcome.m_key.equals( key ) ) {
-                    return outcome;
-                }
-            }
-        }
-        throw new NoSuchOutcomeException( "Outcome " + key + " not found." );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String toString() {
-        return "[Outcome:" + m_key + "]";
-    }
+	/**
+	 * Returns an Outcome. If an Outcome matching the supplied name is not found, this method throws
+	 * a {@link NoSuchOutcomeException}.
+	 *
+	 * @param key the name of the outcome
+	 * @return the Outcome
+	 * @throws NoSuchOutcomeException if an Outcome matching the name isn't found.
+	 */
+	public static Outcome forName(String key) throws NoSuchOutcomeException {
+		try {
+			return Outcome.valueOf(key);
+		} catch (Exception ex) {
+			throw new NoSuchOutcomeException("Outcome " + key + " not found.");
+		}
+	}
 
 }

@@ -20,6 +20,7 @@ package org.apache.wiki.plugin;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
@@ -33,7 +34,6 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.permissions.PagePermission;

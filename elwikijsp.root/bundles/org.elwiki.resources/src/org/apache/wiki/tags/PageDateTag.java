@@ -25,9 +25,9 @@ import java.util.Date;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.elwiki_data.WikiPage;
 
 /**

@@ -19,9 +19,9 @@
 package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
+import org.elwiki.api.event.WikiWorkflowEventTopic;
 import org.osgi.service.event.Event;
 
 import java.io.Serializable;

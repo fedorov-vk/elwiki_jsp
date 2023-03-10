@@ -19,10 +19,10 @@
 package org.apache.wiki.plugin;
 
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

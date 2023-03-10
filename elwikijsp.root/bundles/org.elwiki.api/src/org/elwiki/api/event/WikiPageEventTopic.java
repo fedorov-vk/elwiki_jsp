@@ -1,4 +1,4 @@
-package org.apache.wiki.api.event;
+package org.elwiki.api.event;
 
 /**
  * WikiPageEvent indicates a change in the state or processing of a WikiPage. There are basically

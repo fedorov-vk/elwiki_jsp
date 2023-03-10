@@ -69,8 +69,7 @@ public interface Decision extends Step {
 	void setId(int id);
 
 	/**
-	 * Returns <code>true</code> if the Decision can be reassigned to another actor. This implementation
-	 * always returns <code>true</code>.
+	 * Returns <code>true</code> if the Decision can be reassigned to another actor.
 	 *
 	 * @return the result
 	 */

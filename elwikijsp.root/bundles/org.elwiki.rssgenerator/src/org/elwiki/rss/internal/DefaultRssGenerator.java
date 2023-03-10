@@ -29,7 +29,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiEngineEventTopic;
+import org.elwiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.rss.IFeed;

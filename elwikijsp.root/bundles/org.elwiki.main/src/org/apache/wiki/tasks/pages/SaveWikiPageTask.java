@@ -31,53 +31,54 @@ import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
 
 /**
- * Handles the actual page save and post-save actions. 
+ * Handles the actual page save and post-save actions.
  */
 public class SaveWikiPageTask extends Task {
 
-    private static final long serialVersionUID = 3190559953484411420L;
+	private static final long serialVersionUID = 3190559953484411420L;
 
-    private final WikiContext context;
+	private final WikiContext context;
 
 	private final String author;
 
 	private final String changenote;
 
-    /**
-     * Creates the Task.
-     * @param author TODO
-     * @param changenote TODO
-     */
-    public SaveWikiPageTask( final WikiContext context, String author, String changenote ) {
-        super( TasksManager.WIKIPAGE_SAVE_TASK_MESSAGE_KEY );
-        this.context = context;
-        this.author = author;
-        this.changenote = changenote;
-    }
+	/**
+	 * Creates the Task.
+	 * 
+	 * @param author     TODO
+	 * @param changenote TODO
+	 */
+	public SaveWikiPageTask(WikiContext context, String author, String changenote) {
+		super(TasksManager.WIKIPAGE_SAVE_TASK_MESSAGE_KEY);
+		this.context = context;
+		this.author = author;
+		this.changenote = changenote;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Outcome execute() throws WikiException {
-        // Retrieve attributes
-        final String proposedText = ( String )getWorkflowContext().get( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Outcome execute() throws WikiException {
+		// Retrieve attributes
+		String proposedText = (String) getWorkflowContext().get(WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT);
 
-        final Engine engine = context.getEngine();
-        final WikiPage page = context.getPage();
-        PageManager pageManager = engine.getManager(PageManager.class);
-        RenderingManager renderingManager = engine.getManager(RenderingManager.class);
-        FilterManager filterManager = engine.getManager(FilterManager.class);
+		Engine engine = context.getEngine();
+		WikiPage page = context.getPage();
+		PageManager pageManager = engine.getManager(PageManager.class);
+		RenderingManager renderingManager = engine.getManager(RenderingManager.class);
+		FilterManager filterManager = engine.getManager(FilterManager.class);
 
-        // Let the rest of the engine handle actual saving.
-        pageManager.putPageText( page, proposedText, this.author, this.changenote );
+		// Let the rest of the engine handle actual saving.
+		pageManager.putPageText(page, proposedText, this.author, this.changenote);
 
-        // Refresh the context for post save filtering.
-        pageManager.getPage( page.getName() );
-        renderingManager.textToHTML( context, proposedText );
-        filterManager.doPostSaveFiltering( context, proposedText );
+		// Refresh the context for post save filtering.
+		pageManager.getPage(page.getName());
+		renderingManager.textToHTML(context, proposedText);
+		filterManager.doPostSaveFiltering(context, proposedText);
 
-        return Outcome.STEP_COMPLETE;
-    }
+		return Outcome.STEP_COMPLETE;
+	}
 
 }

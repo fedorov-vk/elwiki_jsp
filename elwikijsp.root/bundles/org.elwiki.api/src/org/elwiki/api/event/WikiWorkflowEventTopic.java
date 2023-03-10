@@ -1,4 +1,4 @@
-package org.apache.wiki.api.event;
+package org.elwiki.api.event;
 
 /**
  * <p>

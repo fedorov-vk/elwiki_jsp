@@ -87,7 +87,7 @@
               <input type="hidden" name="action" value="decide" />
               <input type="hidden" name="id" value="${decision.id}" />
               <c:forEach var="outcome" items="${decision.availableOutcomes}">
-                <button class="btn btn-xs btn-default" type="submit" name="outcome" value="${outcome.messageKey}">
+                <button class="btn btn-xs btn-default" type="submit" name="outcome" value="${outcome}">
                   <fmt:message key="${outcome.messageKey}"/>
                 </button>
               </c:forEach>

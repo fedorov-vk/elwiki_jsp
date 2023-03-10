@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.i18n.InternationalizationManager;
@@ -53,25 +54,6 @@ public class Preferences extends HashMap<String, String> {
 	private static final long serialVersionUID = 1782510796921957634L;
 
 	private static final Logger logger = Logger.getLogger(Preferences.class);
-
-	/**
-	 * Is used to choose between the different date formats that JSPWiki supports.
-	 * <ul>
-	 * <li>TIME: A time format, without date</li>
-	 * <li>DATE: A date format, without a time</li>
-	 * <li>DATETIME: A date format, with a time</li>
-	 * </ul>
-	 *
-	 * @since 2.8
-	 */
-	public enum TimeFormat {
-		/** A time format, no date. */
-		TIME,
-		/** A date format, no time. */
-		DATE,
-		/** A date & time format. */
-		DATETIME
-	}
 
 	/**
 	 * The name under which a Preferences object is stored in the HttpSession. Its value is

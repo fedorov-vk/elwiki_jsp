@@ -28,13 +28,13 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.preferences.Preferences.TimeFormat;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;

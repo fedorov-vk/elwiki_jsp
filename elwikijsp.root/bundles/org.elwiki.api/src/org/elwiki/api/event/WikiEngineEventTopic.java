@@ -1,4 +1,4 @@
-package org.apache.wiki.api.event;
+package org.elwiki.api.event;
 
 /**
  * WikiEngineEventTopic indicates a change in the state of the Engine.

@@ -18,64 +18,64 @@
  */
 package org.apache.wiki.tasks.pages;
 
+import java.security.Principal;
+
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
-
-import java.security.Principal;
-
+import org.elwiki_data.WikiPage;
 
 /**
- * Handles the page pre-save actions. If the proposed page text is the same as the current version, 
+ * Handles the page pre-save actions. If the proposed page text is the same as the current version,
  * the {@link #execute()} method returns {@link org.apache.wiki.workflow0.Outcome#STEP_ABORT}. Any
  * WikiExceptions thrown by page filters will be re-thrown, and the workflow will abort.
  */
 public class PreSaveWikiPageTask extends Task {
 
-    private static final long serialVersionUID = 6304715570092804615L;
-    private final WikiContext m_context;
-    private final String m_proposedText;
+	private static final long serialVersionUID = 6304715570092804615L;
+	private final WikiContext m_context;
+	private final String m_proposedText;
 
-    /**
-     * Creates the task.
-     *
-     * @param context The WikiContext
-     * @param proposedText The text that was just saved.
-     */
-    public PreSaveWikiPageTask( final WikiContext context, final String proposedText ) {
-        super( TasksManager.WIKIPAGE_PRESAVE_TASK_MESSAGE_KEY );
-        m_context = context;
-        m_proposedText = proposedText;
-    }
+	/**
+	 * Creates the task.
+	 *
+	 * @param context      The WikiContext
+	 * @param proposedText The text that was just saved.
+	 */
+	public PreSaveWikiPageTask(WikiContext context, String proposedText) {
+		super(TasksManager.WIKIPAGE_PRESAVE_TASK_MESSAGE_KEY);
+		m_context = context;
+		m_proposedText = proposedText;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Outcome execute() throws WikiException {
-        // Get the wiki page
-        final WikiPage page = m_context.getPage();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Outcome execute() throws WikiException {
+		// Get the wiki page
+		WikiPage page = m_context.getPage();
 
-        // Figure out who the author was. Prefer the author set programmatically; otherwise get from the current logged in user
-        if( page.getAuthor() == null ) {
-            final Principal wup = m_context.getCurrentUser();
-            if( wup != null ) {
-            	//:FVK: page.setAuthor( wup.getName() );
-            }
-        }
+		// Figure out who the author was. Prefer the author set programmatically;
+		// otherwise get from the current logged in user
+		if (page.getAuthor() == null) {
+			Principal wup = m_context.getCurrentUser();
+			if (wup != null) {
+				//:FVK: page.setAuthor( wup.getName() );
+			}
+		}
 
-        // Run the pre-save filters. If any exceptions, add error to list, abort, and redirect
-        FilterManager filterManager = m_context.getEngine().getManager(FilterManager.class);
-        final String saveText = filterManager.doPreSaveFiltering(m_context, m_proposedText);
+		// Run the pre-save filters. If any exceptions, add error to list, abort, and redirect
+		FilterManager filterManager = m_context.getEngine().getManager(FilterManager.class);
+		String saveText = filterManager.doPreSaveFiltering(m_context, m_proposedText);
 
-        // Stash the wiki context, old and new text as workflow attributes
-        getWorkflowContext().put( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, saveText );
-        return Outcome.STEP_COMPLETE;
-    }
+		// Stash the wiki context, old and new text as workflow attributes
+		getWorkflowContext().put(WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, saveText);
+		return Outcome.STEP_COMPLETE;
+	}
 
 }

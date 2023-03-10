@@ -40,7 +40,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.event.WikiWorkflowEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.DecisionQueue;
@@ -48,9 +47,11 @@ import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.apache.wiki.workflow0.Workflow.WfState;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.event.WikiWorkflowEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.osgi.service.component.annotations.Component;
@@ -336,16 +337,16 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
     protected void removeFromDecisionQueue( final Decision decision ) {
         // If current workflow is waiting for input, restart it and remove Decision from DecisionQueue
         final int workflowId = decision.getWorkflowId();
-        final Optional< Workflow > optw = m_workflows.stream().filter( w -> w.getId() == workflowId ).findAny();
-        if( optw.isPresent() ) {
-            final Workflow w = optw.get();
-            if( w.getCurrentState() == Workflow.WAITING && decision.equals( w.getCurrentStep() ) ) {
+        final Optional< Workflow > optWf = m_workflows.stream().filter( w -> w.getId() == workflowId ).findAny();
+        if( optWf.isPresent() ) {
+            final Workflow workflow = optWf.get();
+            if( workflow.getCurrentState() == WfState.WAITING && decision.equals( workflow.getCurrentStep() ) ) {
                 getDecisionQueue().remove( decision );
                 // Restart workflow
                 try {
-                    w.restart();
+                    workflow.restart();
                 } catch( final WikiException e ) {
-                    log.error( "restarting workflow #" + w.getId() + " caused " + e.getMessage(), e );
+                    log.error( "restarting workflow #" + workflow.getId() + " caused " + e.getMessage(), e );
                 }
             }
         }

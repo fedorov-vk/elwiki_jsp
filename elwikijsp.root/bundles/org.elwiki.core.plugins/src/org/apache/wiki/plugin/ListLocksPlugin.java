@@ -20,6 +20,7 @@ package org.apache.wiki.plugin;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
@@ -65,8 +66,8 @@ public class ListLocksPlugin implements Plugin {
                 result.append( rowNum % 2 != 0 ? "<tr class=\"odd\">" : "<tr>" );
                 result.append( "<td>" + lock.getPageId() + "</td>" );
                 result.append( "<td>" + lock.getLocker() + "</td>" );
-                result.append( "<td>" + Preferences.renderDate( context, lock.getAcquisitionTime(), Preferences.TimeFormat.DATETIME ) + "</td>" );
-                result.append( "<td>" + Preferences.renderDate( context, lock.getExpiryTime(), Preferences.TimeFormat.DATETIME ) + "</td>" );
+                result.append( "<td>" + Preferences.renderDate( context, lock.getAcquisitionTime(), TimeFormat.DATETIME ) + "</td>" );
+                result.append( "<td>" + Preferences.renderDate( context, lock.getExpiryTime(), TimeFormat.DATETIME ) + "</td>" );
                 result.append( "</tr>\n" );
                 rowNum++;
             }

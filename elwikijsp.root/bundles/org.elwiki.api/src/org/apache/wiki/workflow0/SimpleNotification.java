@@ -25,45 +25,49 @@ import java.security.Principal;
 import java.util.Map;
 
 /**
- * Decision subclass used for notifications that includes only one available Outcome: {@link Outcome#DECISION_ACKNOWLEDGE}. The Decision is
- * not reassignable, and the default Outcome is {@link Outcome#DECISION_ACKNOWLEDGE}.
+ * Decision subclass used for notifications that includes only one available Outcome:
+ * {@link Outcome#DECISION_ACKNOWLEDGE}. The Decision is not reassignable, and the default Outcome
+ * is {@link Outcome#DECISION_ACKNOWLEDGE}.
  * 
  * @since 2.5
  */
 public final class SimpleNotification extends AbstractDecision {
 
-    private static final long serialVersionUID = -3392947495169819527L;
+	private static final long serialVersionUID = -3392947495169819527L;
 
-    /**
-     * Constructs a new SimpleNotification object with a supplied message key, associated Workflow, and named actor who must acknowledge
-     * the message. The notification is placed in the Principal's list of queued Decisions. Because the only available Outcome is
-     * {@link Outcome#DECISION_ACKNOWLEDGE}, the actor can only acknowledge the message.
-     * 
-     * @param workflowId the parent workflow id to set
-     * @param workflowContext the parent workflow context to set
-     * @param messageKey the message key
-     * @param actor the Principal who will acknowledge the message
-     */
-    public SimpleNotification( final int workflowId, final Map< String, Serializable > workflowContext, final String messageKey, final Principal actor, Principal submitter ) {
-        super( workflowId, workflowContext, messageKey, actor, submitter, Outcome.DECISION_ACKNOWLEDGE );
-    }
-    
-    /**
-     * Convenience method that simply calls {@link #decide(Outcome)} with the value {@link Outcome#DECISION_ACKNOWLEDGE}.
-     *
-     * @throws WikiException never
-     */
-    public void acknowledge() throws WikiException {
-        this.decide( Outcome.DECISION_ACKNOWLEDGE  );
-    }
+	/**
+	 * Constructs a new SimpleNotification object with a supplied message key, associated Workflow, and
+	 * named actor who must acknowledge the message. The notification is placed in the Principal's list
+	 * of queued Decisions. Because the only available Outcome is {@link Outcome#DECISION_ACKNOWLEDGE},
+	 * the actor can only acknowledge the message.
+	 * 
+	 * @param workflowId      the parent workflow id to set
+	 * @param workflowContext the parent workflow context to set
+	 * @param messageKey      the message key
+	 * @param actor           the Principal who will acknowledge the message
+	 */
+	public SimpleNotification(int workflowId, Map<String, Serializable> workflowContext, String messageKey,
+			Principal actor, Principal submitter) {
+		super(workflowId, workflowContext, messageKey, actor, submitter, Outcome.DECISION_ACKNOWLEDGE);
+	}
 
-    /**
-     * Notifications cannot be re-assigned, so this method always returns <code>false</code>.
-     *
-     * @return <code>false</code> always.
-     */
-    public boolean isReassignable() {
-        return false;
-    }
+	/**
+	 * Convenience method that simply calls {@link #decide(Outcome)} with the value
+	 * {@link Outcome#DECISION_ACKNOWLEDGE}.
+	 *
+	 * @throws WikiException never
+	 */
+	public void acknowledge() throws WikiException {
+		this.decide(Outcome.DECISION_ACKNOWLEDGE);
+	}
+
+	/**
+	 * Notifications cannot be re-assigned, so this method always returns <code>false</code>.
+	 *
+	 * @return <code>false</code> always.
+	 */
+	public boolean isReassignable() {
+		return false;
+	}
 
 }

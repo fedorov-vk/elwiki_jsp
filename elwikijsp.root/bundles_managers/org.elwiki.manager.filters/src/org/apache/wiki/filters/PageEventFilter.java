@@ -23,11 +23,11 @@ import java.util.Map;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.event.WikiPageEventTopic;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.filters.internal.FiltersActivator;
+import org.elwiki.api.event.WikiPageEventTopic;
 import org.osgi.service.event.Event;
 
 /**
