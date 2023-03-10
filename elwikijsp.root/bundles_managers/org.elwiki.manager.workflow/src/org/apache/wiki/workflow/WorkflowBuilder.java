@@ -31,6 +31,7 @@ import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -75,7 +76,7 @@ public final class WorkflowBuilder implements IWorkflowBuilder {
                                           String workflowApproverKey,
                                           Step prepTask,
                                           String decisionKey,
-                                          Fact[] facts,
+                                          List<Fact> facts,
                                           Step completionTask,
                                           String rejectedMessageKey) throws WikiException {
         //@formatter:on
@@ -94,12 +95,10 @@ public final class WorkflowBuilder implements IWorkflowBuilder {
 
 			// Add facts to the Decision, if any were supplied
 			if (facts != null) {
-				for (Fact fact : facts) {
-					decision.addFact(fact);
-				}
+				decision.addFacts(facts);
 				// Add the first one as a message key
-				if (facts.length > 0) {
-					workflow.addMessageArgument(facts[0].getValue());
+				if (facts.size() > 0) {
+					workflow.addMessageArgument(facts.get(0).getValue());
 				}
 			}
 

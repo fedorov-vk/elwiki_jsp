@@ -1,6 +1,7 @@
 package org.apache.wiki.workflow0;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.wiki.api.exceptions.WikiException;
@@ -13,6 +14,20 @@ public interface Decision extends Step {
 	 * @param fact the new fact to add
 	 */
 	void addFact(Fact fact);
+
+	/**
+	 * Appends collection of Fact to the list of Fact associated with this Decision.
+	 *
+	 * @param facts list of the new fatcs to add.
+	 */
+	void addFacts(Collection<Fact> facts);
+
+	/**
+	 * Returns the Facts associated with this Decision, in the order in which they were added.
+	 * 
+	 * @return the list of Facts
+	 */
+	List<Fact> getFacts();
 
 	/**
 	 * <p>
@@ -45,13 +60,6 @@ public interface Decision extends Step {
 	 * @return the default outcome.
 	 */
 	Outcome getDefaultOutcome();
-
-	/**
-	 * Returns the Facts associated with this Decision, in the order in which they were added.
-	 * 
-	 * @return the list of Facts
-	 */
-	List<Fact> getFacts();
 
 	/**
 	 * Returns the unique identifier for this Decision. Normally, this ID is programmatically assigned

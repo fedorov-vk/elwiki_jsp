@@ -474,12 +474,12 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         Step completionTask = this.tasksManager.buildSaveWikiPageTask( context, author, changenote );
         String diffText = this.differenceManager.makeDiff( context, oldText, proposedText );
         boolean isAuthenticated = context.getWikiSession().isAuthenticated();
-        Fact[] facts = new Fact[ 5 ];
-        facts[ 0 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_PAGE_NAME, page.getName() );
-        facts[ 1 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_DIFF_TEXT, diffText );
-        facts[ 2 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, proposedText );
-        facts[ 3 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_CURRENT_TEXT, oldText);
-        facts[ 4 ] = new Fact( WorkflowManager.WF_WP_SAVE_FACT_IS_AUTHENTICATED, isAuthenticated );
+		List<Fact> facts = new ArrayList<>();
+		facts.add(new Fact(WorkflowManager.WF_WP_SAVE_FACT_PAGE_NAME, page.getName()));
+		facts.add(new Fact(WorkflowManager.WF_WP_SAVE_FACT_DIFF_TEXT, diffText));
+		facts.add(new Fact(WorkflowManager.WF_WP_SAVE_FACT_PROPOSED_TEXT, proposedText));
+		facts.add(new Fact(WorkflowManager.WF_WP_SAVE_FACT_CURRENT_TEXT, oldText));
+		facts.add(new Fact(WorkflowManager.WF_WP_SAVE_FACT_IS_AUTHENTICATED, isAuthenticated));
         String rejectKey = isAuthenticated ? WorkflowManager.WF_WP_SAVE_REJECT_MESSAGE_KEY : null;
 		Workflow workflow = builder.buildApprovalWorkflow(submitter, //
 				WorkflowManager.WF_WP_SAVE_APPROVER, //

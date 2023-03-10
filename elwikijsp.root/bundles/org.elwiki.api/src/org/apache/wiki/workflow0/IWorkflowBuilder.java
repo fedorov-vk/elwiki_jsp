@@ -1,6 +1,7 @@
 package org.apache.wiki.workflow0;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.apache.wiki.api.exceptions.WikiException;
 
@@ -58,7 +59,7 @@ public interface IWorkflowBuilder {
 	 * @return the created workflow
 	 * @throws WikiException if the name of the approving user, Role or Group cannot be determined
 	 */
-	Workflow buildApprovalWorkflow(final Principal submitter, final String workflowApproverKey, final Step prepTask, final String decisionKey, final Fact[] facts, final Step completionTask,
-			final String rejectedMessageKey) throws WikiException;
+	Workflow buildApprovalWorkflow(Principal submitter, String workflowApproverKey, Step prepTask, String decisionKey,
+			List<Fact> facts, Step completionTask, String rejectedMessageKey) throws WikiException;
 
 }

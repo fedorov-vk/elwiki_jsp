@@ -115,7 +115,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	/**
 	 * Inner class that handles the actual profile save action. Instances of this class are assumed to
 	 * have been added to an approval workflow via
-	 * {@link org.apache.wiki.workflow.workflow.WorkflowBuilder#buildApprovalWorkflow(Principal, String, Task, String, org.apache.wiki.workflow.Fact[], Task, String)};
+	 * {@link org.apache.wiki.workflow.workflow.WorkflowBuilder#buildApprovalWorkflow(Principal, String, Task, String, List, Task, String)};
 	 * they will not function correctly otherwise.
 	 *
 	 */
@@ -434,12 +434,12 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 
 		// Add user profile attribute as Facts for the approver (if required)
 		boolean hasEmail = profile.getEmail() != null;
-		Fact[] facts = new Fact[hasEmail ? 4 : 3];
-		facts[0] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_FULL_NAME, profile.getFullname());
-		facts[1] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_LOGIN_NAME, profile.getLoginName());
-		facts[2] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_SUBMITTER, submitter.getName());
-		if (hasEmail) {
-			facts[3] = new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_EMAIL, profile.getEmail());
+		List<Fact> facts = new ArrayList<>();
+		facts.add(new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_FULL_NAME, profile.getFullname()));
+		facts.add(new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_LOGIN_NAME, profile.getLoginName()));
+		facts.add(new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_SUBMITTER, submitter.getName()));
+		if (profile.getEmail() != null) {
+			facts.add(new Fact(WorkflowManager.WF_UP_CREATE_SAVE_FACT_PREFS_EMAIL, profile.getEmail()));
 		}
 		Workflow workflow = builder.buildApprovalWorkflow(submitter, //
 				WorkflowManager.WF_UP_CREATE_SAVE_APPROVER, //

@@ -26,6 +26,7 @@ import org.osgi.service.event.Event;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +93,12 @@ abstract class AbstractDecision extends AbstractStep implements Decision {
 	@Override
 	public final void addFact(Fact fact) {
 		m_facts.add(fact);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final void addFacts(Collection<Fact> facts) {
+		m_facts.addAll(facts);
 	}
 
 	/**
