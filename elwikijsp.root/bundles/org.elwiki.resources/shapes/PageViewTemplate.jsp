@@ -43,7 +43,7 @@
   <wiki:CheckRequestContext context="<%=ContextUtil.compose(WikiContext.PAGE_DIFF, WikiContext.PAGE_INFO)%>">
     <meta name="robots" content="noindex,nofollow" />
   </wiki:CheckRequestContext>
-  <wiki:CheckRequestContext context="!<%=WikiContext.PAGE_VIEW%>">
+  <wiki:CheckRequestContext context="<%=WikiContext.NONE_PAGE_VIEW%>">
     <meta name="robots" content="noindex,follow" />
   </wiki:CheckRequestContext>
 </head>
@@ -54,13 +54,12 @@
  --%>
 <%@ include file="/shapes/default/Header.jsp" %>
 <!-- ~~ Page Middle ~~ -->
-<wiki:CheckRequestContext context="!<%=WikiContext.PAGE_EDIT%>">
+<wiki:CheckRequestContext context="<%=WikiContext.NONE_PAGE_EDIT%>">
   <c:set var="sidebarState"><wiki:Variable var="sidebar" default="${prefs.Sidebar}" /></c:set>
   <c:set var="sidebarCookie" value="Sidebar" />
-  <wiki:CheckRequestContext context='login'>
-  <%--:FVK:
-  <%=WikiContext.WIKI_LOGIN%>|<%=WikiContext.WIKI_PREFS%>|<%=WikiContext.GROUP_CREATE%>|<%=WikiContext.GROUP_VIEW%>|<%=WikiContext.PAGE_CONFLICT%>'>
-  --%>
+  <wiki:CheckRequestContext context="<%=ContextUtil.compose(
+		  WikiContext.WIKI_LOGIN, WikiContext.WIKI_PREFS, WikiContext.GROUP_CREATE, WikiContext.GROUP_VIEW,
+		  WikiContext.PAGE_CONFLICT)%>">
     <c:set var="sidebarState" value="" />
     <c:set var="sidebarCookie" value="" />
   </wiki:CheckRequestContext>

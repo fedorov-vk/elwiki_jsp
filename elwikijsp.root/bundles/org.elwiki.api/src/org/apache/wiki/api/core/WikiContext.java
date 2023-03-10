@@ -73,6 +73,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** The VIEW context - the user just wants to view the page contents. */
 	String PAGE_VIEW = ContextEnum.PAGE_VIEW.getRequestContext();
+	String NONE_PAGE_VIEW = "!" + PAGE_VIEW;
 
 	/** User is previewing the changes he just made. */
 	String PAGE_PREVIEW = ContextEnum.PAGE_PREVIEW.getRequestContext();
@@ -83,6 +84,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** The EDIT context - the user is editing the page. */
 	String PAGE_EDIT = ContextEnum.PAGE_EDIT.getRequestContext();
+	String NONE_PAGE_EDIT = "!" + PAGE_EDIT;
 
 	/** User is deleting a page or an attachment. */
 	String PAGE_DELETE = ContextEnum.PAGE_DELETE.getRequestContext();
