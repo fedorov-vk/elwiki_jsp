@@ -29,7 +29,6 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.preferences.Preferences;
 import org.eclipse.jdt.annotation.NonNull;
@@ -99,7 +98,7 @@ public class RSSImageLinkTag extends BaseWikiTag {
 		RssGenerator rssGenerator = engine.getManager(RssGenerator.class);
 		
 		final JspWriter out = pageContext.getOut();
-		final ResourceBundle rb = Preferences.getBundle(wikiContext, InternationalizationManager.CORE_BUNDLE);
+		final ResourceBundle rb = Preferences.getBundle(wikiContext);
 		if (rssGenerator != null && rssGenerator.isEnabled()) {
 			if (RssGenerator.MODE_FULL.equals(m_mode)) {
 				final String rssURL = engine.getGlobalRSSURL();

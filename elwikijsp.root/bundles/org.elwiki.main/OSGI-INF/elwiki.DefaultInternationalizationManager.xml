@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.DefaultInternationalizationManager">
-   <service scope="singleton">
-      <provide interface="org.apache.wiki.api.i18n.InternationalizationManager"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
-   </service>
-   <implementation class="org.apache.wiki.i18n.DefaultInternationalizationManager"/>
-</scr:component>

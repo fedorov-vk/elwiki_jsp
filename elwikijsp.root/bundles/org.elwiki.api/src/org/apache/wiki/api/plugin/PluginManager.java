@@ -18,15 +18,14 @@
  */
 package org.apache.wiki.api.plugin;
 
-import org.apache.oro.text.regex.Pattern;
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.modules.ModuleManager;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.oro.text.regex.Pattern;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.api.modules.ModuleManager;
 
 public interface PluginManager extends ModuleManager {
 
@@ -51,6 +50,15 @@ public interface PluginManager extends ModuleManager {
     /** A special name to be used in case you want to see debug output */
     String PARAM_DEBUG     = "debug";
 
+	/**
+	 * Finds a resource bundle of core plugins.
+	 *
+	 * @param context wiki context.
+	 * @return ResourceBundle instance. 
+	 * @throws PluginException TODO
+	 */
+	ResourceBundle getBundle(WikiContext context) throws PluginException;
+    
     /**
      * Enables or disables plugin execution.
      * 
@@ -127,5 +135,5 @@ public interface PluginManager extends ModuleManager {
      * @throws PluginException if there is a problem building the {@link Plugin}.
      */
     Plugin newWikiPlugin( String pluginName, ResourceBundle rb ) throws PluginException;
-    
+
 }

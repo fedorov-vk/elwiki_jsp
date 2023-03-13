@@ -35,6 +35,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.io.IOException;
 import java.util.Map;
@@ -162,7 +163,7 @@ public class TableOfContents implements Plugin, HeadingListener {
 		FilterManager filterManager = engine.getManager(FilterManager.class);
 		
 		WikiPage page = context.getPage();
-		ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+		ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 
 		if (context.getVariable(VAR_ALREADY_PROCESSING) != null) {
 			//return rb.getString("tableofcontents.title");

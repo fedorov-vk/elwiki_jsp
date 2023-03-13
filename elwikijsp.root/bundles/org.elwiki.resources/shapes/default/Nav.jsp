@@ -236,7 +236,7 @@
   <%-- help slimbox-link --%>
   <wiki:CheckRequestContext context='<%=WikiContext.WIKI_FIND%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='SearchPageHelp' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1004' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="find.tab.help" /></span>
     </a>
@@ -244,7 +244,7 @@
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT)%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='EditPageHelp' ></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1002' ></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="edit.tab.help" /></span>
     </a>
@@ -261,7 +261,7 @@
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='<%=WikiContext.WIKI_LOGIN%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='LoginHelp' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
+    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1006' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
       <span class="icon-help-menu"></span>
       <span><fmt:message key="login.tab.help" /></span>
     </a>

@@ -26,10 +26,10 @@ import java.util.ResourceBundle;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -56,7 +56,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+			ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 			Engine engine = context.getEngine();
 			PageManager pageManager = engine.getManager(PageManager.class);
 

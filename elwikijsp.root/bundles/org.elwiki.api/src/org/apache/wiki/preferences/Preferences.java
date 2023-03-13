@@ -101,9 +101,8 @@ public class Preferences extends HashMap<String, String> {
 		IPreferenceStore props = engine.getWikiPreferences();
 
 		final WikiContext ctx = ContextUtil.findContext(request);
-		InternationalizationManager i18lManager = engine.getManager(InternationalizationManager.class);
-		final String dateFormat = i18lManager.get(InternationalizationManager.CORE_BUNDLE, getLocale(ctx),
-				"common.datetimeformat");
+		InternationalizationManager i18n = engine.getManager(InternationalizationManager.class);
+		final String dateFormat = i18n.get(getLocale(ctx), "common.datetimeformat");
 
 		/*:FVK:
 		*///@formatter:off
@@ -268,8 +267,7 @@ public class Preferences extends HashMap<String, String> {
 			prefDateFormat = getPreference(context, "DateFormat");
 			logger.debug("Preferences fmt = " + prefDateFormat);
 			if (prefDateFormat == null) {
-				prefDateFormat = imgr.get(InternationalizationManager.CORE_BUNDLE, clientLocale,
-						"common.datetimeformat");
+				prefDateFormat = imgr.get(clientLocale, "common.datetimeformat");
 				logger.debug("Using locale-format = " + prefDateFormat);
 			}
 			break;
@@ -306,15 +304,14 @@ public class Preferences extends HashMap<String, String> {
 	 * that to figure out which language the user wants.
 	 *
 	 * @param context {@link WikiContext} holding the user's locale
-	 * @param bundle  The name of the bundle you are looking for.
 	 * @return A localized string (or from the default language, if not found)
 	 * @throws MissingResourceException If the bundle cannot be found
 	 * @see org.apache.wiki.i18n.InternationalizationManager
 	 */
-	public static ResourceBundle getBundle(final WikiContext context, final String bundle) throws MissingResourceException {
+	public static ResourceBundle getBundle(WikiContext context) throws MissingResourceException {
 		final Locale loc = getLocale(context);
 		final InternationalizationManager i18n = context.getEngine().getManager(InternationalizationManager.class);
-		return i18n.getBundle(bundle, loc);
+		return i18n.getBundle(loc);
 	}
 
 	/**

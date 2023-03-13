@@ -37,6 +37,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.permissions.PagePermission;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -277,11 +278,12 @@ public class WeblogPlugin implements Plugin, ParserStagePlugin {
      *  @param hasComments  True, if comments are enabled.
      *  @param buffer       The buffer to which we add.
      *  @param entry
-     *  @throws ProviderException
+     * @throws PluginException TODO
+     * @throws ProviderException
      */
     private void addEntryHTML( final WikiContext context, final DateFormat entryFormat, final boolean hasComments,
-                               final StringBuilder buffer, final WikiPage entry, final Map< String, String > params) {
-        final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+                               final StringBuilder buffer, final WikiPage entry, final Map< String, String > params) throws PluginException {
+        final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 
         buffer.append("<div class=\"weblogentry\">\n");
 

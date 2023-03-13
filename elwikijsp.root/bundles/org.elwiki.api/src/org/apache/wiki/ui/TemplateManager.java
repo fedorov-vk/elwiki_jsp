@@ -32,7 +32,6 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.modules.ModuleManager;
 import org.apache.wiki.preferences.Preferences;
 
@@ -248,7 +247,7 @@ public interface TemplateManager extends ModuleManager {
     static String getJSLocalizedStrings( final WikiContext context ) {
         final StringBuilder sb = new StringBuilder();
         sb.append( "var LocalizedStrings = {\n");
-        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.DEF_TEMPLATE );
+        final ResourceBundle rb = Preferences.getBundle( context );
         boolean first = true;
 
         for( final Enumeration< String > en = rb.getKeys(); en.hasMoreElements(); ) {

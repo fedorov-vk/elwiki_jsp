@@ -42,6 +42,7 @@ import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
@@ -192,7 +193,10 @@ public class Installer {
     }
     
     public void parseProperties () {
-        final ResourceBundle rb = ResourceBundle.getBundle( InternationalizationManager.CORE_BUNDLE, m_session.getLocale() );
+		@NonNull
+		InternationalizationManager i18n = m_engine.getManager(InternationalizationManager.class);
+		ResourceBundle rb = i18n.getBundle(m_request.getLocale());
+
         m_validated = false;
 
         // Get application name
@@ -218,7 +222,10 @@ public class Installer {
     }
     
     public void saveProperties() {
-        final ResourceBundle rb = ResourceBundle.getBundle( InternationalizationManager.CORE_BUNDLE, m_session.getLocale() );
+		@NonNull
+		InternationalizationManager i18n = m_engine.getManager(InternationalizationManager.class);
+		ResourceBundle rb = i18n.getBundle(m_request.getLocale());
+
         // Write the file back to disk
         try {
             try( final OutputStream out = new FileOutputStream( m_propertyFile ) ) {
@@ -232,7 +239,10 @@ public class Installer {
     }
     
     public boolean validateProperties() {
-        final ResourceBundle rb = ResourceBundle.getBundle( InternationalizationManager.CORE_BUNDLE, m_session.getLocale() );
+		@NonNull
+		InternationalizationManager i18n = m_engine.getManager(InternationalizationManager.class);
+		ResourceBundle rb = i18n.getBundle(m_request.getLocale());
+    	
         m_session.clearMessages( INSTALL_ERROR );
         parseProperties();
         validateNotNull( PAGE_DIR, rb.getString( "install.installer.validate.pagedir" ) );

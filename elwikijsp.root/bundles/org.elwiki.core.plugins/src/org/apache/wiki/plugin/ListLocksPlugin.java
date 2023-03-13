@@ -26,6 +26,7 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ListLocksPlugin implements Plugin {
     	final StringBuilder result = new StringBuilder();
         final PageManager pageManager = engine.getManager(PageManager.class);
         final List< PageLock > locks = pageManager.getActiveLocks();
-        final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
+        final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
         result.append("<table class=\"wikitable\">\n");
         result.append("<tr>\n");
         result.append( "<th>" + rb.getString( "plugin.listlocks.page" ) + "</th><th>" + rb.getString( "plugin.listlocks.locked.by" )

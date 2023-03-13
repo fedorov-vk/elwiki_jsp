@@ -35,6 +35,7 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.permissions.PermissionFactory;
+import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -107,7 +108,7 @@ public class InsertPage implements Plugin {
 		int section = TextUtil.parseIntParameter(params.get(PARAM_SECTION), -1);
 		int maxlen = TextUtil.parseIntParameter(params.get(PARAM_MAXLENGTH), -1);
 
-		ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+		ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 
 		if (style == null) {
 			style = DEFAULT_STYLE;

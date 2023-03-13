@@ -20,6 +20,7 @@
 <%@ page errorPage="/shapes/Error.jsp" %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
+<%@ page import="org.apache.wiki.workflow0.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -166,7 +167,7 @@
             <form id="workflow.${workflow.id}"
               action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
               method="POST" accept-charset="UTF-8">
-              <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<fmt:message key="outcome.step.abort" />" />
+              <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<%=Outcome.STEP_ABORT.getMessageKey()%>" />
               <input type="hidden" name="action" value="abort" />
               <input type="hidden" name="id" value="${workflow.id}" />
             </form>

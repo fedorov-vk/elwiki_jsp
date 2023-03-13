@@ -25,11 +25,11 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -79,8 +79,8 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-			//ReferenceManager refmgr = Engine.getReferenceManager();
-			ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+			//:FVK: или не я? ReferenceManager refmgr = Engine.getReferenceManager();
+			ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 			StringBuilder result = new StringBuilder(256);
 
 			WikiPage page;

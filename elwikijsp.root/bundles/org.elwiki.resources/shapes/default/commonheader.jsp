@@ -111,7 +111,7 @@ String.I18N.PREFIX = "javascript.";
 
 <link rel="search" href="<wiki:LinkTo format='url' pageName='cmd.find'/>"
     title='Search <wiki:Variable var="ApplicationName" />' />
-<link rel="help"   href="<wiki:LinkTo format='url' pageName='TextFormattingRules'/>"
+<link rel="help"   href="<wiki:LinkTo format='url' pageName='1003'/>"
     title="Help" />
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
 <link rel="start"  href="<wiki:Link pageName='${frontpage}' format='url' />" title="Front page" />

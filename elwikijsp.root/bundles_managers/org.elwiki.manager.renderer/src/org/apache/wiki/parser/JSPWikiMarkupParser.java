@@ -18,6 +18,24 @@
  */
 package org.apache.wiki.parser;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Stack;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Result;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -33,14 +51,11 @@ import org.apache.wiki.LinkCollector;
 import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.elwiki_data.Acl;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
-import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
-import org.apache.wiki.api.plugin.Plugin;
+import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -56,29 +71,14 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki_data.Acl;
+import org.elwiki_data.WikiPage;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.IllegalDataException;
 import org.jdom2.ProcessingInstruction;
 import org.jdom2.Verifier;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Result;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Stack;
 
 /**
  *  Parses JSPWiki-style markup into a WikiDocument DOM tree.  This class is the
@@ -199,6 +199,8 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 	private AclManager aclManager;
 
+	private PluginManager pluginManager;
+
     /**
      *  Creates a markup parser.
      *
@@ -214,6 +216,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         attachmentManager = this.m_engine.getManager(AttachmentManager.class);
         variableManager = this.m_engine.getManager(VariableManager.class);
         aclManager = this.m_engine.getManager(AclManager.class);
+        pluginManager = this.m_engine.getManager(PluginManager.class); 
     }
 
     // FIXME: parsers should be pooled for better performance.
@@ -358,7 +361,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
         {
             type = LinkType.EMPTY;
         }
-        final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+        final ResourceBundle rb = Preferences.getBundle( m_context );
 
         //@formatter:off
 		el = switch (type) {
@@ -1110,7 +1113,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 m_context.getPage().setAttribute(name, val );
             }
         } catch( final Exception e ) {
-            final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            final ResourceBundle rb = Preferences.getBundle( m_context );
             return makeError( MessageFormat.format( rb.getString( "markupparser.error.invalidset" ), link ) );
         }
 
@@ -1130,7 +1133,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
      *  Gobbles up all hyperlinks that are encased in square brackets.
      */
     private Element handleHyperlinks( String linkText, final int pos ) {
-        final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+        final ResourceBundle rb = Preferences.getBundle( m_context );
         final StringBuilder sb = new StringBuilder( linkText.length() + 80 );
 
         if( m_linkParsingOperations.isAccessRule( linkText ) ) {
@@ -1154,13 +1157,18 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 log.info( m_context.getRealPage().getWiki() + " : " + m_context.getRealPage().getName() + " - Failed to insert plugin: " + e.getMessage() );
                 //log.info( "Root cause:",e.getRootThrowable() );
                 if( !m_wysiwygEditorMode ) {
-                    final ResourceBundle rbPlugin = Preferences.getBundle( m_context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
-                    return addElement( makeError( MessageFormat.format( rbPlugin.getString( "plugin.error.insertionfailed" ),
-                    		                                            m_context.getRealPage().getWiki(),
-                    		                                            m_context.getRealPage().getName(),
-                    		                                            e.getMessage() ) ) );
-                }
-            }
+					String message;
+					try {
+						ResourceBundle rbPlugin = pluginManager.getBundle(m_context);
+						message = rbPlugin.getString("plugin.error.insertionfailed");
+					} catch (PluginException e1) {
+						log.error(e1.getMessage());
+						message = "{0} : {1} - Plugin insertion failed: {2}";
+					}
+					return addElement(makeError(MessageFormat.format(message, //
+							m_context.getRealPage().getWiki(), m_context.getRealPage().getName(), e.getMessage())));
+				}
+			}
 
             return m_currentElement;
         }
@@ -2047,7 +2055,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 if( style != null && style.indexOf("javascript:") != -1 )
                 {
                     log.debug("Attempt to output javascript within CSS:"+style);
-                    final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+                    final ResourceBundle rb = Preferences.getBundle( m_context );
                     return addElement( makeError( rb.getString( "markupparser.error.javascriptattempt" ) ) );
                 }
             }
@@ -2056,7 +2064,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 //
                 //  If there are unknown entities, we don't want the parser to stop.
                 //
-                final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+                final ResourceBundle rb = Preferences.getBundle( m_context );
                 final String msg = MessageFormat.format( rb.getString( "markupparser.error.parserfailure"), e.getMessage() );
                 return addElement( makeError( msg ) );
             }

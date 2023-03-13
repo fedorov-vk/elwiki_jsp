@@ -31,7 +31,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
@@ -187,7 +186,7 @@ public class UserProfileTag extends BaseWikiTag {
 	public static String printGroups(final WikiContext context) {
 		final Principal[] roles = context.getWikiSession().getRoles();
 		final List<String> tempRoles = new ArrayList<>();
-		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
+		final ResourceBundle rb = Preferences.getBundle(context);
 
 		for (final Principal role : roles) {
 			if (role instanceof GroupPrincipal) {
@@ -223,7 +222,7 @@ public class UserProfileTag extends BaseWikiTag {
 	public static String printRoles(final WikiContext context) {
 		final Principal[] roles = context.getWikiSession().getRoles();
 		final List<String> tempRoles = new ArrayList<>();
-		final ResourceBundle rb = Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE);
+		final ResourceBundle rb = Preferences.getBundle(context);
 
 		for (final Principal role : roles) {
 			if (role instanceof GroupPrincipal) {

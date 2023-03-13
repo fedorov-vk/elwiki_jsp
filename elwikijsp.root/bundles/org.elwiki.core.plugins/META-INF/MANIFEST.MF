@@ -8,6 +8,7 @@ Automatic-Module-Name: org.elwiki.core.plugins
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.elwiki.plugins.internal.PluginsActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Localization: OSGI-INF/l10n/PluginResources
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.osgi.services;bundle-version="3.8.0",
  org.eclipse.equinox.common;bundle-version="3.11.0",
@@ -30,4 +31,6 @@ Import-Package: javax.servlet;version="3.1.0",
  org.apache.wiki.util.comparators,
  org.eclipse.jface.preference,
  org.elwiki.configuration
-Export-Package: org.apache.wiki.plugin
+Export-Package: org.apache.wiki.forms,
+ org.apache.wiki.plugin
+Service-Component: OSGI-INF/elwiki.DefaultPluginManager.xml

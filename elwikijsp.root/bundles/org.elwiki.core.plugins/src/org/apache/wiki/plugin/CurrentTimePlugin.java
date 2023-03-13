@@ -23,6 +23,7 @@ import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class CurrentTimePlugin implements Plugin {
 
             return fmt.format( d );
         } catch( final IllegalArgumentException e ) {
-            final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
+            final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
             throw new PluginException( rb.getString( "currenttimeplugin.badformat" ) + e.getMessage(), e );
         }
     }

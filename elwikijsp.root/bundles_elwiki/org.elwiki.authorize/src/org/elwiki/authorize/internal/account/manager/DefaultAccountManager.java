@@ -38,7 +38,6 @@ import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
@@ -534,7 +533,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 		 final boolean isNew = profile.isNew();
 	        final Session session = context.getWikiSession();
 	        final InputValidator validator = new InputValidator( SESSION_MESSAGES, context );
-	        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
+	        final ResourceBundle rb = Preferences.getBundle( context );
 
 	        //  Query the SpamFilter first
 			ISpamFilter spamFilter = getFilterManager().getSpamFilter();

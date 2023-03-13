@@ -32,6 +32,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -93,7 +94,7 @@ public class WeblogEntryPlugin implements Plugin {
      */
     @Override
     public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
-        final ResourceBundle rb = Preferences.getBundle(context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+        final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
         final IWikiConfiguration config = context.getConfiguration();
 
         String weblogName = params.get(PARAM_BLOGNAME);

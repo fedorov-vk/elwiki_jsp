@@ -108,8 +108,8 @@ public class PrefsCmdCode extends CmdCode {
 				} catch (DuplicateUserException due) {
 					// User collision! (full name or wiki name already taken)
 					@NonNull
-					InternationalizationManager im = wiki.getManager(InternationalizationManager.class);
-					String message = im.get(InternationalizationManager.CORE_BUNDLE, Preferences.getLocale(wikiContext),
+					InternationalizationManager i18n = wiki.getManager(InternationalizationManager.class);
+					String message = i18n.get(Preferences.getLocale(wikiContext),
 							due.getMessage(), due.getArgs());
 					wikiSession.addMessage("profile", message);
 				} catch (DecisionRequiredException e) {

@@ -51,7 +51,7 @@ public class RenameCmdCode extends CmdCode {
 
 		boolean changeReferences = false;
 
-		ResourceBundle rb = Preferences.getBundle(wikiContext, "CoreResources");
+		ResourceBundle rb = Preferences.getBundle(wikiContext);
 
 		if (httpRequest.getParameter("references") != null) {
 			changeReferences = true;

@@ -24,7 +24,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.suigeneris.jrcs.diff.Diff;
@@ -130,7 +129,7 @@ public class TraditionalDiffProvider implements DiffProvider {
         private RevisionPrint( final WikiContext ctx, final StringBuffer sb ) {
             m_result = sb;
             m_context = ctx;
-            m_rb = Preferences.getBundle( ctx, InternationalizationManager.CORE_BUNDLE );
+            m_rb = Preferences.getBundle( ctx );
         }
 
         @Override

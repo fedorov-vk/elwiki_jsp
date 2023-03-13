@@ -56,6 +56,7 @@ Import-Package: javax.mail;version="1.4.0",
  org.intabulas.sandler.exceptions,
  org.osgi.framework;version="1.3.0"
 Service-Component: OSGI-INF/contextSPI.xml,
+ OSGI-INF/elwiki.DefaultInternationalizationManager.xml,
  OSGI-INF/elwiki.DefaultAdminBeanManager.xml,
  OSGI-INF/elwiki.DefaultProgressManager.xml,
  OSGI-INF/elwiki.DefaultTemplateManager.xml,

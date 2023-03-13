@@ -25,7 +25,6 @@ import javax.servlet.jsp.JspTagException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
@@ -83,7 +82,7 @@ public class AuthorTag extends BaseWikiTag {
 
 			pageContext.getOut().print(author);
 		} else {
-			pageContext.getOut().print(Preferences.getBundle(wikiContext, InternationalizationManager.CORE_BUNDLE)
+			pageContext.getOut().print(Preferences.getBundle(wikiContext)
 					.getString("common.unknownauthor"));
 		}
 

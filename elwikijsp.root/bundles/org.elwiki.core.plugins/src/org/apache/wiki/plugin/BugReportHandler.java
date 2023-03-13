@@ -30,6 +30,7 @@ import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -81,13 +82,13 @@ public class BugReportHandler implements Plugin {
     	Engine engine = context.getEngine();
     	this.pageManager = engine.getManager(PageManager.class);
     	
-        final String title = params.get( PARAM_TITLE );
+        String title = params.get( PARAM_TITLE );
         String description = params.get( PARAM_DESCRIPTION );
         String version = params.get( PARAM_VERSION );
         String submitter = null;
-        final SimpleDateFormat format = new SimpleDateFormat( DEFAULT_DATEFORMAT );
-        final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
-        final Principal wup = context.getCurrentUser();
+        SimpleDateFormat format = new SimpleDateFormat( DEFAULT_DATEFORMAT );
+        ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
+        Principal wup = context.getCurrentUser();
 
         if( wup != null ) {
             submitter = wup.getName();

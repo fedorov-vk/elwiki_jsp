@@ -61,8 +61,7 @@
 		if( creationAuthor != null && creationAuthor.length() > 0 ) {
 			creationAuthor = TextUtil.replaceEntities(creationAuthor);
 		} else {
-			creationAuthor = Preferences.getBundle(wikiContext,
-				InternationalizationManager.CORE_BUNDLE).getString("common.unknownauthor");
+			creationAuthor = Preferences.getBundle(wikiContext).getString("common.unknownauthor");
 		}
 	}
 

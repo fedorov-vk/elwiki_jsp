@@ -39,15 +39,10 @@ Import-Package: javax.mail;version="1.4.0",
  org.osgi.service.component.annotations;version="1.3.0",
  org.slf4j;version="1.7.2"
 Export-Package: org.apache.wiki,
- org.apache.wiki.forms,
- org.apache.wiki.i18n,
  org.apache.wiki.internal,
- org.apache.wiki.plugin,
  org.apache.wiki.tasks,
  org.apache.wiki.tasks.auth,
  org.apache.wiki.tasks.pages,
  org.apache.wiki.variables
-Service-Component: OSGI-INF/elwiki.DefaultInternationalizationManager.xml,
- OSGI-INF/elwiki.DefaultPluginManager.xml,
- OSGI-INF/elwiki.DefaultTasksManager.xml,
+Service-Component: OSGI-INF/elwiki.DefaultTasksManager.xml,
  OSGI-INF/elwiki.DefaultVariableManager.xml

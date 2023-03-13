@@ -69,7 +69,7 @@ public class CommentCmdCode extends CmdCode {
 	    }
 	    String pagereq = wikiContext.getName();
 
-	    ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
+	    ResourceBundle rb = Preferences.getBundle( wikiContext );
 	    Session wikiSession = wikiContext.getWikiSession();
 	    String storedUser = wikiSession.getUserPrincipal().getName();
 

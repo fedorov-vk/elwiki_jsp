@@ -60,10 +60,9 @@ public class SaveUserProfileTask extends Task {
                 try {
                     final InternationalizationManager i18n = m_engine.getManager(InternationalizationManager.class);
                     final String app = m_engine.getWikiConfiguration().getApplicationName();
-                    final String subject = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
-                                                     "wf.notification.createUserProfile.accept.subject", app );
+                    final String subject = i18n.get(m_loc, "wf.notification.createUserProfile.accept.subject", app );
 
-                    final String content = i18n.get( InternationalizationManager.DEF_TEMPLATE, m_loc,
+                    final String content = i18n.get(m_loc,
                                                      "wf.notification.createUserProfile.accept.content", app,
                                                      profile.getLoginName(),
                                                      profile.getFullname(),

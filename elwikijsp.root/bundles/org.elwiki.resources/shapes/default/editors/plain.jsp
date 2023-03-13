@@ -174,7 +174,7 @@ if( usertext == null ) usertext = "";
       <ul class="dropdown-menu" data-hover-parent="div">
 
             <li>
-        <a class="slimbox-link" href="<wiki:Link format='url' pageName='EditPageHelp' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
+        <a class="slimbox-link" href="<wiki:Link format='url' pageName='1002' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
           <fmt:message key="edit.tab.help" />
         </a>
     <%--

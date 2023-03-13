@@ -20,7 +20,6 @@ package org.apache.wiki.ui;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Session;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.preferences.Preferences;
 
 import java.text.MessageFormat;
@@ -91,7 +90,7 @@ public final class InputValidator {
      */
     public boolean validateNotNull( final String input, final String label, final int type ) {
         if ( isBlank( input ) ) {
-            final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            final ResourceBundle rb = Preferences.getBundle( m_context );
             m_session.addMessage( m_form, MessageFormat.format( rb.getString("validate.cantbenull"), label ) );
             return false;
         }
@@ -113,7 +112,7 @@ public final class InputValidator {
             return true;
         }
 
-        final ResourceBundle rb = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+        final ResourceBundle rb = Preferences.getBundle( m_context );
 
         // Otherwise, see if it matches the pattern for the target type
         final Matcher matcher;

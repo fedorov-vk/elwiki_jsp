@@ -176,7 +176,7 @@ public class PluginContent extends Text implements PluginElement {
                 result = "";
             } else {
                 // log.info("Failed to execute plugin",e);
-                final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE );
+                final ResourceBundle rb = Preferences.getBundle( context );
                 result = MarkupParser.makeError( MessageFormat.format( rb.getString( "plugin.error.insertionfailed" ), 
                 		                                               context.getRealPage().getWiki(), 
                 		                                               context.getRealPage().getName(), 
@@ -193,7 +193,7 @@ public class PluginContent extends Text implements PluginElement {
 		Engine engine = context.getEngine();
 		PluginManager pluginManager = engine.getManager(PluginManager.class);
         if( pluginManager.pluginsEnabled() ) {
-            final ResourceBundle rb = Preferences.getBundle( context, Plugin.CORE_PLUGINS_RESOURCEBUNDLE);
+            final ResourceBundle rb = Preferences.getBundle( context);
             final Map< String, String > params = getParameters();
             final Plugin plugin = pluginManager.newWikiPlugin( getPluginName(), rb );
             try {

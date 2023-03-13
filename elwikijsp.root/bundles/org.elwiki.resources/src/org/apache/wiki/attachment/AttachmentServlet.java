@@ -53,7 +53,6 @@ import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
@@ -514,7 +513,7 @@ public class AttachmentServlet extends HttpServlet {
 			// this is a kludge, the exception that is caught here contains the i18n key
 			// here we have the context available, so we can internationalize it properly :
 			throw new RedirectException(
-					Preferences.getBundle(context, InternationalizationManager.CORE_BUNDLE).getString(e.getMessage()),
+					Preferences.getBundle(context).getString(e.getMessage()),
 					errorPage);
 		}
 

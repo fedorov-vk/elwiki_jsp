@@ -35,7 +35,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.PageFilter;
-import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.variables.VariableManager;
@@ -416,13 +415,13 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 
         public String getLoginstatus() {
             final Session session = m_context.getWikiSession();
-            ResourceBundle rcBundle = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            ResourceBundle rcBundle = Preferences.getBundle( m_context );
             return rcBundle.getString( "varmgr." + session.getLoginStatus().getId());
         }
 
         public String getUsername() {
             final Principal wup = m_context.getCurrentUser();
-            final ResourceBundle rcBundle = Preferences.getBundle( m_context, InternationalizationManager.CORE_BUNDLE );
+            final ResourceBundle rcBundle = Preferences.getBundle( m_context );
             return wup != null ? wup.getName() : rcBundle.getString( "varmgr.not.logged.in" );
         }
 

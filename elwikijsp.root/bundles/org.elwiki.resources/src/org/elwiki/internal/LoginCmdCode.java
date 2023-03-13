@@ -54,7 +54,7 @@ public class LoginCmdCode extends CmdCode {
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE - уже должен быть установлен.
 		// httpRequest.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
 		Session wikiSession = wikiContext.getWikiSession();
-		ResourceBundle rb = Preferences.getBundle(wikiContext, "CoreResources"); // :FVK: это ресурсы в заданном
+		ResourceBundle rb = Preferences.getBundle(wikiContext); // :FVK: это ресурсы в заданном
 
 		// Set the redirect-page variable if one was passed as a parameter.
 		String requestRedirect = (httpRequest.getParameter("redirect") != null) ? //
@@ -78,9 +78,8 @@ public class LoginCmdCode extends CmdCode {
 							getEngine().getManager(InternationalizationManager.class);
 							
 					// User collision! (full name or wiki name already taken)
-					wikiSession.addMessage("profile",
-							internationalizationManager.get(InternationalizationManager.CORE_BUNDLE,
-									Preferences.getLocale(wikiContext), due.getMessage(), due.getArgs()));
+					wikiSession.addMessage("profile", internationalizationManager
+							.get(Preferences.getLocale(wikiContext), due.getMessage(), due.getArgs()));
 				} catch (DecisionRequiredException e) {
 					String redirect = getEngine().getURL(ContextEnum.PAGE_VIEW.getRequestContext(),
 							"ApprovalRequiredForUserProfiles", null);
