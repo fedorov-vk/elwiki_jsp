@@ -60,6 +60,7 @@ public interface AllCommands {
             WikiCommand.INSTALL,
             WikiCommand.LOGIN,
             WikiCommand.LOGOUT,
+            WikiCommand.LOSTPASSWORD,
             WikiCommand.MESSAGE,
             WikiCommand.PREFS,
             WikiCommand.WORKFLOW,

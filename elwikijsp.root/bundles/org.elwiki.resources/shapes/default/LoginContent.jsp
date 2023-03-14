@@ -42,12 +42,10 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
 %>
 <c:set var="allowsCookieAuthentication" value="<%= authenticationManager.allowsCookieAuthentication() %>" />
 <div class="page-content">
+<div class="tabs">
 
 <%-- Login functionality --%>
-<wiki:UserCheck status="notauthenticated">
-<%--<wiki:Include page='LoginTab.jsp'/>--%>
-
-<div class="tabs" >
+<wiki:UserCheck status="notAuthenticated">
 
 <h3 id="section-login"><fmt:message key="login.tab"/></h3>
 
@@ -184,7 +182,6 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
 <c:set var="registerTab" value="${param.tab == 'register' ? 'data-activePane': ''}"/>
 <h3 ${registerTab} id="section-register"><fmt:message key="login.register.tab" /></h3>
 
-<%-- <wiki:Include page='ProfileTab.jsp'/> --%>
 <form action="<wiki:Link context='<%=WikiContext.WIKI_LOGIN%>' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>"
           id="editProfile"
        class="login-form"
@@ -270,7 +267,6 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
 </wiki:Permission>
 
 </div>
-
 </div>
 
 <!-- ~~ END ~~ LoginContent.jsp -->
