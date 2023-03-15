@@ -167,7 +167,7 @@
             <form id="workflow.${workflow.id}"
               action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
               method="POST" accept-charset="UTF-8">
-              <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<%=Outcome.STEP_ABORT.getMessageKey()%>" />
+              <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<fmt:message key='<%=Outcome.STEP_ABORT.getMessageKey()%>'/>" />
               <input type="hidden" name="action" value="abort" />
               <input type="hidden" name="id" value="${workflow.id}" />
             </form>
