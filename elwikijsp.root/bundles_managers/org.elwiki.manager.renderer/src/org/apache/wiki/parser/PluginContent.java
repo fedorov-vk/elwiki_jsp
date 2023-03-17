@@ -132,6 +132,10 @@ public class PluginContent extends Text implements PluginElement {
     /**{@inheritDoc}*/
     @Override
     public String invoke( final WikiContext context ) {
+		Engine engine = context.getEngine();
+		VariableManager variableManager = engine.getManager(VariableManager.class);
+		PluginManager pluginManager = engine.getManager(PluginManager.class);
+
 		String result;
 		final Boolean wysiwygVariable = context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         boolean wysiwygEditorMode = false;
@@ -158,9 +162,6 @@ public class PluginContent extends Text implements PluginElement {
                     return BLANK;
                 }
 
-        		Engine engine = context.getEngine();
-        		VariableManager variableManager = engine.getManager(VariableManager.class);
-        		PluginManager pluginManager = engine.getManager(PluginManager.class);
                 final Map< String, String > parsedParams = new HashMap<>();
 
                 //  Parse any variable instances from the string
@@ -175,36 +176,41 @@ public class PluginContent extends Text implements PluginElement {
             if( wysiwygEditorMode ) {
                 result = "";
             } else {
-                // log.info("Failed to execute plugin",e);
-                final ResourceBundle rb = Preferences.getBundle( context );
-                result = MarkupParser.makeError( MessageFormat.format( rb.getString( "plugin.error.insertionfailed" ), 
-                		                                               context.getRealPage().getWiki(), 
-                		                                               context.getRealPage().getName(), 
-                		                                               e.getMessage() ) ).getText();
-            }
+				//:FVK: log.info("Failed to execute plugin", e);
+				String pattern = "{0} : {1} - Plugin insertion failed: {2}";
+				try {//workaround.
+					pattern = pluginManager.getBundle(context).getString("plugin.error.insertionfailed");
+				} catch (PluginException e1) {
+				}
+				result = MarkupParser.makeError(MessageFormat.format(pattern, //
+						context.getRealPage().getWiki(), // 
+						context.getRealPage().getName(), // 
+						e.getMessage())).getText();
+			}
         }
 
         return result;
 	}
 
-    /**{@inheritDoc}*/
-    @Override
-    public void executeParse( final WikiContext context ) throws PluginException {
+	/** {@inheritDoc} */
+	@Override
+	public void executeParse(WikiContext context) throws PluginException {
 		Engine engine = context.getEngine();
 		PluginManager pluginManager = engine.getManager(PluginManager.class);
-        if( pluginManager.pluginsEnabled() ) {
-            final ResourceBundle rb = Preferences.getBundle( context);
-            final Map< String, String > params = getParameters();
-            final Plugin plugin = pluginManager.newWikiPlugin( getPluginName(), rb );
-            try {
-                if( plugin instanceof ParserStagePlugin parserStagePlugin) {
-                	parserStagePlugin.executeParser(this, context, params );
-                }
-            } catch( final ClassCastException e ) {
-                throw new PluginException( MessageFormat.format( rb.getString("plugin.error.notawikiplugin"), getPluginName() ), e );
-            }
-        }
-    }
+		if (pluginManager.pluginsEnabled()) {
+			Plugin plugin = pluginManager.newWikiPlugin(getPluginName(), context);
+			try {
+				if (plugin instanceof ParserStagePlugin parserStagePlugin) {
+					Map<String, String> params = getParameters();
+					parserStagePlugin.executeParser(this, context, params);
+				}
+			} catch (ClassCastException e) {
+				String pattern = pluginManager.getBundle(context).getString("plugin.error.notawikiplugin");
+				throw new PluginException(
+						MessageFormat.format(pattern, getPluginName()), e);
+			}
+		}
+	}
 
     /**
      * Parses a plugin invocation and returns a DOM element.

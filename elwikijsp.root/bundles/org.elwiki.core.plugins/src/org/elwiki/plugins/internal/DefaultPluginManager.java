@@ -390,11 +390,9 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 		}
 
 		boolean debug = TextUtil.isPositive(params.get(PARAM_DEBUG));
-		ResourceBundle rb = getBundle(context);
 		try {
-
 			//   Create...
-			final Plugin plugin = newWikiPlugin(classname, rb);
+			final Plugin plugin = newWikiPlugin(classname, context);
 			if (plugin == null) {
 				return "Plugin '" + classname + "' not compatible with this version of JSPWiki";
 			}
@@ -416,11 +414,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 					return stackTrace(params, t);
 				}
 
-				throw new PluginException(rb.getString("plugin.error.failed"), t);
+				throw new PluginException(getBundle(context).getString("plugin.error.failed"), t);
 			}
 
 		} catch (ClassCastException e) {
-			throw new PluginException(MessageFormat.format(rb.getString("plugin.error.notawikiplugin"), classname), e);
+			throw new PluginException(
+					MessageFormat.format(getBundle(context).getString("plugin.error.notawikiplugin"), classname), e);
 		}
     }
 
@@ -508,7 +507,6 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
             return "";
         }
 
-        ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
         final PatternMatcher matcher = new Perl5Matcher();
 
         try {
@@ -523,11 +521,11 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         } catch( final NoSuchElementException e ) {
             final String msg =  "Missing parameter in plugin definition: " + commandline;
             log.warn( msg, e );
-            throw new PluginException( MessageFormat.format( rb.getString( "plugin.error.missingparameter" ), commandline ) );
+            throw new PluginException( MessageFormat.format( getBundle(context).getString( "plugin.error.missingparameter" ), commandline ) );
         } catch( final IOException e ) {
             final String msg = "Zyrf.  Problems with parsing arguments: " + commandline;
             log.warn( msg, e );
-            throw new PluginException( MessageFormat.format( rb.getString( "plugin.error.parsingarguments" ), commandline ) );
+            throw new PluginException( MessageFormat.format( getBundle(context).getString( "plugin.error.parsingarguments" ), commandline ) );
         }
 
         // FIXME: We could either return an empty string "", or the original line.  If we want unsuccessful requests
@@ -769,12 +767,13 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
      * Creates a {@link Plugin}.
      *
      * @param pluginName plugin's classname
-     * @param rb {@link ResourceBundle} with i18ned text for exceptions.
+     * @param context The current WikiContext.
      * @return a {@link Plugin}.
      * @throws PluginException if there is a problem building the {@link Plugin}.
      */
     @Override
-    public Plugin newWikiPlugin( final String pluginName, final ResourceBundle rb ) throws PluginException {
+    public Plugin newWikiPlugin( final String pluginName, WikiContext context ) throws PluginException {
+		ResourceBundle rb = getBundle(context);
         Plugin plugin = null;
         WikiPluginInfo pluginInfo = m_pluginClassMap.get( pluginName );
         try {
@@ -796,11 +795,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         } catch( final IllegalAccessException e ) {
             throw new PluginException( MessageFormat.format( rb.getString( "plugin.error.notallowed" ), pluginName ), e );
         } catch( final Exception e ) {
-            throw new PluginException( MessageFormat.format( rb.getString( "plugin.error.instantationfailed" ), pluginName ), e );
+        	String msg = rb.getString( "plugin.error.instantationfailed" );
+            throw new PluginException( MessageFormat.format( msg, pluginName ), e );
         }
         return plugin;
     }
-
+	
 	@Override
 	public void handleEvent(Event event) {
 		/*String topic = event.getTopic();

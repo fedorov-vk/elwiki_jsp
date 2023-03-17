@@ -51,11 +51,13 @@ public interface PluginManager extends ModuleManager {
     String PARAM_DEBUG     = "debug";
 
 	/**
-	 * Finds a resource bundle of core plugins.
+	 * Locates the specified i18n ResourceBundle of core plugins.<br/>
+	 * This method interprets the request locale, and uses that to figure out which language the user
+	 * wants.
 	 *
 	 * @param context wiki context.
-	 * @return ResourceBundle instance. 
-	 * @throws PluginException TODO
+	 * @return A ResourceBundle with localized strings (or from the default language, if Locale not defined).
+	 * @throws PluginException If the bundle cannot be found.
 	 */
 	ResourceBundle getBundle(WikiContext context) throws PluginException;
     
@@ -130,10 +132,10 @@ public interface PluginManager extends ModuleManager {
      * Creates a {@link Plugin}.
      * 
      * @param pluginName plugin's classname
-     * @param rb {@link ResourceBundle} with i18ned text for exceptions.
+     * @param context {@link ResourceBundle} with i18ned text for exceptions.
      * @return a {@link Plugin}.
      * @throws PluginException if there is a problem building the {@link Plugin}.
      */
-    Plugin newWikiPlugin( String pluginName, ResourceBundle rb ) throws PluginException;
+    Plugin newWikiPlugin( String pluginName, WikiContext context ) throws PluginException;
 
 }

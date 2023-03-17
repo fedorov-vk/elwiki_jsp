@@ -1157,16 +1157,15 @@ public class JSPWikiMarkupParser extends MarkupParser {
                 log.info( m_context.getRealPage().getWiki() + " : " + m_context.getRealPage().getName() + " - Failed to insert plugin: " + e.getMessage() );
                 //log.info( "Root cause:",e.getRootThrowable() );
                 if( !m_wysiwygEditorMode ) {
-					String message;
-					try {
-						ResourceBundle rbPlugin = pluginManager.getBundle(m_context);
-						message = rbPlugin.getString("plugin.error.insertionfailed");
-					} catch (PluginException e1) {
-						log.error(e1.getMessage());
-						message = "{0} : {1} - Plugin insertion failed: {2}";
-					}
-					return addElement(makeError(MessageFormat.format(message, //
-							m_context.getRealPage().getWiki(), m_context.getRealPage().getName(), e.getMessage())));
+    				String pattern = "{0} : {1} - Plugin insertion failed: {2}";
+    				try {//workaround.
+    					pattern = pluginManager.getBundle(m_context).getString("plugin.error.insertionfailed");
+    				} catch (PluginException e1) {
+    				}
+					return addElement(makeError(MessageFormat.format(pattern, //
+							m_context.getRealPage().getWiki(), //
+							m_context.getRealPage().getName(), //
+							e.getMessage())));
 				}
 			}
 

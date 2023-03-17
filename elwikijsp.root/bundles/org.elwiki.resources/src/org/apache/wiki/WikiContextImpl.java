@@ -790,4 +790,9 @@ public class WikiContextImpl implements WikiContext, Command {
 		return this.m_command.getContextCmd();
 	}
 
+	@Override
+	public String toString() {
+		return (this.m_command != null) ? this.m_command.getContextCmd().getRequestContext() : super.toString();
+	}
+	
 }
