@@ -55,7 +55,6 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -199,8 +198,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 	private AclManager aclManager;
 
-	private PluginManager pluginManager;
-
     /**
      *  Creates a markup parser.
      *
@@ -216,7 +213,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         attachmentManager = this.m_engine.getManager(AttachmentManager.class);
         variableManager = this.m_engine.getManager(VariableManager.class);
         aclManager = this.m_engine.getManager(AclManager.class);
-        pluginManager = this.m_engine.getManager(PluginManager.class); 
     }
 
     // FIXME: parsers should be pooled for better performance.
@@ -1145,8 +1141,9 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
 
         if( m_linkParsingOperations.isPluginLink( linkText ) ) {
+        	PluginContent pluginContent = null;
             try {
-                final PluginContent pluginContent = PluginContent.parsePluginLine( m_context, linkText, pos );
+            	pluginContent = PluginContent.parsePluginLine( m_context, linkText, pos );
 
                 // This might sometimes fail, especially if there is something which looks like a plugin invocation but is really not.
                 if( pluginContent != null ) {
@@ -1154,18 +1151,29 @@ public class JSPWikiMarkupParser extends MarkupParser {
                     pluginContent.executeParse( m_context );
                 }
             } catch( final PluginException e ) {
-                log.info( m_context.getRealPage().getWiki() + " : " + m_context.getRealPage().getName() + " - Failed to insert plugin: " + e.getMessage() );
-                //log.info( "Root cause:",e.getRootThrowable() );
-                if( !m_wysiwygEditorMode ) {
-    				String pattern = "{0} : {1} - Plugin insertion failed: {2}";
-    				try {//workaround.
-    					pattern = pluginManager.getBundle(m_context).getString("plugin.error.insertionfailed");
-    				} catch (PluginException e1) {
-    				}
-					return addElement(makeError(MessageFormat.format(pattern, //
-							m_context.getRealPage().getWiki(), //
-							m_context.getRealPage().getName(), //
-							e.getMessage())));
+				log.info(m_context.getRealPage().getWiki() + " : " + m_context.getRealPage().getName()
+						+ " - Failed to insert plugin: " + e.getMessage());
+
+                if (pluginContent != null) {
+					Element parentEl = pluginContent.getParent();
+					if (parentEl != null) {
+						// Removing the PluginContent element so it is not cause error. 
+						parentEl.removeContent(pluginContent);
+						if (!m_wysiwygEditorMode) {
+							// Adding 'red' SPAN that will contatin an error message,
+							// that will be made by PluginContent itself.
+							parentEl.addContent(makeError(pluginContent));
+						}
+					}
+				} else {
+					// The problem was not detected. it is not recognized at this level.
+	                if( !m_wysiwygEditorMode ) {
+	   					String pattern = Preferences.getBundle(m_context).getString("markupparser.error.plugininsertion");
+						return addElement(makeError(MessageFormat.format(pattern, //
+								m_context.getRealPage().getWiki(), //
+								m_context.getRealPage().getName(), //
+								e.getMessage())));
+					}
 				}
 			}
 

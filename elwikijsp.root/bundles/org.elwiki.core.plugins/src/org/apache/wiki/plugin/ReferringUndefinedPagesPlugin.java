@@ -56,7 +56,6 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-			ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 			Engine engine = context.getEngine();
 			PageManager pageManager = engine.getManager(PageManager.class);
 
@@ -65,7 +64,8 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
 			String extras = params.get(PARAM_EXTRAS);
 			if (extras == null) {
-				extras = rb.getString("referringundefinedpagesplugin.more");
+				extras = PluginsActivator.getMessage("referringundefinedpagesplugin.more",
+						Preferences.getLocale(context));
 			}
 
 			Collection<WikiPage> referrers = pageManager.getReferrersToUncreatedPages();

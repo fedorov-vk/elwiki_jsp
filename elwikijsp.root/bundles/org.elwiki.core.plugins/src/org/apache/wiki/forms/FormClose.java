@@ -43,8 +43,8 @@ public class FormClose extends FormElement {
         // Don't render if no error and error-only-rendering is on.
         final FormInfo info = getFormInfo( ctx );
         if( info != null && info.hide() ) {
-            final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(ctx));
-            return "<p>" + rb.getString( "formclose.noneedtoshow" ) + "</p>";
+			String message = PluginsActivator.getMessage("formclose.noneedtoshow", Preferences.getLocale(ctx));
+			return "<p>" + message + "</p>";
         }
 
         // Get rid of remaining form data, so it doesn't mess up other forms. After this, it is safe to add other Forms.

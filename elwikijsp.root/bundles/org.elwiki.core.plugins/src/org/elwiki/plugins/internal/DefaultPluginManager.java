@@ -304,30 +304,6 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         pluginClass.initializePlugin( pluginClass, m_engine, m_searchPath, m_externalJars );
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ResourceBundle getBundle(WikiContext context) throws PluginException {
-		Locale locale = Preferences.getLocale(context);
-		if (locale == null) {
-			locale = Locale.getDefault();
-			//:FVK: Locale locale1 = new Locale("en", "US");
-		}
-
-		if (bundleLocalization == null) {
-			throw new PluginException("Can't get BundleLocalization component of osgi.");
-		}
-
-		ResourceBundle result = bundleLocalization.getLocalization(this.bundle, locale.toString());
-		if (result == null) {
-			throw new PluginException(
-					"Can't load ResourceBundle object of core plugins, for " + locale.toString() + " locale.");
-		}
-
-		return result;
-	}
-    
     /** {@inheritDoc} */
     @Override
     public void enablePlugins( final boolean enabled ) {
@@ -414,12 +390,13 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 					return stackTrace(params, t);
 				}
 
-				throw new PluginException(getBundle(context).getString("plugin.error.failed"), t);
+				throw new PluginException(
+						PluginsActivator.getMessage("plugin.error.failed", Preferences.getLocale(context)), t);
 			}
 
 		} catch (ClassCastException e) {
-			throw new PluginException(
-					MessageFormat.format(getBundle(context).getString("plugin.error.notawikiplugin"), classname), e);
+			String pattern = PluginsActivator.getMessage("plugin.error.notawikiplugin", Preferences.getLocale(context));
+			throw new PluginException(MessageFormat.format(pattern, classname), e);
 		}
     }
 
@@ -518,15 +495,19 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
                 final Map< String, String > arglist = parseArgs( args );
                 return execute( context, plugin, arglist );
             }
-        } catch( final NoSuchElementException e ) {
-            final String msg =  "Missing parameter in plugin definition: " + commandline;
-            log.warn( msg, e );
-            throw new PluginException( MessageFormat.format( getBundle(context).getString( "plugin.error.missingparameter" ), commandline ) );
-        } catch( final IOException e ) {
-            final String msg = "Zyrf.  Problems with parsing arguments: " + commandline;
-            log.warn( msg, e );
-            throw new PluginException( MessageFormat.format( getBundle(context).getString( "plugin.error.parsingarguments" ), commandline ) );
-        }
+		} catch (final NoSuchElementException e) {
+			final String msg = "Missing parameter in plugin definition: " + commandline;
+			log.warn(msg, e);
+			String pattern = PluginsActivator.getMessage("plugin.error.missingparameter",
+					Preferences.getLocale(context));
+			throw new PluginException(MessageFormat.format(pattern, commandline));
+		} catch (final IOException e) {
+			final String msg = "Zyrf.  Problems with parsing arguments: " + commandline;
+			log.warn(msg, e);
+			String pattern = PluginsActivator.getMessage("plugin.error.parsingarguments",
+					Preferences.getLocale(context));
+			throw new PluginException(MessageFormat.format(pattern, commandline));
+		}
 
         // FIXME: We could either return an empty string "", or the original line.  If we want unsuccessful requests
         // to be invisible, then we should return an empty string.
@@ -773,7 +754,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
      */
     @Override
     public Plugin newWikiPlugin( final String pluginName, WikiContext context ) throws PluginException {
-		ResourceBundle rb = getBundle(context);
+		ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
         Plugin plugin = null;
         WikiPluginInfo pluginInfo = m_pluginClassMap.get( pluginName );
         try {

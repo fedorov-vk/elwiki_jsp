@@ -1,2 +1,3 @@
-ResourceBundle which contains any and all ElWiki core resource strings,
- and JavaScript resource strings
+ResourceBundle which contains:
+A) any and all ElWiki core resource strings
+B) JavaScript resource strings (string key begins with 'javascript.')

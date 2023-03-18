@@ -195,8 +195,9 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugi
                             authorinfo.addContent( author );
                         }
                     } else {
-                    	ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
-                        authorinfo.addContent( rb.getString( "common.unknownauthor" ) );
+						String message = PluginsActivator.getMessage("common.unknownauthor",
+								Preferences.getLocale(context));
+						authorinfo.addContent(message);
                     }
 
                     row.addContent( authorinfo );

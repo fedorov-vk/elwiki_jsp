@@ -43,10 +43,13 @@ public class PluginsActivator implements BundleActivator {
 	}
 
 	/**
+	 * Locates the specified i18n ResourceBundle of core plugins.<br/>
+	 * This method interprets the request locale, and uses that to figure out which language the user
+	 * wants.<br/>
 	 * Returns ResourceBundle instance of required locale for core plugins.
 	 *
 	 * @param locale the required Locale instance.
-	 * @return ResourceBundle object of core plugins.
+	 * @return A ResourceBundle with localized strings (or from the default language, if Locale not defined).
 	 * @throws PluginException - In case if osgi component or resource bundle is not possible to get.
 	 */
 	public static ResourceBundle getBundle(Locale locale) throws PluginException {
@@ -62,6 +65,15 @@ public class PluginsActivator implements BundleActivator {
 		}
 
 		return resourceBundle;
+	}
+
+	public static String getMessage(String resourceId, Locale locale) throws PluginException {
+		try {
+			ResourceBundle rb = getBundle(locale);
+			return rb.getString(resourceId);
+		} catch (Exception ex) {
+			throw new PluginException(ex.getMessage());
+		}
 	}
 
 }

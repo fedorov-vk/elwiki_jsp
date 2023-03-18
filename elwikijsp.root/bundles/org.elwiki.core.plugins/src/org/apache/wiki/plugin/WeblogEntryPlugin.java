@@ -94,7 +94,6 @@ public class WeblogEntryPlugin implements Plugin {
      */
     @Override
     public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
-        final ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
         final IWikiConfiguration config = context.getConfiguration();
 
         String weblogName = params.get(PARAM_BLOGNAME);
@@ -103,8 +102,8 @@ public class WeblogEntryPlugin implements Plugin {
         }
 
         String entryText = TextUtil.replaceEntities( params.get( PARAM_ENTRYTEXT ) );
-        if (entryText == null) {
-            entryText = rb.getString("weblogentryplugin.newentry");
+		if (entryText == null) {
+			entryText = PluginsActivator.getMessage("weblogentryplugin.newentry", Preferences.getLocale(context));
         }
 
         String url = null;

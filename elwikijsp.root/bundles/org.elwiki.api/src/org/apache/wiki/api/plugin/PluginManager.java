@@ -50,17 +50,6 @@ public interface PluginManager extends ModuleManager {
     /** A special name to be used in case you want to see debug output */
     String PARAM_DEBUG     = "debug";
 
-	/**
-	 * Locates the specified i18n ResourceBundle of core plugins.<br/>
-	 * This method interprets the request locale, and uses that to figure out which language the user
-	 * wants.
-	 *
-	 * @param context wiki context.
-	 * @return A ResourceBundle with localized strings (or from the default language, if Locale not defined).
-	 * @throws PluginException If the bundle cannot be found.
-	 */
-	ResourceBundle getBundle(WikiContext context) throws PluginException;
-    
     /**
      * Enables or disables plugin execution.
      * 

@@ -30,6 +30,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
+import org.jdom2.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -358,6 +359,18 @@ public abstract class MarkupParser {
     public static Element makeError( final String error ) {
         return new Element( "span" ).setAttribute( "class", "error" ).addContent( error );
     }
+
+    /**
+	 * Add <tt>&lt;span class="error"&gt;</tt> as parentess for error message. Text of message are
+	 * produced by specified element.
+	 *
+	 * @param hasError Element which should produce error string.
+	 * @return An Element containing the error.
+	 */
+    public static Element makeError( Text hasError ) {
+		return new Element("span").setAttribute("class", "error").addContent(hasError);
+	}
+    
 
     /**
      *  Cleans a Wiki name.  The functionality of this method was changed in 2.6 so that the list of allowed characters is much larger.
