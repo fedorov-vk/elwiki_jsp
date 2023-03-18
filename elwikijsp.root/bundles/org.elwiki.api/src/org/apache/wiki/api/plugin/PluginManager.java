@@ -29,12 +29,6 @@ import org.apache.wiki.api.modules.ModuleManager;
 
 public interface PluginManager extends ModuleManager {
 
-    /** The property name defining which external jars will be added to the classpath when searching for plugin classes. */
-    String PROP_EXTERNALJARS = "jspwiki.plugin.externalJars";
-
-    /** This is the default package to try in case the instantiation fails. */
-    String DEFAULT_PACKAGE = "org.apache.wiki.plugin";
-
     /** The name of the body content. Current value is "_body". */
     String PARAM_BODY      = "_body";
 
@@ -51,7 +45,7 @@ public interface PluginManager extends ModuleManager {
     String PARAM_DEBUG     = "debug";
 
     /**
-     * Enables or disables plugin execution.
+     * Indicates whether plugin execution is enabled or disabled.
      * 
      * @param enabled True, if plugins should be globally enabled; false, if disabled.
      */
@@ -63,7 +57,7 @@ public interface PluginManager extends ModuleManager {
      * 
      * @return True, if plugins are enabled; false otherwise.
      */
-    boolean pluginsEnabled();
+    boolean isEnabledPlugins();
     
     /**
      * Returns plugin insert pattern.
@@ -74,18 +68,14 @@ public interface PluginManager extends ModuleManager {
 
     /**
      * Executes a plugin class in the given context.
-     * <P>Used to be private, but is public since 1.9.21.
      *
      * @param context The current WikiContext.
-     * @param classname The name of the class.  Can also be a shortened version without the package name, since the class name is
-     *                 searched from the package search path.
+     * @param pluginName The name of the plugin.
      * @param params A parsed map of key-value pairs.
      * @return Whatever the plugin returns.
      * @throws PluginException If the plugin execution failed for some reason.
-     *
-     * @since 2.0
      */
-    String execute( WikiContext context, String classname, Map< String, String > params ) throws PluginException;
+    String execute( WikiContext context, String pluginName, Map< String, String > params ) throws PluginException;
 
     /**
      * Parses plugin arguments.  Handles quotes and all other kewl stuff.
@@ -118,13 +108,13 @@ public interface PluginManager extends ModuleManager {
     String execute( WikiContext context, String commandline ) throws PluginException;
     
     /**
-     * Creates a {@link Plugin}.
+     * Get a {@link Plugin}.
      * 
      * @param pluginName plugin's classname
      * @param context {@link ResourceBundle} with i18ned text for exceptions.
      * @return a {@link Plugin}.
      * @throws PluginException if there is a problem building the {@link Plugin}.
      */
-    Plugin newWikiPlugin( String pluginName, WikiContext context ) throws PluginException;
+    Plugin getWikiPlugin( String pluginName, WikiContext context ) throws PluginException;
 
 }

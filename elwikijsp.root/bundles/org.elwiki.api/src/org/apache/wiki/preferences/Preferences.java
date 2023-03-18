@@ -194,6 +194,20 @@ public class Preferences extends HashMap<String, String> {
 		return null;
 	}
 
+	public static Locale getConfiguredLocale(Engine engine) {
+		Locale result = null;
+		if (engine != null) {
+			String locale = engine.getWikiPreferences().getString("jspwiki.preferences.default-locale");
+			try {
+				result = LocaleUtils.toLocale(locale);
+			} catch (final IllegalArgumentException iae) {
+				logger.error(iae.getMessage());
+			}
+		}
+
+		return result;
+	}
+
 	/**
 	 * Get Locale according to user-preference settings or the user browser locale
 	 *
@@ -201,7 +215,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @return a Locale object.
 	 * @since 2.8
 	 */
-	public static Locale getLocale(final WikiContext context) {
+	public static Locale getLocale(WikiContext context) {
 		Locale loc = null;
 
 		final String langSetting = getPreference(context, "Language");
@@ -227,13 +241,7 @@ public class Preferences extends HashMap<String, String> {
 
 		// see if default locale is set server side
 		if (loc == null) {
-			final String locale = context.getEngine().getWikiPreferences()
-					.getString("jspwiki.preferences.default-locale");
-			try {
-				loc = LocaleUtils.toLocale(locale);
-			} catch (final IllegalArgumentException iae) {
-				logger.error(iae.getMessage());
-			}
+			loc = getConfiguredLocale(context.getEngine());
 		}
 
 		// otherwise try to find out the browser's preferred language setting, or use the JVM's default

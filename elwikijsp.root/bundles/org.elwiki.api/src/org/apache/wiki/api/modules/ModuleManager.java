@@ -2,9 +2,11 @@ package org.apache.wiki.api.modules;
 
 import java.util.Collection;
 
+@Deprecated
 public interface ModuleManager {
 
     /** Location of the property-files of plugins. (Each plugin should include this property-file in its jar-file) */
+	@Deprecated
     String PLUGIN_RESOURCE_LOCATION = "ini/jspwiki_module.xml";
 
     /**

@@ -52,7 +52,7 @@
          <sequence>
             <element ref="description" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
-         <attribute name="id" type="string" use="required">
+         <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -67,6 +67,20 @@
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.apache.wiki.api.plugin.Plugin"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="alias" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="ajaxAlias" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

@@ -50,8 +50,6 @@ import org.jdom2.Text;
  * as well.
  * <p/>
  * If Context.VAR_EXECUTE_PLUGINS is set to Boolean.FALSE, then the plugin is not executed.
- *
- * @since 2.4
  */
 public class PluginContent extends Text implements PluginElement {
 
@@ -191,8 +189,8 @@ public class PluginContent extends Text implements PluginElement {
 	public void executeParse(WikiContext context) throws PluginException {
 		Engine engine = context.getEngine();
 		PluginManager pluginManager = engine.getManager(PluginManager.class);
-		if (pluginManager.pluginsEnabled()) {
-			Plugin plugin = pluginManager.newWikiPlugin(getPluginName(), context);
+		if (pluginManager.isEnabledPlugins()) {
+			Plugin plugin = pluginManager.getWikiPlugin(getPluginName(), context);
 			if (plugin instanceof ParserStagePlugin parserStagePlugin) {
 				Map<String, String> params = getParameters();
 				parserStagePlugin.executeParser(this, context, params);

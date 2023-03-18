@@ -390,12 +390,6 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
             return res.toString();
         }
 
-        public String getPluginpath() {
-            final String s = m_context.getEngine().getPluginSearchPath();
-
-            return ( s == null ) ? "-" : s;
-        }
-
         public String getBaseurl()
         {
             return m_context.getConfiguration().getBaseURL();

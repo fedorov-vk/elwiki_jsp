@@ -5,120 +5,124 @@
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
            class="org.apache.wiki.plugin.ReferredPagesPlugin"
-           id="ReferredPagesPlugin">
+           name="ReferredPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.TableOfContents"
-           id="TableOfContents">
+           name="TableOfContents">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.Counter"
-           id="Counter">
+           name="Counter">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.CurrentTimePlugin"
-           id="CurrentTimePlugin">
+           name="CurrentTimePlugin">
+     </wikiPlugin>
+     <wikiPlugin
+           class="org.elwiki.plugins.Table"
+           name="Table">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
            class="org.apache.wiki.plugin.ReferringPagesPlugin"
-           id="ReferringPagesPlugin">
+           name="ReferringPagesPlugin">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
            class="org.apache.wiki.plugin.pageview.PageViewPlugin"
-           id="PageViewPlugin">
+           name="PageViewPlugin">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
            class="org.apache.wiki.plugin.InsertPage"
-           id="InsertPage">
+           name="InsertPage">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
            class="org.apache.wiki.plugin.Image"
-           id="Image">
-     </wikiPlugin>
-     <wikiPlugin
-           class="org.apache.wiki.plugin.AbstractReferralPlugin"
-           id="AbstractReferralPlugin">
+           name="Image">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.BugReportHandler"
-           id="BugReportHandler">
+           name="BugReportHandler">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.Denounce"
-           id="Denounce">
+           name="Denounce">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.Groups"
-           id="Groups">
+           name="Groups">
      </wikiPlugin>
      <wikiPlugin
+           alias="If"
            class="org.apache.wiki.plugin.If"
-           id="If">
+           name="IfPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.IndexPlugin"
-           id="IndexPlugin">
+           name="IndexPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.ListLocksPlugin"
-           id="ListLocksPlugin">
+           name="ListLocksPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.Note"
-           id="Note">
+           name="Note">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.RecentChangesPlugin"
-           id="RecentChangesPlugin">
+           name="RecentChangesPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.ReferringUndefinedPagesPlugin"
-           id="ReferringUndefinedPagesPlugin">
+           name="ReferringUndefinedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.SampleAjaxPlugin"
-           id="SampleAjaxPlugin">
+           name="SampleAjaxPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.Search"
-           id="Search">
+           name="Search">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.SessionsPlugin"
-           id="SessionsPlugin">
+           name="SessionsPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.UndefinedPagesPlugin"
-           id="UndefinedPagesPlugin">
+           name="UndefinedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.UnusedPagesPlugin"
-           id="UnusedPagesPlugin">
+           name="UnusedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.WeblogArchivePlugin"
-           id="WeblogArchivePlugin">
+           name="WeblogArchivePlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.WeblogEntryPlugin"
-           id="WeblogEntryPlugin">
+           name="WeblogEntryPlugin">
      </wikiPlugin>
      <wikiPlugin
            class="org.apache.wiki.plugin.WeblogPlugin"
-           id="WeblogPlugin">
+           name="WeblogPlugin">
      </wikiPlugin>
+  </extension>
+  <extension
+        point="org.elwiki.api.WikiPlugin">
   </extension>
 
 </plugin>

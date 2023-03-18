@@ -34,7 +34,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -54,9 +53,6 @@ public interface Engine {
 
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
-
-    /** The property name defining which packages will be searched for plugin classes. */
-    String PROP_SEARCHPATH = "jspwiki.plugin.searchPath";
 
     /** Do not use encoding in WikiJSPFilter, default is false for most servers.
      Double negative, cause for most servers you don't need the property */
@@ -123,15 +119,6 @@ public interface Engine {
      */
 	@Deprecated
     IPreferenceStore getWikiPreferences();
-
-    /**
-     * Returns plugins' search path.
-     *
-     * @return plugins' search path.
-     */
-    default String getPluginSearchPath() {
-        return TextUtil.getStringProperty( getWikiPreferences(), PROP_SEARCHPATH, null );
-    }
 
     /**
      *  Returns the moment when this engine was started.

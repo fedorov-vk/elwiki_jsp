@@ -43,7 +43,7 @@ import java.util.Properties;
 
 /**
  *  Denounces a link by removing it from any search engine.
- *  <br> The bots are listed in org/apache/wiki/plugin/denounce.properties.
+ *  <br> The bots are listed in file denounce.properties.
  *
  *  <p>Parameters : </p>
  *  <ul>
@@ -62,7 +62,7 @@ public class Denounce implements Plugin {
     /** Parameter name for setting the text.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_TEXT = "text";
 
-    private static final String PROPERTYFILE = "org/apache/wiki/plugin/denounce.properties";
+    private static final String PROPERTYFILE = "denounce.properties";
     private static final String PROP_AGENTPATTERN   = "denounce.agentpattern.";
     private static final String PROP_HOSTPATTERN    = "denounce.hostpattern.";
     private static final String PROP_REFERERPATTERN = "denounce.refererpattern.";
@@ -85,8 +85,9 @@ public class Denounce implements Plugin {
         {
             final PatternCompiler compiler = new GlobCompiler();
             final ClassLoader loader = Denounce.class.getClassLoader();
-
-            final InputStream in = loader.getResourceAsStream( PROPERTYFILE );
+            
+            String packageName = Denounce.class.getPackageName().replace('.', '/');
+			InputStream in = loader.getResourceAsStream(packageName + '/' + PROPERTYFILE);
 
             if( in == null )
             {
