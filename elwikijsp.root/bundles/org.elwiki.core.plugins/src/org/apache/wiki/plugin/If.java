@@ -32,8 +32,6 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -41,6 +39,8 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.WikiPlugin;
 
 /**
  * The IfPlugin allows parts of a WikiPage to be executed conditionally, and is intended as a flexible way of
@@ -133,7 +133,7 @@ import org.apache.wiki.util.TextUtil;
  *
  * @since 2.6
  */
-public class If implements Plugin {
+public class If implements WikiPlugin {
 
 	/** The parameter name for setting the group to check. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_GROUP = "group";

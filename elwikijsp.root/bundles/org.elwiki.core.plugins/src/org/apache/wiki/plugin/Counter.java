@@ -20,8 +20,8 @@ package org.apache.wiki.plugin;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.util.Map;
 
@@ -39,7 +39,7 @@ import java.util.Map;
  *
  *  @since 1.9.30
  */
-public class Counter implements Plugin {
+public class Counter implements WikiPlugin {
 
     // private static Logger log = Logger.getLogger( Counter.class );
 

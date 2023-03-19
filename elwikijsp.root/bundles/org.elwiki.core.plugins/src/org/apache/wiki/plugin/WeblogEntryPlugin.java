@@ -26,11 +26,11 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.plugins.internal.PluginsActivator;
 
@@ -52,7 +52,7 @@ import java.util.ResourceBundle;
  *
  * @since 1.9.21
  */
-public class WeblogEntryPlugin implements Plugin {
+public class WeblogEntryPlugin implements WikiPlugin {
 
     private static final Logger log = Logger.getLogger(WeblogEntryPlugin.class);
     private static final int MAX_BLOG_ENTRIES = 10_000; // Just a precaution.

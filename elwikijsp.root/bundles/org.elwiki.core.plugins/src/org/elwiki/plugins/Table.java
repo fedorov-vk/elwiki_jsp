@@ -32,9 +32,9 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.RenderApi;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -55,7 +55,7 @@ import org.elwiki_data.WikiPage;
  *
  * @author Dirk Frederickx
  */
-public class Table implements Plugin {
+public class Table implements WikiPlugin {
 
 	private static Logger log = Logger.getLogger(Table.class);
 

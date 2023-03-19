@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.plugin.WikiPlugin;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ import org.elwiki.api.authorization.IGroupWiki;
  *
  * @since 2.4.19
  */
-public class Groups implements Plugin {
+public class Groups implements WikiPlugin {
 
 	private static final Comparator<Principal> COMPARATOR = new PrincipalComparator();
 

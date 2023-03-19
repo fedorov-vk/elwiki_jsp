@@ -22,10 +22,10 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.ResourceBundle;
  *   NONE
  *  @since 2.0.22.
  */
-public class ListLocksPlugin implements Plugin {
+public class ListLocksPlugin implements WikiPlugin {
 
 	/**
      *  {@inheritDoc}

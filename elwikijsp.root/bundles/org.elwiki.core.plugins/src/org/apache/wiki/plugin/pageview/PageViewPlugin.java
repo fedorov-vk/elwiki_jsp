@@ -49,9 +49,6 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.InitializablePlugin;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.plugin.AbstractReferralPlugin;
 import org.apache.wiki.render0.RenderingManager;
@@ -60,6 +57,9 @@ import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.plugin.InitializablePlugin;
+import org.elwiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.ServiceRegistration;
@@ -83,7 +83,7 @@ import org.osgi.service.event.EventHandler;
  * 
  * @since 2.8
  */
-public class PageViewPlugin extends AbstractReferralPlugin implements Plugin, InitializablePlugin {
+public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin, InitializablePlugin {
 
     private static final Logger log = Logger.getLogger( PageViewPlugin.class );
 

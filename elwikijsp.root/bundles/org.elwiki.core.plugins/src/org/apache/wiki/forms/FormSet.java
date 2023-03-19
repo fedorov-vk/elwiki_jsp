@@ -20,7 +20,7 @@ package org.apache.wiki.forms;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +56,7 @@ import java.util.Map;
  *
  * @see FormInfo
  */
-public class FormSet implements Plugin {
+public class FormSet implements WikiPlugin {
 
     /**
      *  {@inheritDoc}

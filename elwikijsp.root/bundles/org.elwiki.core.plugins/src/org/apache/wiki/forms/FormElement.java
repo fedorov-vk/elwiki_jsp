@@ -19,11 +19,11 @@
 package org.apache.wiki.forms;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.plugin.Plugin;
+import org.elwiki.api.plugin.WikiPlugin;
 
 /**
  */
-public abstract class FormElement implements Plugin {
+public abstract class FormElement implements WikiPlugin {
 
     /**
      * In order to make the form-to-handler parameter transfer easier,

@@ -27,13 +27,13 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
@@ -55,7 +55,7 @@ import org.elwiki_data.WikiPage;
  *
  * @since 2.1.37
  */
-public class InsertPage implements Plugin {
+public class InsertPage implements WikiPlugin {
 
 	/** Parameter name for setting the page ID. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_PAGEID = "id";

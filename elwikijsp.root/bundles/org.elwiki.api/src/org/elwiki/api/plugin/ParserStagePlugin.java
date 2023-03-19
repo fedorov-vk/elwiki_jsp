@@ -16,14 +16,14 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.api.plugin;
+package org.elwiki.api.plugin;
 
 import org.apache.wiki.api.core.WikiContext;
 
 import java.util.Map;
 
 /**
- *  Implements a Plugin interface for the parser stage.  Please see {@link org.apache.wiki.plugin.PluginManager PluginManager}
+ *  Implements a Plugin interface for the parser stage.  Please see {@link org.elwiki.api.plugin.plugin.PluginManager PluginManager}
  *  for further documentation.
  */
 public interface ParserStagePlugin {

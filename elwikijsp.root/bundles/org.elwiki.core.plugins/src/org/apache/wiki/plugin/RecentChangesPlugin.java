@@ -33,11 +33,11 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -54,7 +54,7 @@ import org.jdom2.Element;
  *  <li><b>dateFormat</b> - the date format to use, the default is "dd.MM.yyyy"</li>
  *  </ul>
  */
-public class RecentChangesPlugin extends AbstractReferralPlugin implements Plugin {
+public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiPlugin {
 
 	private static final Logger log = Logger.getLogger(RecentChangesPlugin.class);
 

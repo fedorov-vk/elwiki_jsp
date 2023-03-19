@@ -26,9 +26,9 @@ import java.util.ResourceBundle;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FormUtil;
+import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.plugins.internal.PluginsActivator;
 
 /**

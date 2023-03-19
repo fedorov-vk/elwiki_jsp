@@ -21,8 +21,8 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.text.SimpleDateFormat;
@@ -39,7 +39,7 @@ import java.util.ResourceBundle;
  *  @since 1.7.8
  *  @see java.text.SimpleDateFormat
  */
-public class CurrentTimePlugin implements Plugin {
+public class CurrentTimePlugin implements WikiPlugin {
 
     // private static Logger log = Logger.getLogger( CurrentTimePlugin.class );
 

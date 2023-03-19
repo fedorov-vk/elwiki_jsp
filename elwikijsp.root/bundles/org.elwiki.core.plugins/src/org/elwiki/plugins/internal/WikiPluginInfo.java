@@ -16,11 +16,11 @@ import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.modules.WikiModuleInfo;
-import org.apache.wiki.api.plugin.InitializablePlugin;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.preferences.Preferences;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.elwiki.api.plugin.InitializablePlugin;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.osgi.framework.Bundle;
 
 /**
@@ -36,12 +36,12 @@ final class WikiPluginInfo extends WikiModuleInfo {
     private String    m_className;
     private String    m_alias;
     private String    m_ajaxAlias;
-    private Class<Plugin>  m_clazz;
+    private Class<WikiPlugin>  m_clazz;
 
     private boolean m_initialized = false;
 
 	/** Implementation of WikiPlugin class. */
-	private Plugin wikiPlugin;
+	private WikiPlugin wikiPlugin;
 
     /**
      * Creates a new plugin info object which can be used to access a plugin.<br/>
@@ -96,8 +96,8 @@ final class WikiPluginInfo extends WikiModuleInfo {
 		String className = el.getAttribute("class");
 		Bundle bundle = Platform.getBundle(contributorName);
 		Class<?> clazz = bundle.loadClass(className);
-		if (Plugin.class.isAssignableFrom(clazz)) {
-			this.m_clazz = (Class<Plugin>) clazz;
+		if (WikiPlugin.class.isAssignableFrom(clazz)) {
+			this.m_clazz = (Class<WikiPlugin>) clazz;
 			this.m_className = clazz.getName();
 		} else {
 			throw new PluginException("Plugin " + m_name + " is not implemented wiki plugin.");
@@ -148,7 +148,7 @@ final class WikiPluginInfo extends WikiModuleInfo {
         }
     }
 
-	public Plugin getPluginInstance() {
+	public WikiPlugin getPluginInstance() {
 		return this.wikiPlugin;
 	}
 	

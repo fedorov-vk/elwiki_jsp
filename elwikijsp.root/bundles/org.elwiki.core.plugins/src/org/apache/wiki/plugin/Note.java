@@ -24,11 +24,11 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.util.Map;
 
@@ -51,7 +51,7 @@ import java.util.Map;
  * </ul>
  * 
  */
-public class Note implements Plugin {
+public class Note implements WikiPlugin {
 
 	/** Property name for setting the image for the note. Value is <tt>{@value}</tt>. */
 	public static final String PROP_NOTE_IMAGE = "notePlugin.imageName";

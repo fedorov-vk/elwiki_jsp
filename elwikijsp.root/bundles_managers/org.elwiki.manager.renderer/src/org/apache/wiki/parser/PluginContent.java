@@ -32,14 +32,14 @@ import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.ParserStagePlugin;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginElement;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.parser0.WikiDocument;
 import org.apache.wiki.preferences.Preferences;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.plugin.ParserStagePlugin;
+import org.elwiki.api.plugin.PluginElement;
+import org.elwiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.jdom2.Text;
 
 /**
@@ -190,7 +190,7 @@ public class PluginContent extends Text implements PluginElement {
 		Engine engine = context.getEngine();
 		PluginManager pluginManager = engine.getManager(PluginManager.class);
 		if (pluginManager.isEnabledPlugins()) {
-			Plugin plugin = pluginManager.getWikiPlugin(getPluginName(), context);
+			WikiPlugin plugin = pluginManager.getWikiPlugin(getPluginName(), context);
 			if (plugin instanceof ParserStagePlugin parserStagePlugin) {
 				Map<String, String> params = getParameters();
 				parserStagePlugin.executeParser(this, context, params);

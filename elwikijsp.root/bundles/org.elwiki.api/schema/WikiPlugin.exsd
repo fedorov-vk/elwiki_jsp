@@ -65,7 +65,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.apache.wiki.api.plugin.Plugin"/>
+                  <meta.attribute kind="java" basedOn=":org.elwiki.api.plugin.Plugin"/>
                </appinfo>
             </annotation>
          </attribute>

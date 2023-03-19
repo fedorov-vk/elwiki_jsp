@@ -24,17 +24,11 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
@@ -45,17 +39,12 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.InternalWikiException;
-import org.apache.wiki.ajax.WikiAjaxDispatcher;
-import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
-import org.apache.wiki.api.plugin.InitializablePlugin;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
@@ -63,14 +52,12 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.service.localization.BundleLocalization;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.jdom2.Element;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -184,6 +171,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
 	private static final String ID_EXTENSION_WIKI_PLUGIN = "WikiPlugin";
 
+    private static final int QUOTE_CHARACTER = '\'';
+
 	private Pattern m_pluginPattern;
 
 	/** Indicates whether plugin execution is enabled or disabled. */
@@ -226,8 +215,6 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
-		
         registerPlugins();
 
         final PatternCompiler compiler = new Perl5Compiler();
@@ -323,7 +310,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 		boolean debug = TextUtil.isPositive(params.get(PARAM_DEBUG));
 		try {
 			//   Get...
-			Plugin plugin = getWikiPlugin(pluginName, context);
+			WikiPlugin plugin = getWikiPlugin(pluginName, context);
 			if (plugin == null) {
 				return "Plugin '" + pluginName + "' not compatible with this version of JSPWiki";
 			}
@@ -366,8 +353,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 
         arglist.put( PARAM_CMDLINE, argstring );
         final StringReader in = new StringReader( argstring );
-        final StreamTokenizer tok = new StreamTokenizer( in );
-        tok.eolIsSignificant( true );
+        final StreamTokenizer streamTokenizer = new StreamTokenizer( in );
+        streamTokenizer.eolIsSignificant( true );
 
         String param = null;
         String value;
@@ -375,7 +362,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         boolean quit = false;
         while( !quit ) {
             final String s;
-            final int type = tok.nextToken();
+            final int type = streamTokenizer.nextToken();
 
             switch( type ) {
             case StreamTokenizer.TT_EOF:
@@ -384,7 +371,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
                 break;
 
             case StreamTokenizer.TT_WORD:
-                s = tok.sval;
+                s = streamTokenizer.sval;
                 potentialEmptyLine = false;
                 break;
 
@@ -395,12 +382,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
                 break;
 
             case StreamTokenizer.TT_NUMBER:
-                s = Integer.toString( ( int )tok.nval );
+                s = Integer.toString( ( int )streamTokenizer.nval );
                 potentialEmptyLine = false;
                 break;
 
-            case '\'':
-                s = tok.sval;
+            case QUOTE_CHARACTER:
+                s = streamTokenizer.sval;
                 break;
 
             default:
@@ -486,17 +473,17 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
     }
 
     /**
-	 * Creates a {@link Plugin}.
+	 * Creates a {@link WikiPlugin}.
 	 *
 	 * @param pluginName plugin's classname
 	 * @param context    The current WikiContext.
-	 * @return a {@link Plugin}.
-	 * @throws PluginException if there is a problem building the {@link Plugin}.
+	 * @return a {@link WikiPlugin}.
+	 * @throws PluginException if there is a problem building the {@link WikiPlugin}.
 	 */
 	@Override
-	public Plugin getWikiPlugin(String pluginName, WikiContext context) throws PluginException {
+	public WikiPlugin getWikiPlugin(String pluginName, WikiContext context) throws PluginException {
 		ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
-		Plugin plugin = null;
+		WikiPlugin plugin = null;
 		WikiPluginInfo pluginInfo = m_pluginClassMap.get(pluginName);
 
 		if (pluginInfo == null) {

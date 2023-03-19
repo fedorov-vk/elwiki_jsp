@@ -29,8 +29,8 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import java.util.Properties;
  *
  *  @since 2.1.40.
  */
-public class Denounce implements Plugin {
+public class Denounce implements WikiPlugin {
 
     private static final Logger log = Logger.getLogger(Denounce.class);
 

@@ -33,7 +33,6 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
@@ -46,6 +45,7 @@ import org.apache.wiki.util.comparators.CollatorComparator;
 import org.apache.wiki.util.comparators.HumanComparator;
 import org.apache.wiki.util.comparators.JavaNaturalComparator;
 import org.apache.wiki.util.comparators.LocaleComparator;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -79,7 +79,7 @@ import java.util.stream.Collectors;
  *  </ul>
  *
  */
-public abstract class AbstractReferralPlugin implements Plugin {
+public abstract class AbstractReferralPlugin implements WikiPlugin {
 
     private static Logger log = Logger.getLogger( AbstractReferralPlugin.class );
 

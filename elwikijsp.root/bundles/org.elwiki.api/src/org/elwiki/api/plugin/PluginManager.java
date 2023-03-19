@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.    
  */
-package org.apache.wiki.api.plugin;
+package org.elwiki.api.plugin;
 
 import java.io.IOException;
 import java.util.Map;
@@ -108,13 +108,13 @@ public interface PluginManager extends ModuleManager {
     String execute( WikiContext context, String commandline ) throws PluginException;
     
     /**
-     * Get a {@link Plugin}.
+     * Get a {@link WikiPlugin}.
      * 
      * @param pluginName plugin's classname
      * @param context {@link ResourceBundle} with i18ned text for exceptions.
-     * @return a {@link Plugin}.
-     * @throws PluginException if there is a problem building the {@link Plugin}.
+     * @return a {@link WikiPlugin}.
+     * @throws PluginException if there is a problem building the {@link WikiPlugin}.
      */
-    Plugin getWikiPlugin( String pluginName, WikiContext context ) throws PluginException;
+    WikiPlugin getWikiPlugin( String pluginName, WikiContext context ) throws PluginException;
 
 }

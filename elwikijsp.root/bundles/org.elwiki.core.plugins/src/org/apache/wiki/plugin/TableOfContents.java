@@ -24,7 +24,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.filters0.FilterManager;
@@ -35,6 +34,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ import java.util.ResourceBundle;
  *
  * @since 2.2
  */
-public class TableOfContents implements Plugin, HeadingListener {
+public class TableOfContents implements WikiPlugin, HeadingListener {
 
 	private static final Logger log = Logger.getLogger(TableOfContents.class);
 

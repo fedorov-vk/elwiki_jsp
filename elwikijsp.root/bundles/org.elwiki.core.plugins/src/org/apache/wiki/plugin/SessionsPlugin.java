@@ -21,10 +21,10 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ import java.util.Map;
  * </ul>
  * </ul>
  */
-public class SessionsPlugin implements Plugin {
+public class SessionsPlugin implements WikiPlugin {
 
 	/** The parameter name for setting the property value. */
 	public static final String PARAM_PROP = "property";

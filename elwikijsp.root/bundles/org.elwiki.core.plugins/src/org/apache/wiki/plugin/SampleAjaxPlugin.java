@@ -21,7 +21,7 @@ package org.apache.wiki.plugin;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @since 2.10.2-svn10
  */
-public class SampleAjaxPlugin implements Plugin, WikiAjaxServlet {
+public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 	
 	private static final String SERVLET_MAPPING = "SampleAjaxPlugin";
 

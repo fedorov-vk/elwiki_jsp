@@ -34,9 +34,9 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 
@@ -54,7 +54,7 @@ import org.elwiki_data.WikiPage;
  * <li><b>format</b> - The 'sort' format sorts the page's target links in alphabetical order.
  * </ul>
  */
-public class ReferredPagesPlugin implements Plugin {
+public class ReferredPagesPlugin implements WikiPlugin {
 
 	private static final Logger log = Logger.getLogger(ReferredPagesPlugin.class);
 

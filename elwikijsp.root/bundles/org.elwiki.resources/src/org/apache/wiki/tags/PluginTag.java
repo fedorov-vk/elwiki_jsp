@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.PluginManager;
+import org.elwiki.api.plugin.PluginManager;
 
 /**
  * Inserts any Wiki plugin. The body of the tag becomes then the body for the

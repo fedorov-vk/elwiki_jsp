@@ -26,12 +26,12 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.security.Principal;
 import java.util.Map;
@@ -62,7 +62,7 @@ import java.util.Map;
  */
 // FIXME: It is not yet possible to do wiki internal links.  In order to do this cleanly, a TranslatorReader revamp is needed.
 
-public class Image implements Plugin {
+public class Image implements WikiPlugin {
 
 	/** The parameter name for setting the src. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_SRC = "src";

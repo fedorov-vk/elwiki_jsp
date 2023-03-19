@@ -26,10 +26,10 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 
 import java.io.PrintWriter;
@@ -56,7 +56,7 @@ import java.util.StringTokenizer;
  *  </ul>
  *
  */
-public class BugReportHandler implements Plugin {
+public class BugReportHandler implements WikiPlugin {
 
     private static final Logger log = Logger.getLogger( BugReportHandler.class );
     private static final String DEFAULT_DATEFORMAT = "dd-MMM-yyyy HH:mm:ss zzz";

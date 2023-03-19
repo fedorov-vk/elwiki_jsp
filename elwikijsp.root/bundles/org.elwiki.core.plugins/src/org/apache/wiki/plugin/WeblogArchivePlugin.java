@@ -23,8 +23,8 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.plugin.Plugin;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.WikiPlugin;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,7 +46,7 @@ import java.util.TreeSet;
  *
  *  @since 1.9.21
  */
-public class WeblogArchivePlugin implements Plugin {
+public class WeblogArchivePlugin implements WikiPlugin {
 
     /** Parameter name for setting the page.  Value is <tt>{@value}</tt>. */
     public static final String PARAM_PAGE = "page";

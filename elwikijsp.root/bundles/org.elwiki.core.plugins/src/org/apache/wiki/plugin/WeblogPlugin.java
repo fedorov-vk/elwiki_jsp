@@ -26,9 +26,6 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.ParserStagePlugin;
-import org.apache.wiki.api.plugin.Plugin;
-import org.apache.wiki.api.plugin.PluginElement;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -36,6 +33,9 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.ParserStagePlugin;
+import org.elwiki.api.plugin.PluginElement;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.plugins.internal.PluginsActivator;
 
@@ -85,7 +85,7 @@ import java.util.regex.Pattern;
 // FIXME: Add "entries" param as an alternative to "days".
 // FIXME: Entries arrive in wrong order.
 
-public class WeblogPlugin implements Plugin, ParserStagePlugin {
+public class WeblogPlugin implements WikiPlugin, ParserStagePlugin {
 
     private static final Logger log = Logger.getLogger(WeblogPlugin.class);
     private static final Pattern HEADINGPATTERN;

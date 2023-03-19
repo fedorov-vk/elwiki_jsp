@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.plugin.Plugin;
+import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
  * 
  * @author Ichiro Furusato
  */
-public class IndexPlugin extends AbstractReferralPlugin implements Plugin {
+public class IndexPlugin extends AbstractReferralPlugin implements WikiPlugin {
 
 	private static final Logger log = Logger.getLogger(IndexPlugin.class);
 

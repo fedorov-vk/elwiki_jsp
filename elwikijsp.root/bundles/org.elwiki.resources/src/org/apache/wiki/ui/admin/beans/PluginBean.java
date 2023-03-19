@@ -24,9 +24,9 @@ import javax.management.NotCompliantMBeanException;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.modules.WikiModuleInfo;
-import org.apache.wiki.api.plugin.PluginManager;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
+import org.elwiki.api.plugin.PluginManager;
 import org.jdom2.Element;
 
 public class PluginBean extends ModuleBean {
