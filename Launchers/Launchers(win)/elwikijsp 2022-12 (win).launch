@@ -161,7 +161,6 @@
         <setEntry value="org.elwiki.engine@5:default"/>
         <setEntry value="org.elwiki.event@default:default"/>
         <setEntry value="org.elwiki.log4.definition@default:false"/>
-        <setEntry value="org.elwiki.main@default:default"/>
         <setEntry value="org.elwiki.manager.attachment@default:default"/>
         <setEntry value="org.elwiki.manager.difference@default:default"/>
         <setEntry value="org.elwiki.manager.editor@default:default"/>
@@ -171,6 +170,7 @@
         <setEntry value="org.elwiki.manager.referencemanager@default:default"/>
         <setEntry value="org.elwiki.manager.renderer@default:default"/>
         <setEntry value="org.elwiki.manager.search@default:default"/>
+        <setEntry value="org.elwiki.manager.variables@default:default"/>
         <setEntry value="org.elwiki.manager.wikiscope@default:default"/>
         <setEntry value="org.elwiki.manager.workflow@default:default"/>
         <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
@@ -180,7 +180,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1678448146494"/>
+    <stringAttribute key="timestamp" value="1679581765969"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>

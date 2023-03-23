@@ -24,6 +24,5 @@
 		<module>org.elwiki.resources</module>
 		<module>org.elwiki.rssgenerator</module>
 		<module>org.elwiki.core.plugins</module>
-		<module>org.elwiki.main</module>
 	</modules>
 </project>

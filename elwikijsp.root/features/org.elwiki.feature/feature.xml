@@ -73,13 +73,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.elwiki.main"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.elwiki.manager.attachment"
          download-size="0"
          install-size="0"
@@ -143,6 +136,20 @@
          unpack="false"/>
 
    <plugin
+         id="org.elwiki.manager.variables"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elwiki.manager.wikiscope"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.elwiki.manager.workflow"
          download-size="0"
          install-size="0"
@@ -190,13 +197,6 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.elwiki.manager.wikiscope"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
          unpack="false"/>
 
    <plugin

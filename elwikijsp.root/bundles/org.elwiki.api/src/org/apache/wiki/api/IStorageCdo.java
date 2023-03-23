@@ -8,6 +8,10 @@ import org.eclipse.emf.cdo.view.CDOView;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.elwiki_data.PagesStore;
 
+/**
+ * This interface provides access to the repository's CDO service from anywhere in ElWiki.
+ *
+ */
 public interface IStorageCdo {
 
 	public interface ITransactionalOperation<T extends CDOObject> {

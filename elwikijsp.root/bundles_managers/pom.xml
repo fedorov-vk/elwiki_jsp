@@ -24,6 +24,7 @@
 		<module>org.elwiki.manager.referencemanager</module>
 		<module>org.elwiki.manager.renderer</module>
 		<module>org.elwiki.manager.search</module>
+		<module>org.elwiki.manager.variables</module>
 		<module>org.elwiki.manager.wikiscope</module>
 		<module>org.elwiki.urlconstructor</module>
 	</modules>
