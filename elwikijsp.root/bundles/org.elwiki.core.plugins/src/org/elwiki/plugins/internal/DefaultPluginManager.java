@@ -172,6 +172,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 	private static final String ID_EXTENSION_WIKI_PLUGIN = "WikiPlugin";
 
     private static final int QUOTE_CHARACTER = '\'';
+    private static final int COLON_CHARACTER = ':';
 
 	private Pattern m_pluginPattern;
 
@@ -365,10 +366,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
             final int type = streamTokenizer.nextToken();
 
             switch( type ) {
-            case StreamTokenizer.TT_EOF:
-                quit = true;
-                s = null;
-                break;
+			case COLON_CHARACTER:
+				potentialEmptyLine = true;
+			case StreamTokenizer.TT_EOF:
+				quit = true;
+				s = null;
+				break;
 
             case StreamTokenizer.TT_WORD:
                 s = streamTokenizer.sval;
