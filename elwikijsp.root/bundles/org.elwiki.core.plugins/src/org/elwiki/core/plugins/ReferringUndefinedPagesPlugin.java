@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -29,6 +29,7 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
 

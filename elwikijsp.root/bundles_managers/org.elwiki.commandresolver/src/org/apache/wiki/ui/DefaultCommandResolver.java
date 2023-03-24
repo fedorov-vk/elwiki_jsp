@@ -150,9 +150,9 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 		if (PageCommand.VIEW.equals(command) && pageName == null) {
 			pageName = this.wikiConfiguration.getFrontPage();
 		}
-		
+
 		//:FVK: workaround - for /attach/ request.
-		if(PageCommand.ATTACH.equals(command)) {
+		if (PageCommand.ATTACH.equals(command)) {
 			pageName = request.getParameter("pageId");
 			if (pageName != null) {
 				WikiPage page = null;
@@ -318,5 +318,5 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 			break;
 		}*/
 	}
-	
+
 }

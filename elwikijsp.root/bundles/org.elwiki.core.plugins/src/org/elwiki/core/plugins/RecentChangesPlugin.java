@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,6 +38,7 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.elwiki.api.plugin.WikiPlugin;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;

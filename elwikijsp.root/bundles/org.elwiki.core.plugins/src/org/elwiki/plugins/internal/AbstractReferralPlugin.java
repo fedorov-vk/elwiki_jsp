@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.plugin;
+package org.elwiki.plugins.internal;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

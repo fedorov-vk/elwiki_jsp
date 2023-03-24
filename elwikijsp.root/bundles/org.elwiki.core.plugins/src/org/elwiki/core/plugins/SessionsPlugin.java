@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;

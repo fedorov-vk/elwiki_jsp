@@ -1,7 +1,7 @@
-package org.apache.wiki.plugin.pageview;
+package org.elwiki.core.plugins.pageview;
 
-import org.apache.wiki.plugin.pageview.PageViewPlugin.PageViewManager;
 import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.core.plugins.pageview.PageViewPlugin.PageViewManager;
 
 /**
  * Actor of background thread for storing the page counters.

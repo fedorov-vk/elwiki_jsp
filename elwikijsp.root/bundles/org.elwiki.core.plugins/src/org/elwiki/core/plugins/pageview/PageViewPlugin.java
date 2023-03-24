@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.plugin.pageview;
+package org.elwiki.core.plugins.pageview;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +50,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.plugin.AbstractReferralPlugin;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.BackgroundThreads;
@@ -60,6 +59,7 @@ import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.ServiceRegistration;

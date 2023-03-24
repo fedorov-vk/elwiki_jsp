@@ -49,6 +49,7 @@ public enum ContextEnum {
     PAGE_RENAME( "cmd.rename", "%u", "?pageId=%n", "InfoContent.jsp" ),
     PAGE_RSS( "rss.jsp", "%u", "", null ),
 
+    @Deprecated
     ATTACHMENT_UPLOAD( "cmd.upload", "%u", "?pageId=%n", "AttachmentTab.jsp" ),
     ATTACHMENT_DOGET( "attach", "%u", "/%n", null ),
     ATTACHMENT_DOPOST( "attach", "%u", "/%n", null ),

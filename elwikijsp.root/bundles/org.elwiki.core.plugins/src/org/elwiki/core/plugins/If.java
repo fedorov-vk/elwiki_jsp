@@ -17,7 +17,7 @@
     under the License.  
  */
 
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import java.security.Principal;
 import java.util.Map;

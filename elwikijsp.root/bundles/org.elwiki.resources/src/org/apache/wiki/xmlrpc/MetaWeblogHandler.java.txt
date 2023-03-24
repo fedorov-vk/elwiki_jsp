@@ -32,8 +32,8 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.auth.permissions.PermissionFactory;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageTimeComparator;
-import org.apache.wiki.plugin.WeblogEntryPlugin;
-import org.apache.wiki.plugin.WeblogPlugin;
+import org.elwiki.core.plugins.WeblogEntryPlugin;
+import org.elwiki.core.plugins.WeblogPlugin;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.io.ByteArrayInputStream;

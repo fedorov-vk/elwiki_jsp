@@ -4,120 +4,120 @@
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.ReferredPagesPlugin"
+           class="org.elwiki.core.plugins.ReferredPagesPlugin"
            name="ReferredPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.TableOfContents"
+           class="org.elwiki.core.plugins.TableOfContents"
            name="TableOfContents">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.Counter"
+           class="org.elwiki.core.plugins.Counter"
            name="Counter">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.CurrentTimePlugin"
+           class="org.elwiki.core.plugins.CurrentTimePlugin"
            name="CurrentTimePlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.elwiki.plugins.Table"
+           class="org.elwiki.core.plugins.Table"
            name="Table">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.ReferringPagesPlugin"
+           class="org.elwiki.core.plugins.ReferringPagesPlugin"
            name="ReferringPagesPlugin">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.pageview.PageViewPlugin"
+           class="org.elwiki.core.plugins.pageview.PageViewPlugin"
            name="PageViewPlugin">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.InsertPage"
+           class="org.elwiki.core.plugins.InsertPage"
            name="InsertPage">
      </wikiPlugin>
   </extension>
   <extension
         point="org.elwiki.api.WikiPlugin">
      <wikiPlugin
-           class="org.apache.wiki.plugin.Image"
+           class="org.elwiki.core.plugins.Image"
            name="Image">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.BugReportHandler"
+           class="org.elwiki.core.plugins.BugReportHandler"
            name="BugReportHandler">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.Denounce"
+           class="org.elwiki.core.plugins.denounce.Denounce"
            name="Denounce">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.Groups"
+           class="org.elwiki.core.plugins.Groups"
            name="Groups">
      </wikiPlugin>
      <wikiPlugin
            alias="If"
-           class="org.apache.wiki.plugin.If"
+           class="org.elwiki.core.plugins.If"
            name="IfPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.IndexPlugin"
+           class="org.elwiki.core.plugins.IndexPlugin"
            name="IndexPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.ListLocksPlugin"
+           class="org.elwiki.core.plugins.ListLocksPlugin"
            name="ListLocksPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.Note"
+           class="org.elwiki.core.plugins.Note"
            name="Note">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.RecentChangesPlugin"
-           name="RecentChangesPlugin">
+           class="org.elwiki.core.plugins.RecentChangesPlugin"
+           name="RecentChanges">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.ReferringUndefinedPagesPlugin"
+           class="org.elwiki.core.plugins.ReferringUndefinedPagesPlugin"
            name="ReferringUndefinedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.SampleAjaxPlugin"
+           class="org.elwiki.core.plugins.SampleAjaxPlugin"
            name="SampleAjaxPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.Search"
+           class="org.elwiki.core.plugins.Search"
            name="Search">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.SessionsPlugin"
+           class="org.elwiki.core.plugins.SessionsPlugin"
            name="SessionsPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.UndefinedPagesPlugin"
+           class="org.elwiki.core.plugins.UndefinedPagesPlugin"
            name="UndefinedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.UnusedPagesPlugin"
+           class="org.elwiki.core.plugins.UnusedPagesPlugin"
            name="UnusedPagesPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.WeblogArchivePlugin"
+           class="org.elwiki.core.plugins.WeblogArchivePlugin"
            name="WeblogArchivePlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.WeblogEntryPlugin"
+           class="org.elwiki.core.plugins.WeblogEntryPlugin"
            name="WeblogEntryPlugin">
      </wikiPlugin>
      <wikiPlugin
-           class="org.apache.wiki.plugin.WeblogPlugin"
+           class="org.elwiki.core.plugins.WeblogPlugin"
            name="WeblogPlugin">
      </wikiPlugin>
   </extension>

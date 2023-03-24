@@ -17,13 +17,14 @@
     under the License.  
  */
 
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.elwiki.api.plugin.WikiPlugin;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
 import org.jdom2.Namespace;

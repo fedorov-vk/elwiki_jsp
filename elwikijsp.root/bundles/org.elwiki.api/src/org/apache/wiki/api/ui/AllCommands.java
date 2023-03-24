@@ -35,7 +35,6 @@ public interface AllCommands {
             GroupCommand.DELETE_GROUP,
             GroupCommand.EDIT_GROUP,
             GroupCommand.VIEW_GROUP,
-            PageCommand.ATTACH,
             PageCommand.COMMENT,
             PageCommand.CONFLICT,
             PageCommand.CREATE,
@@ -48,10 +47,14 @@ public interface AllCommands {
             PageCommand.PREVIEW,
             PageCommand.RENAME,
             PageCommand.RSS,
-            PageCommand.UPLOAD,
             PageCommand.VIEW,
             PageCommand.DELETE_ATTACHMENT,
             PageCommand.INFO_ATTACHMENT,
+            //
+            PageCommand.UPLOAD,
+            PageCommand.ATTACH,
+            PageCommand.ATTACHMENT_DOPOST,
+            //
             //:FVK: PageCommand.VIEWID,
             RedirectCommand.REDIRECT,
             WikiCommand.CREATE_GROUP,

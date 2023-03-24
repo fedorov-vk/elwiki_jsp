@@ -16,12 +16,13 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.apache.wiki.plugin;
+package org.elwiki.core.plugins;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
