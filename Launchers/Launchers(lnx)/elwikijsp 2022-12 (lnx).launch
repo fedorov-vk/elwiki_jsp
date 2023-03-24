@@ -147,7 +147,6 @@
         <setEntry value="org.elwiki.authorize@default:default"/>
         <setEntry value="org.elwiki.commandresolver@default:default"/>
         <setEntry value="org.elwiki.configuration@default:default"/>
-        <setEntry value="org.elwiki.core.plugins@default:default"/>
         <setEntry value="org.elwiki.data.persist@default:default"/>
         <setEntry value="org.elwiki.data@default:default"/>
         <setEntry value="org.elwiki.engine@5:default"/>
@@ -159,12 +158,15 @@
         <setEntry value="org.elwiki.manager.filters@default:default"/>
         <setEntry value="org.elwiki.manager.page@default:default"/>
         <setEntry value="org.elwiki.manager.pagerenamer@default:default"/>
+        <setEntry value="org.elwiki.manager.plugins@default:default"/>
         <setEntry value="org.elwiki.manager.referencemanager@default:default"/>
         <setEntry value="org.elwiki.manager.renderer@default:default"/>
         <setEntry value="org.elwiki.manager.search@default:default"/>
         <setEntry value="org.elwiki.manager.variables@default:default"/>
         <setEntry value="org.elwiki.manager.wikiscope@default:default"/>
         <setEntry value="org.elwiki.manager.workflow@default:default"/>
+        <setEntry value="org.elwiki.plugin.bugreporthandler@default:default"/>
+        <setEntry value="org.elwiki.plugins.main@default:default"/>
         <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
         <setEntry value="org.elwiki.resources@default:default"/>
         <setEntry value="org.elwiki.rssgenerator@default:default"/>
@@ -172,7 +174,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1677945039963"/>
+    <stringAttribute key="timestamp" value="1679673374486"/>
     <booleanAttribute key="tracing" value="false"/>
     <mapAttribute key="tracingOptions">
         <mapEntry key="com.ibm.datatools.core.ui/debug" value="true"/>

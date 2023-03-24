@@ -32,8 +32,8 @@ Require-Bundle: org.osgi.service.event,
  org.elwiki.api;visibility:=reexport,
  org.elwiki.event,
  org.elwiki.util,
- org.elwiki.core.plugins,
- org.elwiki.data
+ org.elwiki.data,
+ org.elwiki.plugins.main;bundle-version="1.0.0"
 Import-Package: javax.mail;version="1.4.0",
  org.apache.commons.io,
  org.apache.jasper;version="2.2.2",

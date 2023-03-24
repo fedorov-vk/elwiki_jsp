@@ -103,7 +103,7 @@ public class CalendarTag extends BaseWikiTag {
 	 * @param format The format in the SimpleDateFormat fashion.
 	 * 
 	 * @see SimpleDateFormat
-	 * @see org.elwiki.core.plugins.WeblogPlugin
+	 * @see org.elwiki.plugins.WeblogPlugin
 	 */
 	public void setPageformat(final String format) {
 		m_pageFormat = new SimpleDateFormat(format);

@@ -18,7 +18,7 @@
 		<module>bundles_managers</module>
 		<module>bundles_elwiki</module>
 		<module>bundles_elwiki_model</module>
-		<module>bundles_workflow</module>
+		<module>bundles_plugins</module>
 		<module>features</module>
 
 <!--

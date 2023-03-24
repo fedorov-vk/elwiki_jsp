@@ -231,9 +231,7 @@
         List<PageReference> inReferences = pageManager.getPageReferrers(wikiPage.getId());
         %>
         <c:set var="inReferences" value="<%=inReferences%>" />
-        <c:if test="${empty inReferences}">
-          nothing. <!-- TODO: make message in the properties file. <fmt:message key="info.attachment.type"/> -->
-        </c:if>
+        <c:if test="${empty inReferences}"><fmt:message key="info.tab.links.nothing"/></c:if>
         <c:if test="${not empty inReferences}">
 		<%
 		for (PageReference pageReference : inReferences) {
@@ -254,9 +252,7 @@
         List<PageReference> outReferences = wikiPage.getPageReferences();
         %>
         <c:set var="outReferences" value="<%=outReferences%>" />
-        <c:if test="${empty outReferences}">
-          nothing. <!-- TODO: make message in the properties file. <fmt:message key="info.attachment.type"/> -->
-        </c:if>
+        <c:if test="${empty outReferences}"><fmt:message key="info.tab.links.nothing"/></c:if>
         <c:if test="${not empty outReferences}">
 		<%
 		for (PageReference pageReference : outReferences) {

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PageRenamer
+Bundle-Name: PageRenamer manager
 Bundle-SymbolicName: org.elwiki.manager.pagerenamer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
