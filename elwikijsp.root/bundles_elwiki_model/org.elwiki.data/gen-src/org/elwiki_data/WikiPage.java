@@ -41,6 +41,7 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getTags <em>Tags</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -492,6 +493,18 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	EList<UnknownPage> getUnknownPages();
+
+	/**
+	 * Returns the value of the '<em><b>Tags</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Tags</em>' attribute list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Tags()
+	 * @model
+	 * @generated
+	 */
+	EList<String> getTags();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -35,6 +35,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/webLog"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/unknownPages"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/tags"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/compareTo" body="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
       </genOperations>
@@ -63,6 +64,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/mainPageId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/nextPageId"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PagesStore/nextAttachmentId"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/tagslist"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PageContent">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageContent/content"/>
@@ -135,6 +137,9 @@
     <genClasses ecoreClass="elwiki_data.ecore#//UnknownPage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//UnknownPage/pageName"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//UnknownPage/wikipage"/>
+    </genClasses>
+    <genClasses ecoreClass="elwiki_data.ecore#//TagsList">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//TagsList/tags"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

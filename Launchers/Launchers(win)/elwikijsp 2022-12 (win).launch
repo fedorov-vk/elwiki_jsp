@@ -158,7 +158,6 @@
         <setEntry value="org.elwiki.data.persist@default:default"/>
         <setEntry value="org.elwiki.data@default:default"/>
         <setEntry value="org.elwiki.engine@5:default"/>
-        <setEntry value="org.elwiki.event@default:default"/>
         <setEntry value="org.elwiki.log4.definition@default:false"/>
         <setEntry value="org.elwiki.manager.attachment@default:default"/>
         <setEntry value="org.elwiki.manager.difference@default:default"/>

@@ -26,7 +26,6 @@ Require-Bundle: org.eclipse.osgi,
  org.jdom.2;bundle-version="2.0.6",
  jaxen;bundle-version="1.2.0",
  org.elwiki.api,
- org.elwiki.event,
  org.elwiki.data
 Import-Package: org.osgi.framework;version="1.3.0",
  javax.servlet;version="3.1.0",

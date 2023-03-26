@@ -158,6 +158,7 @@
         eType="#//StringToObjectMap" containment="true" eKeys="#//StringToObjectMap/key"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="unknownPages" upperBound="-1"
         eType="#//UnknownPage" containment="true" eOpposite="#//UnknownPage/wikipage"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"
@@ -179,6 +180,8 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextAttachmentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tagslist" upperBound="-1"
+        eType="#//TagsList" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageContent" eSuperTypes="#//IHistoryInfo">
     <eOperations name="getLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
@@ -371,5 +374,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipage" eType="#//WikiPage"
         eOpposite="#//WikiPage/unknownPages"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TagsList">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags" ordered="false" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.elwiki_data.PagesStore#getMainPageId <em>Main Page Id</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getNextPageId <em>Next Page Id</em>}</li>
  *   <li>{@link org.elwiki_data.PagesStore#getNextAttachmentId <em>Next Attachment Id</em>}</li>
+ *   <li>{@link org.elwiki_data.PagesStore#getTagslist <em>Tagslist</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore()
@@ -124,5 +125,17 @@ public interface PagesStore extends CDOObject {
 	 * @generated
 	 */
 	void setNextAttachmentId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Tagslist</b></em>' containment reference list.
+	 * The list contents are of type {@link org.elwiki_data.TagsList}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Tagslist</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPagesStore_Tagslist()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TagsList> getTagslist();
 
 } // PagesStore

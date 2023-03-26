@@ -30,7 +30,6 @@ Require-Bundle: org.osgi.service.event,
  com.sun.el;bundle-version="2.2.0",
  org.jdom.2;bundle-version="2.0.6",
  org.elwiki.api;visibility:=reexport,
- org.elwiki.event,
  org.elwiki.util,
  org.elwiki.data,
  org.elwiki.plugins.main;bundle-version="1.0.0"

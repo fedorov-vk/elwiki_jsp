@@ -20,6 +20,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.PagesStore;
+import org.elwiki_data.TagsList;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
@@ -171,6 +172,12 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.UNKNOWN_PAGE: {
 				UnknownPage unknownPage = (UnknownPage)theEObject;
 				T result = caseUnknownPage(unknownPage);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Elwiki_dataPackage.TAGS_LIST: {
+				TagsList tagsList = (TagsList)theEObject;
+				T result = caseTagsList(tagsList);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -385,6 +392,21 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUnknownPage(UnknownPage object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Tags List</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Tags List</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTagsList(TagsList object) {
 		return null;
 	}
 

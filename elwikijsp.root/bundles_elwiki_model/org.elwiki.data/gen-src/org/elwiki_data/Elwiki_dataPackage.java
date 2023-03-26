@@ -268,13 +268,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
+	 * The feature id for the '<em><b>Tags</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 18;
+
+	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 18;
+	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Compare To</em>' operation.
@@ -431,13 +440,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGES_STORE__NEXT_ATTACHMENT_ID = 3;
 
 	/**
+	 * The feature id for the '<em><b>Tagslist</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PAGES_STORE__TAGSLIST = 4;
+
+	/**
 	 * The number of structural features of the '<em>Pages Store</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PAGES_STORE_FEATURE_COUNT = 4;
+	int PAGES_STORE_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Pages Store</em>' class.
@@ -1136,13 +1154,50 @@ public interface Elwiki_dataPackage extends EPackage {
 	int UNKNOWN_PAGE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.TagsListImpl <em>Tags List</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.TagsListImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getTagsList()
+	 * @generated
+	 */
+	int TAGS_LIST = 15;
+
+	/**
+	 * The feature id for the '<em><b>Tags</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAGS_LIST__TAGS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Tags List</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAGS_LIST_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Tags List</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TAGS_LIST_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
 	 * @generated
 	 */
-	int ARRAY_STRING = 15;
+	int ARRAY_STRING = 16;
 
 	/**
 	 * The meta object id for the '<em>Access List</em>' data type.
@@ -1152,7 +1207,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAccessList()
 	 * @generated
 	 */
-	int ACCESS_LIST = 16;
+	int ACCESS_LIST = 17;
 
 	/**
 	 * The meta object id for the '<em>Array Principal</em>' data type.
@@ -1161,7 +1216,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
 	 * @generated
 	 */
-	int ARRAY_PRINCIPAL = 18;
+	int ARRAY_PRINCIPAL = 19;
 
 	/**
 	 * The meta object id for the '<em>Permission Object</em>' data type.
@@ -1171,7 +1226,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
 	 * @generated
 	 */
-	int PERMISSION_OBJECT = 19;
+	int PERMISSION_OBJECT = 20;
 
 	/**
 	 * The meta object id for the '<em>List Page Content</em>' data type.
@@ -1181,7 +1236,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getListPageContent()
 	 * @generated
 	 */
-	int LIST_PAGE_CONTENT = 20;
+	int LIST_PAGE_CONTENT = 21;
 
 	/**
 	 * The meta object id for the '<em>Principal Object</em>' data type.
@@ -1191,7 +1246,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
 	 * @generated
 	 */
-	int PRINCIPAL_OBJECT = 17;
+	int PRINCIPAL_OBJECT = 18;
 
 
 	/**
@@ -1403,6 +1458,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getWikiPage_UnknownPages();
 
 	/**
+	 * Returns the meta object for the attribute list '{@link org.elwiki_data.WikiPage#getTags <em>Tags</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Tags</em>'.
+	 * @see org.elwiki_data.WikiPage#getTags()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EAttribute getWikiPage_Tags();
+
+	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1565,6 +1631,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPagesStore_NextAttachmentId();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.PagesStore#getTagslist <em>Tagslist</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Tagslist</em>'.
+	 * @see org.elwiki_data.PagesStore#getTagslist()
+	 * @see #getPagesStore()
+	 * @generated
+	 */
+	EReference getPagesStore_Tagslist();
 
 	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PageContent <em>Page Content</em>}'.
@@ -2003,6 +2080,27 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getUnknownPage_Wikipage();
 
 	/**
+	 * Returns the meta object for class '{@link org.elwiki_data.TagsList <em>Tags List</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Tags List</em>'.
+	 * @see org.elwiki_data.TagsList
+	 * @generated
+	 */
+	EClass getTagsList();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.elwiki_data.TagsList#getTags <em>Tags</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Tags</em>'.
+	 * @see org.elwiki_data.TagsList#getTags()
+	 * @see #getTagsList()
+	 * @generated
+	 */
+	EAttribute getTagsList_Tags();
+
+	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.AttachmentContent <em>Attachment Content</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2287,6 +2385,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference WIKI_PAGE__UNKNOWN_PAGES = eINSTANCE.getWikiPage_UnknownPages();
 
 		/**
+		 * The meta object literal for the '<em><b>Tags</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WIKI_PAGE__TAGS = eINSTANCE.getWikiPage_Tags();
+
+		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2415,6 +2521,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PAGES_STORE__NEXT_ATTACHMENT_ID = eINSTANCE.getPagesStore_NextAttachmentId();
+
+		/**
+		 * The meta object literal for the '<em><b>Tagslist</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PAGES_STORE__TAGSLIST = eINSTANCE.getPagesStore_Tagslist();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PageContentImpl <em>Page Content</em>}' class.
@@ -2767,6 +2881,24 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference UNKNOWN_PAGE__WIKIPAGE = eINSTANCE.getUnknownPage_Wikipage();
+
+		/**
+		 * The meta object literal for the '{@link org.elwiki_data.impl.TagsListImpl <em>Tags List</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.elwiki_data.impl.TagsListImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getTagsList()
+		 * @generated
+		 */
+		EClass TAGS_LIST = eINSTANCE.getTagsList();
+
+		/**
+		 * The meta object literal for the '<em><b>Tags</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TAGS_LIST__TAGS = eINSTANCE.getTagsList_Tags();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.

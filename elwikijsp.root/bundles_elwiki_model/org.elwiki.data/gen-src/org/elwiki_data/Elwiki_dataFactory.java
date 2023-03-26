@@ -112,6 +112,15 @@ public interface Elwiki_dataFactory extends EFactory {
 	UnknownPage createUnknownPage();
 
 	/**
+	 * Returns a new object of class '<em>Tags List</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Tags List</em>'.
+	 * @generated
+	 */
+	TagsList createTagsList();
+
+	/**
 	 * Returns a new object of class '<em>Attachment Content</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

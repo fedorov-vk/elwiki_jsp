@@ -52,6 +52,7 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getUnknownPages <em>Unknown Pages</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTags <em>Tags</em>}</li>
  * </ul>
  *
  * @generated
@@ -380,6 +381,17 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public EList<UnknownPage> getUnknownPages() {
 		return (EList<UnknownPage>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__UNKNOWN_PAGES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public EList<String> getTags() {
+		return (EList<String>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__TAGS, true);
 	}
 
 	/**
