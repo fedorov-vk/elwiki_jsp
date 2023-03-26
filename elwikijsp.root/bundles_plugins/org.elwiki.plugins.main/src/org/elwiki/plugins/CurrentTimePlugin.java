@@ -18,6 +18,10 @@
  */
 package org.elwiki.plugins;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -25,46 +29,43 @@ import org.apache.wiki.preferences.Preferences;
 import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 /**
- *  Just displays the current date and time.
- *  The time format is exactly like in the java.text.SimpleDateFormat class.
- *  
- *  <p>Parameters : </p>
- *  NONE
- *  @since 1.7.8
- *  @see java.text.SimpleDateFormat
+ * Just displays the current date and time. The time format is exactly like in the
+ * java.text.SimpleDateFormat class.
+ * 
+ * <p>
+ * Parameters :
+ * </p>
+ * NONE
+ * 
+ * @see java.text.SimpleDateFormat
  */
 public class CurrentTimePlugin implements WikiPlugin {
 
-    // private static Logger log = Logger.getLogger( CurrentTimePlugin.class );
+	// private static Logger log = Logger.getLogger(CurrentTimePlugin.class);
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
-        final String formatString = params.get( "format" );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(final WikiContext context, final Map<String, String> params) throws PluginException {
+		final String formatString = params.get("format");
 
-        try {
-            final SimpleDateFormat fmt;
-            if( formatString != null ) {
-                fmt = new SimpleDateFormat( formatString );
-            } else {
-                fmt = Preferences.getDateFormat( context, TimeFormat.DATETIME );
-            }
+		try {
+			final SimpleDateFormat fmt;
+			if (formatString != null) {
+				fmt = new SimpleDateFormat(formatString);
+			} else {
+				fmt = Preferences.getDateFormat(context, TimeFormat.DATETIME);
+			}
 
-            final Date d = new Date();  // Now.
+			final Date d = new Date(); // Now.
 
-            return fmt.format( d );
-        } catch( final IllegalArgumentException e ) {
+			return fmt.format(d);
+		} catch (final IllegalArgumentException e) {
 			String message = PluginsActivator.getMessage("currenttimeplugin.badformat", Preferences.getLocale(context));
 			throw new PluginException(message + e.getMessage(), e);
-        }
-    }
+		}
+	}
 
 }

@@ -31,29 +31,29 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Plugin for displaying pages that are not linked to in other pages.
- * Uses the ReferenceManager.
+ * Plugin for displaying pages that are not linked to in other pages. Uses the ReferenceManager.
  * <p>
- *  Parameters  (from AbstractReferralPlugin):
- *  <ul>
- *  <li><b>separator</b> - how to separate generated links; default is a wikitext line break,  producing a vertical list</li>
+ * Parameters (from AbstractReferralPlugin):
+ * <ul>
+ * <li><b>separator</b> - how to separate generated links; default is a wikitext line break,
+ * producing a vertical list</li>
  * <li><b> maxwidth</b> - maximum width, in chars, of generated links.</li>
  * </ul>
  */
 public class UnusedPagesPlugin extends AbstractReferralPlugin {
 
-    /**
-     *  {@inheritDoc}
-     */
-    @Override
-    public String execute( final WikiContext context, final Map< String, String > params ) throws PluginException {
-        super.initialize( context, params );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
 
 		try {
 			Collection<WikiPage> unreferencedPages = super.pageManager.getUnreferencedPages();
 			//:FVK: Collection<String> links = unreferencedPages.stream().map(WikiPage::getName).collect(Collectors.toList());
 			//:FVK: links = filterAndSortCollection(links);
-			
+
 			unreferencedPages.removeIf(page -> page.getId().startsWith("w")); // :FVK: workaround.
 
 			String wikitext;
@@ -69,7 +69,6 @@ public class UnusedPagesPlugin extends AbstractReferralPlugin {
 		} catch (Exception e) {
 			throw new PluginException(e);
 		}
-    }
+	}
 
 }
-

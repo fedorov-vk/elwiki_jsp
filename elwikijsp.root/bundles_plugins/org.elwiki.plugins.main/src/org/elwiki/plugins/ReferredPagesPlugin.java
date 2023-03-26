@@ -30,12 +30,13 @@ import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
@@ -54,20 +55,9 @@ import org.elwiki_data.WikiPage;
  * <li><b>format</b> - The 'sort' format sorts the page's target links in alphabetical order.
  * </ul>
  */
-public class ReferredPagesPlugin implements WikiPlugin {
+public class ReferredPagesPlugin implements WikiPlugin, InitializablePlugin {
 
 	private static final Logger log = Logger.getLogger(ReferredPagesPlugin.class);
-
-	private Engine m_engine;
-	private PageManager pageManager;
-
-	private int m_depth;
-	private Pattern m_includePattern;
-	private Pattern m_excludePattern;
-	private boolean m_formatSort = false;
-
-	private PatternMatcher m_matcher = new Perl5Matcher();
-	private StringBuffer m_result = new StringBuffer(1024);
 
 	/** The parameter name for the root page ID to start from. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_PAGE_ID = "id";
@@ -90,15 +80,27 @@ public class ReferredPagesPlugin implements WikiPlugin {
 	/** The maximum depth. Value is <tt>{@value}</tt>. */
 	public static final int MAX_DEPTH = 8;
 
+	private int m_depth;
+	private Pattern m_includePattern;
+	private Pattern m_excludePattern;
+	private boolean m_formatSort = false;
+
+	private PatternMatcher m_matcher = new Perl5Matcher();
+	private StringBuffer m_result = new StringBuffer(1024);
+	
+	private PageManager pageManager;
+
+	@Override
+	public void initialize(Engine engine) throws PluginException {
+		this.pageManager = engine.getManager(PageManager.class);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		try {
-			m_engine = context.getEngine();
-			pageManager = m_engine.getManager(PageManager.class);
-
 			WikiPage rootPage;
 			String rootPageName;
 

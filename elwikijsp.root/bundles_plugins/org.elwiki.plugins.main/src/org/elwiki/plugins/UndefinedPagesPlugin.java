@@ -18,24 +18,22 @@
  */
 package org.elwiki.plugins;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.elwiki.plugins.internal.AbstractReferralPlugin;
-import org.elwiki_data.UnknownPage;
-import org.elwiki_data.WikiPage;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.elwiki.plugins.internal.AbstractReferralPlugin;
+import org.elwiki_data.UnknownPage;
 
 /**
  * Plugin that enumerates the pages in the wiki that have not yet been defined.
  * 
  * Parameters (from AbstractReferralPlugin):
  * <ul>
- * <li><b>separator</b> - how to separate generated links; default is a wikitext line break, producing a
- * vertical list</li>
+ * <li><b>separator</b> - how to separate generated links; default is a wikitext line break,
+ * producing a vertical list</li>
  * <li><b> maxwidth</b> - maximum width, in chars, of generated links.</li>
  * </ul>
  */
@@ -45,7 +43,7 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String execute(final WikiContext context, final Map<String, String> params) throws PluginException {
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
 		super.initialize(context, params);
 		try {
 			Collection<UnknownPage> unknownPages = super.pageManager.getUnknownPages();
@@ -58,7 +56,7 @@ public class UndefinedPagesPlugin extends AbstractReferralPlugin {
 						"parameter " + PARAM_LASTMODIFIED + " is not valid for the UndefinedPagesPlugin");
 			}
 
-			final String wikitext;
+			String wikitext;
 			if (m_show.equals(PARAM_SHOW_VALUE_COUNT)) {
 				wikitext = "" + links.size();
 			} else {

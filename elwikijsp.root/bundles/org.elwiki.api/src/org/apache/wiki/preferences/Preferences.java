@@ -165,12 +165,16 @@ public class Preferences extends HashMap<String, String> {
 	 * @return the preference value
 	 */
 	public static String getPreference(final WikiContext wikiContext, final String name) {
-		final HttpServletRequest request = wikiContext.getHttpRequest();
+		if (wikiContext == null) {
+			return null;
+		}
+
+		HttpServletRequest request = wikiContext.getHttpRequest();
 		if (request == null) {
 			return null;
 		}
 
-		final Preferences prefs = (Preferences) request.getSession().getAttribute(SESSIONPREFS);
+		Preferences prefs = (Preferences) request.getSession().getAttribute(SESSIONPREFS);
 		if (prefs != null) {
 			return prefs.get(name);
 		}
@@ -218,7 +222,7 @@ public class Preferences extends HashMap<String, String> {
 	public static Locale getLocale(WikiContext context) {
 		Locale loc = null;
 
-		final String langSetting = getPreference(context, "Language");
+		String langSetting = getPreference(context, "Language");
 
 		// parse language and construct valid Locale object
 		if (langSetting != null) {
@@ -226,7 +230,7 @@ public class Preferences extends HashMap<String, String> {
 			String country = "";
 			String variant = "";
 
-			final String[] res = StringUtils.split(langSetting, "-_");
+			String[] res = StringUtils.split(langSetting, "-_");
 			if (res.length > 2) {
 				variant = res[2];
 			}
@@ -240,13 +244,13 @@ public class Preferences extends HashMap<String, String> {
 		}
 
 		// see if default locale is set server side
-		if (loc == null) {
+		if (loc == null && context != null) {
 			loc = getConfiguredLocale(context.getEngine());
 		}
 
 		// otherwise try to find out the browser's preferred language setting, or use the JVM's default
 		if (loc == null) {
-			final HttpServletRequest request = context.getHttpRequest();
+			HttpServletRequest request = (context != null) ? context.getHttpRequest() : null;
 			loc = (request != null) ? request.getLocale() : Locale.getDefault();
 		}
 

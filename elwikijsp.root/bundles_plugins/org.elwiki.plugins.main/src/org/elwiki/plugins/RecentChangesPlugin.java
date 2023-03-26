@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,15 +44,19 @@ import org.elwiki_data.WikiPage;
 import org.jdom2.Element;
 
 /**
- *  Returns the Recent Changes in the wiki being a date-sorted list of page names.
+ * Returns the Recent Changes in the wiki being a date-sorted list of page names.
  *
- *  <p>Parameters: </p>
- *  <ul>
- *  <li><b>since</b> - show changes from the last n days, for example since=5 shows only the pages that were changed in the last five days</li>
- *  <li><b>format</b> - (full|compact) : if "full", then display a long version with all possible info. If "compact", then be as compact as possible.</li>
- *  <li><b>timeFormat</b> - the time format to use, the default is "HH:mm:ss"</li>
- *  <li><b>dateFormat</b> - the date format to use, the default is "dd.MM.yyyy"</li>
- *  </ul>
+ * <p>
+ * Parameters:
+ * </p>
+ * <ul>
+ * <li><b>since</b> - show changes from the last n days, for example since=5 shows only the pages
+ * that were changed in the last five days</li>
+ * <li><b>format</b> - (full|compact) : if "full", then display a long version with all possible
+ * info. If "compact", then be as compact as possible.</li>
+ * <li><b>timeFormat</b> - the time format to use, the default is "HH:mm:ss"</li>
+ * <li><b>dateFormat</b> - the date format to use, the default is "dd.MM.yyyy"</li>
+ * </ul>
  */
 public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiPlugin {
 
@@ -61,22 +64,25 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiP
 
 	/** Parameter name for the separator format. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_FORMAT = "format";
+
 	/** Parameter name for the separator timeFormat. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_TIME_FORMAT = "timeFormat";
+
 	/** Parameter name for the separator dateFormat. Value is <tt>{@value}</tt>. */
 	public static final String PARAM_DATE_FORMAT = "dateFormat";
 
 	/** How many days we show by default. */
 	private static final int DEFAULT_DAYS = 100 * 365;
+
 	public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 	public static final String DEFAULT_DATE_FORMAT = "dd.MM.yyyy";
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String execute( WikiContext context, Map< String, String > params ) throws PluginException {
-        super.initialize( context, params );
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
+		super.initialize(context, params);
 
 		String spacing = "4";
 		boolean showAuthor = true;
@@ -105,161 +111,163 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiP
 
 		/* Do the actual work.
 		 */
-        // FIXME: Should really have a since date on the getRecentChanges method.
-        Collection< WikiPage > changes = super.pageManager.getRecentChanges();
-        changes = filterWikiPageCollection( changes );
-        
-        if ( changes != null ) {
-            Date olddate = new Date( 0 );
+		// FIXME: Should really have a since date on the getRecentChanges method.
+		Collection<WikiPage> changes = super.pageManager.getRecentChanges();
+		changes = filterWikiPageCollection(changes);
 
-            DateFormat fmt = getDateFormat( context, params );
-            DateFormat tfmt = getTimeFormat( context, params );
+		if (changes != null) {
+			Date olddate = new Date(0);
 
-            Element rt = XhtmlUtil.element( XHTML.table );
-            rt.setAttribute( XHTML.ATTR_class, "recentchanges" );
-            rt.setAttribute( XHTML.ATTR_cellpadding, spacing );
+			DateFormat fmt = getDateFormat(context, params);
+			DateFormat tfmt = getTimeFormat(context, params);
 
-            for(WikiPage pageref : changes ) {
-                Date lastmod = pageref.getLastModifiedDate();
+			Element rt = XhtmlUtil.element(XHTML.table);
+			rt.setAttribute(XHTML.ATTR_class, "recentchanges");
+			rt.setAttribute(XHTML.ATTR_cellpadding, spacing);
+
+			for (WikiPage pageref : changes) {
+				Date lastmod = pageref.getLastModifiedDate();
 				if (lastmod == null) {
 					lastmod = new Date(); //:FVK: workaround.
 				}
 
-                if( lastmod.before( sincedate.getTime() ) ) {
-                    break;
-                }
+				if (lastmod.before(sincedate.getTime())) {
+					break;
+				}
 
-                if( !isSameDay( lastmod, olddate ) ) {
-                    Element row = XhtmlUtil.element( XHTML.tr );
-                    Element col = XhtmlUtil.element( XHTML.td );
-                    col.setAttribute( XHTML.ATTR_colspan, tablewidth );
-                    col.setAttribute( XHTML.ATTR_class, "date" );
-                    col.addContent( XhtmlUtil.element( XHTML.b, fmt.format( lastmod ) ) );
+				if (!isSameDay(lastmod, olddate)) {
+					Element row = XhtmlUtil.element(XHTML.tr);
+					Element col = XhtmlUtil.element(XHTML.td);
+					col.setAttribute(XHTML.ATTR_colspan, tablewidth);
+					col.setAttribute(XHTML.ATTR_class, "date");
+					col.addContent(XhtmlUtil.element(XHTML.b, fmt.format(lastmod)));
 
-                    rt.addContent( row );
-                    row.addContent( col );
-                    olddate = lastmod;
-                }
+					rt.addContent(row);
+					row.addContent(col);
+					olddate = lastmod;
+				}
 
-                //TODO: here porting code for JSPwiki "pageref instanceof PageAttachment" (Page -> PageAttachment):
+				//TODO: here porting code for JSPwiki "pageref instanceof PageAttachment" (Page -> PageAttachment):
 
 				String href = context
 						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOGET.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
-                Element link = XhtmlUtil.link( href, super.renderingManager.beautifyTitle( pageref.getName() ) );
-                Element row = XhtmlUtil.element( XHTML.tr );
-                Element col = XhtmlUtil.element( XHTML.td );
-                col.setAttribute( XHTML.ATTR_width, "30%" );
-                col.addContent( link );
+				Element link = XhtmlUtil.link(href, super.renderingManager.beautifyTitle(pageref.getName()));
+				Element row = XhtmlUtil.element(XHTML.tr);
+				Element col = XhtmlUtil.element(XHTML.td);
+				col.setAttribute(XHTML.ATTR_width, "30%");
+				col.addContent(link);
 
-                //
-                //  Add the direct link to the attachment info.
-                //
-                if( pageref instanceof PageAttachment ) {
-                    link = XhtmlUtil.link( context.getURL( WikiContext.PAGE_INFO, pageref.getName() ), null );
-                    link.setAttribute( XHTML.ATTR_class, "infolink" );
+				//
+				//  Add the direct link to the attachment info.
+				//
+				if (pageref instanceof PageAttachment) {
+					link = XhtmlUtil.link(context.getURL(WikiContext.PAGE_INFO, pageref.getName()), null);
+					link.setAttribute(XHTML.ATTR_class, "infolink");
 
-                    Element img = XhtmlUtil.img( context.getURL( WikiContext.PAGE_NONE, "images/attachment_small.png" ), null );
-                    link.addContent( img );
+					Element img = XhtmlUtil.img(context.getURL(WikiContext.PAGE_NONE, "images/attachment_small.png"),
+							null);
+					link.addContent(img);
 
-                    col.addContent( link );
-                }
+					col.addContent(link);
+				}
 
-                row.addContent( col );
-                rt.addContent( row );
+				row.addContent(col);
+				rt.addContent(row);
 
-                if( pageref instanceof PageAttachment ) {
-                    Element td = XhtmlUtil.element( XHTML.td, tfmt.format( lastmod ) );
-                    td.setAttribute( XHTML.ATTR_class, "lastchange" );
-                    row.addContent( td );
-                } else {
-                    Element infocol = XhtmlUtil.element( XHTML.td );
-                    infocol.setAttribute( XHTML.ATTR_class, "lastchange" );
-                    infocol.addContent( XhtmlUtil.link( context.getURL( WikiContext.PAGE_DIFF, pageref.getName(), "r1=-1" ),
-                                                        tfmt.format( lastmod ) ) );
-                    row.addContent( infocol );
-                }
+				if (pageref instanceof PageAttachment) {
+					Element td = XhtmlUtil.element(XHTML.td, tfmt.format(lastmod));
+					td.setAttribute(XHTML.ATTR_class, "lastchange");
+					row.addContent(td);
+				} else {
+					Element infocol = XhtmlUtil.element(XHTML.td);
+					infocol.setAttribute(XHTML.ATTR_class, "lastchange");
+					infocol.addContent(XhtmlUtil.link(context.getURL(WikiContext.PAGE_DIFF, pageref.getName(), "r1=-1"),
+							tfmt.format(lastmod)));
+					row.addContent(infocol);
+				}
 
-                //
-                //  Display author information.
-                //
-                if( showAuthor ) {
-                    String author = pageref.getAuthor();
+				//
+				//  Display author information.
+				//
+				if (showAuthor) {
+					String author = pageref.getAuthor();
 
-                    Element authorinfo = XhtmlUtil.element( XHTML.td );
-                    authorinfo.setAttribute( XHTML.ATTR_class, "author" );
+					Element authorinfo = XhtmlUtil.element(XHTML.td);
+					authorinfo.setAttribute(XHTML.ATTR_class, "author");
 
-                    if( author != null ) {
-                        if( super.pageManager.pageExistsByName( author ) ) {
-                            authorinfo.addContent( XhtmlUtil.link( context.getURL( WikiContext.PAGE_VIEW, author ), author ) );
-                        } else {
-                            authorinfo.addContent( author );
-                        }
-                    } else {
+					if (author != null) {
+						if (super.pageManager.pageExistsByName(author)) {
+							authorinfo
+									.addContent(XhtmlUtil.link(context.getURL(WikiContext.PAGE_VIEW, author), author));
+						} else {
+							authorinfo.addContent(author);
+						}
+					} else {
 						String message = PluginsActivator.getMessage("common.unknownauthor",
 								Preferences.getLocale(context));
 						authorinfo.addContent(message);
-                    }
+					}
 
-                    row.addContent( authorinfo );
-                }
+					row.addContent(authorinfo);
+				}
 
-                // Change note
-                if( showChangenote ) {
-                    String changenote = ":FVK:"; //:FVK: pageref.getAttribute( WikiPage.CHANGENOTE );
-                    Element td_changenote = XhtmlUtil.element( XHTML.td, changenote );
-                    td_changenote.setAttribute( XHTML.ATTR_class, "changenote" );
-                    row.addContent( td_changenote );
-                }
+				// Change note
+				if (showChangenote) {
+					String changenote = ":FVK:"; //:FVK: pageref.getAttribute( WikiPage.CHANGENOTE );
+					Element td_changenote = XhtmlUtil.element(XHTML.td, changenote);
+					td_changenote.setAttribute(XHTML.ATTR_class, "changenote");
+					row.addContent(td_changenote);
+				}
 
-                //  Revert note
-/*                
-                if( context.hasAdminPermissions() )
-                {
-                    row.addElement( new td("Revert") );
-                }
- */
-            }
-            return XhtmlUtil.serialize( rt, XhtmlUtil.EXPAND_EMPTY_NODES );
-        }
-        return "";
-    }
+				//  Revert note
+				/*                
+				if( context.hasAdminPermissions() )
+				{
+				    row.addElement( new td("Revert") );
+				}
+				 */
+			}
+			return XhtmlUtil.serialize(rt, XhtmlUtil.EXPAND_EMPTY_NODES);
+		}
+		return "";
+	}
 
-    
-    private boolean isSameDay( Date a, Date b ) {
-        Calendar aa = Calendar.getInstance(); aa.setTime( a );
-        Calendar bb = Calendar.getInstance(); bb.setTime( b );
+	private boolean isSameDay(Date a, Date b) {
+		Calendar aa = Calendar.getInstance();
+		aa.setTime(a);
+		Calendar bb = Calendar.getInstance();
+		bb.setTime(b);
 
-        return aa.get( Calendar.YEAR ) == bb.get( Calendar.YEAR ) 
-            && aa.get( Calendar.DAY_OF_YEAR ) == bb.get( Calendar.DAY_OF_YEAR );
-    }
-    
+		return aa.get(Calendar.YEAR) == bb.get(Calendar.YEAR)
+				&& aa.get(Calendar.DAY_OF_YEAR) == bb.get(Calendar.DAY_OF_YEAR);
+	}
 
-    // TODO: Ideally the default behavior should be to return the default format for the default
-    // locale, but that is at odds with the 1st version of this plugin. We seek to preserve the
-    // behaviour of that first version, so to get the default format, the user must explicitly do
-    // something like: dateFormat='' timeformat='' which is a odd, but probably okay.
-    private DateFormat getTimeFormat( WikiContext context, Map< String, String > params ) {
-        String formatString = get( params, DEFAULT_TIME_FORMAT, PARAM_TIME_FORMAT );
-        if( StringUtils.isBlank( formatString ) ) {
-            return Preferences.getDateFormat( context, TimeFormat.TIME );
-        }
+	// TODO: Ideally the default behavior should be to return the default format for the default
+	// locale, but that is at odds with the 1st version of this plugin. We seek to preserve the
+	// behaviour of that first version, so to get the default format, the user must explicitly do
+	// something like: dateFormat='' timeformat='' which is a odd, but probably okay.
+	private DateFormat getTimeFormat(WikiContext context, Map<String, String> params) {
+		String formatString = get(params, DEFAULT_TIME_FORMAT, PARAM_TIME_FORMAT);
+		if (StringUtils.isBlank(formatString)) {
+			return Preferences.getDateFormat(context, TimeFormat.TIME);
+		}
 
-        return new SimpleDateFormat( formatString );
-    }
+		return new SimpleDateFormat(formatString);
+	}
 
-    private DateFormat getDateFormat( WikiContext context, Map< String, String > params ) {
-        String formatString = get( params, DEFAULT_DATE_FORMAT, PARAM_DATE_FORMAT );
-        if( StringUtils.isBlank( formatString ) ) {
-            return Preferences.getDateFormat( context, TimeFormat.DATE );
-        }
+	private DateFormat getDateFormat(WikiContext context, Map<String, String> params) {
+		String formatString = get(params, DEFAULT_DATE_FORMAT, PARAM_DATE_FORMAT);
+		if (StringUtils.isBlank(formatString)) {
+			return Preferences.getDateFormat(context, TimeFormat.DATE);
+		}
 
-        return new SimpleDateFormat( formatString );
-    }
-    
-    private String get( Map< String, String > params, String defaultValue, String paramName ) {
-        String value = params.get( paramName );
-        return value == null ? defaultValue : value;
-    }
+		return new SimpleDateFormat(formatString);
+	}
+
+	private String get(Map<String, String> params, String defaultValue, String paramName) {
+		String value = params.get(paramName);
+		return value == null ? defaultValue : value;
+	}
 
 }

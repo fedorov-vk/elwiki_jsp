@@ -21,10 +21,9 @@ package org.elwiki.plugins;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
@@ -39,8 +38,6 @@ import org.elwiki_data.WikiPage;
  * </p>
  *
  * An original idea from Gregor Hagedorn.
- *
- * @since 2.10.0
  */
 public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 

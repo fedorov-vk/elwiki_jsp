@@ -18,26 +18,22 @@
  */
 package org.elwiki.plugins;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
-import org.elwiki_data.PageReference;
-import org.elwiki_data.WikiPage;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.references.ReferenceManager;
-import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import org.elwiki_data.PageReference;
+import org.elwiki_data.WikiPage;
 
 /**
  * Displays the pages referring to the current page.
@@ -80,12 +76,10 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 		super.initialize(context, params);
 
 		try {
-			//:FVK: или не я? ReferenceManager refmgr = Engine.getReferenceManager();
 			ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 			StringBuilder result = new StringBuilder(256);
 
 			WikiPage page;
-			String pageName;
 
 			/* Parse parameters.
 			 */
@@ -95,7 +89,6 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 				return "";
 			}
 			pageId = page.getId();
-			pageName = page.getName();
 
 			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
 

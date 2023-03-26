@@ -247,19 +247,19 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 					// Register the plugin with the its name.
 					name = pluginInfo.getName();
 					if (name != null) {
-						log.debug("Registering plugin [name]: " + name);
+						// log.debug("Registering plugin [name]: " + name);
 						m_pluginClassMap.put(name, pluginInfo);
 					}
 					// Register the plugin with a short convenient name.
 					name = pluginInfo.getAlias();
 					if (name != null) {
-						log.debug("Registering plugin [shortName]: " + name);
+						// log.debug("Registering plugin [shortName]: " + name);
 						m_pluginClassMap.put(name, pluginInfo);
 					}
 				}
 			}
 		}
-		log.info("<-end-> Registering plugins. Registered " + pluginsCount + " plugins.");
+		log.info("<-end-> Registering plugins. Registered (" + pluginsCount + ") plugins.");
     }
 
 	/** {@inheritDoc} */
@@ -477,11 +477,12 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
         return m_pluginClassMap.get(moduleName);
     }
 
-    /**
+	/**
 	 * Creates a {@link WikiPlugin}.
 	 *
 	 * @param pluginName plugin's classname
-	 * @param context    The current WikiContext.
+	 * @param context    The current WikiContext. Required for selecting locale of messages. If
+	 *                   <code>null</code> - then chosen default locale.
 	 * @return a {@link WikiPlugin}.
 	 * @throws PluginException if there is a problem building the {@link WikiPlugin}.
 	 */

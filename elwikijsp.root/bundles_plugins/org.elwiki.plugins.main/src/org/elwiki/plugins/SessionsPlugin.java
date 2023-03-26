@@ -18,22 +18,22 @@
  */
 package org.elwiki.plugins;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.auth.ISessionMonitor;
-import org.apache.wiki.auth.SessionMonitor;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.plugin.WikiPlugin;
-
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.api.exceptions.PluginException;
+import org.apache.wiki.auth.ISessionMonitor;
+import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.plugin.InitializablePlugin;
+import org.elwiki.api.plugin.WikiPlugin;
+
 /**
  * <p>
- * Displays information about active wiki sessions. The parameter <code>property</code> specifies what
- * information is displayed. If omitted, the number of sessions is returned.
+ * Displays information about active wiki sessions. The parameter <code>property</code> specifies
+ * what information is displayed. If omitted, the number of sessions is returned.
  *
  * <p>
  * Parameters :
@@ -46,18 +46,23 @@ import java.util.Map;
  * </ul>
  * </ul>
  */
-public class SessionsPlugin implements WikiPlugin {
+public class SessionsPlugin implements WikiPlugin, InitializablePlugin {
 
 	/** The parameter name for setting the property value. */
 	public static final String PARAM_PROP = "property";
+
+	ISessionMonitor sessionMonitor;
+
+	@Override
+	public void initialize(Engine engine) throws PluginException {
+		this.sessionMonitor = engine.getManager(ISessionMonitor.class);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
-		Engine engine = context.getEngine();
-		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
 		String prop = params.get(PARAM_PROP);
 
 		if ("users".equals(prop)) {

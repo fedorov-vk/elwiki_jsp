@@ -31,14 +31,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @since 2.10.2-svn10
+ * A simple AJAX Plugin, renders a "Press Me" link, waits 5 seconds, and then prints "You called"
+ * with the actionName and parameters.
+ * <p>
+ * The code uses javascript Wiki.ajaxHtmlCall() with the parameters:
+ * <ul>
+ * <li>URL e.g. "/SERVLET_MAPPING/actionName". SERVLET_MAPPING should be the name of the plugin,
+ * e.g. SampleAjaxPlugin
+ * <li>Parameters, an array of Strings e.g. [12,45]
+ * <li>Element id where result will be inserted e.g. "result&lt;id&gt;". &lt;id&gt; needs to be
+ * unique to each plugin instance on the page.
+ * <li>Execution Text e.g. "Loading..."
+ * </ul>
+ * 
+ * @author David Vittor
  */
 public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
-	
+
 	private static final String SERVLET_MAPPING = "SampleAjaxPlugin";
 
 	@Override
-    public String execute( final WikiContext context, final Map<String, String> params) throws PluginException {
+	public String execute(final WikiContext context, final Map<String, String> params) throws PluginException {
 		final String id = Integer.toString(this.hashCode());
 		final String html = String.format(//
 				"<div onclick='Wiki.ajaxHtmlCall(\"/%s/ajaxAction\",[12,45],\"result%s\",\"Loading...\")'" //
@@ -46,7 +59,7 @@ public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 						+ "<div id='result%s'></div>",
 				SERVLET_MAPPING, id, id);
 		return html;
-    }
+	}
 
 	@Override
 	public String getServletMapping() {
@@ -54,13 +67,13 @@ public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 	}
 
 	@Override
-	public void service( final HttpServletRequest request, final HttpServletResponse response, final String actionName, final List< String > params )
-			throws ServletException, IOException {
+	public void service(final HttpServletRequest request, final HttpServletResponse response, final String actionName,
+			final List<String> params) throws ServletException, IOException {
 		try {
-			Thread.sleep( 5000 ); // Wait 5 seconds
-		} catch( final Exception e ) {
+			Thread.sleep(5000); // Wait 5 seconds
+		} catch (final Exception e) {
 		}
-		response.getWriter().print( "You called! actionName=" + actionName + " params=" + params );
+		response.getWriter().print("You called! actionName=" + actionName + " params=" + params);
 	}
 
 }

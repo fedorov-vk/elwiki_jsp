@@ -72,7 +72,7 @@ import org.elwiki_data.WikiPage;
  * Do not cache the page object that you get from the WikiContext; always use getPage()!
  * </p>
  *
- * @see org.elwiki.plugins.Counter
+ * @see org.elwiki.plugins.CounterPlugin
  */
 public class WikiContextImpl implements WikiContext, Command {
 

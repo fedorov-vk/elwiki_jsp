@@ -144,7 +144,7 @@ public class AtomAPIServlet extends HttpServlet {
             // FIXME: Sandler 0.5 does not support generator
             // Generate new blog entry.
             final WeblogEntryPlugin plugin = new WeblogEntryPlugin();
-            final String pageName = plugin.getNewEntryPage( m_engine, blogid );
+            final String pageName = plugin.getNewEntryPage( blogid );
             final String username = author.getName();
             final WikiPage entryPage = Wiki.contents().page( pageName );
 
