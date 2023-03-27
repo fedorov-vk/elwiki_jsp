@@ -200,7 +200,7 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 		String group = params.get(PARAM_GROUP);
 		String user = params.get(PARAM_USER);
 		String ip = params.get(PARAM_IP);
-		String page = params.get(PARAM_PAGE);
+		String pageName = params.get(PARAM_PAGE);
 		String contains = params.get(PARAM_CONTAINS);
 		String var = params.get(PARAM_VAR);
 		String is = params.get(PARAM_IS);
@@ -210,11 +210,11 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 		include |= checkUser(context, user);
 		include |= checkIP(context, ip);
 
-		if (page != null) {
-			String content = this.pageManager.getPureText(page, WikiProvider.LATEST_VERSION).trim();
+		if (pageName != null) {
+			String content = this.pageManager.getPureText(pageName, WikiProvider.LATEST_VERSION).trim();
 			include |= checkContains(content, contains);
 			include |= checkIs(content, is);
-			include |= checkExists(context, page, exists);
+			include |= checkExists(context, pageName, exists);
 		}
 
 		if (var != null) {

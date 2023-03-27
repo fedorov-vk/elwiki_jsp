@@ -22,6 +22,7 @@ import java.security.Permission;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.PropertyPermission;
+import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -76,9 +77,13 @@ import org.elwiki_data.WikiPage;
  */
 public class WikiContextImpl implements WikiContext, Command {
 
+	private record PageInfo(WikiPage wikiPage, int pageVersion) {}
+
 	private static final Logger log = Logger.getLogger(WikiContextImpl.class);
 
 	private static final Permission DUMMY_PERMISSION = new PropertyPermission("os.name", "read");
+
+	private Stack<PageInfo> stackPageInfo = new Stack<>();
 
 	private Command m_command;
 	private WikiPage m_page;
@@ -95,6 +100,9 @@ public class WikiContextImpl implements WikiContext, Command {
 
 	private Session m_session;
 	final private IWikiConfiguration wikiConfiguration;
+
+	/** The page version in question. (or attachment version) */
+	private int m_version = 0;
 
 	/**
 	 * Create a new WikiContext for the given WikiPage. Delegates to
@@ -202,10 +210,32 @@ public class WikiContextImpl implements WikiContext, Command {
 					+ getCommand());
 		}
 
+		// Set required version of the WikiPage.
+		if (request != null) {
+			String rqVersion = request.getParameter("version");
+			if (rqVersion != null) {
+				try {
+					m_version = Integer.parseInt(rqVersion);
+				} catch (Exception e) {
+				}
+			}
+		}
+		if (m_version == 0) {
+			m_version = m_page.getLastVersion();
+		}
+
 		// Figure out what shape to use.
 		setDefaultShape(request);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getPageVersion() {
+		return m_version;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -230,7 +260,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * Sets a reference to the real page whose content is currently being rendered.
 	 * <p>
 	 * Sometimes you may want to render the page using some other page's context. In those cases, it
-	 * is highly recommended that you set the setRealPage() to point at the real page you are
+	 * is highly recommended that you set the pushRealPage() to point at the real page you are
 	 * rendering. Please see InsertPageTag for an example.
 	 * <p>
 	 * Also, if your plugin e.g. does some variable setting, be aware that if it is embedded in the
@@ -238,16 +268,26 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * - do you wish to really reference the "master" page or the included page.
 	 *
 	 * @param page The real page which is being rendered.
-	 * @return The previous real page
 	 * @since 2.3.14
 	 * @see org.apache.wiki.tags.InsertPageTag
 	 */
 	@Override
-	public WikiPage setRealPage(final WikiPage page) {
-		final WikiPage old = m_realPage;
-		m_realPage = (WikiPage) page;
+	public void pushRealPage(WikiPage page) {
+		PageInfo pageInfo = new PageInfo(this.m_realPage, this.m_version);
+		this.stackPageInfo.push(pageInfo);
+
+		this.m_realPage = page;
+		this.m_version = page.getLastVersion();
 		updateCommand(m_command.getRequestContext());
-		return old;
+	}
+	
+	@Override
+	public void popRealPage() {
+		if (this.stackPageInfo.size() > 0) {
+			PageInfo pageInfo = this.stackPageInfo.pop();
+			this.m_realPage = pageInfo.wikiPage;
+			this.m_version = pageInfo.pageVersion;
+		}
 	}
 
 	/** {@inheritDoc} */

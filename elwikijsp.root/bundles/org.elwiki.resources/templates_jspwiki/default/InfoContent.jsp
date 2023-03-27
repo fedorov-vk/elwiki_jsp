@@ -65,7 +65,7 @@ WikiContext c = ContextUtil.findContext(pageContext);
   int itemcount = 0;  //number of page versions
   try
   {
-    itemcount = wikiPage.getVersion(); /* highest version */
+    itemcount = wikiPage.getPageVersion(); /* highest version */
   }
   catch( Exception  e )  { /* dont care */ }
 

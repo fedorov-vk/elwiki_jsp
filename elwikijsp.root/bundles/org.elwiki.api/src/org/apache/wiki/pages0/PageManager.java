@@ -26,6 +26,8 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
+import org.apache.wiki.api.providers.WikiProvider;
+import org.eclipse.core.runtime.Assert;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -78,6 +80,8 @@ public interface PageManager {
      */
     String getPageText( String pageName, int version ) throws ProviderException;
 
+	String getPureText(WikiPage page, int version);
+
     /**
      *  Returns the pure text of a page, no conversions.  Use this if you are writing something that depends on the parsing
      *  of the page. Note that you should always check for page existence through pageExists() before attempting to fetch
@@ -101,12 +105,14 @@ public interface PageManager {
      *  it logs and swallows them.
      *
      *  @param page A handle to the WikiPage
+     * @param pageVersion TODO
      *  @return String of WikiText.
      *  @since 2.1.13, moved to PageManager on 2.11.0.
      */
-    default String getPureText( final WikiPage page ) {
-        return getPureText( page.getName(), page.getVersion() );
-    }
+	default String getPureText(WikiPage page, int... pageVersion) {
+		int pageVersion1 = (pageVersion.length == 0) ? WikiProvider.LATEST_VERSION : pageVersion[0];
+		return getPureText(page, pageVersion1);
+	}
 
 	/**
 	 * Returns the un-HTMLized text of the given version of a page. This method also replaces the &lt;
@@ -118,7 +124,7 @@ public interface PageManager {
 	 * @param version Version of the page to fetch
 	 * @return WikiText.
 	 */
-	String getText(WikiPage page, int version);
+//:FVK:	String getText(WikiPage page, int version);
 
     String getText( String pageName, int version );
 
@@ -138,15 +144,16 @@ public interface PageManager {
      *  Returns the un-HTMLized text of the given version of a page in the given context.  USE THIS METHOD if you don't know what doing.
      *  <p>
      *  This method also replaces the &lt; and &amp; -characters with their respective HTML entities, thus making it suitable
-     *  for inclusion on an HTML page.  If you want to have the page text without any conversions, use {@link #getPureText(WikiPage)}.
+     *  for inclusion on an HTML page.  If you want to have the page text without any conversions, use {@link #getPureText(WikiPage, int)}.
      *
      *  @since 1.9.15.
      *  @param page A page reference (not an attachment)
+     * @param pageVersion TODO
      *  @return The page content as HTMLized String.
-     *  @see PageManager#getPureText(WikiPage)
+     *  @see PageManager#getPureText(WikiPage, int)
      */
-    default String getText( final WikiPage page ) {
-        return getText( page, page.getVersion() );
+    default String getText( final WikiPage page, int pageVersion ) {
+        return getText( page, pageVersion );
     }
 
 	/**
@@ -363,7 +370,7 @@ public interface PageManager {
      */
     default boolean wikiPageExists( final WikiPage page ) throws ProviderException {
         if( page != null ) {
-            return wikiPageExists( page.getName(), page.getVersion() );
+            return wikiPageExists( page.getName(), page.getLastVersion() );
         }
         return false;
     }

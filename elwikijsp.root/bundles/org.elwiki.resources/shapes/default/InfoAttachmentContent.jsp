@@ -67,7 +67,7 @@
 
 	int itemcount = 0;  //number of page versions
 	try {
-		itemcount = wikiPage.getVersion(); /* highest version */
+		itemcount = wikiPage.getLastVersion(); /* highest version */
 	} catch( Exception  e )  { /* dont care */ }
 
 	int pagesize = 20;

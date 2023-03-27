@@ -159,7 +159,7 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 		content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
 
 		content.setAuthor(context.getCurrentUser().getName());
-		pageManager.putPageText(toPage, pageManager.getPureText(toPage), "author",
+		pageManager.putPageText(toPage, pageManager.getPureText(toPage, context.getPageVersion()), "author",
 				"changenote"); // FIXME: здесь надо не текст, а просто имя поменть.
 
 		// Update the references
@@ -215,7 +215,7 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 			final WikiPage p = pageManager.getPage(pageName);
 
-			final String sourceText = pageManager.getPureText(p);
+			final String sourceText = pageManager.getPureText(p, context.getPageVersion());
 			String newText = replaceReferrerString(context, sourceText, fromPage.getName(), toPage.getName());
 
 			IPreferenceStore wikiPreferences = engine.getWikiPreferences();

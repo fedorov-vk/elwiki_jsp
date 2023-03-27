@@ -420,7 +420,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiManager, EventHand
 			e.setURL(url);
 
 			//  Title
-			String pageText = pageManager.getPureText(page.getName(), WikiProvider.LATEST_VERSION);
+			String pageText = pageManager.getPureText(page, WikiProvider.LATEST_VERSION);
 
 			String title = "";
 			final int firstLine = pageText.indexOf('\n');

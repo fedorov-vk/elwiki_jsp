@@ -23,7 +23,6 @@ import java.io.IOException;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki_data.WikiPage;
 
 /**
  * Outputs the version number of the previous version of this page.
@@ -39,8 +38,7 @@ public class PreviousVersionTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final WikiPage page = getWikiContext().getPage();
-		int version = page.getVersion();
+		int version = getWikiContext().getPageVersion();
 		version--;
 		if (version > 0) {
 			pageContext.getOut().print(version);

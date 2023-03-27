@@ -101,7 +101,7 @@ public class EditLinkTag extends BaseWikiLinkTag {
 		//
 		if (m_version != null) {
 			if ("this".equalsIgnoreCase(m_version)) {
-				versionString = "version=" + page.getVersion();
+				versionString = "version=" + page.getLastVersion();
 			} else {
 				versionString = "version=" + m_version;
 			}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.elwiki.plugins.feature"
-      label="Feature of additional plugins ElWiki"
+      label="ElWiki main plugins Feature"
       version="1.0.0.qualifier"
       provider-name="FVK">
 

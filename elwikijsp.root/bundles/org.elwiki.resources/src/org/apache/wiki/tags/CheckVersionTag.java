@@ -46,11 +46,11 @@ import org.elwiki_data.WikiPage;
  */
 public class CheckVersionTag extends BaseWikiTag {
 
-	private static final long serialVersionUID = 3269431461906269282L;
-
 	private enum VersionMode {
 		LATEST, NOTLATEST, FIRST, NOTFIRST
 	}
+
+	private static final long serialVersionUID = 3269431461906269282L;
 
 	private VersionMode m_mode;
 
@@ -73,6 +73,7 @@ public class CheckVersionTag extends BaseWikiTag {
 		case "first" -> VersionMode.FIRST;
 		case "notfirst" -> VersionMode.NOTFIRST;
 		case "latest" -> VersionMode.LATEST;
+		case "notlatest" -> VersionMode.NOTLATEST;
 		default -> VersionMode.NOTLATEST;
 		};
 	}
@@ -84,13 +85,13 @@ public class CheckVersionTag extends BaseWikiTag {
 	public final int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		WikiPage page = getWikiContext().getPage();
 		if (page != null) {
-			int version = page.getVersion();
-			int latestVersion = page.getLastContent().getVersion();
+			int pageVersion = getWikiContext().getPageVersion();
+			int latestVersion = page.getLastVersion();
 			boolean isIncluding = switch (m_mode) {
-			case LATEST -> (version < 0) || (latestVersion == version);
-			case NOTLATEST -> (version > 0) && (latestVersion != version);
-			case FIRST -> (version == 1) || (version < 0 && latestVersion == 1);
-			case NOTFIRST -> version > 1;
+			case LATEST -> (pageVersion == 0) || (latestVersion == pageVersion);
+			case NOTLATEST -> (pageVersion > 0) && (latestVersion != pageVersion);
+			case FIRST -> (pageVersion == 1) || (pageVersion < 0 && latestVersion == 1);
+			case NOTFIRST -> pageVersion > 1;
 			};
 			if (isIncluding) {
 				return EVAL_BODY_INCLUDE;

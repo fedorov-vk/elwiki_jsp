@@ -58,6 +58,15 @@ public interface Elwiki_dataFactory extends EFactory {
 	PageAttachment createPageAttachment();
 
 	/**
+	 * Returns a new object of class '<em>Attachment Content</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attachment Content</em>'.
+	 * @generated
+	 */
+	AttachmentContent createAttachmentContent();
+
+	/**
 	 * Returns a new object of class '<em>Comparable</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -119,15 +128,6 @@ public interface Elwiki_dataFactory extends EFactory {
 	 * @generated
 	 */
 	TagsList createTagsList();
-
-	/**
-	 * Returns a new object of class '<em>Attachment Content</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attachment Content</em>'.
-	 * @generated
-	 */
-	AttachmentContent createAttachmentContent();
 
 	/**
 	 * Returns the package supported by this factory.

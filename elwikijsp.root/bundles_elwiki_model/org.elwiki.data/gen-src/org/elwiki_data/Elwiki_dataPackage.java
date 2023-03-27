@@ -124,22 +124,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__NAME = COMPARABLE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Last Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WIKI_PAGE__LAST_VERSION = COMPARABLE_FEATURE_COUNT + 2;
-
-	/**
 	 * The feature id for the '<em><b>Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__DESCRIPTION = COMPARABLE_FEATURE_COUNT + 3;
+	int WIKI_PAGE__DESCRIPTION = COMPARABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
@@ -148,7 +139,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ALIAS = COMPARABLE_FEATURE_COUNT + 4;
+	int WIKI_PAGE__ALIAS = COMPARABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Redirect</b></em>' attribute.
@@ -157,7 +148,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__REDIRECT = COMPARABLE_FEATURE_COUNT + 5;
+	int WIKI_PAGE__REDIRECT = COMPARABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>View Count</b></em>' attribute.
@@ -166,7 +157,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__VIEW_COUNT = COMPARABLE_FEATURE_COUNT + 6;
+	int WIKI_PAGE__VIEW_COUNT = COMPARABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Page Contents</b></em>' containment reference list.
@@ -175,7 +166,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__PAGE_CONTENTS = COMPARABLE_FEATURE_COUNT + 7;
+	int WIKI_PAGE__PAGE_CONTENTS = COMPARABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Attachments</b></em>' containment reference list.
@@ -184,7 +175,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ATTACHMENTS = COMPARABLE_FEATURE_COUNT + 8;
+	int WIKI_PAGE__ATTACHMENTS = COMPARABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Wiki</b></em>' attribute.
@@ -193,7 +184,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__WIKI = COMPARABLE_FEATURE_COUNT + 9;
+	int WIKI_PAGE__WIKI = COMPARABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -202,7 +193,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__CHILDREN = COMPARABLE_FEATURE_COUNT + 10;
+	int WIKI_PAGE__CHILDREN = COMPARABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Parent</b></em>' container reference.
@@ -211,7 +202,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__PARENT = COMPARABLE_FEATURE_COUNT + 11;
+	int WIKI_PAGE__PARENT = COMPARABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Old Parents</b></em>' attribute.
@@ -220,7 +211,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__OLD_PARENTS = COMPARABLE_FEATURE_COUNT + 12;
+	int WIKI_PAGE__OLD_PARENTS = COMPARABLE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Page References</b></em>' containment reference list.
@@ -229,7 +220,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__PAGE_REFERENCES = COMPARABLE_FEATURE_COUNT + 13;
+	int WIKI_PAGE__PAGE_REFERENCES = COMPARABLE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Acl</b></em>' containment reference.
@@ -238,7 +229,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ACL = COMPARABLE_FEATURE_COUNT + 14;
+	int WIKI_PAGE__ACL = COMPARABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Web Log</b></em>' attribute.
@@ -247,7 +238,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__WEB_LOG = COMPARABLE_FEATURE_COUNT + 15;
+	int WIKI_PAGE__WEB_LOG = COMPARABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -256,7 +247,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 16;
+	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Unknown Pages</b></em>' containment reference list.
@@ -265,7 +256,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 17;
+	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Tags</b></em>' attribute list.
@@ -274,7 +265,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 18;
+	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
@@ -283,7 +274,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 19;
+	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Compare To</em>' operation.
@@ -331,13 +322,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___GET_LAST_CONTENT = COMPARABLE_OPERATION_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
+	 * The operation id for the '<em>Get Last Version</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE___GET_VERSION = COMPARABLE_OPERATION_COUNT + 6;
+	int WIKI_PAGE___GET_LAST_VERSION = COMPARABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Attribute</em>' operation.
@@ -385,13 +376,31 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE___TO_STRING = COMPARABLE_OPERATION_COUNT + 11;
 
 	/**
+	 * The operation id for the '<em>Get Content Text</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___GET_CONTENT_TEXT__INT = COMPARABLE_OPERATION_COUNT + 12;
+
+	/**
+	 * The operation id for the '<em>Get Content Text</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE___GET_CONTENT_TEXT = COMPARABLE_OPERATION_COUNT + 13;
+
+	/**
 	 * The number of operations of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 12;
+	int WIKI_PAGE_OPERATION_COUNT = COMPARABLE_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -713,76 +722,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGE_ATTACHMENT_OPERATION_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link java.lang.Object <em>Object</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.lang.Object
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getObject()
-	 * @generated
-	 */
-	int OBJECT = 5;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.CloneableImpl <em>Cloneable</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.CloneableImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getCloneable()
-	 * @generated
-	 */
-	int CLONEABLE = 7;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.PageReferenceImpl <em>Page Reference</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.PageReferenceImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPageReference()
-	 * @generated
-	 */
-	int PAGE_REFERENCE = 9;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclEntryImpl <em>Acl Entry</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclEntryImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclEntry()
-	 * @generated
-	 */
-	int ACL_ENTRY = 10;
-
-	/**
-	 * The meta object id for the '{@link java.security.Principal <em>Principal</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.security.Principal
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
-	 * @generated
-	 */
-	int PRINCIPAL = 11;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
-	 * @generated
-	 */
-	int ACL = 12;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.StringToObjectMapImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
-	 * @generated
-	 */
-	int STRING_TO_OBJECT_MAP = 13;
-
-	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -874,6 +813,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ATTACHMENT_CONTENT_OPERATION_COUNT = IHISTORY_INFO_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link java.lang.Object <em>Object</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Object
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getObject()
+	 * @generated
+	 */
+	int OBJECT = 5;
+
+	/**
 	 * The number of structural features of the '<em>Object</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -890,6 +839,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int OBJECT_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.CloneableImpl <em>Cloneable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.CloneableImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getCloneable()
+	 * @generated
+	 */
+	int CLONEABLE = 7;
 
 	/**
 	 * The number of structural features of the '<em>Cloneable</em>' class.
@@ -917,6 +876,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int CLONEABLE_OPERATION_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.PageReferenceImpl <em>Page Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.PageReferenceImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPageReference()
+	 * @generated
+	 */
+	int PAGE_REFERENCE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Page Id</b></em>' attribute.
@@ -953,6 +922,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int PAGE_REFERENCE_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.AclEntryImpl <em>Acl Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.AclEntryImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclEntry()
+	 * @generated
+	 */
+	int ACL_ENTRY = 10;
 
 	/**
 	 * The feature id for the '<em><b>Principal</b></em>' attribute.
@@ -1009,6 +988,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ACL_ENTRY_OPERATION_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link java.security.Principal <em>Principal</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.security.Principal
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
+	 * @generated
+	 */
+	int PRINCIPAL = 11;
+
+	/**
 	 * The number of structural features of the '<em>Principal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1025,6 +1014,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int PRINCIPAL_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.AclImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
+	 * @generated
+	 */
+	int ACL = 12;
 
 	/**
 	 * The feature id for the '<em><b>Acl Entries</b></em>' containment reference list.
@@ -1070,6 +1069,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @ordered
 	 */
 	int ACL_OPERATION_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.StringToObjectMapImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
+	 * @generated
+	 */
+	int STRING_TO_OBJECT_MAP = 13;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -1164,13 +1173,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int TAGS_LIST = 15;
 
 	/**
-	 * The feature id for the '<em><b>Tags</b></em>' attribute list.
+	 * The feature id for the '<em><b>Tag</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TAGS_LIST__TAGS = 0;
+	int TAGS_LIST__TAG = 0;
 
 	/**
 	 * The number of structural features of the '<em>Tags List</em>' class.
@@ -1210,6 +1219,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	int ACCESS_LIST = 17;
 
 	/**
+	 * The meta object id for the '<em>Principal Object</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.security.Principal
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
+	 * @generated
+	 */
+	int PRINCIPAL_OBJECT = 18;
+
+	/**
 	 * The meta object id for the '<em>Array Principal</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1237,16 +1256,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	int LIST_PAGE_CONTENT = 21;
-
-	/**
-	 * The meta object id for the '<em>Principal Object</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.security.Principal
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
-	 * @generated
-	 */
-	int PRINCIPAL_OBJECT = 18;
 
 
 	/**
@@ -1403,17 +1412,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getWikiPage_PageReferences();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Last Version</em>'.
-	 * @see org.elwiki_data.WikiPage#getLastVersion()
-	 * @see #getWikiPage()
-	 * @generated
-	 */
-	EAttribute getWikiPage_LastVersion();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1519,14 +1517,14 @@ public interface Elwiki_dataPackage extends EPackage {
 	EOperation getWikiPage__GetLastContent();
 
 	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getVersion() <em>Get Version</em>}' operation.
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getLastVersion() <em>Get Last Version</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.elwiki_data.WikiPage#getVersion()
+	 * @return the meta object for the '<em>Get Last Version</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getLastVersion()
 	 * @generated
 	 */
-	EOperation getWikiPage__GetVersion();
+	EOperation getWikiPage__GetLastVersion();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getAttribute(java.lang.String) <em>Get Attribute</em>}' operation.
@@ -1577,6 +1575,26 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getWikiPage__ToString();
+
+	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getContentText(int) <em>Get Content Text</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Content Text</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getContentText(int)
+	 * @generated
+	 */
+	EOperation getWikiPage__GetContentText__int();
+
+	/**
+	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#getContentText() <em>Get Content Text</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Content Text</em>' operation.
+	 * @see org.elwiki_data.WikiPage#getContentText()
+	 * @generated
+	 */
+	EOperation getWikiPage__GetContentText();
 
 	/**
 	 * Returns the meta object for class '{@link org.elwiki_data.PagesStore <em>Pages Store</em>}'.
@@ -1718,6 +1736,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getPageAttachment_Name();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Last Version</em>'.
+	 * @see org.elwiki_data.PageAttachment#getLastVersion()
+	 * @see #getPageAttachment()
+	 * @generated
+	 */
+	EAttribute getPageAttachment_LastVersion();
+
+	/**
 	 * Returns the meta object for the container reference '{@link org.elwiki_data.PageAttachment#getWikipage <em>Wikipage</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1740,17 +1769,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getPageAttachment_AttachContents();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Last Version</em>'.
-	 * @see org.elwiki_data.PageAttachment#getLastVersion()
-	 * @see #getPageAttachment()
-	 * @generated
-	 */
-	EAttribute getPageAttachment_LastVersion();
-
-	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.PageAttachment#forLastContent() <em>For Last Content</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1769,6 +1787,49 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getPageAttachment__ForVersionContent__int();
+
+	/**
+	 * Returns the meta object for class '{@link org.elwiki_data.AttachmentContent <em>Attachment Content</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Attachment Content</em>'.
+	 * @see org.elwiki_data.AttachmentContent
+	 * @generated
+	 */
+	EClass getAttachmentContent();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.AttachmentContent#getPlace <em>Place</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Place</em>'.
+	 * @see org.elwiki_data.AttachmentContent#getPlace()
+	 * @see #getAttachmentContent()
+	 * @generated
+	 */
+	EAttribute getAttachmentContent_Place();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.AttachmentContent#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see org.elwiki_data.AttachmentContent#getSize()
+	 * @see #getAttachmentContent()
+	 * @generated
+	 */
+	EAttribute getAttachmentContent_Size();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Page Attachment</em>'.
+	 * @see org.elwiki_data.AttachmentContent#getPageAttachment()
+	 * @see #getAttachmentContent()
+	 * @generated
+	 */
+	EReference getAttachmentContent_PageAttachment();
 
 	/**
 	 * Returns the meta object for class '{@link java.lang.Object <em>Object</em>}'.
@@ -2090,58 +2151,15 @@ public interface Elwiki_dataPackage extends EPackage {
 	EClass getTagsList();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.elwiki_data.TagsList#getTags <em>Tags</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.TagsList#getTag <em>Tag</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Tags</em>'.
-	 * @see org.elwiki_data.TagsList#getTags()
+	 * @return the meta object for the attribute '<em>Tag</em>'.
+	 * @see org.elwiki_data.TagsList#getTag()
 	 * @see #getTagsList()
 	 * @generated
 	 */
-	EAttribute getTagsList_Tags();
-
-	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.AttachmentContent <em>Attachment Content</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Attachment Content</em>'.
-	 * @see org.elwiki_data.AttachmentContent
-	 * @generated
-	 */
-	EClass getAttachmentContent();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AttachmentContent#getPlace <em>Place</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Place</em>'.
-	 * @see org.elwiki_data.AttachmentContent#getPlace()
-	 * @see #getAttachmentContent()
-	 * @generated
-	 */
-	EAttribute getAttachmentContent_Place();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AttachmentContent#getSize <em>Size</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Size</em>'.
-	 * @see org.elwiki_data.AttachmentContent#getSize()
-	 * @see #getAttachmentContent()
-	 * @generated
-	 */
-	EAttribute getAttachmentContent_Size();
-
-	/**
-	 * Returns the meta object for the container reference '{@link org.elwiki_data.AttachmentContent#getPageAttachment <em>Page Attachment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the container reference '<em>Page Attachment</em>'.
-	 * @see org.elwiki_data.AttachmentContent#getPageAttachment()
-	 * @see #getAttachmentContent()
-	 * @generated
-	 */
-	EReference getAttachmentContent_PageAttachment();
+	EAttribute getTagsList_Tag();
 
 	/**
 	 * Returns the meta object for data type '<em>Array String</em>'.
@@ -2163,6 +2181,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getAccessList();
+
+	/**
+	 * Returns the meta object for data type '{@link java.security.Principal <em>Principal Object</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Principal Object</em>'.
+	 * @see java.security.Principal
+	 * @model instanceClass="java.security.Principal"
+	 * @generated
+	 */
+	EDataType getPrincipalObject();
 
 	/**
 	 * Returns the meta object for data type '<em>Array Principal</em>'.
@@ -2195,17 +2224,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getListPageContent();
-
-	/**
-	 * Returns the meta object for data type '{@link java.security.Principal <em>Principal Object</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Principal Object</em>'.
-	 * @see java.security.Principal
-	 * @model instanceClass="java.security.Principal"
-	 * @generated
-	 */
-	EDataType getPrincipalObject();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -2345,14 +2363,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference WIKI_PAGE__PAGE_REFERENCES = eINSTANCE.getWikiPage_PageReferences();
 
 		/**
-		 * The meta object literal for the '<em><b>Last Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute WIKI_PAGE__LAST_VERSION = eINSTANCE.getWikiPage_LastVersion();
-
-		/**
 		 * The meta object literal for the '<em><b>Acl</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2433,12 +2443,12 @@ public interface Elwiki_dataPackage extends EPackage {
 		EOperation WIKI_PAGE___GET_LAST_CONTENT = eINSTANCE.getWikiPage__GetLastContent();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Last Version</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation WIKI_PAGE___GET_VERSION = eINSTANCE.getWikiPage__GetVersion();
+		EOperation WIKI_PAGE___GET_LAST_VERSION = eINSTANCE.getWikiPage__GetLastVersion();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Attribute</b></em>' operation.
@@ -2479,6 +2489,22 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation WIKI_PAGE___TO_STRING = eINSTANCE.getWikiPage__ToString();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Content Text</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___GET_CONTENT_TEXT__INT = eINSTANCE.getWikiPage__GetContentText__int();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Content Text</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation WIKI_PAGE___GET_CONTENT_TEXT = eINSTANCE.getWikiPage__GetContentText();
 
 		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.PagesStoreImpl <em>Pages Store</em>}' class.
@@ -2591,6 +2617,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute PAGE_ATTACHMENT__NAME = eINSTANCE.getPageAttachment_Name();
 
 		/**
+		 * The meta object literal for the '<em><b>Last Version</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PAGE_ATTACHMENT__LAST_VERSION = eINSTANCE.getPageAttachment_LastVersion();
+
+		/**
 		 * The meta object literal for the '<em><b>Wikipage</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2607,14 +2641,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference PAGE_ATTACHMENT__ATTACH_CONTENTS = eINSTANCE.getPageAttachment_AttachContents();
 
 		/**
-		 * The meta object literal for the '<em><b>Last Version</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PAGE_ATTACHMENT__LAST_VERSION = eINSTANCE.getPageAttachment_LastVersion();
-
-		/**
 		 * The meta object literal for the '<em><b>For Last Content</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2629,6 +2655,40 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PAGE_ATTACHMENT___FOR_VERSION_CONTENT__INT = eINSTANCE.getPageAttachment__ForVersionContent__int();
+
+		/**
+		 * The meta object literal for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.elwiki_data.impl.AttachmentContentImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAttachmentContent()
+		 * @generated
+		 */
+		EClass ATTACHMENT_CONTENT = eINSTANCE.getAttachmentContent();
+
+		/**
+		 * The meta object literal for the '<em><b>Place</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ATTACHMENT_CONTENT__PLACE = eINSTANCE.getAttachmentContent_Place();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ATTACHMENT_CONTENT__SIZE = eINSTANCE.getAttachmentContent_Size();
+
+		/**
+		 * The meta object literal for the '<em><b>Page Attachment</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ATTACHMENT_CONTENT__PAGE_ATTACHMENT = eINSTANCE.getAttachmentContent_PageAttachment();
 
 		/**
 		 * The meta object literal for the '{@link java.lang.Object <em>Object</em>}' class.
@@ -2893,46 +2953,12 @@ public interface Elwiki_dataPackage extends EPackage {
 		EClass TAGS_LIST = eINSTANCE.getTagsList();
 
 		/**
-		 * The meta object literal for the '<em><b>Tags</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Tag</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TAGS_LIST__TAGS = eINSTANCE.getTagsList_Tags();
-
-		/**
-		 * The meta object literal for the '{@link org.elwiki_data.impl.AttachmentContentImpl <em>Attachment Content</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.AttachmentContentImpl
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAttachmentContent()
-		 * @generated
-		 */
-		EClass ATTACHMENT_CONTENT = eINSTANCE.getAttachmentContent();
-
-		/**
-		 * The meta object literal for the '<em><b>Place</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ATTACHMENT_CONTENT__PLACE = eINSTANCE.getAttachmentContent_Place();
-
-		/**
-		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ATTACHMENT_CONTENT__SIZE = eINSTANCE.getAttachmentContent_Size();
-
-		/**
-		 * The meta object literal for the '<em><b>Page Attachment</b></em>' container reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ATTACHMENT_CONTENT__PAGE_ATTACHMENT = eINSTANCE.getAttachmentContent_PageAttachment();
+		EAttribute TAGS_LIST__TAG = eINSTANCE.getTagsList_Tag();
 
 		/**
 		 * The meta object literal for the '<em>Array String</em>' data type.
@@ -2952,6 +2978,16 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ACCESS_LIST = eINSTANCE.getAccessList();
+
+		/**
+		 * The meta object literal for the '<em>Principal Object</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.security.Principal
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
+		 * @generated
+		 */
+		EDataType PRINCIPAL_OBJECT = eINSTANCE.getPrincipalObject();
 
 		/**
 		 * The meta object literal for the '<em>Array Principal</em>' data type.
@@ -2981,16 +3017,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType LIST_PAGE_CONTENT = eINSTANCE.getListPageContent();
-
-		/**
-		 * The meta object literal for the '<em>Principal Object</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.security.Principal
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
-		 * @generated
-		 */
-		EDataType PRINCIPAL_OBJECT = eINSTANCE.getPrincipalObject();
 
 	}
 

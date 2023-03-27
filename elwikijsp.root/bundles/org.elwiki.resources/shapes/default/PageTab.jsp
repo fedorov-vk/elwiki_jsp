@@ -45,14 +45,14 @@
 	Engine engine = wikiContext.getEngine();
 	PageManager pageManager = engine.getManager(PageManager.class);  
   %>
-  <c:set var="thisVersion" value="<%=wikiContext.getPage().getVersion()%>" />
-  <c:set var="latestVersion" value="<%=pageManager.getPage(wikiContext.getPage().getName(), WikiProvider.LATEST_VERSION).getVersion()%>" />
+  <c:set var="thisVersion" value="<%=wikiContext.getPageVersion()%>" />
+  <c:set var="latestVersion" value="<%=pageManager.getPage(wikiContext.getPage().getName(), WikiProvider.LATEST_VERSION).getLastVersion()%>" />
 
 <!-- TODO: understand and release follow //wiki:Link path='Wiki.jsp'// :FVK:  -->
-  <form action="<wiki:Link format='url' path='Wiki.jsp'/>"
+  <form action="<wiki:Link format='url' path='<%=ContextEnum.PAGE_VIEW.getUri()%>'/>"
         method="get" accept-charset='UTF-8'>
 
-    <input type="hidden" name="page" value="${param.page}" />
+    <input type="hidden" name="pageId" value="${param.pageId}" />
     <div class="error center">
       <label>
       <fmt:message key="view.oldversion">
@@ -67,8 +67,8 @@
       </fmt:message>
       </label>
       <div>
-      <wiki:Link cssClass="btn btn-primary">
-        <fmt:message key="view.backtocurrent" />
+      <wiki:Link cssClass="btn btn-primary" pageId='<%=wikiContext.getPageId()%>'>
+        <fmt:message key="view.backtolatest" />
       </wiki:Link>
       <wiki:Link cssClass="btn btn-danger" context="<%=WikiContext.PAGE_EDIT%>" version="${thisVersion}">
         <fmt:message key="view.restore" />

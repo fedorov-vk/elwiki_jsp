@@ -28,13 +28,13 @@
     <eOperations name="getLastContent" eType="#//PageContent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="body" value="PageContent result = null;&#xA;int version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
-        <details key="documentation" value="Returns last item of pageContents reference.&#xA;&lt;/br>Can be NULL."/>
+        <details key="documentation" value="Returns the item of  latest version from page content elements.&#xA;&lt;/br>Can be NULL."/>
       </eAnnotations>
     </eOperations>
-    <eOperations name="getVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+    <eOperations name="getLastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
-        <details key="documentation" value="Returns version of last item of pagecontents reference.&#xA;&lt;/br>Can be -1, if no content."/>
+        <details key="body" value="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : 0;"/>
+        <details key="documentation" value="Returns the latest version of item from page content elements.&#xA;&lt;/br>Can be 0, if no content."/>
       </eAnnotations>
     </eOperations>
     <eOperations name="getAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject">
@@ -68,6 +68,19 @@
         <details key="body" value="return super.toString() + &quot; &quot; + getId() + &quot;:&quot; + getName();"/>
       </eAnnotations>
     </eOperations>
+    <eOperations name="getContentText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="String result = &quot;&quot;;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;if (version == pageContent.getVersion()) {&#xA;&#x9;&#x9;result = pageContent.getContent();&#xA;&#x9;&#x9;break;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
+        <details key="documentation" value="Returns the content text for the specified version.&lt;br/>If there is no specified version, an empty string is returned."/>
+      </eAnnotations>
+      <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eOperations>
+    <eOperations name="getContentText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="body" value="String result = &quot;&quot;;&#xA;PageContent lastContent = getLastContent();&#xA;if (lastContent != null) {&#xA;&#x9;result = lastContent.getContent();&#xA;}&#xA;&#xA;return result;"/>
+        <details key="documentation" value="Returns the content text of last version.&lt;br/>If there is no specified version, an empty string is returned."/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -78,12 +91,6 @@
         defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Name&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="0">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Total Attachment&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -376,7 +383,6 @@
         eOpposite="#//WikiPage/unknownPages"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TagsList">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags" ordered="false" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" ordered="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

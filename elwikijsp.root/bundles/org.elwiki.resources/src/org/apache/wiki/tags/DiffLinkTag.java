@@ -28,7 +28,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.elwiki_data.WikiPage;
 
@@ -39,22 +38,21 @@ import org.elwiki_data.WikiPage;
  * </p>
  * <ul>
  * <li>pageName - Page name to refer to. Default is the current page.</li>
- * <li>version - The older of these versions. May be an integer to signify a
- * version number, or the text "latest" to signify the latest version. If not
- * specified, will default to "latest". May also be "previous" to signify a
- * version prior to this particular version.</li>
- * <li>newVersion - The newer of these versions. Can also be "latest", or
- * "previous". Defaults to "latest".</li>
+ * <li>version - The older of these versions. May be an integer to signify a version number, or the
+ * text "latest" to signify the latest version. If not specified, will default to "latest". May also
+ * be "previous" to signify a version prior to this particular version.</li>
+ * <li>newVersion - The newer of these versions. Can also be "latest", or "previous". Defaults to
+ * "latest".</li>
  * </ul>
  *
- * If the page does not exist, this tag will fail silently, and not evaluate its
- * body contents.
+ * If the page does not exist, this tag will fail silently, and not evaluate its body contents.
  *
  * @since 2.0
  */
 public class DiffLinkTag extends BaseWikiLinkTag {
 
 	private static final long serialVersionUID = 4900799162029349581L;
+
 	public static final String VER_LATEST = "latest";
 	public static final String VER_PREVIOUS = "previous";
 	public static final String VER_CURRENT = "current";
@@ -68,76 +66,78 @@ public class DiffLinkTag extends BaseWikiLinkTag {
 		m_version = m_newVersion = VER_LATEST;
 	}
 
-	public final String getVersion() {
+	public String getVersion() {
 		return m_version;
 	}
 
-	public void setVersion(final String arg) {
+	public void setVersion(String arg) {
 		m_version = arg;
 	}
 
-	public final String getNewVersion() {
+	public String getNewVersion() {
 		return m_newVersion;
 	}
 
-	public void setNewVersion(final String arg) {
+	public void setNewVersion(String arg) {
 		m_newVersion = arg;
 	}
 
 	@Override
-	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
+	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
-		final Engine engine = wikiContext.getEngine();
 		PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
-		String pageName = m_pageName;
+		String pageId = getPageId();
+		WikiPage wikiPage = null;
 
-		if (m_pageName == null) {
-			if (wikiContext.getPage() != null) {
-				pageName = wikiContext.getPage().getName();
+		if (pageId == null) {
+			wikiPage = wikiContext.getPage();
+			if (wikiPage != null) {
+				pageId = wikiPage.getId();
 			} else {
 				return SKIP_BODY;
 			}
 		}
 
-		final JspWriter out = pageContext.getOut();
+		JspWriter out = pageContext.getOut();
 
 		int r1;
 		int r2;
 
 		//  In case the page does not exist, we fail silently.
-		if (!pageManager.pageExistsByName(pageName)) {
+		if (pageManager.pageExistsById(pageId) == false) {
 			return SKIP_BODY;
+		}
+		if(wikiPage == null ) {
+			wikiPage = pageManager.getPageById(pageId);
 		}
 
 		if (VER_LATEST.equals(getVersion())) {
-			final WikiPage latest = pageManager.getPage(pageName, WikiProvider.LATEST_VERSION);
-			if (latest == null) {
-				// This may occur if matchEnglishPlurals is on, and we access the wrong page name
+			r1 = wikiPage.getLastVersion();
+			if (r1 < 1 ) {
+				// This may occur if page has not content, no version.
 				return SKIP_BODY;
 			}
-			r1 = latest.getVersion();
 		} else if (VER_PREVIOUS.equals(getVersion())) {
-			r1 = wikiContext.getPage().getVersion() - 1;
+			r1 = wikiPage.getLastVersion() - 1;
 			r1 = Math.max(r1, 1);
 		} else if (VER_CURRENT.equals(getVersion())) {
-			r1 = wikiContext.getPage().getVersion();
+			r1 = wikiPage.getLastVersion();
 		} else {
 			r1 = Integer.parseInt(getVersion());
 		}
 
 		if (VER_LATEST.equals(getNewVersion())) {
-			final WikiPage latest = pageManager.getPage(pageName, WikiProvider.LATEST_VERSION);
-			r2 = latest.getVersion();
+			r2 = wikiPage.getLastVersion();
 		} else if (VER_PREVIOUS.equals(getNewVersion())) {
-			r2 = wikiContext.getPage().getVersion() - 1;
+			r2 = wikiPage.getLastVersion() - 1;
 			r2 = Math.max(r2, 1);
 		} else if (VER_CURRENT.equals(getNewVersion())) {
-			r2 = wikiContext.getPage().getVersion();
+			r2 = wikiPage.getLastVersion();
 		} else {
 			r2 = Integer.parseInt(getNewVersion());
 		}
 
-		final String url = wikiContext.getURL(ContextEnum.PAGE_DIFF.getRequestContext(), pageName,
+		String url = wikiContext.getURL(ContextEnum.PAGE_DIFF.getRequestContext(), getPageId(),
 				"r1=" + r1 + "&amp;r2=" + r2);
 		switch (m_format) {
 		case ANCHOR:

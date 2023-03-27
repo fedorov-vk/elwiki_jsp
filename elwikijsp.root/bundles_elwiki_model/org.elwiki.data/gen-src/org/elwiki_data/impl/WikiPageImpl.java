@@ -36,7 +36,6 @@ import org.elwiki_data.WikiPage;
  * <ul>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getRedirect <em>Redirect</em>}</li>
@@ -115,26 +114,6 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public void setName(String newName) {
 		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__NAME, newName);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getLastVersion() {
-		return (Integer)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setLastVersion(int newLastVersion) {
-		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__LAST_VERSION, newLastVersion);
 	}
 
 	/**
@@ -503,9 +482,9 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
+	public int getLastVersion() {
 		PageContent content = getLastContent();
-		return (content != null) ? content.getVersion() : -1;
+		return (content != null) ? content.getVersion() : 0;
 	}
 
 	/**
@@ -568,6 +547,41 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
+	public String getContentText(final int version) {
+		String result = "";
+		EList<PageContent> attachContents = getPageContents();
+		for (PageContent pageContent : attachContents) {
+			if (version == pageContent.getVersion()) {
+				result = pageContent.getContent();
+				break;
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContentText() {
+		String result = "";
+		PageContent lastContent = getLastContent();
+		if (lastContent != null) {
+			result = lastContent.getContent();
+		}
+		
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Comparable.class) {
 			switch (baseOperationID) {
@@ -602,8 +616,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return getAuthor();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_CONTENT:
 				return getLastContent();
-			case Elwiki_dataPackage.WIKI_PAGE___GET_VERSION:
-				return getVersion();
+			case Elwiki_dataPackage.WIKI_PAGE___GET_LAST_VERSION:
+				return getLastVersion();
 			case Elwiki_dataPackage.WIKI_PAGE___GET_ATTRIBUTE__STRING:
 				return getAttribute((String)arguments.get(0));
 			case Elwiki_dataPackage.WIKI_PAGE___SET_ATTRIBUTE__STRING_OBJECT:
@@ -615,6 +629,10 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 				return getPageContentsReversed();
 			case Elwiki_dataPackage.WIKI_PAGE___TO_STRING:
 				return toString();
+			case Elwiki_dataPackage.WIKI_PAGE___GET_CONTENT_TEXT__INT:
+				return getContentText((Integer)arguments.get(0));
+			case Elwiki_dataPackage.WIKI_PAGE___GET_CONTENT_TEXT:
+				return getContentText();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

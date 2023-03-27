@@ -230,7 +230,7 @@ public class TableOfContentsPlugin implements WikiPlugin, HeadingListener, Initi
 		}
 
 		try {
-			String wikiText = pageManager.getPureText(page);
+			String wikiText = pageManager.getPureText(page, context.getPageVersion());
 			boolean runFilters = "true"
 					.equals(variableManager.getValue(context, VariableManager.VAR_RUNFILTERS, "true"));
 

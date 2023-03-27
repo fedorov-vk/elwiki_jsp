@@ -7,8 +7,8 @@ import java.lang.Comparable;
 import java.lang.Object;
 
 import java.util.Date;
-
 import java.util.List;
+
 import org.eclipse.emf.cdo.CDOObject;
 
 import org.eclipse.emf.common.util.EList;
@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.EMap;
  * <ul>
  *   <li>{@link org.elwiki_data.WikiPage#getId <em>Id</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getName <em>Name</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getDescription <em>Description</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAlias <em>Alias</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getRedirect <em>Redirect</em>}</li>
@@ -388,35 +387,6 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	EList<PageReference> getPageReferences();
 
 	/**
-	 * Returns the value of the '<em><b>Last Version</b></em>' attribute.
-	 * The default value is <code>"0"</code>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Total Attachment</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Last Version</em>' attribute.
-	 * @see #setLastVersion(int)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_LastVersion()
-	 * @model default="0"
-	 * @generated
-	 */
-	int getLastVersion();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.WikiPage#getLastVersion <em>Last Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Last Version</em>' attribute.
-	 * @see #getLastVersion()
-	 * @generated
-	 */
-	void setLastVersion(int value);
-
-	/**
 	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -548,7 +518,7 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns last item of pageContents reference.
+	 * Returns the item of  latest version from page content elements.
 	 * </br>Can be NULL.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation"
@@ -560,13 +530,13 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Returns version of last item of pagecontents reference.
-	 * </br>Can be -1, if no content.
+	 * Returns the latest version of item from page content elements.
+	 * </br>Can be 0, if no content.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation"
 	 * @generated
 	 */
-	int getVersion();
+	int getLastVersion();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -616,5 +586,27 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	String toString();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns the content text for the specified version.<br/>If there is no specified version, an empty string is returned.
+	 * <!-- end-model-doc -->
+	 * @model
+	 * @generated
+	 */
+	String getContentText(int version);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns the content text of last version.<br/>If there is no specified version, an empty string is returned.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	String getContentText();
 
 } // WikiPage

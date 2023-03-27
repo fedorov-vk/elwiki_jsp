@@ -215,6 +215,11 @@ public interface WikiContext extends Cloneable, Command {
 	WikiPage getPage();
 
 	/**
+	 * @return The page version in question. (or attachment version)
+	 */
+	int getPageVersion();
+
+	/**
 	 * Returns the ID of WikiPage that is being handled.
 	 *
 	 * @return the ID of WikiPage which was fetched. In case of a problem with the current page - returns or ID of
@@ -250,7 +255,7 @@ public interface WikiContext extends Cloneable, Command {
 	 * Sets a reference to the real WikiPage whose content is currently being rendered.
 	 * <p>
 	 * Sometimes you may want to render the WikiPage using some other page's context. In those cases, it is highly
-	 * recommended that you set the setRealPage() to point at the real WikiPage you are rendering. Please see
+	 * recommended that you set the pushRealPage() to point at the real WikiPage you are rendering. Please see
 	 * InsertPageTag for an example.
 	 * <p>
 	 * Also, if your plugin e.g. does some variable setting, be aware that if it is embedded in the LeftMenu or some
@@ -258,11 +263,12 @@ public interface WikiContext extends Cloneable, Command {
 	 * reference the "master" WikiPage or the included page.
 	 *
 	 * @param wikiPage The real WikiPage which is being rendered.
-	 * @return The previous real page
 	 * @since 2.3.14
 	 * @see org.apache.wiki.tags.InsertPageTag
 	 */
-	WikiPage setRealPage(WikiPage wikiPage);
+	void pushRealPage(WikiPage wikiPage);
+
+	void popRealPage();
 
 	/**
 	 * Returns WikiPage by specified pageId.

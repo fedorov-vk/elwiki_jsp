@@ -70,7 +70,7 @@
 
 	int itemcount = 0;  //number of page versions
 	try {
-		itemcount = wikiPage.getVersion(); /* highest version */
+		itemcount = wikiPage.getLastVersion(); /* highest version */
 	} catch( Exception  e )  { /* dont care */ }
 
 	int pagesize = 20;
@@ -94,7 +94,7 @@
   <fmt:message key='info.lastmodified'>
     <fmt:param><span class="badge"><wiki:PageVersion >1</wiki:PageVersion></span></fmt:param>
     <fmt:param>
-      <a href="<wiki:DiffLink format='url' version='latest' newVersion='previous' />"
+      <a href="<wiki:DiffLink format='url' version='latest' newVersion='previous' pageId='<%=wikiContext.getPageId()%>'/>"
         title="<fmt:message key='info.pagediff.title' />" >
         <fmt:formatDate value="<%= wikiPage.getLastModifiedDate() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
       </a>
@@ -108,7 +108,7 @@
   <p>
     <fmt:message key='info.createdon'>
       <fmt:param>
-        <wiki:Link version="1">
+        <wiki:Link version='1' pageId='<%=wikiContext.getPageId()%>'>
           <fmt:formatDate value="<%= firstPage.getLastModifiedDate() %>" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
         </wiki:Link>
       </fmt:param>
@@ -156,7 +156,7 @@
   </div>
 
   <div class="tabs">
-    <%-- Page versions history section --%>
+    <%-- 1. Page versions history section --%>
     <h4 id="history"><fmt:message key="info.history"/></h4>
 
     <wiki:SetPagination start="<%=startitem%>" total="<%=itemcount%>" pagesize="<%=pagesize%>" maxlinks="9"
@@ -183,7 +183,7 @@
     <c:set var="version" value="${pageContent.version}"/>
     <c:if test="${ first == -1 || ((version > first ) && (version <= last )) }">
       <tr>
-        <td><wiki:Link version="${version}"><c:out value="${version}"/></wiki:Link></td>
+        <td><wiki:Link version="${version}" pageId="<%=wikiContext.getPageId()%>"><c:out value="${version}"/></wiki:Link></td>
 
         <td class="nowrap" data-sortvalue="${pageContent.creationDate.time}">
           <fmt:formatDate value="${pageContent.creationDate}" pattern="${prefs.DateFormat}" timeZone="${prefs.TimeZone}" />
@@ -217,7 +217,7 @@
     </div>
     ${pagination}
 
-    <%-- Page references section --%>
+    <%-- 2. Page references section --%>
     <h4 id="page-refs"><fmt:message key="info.tab.links" /></h4>
     <table class="table" aria-describedby="page-refs">
       <tr>
@@ -270,7 +270,7 @@
       </tr>
     </table>
 
-    <%-- Page versions difference section --%>
+    <%-- 3. Page versions difference section --%>
     <wiki:CheckRequestContext context='<%=WikiContext.PAGE_DIFF%>'>
       <h4 data-activePane id="diff"><fmt:message key="diff.tab" /></h4>
       <c:set var="olddiff" value="${param.r1}" />

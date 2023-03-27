@@ -34,6 +34,7 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -150,9 +151,9 @@ public class DefaultDifferenceManager implements DifferenceManager, WikiManager,
      */
     @Override
     public String getDiff( final WikiContext context, final int version1, final int version2 ) {
-        final String page = context.getPage().getName();
-        String page1 = pageManager.getPureText( page, version1 );
-        final String page2 = pageManager.getPureText( page, version2 );
+		WikiPage wikiPage = context.getPage();
+		String page1 = pageManager.getPureText(wikiPage, version1);
+		String page2 = pageManager.getPureText(wikiPage, version2);
 
         // Kludge to make diffs for new pages to work this way.
         if( version1 == PageProvider.LATEST_VERSION ) {

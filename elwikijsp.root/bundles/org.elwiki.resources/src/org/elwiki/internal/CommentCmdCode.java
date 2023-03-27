@@ -179,7 +179,7 @@ public class CommentCmdCode extends CmdCode {
 	        //
 	        //  Build comment part
 	        //
-	        StringBuffer pageText = new StringBuffer( pageManager.getPureText( wikipage ));
+	        StringBuffer pageText = new StringBuffer( pageManager.getPureText( wikipage, wikiContext.getPageVersion() ));
 
 	        log.debug("Page initial contents are "+pageText.length()+" chars");
 

@@ -51,7 +51,7 @@ public class PageSizeTag extends BaseWikiTag {
 				long size = 123; //:WORKAROUND. FVK: page.getSize();
 
 				if (size == -1 && pageManager.wikiPageExists(page)) { // should never happen with attachments
-					size = pageManager.getPureText(page.getName(), page.getVersion()).length();
+					size = pageManager.getPureText(page, wikiContext.getPageVersion()).length();
 					//:FVK: page.setSize( size );
 				}
 

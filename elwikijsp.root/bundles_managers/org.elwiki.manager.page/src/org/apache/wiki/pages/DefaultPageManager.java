@@ -397,17 +397,23 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         return text;
     }
 
+	@Override
+	public String getPureText(WikiPage page, int version) {
+		return (version == WikiProvider.LATEST_VERSION) ? //
+				page.getContentText() : page.getContentText(version);
+	}
+
     /**
      * {@inheritDoc}
      * @see org.apache.wiki.pages0.PageManager#getPureText(String, int)
      */
     @Override
-    public String getPureText( final String page, final int version ) {
+    public String getPureText( final String pageName, final int version ) {
         String result = null;
         try {
-            result = getPageText( page, version );
+            result = getPageText( pageName, version );
         } catch( final ProviderException e ) {
-            log.error( "ProviderException getPureText for page " + page + " [version " + version + "]", e );
+            log.error( "ProviderException getPureText for page " + pageName + " [version " + version + "]", e );
         } finally {
             if( result == null ) {
                 result = "";
@@ -450,7 +456,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	public void saveText(WikiContext context, String text, String author, String changenote) throws WikiException {
         // Check if page data actually changed; bail if not
         WikiPage page = context.getPage();
-        String oldText = getPureText( page );
+        String oldText = getPureText( page, context.getPageVersion() );
         String proposedText = TextUtil.normalizePostData( text );
         if ( oldText != null && oldText.equals( proposedText ) ) {
             return;

@@ -36,7 +36,7 @@
 	//:FVK: duplicate - PageManager pageManager = engine.getManager(PageManager.class);
 	AttachmentManager attachmentManager = engine.getManager(AttachmentManager.class);
 
-	String text = pageManager.getText( wikiContext.getPage() );
+	String text = pageManager.getText( wikiContext.getPage(), wikiContext.getPageVersion() );
 	StringTokenizer tokens = new StringTokenizer( text );
 	//avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
 %>

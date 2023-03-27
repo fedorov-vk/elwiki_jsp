@@ -25,7 +25,6 @@ public class WikiPageConverter extends DeserialiseStuff
 		implements JsonSerializer<WikiPage>, JsonDeserializer<WikiPage> {
 
 	private static String ID = "id";
-	private static String LAST_VERSION = "lastVersion";
 	private static String NAME = "name";
 	private static String DESCRIPTION = "description";
 	private static String ALIAS = "alias";
@@ -43,7 +42,6 @@ public class WikiPageConverter extends DeserialiseStuff
 		JsonObject result = new JsonObject();
 
 		result.addProperty(ID, wikiPage.getId());
-		result.addProperty(LAST_VERSION, wikiPage.getLastVersion());
 		result.addProperty(NAME, wikiPage.getName());
 		result.addProperty(DESCRIPTION, wikiPage.getDescription());
 		result.addProperty(ALIAS, wikiPage.getAlias());
@@ -97,7 +95,6 @@ public class WikiPageConverter extends DeserialiseStuff
 		WikiPage wikiPage = Elwiki_dataFactory.eINSTANCE.createWikiPage();
 
 		String id = getString(jsonObject, ID);
-		int lastVersion = getInt(jsonObject, LAST_VERSION);
 		String name = getString(jsonObject, NAME);
 		String description = getString(jsonObject, DESCRIPTION);
 		String alias = getString(jsonObject, ALIAS);
@@ -106,7 +103,6 @@ public class WikiPageConverter extends DeserialiseStuff
 		String wiki = getString(jsonObject, WIKI);
 
 		wikiPage.setId(id);
-		wikiPage.setLastVersion(lastVersion);
 		wikiPage.setName(name);
 		wikiPage.setDescription(description);
 		wikiPage.setAlias(alias);

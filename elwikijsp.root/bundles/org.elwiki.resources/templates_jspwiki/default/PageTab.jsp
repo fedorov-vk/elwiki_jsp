@@ -43,8 +43,8 @@
   <%
   WikiContext c = ContextUtil.findContext( pageContext );
   %>
-  <c:set var="thisVersion" value="<%= c.getPage().getVersion() %>" />
-  <c:set var="latestVersion" value="<%=WikiEngine.getPageManager().getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getVersion()%>" />
+  <c:set var="thisVersion" value="<%=c.getPage().getPageVersion()%>" />
+  <c:set var="latestVersion" value="<%=WikiEngine.getPageManager().getPage( c.getPage().getName(), WikiProvider.LATEST_VERSION ).getPageVersion()%>" />
 
   <form action="<wiki:Link format='url' jsp='Wiki.jsp'/>"
         method="get" accept-charset='UTF-8'>

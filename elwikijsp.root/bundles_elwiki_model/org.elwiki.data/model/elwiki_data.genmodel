@@ -19,7 +19,6 @@
     <genClasses ecoreClass="elwiki_data.ecore#//WikiPage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/name"/>
-      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/lastVersion"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/alias"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/redirect"/>
@@ -45,7 +44,8 @@
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAuthor" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getAuthor() : &quot;&quot;;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastContent"
           body="PageContent result = null;&#xA;int version = 0;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;int contentVersion = pageContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = pageContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
-      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getVersion" body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : -1;"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getLastVersion"
+          body="PageContent content = getLastContent();&#xA;return (content != null) ? content.getVersion() : 0;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getAttribute" body="return getAttributes().get(name);">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/getAttribute/name"/>
       </genOperations>
@@ -58,6 +58,12 @@
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getPageContentsReversed"
           body="List&lt;PageContent> contents = new ArrayList&lt;>(this.getPageContents());&#xA;contents.sort(Comparator.comparing(PageContent::getVersion, Comparator.reverseOrder()));&#xA;&#xA;return contents;"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/toString" body="return super.toString() + &quot; &quot; + getId() + &quot;:&quot; + getName();"/>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getContentText"
+          body="String result = &quot;&quot;;&#xA;EList&lt;PageContent> attachContents = getPageContents();&#xA;for (PageContent pageContent : attachContents) {&#xA;&#x9;if (version == pageContent.getVersion()) {&#xA;&#x9;&#x9;result = pageContent.getContent();&#xA;&#x9;&#x9;break;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;">
+        <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/getContentText/version"/>
+      </genOperations>
+      <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/getContentText.1"
+          body="String result = &quot;&quot;;&#xA;PageContent lastContent = getLastContent();&#xA;if (lastContent != null) {&#xA;&#x9;result = lastContent.getContent();&#xA;}&#xA;&#xA;return result;"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//PagesStore">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PagesStore/wikipages"/>
@@ -139,7 +145,7 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//UnknownPage/wikipage"/>
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//TagsList">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//TagsList/tags"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//TagsList/tag"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

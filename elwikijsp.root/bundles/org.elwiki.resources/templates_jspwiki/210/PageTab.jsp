@@ -54,8 +54,8 @@
           <%--<wiki:PageVersion/>--%>
           <select id="version" name="version" onchange="this.form.submit();" >
 <%
-int latestVersion = WikiEngine.getPageManager().getPage( pagename, WikiProvider.LATEST_VERSION ).getVersion();
-   int thisVersion = p.getVersion();
+int latestVersion = WikiEngine.getPageManager().getPage( pagename, WikiProvider.LATEST_VERSION ).getPageVersion();
+   int thisVersion = p.getPageVersion();
 
    if( thisVersion == WikiProvider.LATEST_VERSION ) thisVersion = latestVersion; //should not happen
      for( int i = 1; i <= latestVersion; i++) 

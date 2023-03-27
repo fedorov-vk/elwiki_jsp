@@ -286,7 +286,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		return addTo + buf.toString();
 	}
 
-	private String makeBasicURL(final String context, final String page, String parms) {
+	private String makeBasicURL(final String context, final String pageId, String parms) {
 		WikiContext wikiContext = getWikiContext();
 		final Engine engine = wikiContext.getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
@@ -296,27 +296,27 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			int r2;
 
 			if (DiffLinkTag.VER_LATEST.equals(getVersion())) {
-				final WikiPage latest = pageManager.getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = pageManager.getPage(pageId, WikiProvider.LATEST_VERSION);
 
-				r1 = latest.getVersion();
+				r1 = latest.getLastVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(getVersion())) {
-				r1 = wikiContext.getPage().getVersion() - 1;
+				r1 = wikiContext.getPageVersion() - 1;
 				r1 = Math.max(r1, 1);
 			} else if (DiffLinkTag.VER_CURRENT.equals(getVersion())) {
-				r1 = wikiContext.getPage().getVersion();
+				r1 = wikiContext.getPageVersion();
 			} else {
 				r1 = Integer.parseInt(getVersion());
 			}
 
 			if (DiffLinkTag.VER_LATEST.equals(m_compareToVersion)) {
-				final WikiPage latest = pageManager.getPage(page, WikiProvider.LATEST_VERSION);
+				final WikiPage latest = pageManager.getPage(pageId, WikiProvider.LATEST_VERSION);
 
-				r2 = latest.getVersion();
+				r2 = latest.getLastVersion();
 			} else if (DiffLinkTag.VER_PREVIOUS.equals(m_compareToVersion)) {
-				r2 = wikiContext.getPage().getVersion() - 1;
+				r2 = wikiContext.getPageVersion() - 1;
 				r2 = Math.max(r2, 1);
 			} else if (DiffLinkTag.VER_CURRENT.equals(m_compareToVersion)) {
-				r2 = wikiContext.getPage().getVersion();
+				r2 = wikiContext.getPageVersion();
 			} else {
 				r2 = Integer.parseInt(m_compareToVersion);
 			}

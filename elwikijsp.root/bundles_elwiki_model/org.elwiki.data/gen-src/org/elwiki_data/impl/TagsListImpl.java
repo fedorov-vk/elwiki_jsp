@@ -2,8 +2,6 @@
  */
 package org.elwiki_data.impl;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
@@ -19,7 +17,7 @@ import org.elwiki_data.TagsList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.impl.TagsListImpl#getTags <em>Tags</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.TagsListImpl#getTag <em>Tag</em>}</li>
  * </ul>
  *
  * @generated
@@ -59,10 +57,19 @@ public class TagsListImpl extends CDOObjectImpl implements TagsList {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public EList<String> getTags() {
-		return (EList<String>)eGet(Elwiki_dataPackage.Literals.TAGS_LIST__TAGS, true);
+	public String getTag() {
+		return (String)eGet(Elwiki_dataPackage.Literals.TAGS_LIST__TAG, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTag(String newTag) {
+		eSet(Elwiki_dataPackage.Literals.TAGS_LIST__TAG, newTag);
 	}
 
 } //TagsListImpl

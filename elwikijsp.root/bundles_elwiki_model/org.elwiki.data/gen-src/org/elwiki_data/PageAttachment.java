@@ -85,6 +85,29 @@ public interface PageAttachment extends CDOObject {
 	void setName(String value);
 
 	/**
+	 * Returns the value of the '<em><b>Last Version</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Last Version</em>' attribute.
+	 * @see #setLastVersion(int)
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_LastVersion()
+	 * @model default="0"
+	 * @generated
+	 */
+	int getLastVersion();
+
+	/**
+	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Last Version</em>' attribute.
+	 * @see #getLastVersion()
+	 * @generated
+	 */
+	void setLastVersion(int value);
+
+	/**
 	 * Returns the value of the '<em><b>Wikipage</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.elwiki_data.WikiPage#getAttachments <em>Attachments</em>}'.
 	 * <!-- begin-user-doc -->
@@ -127,29 +150,6 @@ public interface PageAttachment extends CDOObject {
 	 * @generated
 	 */
 	EList<AttachmentContent> getAttachContents();
-
-	/**
-	 * Returns the value of the '<em><b>Last Version</b></em>' attribute.
-	 * The default value is <code>"0"</code>.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Last Version</em>' attribute.
-	 * @see #setLastVersion(int)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAttachment_LastVersion()
-	 * @model default="0"
-	 * @generated
-	 */
-	int getLastVersion();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.PageAttachment#getLastVersion <em>Last Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Last Version</em>' attribute.
-	 * @see #getLastVersion()
-	 * @generated
-	 */
-	void setLastVersion(int value);
 
 	/**
 	 * <!-- begin-user-doc -->

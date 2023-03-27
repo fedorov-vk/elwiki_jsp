@@ -148,9 +148,9 @@ public class PermissionTag extends BaseWikiTag {
 			//  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.
 			//
 			if (EDIT.equals(permission)) {
-				PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
-				final WikiPage latest = pageManager.getPage(page.getName());
-				if (page.getVersion() != WikiProvider.LATEST_VERSION && latest.getVersion() != page.getVersion()) {
+				int pageVersion = wikiContext.getPageVersion();
+				int latestVersion = page.getLastVersion();
+				if (pageVersion != WikiProvider.LATEST_VERSION && latestVersion != pageVersion) {
 					return false;
 				}
 			}

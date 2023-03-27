@@ -179,7 +179,7 @@ public class InsertPagePlugin implements WikiPlugin, InitializablePlugin {
 				WikiContext includedContext = context.clone();
 				includedContext.setPage(page);
 
-				String pageData = pageManager.getPureText(page);
+				String pageData = pageManager.getPureText(page, context.getPageVersion());
 				String moreLink = "";
 
 				if (section != -1) {

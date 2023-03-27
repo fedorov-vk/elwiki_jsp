@@ -817,7 +817,7 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
         final Change ch = new Change();
         
         try {
-            final String oldText = super.pageManager.getPureText( page.getName(), WikiProvider.LATEST_VERSION );
+			String oldText = super.pageManager.getPureText(page, WikiProvider.LATEST_VERSION);
             final String[] first  = Diff.stringToArray( oldText );
             final String[] second = Diff.stringToArray( newText );
             final Revision rev = Diff.diff( first, second, new MyersDiff() );

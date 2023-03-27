@@ -72,7 +72,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     if( srev2 != null ) {
         ver2 = Integer.parseInt( srev2 );
     } else {
-        int lastver = wikipage.getVersion();
+        int lastver = wikipage.getPageVersion();
         if( lastver > 1 ) {
             ver2 = lastver-1;
         }

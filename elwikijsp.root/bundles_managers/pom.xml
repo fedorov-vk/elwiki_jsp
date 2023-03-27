@@ -4,7 +4,7 @@
 
 	<artifactId>bundles_managers</artifactId>
 	<packaging>pom</packaging>
-	<name>~~~ Bundles Managers ~~~</name>
+	<name>~~~ Bundles of Managers ~~~</name>
 	<description>Managers Bundles specifications.</description>
 	<parent>
 		<groupId>elwiki</groupId>

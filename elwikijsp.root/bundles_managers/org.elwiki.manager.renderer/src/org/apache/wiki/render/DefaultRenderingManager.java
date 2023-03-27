@@ -328,7 +328,7 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
      */
     @Override
     public String getHTML( final WikiContext context, final WikiPage page ) {
-        final String pagedata = this.pageManager.getPureText( page.getName(), -1); //:FVK: page.getVersion() );
+		String pagedata = this.pageManager.getPureText(page, context.getPageVersion());
         return textToHTML( context, pagedata );
     }
 

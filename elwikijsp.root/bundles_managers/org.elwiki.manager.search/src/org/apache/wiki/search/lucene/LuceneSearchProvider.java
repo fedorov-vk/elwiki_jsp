@@ -471,7 +471,7 @@ public class LuceneSearchProvider implements SearchProvider {
 				//FIXME: :FVK:
 			    //OLD CODE: text = getAttachmentContent( ( PageAttachment )page );
 			} else*/ {
-                text = pageManager.getPureText( page );
+				text = pageManager.getPureText(page, page.getLastVersion());
             }
 
             if( text != null ) {
