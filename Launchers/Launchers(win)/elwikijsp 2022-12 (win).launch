@@ -46,7 +46,6 @@
         <setEntry value="lpg.runtime.java@default:default"/>
         <setEntry value="net.sf.ehcache@default:default"/>
         <setEntry value="net.sourceforge.akismet-java@default:default"/>
-        <setEntry value="net.sourceforge.sandler@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.commons-fileupload@default:default"/>
         <setEntry value="org.apache.commons.commons-text@default:default"/>

@@ -23,7 +23,9 @@
 		<plugin id="jaxen"/>
 		<plugin id="lpg.runtime.java"/>
 		<plugin id="net.sf.ehcache"/>
+		<plugin id="net.sf.ehcache.source"/>
 		<plugin id="net.sourceforge.akismet-java"/>
+		<plugin id="net.sourceforge.akismet-java.source"/>
 		<plugin id="org.apache.commons.codec"/>
 		<plugin id="org.apache.commons.commons-fileupload"/>
 		<plugin id="org.apache.commons.io"/>
@@ -117,8 +119,6 @@
 		<plugin id="oro"/>
 		<plugin id="xmlrpc.source"/>
 		<plugin id="xmlrpc"/>
-		<plugin id="net.sourceforge.sandler"/>
-		<plugin id="net.sourceforge.sandler.source"/>
 		<plugin id="org.freshcookies.security.source"/>
 		<plugin id="org.freshcookies.security"/>
 		<plugin id="org.apache.lucene.core" version="9.4.2"/>
