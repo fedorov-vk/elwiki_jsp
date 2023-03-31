@@ -9,8 +9,9 @@
            name="IndexPlugin">
      </wikiPlugin>
      <wikiPlugin
+           alias="RecentChanges"
            class="org.elwiki.plugins.RecentChangesPlugin"
-           name="RecentChanges">
+           name="RecentChangesPlugin">
      </wikiPlugin>
      <wikiPlugin
            alias="ReferredPages"

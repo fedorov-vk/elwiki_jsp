@@ -25,7 +25,7 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "none",
-          "content": "Вот страницы, которые еще не были созданы. Почему бы Вам не создать некоторые?\n\n[{INSERT org.apache.wiki.plugin.UndefinedPagesPlugin}]\n\n(Назад к [Main | @1000]).\n"
+          "content": "Вот страницы, которые еще не были созданы. Почему бы Вам не создать некоторые?\n\n[{INSERT UndefinedPagesPlugin}]\n\n(Назад к [Main | @1000]).\n"
         }
       ],
       "attachments": []
@@ -75,14 +75,14 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "Это – все изменения, произведенные на этих страницах. Намного более короткий список доступен в [RecentChanges | @w10].\n\n[{INSERT org.apache.wiki.plugin.RecentChangesPlugin}]\n"
+          "content": "Это – все изменения, произведенные на этих страницах. Намного более короткий список доступен в [RecentChanges | @w10].\n\n[{INSERT RecentChangesPlugin}]\n"
         },
         {
           "version": 2,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Это – все изменения, произведенные в страницах wiki. Намного более короткий список доступен в [RecentChanges | @w10].\r\n\r\n[{INSERT org.apache.wiki.plugin.RecentChangesPlugin}]\r\n"
+          "content": "Это – все изменения, произведенные в страницах wiki. Намного более короткий список доступен в [RecentChanges | @w10].\r\n\r\n[{INSERT RecentChangesPlugin}]\r\n"
         }
       ],
       "attachments": []
@@ -1116,21 +1116,21 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\nПроверьте [FullRecentChanges | @w11] для полного списока всех измененных страниц.\n\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\n\n[{INSERT org.apache.wiki.plugin.RecentChangesPlugin since\u003d30}]\n"
+          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\nПроверьте [FullRecentChanges | @w11] для полного списока всех измененных страниц.\n\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\n\n[{INSERT RecentChangesPlugin since\u003d30}]\n"
         },
         {
           "version": 2,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT org.apache.wiki.plugin.RecentChangesPlugin since\u003d30}]\r\n"
+          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT RecentChangesPlugin since\u003d30}]\r\n"
         },
         {
           "version": 3,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Список изменений, произведенных в страницах за последние 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT org.apache.wiki.plugin.RecentChangesPlugin since\u003d30}]\r\n"
+          "content": "Список изменений, произведенных в страницах за последние 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT RecentChangesPlugin since\u003d30}]\r\n"
         }
       ],
       "attachments": []
@@ -1220,7 +1220,7 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "Это – одинокие страницы, которые не доступны с любой страницы (кроме тех, которые автоматически сгенерированы).\n\n[{INSERT org.apache.wiki.plugin.UnusedPagesPlugin}]\n"
+          "content": "Это – одинокие страницы, которые не доступны с любой страницы (кроме тех, которые автоматически сгенерированы).\n\n[{INSERT UnusedPagesPlugin}]\n"
         }
       ],
       "attachments": []
