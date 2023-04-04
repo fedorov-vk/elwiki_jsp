@@ -59,7 +59,6 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.parser0.Heading;
 import org.apache.wiki.parser0.HeadingListener;
 import org.apache.wiki.parser0.LinkParser;
@@ -70,7 +69,6 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki_data.Acl;
 import org.elwiki_data.WikiPage;
 import org.jdom2.Attribute;
 import org.jdom2.Content;
@@ -196,8 +194,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
 	private VariableManager variableManager;
 
-	private AclManager aclManager;
-
     /**
      *  Creates a markup parser.
      *
@@ -212,7 +208,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
         attachmentManager = this.m_engine.getManager(AttachmentManager.class);
         variableManager = this.m_engine.getManager(VariableManager.class);
-        aclManager = this.m_engine.getManager(AclManager.class);
     }
 
     // FIXME: parsers should be pooled for better performance.
@@ -1045,43 +1040,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
     }
 
-    private Element handleAccessRule( String ruleLine ) {
-        if( m_wysiwygEditorMode ) {
-            m_currentElement.addContent( "[" + ruleLine + "]" );
-        }
-
-        if( !m_parseAccessRules ) {
-            return m_currentElement;
-        }
-        final WikiPage page = m_context.getRealPage();
-        // UserDatabase db = m_context.getEngine().getManager(AccountRegistry.class);
-
-        if( ruleLine.startsWith( "{" ) ) {
-            ruleLine = ruleLine.substring( 1 );
-        }
-
-        if( ruleLine.endsWith( "}" ) ) {
-            ruleLine = ruleLine.substring( 0, ruleLine.length() - 1 );
-        }
-
-        if( log.isDebugEnabled() ) {
-            log.debug("page="+page.getName()+", ACL = "+ruleLine);
-        }
-
-        try {
-            final Acl acl = aclManager.parseAcl( page, ruleLine );
-            //:FVK: workaround - отмена, т.к. ERROR: запись в CDO view is read-only // page.setAcl( acl );
-
-            if( log.isDebugEnabled() ) {
-                log.debug( acl.toString() );
-            }
-        } catch( final WikiSecurityException wse ) {
-            return makeError( wse.getMessage() );
-        }
-
-        return m_currentElement;
-    }
-
     /**
      *  Handles metadata setting [{SET foo=bar}]
      */
@@ -1131,10 +1089,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
     private Element handleHyperlinks( String linkText, final int pos ) {
         final ResourceBundle rb = Preferences.getBundle( m_context );
         final StringBuilder sb = new StringBuilder( linkText.length() + 80 );
-
-        if( m_linkParsingOperations.isAccessRule( linkText ) ) {
-            return handleAccessRule( linkText );
-        }
 
         if( m_linkParsingOperations.isMetadata( linkText ) ) {
             return handleMetadata( linkText );

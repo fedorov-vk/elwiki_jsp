@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.EMap;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.elwiki_data.Acl;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -47,11 +47,11 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTags <em>Tags</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAclInfos <em>Acl Infos</em>}</li>
  * </ul>
  *
  * @generated
@@ -306,26 +306,6 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 * @generated
 	 */
 	@Override
-	public Acl getAcl() {
-		return (Acl)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAcl(Acl newAcl) {
-		eSet(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL, newAcl);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isWebLog() {
 		return (Boolean)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__WEB_LOG, true);
 	}
@@ -371,6 +351,17 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public EList<String> getTags() {
 		return (EList<String>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__TAGS, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public EList<AclInfo> getAclInfos() {
+		return (EList<AclInfo>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL_INFOS, true);
 	}
 
 	/**

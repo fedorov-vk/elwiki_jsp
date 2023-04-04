@@ -23,7 +23,6 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.pages0.PageManager;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -66,16 +65,6 @@ public class LinkParsingOperations {
 
     public LinkParsingOperations( final WikiContext wikiContext ) {
     	this.wikiContext = wikiContext;
-    }
-
-    /**
-     *  Returns true, if the link in question is an access rule.
-     *
-     * @param link The link text
-     * @return {@code true}, if this represents an access rule.
-     */
-    public boolean isAccessRule( final String link ) {
-        return link.startsWith("{ALLOW") || link.startsWith("{DENY");
     }
 
     /**

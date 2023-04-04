@@ -18,8 +18,6 @@
  */
 package org.apache.wiki;
 
-import org.apache.wiki.api.spi.AclsDSL;
-import org.apache.wiki.api.spi.AclsSPI;
 import org.apache.wiki.api.spi.ContentsDSL;
 import org.apache.wiki.api.spi.ContentsSPI;
 import org.apache.wiki.api.spi.ContextDSL;
@@ -32,15 +30,6 @@ public class Wiki {
 	// :FVK:private static Properties properties = PropertyReader.getDefaultProperties();
 
 	private static ContextSPI contextSPI;
-
-	/**
-	 * Access to {@link AclsSPI} operations.
-	 *
-	 * @return {@link AclsSPI} operations.
-	 */
-	public static AclsDSL acls() {
-		return new AclsDSL();
-	}
 
 	/**
 	 * Access to {@link ContentsSPI} operations.

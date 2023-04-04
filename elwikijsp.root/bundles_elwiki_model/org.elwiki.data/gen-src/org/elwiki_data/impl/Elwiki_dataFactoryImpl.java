@@ -2,9 +2,6 @@
  */
 package org.elwiki_data.impl;
 
-import java.security.Permission;
-import java.security.Principal;
-
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +14,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
@@ -82,11 +78,10 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.COMPARABLE: return (EObject)createComparable();
 			case Elwiki_dataPackage.CLONEABLE: return (EObject)createCloneable();
 			case Elwiki_dataPackage.PAGE_REFERENCE: return (EObject)createPageReference();
-			case Elwiki_dataPackage.ACL_ENTRY: return (EObject)createAclEntry();
-			case Elwiki_dataPackage.ACL: return (EObject)createAcl();
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
 			case Elwiki_dataPackage.UNKNOWN_PAGE: return (EObject)createUnknownPage();
 			case Elwiki_dataPackage.TAGS_LIST: return (EObject)createTagsList();
+			case Elwiki_dataPackage.ACL_INFO: return (EObject)createAclInfo();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -104,12 +99,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 				return createArrayStringFromString(eDataType, initialValue);
 			case Elwiki_dataPackage.ACCESS_LIST:
 				return createAccessListFromString(eDataType, initialValue);
-			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
-				return createPrincipalObjectFromString(eDataType, initialValue);
-			case Elwiki_dataPackage.ARRAY_PRINCIPAL:
-				return createArrayPrincipalFromString(eDataType, initialValue);
-			case Elwiki_dataPackage.PERMISSION_OBJECT:
-				return createPermissionObjectFromString(eDataType, initialValue);
 			case Elwiki_dataPackage.LIST_PAGE_CONTENT:
 				return createListPageContentFromString(eDataType, initialValue);
 			default:
@@ -129,12 +118,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 				return convertArrayStringToString(eDataType, instanceValue);
 			case Elwiki_dataPackage.ACCESS_LIST:
 				return convertAccessListToString(eDataType, instanceValue);
-			case Elwiki_dataPackage.PRINCIPAL_OBJECT:
-				return convertPrincipalObjectToString(eDataType, instanceValue);
-			case Elwiki_dataPackage.ARRAY_PRINCIPAL:
-				return convertArrayPrincipalToString(eDataType, instanceValue);
-			case Elwiki_dataPackage.PERMISSION_OBJECT:
-				return convertPermissionObjectToString(eDataType, instanceValue);
 			case Elwiki_dataPackage.LIST_PAGE_CONTENT:
 				return convertListPageContentToString(eDataType, instanceValue);
 			default:
@@ -235,28 +218,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public AclEntry createAclEntry() {
-		AclEntryImpl aclEntry = new AclEntryImpl();
-		return aclEntry;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Acl createAcl() {
-		AclImpl acl = new AclImpl();
-		return acl;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Map.Entry<String, Object> createStringToObjectMap() {
 		StringToObjectMapImpl stringToObjectMap = new StringToObjectMapImpl();
 		return stringToObjectMap;
@@ -282,6 +243,17 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	public TagsList createTagsList() {
 		TagsListImpl tagsList = new TagsListImpl();
 		return tagsList;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AclInfo createAclInfo() {
+		AclInfoImpl aclInfo = new AclInfoImpl();
+		return aclInfo;
 	}
 
 	/**
@@ -317,60 +289,6 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * @generated
 	 */
 	public String convertAccessListToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Principal createPrincipalObjectFromString(EDataType eDataType, String initialValue) {
-		return (Principal)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertPrincipalObjectToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Principal[] createArrayPrincipalFromString(EDataType eDataType, String initialValue) {
-		return (Principal[])super.createFromString(initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertArrayPrincipalToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Permission createPermissionObjectFromString(EDataType eDataType, String initialValue) {
-		return (Permission)super.createFromString(eDataType, initialValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertPermissionObjectToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

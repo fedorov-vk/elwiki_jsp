@@ -2,8 +2,6 @@
  */
 package org.elwiki_data.util;
 
-import java.security.Principal;
-
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -11,8 +9,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
@@ -145,24 +142,6 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Elwiki_dataPackage.ACL_ENTRY: {
-				AclEntry aclEntry = (AclEntry)theEObject;
-				T result = caseAclEntry(aclEntry);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Elwiki_dataPackage.PRINCIPAL: {
-				Principal principal = (Principal)theEObject;
-				T result = casePrincipal(principal);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case Elwiki_dataPackage.ACL: {
-				Acl acl = (Acl)theEObject;
-				T result = caseAcl(acl);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: {
 				@SuppressWarnings("unchecked") Map.Entry<String, Object> stringToObjectMap = (Map.Entry<String, Object>)theEObject;
 				T result = caseStringToObjectMap(stringToObjectMap);
@@ -178,6 +157,12 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 			case Elwiki_dataPackage.TAGS_LIST: {
 				TagsList tagsList = (TagsList)theEObject;
 				T result = caseTagsList(tagsList);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case Elwiki_dataPackage.ACL_INFO: {
+				AclInfo aclInfo = (AclInfo)theEObject;
+				T result = caseAclInfo(aclInfo);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -336,51 +321,6 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Acl Entry</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Acl Entry</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAclEntry(AclEntry object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Principal</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Principal</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casePrincipal(Principal object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Acl</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Acl</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAcl(Acl object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>String To Object Map</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -422,6 +362,21 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTagsList(TagsList object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Acl Info</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Acl Info</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAclInfo(AclInfo object) {
 		return null;
 	}
 

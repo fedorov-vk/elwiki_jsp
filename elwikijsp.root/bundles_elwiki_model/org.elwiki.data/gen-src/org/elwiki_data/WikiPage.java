@@ -36,11 +36,11 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getParent <em>Parent</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getOldParents <em>Old Parents</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getPageReferences <em>Page References</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getTags <em>Tags</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getAclInfos <em>Acl Infos</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -387,34 +387,6 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	EList<PageReference> getPageReferences();
 
 	/**
-	 * Returns the value of the '<em><b>Acl</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Acl</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Acl</em>' containment reference.
-	 * @see #setAcl(Acl)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Acl()
-	 * @model containment="true"
-	 * @generated
-	 */
-	Acl getAcl();
-
-	/**
-	 * Sets the value of the '{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Acl</em>' containment reference.
-	 * @see #getAcl()
-	 * @generated
-	 */
-	void setAcl(Acl value);
-
-	/**
 	 * Returns the value of the '<em><b>Web Log</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
@@ -475,6 +447,18 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	EList<String> getTags();
+
+	/**
+	 * Returns the value of the '<em><b>Acl Infos</b></em>' containment reference list.
+	 * The list contents are of type {@link org.elwiki_data.AclInfo}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Acl Infos</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_AclInfos()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<AclInfo> getAclInfos();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -75,10 +75,6 @@ import org.osgi.service.useradmin.UserAdmin;
 
 /**
  * Default implementation for {@link AuthenticationManager}
- *
- * {@inheritDoc}
- * 
- * @since 2.3
  */
 //@formatter:off
 @Component(

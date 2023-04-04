@@ -94,24 +94,6 @@ public interface Elwiki_dataFactory extends EFactory {
 	PageReference createPageReference();
 
 	/**
-	 * Returns a new object of class '<em>Acl Entry</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Acl Entry</em>'.
-	 * @generated
-	 */
-	AclEntry createAclEntry();
-
-	/**
-	 * Returns a new object of class '<em>Acl</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Acl</em>'.
-	 * @generated
-	 */
-	Acl createAcl();
-
-	/**
 	 * Returns a new object of class '<em>Unknown Page</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -128,6 +110,15 @@ public interface Elwiki_dataFactory extends EFactory {
 	 * @generated
 	 */
 	TagsList createTagsList();
+
+	/**
+	 * Returns a new object of class '<em>Acl Info</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Acl Info</em>'.
+	 * @generated
+	 */
+	AclInfo createAclInfo();
 
 	/**
 	 * Returns the package supported by this factory.

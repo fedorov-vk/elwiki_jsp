@@ -95,7 +95,7 @@
 <div class="table-filter-sort-condensed-striped">
   <table class="table" aria-described-by="allgroups">
     <caption class="hide">Group Details</caption>
-    <thead>
+    <tr>
       <th scope="col"><fmt:message key="group.name"/></th>
       <th scope="col"><fmt:message key="group.members"/></th>
       <th scope="col"><fmt:message key="group.created"/></th>
@@ -103,7 +103,7 @@
       <th scope="col"><fmt:message key="group.modified"/></th>
       <th scope="col"><fmt:message key="group.themodifier"/></th>
       <th scope="col"><fmt:message key="group.actions"/></th>
-    </thead>
+    </tr>
     <tbody>
     <%
      List<IGroupWiki> groups = accountManager.getGroups();

@@ -2,8 +2,6 @@
  */
 package org.elwiki_data.util;
 
-import java.security.Principal;
-
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -13,8 +11,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
@@ -123,18 +120,6 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 				return createPageReferenceAdapter();
 			}
 			@Override
-			public Adapter caseAclEntry(AclEntry object) {
-				return createAclEntryAdapter();
-			}
-			@Override
-			public Adapter casePrincipal(Principal object) {
-				return createPrincipalAdapter();
-			}
-			@Override
-			public Adapter caseAcl(Acl object) {
-				return createAclAdapter();
-			}
-			@Override
 			public Adapter caseStringToObjectMap(Map.Entry<String, Object> object) {
 				return createStringToObjectMapAdapter();
 			}
@@ -145,6 +130,10 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTagsList(TagsList object) {
 				return createTagsListAdapter();
+			}
+			@Override
+			public Adapter caseAclInfo(AclInfo object) {
+				return createAclInfoAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -307,48 +296,6 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.elwiki_data.AclEntry <em>Acl Entry</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.elwiki_data.AclEntry
-	 * @generated
-	 */
-	public Adapter createAclEntryAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link java.security.Principal <em>Principal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see java.security.Principal
-	 * @generated
-	 */
-	public Adapter createPrincipalAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.elwiki_data.Acl <em>Acl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.elwiki_data.Acl
-	 * @generated
-	 */
-	public Adapter createAclAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>String To Object Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -387,6 +334,20 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTagsListAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.elwiki_data.AclInfo <em>Acl Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.elwiki_data.AclInfo
+	 * @generated
+	 */
+	public Adapter createAclInfoAdapter() {
 		return null;
 	}
 

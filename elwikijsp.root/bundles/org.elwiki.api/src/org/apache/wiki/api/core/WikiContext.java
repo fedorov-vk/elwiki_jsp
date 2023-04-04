@@ -86,6 +86,12 @@ public interface WikiContext extends Cloneable, Command {
 	String PAGE_EDIT = ContextEnum.PAGE_EDIT.getRequestContext();
 	String NONE_PAGE_EDIT = "!" + PAGE_EDIT;
 
+	/** The List of page ACL context - the user is list ACL of page. */
+	String PAGE_ACL = ContextEnum.PAGE_ACL.getRequestContext();
+
+	/** The EDIT ACL context - the user is editing one ACL of page. */
+	String PAGE_EDIT_ACL = ContextEnum.PAGE_EDIT_ACL.getRequestContext();
+
 	/** User is deleting a page or an attachment. */
 	String PAGE_DELETE = ContextEnum.PAGE_DELETE.getRequestContext();
 

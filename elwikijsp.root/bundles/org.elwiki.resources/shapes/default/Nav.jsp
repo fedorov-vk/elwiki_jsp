@@ -130,6 +130,7 @@
   </c:if>
   --%>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
+    WikiContext.PAGE_ACL,		  
     WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME,
     WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT, WikiContext.PAGE_CONFLICT)%>'>
   <li id="view">
@@ -161,6 +162,7 @@
 
   <%-- info --%>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(
+    WikiContext.PAGE_ACL, 
     WikiContext.PAGE_VIEW, WikiContext.PAGE_INFO, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME,
     WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT, WikiContext.PAGE_CONFLICT)%>'>
   <wiki:PageExists>
@@ -341,6 +343,13 @@
       <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
         <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" pageId="${pageId}" accessKey="e">
           <span style="float:left; width: 23px; margin-left:-5px;">✎</span><fmt:message key='actions.page.edit'/>
+        </wiki:Link>
+      </li>
+
+      <%-- edit page ACL --%>
+      <li class="<wiki:Permission permission='!edit'>disabled</wiki:Permission>">
+        <wiki:Link context="<%=WikiContext.PAGE_ACL%>" pageId="${pageId}">
+          <span style="float:left; width: 23px; margin-left:-5px;">✋</span><fmt:message key='actions.page.acl'/>
         </wiki:Link>
       </li>
 

@@ -154,11 +154,6 @@
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Page References&lt;/em>' containment reference list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="acl" eType="#//Acl" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Acl&lt;/em>' containment reference list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="webLog" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
@@ -166,6 +161,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="unknownPages" upperBound="-1"
         eType="#//UnknownPage" containment="true" eOpposite="#//UnknownPage/wikipage"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="aclInfos" upperBound="-1"
+        eType="#//AclInfo" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"
@@ -317,65 +314,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AclEntry">
-    <eOperations name="checkPermission" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="return findPermission(permission) != null;"/>
-        <details key="documentation" value=""/>
-      </eAnnotations>
-      <eParameters name="permission" eType="#//PermissionObject"/>
-    </eOperations>
-    <eOperations name="findPermission" eType="#//PermissionObject">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="for (Permission pp : getPermission()) {&#xA;&#x9;if (pp.implies(p)) {&#xA;&#x9;&#x9;return pp;&#xA;&#x9;}&#xA;}&#xA;&#xA;return null;"/>
-        <details key="documentation" value="Looks through the permission list and finds a permission that matches the permission.&#xA;"/>
-        <details key="suppressedVisibility" value="true"/>
-      </eAnnotations>
-      <eParameters name="p" eType="#//PermissionObject"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="principal" eType="#//PrincipalObject">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Principal&lt;/em>' containment reference isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="permission" upperBound="-1"
-        eType="#//PermissionObject">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Permission&lt;/em>' attribute list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Principal" instanceClassName="java.security.Principal"
-      abstract="true" interface="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Acl">
-    <eOperations name="getEntry" eType="#//AclEntry">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="for (AclEntry entry : getAclEntries()) {&#xA;&#x9;String entryPrincipalName = entry.getPrincipal().getName();&#xA;&#x9;if (entryPrincipalName.equals(principal.getName())) {&#xA;&#x9;&#x9;return entry;&#xA;&#x9;}&#xA;}&#xA;return null;"/>
-      </eAnnotations>
-      <eParameters name="principal" eType="#//PrincipalObject"/>
-    </eOperations>
-    <eOperations name="findPrincipals" eType="#//ArrayPrincipal">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="Vector&lt;Principal> principals = new Vector&lt;Principal>();&#xA;for (AclEntry entry : getAclEntries()) {&#xA;&#x9;for (Permission perm : entry.getPermission()) {&#xA;&#x9;&#x9;if (perm.implies(permission)) {&#xA;&#x9;&#x9;&#x9;principals.add(entry.getPrincipal());&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;}&#xA;return principals.toArray(new Principal[principals.size()]);"/>
-      </eAnnotations>
-      <eParameters name="permission" eType="#//PermissionObject"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="aclEntries" upperBound="-1"
-        eType="#//AclEntry" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Acl Entries&lt;/em>' containment reference list isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StringToObjectMap" instanceClassName="java.util.Map$Entry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ArrayString" instanceClassName="java.lang.String[]"/>
   <eClassifiers xsi:type="ecore:EDataType" name="AccessList" instanceTypeName="newDataType3"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="PrincipalObject" instanceClassName="java.security.Principal"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="ArrayPrincipal" instanceClassName="java.security.Principal[]"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="PermissionObject" instanceClassName="java.security.Permission"/>
   <eClassifiers xsi:type="ecore:EDataType" name="ListPageContent" instanceTypeName="java.util.List&lt;org.elwiki_data.PageContent>"/>
   <eClassifiers xsi:type="ecore:EClass" name="UnknownPage">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -384,5 +328,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TagsList">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" ordered="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AclInfo">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="permission" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roles" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

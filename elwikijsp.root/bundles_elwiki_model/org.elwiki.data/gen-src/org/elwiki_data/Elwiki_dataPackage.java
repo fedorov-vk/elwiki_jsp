@@ -223,22 +223,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__PAGE_REFERENCES = COMPARABLE_FEATURE_COUNT + 12;
 
 	/**
-	 * The feature id for the '<em><b>Acl</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int WIKI_PAGE__ACL = COMPARABLE_FEATURE_COUNT + 13;
-
-	/**
 	 * The feature id for the '<em><b>Web Log</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__WEB_LOG = COMPARABLE_FEATURE_COUNT + 14;
+	int WIKI_PAGE__WEB_LOG = COMPARABLE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Attributes</b></em>' map.
@@ -247,7 +238,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 15;
+	int WIKI_PAGE__ATTRIBUTES = COMPARABLE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Unknown Pages</b></em>' containment reference list.
@@ -256,7 +247,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 16;
+	int WIKI_PAGE__UNKNOWN_PAGES = COMPARABLE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Tags</b></em>' attribute list.
@@ -265,7 +256,16 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 17;
+	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 16;
+
+	/**
+	 * The feature id for the '<em><b>Acl Infos</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__ACL_INFOS = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
@@ -924,153 +924,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	int PAGE_REFERENCE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclEntryImpl <em>Acl Entry</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclEntryImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclEntry()
-	 * @generated
-	 */
-	int ACL_ENTRY = 10;
-
-	/**
-	 * The feature id for the '<em><b>Principal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY__PRINCIPAL = 0;
-
-	/**
-	 * The feature id for the '<em><b>Permission</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY__PERMISSION = 1;
-
-	/**
-	 * The number of structural features of the '<em>Acl Entry</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY_FEATURE_COUNT = 2;
-
-	/**
-	 * The operation id for the '<em>Check Permission</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY___CHECK_PERMISSION__PERMISSION = 0;
-
-	/**
-	 * The operation id for the '<em>Find Permission</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY___FIND_PERMISSION__PERMISSION = 1;
-
-	/**
-	 * The number of operations of the '<em>Acl Entry</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_ENTRY_OPERATION_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link java.security.Principal <em>Principal</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.security.Principal
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
-	 * @generated
-	 */
-	int PRINCIPAL = 11;
-
-	/**
-	 * The number of structural features of the '<em>Principal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRINCIPAL_FEATURE_COUNT = 0;
-
-	/**
-	 * The number of operations of the '<em>Principal</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRINCIPAL_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
-	 * @generated
-	 */
-	int ACL = 12;
-
-	/**
-	 * The feature id for the '<em><b>Acl Entries</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL__ACL_ENTRIES = 0;
-
-	/**
-	 * The number of structural features of the '<em>Acl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_FEATURE_COUNT = 1;
-
-	/**
-	 * The operation id for the '<em>Get Entry</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL___GET_ENTRY__PRINCIPAL = 0;
-
-	/**
-	 * The operation id for the '<em>Find Principals</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL___FIND_PRINCIPALS__PERMISSION = 1;
-
-	/**
-	 * The number of operations of the '<em>Acl</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACL_OPERATION_COUNT = 2;
-
-	/**
 	 * The meta object id for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1078,7 +931,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getStringToObjectMap()
 	 * @generated
 	 */
-	int STRING_TO_OBJECT_MAP = 13;
+	int STRING_TO_OBJECT_MAP = 10;
 
 	/**
 	 * The feature id for the '<em><b>Key</b></em>' attribute.
@@ -1124,7 +977,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getUnknownPage()
 	 * @generated
 	 */
-	int UNKNOWN_PAGE = 14;
+	int UNKNOWN_PAGE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Page Name</b></em>' attribute.
@@ -1170,7 +1023,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getTagsList()
 	 * @generated
 	 */
-	int TAGS_LIST = 15;
+	int TAGS_LIST = 12;
 
 	/**
 	 * The feature id for the '<em><b>Tag</b></em>' attribute.
@@ -1200,13 +1053,68 @@ public interface Elwiki_dataPackage extends EPackage {
 	int TAGS_LIST_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.elwiki_data.impl.AclInfoImpl <em>Acl Info</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.elwiki_data.impl.AclInfoImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclInfo()
+	 * @generated
+	 */
+	int ACL_INFO = 13;
+
+	/**
+	 * The feature id for the '<em><b>Allow</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_INFO__ALLOW = 0;
+
+	/**
+	 * The feature id for the '<em><b>Permission</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_INFO__PERMISSION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Roles</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_INFO__ROLES = 2;
+
+	/**
+	 * The number of structural features of the '<em>Acl Info</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_INFO_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Acl Info</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACL_INFO_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayString()
 	 * @generated
 	 */
-	int ARRAY_STRING = 16;
+	int ARRAY_STRING = 14;
 
 	/**
 	 * The meta object id for the '<em>Access List</em>' data type.
@@ -1216,36 +1124,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAccessList()
 	 * @generated
 	 */
-	int ACCESS_LIST = 17;
-
-	/**
-	 * The meta object id for the '<em>Principal Object</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.security.Principal
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
-	 * @generated
-	 */
-	int PRINCIPAL_OBJECT = 18;
-
-	/**
-	 * The meta object id for the '<em>Array Principal</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
-	 * @generated
-	 */
-	int ARRAY_PRINCIPAL = 19;
-
-	/**
-	 * The meta object id for the '<em>Permission Object</em>' data type.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see java.security.Permission
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
-	 * @generated
-	 */
-	int PERMISSION_OBJECT = 20;
+	int ACCESS_LIST = 15;
 
 	/**
 	 * The meta object id for the '<em>List Page Content</em>' data type.
@@ -1255,7 +1134,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getListPageContent()
 	 * @generated
 	 */
-	int LIST_PAGE_CONTENT = 21;
+	int LIST_PAGE_CONTENT = 16;
 
 
 	/**
@@ -1412,17 +1291,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getWikiPage_PageReferences();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.elwiki_data.WikiPage#getAcl <em>Acl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Acl</em>'.
-	 * @see org.elwiki_data.WikiPage#getAcl()
-	 * @see #getWikiPage()
-	 * @generated
-	 */
-	EReference getWikiPage_Acl();
-
-	/**
 	 * Returns the meta object for the attribute '{@link org.elwiki_data.WikiPage#isWebLog <em>Web Log</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1465,6 +1333,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getWikiPage_Tags();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.WikiPage#getAclInfos <em>Acl Infos</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Acl Infos</em>'.
+	 * @see org.elwiki_data.WikiPage#getAclInfos()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EReference getWikiPage_AclInfos();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
@@ -1971,110 +1850,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getPageReference_Wikipage();
 
 	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.AclEntry <em>Acl Entry</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Acl Entry</em>'.
-	 * @see org.elwiki_data.AclEntry
-	 * @generated
-	 */
-	EClass getAclEntry();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclEntry#getPrincipal <em>Principal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Principal</em>'.
-	 * @see org.elwiki_data.AclEntry#getPrincipal()
-	 * @see #getAclEntry()
-	 * @generated
-	 */
-	EAttribute getAclEntry_Principal();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link org.elwiki_data.AclEntry#getPermission <em>Permission</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Permission</em>'.
-	 * @see org.elwiki_data.AclEntry#getPermission()
-	 * @see #getAclEntry()
-	 * @generated
-	 */
-	EAttribute getAclEntry_Permission();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.AclEntry#checkPermission(java.security.Permission) <em>Check Permission</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Check Permission</em>' operation.
-	 * @see org.elwiki_data.AclEntry#checkPermission(java.security.Permission)
-	 * @generated
-	 */
-	EOperation getAclEntry__CheckPermission__Permission();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.AclEntry#findPermission(java.security.Permission) <em>Find Permission</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Find Permission</em>' operation.
-	 * @see org.elwiki_data.AclEntry#findPermission(java.security.Permission)
-	 * @generated
-	 */
-	EOperation getAclEntry__FindPermission__Permission();
-
-	/**
-	 * Returns the meta object for class '{@link java.security.Principal <em>Principal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Principal</em>'.
-	 * @see java.security.Principal
-	 * @model instanceClass="java.security.Principal"
-	 * @generated
-	 */
-	EClass getPrincipal();
-
-	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.Acl <em>Acl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Acl</em>'.
-	 * @see org.elwiki_data.Acl
-	 * @generated
-	 */
-	EClass getAcl();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.Acl#getAclEntries <em>Acl Entries</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Acl Entries</em>'.
-	 * @see org.elwiki_data.Acl#getAclEntries()
-	 * @see #getAcl()
-	 * @generated
-	 */
-	EReference getAcl_AclEntries();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.Acl#getEntry(java.security.Principal) <em>Get Entry</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Entry</em>' operation.
-	 * @see org.elwiki_data.Acl#getEntry(java.security.Principal)
-	 * @generated
-	 */
-	EOperation getAcl__GetEntry__Principal();
-
-	/**
-	 * Returns the meta object for the '{@link org.elwiki_data.Acl#findPrincipals(java.security.Permission) <em>Find Principals</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Find Principals</em>' operation.
-	 * @see org.elwiki_data.Acl#findPrincipals(java.security.Permission)
-	 * @generated
-	 */
-	EOperation getAcl__FindPrincipals__Permission();
-
-	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To Object Map</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2162,6 +1937,49 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getTagsList_Tag();
 
 	/**
+	 * Returns the meta object for class '{@link org.elwiki_data.AclInfo <em>Acl Info</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Acl Info</em>'.
+	 * @see org.elwiki_data.AclInfo
+	 * @generated
+	 */
+	EClass getAclInfo();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclInfo#isAllow <em>Allow</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Allow</em>'.
+	 * @see org.elwiki_data.AclInfo#isAllow()
+	 * @see #getAclInfo()
+	 * @generated
+	 */
+	EAttribute getAclInfo_Allow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclInfo#getPermission <em>Permission</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Permission</em>'.
+	 * @see org.elwiki_data.AclInfo#getPermission()
+	 * @see #getAclInfo()
+	 * @generated
+	 */
+	EAttribute getAclInfo_Permission();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.elwiki_data.AclInfo#getRoles <em>Roles</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Roles</em>'.
+	 * @see org.elwiki_data.AclInfo#getRoles()
+	 * @see #getAclInfo()
+	 * @generated
+	 */
+	EAttribute getAclInfo_Roles();
+
+	/**
 	 * Returns the meta object for data type '<em>Array String</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2181,38 +1999,6 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getAccessList();
-
-	/**
-	 * Returns the meta object for data type '{@link java.security.Principal <em>Principal Object</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Principal Object</em>'.
-	 * @see java.security.Principal
-	 * @model instanceClass="java.security.Principal"
-	 * @generated
-	 */
-	EDataType getPrincipalObject();
-
-	/**
-	 * Returns the meta object for data type '<em>Array Principal</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Array Principal</em>'.
-	 * @model instanceClass="java.security.Principal[]"
-	 * @generated
-	 */
-	EDataType getArrayPrincipal();
-
-	/**
-	 * Returns the meta object for data type '{@link java.security.Permission <em>Permission Object</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for data type '<em>Permission Object</em>'.
-	 * @see java.security.Permission
-	 * @model instanceClass="java.security.Permission"
-	 * @generated
-	 */
-	EDataType getPermissionObject();
 
 	/**
 	 * Returns the meta object for data type '{@link java.util.List <em>List Page Content</em>}'.
@@ -2363,14 +2149,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference WIKI_PAGE__PAGE_REFERENCES = eINSTANCE.getWikiPage_PageReferences();
 
 		/**
-		 * The meta object literal for the '<em><b>Acl</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference WIKI_PAGE__ACL = eINSTANCE.getWikiPage_Acl();
-
-		/**
 		 * The meta object literal for the '<em><b>Web Log</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2401,6 +2179,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute WIKI_PAGE__TAGS = eINSTANCE.getWikiPage_Tags();
+
+		/**
+		 * The meta object literal for the '<em><b>Acl Infos</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference WIKI_PAGE__ACL_INFOS = eINSTANCE.getWikiPage_AclInfos();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.
@@ -2805,92 +2591,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		EReference PAGE_REFERENCE__WIKIPAGE = eINSTANCE.getPageReference_Wikipage();
 
 		/**
-		 * The meta object literal for the '{@link org.elwiki_data.impl.AclEntryImpl <em>Acl Entry</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.AclEntryImpl
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclEntry()
-		 * @generated
-		 */
-		EClass ACL_ENTRY = eINSTANCE.getAclEntry();
-
-		/**
-		 * The meta object literal for the '<em><b>Principal</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ACL_ENTRY__PRINCIPAL = eINSTANCE.getAclEntry_Principal();
-
-		/**
-		 * The meta object literal for the '<em><b>Permission</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ACL_ENTRY__PERMISSION = eINSTANCE.getAclEntry_Permission();
-
-		/**
-		 * The meta object literal for the '<em><b>Check Permission</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ACL_ENTRY___CHECK_PERMISSION__PERMISSION = eINSTANCE.getAclEntry__CheckPermission__Permission();
-
-		/**
-		 * The meta object literal for the '<em><b>Find Permission</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ACL_ENTRY___FIND_PERMISSION__PERMISSION = eINSTANCE.getAclEntry__FindPermission__Permission();
-
-		/**
-		 * The meta object literal for the '{@link java.security.Principal <em>Principal</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.security.Principal
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipal()
-		 * @generated
-		 */
-		EClass PRINCIPAL = eINSTANCE.getPrincipal();
-
-		/**
-		 * The meta object literal for the '{@link org.elwiki_data.impl.AclImpl <em>Acl</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.AclImpl
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAcl()
-		 * @generated
-		 */
-		EClass ACL = eINSTANCE.getAcl();
-
-		/**
-		 * The meta object literal for the '<em><b>Acl Entries</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ACL__ACL_ENTRIES = eINSTANCE.getAcl_AclEntries();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Entry</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ACL___GET_ENTRY__PRINCIPAL = eINSTANCE.getAcl__GetEntry__Principal();
-
-		/**
-		 * The meta object literal for the '<em><b>Find Principals</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ACL___FIND_PRINCIPALS__PERMISSION = eINSTANCE.getAcl__FindPrincipals__Permission();
-
-		/**
 		 * The meta object literal for the '{@link org.elwiki_data.impl.StringToObjectMapImpl <em>String To Object Map</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2961,6 +2661,40 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute TAGS_LIST__TAG = eINSTANCE.getTagsList_Tag();
 
 		/**
+		 * The meta object literal for the '{@link org.elwiki_data.impl.AclInfoImpl <em>Acl Info</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.elwiki_data.impl.AclInfoImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclInfo()
+		 * @generated
+		 */
+		EClass ACL_INFO = eINSTANCE.getAclInfo();
+
+		/**
+		 * The meta object literal for the '<em><b>Allow</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACL_INFO__ALLOW = eINSTANCE.getAclInfo_Allow();
+
+		/**
+		 * The meta object literal for the '<em><b>Permission</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACL_INFO__PERMISSION = eINSTANCE.getAclInfo_Permission();
+
+		/**
+		 * The meta object literal for the '<em><b>Roles</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACL_INFO__ROLES = eINSTANCE.getAclInfo_Roles();
+
+		/**
 		 * The meta object literal for the '<em>Array String</em>' data type.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2978,35 +2712,6 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ACCESS_LIST = eINSTANCE.getAccessList();
-
-		/**
-		 * The meta object literal for the '<em>Principal Object</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.security.Principal
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPrincipalObject()
-		 * @generated
-		 */
-		EDataType PRINCIPAL_OBJECT = eINSTANCE.getPrincipalObject();
-
-		/**
-		 * The meta object literal for the '<em>Array Principal</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getArrayPrincipal()
-		 * @generated
-		 */
-		EDataType ARRAY_PRINCIPAL = eINSTANCE.getArrayPrincipal();
-
-		/**
-		 * The meta object literal for the '<em>Permission Object</em>' data type.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see java.security.Permission
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPermissionObject()
-		 * @generated
-		 */
-		EDataType PERMISSION_OBJECT = eINSTANCE.getPermissionObject();
 
 		/**
 		 * The meta object literal for the '<em>List Page Content</em>' data type.

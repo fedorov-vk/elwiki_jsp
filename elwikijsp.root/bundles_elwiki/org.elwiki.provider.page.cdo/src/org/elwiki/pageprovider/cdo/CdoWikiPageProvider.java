@@ -40,7 +40,6 @@ import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.util.FileUtil;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -70,8 +69,6 @@ import org.elwiki.pageprovider.cdo.internal.bundle.PageProviderCdoActivator;
 //import org.elwiki.pageprovider.jspwiki.JdbcPageProvider;
 import org.elwiki.permissions.PermissionFactory;
 //import org.elwiki.utils.FileUtil;
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
@@ -1382,6 +1379,8 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 	*/
 
+	/*
+	@Deprecated
 	//:FVK: @Override
 	public void putAcl(WikiPage page, String aclString) {
 		//:FVK: 
@@ -1412,7 +1411,9 @@ public class CdoWikiPageProvider implements PageProvider {
 			}
 		}
 	}
+	*/
 
+	/*:FVK:
 	@Deprecated
 	private org.elwiki_data.Acl parseAcl(WikiPage page, String ruleLine) {
 		Acl acl = page.getAcl();
@@ -1457,6 +1458,7 @@ public class CdoWikiPageProvider implements PageProvider {
 
 		return acl;
 	}
+	*/
 
 	@Override
 	public void addAttachment(WikiPage wikiPage, AttachmentContent attContent, String attName) throws Exception {

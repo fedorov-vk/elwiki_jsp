@@ -40,6 +40,8 @@ public final class PageCommand extends AbstractCommand {
     public static final Command DELETE = new PageCommand( ContextEnum.PAGE_DELETE, null, PagePermission.DELETE_ACTION );
     public static final Command DIFF = new PageCommand( ContextEnum.PAGE_DIFF, null, PagePermission.VIEW_ACTION );
     public static final Command EDIT = new PageCommand( ContextEnum.PAGE_EDIT, null, PagePermission.EDIT_ACTION );
+    public static final Command PAGE_ACL = new PageCommand( ContextEnum.PAGE_ACL, null, PagePermission.EDIT_ACTION );
+    public static final Command EDIT_ACL = new PageCommand( ContextEnum.PAGE_EDIT_ACL, null, PagePermission.EDIT_ACTION );
     public static final Command INFO = new PageCommand( ContextEnum.PAGE_INFO, null, PagePermission.VIEW_ACTION );
     public static final Command PREVIEW = new PageCommand( ContextEnum.PAGE_PREVIEW, null, PagePermission.VIEW_ACTION );
     public static final Command RENAME = new PageCommand( ContextEnum.PAGE_RENAME, null, PagePermission.RENAME_ACTION );

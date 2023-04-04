@@ -12,9 +12,6 @@
       ecorePackage="elwiki_data.ecore#/">
     <genDataTypes ecoreDataType="elwiki_data.ecore#//ArrayString"/>
     <genDataTypes ecoreDataType="elwiki_data.ecore#//AccessList"/>
-    <genDataTypes ecoreDataType="elwiki_data.ecore#//PrincipalObject"/>
-    <genDataTypes ecoreDataType="elwiki_data.ecore#//ArrayPrincipal"/>
-    <genDataTypes ecoreDataType="elwiki_data.ecore#//PermissionObject"/>
     <genDataTypes ecoreDataType="elwiki_data.ecore#//ListPageContent"/>
     <genClasses ecoreClass="elwiki_data.ecore#//WikiPage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/id"/>
@@ -30,11 +27,11 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/parent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/oldParents"/>
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/pageReferences"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/acl"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/webLog"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/unknownPages"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/tags"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/aclInfos"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/compareTo" body="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
       </genOperations>
@@ -114,28 +111,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageReference/pageId"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//PageReference/wikipage"/>
     </genClasses>
-    <genClasses ecoreClass="elwiki_data.ecore#//AclEntry">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclEntry/principal"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclEntry/permission"/>
-      <genOperations ecoreOperation="elwiki_data.ecore#//AclEntry/checkPermission"
-          body="return findPermission(permission) != null;">
-        <genParameters ecoreParameter="elwiki_data.ecore#//AclEntry/checkPermission/permission"/>
-      </genOperations>
-      <genOperations ecoreOperation="elwiki_data.ecore#//AclEntry/findPermission"
-          body="for (Permission pp : getPermission()) {&#xA;&#x9;if (pp.implies(p)) {&#xA;&#x9;&#x9;return pp;&#xA;&#x9;}&#xA;}&#xA;&#xA;return null;">
-        <genParameters ecoreParameter="elwiki_data.ecore#//AclEntry/findPermission/p"/>
-      </genOperations>
-    </genClasses>
-    <genClasses image="false" ecoreClass="elwiki_data.ecore#//Principal"/>
-    <genClasses ecoreClass="elwiki_data.ecore#//Acl">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//Acl/aclEntries"/>
-      <genOperations ecoreOperation="elwiki_data.ecore#//Acl/getEntry" body="for (AclEntry entry : getAclEntries()) {&#xA;&#x9;String entryPrincipalName = entry.getPrincipal().getName();&#xA;&#x9;if (entryPrincipalName.equals(principal.getName())) {&#xA;&#x9;&#x9;return entry;&#xA;&#x9;}&#xA;}&#xA;return null;">
-        <genParameters ecoreParameter="elwiki_data.ecore#//Acl/getEntry/principal"/>
-      </genOperations>
-      <genOperations ecoreOperation="elwiki_data.ecore#//Acl/findPrincipals" body="Vector&lt;Principal> principals = new Vector&lt;Principal>();&#xA;for (AclEntry entry : getAclEntries()) {&#xA;&#x9;for (Permission perm : entry.getPermission()) {&#xA;&#x9;&#x9;if (perm.implies(permission)) {&#xA;&#x9;&#x9;&#x9;principals.add(entry.getPrincipal());&#xA;&#x9;&#x9;}&#xA;&#x9;}&#xA;}&#xA;return principals.toArray(new Principal[principals.size()]);">
-        <genParameters ecoreParameter="elwiki_data.ecore#//Acl/findPrincipals/permission"/>
-      </genOperations>
-    </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//StringToObjectMap">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/key"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//StringToObjectMap/value"/>
@@ -146,6 +121,11 @@
     </genClasses>
     <genClasses ecoreClass="elwiki_data.ecore#//TagsList">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//TagsList/tag"/>
+    </genClasses>
+    <genClasses ecoreClass="elwiki_data.ecore#//AclInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/allow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/permission"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/roles"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

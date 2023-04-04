@@ -38,8 +38,6 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * attempts to log in into the same account.  Every login attempt is recorded, and stored for a while (currently ten minutes), and each
  * login attempt during that time incurs a penalty of 2^login attempts milliseconds - that is, 10 login attempts incur a login penalty
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
- * 
- * @since 2.3
  */
 public interface AuthenticationManager {
 

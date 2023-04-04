@@ -54,7 +54,6 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
@@ -83,8 +82,6 @@ import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -154,9 +151,6 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	@WikiServiceReference
 	private Engine m_engine;
-
-	@WikiServiceReference
-	private AclManager aclManager;
 
 	@WikiServiceReference
 	private ReferenceManager referenceManager;
@@ -897,6 +891,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
      * @param newPrincipal the Principal that should receive the old Principals' permissions
      * @return <code>true</code> if the Acl was actually changed; <code>false</code> otherwise
      */
+	/*:FVK: TODO: old ACL code.
     protected boolean changeAcl( final WikiPage page, final Principal[] oldPrincipals, final Principal newPrincipal ) {
         final Acl acl = page.getAcl();
         boolean pageChanged = false;
@@ -929,6 +924,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         }
         return pageChanged;
     }
+    */
 
     /**
      * {@inheritDoc}
@@ -1036,6 +1032,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
                 int pagesChanged = 0;
                 final Collection< WikiPage > pages = getAllPages();
                 for( final WikiPage page : pages ) {
+                	//:FVK: TODO:...
+                	/* here old code (with page's ACL
                     final boolean aclChanged = changeAcl( page, oldPrincipals, newPrincipal );
                     if( aclChanged ) {
                         // If the Acl needed changing, change it now
@@ -1046,6 +1044,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
                         }
                         pagesChanged++;
                     }
+                	*/
                 }
                 log.info( "Profile name change for '" + newPrincipal.toString() + "' caused " + pagesChanged + " page ACLs to change also." );
             } catch( final ProviderException e ) {

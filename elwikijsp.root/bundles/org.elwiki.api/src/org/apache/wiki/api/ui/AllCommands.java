@@ -41,6 +41,8 @@ public interface AllCommands {
             PageCommand.DELETE,
             PageCommand.DIFF,
             PageCommand.EDIT,
+            PageCommand.PAGE_ACL,
+            PageCommand.EDIT_ACL,
             PageCommand.INFO,
             PageCommand.NONE,
             PageCommand.OTHER,

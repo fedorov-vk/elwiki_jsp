@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.persist.internal.PluginActivator;
-import org.elwiki.data.persist.json.converters.AclConverter;
+import org.elwiki.data.persist.json.converters.AclInfoConverter;
 import org.elwiki.data.persist.json.converters.AttachmentContentConverter;
 import org.elwiki.data.persist.json.converters.DateConverter;
 import org.elwiki.data.persist.json.converters.PageAttachmentConverter;
@@ -17,7 +17,7 @@ import org.elwiki.data.persist.json.converters.PageContentConverter;
 import org.elwiki.data.persist.json.converters.PageReferenceConverter;
 import org.elwiki.data.persist.json.converters.PagesStoreConverter;
 import org.elwiki.data.persist.json.converters.WikiPageConverter;
-import org.elwiki_data.Acl;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -50,7 +50,7 @@ public class JsonSerialiser {
 				.registerTypeAdapter(PageContent.class, new PageContentConverter())
 				.registerTypeAdapter(PageAttachment.class, new PageAttachmentConverter())
 				.registerTypeAdapter(AttachmentContent.class, new AttachmentContentConverter())
-				.registerTypeAdapter(Acl.class, new AclConverter())
+				.registerTypeAdapter(AclInfo.class, new AclInfoConverter())
 				.registerTypeAdapter(Date.class, new DateConverter())
 				.create(); //@formatter:on
 

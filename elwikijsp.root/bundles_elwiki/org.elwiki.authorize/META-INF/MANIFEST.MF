@@ -47,8 +47,7 @@ Export-Package: org.elwiki.authorize;
    javax.security.auth,
    javax.security.auth.spi,
    org.apache.log4j"
-Service-Component: OSGI-INF/elwiki.DefaultAclManager.xml,
- OSGI-INF/elwiki.DefaultAuthenticationManager.xml,
+Service-Component: OSGI-INF/elwiki.DefaultAuthenticationManager.xml,
  OSGI-INF/elwiki.DefaultAuthorizationManager.xml,
  OSGI-INF/elwiki.DefaultAccountManager.xml,
  OSGI-INF/elwiki.DefaultAccountRegistry.xml

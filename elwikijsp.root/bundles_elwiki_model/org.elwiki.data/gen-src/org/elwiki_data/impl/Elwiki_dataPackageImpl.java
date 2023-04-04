@@ -6,9 +6,6 @@ import java.lang.Cloneable;
 import java.lang.Comparable;
 import java.lang.Object;
 
-import java.security.Permission;
-import java.security.Principal;
-
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +18,7 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
@@ -117,27 +113,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass aclEntryEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass principalEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass aclEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass stringToObjectMapEClass = null;
 
 	/**
@@ -159,6 +134,13 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass aclInfoEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType arrayStringEDataType = null;
 
 	/**
@@ -167,27 +149,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	private EDataType accessListEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType principalObjectEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType arrayPrincipalEDataType = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EDataType permissionObjectEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -402,18 +363,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EReference getWikiPage_Acl() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(13);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getWikiPage_WebLog() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(14);
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -423,7 +374,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getWikiPage_Attributes() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(15);
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -433,7 +384,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EReference getWikiPage_UnknownPages() {
-		return (EReference)wikiPageEClass.getEStructuralFeatures().get(16);
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(15);
 	}
 
 	/**
@@ -443,7 +394,17 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 */
 	@Override
 	public EAttribute getWikiPage_Tags() {
-		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(17);
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(16);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getWikiPage_AclInfos() {
+		return (EReference)wikiPageEClass.getEStructuralFeatures().get(17);
 	}
 
 	/**
@@ -932,106 +893,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EClass getAclEntry() {
-		return aclEntryEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAclEntry_Principal() {
-		return (EAttribute)aclEntryEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAclEntry_Permission() {
-		return (EAttribute)aclEntryEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getAclEntry__CheckPermission__Permission() {
-		return aclEntryEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getAclEntry__FindPermission__Permission() {
-		return aclEntryEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getPrincipal() {
-		return principalEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getAcl() {
-		return aclEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getAcl_AclEntries() {
-		return (EReference)aclEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getAcl__GetEntry__Principal() {
-		return aclEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getAcl__FindPrincipals__Permission() {
-		return aclEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getStringToObjectMap() {
 		return stringToObjectMapEClass;
 	}
@@ -1112,6 +973,46 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EClass getAclInfo() {
+		return aclInfoEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAclInfo_Allow() {
+		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAclInfo_Permission() {
+		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAclInfo_Roles() {
+		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getArrayString() {
 		return arrayStringEDataType;
 	}
@@ -1124,36 +1025,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	@Override
 	public EDataType getAccessList() {
 		return accessListEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getPrincipalObject() {
-		return principalObjectEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getArrayPrincipal() {
-		return arrayPrincipalEDataType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EDataType getPermissionObject() {
-		return permissionObjectEDataType;
 	}
 
 	/**
@@ -1209,11 +1080,11 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(wikiPageEClass, WIKI_PAGE__PARENT);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__OLD_PARENTS);
 		createEReference(wikiPageEClass, WIKI_PAGE__PAGE_REFERENCES);
-		createEReference(wikiPageEClass, WIKI_PAGE__ACL);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__WEB_LOG);
 		createEReference(wikiPageEClass, WIKI_PAGE__ATTRIBUTES);
 		createEReference(wikiPageEClass, WIKI_PAGE__UNKNOWN_PAGES);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__TAGS);
+		createEReference(wikiPageEClass, WIKI_PAGE__ACL_INFOS);
 		createEOperation(wikiPageEClass, WIKI_PAGE___COMPARE_TO__OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___CLONE);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_LAST_MODIFIED_DATE);
@@ -1272,19 +1143,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEAttribute(pageReferenceEClass, PAGE_REFERENCE__PAGE_ID);
 		createEReference(pageReferenceEClass, PAGE_REFERENCE__WIKIPAGE);
 
-		aclEntryEClass = createEClass(ACL_ENTRY);
-		createEAttribute(aclEntryEClass, ACL_ENTRY__PRINCIPAL);
-		createEAttribute(aclEntryEClass, ACL_ENTRY__PERMISSION);
-		createEOperation(aclEntryEClass, ACL_ENTRY___CHECK_PERMISSION__PERMISSION);
-		createEOperation(aclEntryEClass, ACL_ENTRY___FIND_PERMISSION__PERMISSION);
-
-		principalEClass = createEClass(PRINCIPAL);
-
-		aclEClass = createEClass(ACL);
-		createEReference(aclEClass, ACL__ACL_ENTRIES);
-		createEOperation(aclEClass, ACL___GET_ENTRY__PRINCIPAL);
-		createEOperation(aclEClass, ACL___FIND_PRINCIPALS__PERMISSION);
-
 		stringToObjectMapEClass = createEClass(STRING_TO_OBJECT_MAP);
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__KEY);
 		createEAttribute(stringToObjectMapEClass, STRING_TO_OBJECT_MAP__VALUE);
@@ -1296,12 +1154,14 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		tagsListEClass = createEClass(TAGS_LIST);
 		createEAttribute(tagsListEClass, TAGS_LIST__TAG);
 
+		aclInfoEClass = createEClass(ACL_INFO);
+		createEAttribute(aclInfoEClass, ACL_INFO__ALLOW);
+		createEAttribute(aclInfoEClass, ACL_INFO__PERMISSION);
+		createEAttribute(aclInfoEClass, ACL_INFO__ROLES);
+
 		// Create data types
 		arrayStringEDataType = createEDataType(ARRAY_STRING);
 		accessListEDataType = createEDataType(ACCESS_LIST);
-		principalObjectEDataType = createEDataType(PRINCIPAL_OBJECT);
-		arrayPrincipalEDataType = createEDataType(ARRAY_PRINCIPAL);
-		permissionObjectEDataType = createEDataType(PERMISSION_OBJECT);
 		listPageContentEDataType = createEDataType(LIST_PAGE_CONTENT);
 	}
 
@@ -1353,12 +1213,12 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEReference(getWikiPage_Parent(), this.getWikiPage(), this.getWikiPage_Children(), "parent", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_OldParents(), this.getArrayString(), "oldParents", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_PageReferences(), this.getPageReference(), this.getPageReference_Wikipage(), "pageReferences", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getWikiPage_Acl(), this.getAcl(), null, "acl", null, 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_WebLog(), ecorePackage.getEBoolean(), "webLog", "false", 0, 1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_Attributes(), this.getStringToObjectMap(), null, "attributes", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		getWikiPage_Attributes().getEKeys().add(this.getStringToObjectMap_Key());
 		initEReference(getWikiPage_UnknownPages(), this.getUnknownPage(), this.getUnknownPage_Wikipage(), "unknownPages", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Tags(), ecorePackage.getEString(), "tags", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getWikiPage_AclInfos(), this.getAclInfo(), null, "aclInfos", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getWikiPage__CompareTo__Object(), ecorePackage.getEInt(), "compareTo", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getObject(), "obj", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -1442,27 +1302,6 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEAttribute(getPageReference_PageId(), ecorePackage.getEString(), "pageId", "", 0, 1, PageReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPageReference_Wikipage(), this.getWikiPage(), this.getWikiPage_PageReferences(), "wikipage", null, 0, 1, PageReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(aclEntryEClass, AclEntry.class, "AclEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAclEntry_Principal(), this.getPrincipalObject(), "principal", null, 0, 1, AclEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAclEntry_Permission(), this.getPermissionObject(), "permission", null, 0, -1, AclEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		op = initEOperation(getAclEntry__CheckPermission__Permission(), ecorePackage.getEBooleanObject(), "checkPermission", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getPermissionObject(), "permission", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getAclEntry__FindPermission__Permission(), this.getPermissionObject(), "findPermission", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getPermissionObject(), "p", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		initEClass(principalEClass, Principal.class, "Principal", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(aclEClass, Acl.class, "Acl", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAcl_AclEntries(), this.getAclEntry(), null, "aclEntries", null, 0, -1, Acl.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		op = initEOperation(getAcl__GetEntry__Principal(), this.getAclEntry(), "getEntry", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getPrincipalObject(), "principal", 0, 1, IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getAcl__FindPrincipals__Permission(), this.getArrayPrincipal(), "findPrincipals", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getPermissionObject(), "permission", 0, 1, IS_UNIQUE, IS_ORDERED);
-
 		initEClass(stringToObjectMapEClass, Map.Entry.class, "StringToObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStringToObjectMap_Key(), ecorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToObjectMap_Value(), ecorePackage.getEJavaObject(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1474,12 +1313,14 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(tagsListEClass, TagsList.class, "TagsList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTagsList_Tag(), ecorePackage.getEString(), "tag", null, 0, 1, TagsList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
+		initEClass(aclInfoEClass, AclInfo.class, "AclInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAclInfo_Allow(), ecorePackage.getEBoolean(), "allow", "true", 0, 1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAclInfo_Permission(), ecorePackage.getEString(), "permission", null, 0, 1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAclInfo_Roles(), ecorePackage.getEString(), "roles", null, 0, -1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Initialize data types
 		initEDataType(arrayStringEDataType, String[].class, "ArrayString", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(accessListEDataType, Object.class, "AccessList", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(principalObjectEDataType, Principal.class, "PrincipalObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(arrayPrincipalEDataType, Principal[].class, "ArrayPrincipal", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(permissionObjectEDataType, Permission.class, "PermissionObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(listPageContentEDataType, List.class, "ListPageContent", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<org.elwiki_data.PageContent>");
 
 		// Create resource

@@ -217,6 +217,23 @@
               "id": "1000"
             }
           ],
+          "aclInfos": [
+            {
+              "isAllow": true,
+              "permission": "view",
+              "roles": ["admin", "vfedorov"]
+            },
+            {
+              "isAllow": true,
+              "permission": "edit",
+              "roles": ["admin", "vfedorov"]
+            },
+            {
+              "isAllow": true,
+              "permission": "delete",
+              "roles": ["admin", "vfedorov"]
+            }
+          ],
           "children": [],
           "attributes": [],
           "contents": [

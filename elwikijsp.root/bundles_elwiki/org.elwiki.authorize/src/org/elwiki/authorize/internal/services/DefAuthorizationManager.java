@@ -28,8 +28,10 @@ import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +46,6 @@ import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.auth.acl.AclManager;
 import org.apache.wiki.pages0.PageManager;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -66,8 +67,8 @@ import org.elwiki.data.authorize.Aprincipal;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki_data.Acl;
-import org.elwiki_data.AclEntry;
+import org.elwiki.permissions.PermissionFactory;
+import org.elwiki_data.AclInfo;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -188,9 +189,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 
 	@WikiServiceReference
 	private AccountManager accountManager;
-
-	@WikiServiceReference
-	private AclManager aclManager;
 
 	@WikiServiceReference
 	PageManager pageManager;
@@ -382,38 +380,25 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		//
 		String pageName = ((PagePermission) permission).getPage();
 		WikiPage page = pageManager.getPage(pageName);
-		Acl acl = (page == null) ? null : this.aclManager.getPermissions(page);
-		if (page == null || acl == null || acl.getAclEntries().isEmpty()) {
+		if (page == null || page.getAclInfos().size() == 0) {
 			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
 					WikiSecurityEventTopic.PROPERTY_USER, user, //
 					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
-		
 
 		//
 		//  Next, iterate through the Principal objects assigned
 		//  this permission. If the context's subject possesses
 		//  any of these, the action is allowed.
 
-		Principal[] aclPrincipals = acl.findPrincipals(permission);
+		List<Principal> aclPrincipals = findPrincipals(page, permission);
 
 		log.debug("Checking ACL entries...");
-		log.debug("Acl for this page is: " + acl);
-		log.debug("Checking for principals: " + Arrays.toString(aclPrincipals));
+		log.debug("Checking for principals: " + aclPrincipals.toString());
 		log.debug("Permission: " + permission);
 
 		for (Principal aclPrincipal : aclPrincipals) {
-			// If the ACL principal we're looking at is unresolved,
-			// try to resolve it here & correct the Acl
-			if (aclPrincipal instanceof UnresolvedPrincipal) {
-				AclEntry aclEntry = acl.getEntry(aclPrincipal);
-				aclPrincipal = resolvePrincipal(aclPrincipal.getName());
-				if (aclEntry != null && !(aclPrincipal instanceof UnresolvedPrincipal)) {
-					aclEntry.setPrincipal(aclPrincipal);
-				}
-			}
-
 			if (hasRoleOrPrincipal(session, aclPrincipal)) {
 				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
 						WikiSecurityEventTopic.PROPERTY_USER, user, //
@@ -426,6 +411,30 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 				WikiSecurityEventTopic.PROPERTY_USER, user, //
 				WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 		return false;
+	}
+
+	/**
+	 * Get Principals of page ACL implied to specified permission.
+	 * 
+	 * @param page
+	 * @param permission
+	 * @return
+	 */
+	protected List<Principal> findPrincipals(WikiPage page, Permission permission) {
+		List<Principal> principals = new ArrayList<>();
+
+		for(AclInfo aclInfo : page.getAclInfos()) {
+			String action = aclInfo.getPermission();
+			PagePermission pagePermission = PermissionFactory.getPagePermission(page, action);
+			if (pagePermission.implies(permission)) {
+				for (String role : aclInfo.getRoles()) {
+					Principal principal = resolvePrincipal(role);
+					principals.add(principal);
+				}
+			}
+		}
+
+		return principals;
 	}
 
 	/* (non-Javadoc)
