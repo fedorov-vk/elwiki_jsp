@@ -35,9 +35,7 @@ public class CreateGroupCmdCode extends CmdCode {
 		
 		// Get wiki context and check for authorization
 		WikiContext wikiContext = Wiki.context().create(wiki, httpRequest, WikiContext.GROUP_EDIT);
-		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
-			return;
-		}
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();

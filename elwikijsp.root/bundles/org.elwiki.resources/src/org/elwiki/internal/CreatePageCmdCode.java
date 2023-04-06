@@ -37,10 +37,10 @@ public class CreatePageCmdCode extends CmdCode {
 			String redirectedUrl;
 			switch (action) {
 			case "create":
-				redirectedUrl = "cmd.view?pageId=" + newPage.getId();
+				redirectedUrl = "cmd.view?pageId=" + newPage.getId(); //:FVK: workaround - here need refer to ContextEnum.
 				break;
 			case "createedit":
-				redirectedUrl = "cmd.edit?pageId=" + newPage.getId();
+				redirectedUrl = "cmd.edit?pageId=" + newPage.getId(); //:FVK: workaround - here need refer to ContextEnum.
 				break;
 			default: // :FVK: wrong case.
 				throw new Exception("Incorrect form action.");

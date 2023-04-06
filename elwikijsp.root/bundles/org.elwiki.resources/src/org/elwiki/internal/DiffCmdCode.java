@@ -42,9 +42,7 @@ public class DiffCmdCode extends CmdCode {
 
 		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
 		
-		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
-			return;
-		}
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 		if (wikiContext.getCommand().getTarget() == null) {
 			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;

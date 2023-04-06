@@ -1,6 +1,7 @@
 package org.elwiki.web.jsp;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 
 import javax.servlet.Filter;
@@ -16,22 +17,21 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
-import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.ui.AllCommands;
+import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.Platform;
 import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.web.support.ErrorHandlingServlet;
+import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
-import org.osgi.framework.Constants;
 
 //@formatter:off
 /**
@@ -43,7 +43,9 @@ import org.osgi.framework.Constants;
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_PATTERN + "=/*",
 		HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 		+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)",
-		Constants.SERVICE_RANKING + ":Integer=100"
+		Constants.SERVICE_RANKING + ":Integer=100",
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_DISPATCHER + "=" + HttpWhiteboardConstants.DISPATCHER_REQUEST,
+		HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_DISPATCHER + "=" + HttpWhiteboardConstants.DISPATCHER_FORWARD
 		},
     scope=ServiceScope.PROTOTYPE,
     name = "web.JspServletFilter"
@@ -107,7 +109,10 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			// WatchDog.getCurrentWatchDog( m_engine );
 			boolean isAjaxPage = false;
 
-			String uri = httpRequest.getRequestURI();
+			String isForward = (String) httpRequest.getAttribute(WikiContext.ATTR_FORWARD_REQUEST);
+			String uri = (isForward == null) ? httpRequest.getRequestURI()
+					: new URI(httpRequest.getRequestURL().toString()).getPath();
+
 			log.debug("◄►doFilter◄► " + uri);
 			if (uri.startsWith("/cmd.")) {
 				// catch URI "/cmd.*"
@@ -123,7 +128,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 				return;
 			}
 
-			/* Create Wiki context according to required URI.
+			/* Create Wiki context according to required URI. Stash it into HTTP request.
 			 */
 			ContextEnum contextEnum = getContextEnum(uri.substring(1)); // URI without first symbol '/'.
 			WikiContext wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());

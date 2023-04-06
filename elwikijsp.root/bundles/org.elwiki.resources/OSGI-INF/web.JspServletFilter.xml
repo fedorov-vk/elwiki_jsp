@@ -3,6 +3,9 @@
    <property name="osgi.http.whiteboard.filter.pattern" value="/*"/>
    <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <property name="service.ranking" type="Integer" value="100"/>
+   <property name="osgi.http.whiteboard.filter.dispatcher" type="String">REQUEST
+FORWARD
+   </property>
    <service scope="prototype">
       <provide interface="javax.servlet.Filter"/>
    </service>

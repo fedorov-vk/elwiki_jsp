@@ -33,9 +33,7 @@ public class EditGroupCmdCode extends CmdCode {
 		AccountManager accountManager = wiki.getManager(AccountManager.class);
 
 		// Check for authorization
-		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
-			return;
-		}
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 
 		// Extract the current user, group name, members and action attributes
 		Session wikiSession = wikiContext.getWikiSession();

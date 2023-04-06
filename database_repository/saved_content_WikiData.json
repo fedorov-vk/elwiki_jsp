@@ -5,7 +5,6 @@
   "pages": [
     {
       "id": "w13",
-      "lastVersion": 0,
       "name": "UndefinedPages",
       "description": "",
       "alias": "",
@@ -28,11 +27,11 @@
           "content": "Вот страницы, которые еще не были созданы. Почему бы Вам не создать некоторые?\n\n[{INSERT UndefinedPagesPlugin}]\n\n(Назад к [Main | @1000]).\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w107",
-      "lastVersion": 0,
       "name": "CSSThemeDark",
       "description": "",
       "alias": "",
@@ -48,14 +47,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "-",
-          "content": "%%add-css\n\n/* Inspired by:  https://medium.com/@mwichary/dark-theme-in-a-day-3518dde2955a. Adapted for JSPWIKI,  as delta on top of haddock.css.   */\n\nhtml {\n  /*red / ...\n  --hue: 10;\n  --accent-hue: 185;\n  */\n  /*green / ...\n  --hue: 110;\n  --accent-hue: 285;\n  */\n  /* blue / orange */\n  --hue: 210;\n  --accent-hue: 25;\n\n  --text-color-normal: hsl(var(--hue), 10%, 62%);\n  --text-color-light: hsl(var(--hue), 15%, 35%);\n  --text-color-richer: hsl(var(--hue), 50%, 72%);\n  --text-color-highlight: hsl(var(--accent-hue), 70%, 45%);\n\n  --link-color: hsl(var(--accent-hue), 90%, 70%);\n\n  --accent-color: hsl(var(--accent-hue), 100%, 70%);\n  --error-color: rgb(240, 50, 50);\n\n  --button-background: hsl(var(--hue), 63%, 43%);\n  --button-text-color: black;\n\n  --background: hsla(var(--hue), 20%, 12%, 0.9);\n  --background-sidebar: hsla(var(--hue), 20%, 28%, 0.5);\n  --background-light: hsla(var(--hue), 20%, 28%, 0.9);\n  --background-lighter: hsla(var(--hue), 20%, 32%, 0.9);\n\n  --background-dropdown: hsla(var(--hue), 20%, 20%, 0.95);\n  --background-dialog: hsla(var(--hue), 20%, 20%, 0.95);\n\n  --border-color: var(--background-lighter);\n\n  --context-primary: #0088cc;\n  --context-success: #47a447;\n  --context-info: #5bc0de;\n  --context-warning: #ed9c28;\n  --context-error: #d53f3a;\n  --color-black: #111;\n  --color-white: #fff;\n}\n\n::selection {\n  color:var(--accent-color);\n  background-color: var(--color-black);\n}\n\n/* --- BOOTSTRAP --- */\n\n.panel {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.panel-default .panel-heading {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:inherit;\n}\n\n.list-group-item {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n\n.nav-tabs {\n  border-color: var(--border-color);\n}\n.nav-tabs \u003e li \u003e a {\n  color:inherit;\n}\n.nav-tabs \u003e li \u003e a:hover {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:inherit;\n}\n.nav-tabs \u003e li.active \u003e a,\n.nav-tabs \u003e li.active {\n  background:transparent;\n  color:var(--text-color-richer);\n  border-color: var(--border-color);\n  border-bottom-color: var(--background);\n}\n.nav-tabs \u003e li.active \u003e a:hover,\n.nav-tabs \u003e li.active \u003e a:focus {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n/*.nav-pills \u003e li.active \u003e a,\n.nav-pills \u003e li.active \u003e a:hover,\n.nav-pills \u003e li.active \u003e a:focus {\n\n}*/\n.nav \u003e li \u003e a:hover, .nav \u003e li \u003e a:focus {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n\n.btn-default,\n.default {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n.btn:hover, .btn:focus, .btn.focus,\n.btn-default:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n.btn.disabled:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n}\n.btn-default:active,\n.btn-default:active:hover,\n.btn-default.active,\n.btn-default.active:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--accent-color);\n}\n\n.dropdown-menu {\n  background-color: var(--background-dropdown);\n  border-color: var(--border-color);\n}\n.dropdown-header {\n  color:var(--text-color-richer);\n}\n.dropdown-menu .divider {\n  background-color: var(--border-color);\n}\n.dropdown-menu \u003e li \u003e a {\n  color:var(--text-color-normal);\n}\n.dropdown-menu \u003e li \u003e a:hover {\n  background-color: var(--background-lighter);\n  color:inherit;\n}\n\n.form-control {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.form-control:focus {\n  border-color: var(--accent-color);\n}\n.form-control[[disabled] {\n  background-color: transparent;\n  border-color: var(--border-color);\n}\n.form-frame {\n  border-color: var(--border-color);\n}\n\nselect,\n.form-group select {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-normal);\n}\n\n.modal {\n  background-color: var(--background-dropdown);\n  color:var(--text-color-normal);\n}\n\n/*pagination.less*/\n.pagination {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.pagination a {\n  color:var(--link-color);\n  text-decoration:none;\n}\n.pagination .cursor,\n.pagination a:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color: var(--accent-color);\n}\n\n/* --- JSPWiki --- */\n\n/* --- variables.less --- */\n\n/* --- type.less --- */\n\nhr,.hr {\n  border-color: var(--border-color);\n}\n\nmark, .highlight {\n  background-color: var(--accent-color) !important;\n  color:var(--text-color-highlight);\n}\n\nspan.text-white, div.text-white, .bg.dark + .bg-overlay { color:var(--text-color-normal;); }\n/*span.text-black, div.text-black, .bg.light + .bg-overlay { color:(var(--text-???); } */\n\n.text-primary { color: var(--context-primary); }\n.text-success { color: var(--context-success); }\n.text-info { color: var(--context-info); }\n.text-warning { color: var(--context-warning); }\n.text-error,\n.text-danger { color: var(--context-error); }\n\n/* primary */\n.panel-primary \u003e .panel-heading,\n.bg-primary {\n  background-color: var(--context-primary);\n  border-color: var(--context-primary);\n  color:var(--color-white);\n}\n.panel-primary \u003e .panel-heading a:link,\n.bg-primary a:link {\n  color:var(--color-black);\n}\n/* success */\n.panel-success \u003e .panel-heading,\n.success,\n.bg-success {\n  background-color: var(--context-success);\n  border-color: var(--context-success);\n  color:var(--color-black);\n}\n.panel-success \u003e .panel-heading a:link,\n.success a:link,\n.bg-success a:link {\n  color:inherit;\n  text-decoration:underline;\n}\n/* info */\n.panel-info \u003e .panel-heading,\n.info, .information,\n.bg-info  {\n  background-color: var(--context-info);\n  border-color: var(--context-info);\n  color:var(--color-black);\n}\n.panel-info \u003e .panel-heading a:link,\n.info a:link, .information a:link,\n.bg-info a:link {\n  color:inherit; \n  text-decoration:underline;\n}\n/* warning */\n.panel-warning \u003e .panel-heading,\n.alert-warning,\n.warning,\n.bg-warning {\n  background-color: var(--context-warning);\n  border-color: var(--context-warning);\n  color:var(--color-black);\n}\n.panel-warning \u003e .panel-heading a:link,\n.alert-warning a:link,\n.warning a:link,\n.bg-warning  a:link {\n  color:inherit;\n  text-decoration:underline;\n}\n/* danger, error */\n.panel-danger \u003e .panel-heading,\n.error,.danger,\n.bg-danger  {\n  background-color: var(--context-error);\n  border-color: var(--context-error);\n  color:var(--color-black);\n}\n.panel-danger \u003e .panel-heading a:link,\n.error a:link,.danger a:link,\n.bg-danger a:link  {\n  color:inherit;\n  text-decoration:underline;\n}\n\nspan.label { color:var(--color-black); }\n\npre {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n\ncode,\ntt {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n\na.list-group-item:hover,\n.list-hover li:hover {\n  background-color:var(--background-lighter);\n  color:inherit;\n}\n\n.tree ul li::before,\n.tree ul li::after {\n  background: var(--border-color);\n}\n\n.list-hover li:hover {\n  background-color:var(--background-lighter);\n}\n\n.hover {\n    background-color:var(--background-lighter);\n}\n\na.slimbox-link:after,\n.slimbox-btn:before,\na:visited,\na:link { color:var(--link-color); }\n\na.createpage {\n  color:var(--error-color);\n}\n\n.interwiki-raw::after,\na.interwiki[[href$\u003d\"skin\u003draw\"]::after,\n.interwiki-reader::after,\na.interwiki[[href$\u003d\"skin\u003dreader\"]::after,\n.interwiki-edit::after,\na.interwiki[[href*\u003d\"Edit.jsp?page\u003d\"]::after,\n.interwiki-group::after,\na.interwiki[[href*\u003d\"Group.jsp?group\u003d\"]::after,\na.interwiki[[href^\u003d\"rss.jsp\"]::after {\n    background-color:var(--background-lighter);\n    color:var(--accent-color);\n}\n\n.editsection,\n.hashlink {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--link-color);\n}\nh2 .editsection:hover,\nh3 .editsection:hover,\nh4 .editsection:hover,\nh2 .hashlink:hover,\nh3 .hashlink:hover,\nh4 .hashlink:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--link-color);\n  opacity:1;\n}\n\ndiv.dropcaps  \u003e span.dropcaps {\n  color: var(--text-color-highlight);\n}\nblockquote,\n.dialog .quote-item {\n  border-color:var(--text-color-highlight);\n}\n.page-break {\n  border-color: var(--border-color);\n}\n\n\n/* --- grid.less --- */\n/* --- tables.less --- */\n\n.table \u003e thead \u003e tr \u003e th,\n.table \u003e tbody \u003e tr \u003e th,\n.table \u003e tfoot \u003e tr \u003e th,\n.table \u003e thead \u003e tr \u003e td,\n.table \u003e tbody \u003e tr \u003e td,\n.table \u003e tfoot \u003e tr \u003e td {\n  border-color: var(--border-color);\n}\n\n.wikitable \u003e thead \u003e tr \u003e th,\n.wikitable \u003e tbody \u003e tr \u003e th,\n.wikitable \u003e tfoot \u003e tr \u003e th,\n.wikitable \u003e thead \u003e tr \u003e td,\n.wikitable \u003e tbody \u003e tr \u003e td,\n.wikitable \u003e tfoot \u003e tr \u003e td,\n.wikitable tr:first-child th {\n  border-color: var(--border-color);\n}\n\n.table-bordered,\n.table-bordered tr:first-child th,\n.table-bordered tr:first-child td {\n  border-color: var(--border-color);\n}\n.table-bordered \u003e thead \u003e tr \u003e th,\n.table-bordered \u003e tbody \u003e tr \u003e th,\n.table-bordered \u003e tfoot \u003e tr \u003e th,\n.table-bordered \u003e thead \u003e tr \u003e td,\n.table-bordered \u003e tbody \u003e tr \u003e td,\n.table-bordered \u003e tfoot \u003e tr \u003e td {\n  border-color: var(--border-color);\n}\n\n.table-hover \u003e tbody \u003e tr:nth-of-type(odd):hover,\n.table-hover \u003e tbody \u003e tr:nth-child(odd):hover \u003e td,\n.table-hover \u003e tbody \u003e tr:nth-child(odd):hover \u003e th,\n.table-hover \u003e tbody \u003e tr:hover {\n  background-color: var(--background-lighter);\n}\n\n.table-striped \u003e tbody \u003e tr:nth-of-type(odd) ,\n.table-striped \u003e tbody \u003e tr:nth-child(odd) \u003e td,\n.table-striped \u003e tbody \u003e tr:nth-child(odd) \u003e th {\n  background-color: var(--background-light);\n}\n[[class*\u003dzebra] .odd {\n  background-color: var(--background-light);\n}\n\n\n/* --- TableX.Sort.less --- */\n.sortable th:hover {\n  background-color: var(--background-lighter);;\n}\n.sortable th.up:after,\n.sortable th.up:hover:after {\n  border-bottom-color: var(--accent-color);\n  opacity:1;\n}\n.sortable th:hover:after,\n.sortable th.down:after,\n.sortable th.down:hover:after {\n  border-top-color: var(--accent-color);\n  opacity:1;\n}\n\n/* --- TableX.Filter.less --- */\n/* --- forms.less --- */\n/* --- modals.less --- */\n\n/* --- fontjspwiki/font-jspwiki.less --- */\n/* --- dropdown.less --- */\n\n/* --- pagination.less --- */\n/* --- Tips.less --- */\n.tip-link,\n.tip-link:hover {\n  color: var(--link-color);\n}\n/* --- Magnify.less --- */\n/* --- Viewer.less --- */\n/* --- Viewer.Slimbox.less --- */\n/* --- Viewer.Carousel.less --- */\n/* --- Template.View.less --- */\n.header, .footer {\n  background-image: -webkit-radial-gradient(circle, var(--background-light), var(--background));\n  background-image: radial-gradient(circle, var(--background-light), var(--background) );\n  color:var(--text-color-normal);\n}\na.logo { border-color: var(--border-color); }\n\n\ndiv.admin .formcontainer {\n  /*.default*/\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n.admin .formcontainer table {\n  border-color: var(--border-color);\n  /*\n      .table;\n      .table-bordered;\n      .table-striped;\n  */\n}\n.admin-user-form \u003e div#userlist .list-group-item.new-user{\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n\n\n\n/* --- Template.UserBox.less --- */\n.login-form {\n  background-color: var(--background-dialog);\n  border:1px solid var(--border-color);\n}\n.login-form hr { border-color:var(--border-color); }\n\n\n/* --- Template.SearchBox.less --- */\n/* --- Template.Nav.less --- */\n.badge,\n.header \u003e .navigation  .nav \u003e li \u003e a \u003e .badge {\n  background-color:var(--background-lighter);\n  color:var(--text-color-normal);\n}\n\n.header \u003e .navigation .nav .btn-xs .badge {\n  background-color: var(--background-lighter);\n}\n\n/* --- Template.Content.less --- */\nbody, .content {\n  background-color: var(--background);\n  color:var(--text-color-normal);\n  overflow-y: auto;\n}\n.content:after {\n  background: var(--background-sidebar);\n}\n/* --- Template.Attach.less --- */\n/* --- Template.Diff.less --- */\n.diffadd { background-color:var(--context-success); color:var(--color-black);  }\n.diffrem { background:var(--context-error); color:var(--color-black); }\n\n/* --- Template.Search.less --- */\n\nform#searchform2 + div \t.fragment {\n  color: var(--text-color-richer);\n}\nform#searchform2 + div .gb-bar {\n  background-color: var(--context-warning);\n}\n\n/* --- Template.Workflow.less --- */\n/* --- Template.Edit.less --- */\n\n.editform input[[type\u003d\"text\"]:focus,\n.dialog.find input[[type\u003d\"text\"]:focus,\n.editform textarea:focus,\n.dialog.find textarea:focus {\n  background-color:var(--background-lighter);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n.ajaxpreview {\n  border-color:var(--border-color);\n}\n.edit-area ~ .ajaxpreview {\n  border-left-color:var(--border-color);\n}\n\n/* --- Dialog.less --- */\n.dialog {\n  background-color: var(--background-dialog);\n  border-color: var(--border-color);\n}\n.dialog .caption {\n  border-color: var(--border-color);\n  color: var(--text-color-normal);\n}\n.dialog.selection .body .item:hover {\n  background-color: var(--background-lighter);\n}\n.dialog.selection .body .divider {\n  background-color: var(--border-color);\n}\n\n.dialog.find [[name\u003dtbTEXTSEL] {  /*same as selected text*/\n  color:var(--accent-color);\n  background-color: var(--color-black);\n}\n\n\n\n/* --- Template.Preview.less --- */\n\n/* --- ImagePlugin.less --- */\n/* --- IndexPlugin.less --- */\n\n.index .header {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n}\n.index .header:hover {\n  background-color:var(--background-light);\n}\n.index .header a {\n  color:var(--text-color-richer);\n}\n.index .header a:hover {\n  background-color:var(--background-lighter);\n}\n.index \u003e .section a {\n  color:var(--text-color-richer);\n}\n\n\n/* --- TOCPlugin.less --- */\n\n.toc ul li:hover {\n  background-color:var(--background-lighter);\n}\n\n/* --- WeblogPlugin.less --- */\n/* --- RecentChangesPlugin.less --- */\n\n.recentchanges .date {\n  border-color:var(--border-color);\n}\n/* --- CommentBox.less --- */\n\n\n/* --- GraphBar.less --- */\n.gb-group {\n  background-color:var(--background-light);\n  border:1px solid var(--border-color);\n}\n\n/* --- Tabs.less --- */\n/* --- Accordion.less --- */\n/* --- Columns.less --- */\n.columns.border,\n.columns.border \u003e .col:not(:last-child)  {\n  border-color:var(--border-color);\n}\n.columns.hover .col:hover {\n  background-color: var(--background-lighter);\n}\n\n\n/* --- Collapsible.less --- */\n.bullet, .bullet.clpse { border-left-color: var(--text-color-normal); }\n.bullet.clpse:hover { border-left-color: var(--text-color-richer); }\n\n.bullet.xpand { border-top-color: var(--text-color-normal); }\n.bullet.xpand:hover { border-top-color: var(--text-color-richer); }\n\n/* --- Category.less --- */\n.category-link {\n  border-color:var(--border-color);\n}\n/* --- Flip.less --- */\n/* --- Invisibles.less --- */\n/* --- prettify.less --- */\n  .prettify pre,  .prettify-nonum pre, pre.prettylines {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n  }\n  .pln { color: #cccccc; }  /* plain text */\n  .str { color: #99cc99; }  /* string content */\n  .kwd { color: #ffeea6; }  /* keyword */\n  .com { color: #8a8a80; }  /* comment */\n  .typ { color: #bbdaff; }  /* type name */\n  .lit { color: #FCA369; }  /* literal value */\n  .pun { color: #cda869; }  /* punctuation */\n  .opn { color: #ffffff; }  /* lisp open bracket */\n  .clo { color: #ffffff; }  /* lisp close bracket */\n  .tag { color: #78AAD6; }  /* markup tag name */\n  .atn { color: #ffc58f; }  /* markup attribute name */\n  .atv { color: #FFD479; }  /* markup attribute value */\n  .dec { color: #D6ACD6; }  /* declaration */\n  .var { color: #76D4D6; }  /* variable name */\n  .fun { color: #d6acd6; }  /* function name */\n\n/* --- responsive-viewport.less --- */\n/* --- print.less --- */\n\n/% \n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n\n/* Inspired by:  https://medium.com/@mwichary/dark-theme-in-a-day-3518dde2955a. Adapted for JSPWIKI,  as delta on top of haddock.css.   */\n\nhtml {\n  /*red / ...\n  --hue: 10;\n  --accent-hue: 185;\n  */\n  /*green / ...\n  --hue: 110;\n  --accent-hue: 285;\n  */\n  /* blue / orange */\n  --hue: 210;\n  --accent-hue: 25;\n\n  --text-color-normal: hsl(var(--hue), 10%, 62%);\n  --text-color-light: hsl(var(--hue), 15%, 35%);\n  --text-color-richer: hsl(var(--hue), 50%, 72%);\n  --text-color-highlight: hsl(var(--accent-hue), 70%, 45%);\n\n  --link-color: hsl(var(--accent-hue), 90%, 70%);\n\n  --accent-color: hsl(var(--accent-hue), 100%, 70%);\n  --error-color: rgb(240, 50, 50);\n\n  --button-background: hsl(var(--hue), 63%, 43%);\n  --button-text-color: black;\n\n  --background: hsla(var(--hue), 20%, 12%, 0.9);\n  --background-sidebar: hsla(var(--hue), 20%, 28%, 0.5);\n  --background-light: hsla(var(--hue), 20%, 28%, 0.9);\n  --background-lighter: hsla(var(--hue), 20%, 32%, 0.9);\n\n  --background-dropdown: hsla(var(--hue), 20%, 20%, 0.95);\n  --background-dialog: hsla(var(--hue), 20%, 20%, 0.95);\n\n  --border-color: var(--background-lighter);\n\n  --context-primary: #0088cc;\n  --context-success: #47a447;\n  --context-info: #5bc0de;\n  --context-warning: #ed9c28;\n  --context-error: #d53f3a;\n  --color-black: #111;\n  --color-white: #fff;\n}\n\n::selection {\n  color:var(--accent-color);\n  background-color: var(--color-black);\n}\n\n/* --- BOOTSTRAP --- */\n\n.panel {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.panel-default .panel-heading {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:inherit;\n}\n\n.list-group-item {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n\n.nav-tabs {\n  border-color: var(--border-color);\n}\n.nav-tabs \u003e li \u003e a {\n  color:inherit;\n}\n.nav-tabs \u003e li \u003e a:hover {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:inherit;\n}\n.nav-tabs \u003e li.active \u003e a,\n.nav-tabs \u003e li.active {\n  background:transparent;\n  color:var(--text-color-richer);\n  border-color: var(--border-color);\n  border-bottom-color: var(--background);\n}\n.nav-tabs \u003e li.active \u003e a:hover,\n.nav-tabs \u003e li.active \u003e a:focus {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n/*.nav-pills \u003e li.active \u003e a,\n.nav-pills \u003e li.active \u003e a:hover,\n.nav-pills \u003e li.active \u003e a:focus {\n\n}*/\n.nav \u003e li \u003e a:hover, .nav \u003e li \u003e a:focus {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n\n.btn-default,\n.default {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n.btn:hover, .btn:focus, .btn.focus,\n.btn-default:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n.btn.disabled:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n}\n.btn-default:active,\n.btn-default:active:hover,\n.btn-default.active,\n.btn-default.active:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--accent-color);\n}\n\n.dropdown-menu {\n  background-color: var(--background-dropdown);\n  border-color: var(--border-color);\n}\n.dropdown-header {\n  color:var(--text-color-richer);\n}\n.dropdown-menu .divider {\n  background-color: var(--border-color);\n}\n.dropdown-menu \u003e li \u003e a {\n  color:var(--text-color-normal);\n}\n.dropdown-menu \u003e li \u003e a:hover {\n  background-color: var(--background-lighter);\n  color:inherit;\n}\n\n.form-control {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.form-control:focus {\n  border-color: var(--accent-color);\n}\n.form-control[[disabled] {\n  background-color: transparent;\n  border-color: var(--border-color);\n}\n.form-frame {\n  border-color: var(--border-color);\n}\n\nselect,\n.form-group select {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-normal);\n}\n\n.modal {\n  background-color: var(--background-dropdown);\n  color:var(--text-color-normal);\n}\n\n/*pagination.less*/\n.pagination {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n}\n.pagination a {\n  color:var(--link-color);\n  text-decoration:none;\n}\n.pagination .cursor,\n.pagination a:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color: var(--accent-color);\n}\n\n/* --- JSPWiki --- */\n\n/* --- variables.less --- */\n\n/* --- type.less --- */\n\nhr,.hr {\n  border-color: var(--border-color);\n}\n\nmark, .highlight {\n  background-color: var(--accent-color) !important;\n  color:var(--text-color-highlight);\n}\n\nspan.text-white, div.text-white, .bg.dark + .bg-overlay { color:var(--text-color-normal;); }\n/*span.text-black, div.text-black, .bg.light + .bg-overlay { color:(var(--text-???); } */\n\n.text-primary { color: var(--context-primary); }\n.text-success { color: var(--context-success); }\n.text-info { color: var(--context-info); }\n.text-warning { color: var(--context-warning); }\n.text-error,\n.text-danger { color: var(--context-error); }\n\n/* primary */\n.panel-primary \u003e .panel-heading,\n.bg-primary {\n  background-color: var(--context-primary);\n  border-color: var(--context-primary);\n  color:var(--color-white);\n}\n.panel-primary \u003e .panel-heading a:link,\n.bg-primary a:link {\n  color:var(--color-black);\n}\n/* success */\n.panel-success \u003e .panel-heading,\n.success,\n.bg-success {\n  background-color: var(--context-success);\n  border-color: var(--context-success);\n  color:var(--color-black);\n}\n.panel-success \u003e .panel-heading a:link,\n.success a:link,\n.bg-success a:link {\n  color:inherit;\n  text-decoration:underline;\n}\n/* info */\n.panel-info \u003e .panel-heading,\n.info, .information,\n.bg-info  {\n  background-color: var(--context-info);\n  border-color: var(--context-info);\n  color:var(--color-black);\n}\n.panel-info \u003e .panel-heading a:link,\n.info a:link, .information a:link,\n.bg-info a:link {\n  color:inherit; \n  text-decoration:underline;\n}\n/* warning */\n.panel-warning \u003e .panel-heading,\n.alert-warning,\n.warning,\n.bg-warning {\n  background-color: var(--context-warning);\n  border-color: var(--context-warning);\n  color:var(--color-black);\n}\n.panel-warning \u003e .panel-heading a:link,\n.alert-warning a:link,\n.warning a:link,\n.bg-warning  a:link {\n  color:inherit;\n  text-decoration:underline;\n}\n/* danger, error */\n.panel-danger \u003e .panel-heading,\n.error,.danger,\n.bg-danger  {\n  background-color: var(--context-error);\n  border-color: var(--context-error);\n  color:var(--color-black);\n}\n.panel-danger \u003e .panel-heading a:link,\n.error a:link,.danger a:link,\n.bg-danger a:link  {\n  color:inherit;\n  text-decoration:underline;\n}\n\nspan.label { color:var(--color-black); }\n\npre {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n\ncode,\ntt {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n\na.list-group-item:hover,\n.list-hover li:hover {\n  background-color:var(--background-lighter);\n  color:inherit;\n}\n\n.tree ul li::before,\n.tree ul li::after {\n  background: var(--border-color);\n}\n\n.list-hover li:hover {\n  background-color:var(--background-lighter);\n}\n\n.hover {\n    background-color:var(--background-lighter);\n}\n\na.slimbox-link:after,\n.slimbox-btn:before,\na:visited,\na:link { color:var(--link-color); }\n\na.createpage {\n  color:var(--error-color);\n}\n\n.interwiki-raw::after,\na.interwiki[[href$\u003d\"skin\u003draw\"]::after,\n.interwiki-reader::after,\na.interwiki[[href$\u003d\"skin\u003dreader\"]::after,\n.interwiki-edit::after,\na.interwiki[[href*\u003d\"Edit.jsp?page\u003d\"]::after,\n.interwiki-group::after,\na.interwiki[[href*\u003d\"Group.jsp?group\u003d\"]::after,\na.interwiki[[href^\u003d\"rss.jsp\"]::after {\n    background-color:var(--background-lighter);\n    color:var(--accent-color);\n}\n\n.editsection,\n.hashlink {\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--link-color);\n}\nh2 .editsection:hover,\nh3 .editsection:hover,\nh4 .editsection:hover,\nh2 .hashlink:hover,\nh3 .hashlink:hover,\nh4 .hashlink:hover {\n  background-color: var(--background-lighter);\n  border-color: var(--border-color);\n  color:var(--link-color);\n  opacity:1;\n}\n\ndiv.dropcaps  \u003e span.dropcaps {\n  color: var(--text-color-highlight);\n}\nblockquote,\n.dialog .quote-item {\n  border-color:var(--text-color-highlight);\n}\n.page-break {\n  border-color: var(--border-color);\n}\n\n\n/* --- grid.less --- */\n/* --- tables.less --- */\n\n.table \u003e thead \u003e tr \u003e th,\n.table \u003e tbody \u003e tr \u003e th,\n.table \u003e tfoot \u003e tr \u003e th,\n.table \u003e thead \u003e tr \u003e td,\n.table \u003e tbody \u003e tr \u003e td,\n.table \u003e tfoot \u003e tr \u003e td {\n  border-color: var(--border-color);\n}\n\n.wikitable \u003e thead \u003e tr \u003e th,\n.wikitable \u003e tbody \u003e tr \u003e th,\n.wikitable \u003e tfoot \u003e tr \u003e th,\n.wikitable \u003e thead \u003e tr \u003e td,\n.wikitable \u003e tbody \u003e tr \u003e td,\n.wikitable \u003e tfoot \u003e tr \u003e td,\n.wikitable tr:first-child th {\n  border-color: var(--border-color);\n}\n\n.table-bordered,\n.table-bordered tr:first-child th,\n.table-bordered tr:first-child td {\n  border-color: var(--border-color);\n}\n.table-bordered \u003e thead \u003e tr \u003e th,\n.table-bordered \u003e tbody \u003e tr \u003e th,\n.table-bordered \u003e tfoot \u003e tr \u003e th,\n.table-bordered \u003e thead \u003e tr \u003e td,\n.table-bordered \u003e tbody \u003e tr \u003e td,\n.table-bordered \u003e tfoot \u003e tr \u003e td {\n  border-color: var(--border-color);\n}\n\n.table-hover \u003e tbody \u003e tr:nth-of-type(odd):hover,\n.table-hover \u003e tbody \u003e tr:nth-child(odd):hover \u003e td,\n.table-hover \u003e tbody \u003e tr:nth-child(odd):hover \u003e th,\n.table-hover \u003e tbody \u003e tr:hover {\n  background-color: var(--background-lighter);\n}\n\n.table-striped \u003e tbody \u003e tr:nth-of-type(odd) ,\n.table-striped \u003e tbody \u003e tr:nth-child(odd) \u003e td,\n.table-striped \u003e tbody \u003e tr:nth-child(odd) \u003e th {\n  background-color: var(--background-light);\n}\n[[class*\u003dzebra] .odd {\n  background-color: var(--background-light);\n}\n\n\n/* --- TableX.Sort.less --- */\n.sortable th:hover {\n  background-color: var(--background-lighter);;\n}\n.sortable th.up:after,\n.sortable th.up:hover:after {\n  border-bottom-color: var(--accent-color);\n  opacity:1;\n}\n.sortable th:hover:after,\n.sortable th.down:after,\n.sortable th.down:hover:after {\n  border-top-color: var(--accent-color);\n  opacity:1;\n}\n\n/* --- TableX.Filter.less --- */\n/* --- forms.less --- */\n/* --- modals.less --- */\n\n/* --- fontjspwiki/font-jspwiki.less --- */\n/* --- dropdown.less --- */\n\n/* --- pagination.less --- */\n/* --- Tips.less --- */\n.tip-link,\n.tip-link:hover {\n  color: var(--link-color);\n}\n/* --- Magnify.less --- */\n/* --- Viewer.less --- */\n/* --- Viewer.Slimbox.less --- */\n/* --- Viewer.Carousel.less --- */\n/* --- Template.View.less --- */\n.header, .footer {\n  background-image: -webkit-radial-gradient(circle, var(--background-light), var(--background));\n  background-image: radial-gradient(circle, var(--background-light), var(--background) );\n  color:var(--text-color-normal);\n}\na.logo { border-color: var(--border-color); }\n\n\ndiv.admin .formcontainer {\n  /*.default*/\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n.admin .formcontainer table {\n  border-color: var(--border-color);\n  /*\n      .table;\n      .table-bordered;\n      .table-striped;\n  */\n}\n.admin-user-form \u003e div#userlist .list-group-item.new-user{\n  background-color: var(--background-light);\n  border-color: var(--border-color);\n  color:var(--text-color-richer);\n}\n\n\n\n\n/* --- Template.UserBox.less --- */\n.login-form {\n  background-color: var(--background-dialog);\n  border:1px solid var(--border-color);\n}\n.login-form hr { border-color:var(--border-color); }\n\n\n/* --- Template.SearchBox.less --- */\n/* --- Template.Nav.less --- */\n.badge,\n.header \u003e .navigation  .nav \u003e li \u003e a \u003e .badge {\n  background-color:var(--background-lighter);\n  color:var(--text-color-normal);\n}\n\n.header \u003e .navigation .nav .btn-xs .badge {\n  background-color: var(--background-lighter);\n}\n\n/* --- Template.Content.less --- */\nbody, .content {\n  background-color: var(--background);\n  color:var(--text-color-normal);\n  overflow-y: auto;\n}\n.content:after {\n  background: var(--background-sidebar);\n}\n/* --- Template.Attach.less --- */\n/* --- Template.Diff.less --- */\n.diffadd { background-color:var(--context-success); color:var(--color-black);  }\n.diffrem { background:var(--context-error); color:var(--color-black); }\n\n/* --- Template.Search.less --- */\n\nform#searchform2 + div \t.fragment {\n  color: var(--text-color-richer);\n}\nform#searchform2 + div .gb-bar {\n  background-color: var(--context-warning);\n}\n\n/* --- Template.Workflow.less --- */\n/* --- Template.Edit.less --- */\n\n.editform input[[type\u003d\"text\"]:focus,\n.dialog.find input[[type\u003d\"text\"]:focus,\n.editform textarea:focus,\n.dialog.find textarea:focus {\n  background-color:var(--background-lighter);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n}\n.ajaxpreview {\n  border-color:var(--border-color);\n}\n.edit-area ~ .ajaxpreview {\n  border-left-color:var(--border-color);\n}\n\n/* --- Dialog.less --- */\n.dialog {\n  background-color: var(--background-dialog);\n  border-color: var(--border-color);\n}\n.dialog .caption {\n  border-color: var(--border-color);\n  color: var(--text-color-normal);\n}\n.dialog.selection .body .item:hover {\n  background-color: var(--background-lighter);\n}\n.dialog.selection .body .divider {\n  background-color: var(--border-color);\n}\n\n.dialog.find [[name\u003dtbTEXTSEL] {  /*same as selected text*/\n  color:var(--accent-color);\n  background-color: var(--color-black);\n}\n\n\n\n/* --- Template.Preview.less --- */\n\n/* --- ImagePlugin.less --- */\n/* --- IndexPlugin.less --- */\n\n.index .header {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n}\n.index .header:hover {\n  background-color:var(--background-light);\n}\n.index .header a {\n  color:var(--text-color-richer);\n}\n.index .header a:hover {\n  background-color:var(--background-lighter);\n}\n.index \u003e .section a {\n  color:var(--text-color-richer);\n}\n\n\n/* --- TOCPlugin.less --- */\n\n.toc ul li:hover {\n  background-color:var(--background-lighter);\n}\n\n/* --- WeblogPlugin.less --- */\n/* --- RecentChangesPlugin.less --- */\n\n.recentchanges .date {\n  border-color:var(--border-color);\n}\n/* --- CommentBox.less --- */\n\n\n/* --- GraphBar.less --- */\n.gb-group {\n  background-color:var(--background-light);\n  border:1px solid var(--border-color);\n}\n\n/* --- Tabs.less --- */\n/* --- Accordion.less --- */\n/* --- Columns.less --- */\n.columns.border,\n.columns.border \u003e .col:not(:last-child)  {\n  border-color:var(--border-color);\n}\n.columns.hover .col:hover {\n  background-color: var(--background-lighter);\n}\n\n\n/* --- Collapsible.less --- */\n.bullet, .bullet.clpse { border-left-color: var(--text-color-normal); }\n.bullet.clpse:hover { border-left-color: var(--text-color-richer); }\n\n.bullet.xpand { border-top-color: var(--text-color-normal); }\n.bullet.xpand:hover { border-top-color: var(--text-color-richer); }\n\n/* --- Category.less --- */\n.category-link {\n  border-color:var(--border-color);\n}\n/* --- Flip.less --- */\n/* --- Invisibles.less --- */\n/* --- prettify.less --- */\n  .prettify pre,  .prettify-nonum pre, pre.prettylines {\n  background-color:var(--background-light);\n  border-color:var(--border-color);\n  color:var(--text-color-richer);\n  }\n  .pln { color: #cccccc; }  /* plain text */\n  .str { color: #99cc99; }  /* string content */\n  .kwd { color: #ffeea6; }  /* keyword */\n  .com { color: #8a8a80; }  /* comment */\n  .typ { color: #bbdaff; }  /* type name */\n  .lit { color: #FCA369; }  /* literal value */\n  .pun { color: #cda869; }  /* punctuation */\n  .opn { color: #ffffff; }  /* lisp open bracket */\n  .clo { color: #ffffff; }  /* lisp close bracket */\n  .tag { color: #78AAD6; }  /* markup tag name */\n  .atn { color: #ffc58f; }  /* markup attribute name */\n  .atv { color: #FFD479; }  /* markup attribute value */\n  .dec { color: #D6ACD6; }  /* declaration */\n  .var { color: #76D4D6; }  /* variable name */\n  .fun { color: #d6acd6; }  /* function name */\n\n/* --- responsive-viewport.less --- */\n/* --- print.less --- */\n\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w11",
-      "lastVersion": 0,
       "name": "FullRecentChanges",
       "description": "",
       "alias": "",
@@ -82,14 +96,14 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Это – все изменения, произведенные в страницах wiki. Намного более короткий список доступен в [RecentChanges | @w10].\r\n\r\n[{INSERT RecentChangesPlugin}]\r\n"
+          "content": "Это – все изменения, произведенные в страницах wiki. Намного более короткий список доступен в [RecentChanges | @w10].\n\n[{INSERT RecentChangesPlugin}]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w40",
-      "lastVersion": 0,
       "name": "CopyrightNotice",
       "description": "",
       "alias": "",
@@ -112,11 +126,11 @@
           "content": "поместите Ваш [CopyrightNotice | @w40] здесь!\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w33",
-      "lastVersion": 0,
       "name": "PageAlias",
       "description": "",
       "alias": "",
@@ -135,11 +149,11 @@
           "content": "Иногда полезно иметь одну страницу, \u0027\u0027действительно\u0027\u0027 означающую некоторую другую страницу.\nНапример, у Вас могла бы быть страница, названная \"Псевдонимы Страницы\", но также требуется,\nчтобы люди имели ее в наличии под именем \"Псевдонимами\". В таком случае можно использовать \"псевдоним страницы\":\n\nПоместите следующее на \"[PageAliases]\" -страницу: (У нас есть страница в качестве примера там, так, если Вы щелкнете по ссылке, то Вы снова будете возвращены назад сюда.)\n\n{{{\n[{SET alias\u003d\u0027PageAlias\u0027}]\n}}}\n\nКаждый раз кто-то просматривает страницу \"[PageAliases]\", они будут автоматически перенаправлены к этой странице.\nЭто очень полезно, если Вам требуется использовать нерегулярные множественные формы, например.\nОбычно, JSPWiki действительно должным образом распознает английские формы множественного числа языка названий страницы,\nно это не достаточно умно, чтобы распознать определенные формы, такие как \"псевдонимы\".\n\n! Редактирование страниц псевдонима/перенаправления\n\nНу, очевидно невозможно щелкнуть по ссылке \"Редактирование этой страницы\",\nпотому что Вы перенаправляетесь каждый раз, когда Вы пытаетесь просмотреть страницу.\nМожно, однако, отредактировать страницу непосредственно только записав {{Edit.jsp?page\u003d\u0027\u0027pagename\u0027\u0027}}\nпосле базового URL. Альтернативно, можно использовать interWikiRef, определенный для редактирования,\nпо умолчанию он устанавливается в \"Edit\" (то есть, [[Edit Aliases Page|Edit:Aliases])\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w1",
-      "lastVersion": 0,
       "name": "SystemInfo",
       "description": "",
       "alias": "",
@@ -162,14 +176,14 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Administrator",
           "changeNote": "",
-          "content": "Вот некоторые стратегические числа и другие интересные вещи об этой конкретной Wiki.\r\nВся эта информация также доступна в [WikiVariables|JSPWiki:WikiVariables],\r\nесли Вы хотите использовать их на какой-либо другой странице.\r\n\r\n| __Имя приложения__                     | [{$applicationname}]\r\n| __Базовый адрес__                      | [{$baseurl}]\r\n| __Версия Процессора ElWiki__          | [{$elwikiversion}] \r\n| __Кодировка символов__                 | [{$encoding}]\r\n| __Общее Количество Страниц__           | [{$totalpages}]\r\n| __Количество Активных Сеансов__        | [{INSERT SessionsPlugin}]\r\n| __Активные Пользователи Wiki__         | [{INSERT SessionsPlugin property\u003dusers}]\r\n| __Текущее Время Работы__               | [{$uptime}]\r\n| __Текущий Провайдер Страниц__          | [{$pageprovider}]\\\\ \\\\[{$pageproviderdescription}]\r\n| __Текущий Присоединяемый Провайдер__   | [{$jspwiki.attachmentProvider}]\r\n| __Доступные меж-Wiki соединения__      | [{$interwikilinks}]\r\n| __Встроенные изображения__             | [{$inlinedimages}]\r\n| __Дополнительный Путь Поиска Плагина__ | [{$pluginpath}]\r\n| __Установленный [PageFilters]__        | [{$pagefilters}]\r\n\r\n! Удобство пользования\r\n\r\n| __Мы украшаем заголовки?__ | [{$jspwiki.breakTitleWithSpaces}]\r\n| __Мы соответствуем английским множественным формам?__ | [{$jspwiki.translatorReader.matchEnglishPlurals}]\r\n| __Используются ли ссылки CamelCase?__ | [{$jspwiki.translatorReader.camelCaseLinks}]\r\n| __HTML допускается на страницах?__    | [{$jspwiki.translatorReader.allowHTML}]\r\n\r\n! RichSiteSummary\r\n\r\n| __Мы генерируем файлы RSS?__ | [{$jspwiki.rss.generate}]\r\n| __Если мы делаем это, то какое имя файла?__ | [{$jspwiki.rss.fileName}]\r\n| __Как часто RSS обновляется?__ | [{$jspwiki.rss.interval}]\r\n\r\n! Личная информация\r\n\r\nВот то, что я знаю о Вас в настоящий момент:\r\n\r\n| __Имя пользователя__ | [{$username}]\r\n| __Состояние входа в систему__ | [{$loginstatus}]\r\n\r\n! Список страниц, отредактированных в настоящий момент\r\n\r\n[{ListLocksPlugin}]\r\n\r\nДомашняя страница JSPWiki – [http://jspwiki.apache.org/]. Добро пожаловать!\r\n"
+          "content": "Вот некоторые стратегические числа и другие интересные вещи об этой конкретной Wiki.\nВся эта информация также доступна в [WikiVariables|JSPWiki:WikiVariables],\nесли Вы хотите использовать их на какой-либо другой странице.\n\n| __Имя приложения__                     | [{$applicationname}]\n| __Базовый адрес__                      | [{$baseurl}]\n| __Версия Процессора ElWiki__          | [{$elwikiversion}] \n| __Кодировка символов__                 | [{$encoding}]\n| __Общее Количество Страниц__           | [{$totalpages}]\n| __Количество Активных Сеансов__        | [{INSERT SessionsPlugin}]\n| __Активные Пользователи Wiki__         | [{INSERT SessionsPlugin property\u003dusers}]\n| __Текущее Время Работы__               | [{$uptime}]\n| __Текущий Провайдер Страниц__          | [{$pageprovider}]\\\\ \\\\[{$pageproviderdescription}]\n| __Текущий Присоединяемый Провайдер__   | [{$jspwiki.attachmentProvider}]\n| __Доступные меж-Wiki соединения__      | [{$interwikilinks}]\n| __Встроенные изображения__             | [{$inlinedimages}]\n| __Дополнительный Путь Поиска Плагина__ | [{$pluginpath}]\n| __Установленный [PageFilters]__        | [{$pagefilters}]\n\n! Удобство пользования\n\n| __Мы украшаем заголовки?__ | [{$jspwiki.breakTitleWithSpaces}]\n| __Мы соответствуем английским множественным формам?__ | [{$jspwiki.translatorReader.matchEnglishPlurals}]\n| __Используются ли ссылки CamelCase?__ | [{$jspwiki.translatorReader.camelCaseLinks}]\n| __HTML допускается на страницах?__    | [{$jspwiki.translatorReader.allowHTML}]\n\n! RichSiteSummary\n\n| __Мы генерируем файлы RSS?__ | [{$jspwiki.rss.generate}]\n| __Если мы делаем это, то какое имя файла?__ | [{$jspwiki.rss.fileName}]\n| __Как часто RSS обновляется?__ | [{$jspwiki.rss.interval}]\n\n! Личная информация\n\nВот то, что я знаю о Вас в настоящий момент:\n\n| __Имя пользователя__ | [{$username}]\n| __Состояние входа в систему__ | [{$loginstatus}]\n\n! Список страниц, отредактированных в настоящий момент\n\n[{ListLocksPlugin}]\n\nДомашняя страница JSPWiki – [http://jspwiki.apache.org/]. Добро пожаловать!\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "1000",
-      "lastVersion": 0,
       "name": "Main",
       "description": "",
       "alias": "",
@@ -205,7 +219,6 @@
       "children": [
         {
           "id": "1013",
-          "lastVersion": 0,
           "name": "SandBox",
           "description": "",
           "alias": "",
@@ -215,23 +228,6 @@
           "references": [
             {
               "id": "1000"
-            }
-          ],
-          "aclInfos": [
-            {
-              "isAllow": true,
-              "permission": "view",
-              "roles": ["admin", "vfedorov"]
-            },
-            {
-              "isAllow": true,
-              "permission": "edit",
-              "roles": ["admin", "vfedorov"]
-            },
-            {
-              "isAllow": true,
-              "permission": "delete",
-              "roles": ["admin", "vfedorov"]
             }
           ],
           "children": [],
@@ -249,70 +245,95 @@
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Victor Fedorov",
               "changeNote": "2чNote",
-              "content": "Эй! 123\r\n\r\nЯ – песочница!\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n"
+              "content": "Эй! 123\n\nЯ – песочница!\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n"
             },
             {
               "version": 3,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Victor Fedorov",
               "changeNote": "32чNote",
-              "content": "Эй! 123 456\r\n\r\nЯ – песочница!\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n"
+              "content": "Эй! 123 456\n\nЯ – песочница!\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n"
             },
             {
               "version": 4,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Victor",
               "changeNote": "change test -- Пн 08 фев 2021 19:48:49 MSK",
-              "content": "Эй! 123 456\r\n\r\nЯ – песочница!\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n"
+              "content": "Эй! 123 456\n\nЯ – песочница!\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n"
             },
             {
               "version": 5,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Guest",
               "changeNote": "",
-              "content": "Эй! 123 456 1\r\n\r\nЯ – песочница!\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n"
+              "content": "Эй! 123 456 1\n\nЯ – песочница!\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n"
             },
             {
               "version": 6,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Guest",
               "changeNote": "",
-              "content": "Эй! 123 456 1 [Main | @1000]\r\n\r\nЯ – песочница!\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n"
+              "content": "Эй! 123 456 1 [Main | @1000]\n\nЯ – песочница!\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n"
             },
             {
               "version": 7,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Guest",
               "changeNote": "",
-              "content": "Эй! 123 456 1 [Main | @1000]\r\n\r\nЯ – песочница! (*)\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n"
+              "content": "Эй! 123 456 1 [Main | @1000]\n\nЯ – песочница! (*)\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n"
             },
             {
               "version": 8,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Administrator",
               "changeNote": "",
-              "content": "Эй! 123 456 1 [Main | @1000]\r\n\r\nЯ – песочница! (*)\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n\r\n* ElWiki, version: __[{$jspwikiversion}]__\r\n\r\n{$jspwikiversion}\r\n"
+              "content": "Эй! 123 456 1 [Main | @1000]\n\nЯ – песочница! (*)\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n\n* ElWiki, version: __[{$jspwikiversion}]__\n\n{$jspwikiversion}\n"
             },
             {
               "version": 9,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Administrator",
               "changeNote": "",
-              "content": "Эй! 123 456 1 [Main | @1000]\r\n\r\nЯ – песочница! (*)\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n\r\n\r\n[{$jspwikiversion}]\r\n"
+              "content": "Эй! 123 456 1 [Main | @1000]\n\nЯ – песочница! (*)\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n\n\n[{$jspwikiversion}]\n"
             },
             {
               "version": 10,
               "creationDate": "21 Jan 2023 01:02:03.000 +0300",
               "author": "Administrator",
               "changeNote": "",
-              "content": "Эй! 123 456 1 [Main | @1000]\r\n\r\nЯ – песочница! (*)\r\n\r\nМожно играть во мне!\r\n\r\nТолько щелкните \"По редактированию этой страницы\"!\r\n\r\nПн 08 фев 2021 19:48:49 MSK\r\n\r\n"
+              "content": "Эй! 123 456 1 [Main | @1000]\n\nЯ – песочница! (*)\n\nМожно играть во мне!\n\nТолько щелкните \"По редактированию этой страницы\"!\n\nПн 08 фев 2021 19:48:49 MSK\n\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": [
+            {
+              "isAllow": true,
+              "permission": "view",
+              "roles": [
+                "admin",
+                "vfedorov"
+              ]
+            },
+            {
+              "isAllow": true,
+              "permission": "edit",
+              "roles": [
+                "admin",
+                "vfedorov"
+              ]
+            },
+            {
+              "isAllow": true,
+              "permission": "delete",
+              "roles": [
+                "admin",
+                "vfedorov"
+              ]
+            }
+          ]
         },
         {
           "id": "1002",
-          "lastVersion": 0,
           "name": "EditPageHelp",
           "description": "",
           "alias": "",
@@ -335,11 +356,11 @@
               "content": "Вот короткая справка о том, какие элементы имеются в вашем распоряжении:\n{{{\n----             Горизонтальная линейка\n\\\\               Принудительный разрыв строки\n[link]           Создает гиперссылку к \"link\", где \"link\" может быть любым внутренним\n                 WikiName или внешней ссылкой (http://)\n[text|link]      Создает гиперссылку, где выводимый текст ссылки отличается от фактической\n                 ссылки гиперссылки.\n[text|wiki:link] Создает гиперссылку, где текст ссылки отличается от\n                 фактической ссылки гиперссылки, и гиперссылка указывают на именованную Wiki.\n                 Это поддерживает связь interWiki (внутренних вики).\n\n*                Делает маркированный список (должен быть в первом столбце). Используйте больше (**)\n                 для добавления более глубоких отступов.\n#                Производит пронумерованный список (должен быть в первом столбце). Используйте больше (##, ###)\n                 для добавления более глубоких отступов.\n\n!, !!, !!!       Начните строку с восклицательного знака (!), чтобы сделать заголовок.\n                 Больше восклицательных знаков означает большие заголовки.\n\n__текст__        Делает текст полужирным.\n\u0027\u0027текст\u0027\u0027        Делает текст курсивом (заметьте, что это одинарные кавычки (\u0027)),\n{{текст}}        Делает текст в моноширинном шрифте.\n;term:def        Задает для термина \u0027term\u0027 определение \u0027def\u0027. Используйте пустой \u0027term\u0027, чтобы сделать короткие комментарии.\n\n|text|more text  Создает таблицу. Двойные черты используются для заголовка таблицы.\n}}}\n\nНе пытайтесь использовать HTML, так как он просто не будет работать.\n\nЧтобы встроить изображения помещайте только имеющееся в сети, используя один из одобренных форматов, и они будут встроены автоматически. Чтобы увидеть список одобренных форматов, перейдите для проверки к [SystemInfo | @w1].\n\nЧтобы сделать блок кода, используйте тройные { при открытии блока, и тройные } при закрытии.\n\n\u0027\u0027(Задаваясь вопросом, откуда этот текст появился? Он расположен на странице по имени [Edit Page Help], ктороую также можно отредактировать!)\u0027\u0027\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1003",
-          "lastVersion": 0,
           "name": "TextFormattingRules",
           "description": "",
           "alias": "",
@@ -368,11 +389,11 @@
               "content": "Эта страница описывает синтаксис wiki, используемый JSPWiki.\nДля дополнительной информации о том, как это отличается от синтаксиса, используемого Википедией,\nпожалуйста см. [MigratingFromMediaWiki|JSPWiki:MigratingFromMediaWiki].\n\n[{TableOfContents}]\n\\\\\nКогда Вы выяснили, как работает редактор, тогда следует читать [WikiEtiquette | @1010] для того, чтобы Вы знали,\nкак использовать Ваши недавно полученные навыки. [Песочница|http://sandbox.jspwiki.org] является великолепным местом, чтобы испытать их.\n\n! Справочник\n\n{{{\n----              \u003d сделать горизонтальную линейку. Дополнительные \u0027-\u0027 игнорируется.\n\\\\                \u003d вызывает разрыв строки\n\n[ссылка]          \u003d создает гиперссылку ко внутренней WikiPage под названием \u0027Ссылка\u0027.\n[это тоже ссылка] \u003d создает гиперссылку к внутренней WikiPage с названием\n                     \u0027ЭтоТожеСсылка\u0027, но  ссылка выводится как введеная с пробелами.\n[пример|ссылка]   \u003d создает гиперссылку к внутренней WikiPage с названием \u0027Ссылка\u0027,\n                    но пользователю выводится текст \u0027пример\u0027 вместо \u0027Ссылка\u0027.\n~NoLink           \u003d отключают создание ссылки для слова в CamelCase.\n[1]               \u003d делает ссылку на сноску, с номером 1.\n[#1]              \u003d отмечает сноску номер 1.\n[[ссылка]         \u003d создает текст \u0027[ссылка]\u0027.\n\n!заголовок        \u003d маленький заголовок с текстом \u0027заголовок\u0027\n!!заголовок       \u003d средний заголовок с текстом \u0027заголовок\u0027\n!!!заголовок      \u003d большой заголовок с текстом \u0027заголовок\u0027\n\n\u0027\u0027текст\u0027\u0027         \u003d печатает \u0027текст\u0027 курсивом.\n__текст__         \u003d печатает \u0027текст\u0027 полужирным.\n{{текст}}         \u003d печатает \u0027текст\u0027 моноширинным шрифтом.\n[текст|]          \u003d печатает подчеркнутый \u0027текст\u0027 (фиктивная гиперссылка)\n* текст           \u003d производит элемент маркированного списка с содержимым \u0027текст\u0027\n# текст           \u003d производит пронумерованный элемент списка с содержимым \u0027текст\u0027\n;term:ex          \u003d производит определение для \u0027term\u0027 с описанием \u0027ex\u0027\n}}}\n\n! Написание текста\n\nВам ничего не надо знать о правилах форматирования текста Wiki, для использования Wiki.\nТолько запишите нормальный текст, и затем используйте пустую строку, чтобы выделить абзац.\nЭто подобно написанию электронной почты. \\\\\nМожно всегда \u0027\u0027Редактировать\u0027\u0027 эту страницу (смотря на левую боковую панель)\nвидеть как на этой странице используются различные эффекты.\n\n! Гиперссылки\n\nУ Вас могут быть внутренние ссылки (к страницам в той же самой wiki), и внешние ссылки (к ресурсам вне wiki).\n\nСсылка к внешнему URL начинается с {{http:}}, {{ftp:}}, {{mailto:}}, {{https:}}, или {{news:}},\nкогда ссылка указывает на внешний объект. Например,\nчтобы указать на домашнюю страницу java.sun.com, используйте {{[[http://java.sun.com]}},\nкоторая становится [http://java.sun.com/] или {{[[Java home page|http://java.sun.com]}},\nкоторая становится [Java home page|http://java.sun.com].\n\nЕсли Ваша ссылка не начинается с одного из вышеупомянутых \"протоколов\",\nwiki подразумевает, что это нормальная ссылка к другой странице в пространстве wiki,\nВы должны использовать букву в качестве первого символа страницы,\nчисто числовые названия страниц не позволяются.\nЕсли Вы хотите использовать квадратные скобки ({{[[]}}) в имени страницы,\nне создавая гиперссылку, используйте две начальных квадратных скобки.\nТак, текст {{[[[Пример Не Ссылки]}}, появится как {{[[Пример Не Ссылки]}}.\n\nЧтобы добавить новую страницу, Вы только создайте ссылку на нее где-то в другом месте, например в песочнице.\nВ конце концов, нет большого количества средств для получения страницы, если к ней невозможно получить доступ!\nВ результате, ссылка предстанет Вам как название страницы, подчеркнутая красной пунктирной линией,\nкогда Вы возвратитесь к странице с Вашей ссылкой.\nЗатем щелкните по ссылке, и Вы создадите новую страницу!\n\nПозволяется использовать почти любой вид символов в [WikiName|JSPWiki:WikiName],\nпока они – буквы или числа. \\\\\nОтметьте также, что эта Wiki может быть сконфигурирована,\nчтобы поддерживать стандарт [CamelCase|JSPWiki:CamelCase],\nсвязывания (если это поддерживается, слово CamelCase должно быть ссылкой,\nесли оно не начинается с \u0027~~\u0027).\nЭто выключено по умолчанию, но если Ваш дружелюбный администратор включил это,\nто хорошо, CamelCase все что Вы хотите \u003d).\n\n! Сноски\n\nЭто – специальный вид гиперссылки.\nПри использовании только числа внутри гиперссылки Вы создаете ссылку на сноску,\nнапример, как это {{[[1]}}, которая создает сноску [1].\nЧтобы сделать фактическую сноску, Вы только поместите {{[[#1]}}\nгде Вы хотите, чтобы указать на ту сноску. Ниже описан поиск сноски.\n\nМожно также сделать именованную сноску, так же, как если бы Вы делали\nнормальную гиперссылку, такую как {{[[Имя сноски|1]}},\nкак другой способ сослаться на первую сноску [Имя сноски|1].\nИли можно поместить пользовательское имя в сноску непосредственно [2].\n\n! [InterWiki|JSPWiki:InterWiki] ссылки\n\nМожно также сделать ссылки между различным Wikis, не зная URL. Только используйте ссылку в форме {{[[Wiki:WikiPage]}},\nи JSPWiki создаст ссылку для Вас. Например, эта ссылка указывает на [JSPWiki TextFormatting rules|JSPWiki:TextFormattingRules].\nПроверьте страницу [SystemInfo | @w1], для получения дополнительной информации о доступных ссылках между Wiki.\nЕсли [InterWiki|JSPWiki:InterWiki] ссылка не будет поддерживаться, то Вы получите уведомление об этом во время сохранения своей страницы.\n\n! Добавление изображений\n\nМожно встроить любое изображение в код wiki, помещая изображение,\nдоступное где-нибудь в сети в одном из позволенных форматов, и затем только свызываясь с ним.\n\nЕсли Вы определяете текст ссылки ({{[[что-то здесь|http://example.com/example.png]}}),\nто это становится текстом ALT для тех, кто или не может или не хочет просматривать изображения.\nСписок принятых типов изображения зависит от Wiki.\nСм. список различных поддерживаемых типов изображений – на странице [SystemInfo | @w1],\nв разделе __Встроенные изображения__.\n\nТакже возможно использовать [Image plugin|JSPWiki:Image],\nчтобы получить больший контроль над размещением изображения и их атрибутами.\nЧтобы вызвать сброс после изображения, используйте \\ \\ \\ (то есть, три последовательных наклонных черты влево вместо двух).\n\n! Маркированные списки\n\nИспользуйте звездочку (*) в первом столбце, чтобы сделать маркированный список.\nИспользуйте больше звездочек для увеличения отступа. Например:\n{{{\n* Один \\\\ полтора\n* Два\n* Три\n** Три.Один}}}\n\nсоздает\n\n* Один \\\\ полтора\n* Два\n* Три\n** Три.Один\n\n! Нумерованные списки\n\nТочно так же как с маркированными списками, но используя символ хеш (#) вместо звездочки. Как это:\n{{{\n# Один \\\\ полтора\n# Два\n# Три\n## Три.Один\n}}}\n\nсоздает\n\n# Один \\\\полтора\n# Два\n# Три\n## Три.Один\n\nЕсли Вы хотите записать элемент списка в несколько строк,\nтолько добавьте один или более пробелов на следующей строке,\nи строка будет автоматически добавлена к\nпредыдущему элементу. Например:\n\n{{{\n* Это – однострочный элемент.\n* Это – фактически многострочный элемент.\n  Мы продолжаем второе предложение на собственной строке.\n  Мы могли бы также сделать третью строку, в то время как мы здесь...\n  Заметьте, однако, поскольку все эти предложения внутри одного элемента!\n* Третья строка – снова однострочный элемент для Вашего удобства.\n}}}\n\nпроизводит:\n\n* Это – однострочный элемент.\n* Это – фактически многострочный элемент.\n  Мы продолжаем второе предложение на собственной строке.\n  Мы могли бы также сделать третью строку, в то время как мы здесь...\n  Заметьте, однако, поскольку все эти предложения внутри одного элемента!\n* Третья строка – снова однострочный элемент для Вашего удобства.\n\n! Списки определения и комментарии\n\nПростой способ, чтоб сделать список определений состоит в использовании конструкции \u0027;:\u0027:\n{{{\n;__Конструкция__: \u0027\u0027Нечто используется, чтобы сделать что-то\u0027\u0027\n}}}\nпредставляется как:\n;__Конструкция__: \u0027\u0027Нечто используется, чтобы сделать что-то\u0027\u0027\n\nДругое хорошее использование для \u0027;:\u0027 – это короткий комментарий текста других людей,\nпри наличии пустого \u0027термина\u0027 в определении, например, как это:\n\n{{{\n;:\u0027\u0027Комментарий здесь.\u0027\u0027\n}}}\n\nКоторый бы выглядел как:\n;:\u0027\u0027Комментарий здесь.\u0027\u0027\n\n! Текстовые эффекты\n\nМожно использовать __полужирный__ текст или \u0027\u0027курсивный\u0027\u0027 текст,\nпри использовании двух подчеркиваний (_) и двух одинарных кавычек (\u0027), соответственно.\nЕсли Вы находитесь на компьютере Windows, удостоверьтесь,\nчто Вы используете корректный знак кавычки,\nпоскольку есть тот, который выглядит подобно, но в реальности не является им.\n\nЭффект [подчеркивания|]  не может быть произведен\nпри использовании гиперссылки нигде, например, [[как это|]\n\n! Предварительно отформатированный текст\n\nЕсли Вы хотите добавить предварительно отформатированный текст,\nнапример код, то используйте три последовательных фигурных скобки ({),\nчтобы открыть блок, и три последовательных фигурных скобки (}),\nчтобы закрыть блок. Отредактируйте эту страницу для примера.\n\n! Таблицы\n\nМожно сделать простые таблицы при использовании знаков канала (\u0027|\u0027).\nИспользуйте двойные знаки канала для начала заголовка таблицы,\nи одиночный знак канала при написании строк таблицы.\nТаблица завершается на строке, которая не является таблицей.\n\nНапример:\n\n{{{\n|| Заголовок 1 || Заголовок 2\n| \u0027\u0027Бормотание\u0027\u0027 | Панель \\\\foo\n| [Основная] | [Песочница]\n}}}\nдает Вам следующую таблицу. Обратите внимание, что ссылки можно использовать также и в таблицах.\n|| Заголовок 1 || Заголовок 2\n| \u0027\u0027Бормотание\u0027\u0027 | Панель \\\\foo\n| [Основная] | [Песочница]\n\n! Стили CSS\n\nВ то время, как не позволяется встраивание, и следуя этому простому принципу, однако,\nстили CSS [могут использоваться встроенными|JSPWiki:CSSInWikipages]\nдля тех особых случаев, когда Вы действительно должны акцентировать часть страницы.\n\n! Конфликты\n\nЕсли кто-то, оказывается, редактирует ту же самую страницу, как и Вы одновременно,\nJSPWiki будет препятствовать тому, чтобы Вы сделали изменения,\nи покажет страницу конфликта вместо этого. К сожалению, но первый,\nкто произведет изменения, побеждает...\n__Слово предупреждения:__, Если Вы используете Кнопку \"Назад\" своего браузера,\nчтобы войти в Редактирование страницы, Вы почти наверняка получите конфликт.\nЭто – потому, что браузер думает, что Вы все еще редактирует более раннюю копию страницы.\n\n! Удаление страниц\n\nЭто не возможно. Можно, конечно, удалить все ссылки к той странице, что сделает ее почти недоступной.\n\nИли можно послать администратору по электронной почте запрос, и он удалит страницу.\nМожно также добавить ссылку [DELETEME|JSPWiki:DELETEME].\n\n! Добавление новых страниц\n\nСоздайте ссылку, которая указывает на новую (не существующую) страницу,\nиспользуя [WikiName|JSPWiki:WikiName].\nЩелкните по той новой ссылке, и Вы получите редактор для новой страницы. –– [Asser|JSPWiki:Asser]\n\n! Замещение Страницы\n\nИногда Вам требуется, чтобы любая ссылка к странице wiki сразу перешла к другой странице.\nЭто может быть сделано, используя [PageAlias | @w33].\n\n! Вставка переменных\n\nЕсть много возможных переменных, которые можно вставлять на странице. Каноническая форма:\n{{ [[{$variablename}], }}\nгде \u0027\u0027variablename\u0027\u0027 – имя переменной, которую Вы хотите вставить.\nЗаметьте, что имя переменной нечувствительно к регистру – то есть,\n\"pagename\" – то же самое как \"paGeNamE\" и \"~PageName\".\nСписок доступных переменных можно увидеть в [WikiVariables|JSPWiki:WikiVariables].\n\n! Вставка плагинов\n\nОсновное колдовство, чтобы вставить плагин, выглядит так:\n[[{INSERT \u003cplugin class\u003e WHERE param1\u003dvalue, param2\u003dvalue, ...}]\nВ [JSPWikiPlugins | JSPWiki:JSPWikiPlugins] есть больше информации об этом.\n\n----\n[#1] Вот сноска, которую я упоминал.\n[2-Другая сноска|#2] Другая сноска. Отметьте, как ее имя отличается?\n----\nЛюбые [идеи | JSPWiki:IdeasTextFormattingRules]?\nЛюбые [вопросы | JSPWiki:TextFormattingRulesDiscussion]?\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1004",
-          "lastVersion": 0,
           "name": "SearchPageHelp",
           "description": "",
           "alias": "",
@@ -391,11 +412,11 @@
               "content": "Эта страница дает быстрый краткий обзор синтаксиса запроса поисковой системы.\nЭту страницу вызывается как [Search Page Help].\n\nИспользуйте \u0027+\u0027 для обязательного присутствия слова, \u0027-\u0027 для запрещения слова. Например:\n\n{{{\n          +java -emacs jsp\n}}}\n\nнаходит страницы, которые ДОЛЖНЫ включать слово \"java\", и ВОЗМОЖНО НЕ включают\nслово \"emacs\". Кроме того, страницы, которые содержат слово \"jsp\",\nранжируются предпочтительней перед страницами, которые не содержат его.\n\nВсе поиски нечувствительны к регистру. Если страница содержит оба,\nзапрещенное и требуемое ключевое слова, то она не показывается.\n\n!! Синтаксическая таблица запроса\n\nНесколько больше информации можно найти на %%slimbox [Lucene\u0027s query syntax|http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description]/%.\n\n|| term   | ищется одиночный Термин  | {{привет}}\n|| \"...\"  | ищется группа слов | {{\"привет куколка\"}}\n|| ?      | какой-либо единственный символ (? не может быть 1-ым символом поиска), | {{te?t}}\n|| *      | любой многократный символ (* не может быть 1-ым символом поиска), | {{тест*}}\n|| OR     | сопоставляет документ, если любой из терминов существует | {{\"привет куколка\" привет}}\\\\{{\"привет куколка\" OR привет}}\n|| AND    | сопоставляет документ, где оба термина существуют | {{\"привет куколка\" AND \"куколка Сьюзи\"}}\n|| +      | требует, чтобы существовал термин после символа \"+\" | {{+привет куколка}}\n|| -\\\\NOT | исключают документы, которые содержат термин после символ \"-\", \\\\ исключает также поддерживаемый с NOT или ! | {{\"привет куколка\" -\"куколка Сьюзи\"}} \\\\{{\"привет куколка\" NOT \"куколка Сьюзи\"}}\n|| (...)  | круглые скобки используют, чтобы сформировать подзапросы | {{(привет OR куколка) AND вебсайт}}\n|| ~~     | \u0027\u0027нечеткий\u0027\u0027 поиск для сопоставления подобных в написании | {{пере~}}\n|| ~n     | поиск \u0027\u0027близости\u0027\u0027, в пределах расстояния, выраженного в числе слов | {{\"привет куколка\"~10}}\n|| ^n     | \u0027\u0027усиливают\u0027\u0027 фактор, чтобы увеличить важность в поиске | {{\"привет куколка\"^4 \"куколка Сьюзи\"}}\n|| \\      | экранирование специальных символов: __ + - \u0026\u0026 ~|~| ! ( ) { } [[ ] ^ \" ~ * ? : \\ __ | {{\\(1\\+1\\)\\:2}} – чтобы найти (1+1):2\n\nМожно ограничить область поиска, снабжая префиксом Ваш запрос:\n|| author:\u0027\u0027term\u0027\u0027     | поиск страниц, измененных определенным автором(ами) | {{author:~JohnFoo}}\n|| attachment:\u0027\u0027term\u0027\u0027 | поиск страниц с определенным именем вложения        | {{attachment:brushed*}}\n|| name:\u0027\u0027term\u0027\u0027       | поиск страниц с определенным названием страницы     | {{name:Main}}\n|| content:\u0027\u0027term\u0027\u0027    | поиск страниц с определенным контентом              | {{content:jspwiki}}\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1005",
-          "lastVersion": 0,
           "name": "EditFindAndReplaceHelp",
           "description": "",
           "alias": "",
@@ -418,11 +439,11 @@
               "content": "Можно использовать следующие метасимволы в поле \u0027Поиск для\u0027:\n\n|.      |любой символ кроме новой строки     |+       |один или более раз\n|*      |ноль или более раз                  |?       |ноль или один раз\n|{n}    |встречается точно n раз             |{n,m}   |минимум n раз, максимум m раз\n|~|    |pipe: {{a~|b}} соответствует a или b | -      |дефис, обозначает диапазон символов\n|^      |начало строки                       |$       |конец строки\n|[[...] |один из набора символов             |[[^...] |никакого из набора символов\n|\\b     |граница слова                       |\\B      |не граница слова\n|\\d     |цифра [[0-9]                        |\\D      |не цифра [[^0-9]\n|\\s     |одиночный пробел                    |\\S      |одиночный не пробел\n|\\w     |[[A-Za-z0-9_]                       |\\W      |[[^A-Za-z0-9_]\n|(...)  |группы сохраняемые как 1$.. 9$      |\\.      |экранирование мета символа\n\nВ поле \u0027Замена на\u0027 могут использоваться 1$.. 9$ как обратные ссылки на круглые скобки поля \u0027Поиск для\u0027.\n----\nПример:\\\\\n\nПоиск для __/abc|def/__ будет соответствовать слову \u0027abc\u0027 или слову \u0027def\u0027 \\\\\nПоиск для __/bwiki/b__ будет соответствовать слову \u0027wiki\u0027, но не слову \u0027jspwiki \u0027. \\\\\nПоиск для __^[[IVXMDCL]+\\.__ будет соответствовать любой комбинации римских цифр, следующих последовательно \\\\\nПоиск для __/(-?\\d+)(\\d{3})/__ и замена на __1$,2$__ – вставляет запятые в большие целые числа.\n\nЭто – страница [EditFindAndReplaceHelp | @1005].\n[Больше информации о регулярных выражениях|http://www.regular-expressions.info/javascript.html]\nи [RegExp Sandbox|http://www.regular-expressions.info/javascriptexample.html] \\\\\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1006",
-          "lastVersion": 0,
           "name": "LoginHelp",
           "description": "",
           "alias": "",
@@ -445,11 +466,11 @@
               "content": "Ниже представлена краткая справка о том, как войти в систему __[{$applicationname}]__. Этот текст [тут | @1006]. \\\\\nМожно прочитать больше о средствах защиты JSPWiki на [страницах документации|Doc:Security].\n\n!! Вход в систему\n\nJSPWiki поддерживает многократные уровни __аутентификации__ и доверия. Пользователи могут быть анонимными,\n\"объявляя\" идентификационные данные при помощи cookie, аутентифицироваться, или быть администраторами:\n\n|| Состояние || Описание || Приветствие пользователя...\n| Анонимный | Пользователь не входит в систему, и не предоставляет cookie | \"Приветствую, (неизвестный гость)\"\n| Задекларированный | Браузер пользователя содержит cookie, с названнием {{~JSPWikiAssertedName}} | \"G\u0027day, \u0027, \u0027имя пользователя\u0027\u0027 (не опознан)\"\n| Аутентифицируемый | Пользователь вошел в систему с идентификатором для входа в систему и паролем | \"G\u0027day \u0027, \u0027имя пользователя\u0027\u0027 (присутствует)\"\n\nВ зависимости от политики безопасности по умолчанию и средств управления доступом страницы на месте, пользователи могут (или нет) быть обязанными аутентифицироваться.\n\nКогда пользователь решает войти в систему – или запрашивает управление доступом страницы или политикой безопасности,\nто он видит стандартную веб-форму с полем имени пользователя и замаскированным полем пароля.\nПосле получения представленной веб-формы JSPWiki пытается зарегистрировать пользователя в системе.\n\n!! Потерянный пароль\n\nЕсли Вы потеряли свой пароль, можно попросить свой новый, случайный пароль,\nкоторый отправляется на почтовый адрес, сохраненный в Вашем Профиле Пользователя.\n\n!! Регистрация нового пользователя\n\nХотя некоторые wiki являются анонимными, многие нет.\nЗачастую, wiki предоставляют пользователям возможность создать идентификационные данные для веб-сайта.\nJSPWiki включает основную страницу саморегистрации,\nкоторая позволяет пользователям устанавливать и управлять своими собственными профилями wiki.\n\nПо умолчанию, форма просит:\n\n* Идентификатор пользователя\n* Пароль\n* Требуемое для пользователя \"wiki имя\" (например, JanneJalkanen).\n  Можно использовать это имя в Списках Управления Доступом или в Wiki Группах\n* Адреса электронной почты. Это может использоваться, когда Вы должны сбросить свой пароль. (см. Потерянный пароль),\n\nЕсли будет использоваться управляемая контейнером аутентификация,\nто идентификатор пользователя не будет доступен для редактирования;\nконтейнер предоставит это значение.\n\nКогда пользователь сохраняет профиль, то JSPWiki проверяет, чтобы удостовериться,\nчто новый идентификатор пользователя, wiki-имя и полное имя уже не используются кем-то еще.\nЕсли так, то пользователю предоставляется возможность выбрать желаемые значения.\n\nПосле того, как пользователь создает профиль wiki, то он может отредактировать его позже,\nпосредством ссылки \u0027\u0027My Prefs\u0027\u0027 (Мои настройки).\nПо умолчанию, пользователи должны аутентифицироваться,\nчтобы отредактировать их собственные профили.\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1007",
-          "lastVersion": 0,
           "name": "About",
           "description": "",
           "alias": "",
@@ -472,11 +493,11 @@
               "content": "Эта Wiki выполнена с использованием технологии [JSP|http://java.sun.com/products/jsp], \nчто, как мы надеемся, делает очень легким усовершенствование и выглядит лучше чем большинство Wiki,\nоснованных на [оригинальной wiki|http://c2.com/cgi/wiki].\nНастраиваемый узел обрабатывает преобразование текста в HTML.\n\nБольшинство [маркеров редактирования | @1003] было разработано согласно [Библиотеке Sensei|http://senseis.xmp.net], лучшие Go сайты в Интернете. Я считаю их разметку очень легкой, тем не менее очевидной.\n\nЭта wiki доступна под [Лицензией Apache, Версии 2.0|http://www.apache.org/licenses/LICENSE-2.0]. Пожалуйста,\nсм. [http://jspwiki.apache.org] для дополнительной информации.\n\nЕсли Вы интересуетесь разработкой JSPWiki, домашняя страница для JSPWiki в [http://jspwiki.apache.org]. Некоторые быстрые ссылки:\n\n* [Протокол Багов|JSPWiki:SubmitBugReport] - или [взгляните на список открытых багов|JSPWiki:OpenBugs].\n* [Внесение новых идей|JSPWiki:SubmitNewIdea].\n* Рассмотрите наиболее актуальные [JSPWiki FAQ|JSPWiki:JSPWikiFAQ]\n* Ищите дополнительные [плагины|JSPWiki:ContributedPlugins], [шаблоны|JSPWiki:ContributedTemplates], [фильтры|JSPWiki:ContributedFilters], [провайдеры|JSPWiki:ContributedProviders], или [другой современный материал|JSPWiki:ContributedCode].\n\nУдачи в исследовании, и спасибо за выбор JSPWiki!\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1008",
-          "lastVersion": 0,
           "name": "Community",
           "description": "",
           "alias": "",
@@ -495,11 +516,11 @@
               "content": "[{TableOfContents}]\n\n!! Списки рассылки\nЕсть список рассылки JSPWiki для обсуждения, что происходит в этой wiki. Это очень хороши для обсуждения таких вещей как патчи, проблемы, разработка, и т.д.\n\nЕсть в настоящий момент три почтовых рассылки, \u0027\u0027jspwiki-users\u0027\u0027, \u0027\u0027jspwiki-dev\u0027\u0027 и \u0027\u0027jspwiki-commits\u0027\u0027.\n\n! JSPWiki-user\n\nСписок рассылки jspwiki-user размещается в Apache. Можно присоединиться к нему, послав электронное письмо по адресу [user-subscribe@jspwiki.apache.org|mailto:user-subscribe@jspwiki.apache.org]. Архивы списка расположены в [http://mail-archives.apache.org/mod_mbox/jspwiki-user/|http://mail-archives.apache.org/mod_mbox/jspwiki-user/]\n\nТакже доступны [архивы старого списка|http://www.ecyrd.com/pipermail/jspwiki-users/]. Есть также [вторичный архив|http://www.nabble.com/JspWiki---User-f2680.html] на Nabble.\n\n! JSPWiki-dev\n\nЭто - список для разработчиков JSPWiki. Не присоединяйтесь, если Вам чудж технический язык. Список jspwiki-dev размещается в Apache, таким образом, Вы присоединяетесь, посылая электронное письмо по адресу [dev-subscribe@jspwiki.apache.org|mailto:dev-subscribe@jspwiki.apache.org]. Архивы списка расположены в [http://mail-archives.apache.org/mod_mbox/jspwiki-dev/|http://mail-archives.apache.org/mod_mbox/jspwiki-dev/]\n\n! JSPWiki-commits\n\nЕсли Вы подпишетесь на этот список, то Вам будет отправлено по электронной почте сообщение всякий раз в момент, когда разработчик передает новые или измененные файлы репозитарию SVN.\nСписок jspwiki-commits (фиксаций) размещается в Apache, присоединитесь к нему, посылая электронное письмо по адресу [commits-subscribe@jspwiki.apache.org|mailto:commits-subscribe@jspwiki.apache.org].  \nАрхивы списка расположены в http://mail-archives.apache.org/mod_mbox/jspwiki-commits/\n\n! Отмена подписки\n\nОтмена подписки так же легка: можно только послать электронное письмо \u003cuser|dev|commits\u003e-unsubscribe@jspwiki.apache.org с того же самого адреса электронной почты, которым Вы первоначально подписывались. \n\nСтарые архивы JSPWiki-dev (вплоть до октября 2007) [также доступны|http://www.ecyrd.com/pipermail/jspwiki-dev/], если Вы хотите внимательно просмотреть некоторые интересные проблемы.\n\n!! Другие ресурсы\n\n! IrcChannel - чат с разработчиками!\n\nЕсть JSPWiki [IRC|http://www.mirc.com/irc.html] образующий канал на [Freenode|http://www.freenode.net], названный #jspwiki. Зайдите, если Вы имеете какие-либо вопросы, или только хотите поболтать.\n\nОтметьте, что канал довольно тих в определенные времена дня, так что не обескураживайтесь, если Вы не получаете ответ. Только побродите вокруг некоторое время...\n\nПостоянные клиенты на канале:\n* [Janne Jalkanen|http://www.ecyrd.com/JSPWiki/wiki/JanneJalkanen] (Ecyrd): Живет на GMT+2.\n\n! [FaceBook | http://www.facebook.com/group.php?gid\u003d11138025370]\n\nТолько для забавы, я создал Группу пользователей JSPWiki в Facebook. Если Вы - регулярный пользователь Facebook, заходите!\n\n(О нет, мы не планируем заменить этот существующий сайт любым. Но, кажется, что кто-либо и даже его кузен, находится на Facebook. Я полагал, что вероятно это не плохая идея - добавить дополнительный канал),\n-- Janne 17.09.07\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1009",
-          "lastVersion": 0,
           "name": "OneMinuteWiki",
           "description": "",
           "alias": "",
@@ -522,11 +543,11 @@
               "content": "! Ура! И добро пожаловать в Wiki!\n\nWikiWiki – это гавайское слово, и имеет в виду \"быстрый\". Исходная идея WikiWiki состояла в том,\nчтобы создать совместную, быструю среду, которая вдобавок еще будет долговременно хранить изменения (персистентность).\n\nЛюбой может способствовать развитию, даже анонимно. Да, можно удалить то, что сказали другие люди,\nи даже удалить целые страницы, но удивительно, wiki [работает|WikiWikiWeb:WhyWikiWorks].\n\nРедактируя, можно легко создать (и следует создавать), гиперссылки, лишь поместив слово в квадратные скобки,\nнапример, [[как это]. Если страница, к которой Вы обращаетесь, еще не существует,\nто текущая страница покажет подчеркнутое имя.\nНапример, как эта: [ThisPageDoesNotExist]. (Пожалуйста, не помешайте этому примеру, создав ту страницу...),\n\nWiki-имена (WikiName), которые содержат пробелы или подчеркивания,\nсминаются воедино и используются для внутренней выгоды,\nтак, чтобы [[This is a link], стал [[ThisIsALink].\n\nWiki и должна быть простой. Это заключается в том, что нет никакой потребности в сложном HTML.\nМожно получить некоторые эффекты, такие как __выделенный текст__ и \u0027\u0027курсив\u0027\u0027, но ничего очень сложного.\nРасположение – непосредственная проблема Wiki. Больше информации об этом есть в [TextFormattingRules | @1003].\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1010",
-          "lastVersion": 0,
           "name": "WikiEtiquette",
           "description": "",
           "alias": "",
@@ -558,11 +579,11 @@
               "content": "При [редактировании страниц | @1003] помни следующие правила:\n\n!! Общие указания.\n\n* Будьте приятны – не грубите, не обижайте.\n* Излагайте методом, который легок для понимания и избегайте локального сленга или фраз.\n  У многих из тех, кто читает Ваш текст, возможно, ваш родной язык (например, английский) не является их родным языком.\n* Не удаляйте вклады других людей (если Вы не знаете то, что Вы делаете),\n* Не используйте слишком много акронимов (или по крайней мере, имейте страницу, их объяснения),\n* __Избегайте фраз \u0027\u0027\"щелкни здесь\"\u0027\u0027!!__ Не говорите: \"Больше информации об этикете может быть найдено [здесь | @1010]\",\n  однако используйте \"Больше информации об этикете, может быть найдено в [WikiEtiquette | @1010]\".\n  Я предложил бы избегать этого также для внешних ссылок.\n* Вносите только исходный материал. Ссылки прекрасны, но не делайте cut-and-paste из вещей, которые защищенны авторским правом.\n* Исправление опечаток вполне хорошо – фактически, это – очень хорошая привычка, так как это делает веб-страницу более читаемой.\n\n!! О комментариях\n\n* Вы свободны в анонимном внесении, но предпочитается, что Вы подписываете свои комментарии Вашим именем (или дескриптором).\n  Распространено предварительно ожидать подпись с \u0027--\u0027, например: \u0027\u0027-- [Janne Jalkanen]\u0027\u0027\n  (В то время как Вы тут, Вы свободны в создании свой собственный wikipage и сказать нам о вас непосредственно.)\n* Хороший путь состоит в том, чтобы также поместить сначала Ваше имя, например: \u0027\u0027[Janne Jalkanen] : I\u0027d like to say that...\u0027\u0027\n* Думайте прежде, чем Вы прокомментируете. [WikiWiki | @1012] не высокоскоростной коммутатор разговора. Это также не сервер новостей.\n  То, что Вы говорите, останется здесь навсегда\n  (если Вы удалите свой комментарий, он находится все еще в предыдущей версии страницы)\n  для всех, чтобы увидеть и прокомментировать.\n\n!! Создание WikiNames\n\n* Хороший [WikiName | @1011] – короткий и описательный. Если имя будет логично и легко,\n  то еще много людей присоединятся к нему.\n* Хотя можно взять целое предложение и уплотнить его, чтобы сделать [WikiName | @1011], это – лучший стиль,\n  чтобы ограничить его самое большее до 5 слов.\n* Вместо этого попытайтесь использовать [WikiName | @1011]-мы,\n  подобно использованию как бы в качестве заголовков глав в книге.\n* Эта Wiki позволяет Вам создавать страницы с отдельным словом в качестве имени,\n  но пытайтесь использовать по крайней мере два слова – мы не хотим исчерпывать пространство имен :-).\n* __Перепроверяйте [WikiName | @1011]-мы на опечатки__ – иначе кто-то создаст неверно названную страницу!\n  Неверно названные страницы плохи, начиная от ссылок на них и т.д. – требует большего усилия чем к логичному,\n  корректному [WikiName | @1011].\n\n!! Рефакторинг страниц\n\nРефакторинг – процесс, где Вы подводите итог страницы, сокращая ее, делая ее более доступной.\nЛюбой, кто ощущает надобность в этом, может двигаться вперед, но мы предполагаем что Вы\nоставите это для частых (опытных) посетителей.\n\n* Будьте объективны – оба, и за и против - должны быть представлены правильно.\n* Будьте осторожны с внесением со знаком – не изменяйте их значение.\n* Дайте кредит, где кредит должен быть.\n* Используйте 3-е лицо или множественное число вместо 1-го лица, исключая лишь случай для Вашей сводки.\n\n(Спасибо [Sensei\u0027s library|http://senseis.xmp.net/] за этот начальный текст.)\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1011",
-          "lastVersion": 0,
           "name": "WikiName",
           "description": "",
           "alias": "",
@@ -591,11 +612,11 @@
               "content": "[WikiNames] традиционно пишутся, используя ~InterCapping, также известны как ~CamelCase\n(начинаются с прописной буквы, и по крайней мере другой прописной буквы в слове ссылки wiki).\nЭто делает создание внутренних гиперссылок действительно легким.\n\nОднако, в этом [WikiWiki | @1012] [ссылки] пишутся, используя [[link] нотацию, поскольку исходный ~InterCapping стиль соединения\nиногда сбивает с толку. Имена все еще соответствуют стандарту [WikiWiki | @1012], если Вы посмотрите на URL в браузере, наверху.\n\nИмена \u0027\u0027сминаются\u0027\u0027, то есть [[This is a link], становится [[ThisIsALink].\nОднако, подчеркивания и точки сохраняются, таким образом, у Вас может быть ссылка, как эта: [[This_is_a_link], или [[This.Is.A.Link].\nВсе неалфавитно-цифровые символы за исключением \u0027_\u0027 и \u0027.\u0027 удаляются (то есть, все символы, которые не являются буквами или числами),\nтак, чтобы [[John\u0027s page] стала [[JohnsPage]. Это позволяет Вам вводить нормальные предложения, которые затем превращаются в ссылки,\nкак говорит об этом [этикет Wiki | @1010].\n\nWikiName не может быть числом. Числовые имена используются для [footnotes | @1003].\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         },
         {
           "id": "1012",
-          "lastVersion": 0,
           "name": "WikiWiki",
           "description": "",
           "alias": "",
@@ -614,7 +635,8 @@
               "content": "WikiWiki является гавайским для \u0026quot;quick\u0026quot;.\n~ViteVite является французским для \u0026quot;quickquick\u0026quot;.\nУ Wiki также есть акроним – \u0027What I Know Is\u0027,\n\nДостаточно всесторонний список других Wiki-процессоров доступен в [оригинальной Wiki | http://c2.com/cgi/wiki? WikiEngines] от Ward Cunningham.\n"
             }
           ],
-          "attachments": []
+          "attachments": [],
+          "aclInfos": []
         }
       ],
       "attributes": [],
@@ -631,28 +653,28 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "!!! Поздравляем!\r\n\r\nВы успешно установили [JSPWiki | @1007].\r\n\r\nПредоставляются некоторые страницы, созданные для Вас:\r\n\r\n! Быстрый запуск\r\n\r\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\r\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\r\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\r\n\r\n! Проблемы установки\r\n\r\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\r\n  в [InstallationTips | @w2] для дополнительной информации.\r\n\r\n! Документация\r\n\r\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\r\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\r\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\r\n\r\n! Разное\r\n\r\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\r\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\r\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\r\n\r\nУдачи, и благодарности за выбор JSPWiki!\r\n\r\n%%collapse\r\n* title 1\r\n** Titile 1.1\r\n** Titile 1.2\r\n* title 2\r\n** Titile 2.1\r\n** Titile 2.2\r\n/%\r\n"
+          "content": "!!! Поздравляем!\n\nВы успешно установили [JSPWiki | @1007].\n\nПредоставляются некоторые страницы, созданные для Вас:\n\n! Быстрый запуск\n\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\n\n! Проблемы установки\n\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\n  в [InstallationTips | @w2] для дополнительной информации.\n\n! Документация\n\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\n\n! Разное\n\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\n\nУдачи, и благодарности за выбор JSPWiki!\n\n%%collapse\n* title 1\n** Titile 1.1\n** Titile 1.2\n* title 2\n** Titile 2.1\n** Titile 2.2\n/%\n"
         },
         {
           "version": 3,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "!!! Поздравляем!\r\n\r\nВы успешно установили [JSPWiki | @1007].\r\n\r\nПредоставляются некоторые страницы, созданные для Вас:\r\n\r\n! Быстрый запуск\r\n\r\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\r\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\r\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\r\n\r\n! Проблемы установки\r\n\r\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\r\n  в [InstallationTips | @w2] для дополнительной информации.\r\n\r\n! Документация\r\n\r\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\r\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\r\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\r\n\r\n! Разное\r\n\r\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\r\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\r\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\r\n\r\nУдачи, и благодарности за выбор JSPWiki!\r\n"
+          "content": "!!! Поздравляем!\n\nВы успешно установили [JSPWiki | @1007].\n\nПредоставляются некоторые страницы, созданные для Вас:\n\n! Быстрый запуск\n\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\n\n! Проблемы установки\n\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\n  в [InstallationTips | @w2] для дополнительной информации.\n\n! Документация\n\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\n\n! Разное\n\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\n\nУдачи, и благодарности за выбор JSPWiki!\n"
         },
         {
           "version": 4,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "!!! Поздравляем!\r\n\r\nВы успешно установили [JSPWiki | @1007].\r\n\r\nПредоставляются некоторые страницы, созданные для Вас:\r\n\r\n! Быстрый запуск\r\n\r\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\r\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\r\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\r\n\r\n! Проблемы установки\r\n\r\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\r\n  в [InstallationTips | @w2] для дополнительной информации.\r\n\r\n! Документация\r\n\r\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\r\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\r\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\r\n\r\n! Разное\r\n\r\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\r\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\r\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\r\n\r\nУдачи, и благодарности за выбор JSPWiki!\r\n\r\n%%collapse\r\n* title 1\r\n** Titile 1.1\r\n** Titile 1.2\r\n* title 2\r\n** Titile 2.1\r\n** Titile 2.2\r\n/%\r\n"
+          "content": "!!! Поздравляем!\n\nВы успешно установили [JSPWiki | @1007].\n\nПредоставляются некоторые страницы, созданные для Вас:\n\n! Быстрый запуск\n\n* Для того, чтобы протестировать простые вещи, попробуйте [Песочница | @1013].\n* Для беглого взгляда на Wiki, перейдите к [OneMinuteWiki | @w9].\n* Для указаний о хороших рабочих привычках работы с wiki, см. [WikiEtiquette | @1010].\n\n! Проблемы установки\n\n* Если Вы работаете с Microsoft Windows, или Вы испытываете затруднения из-за UTF-8 тогда, Вы, вероятно, хотите заглянуть\n  в [InstallationTips | @w2] для дополнительной информации.\n\n! Документация\n\n* Для всех функций разметки Wiki, см. [TextFormattingRules | @1003].\n* Точка входа для полной [JSPWikiDocumentation|JSPWiki:JSPWikiDocumentation]\n** [JSPWiki Новые Возможности|JSPWiki:NewIn].\n\n! Разное\n\n* Есть несколько способов, которыми можно войти в контакт с [Сообществом JSPWiki | @1008]. Проверьте их!\n* Чтобы видеть, о чем эта определенная wiki, щелкните по имени Wiki\n  на верхнем левом углу окна браузера, или [щелкните тут | @w1].\n\nУдачи, и благодарности за выбор JSPWiki!\n\n%%collapse\n* title 1\n** Titile 1.1\n** Titile 1.2\n* title 2\n** Titile 2.1\n** Titile 2.2\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w2",
-      "lastVersion": 0,
       "name": "HomeMenu",
       "description": "",
       "alias": "",
@@ -666,37 +688,31 @@
         {
           "version": 1,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
-          "author": "VFedorov",
-          "changeNote": "1",
-          "content": "* JSPWiki, version: __[{$jspwikiversion}]__\n* Number of pages : %%badge [{$totalpages}]/%\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\n* System Uptime: %%badge [{$uptime}] /%\n* ----\n* [Full System Info|Reader:System Info|class\u003d\u0027slimbox-link\u0027]\n* [Edit this page...|Edit:HomeMenu]\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
-        },
-        {
-          "version": 2,
-          "creationDate": "21 Jan 2023 01:02:03.000 +0300",
-          "author": "Victor Fedorov",
-          "changeNote": "",
-          "content": "* JSPWiki, version: __[{$jspwikiversion}]__\r\n* Number of pages : %%badge [{$totalpages}]/%\r\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\r\n* System Uptime: %%badge [{$uptime}] /%\r\n* ----\r\n* [Full System Info|Reader:1|class\u003d\u0027slimbox-link\u0027]\r\n* [Edit this page...|Edit:2]\r\n\r\n[{ALLOW edit Admin}]\r\n[{ALLOW view All}]\r\n"
-        },
-        {
-          "version": 3,
-          "creationDate": "21 Jan 2023 01:02:03.000 +0300",
-          "author": "127.0.0.1",
-          "changeNote": "",
-          "content": "* ElWiki, version: __[{$jspwikiversion}]__\r\n* Number of pages : %%badge [{$totalpages}]/%\r\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\r\n* System Uptime: %%badge [{$uptime}] /%\r\n* ----\r\n* [Full System Info|Reader:1|class\u003d\u0027slimbox-link\u0027]\r\n* [Edit this page...|Edit:2]\r\n\r\n[{ALLOW edit Admin}]\r\n[{ALLOW view All}]\r\n"
-        },
-        {
-          "version": 4,
-          "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Administrator",
           "changeNote": "",
-          "content": "* ElWiki, version: __[{$elwikiversion}]__\r\n* Number of pages : %%badge [{$totalpages}]/%\r\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\r\n* System Uptime: %%badge [{$uptime}] /%\r\n* ----\r\n* [Full System Info|Reader:w1|class\u003d\u0027slimbox-link\u0027]\r\n* [Edit this page...|Edit:w2]\r\n\r\n[{ALLOW edit Admin}]\r\n[{ALLOW view All}]\r\n"
+          "content": "* ElWiki, version: __[{$elwikiversion}]__\n* Number of pages : %%badge [{$totalpages}]/%\n* Number of active sessions : %%badge [{SessionsPlugin}]/%\n* System Uptime: %%badge [{$uptime}] /%\n* ----\n* [Full System Info|Reader:w1|class\u003d\u0027slimbox-link\u0027]\n* [Edit this page...|Edit:w2]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w20",
-      "lastVersion": 0,
       "name": "ApprovalRequiredForPageChanges",
       "description": "",
       "alias": "",
@@ -715,11 +731,11 @@
           "content": "Редактирования страницы требуют одобрения прежде, чем они станут активными. Ваш запрос был представлен, и будет одобрен или отклонен.\n\nМожно проверить состояние своего запроса, входя в систему (если Вы не в системе), и щелкнув по ссылке \"Workflow\".\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w21",
-      "lastVersion": 0,
       "name": "ApprovalRequiredForUserProfiles",
       "description": "",
       "alias": "",
@@ -738,11 +754,11 @@
           "content": "Новые профили пользователя требуют одобрения прежде, чем они станут активными. Ваш запрос был представлен на рассмотрение, и будет одобрен или отклонен. \n\nЕсли Вы предоставили адрес электронной почты, один из администраторов wiki информирует Вас, когда Ваша учетная запись будет одобрена. В качестве альтернативы, Вы можете возвратиться позже и выяснить, можно ли войти в систему.\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w100",
-      "lastVersion": 0,
       "name": "CSSBackgroundGradients",
       "description": "",
       "alias": "",
@@ -758,14 +774,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n.bg-warm-flame {background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);}\n.bg-night-fade {background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);}\n.bg-spring-warmth {background-image: linear-gradient(to top, #fad0c4 0%, #fad0c4 1%, #ffd1ff 100%);}\n.bg-juicy-peach {background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);}\n.bg-lady-lips {background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);}\n.bg-sunny-morning {background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);}\n.bg-rainy-ashville {background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);}\n.bg-frozen-dreams {background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);}\n.bg-winter-neva {background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);}\n.bg-dusty-grass {background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);}\n.bg-tempting-azure {background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);}\n.bg-deep-blue {background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);}\n.bg-cloudy-knoxville {background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);}\n.bg-everlasting-sky {background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);}\n.bg-plum-plate {background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white;}\n.bg-wild-apple {background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%);}\n/%\n\n%%add-css\n.bg-gradient-1 { background: linear-gradient(90deg, #69b7eb, #b3dbd3, #f4d6db); }\n.bg-gradient-2 { background: linear-gradient(90deg, #cfecd0, #ffc5ca); }\n.bg-gradient-3 { background: linear-gradient(90deg, #f598a8, #f6edb2); }\n.bg-gradient-4 { background: linear-gradient(90deg, #ee5c87, #f1a4b5, #d587b3);color:#fff; }\n.bg-gradient-5 { background: linear-gradient(90deg, #b9deed, #efefef); }\n.bg-gradient-6 { background: linear-gradient(90deg, #aea4e3, #d3ffe8); }\n.bg-gradient-7 { background: linear-gradient(90deg, #faf0cd, #fab397); }\n.bg-gradient-8 { background: linear-gradient(90deg, #cfecd0, #a0cea7, #9ec0db); }\n.bg-gradient-9 { background: linear-gradient(135deg, #e55d87 0%, #5fc3e4 100%);color:#fff; }\n/%\n\n%%add-css\n/*circle with center content*/\n.bollen { display:flex; flex-wrap:wrap; position:relative;}\n.bollen \u003e [[class*\u003dbg-] { \n  display: flex; \n  justify-content: center; \n  align-items: center;\n  text-align: center;\n  border-radius:100%;\n  width:200px; height:200px; margin:.25em;\n  transition: 0.5s all;\n}\n.bollen \u003e [[class*\u003dbg-]:hover { border-radius:0;}\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n.bg-warm-flame {background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);}\n.bg-night-fade {background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);}\n.bg-spring-warmth {background-image: linear-gradient(to top, #fad0c4 0%, #fad0c4 1%, #ffd1ff 100%);}\n.bg-juicy-peach {background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);}\n.bg-lady-lips {background-image: linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);}\n.bg-sunny-morning {background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);}\n.bg-rainy-ashville {background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);}\n.bg-frozen-dreams {background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);}\n.bg-winter-neva {background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);}\n.bg-dusty-grass {background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);}\n.bg-tempting-azure {background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);}\n.bg-deep-blue {background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);}\n.bg-cloudy-knoxville {background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);}\n.bg-everlasting-sky {background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);}\n.bg-plum-plate {background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white;}\n.bg-wild-apple {background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%);}\n/%\n\n%%add-css\n.bg-gradient-1 { background: linear-gradient(90deg, #69b7eb, #b3dbd3, #f4d6db); }\n.bg-gradient-2 { background: linear-gradient(90deg, #cfecd0, #ffc5ca); }\n.bg-gradient-3 { background: linear-gradient(90deg, #f598a8, #f6edb2); }\n.bg-gradient-4 { background: linear-gradient(90deg, #ee5c87, #f1a4b5, #d587b3);color:#fff; }\n.bg-gradient-5 { background: linear-gradient(90deg, #b9deed, #efefef); }\n.bg-gradient-6 { background: linear-gradient(90deg, #aea4e3, #d3ffe8); }\n.bg-gradient-7 { background: linear-gradient(90deg, #faf0cd, #fab397); }\n.bg-gradient-8 { background: linear-gradient(90deg, #cfecd0, #a0cea7, #9ec0db); }\n.bg-gradient-9 { background: linear-gradient(135deg, #e55d87 0%, #5fc3e4 100%);color:#fff; }\n/%\n\n%%add-css\n/*circle with center content*/\n.bollen { display:flex; flex-wrap:wrap; position:relative;}\n.bollen \u003e [[class*\u003dbg-] { \n  display: flex; \n  justify-content: center; \n  align-items: center;\n  text-align: center;\n  border-radius:100%;\n  width:200px; height:200px; margin:.25em;\n  transition: 0.5s all;\n}\n.bollen \u003e [[class*\u003dbg-]:hover { border-radius:0;}\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w101",
-      "lastVersion": 0,
       "name": "CSSBackgroundPatterns",
       "description": "",
       "alias": "",
@@ -781,14 +812,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n/*Credit http://bennettfeely.com/gradients/ */\n.bg-pattern-1 {\nbackground:\n  radial-gradient(\n    circle at bottom left,\n    transparent 0,\n    transparent 2em,\n    beige 2em,\n    beige 4em,\n    transparent 4em,\n    transparent 6em,\n    khaki 6em,\n    khaki 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at top right,\n    transparent 0,\n    transparent 2em,\n    beige 2em,\n    beige 4em,\n    transparent 4em,\n    transparent 6em,\n    khaki 6em,\n    khaki 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at top left,\n    transparent 0,\n    transparent 2em,\n    navajowhite 2em,\n    navajowhite 4em,\n    transparent 4em,\n    transparent 6em,\n    peachpuff 6em,\n    peachpuff 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at bottom right,\n    transparent 0,\n    transparent 2em,\n    palegoldenrod 2em,\n    palegoldenrod 4em,\n    transparent 4em,\n    transparent 6em,\n    peachpuff 6em,\n    peachpuff 8em,\n    transparent 8em,\n    transparent 10em\n  ), blanchedalmond;\n  \nbackground-blend-mode: multiply;\nbackground-size: 10em 10em;\nbackground-position: 0 0, 0 0, 5em 5em, 5em 5em;\n}\n.bg-pattern-2 {\ncolor:white;\nbackground:\n  radial-gradient(\n      at bottom right,\n      dodgerblue 0,\n      dodgerblue 1em,\n      lightskyblue 1em,\n      lightskyblue 2em,\n      deepskyblue 2em,\n      deepskyblue 3em,\n      gainsboro 3em,\n      gainsboro 4em,\n      lightsteelblue 4em,\n      lightsteelblue 5em,\n      deepskyblue 5em,\n      deepskyblue 6em,\n      lightskyblue 6em,\n      lightskyblue 7em,\n      transparent 7em,\n      transparent 8em\n    ),\n    radial-gradient(\n      at top left,\n      transparent 0,\n      transparent 1em,\n      lightskyblue 1em,\n      lightskyblue 2em,\n      deepskyblue 2em,\n      deepskyblue 3em,\n      lightsteelblue 3em,\n      lightsteelblue 4em,\n      gainsboro 4em,\n      gainsboro 5em,\n      deepskyblue 5em,\n      deepskyblue 6em,\n      skyblue 6em,\n      skyblue 7em,\n      dodgerblue 7em,\n      dodgerblue 8em,\n      transparent 8em,\n      transparent 20em\n    ),\n    radial-gradient(\n      circle at center bottom,\n      coral, darkslateblue\n    );\n  \n  background-blend-mode: overlay;\n  background-size:\n    8em 8em, 8em 8em, cover;\n}\n.bg-pattern-3{\nbackground:\n  repeating-linear-gradient(\n    to top left,\n    beige 0,\n    beige 2em,\n    moccasin 2em,\n    moccasin 4em,\n    wheat 4em,\n    wheat 6em\n  ),\n  repeating-linear-gradient(\n    to left,\n    white 0,\n    white 2em,\n    wheat 2em,\n    wheat 4em,\n    beige 4em,\n    beige 6em\n  ), white;\n\nbackground-blend-mode: multiply;\n}\n.bg-pattern-4 {\nbackground:\n  repeating-linear-gradient(\n    45deg,\n    transparent,\n    transparent 1em,\n    moccasin 0,\n    moccasin 2em,\n    transparent 0,\n    transparent 3em,\n    powderblue 0,\n    powderblue 4em,\n    transparent 0,\n    transparent 5em,\n    lavender 0,\n    lavender 6em,\n    transparent 0,\n    transparent 7em,\n    beige 0,\n    beige 8em\n  ),\n  repeating-linear-gradient(\n    -45deg,\n    transparent,\n    transparent 1em,\n    khaki 0,\n    khaki 2em,\n    transparent 0,\n    transparent 3em,\n    beige 0,\n    beige 4em,\n    transparent 0,\n    transparent 5em,\n    peachpuff 0,\n    peachpuff 6em\n  ), whitesmoke;\n\nbackground-blend-mode: multiply;\n}\n.bg-pattern-5{\nbackground:\n  linear-gradient(limegreen,transparent),\n  linear-gradient(90deg,skyblue,transparent),\n  linear-gradient(-90deg,coral,transparent);\n  \n  background-blend-mode: screen;\n}\n\n.bg-polka {\n  \n  background-image: \n  -webkit-gradient(radial, 30 30, 0, 30 30, 45,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n  -webkit-gradient(radial, 30 30, 0, 30 30, 45,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n    \n  background-image:\n  -webkit-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -webkit-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -moz-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -moz-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -ms-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -ms-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -o-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -o-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  \n  background-image:\n  radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n    \n  /*ff 3.6*/-moz-background-size: 100px 100px;\n  background-size: 100px 100px;\n  background-position: 0 0, 50px 50px;    \n}\n.bg-small-polka {\n  background-image: \n  -webkit-gradient(radial, 20 20, 0, 20 20, 20,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n    -webkit-gradient(radial, 20 20, 0, 20 20, 20,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n    \n  /*ff 3.6*/-moz-background-size: 50px 50px;\n  background-size: 50px 50px;\n  background-position: 0 0, 25px 25px;\n}\n\n.bg-tiny-polka {\n  background-image: \n  -webkit-gradient(radial, 7 7, 0, 7 7, 7,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n  -webkit-gradient(radial, 7 7, 0, 7 7, 7,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n  /*ff 3.6*/-moz-background-size: 20px 20px;\n  background-size: 20px 20px;\n  background-position: 0 0, 10px 10px;\n}\n\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n/*Credit http://bennettfeely.com/gradients/ */\n.bg-pattern-1 {\nbackground:\n  radial-gradient(\n    circle at bottom left,\n    transparent 0,\n    transparent 2em,\n    beige 2em,\n    beige 4em,\n    transparent 4em,\n    transparent 6em,\n    khaki 6em,\n    khaki 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at top right,\n    transparent 0,\n    transparent 2em,\n    beige 2em,\n    beige 4em,\n    transparent 4em,\n    transparent 6em,\n    khaki 6em,\n    khaki 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at top left,\n    transparent 0,\n    transparent 2em,\n    navajowhite 2em,\n    navajowhite 4em,\n    transparent 4em,\n    transparent 6em,\n    peachpuff 6em,\n    peachpuff 8em,\n    transparent 8em,\n    transparent 10em\n  ),\n  radial-gradient(\n    circle at bottom right,\n    transparent 0,\n    transparent 2em,\n    palegoldenrod 2em,\n    palegoldenrod 4em,\n    transparent 4em,\n    transparent 6em,\n    peachpuff 6em,\n    peachpuff 8em,\n    transparent 8em,\n    transparent 10em\n  ), blanchedalmond;\n  \nbackground-blend-mode: multiply;\nbackground-size: 10em 10em;\nbackground-position: 0 0, 0 0, 5em 5em, 5em 5em;\n}\n.bg-pattern-2 {\ncolor:white;\nbackground:\n  radial-gradient(\n      at bottom right,\n      dodgerblue 0,\n      dodgerblue 1em,\n      lightskyblue 1em,\n      lightskyblue 2em,\n      deepskyblue 2em,\n      deepskyblue 3em,\n      gainsboro 3em,\n      gainsboro 4em,\n      lightsteelblue 4em,\n      lightsteelblue 5em,\n      deepskyblue 5em,\n      deepskyblue 6em,\n      lightskyblue 6em,\n      lightskyblue 7em,\n      transparent 7em,\n      transparent 8em\n    ),\n    radial-gradient(\n      at top left,\n      transparent 0,\n      transparent 1em,\n      lightskyblue 1em,\n      lightskyblue 2em,\n      deepskyblue 2em,\n      deepskyblue 3em,\n      lightsteelblue 3em,\n      lightsteelblue 4em,\n      gainsboro 4em,\n      gainsboro 5em,\n      deepskyblue 5em,\n      deepskyblue 6em,\n      skyblue 6em,\n      skyblue 7em,\n      dodgerblue 7em,\n      dodgerblue 8em,\n      transparent 8em,\n      transparent 20em\n    ),\n    radial-gradient(\n      circle at center bottom,\n      coral, darkslateblue\n    );\n  \n  background-blend-mode: overlay;\n  background-size:\n    8em 8em, 8em 8em, cover;\n}\n.bg-pattern-3{\nbackground:\n  repeating-linear-gradient(\n    to top left,\n    beige 0,\n    beige 2em,\n    moccasin 2em,\n    moccasin 4em,\n    wheat 4em,\n    wheat 6em\n  ),\n  repeating-linear-gradient(\n    to left,\n    white 0,\n    white 2em,\n    wheat 2em,\n    wheat 4em,\n    beige 4em,\n    beige 6em\n  ), white;\n\nbackground-blend-mode: multiply;\n}\n.bg-pattern-4 {\nbackground:\n  repeating-linear-gradient(\n    45deg,\n    transparent,\n    transparent 1em,\n    moccasin 0,\n    moccasin 2em,\n    transparent 0,\n    transparent 3em,\n    powderblue 0,\n    powderblue 4em,\n    transparent 0,\n    transparent 5em,\n    lavender 0,\n    lavender 6em,\n    transparent 0,\n    transparent 7em,\n    beige 0,\n    beige 8em\n  ),\n  repeating-linear-gradient(\n    -45deg,\n    transparent,\n    transparent 1em,\n    khaki 0,\n    khaki 2em,\n    transparent 0,\n    transparent 3em,\n    beige 0,\n    beige 4em,\n    transparent 0,\n    transparent 5em,\n    peachpuff 0,\n    peachpuff 6em\n  ), whitesmoke;\n\nbackground-blend-mode: multiply;\n}\n.bg-pattern-5{\nbackground:\n  linear-gradient(limegreen,transparent),\n  linear-gradient(90deg,skyblue,transparent),\n  linear-gradient(-90deg,coral,transparent);\n  \n  background-blend-mode: screen;\n}\n\n.bg-polka {\n  \n  background-image: \n  -webkit-gradient(radial, 30 30, 0, 30 30, 45,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n  -webkit-gradient(radial, 30 30, 0, 30 30, 45,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n    \n  background-image:\n  -webkit-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -webkit-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -moz-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -moz-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -ms-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -ms-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  background-image:\n  -o-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  -o-radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n  \n  background-image:\n  radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%),\n  radial-gradient(30% 30%,circle closest-side, \n    rgba(255,255,225,0.5) 40%,\n    rgba(255,255,225,0) 44%,\n    transparent 100%);\n    \n  /*ff 3.6*/-moz-background-size: 100px 100px;\n  background-size: 100px 100px;\n  background-position: 0 0, 50px 50px;    \n}\n.bg-small-polka {\n  background-image: \n  -webkit-gradient(radial, 20 20, 0, 20 20, 20,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n    -webkit-gradient(radial, 20 20, 0, 20 20, 20,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n    \n  /*ff 3.6*/-moz-background-size: 50px 50px;\n  background-size: 50px 50px;\n  background-position: 0 0, 25px 25px;\n}\n\n.bg-tiny-polka {\n  background-image: \n  -webkit-gradient(radial, 7 7, 0, 7 7, 7,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    ),\n  -webkit-gradient(radial, 7 7, 0, 7 7, 7,\n      color-stop(0.4,  rgba(255,255,255,0.5)), \n      color-stop(0.44, rgba(255,255,255,0))\n    );\n  /*ff 3.6*/-moz-background-size: 20px 20px;\n  background-size: 20px 20px;\n  background-position: 0 0, 10px 10px;\n}\n\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w102",
-      "lastVersion": 0,
       "name": "CSSInstagramFilters",
       "description": "",
       "alias": "",
@@ -804,14 +850,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n/*Credit: CSSgram (http://una.im/CSSgram/), an open source library (MIT) for recreating Instagram filters. */\n.aden{-webkit-filter:hue-rotate(-20deg) contrast(.9) saturate(.85) brightness(1.2);filter:hue-rotate(-20deg) contrast(.9) saturate(.85) brightness(1.2)}.aden::after{background:-webkit-linear-gradient(left,rgba(66,10,14,.2),transparent);background:linear-gradient(to right,rgba(66,10,14,.2),transparent);mix-blend-mode:darken}.perpetua::after,.reyes::after{mix-blend-mode:soft-light;lighter:.5}.inkwell{-webkit-filter:sepia(.3) contrast(1.1) brightness(1.1) grayscale(1);filter:sepia(.3) contrast(1.1) brightness(1.1) grayscale(1)}.perpetua::after{background:-webkit-linear-gradient(top,#005b9a,#e6c13d);background:linear-gradient(to bottom,#005b9a,#e6c13d)}.reyes{-webkit-filter:sepia(.22) brightness(1.1) contrast(.85) saturate(.75);filter:sepia(.22) brightness(1.1) contrast(.85) saturate(.75)}.reyes::after{background:#efcdad}.gingham{-webkit-filter:brightness(1.05) hue-rotate(-10deg);filter:brightness(1.05) hue-rotate(-10deg)}.gingham::after{background:-webkit-linear-gradient(left,rgba(66,10,14,.2),transparent);background:linear-gradient(to right,rgba(66,10,14,.2),transparent);mix-blend-mode:darken}.toaster{-webkit-filter:contrast(1.5) brightness(.9);filter:contrast(1.5) brightness(.9)}.toaster::after{background:-webkit-radial-gradient(circle,#804e0f,#3b003b);background:radial-gradient(circle,#804e0f,#3b003b);mix-blend-mode:screen}.walden{-webkit-filter:brightness(1.1) hue-rotate(-10deg) sepia(.3) saturate(1.6);filter:brightness(1.1) hue-rotate(-10deg) sepia(.3) saturate(1.6)}.walden::after{background:#04c;mix-blend-mode:screen;lighter:.3}.hudson{-webkit-filter:brightness(1.2) contrast(.9) saturate(1.1);filter:brightness(1.2) contrast(.9) saturate(1.1)}.hudson::after{background:-webkit-radial-gradient(circle,#a6b1ff 50%,#342134);background:radial-gradient(circle,#a6b1ff 50%,#342134);mix-blend-mode:multiply;lighter:.5}.earlybird{-webkit-filter:contrast(.9) sepia(.2);filter:contrast(.9) sepia(.2)}.earlybird::after{background:-webkit-radial-gradient(circle,#d0ba8e 20%,#360309 85%,#1d0210 100%);background:radial-gradient(circle,#d0ba8e 20%,#360309 85%,#1d0210 100%);mix-blend-mode:overlay}.mayfair{-webkit-filter:contrast(1.1) saturate(1.1);filter:contrast(1.1) saturate(1.1)}.mayfair::after{background:-webkit-radial-gradient(40% 40%,circle,rgba(255,255,255,.8),rgba(255,200,200,.6),#111 60%);background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.8),rgba(255,200,200,.6),#111 60%);mix-blend-mode:overlay;lighter:.4}.lofi{-webkit-filter:saturate(1.1) contrast(1.5);filter:saturate(1.1) contrast(1.5)}.lofi::after{background:-webkit-radial-gradient(circle,transparent 70%,#222 150%);background:radial-gradient(circle,transparent 70%,#222 150%);mix-blend-mode:multiply}._1977{-webkit-filter:contrast(1.1) brightness(1.1) saturate(1.3);filter:contrast(1.1) brightness(1.1) saturate(1.3)}._1977:after{background:rgba(243,106,188,.3);mix-blend-mode:screen}.brooklyn{-webkit-filter:contrast(.9) brightness(1.1);filter:contrast(.9) brightness(1.1)}.brooklyn::after{background:-webkit-radial-gradient(circle,rgba(168,223,193,.4) 70%,#c4b7c8);background:radial-gradient(circle,rgba(168,223,193,.4) 70%,#c4b7c8);mix-blend-mode:overlay}.xpro2{-webkit-filter:sepia(.3);filter:sepia(.3)}.xpro2::after{background:-webkit-radial-gradient(circle,#e6e7e0 40%,rgba(43,42,161,.6) 110%);background:radial-gradient(circle,#e6e7e0 40%,rgba(43,42,161,.6) 110%);mix-blend-mode:color-burn}.nashville{-webkit-filter:sepia(.2) contrast(1.2) brightness(1.05) saturate(1.2);filter:sepia(.2) contrast(1.2) brightness(1.05) saturate(1.2)}.nashville::after{background:rgba(0,70,150,.4);mix-blend-mode:lighten}.nashville::before{background:rgba(247,176,153,.56);mix-blend-mode:darken}.lark{-webkit-filter:contrast(.9);filter:contrast(.9)}.lark::after{background:rgba(242,242,242,.8);mix-blend-mode:darken}.lark::before{background:#22253f;mix-blend-mode:color-dodge}.moon{-webkit-filter:grayscale(1) contrast(1.1) brightness(1.1);filter:grayscale(1) contrast(1.1) brightness(1.1)}.moon::before{background:#a0a0a0;mix-blend-mode:soft-light}.moon::after{background:#383838;mix-blend-mode:lighten}.clarendon{-webkit-filter:contrast(1.2) saturate(1.35);filter:contrast(1.2) saturate(1.35)}.clarendon:before{background:rgba(127,187,227,.2);mix-blend-mode:overlay}.willow{-webkit-filter:grayscale(.5) contrast(.95) brightness(.9);filter:grayscale(.5) contrast(.95) brightness(.9)}.willow::before{background-color:radial-gradient(40%,circle,#d4a9af 55%,#000 150%);mix-blend-mode:overlay}.willow::after{background-color:#d8cdcb;mix-blend-mode:color}.rise{-webkit-filter:brightness(1.05) sepia(.2) contrast(.9) saturate(.9);filter:brightness(1.05) sepia(.2) contrast(.9) saturate(.9)}.rise::after{background:-webkit-radial-gradient(circle,rgba(232,197,152,.8),transparent 90%);background:radial-gradient(circle,rgba(232,197,152,.8),transparent 90%);mix-blend-mode:overlay;lighter:.6}.rise::before{background:-webkit-radial-gradient(circle,rgba(236,205,169,.15) 55%,rgba(50,30,7,.4));background:radial-gradient(circle,rgba(236,205,169,.15) 55%,rgba(50,30,7,.4));mix-blend-mode:multiply}._1977:after,._1977:before,.aden:after,.aden:before,.brooklyn:after,.brooklyn:before,.clarendon:after,.clarendon:before,.earlybird:after,.earlybird:before,.gingham:after,.gingham:before,.hudson:after,.hudson:before,.inkwell:after,.inkwell:before,.lark:after,.lark:before,.lofi:after,.lofi:before,.mayfair:after,.mayfair:before,.moon:after,.moon:before,.nashville:after,.nashville:before,.perpetua:after,.perpetua:before,.reyes:after,.reyes:before,.rise:after,.rise:before,.slumber:after,.slumber:before,.toaster:after,.toaster:before,.walden:after,.walden:before,.willow:after,.willow:before,.xpro2:after,.xpro2:before{content:\"\";display:block;height:100%;width:100%;top:0;left:0;position:absolute;pointer-events:none}._1977,.aden,.brooklyn,.clarendon,.earlybird,.gingham,.hudson,.inkwell,.lark,.lofi,.mayfair,.moon,.nashville,.perpetua,.reyes,.rise,.slumber,.toaster,.walden,.willow,.xpro2{position:relative}._1977 img,.aden img,.brooklyn img,.clarendon img,.earlybird img,.gingham img,.hudson img,.inkwell img,.lark img,.lofi img,.mayfair img,.moon img,.nashville img,.perpetua img,.reyes img,.rise img,.slumber img,.toaster img,.walden img,.willow img,.xpro2 img{/*width:100%*/;z-index:1}._1977:before,.aden:before,.brooklyn:before,.clarendon:before,.earlybird:before,.gingham:before,.hudson:before,.inkwell:before,.lark:before,.lofi:before,.mayfair:before,.moon:before,.nashville:before,.perpetua:before,.reyes:before,.rise:before,.slumber:before,.toaster:before,.walden:before,.willow:before,.xpro2:before{z-index:2}._1977:after,.aden:after,.brooklyn:after,.clarendon:after,.earlybird:after,.gingham:after,.hudson:after,.inkwell:after,.lark:after,.lofi:after,.mayfair:after,.moon:after,.nashville:after,.perpetua:after,.reyes:after,.rise:after,.slumber:after,.toaster:after,.walden:after,.willow:after,.xpro2:after{z-index:3}.slumber{-webkit-filter:saturate(.66) brightness(1.05);filter:saturate(.66) brightness(1.05)}.slumber::after{background:rgba(125,105,24,.5);mix-blend-mode:soft-light}.slumber::before{background:rgba(69,41,12,.4);mix-blend-mode:lighten}\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n/*Credit: CSSgram (http://una.im/CSSgram/), an open source library (MIT) for recreating Instagram filters. */\n.aden{-webkit-filter:hue-rotate(-20deg) contrast(.9) saturate(.85) brightness(1.2);filter:hue-rotate(-20deg) contrast(.9) saturate(.85) brightness(1.2)}.aden::after{background:-webkit-linear-gradient(left,rgba(66,10,14,.2),transparent);background:linear-gradient(to right,rgba(66,10,14,.2),transparent);mix-blend-mode:darken}.perpetua::after,.reyes::after{mix-blend-mode:soft-light;lighter:.5}.inkwell{-webkit-filter:sepia(.3) contrast(1.1) brightness(1.1) grayscale(1);filter:sepia(.3) contrast(1.1) brightness(1.1) grayscale(1)}.perpetua::after{background:-webkit-linear-gradient(top,#005b9a,#e6c13d);background:linear-gradient(to bottom,#005b9a,#e6c13d)}.reyes{-webkit-filter:sepia(.22) brightness(1.1) contrast(.85) saturate(.75);filter:sepia(.22) brightness(1.1) contrast(.85) saturate(.75)}.reyes::after{background:#efcdad}.gingham{-webkit-filter:brightness(1.05) hue-rotate(-10deg);filter:brightness(1.05) hue-rotate(-10deg)}.gingham::after{background:-webkit-linear-gradient(left,rgba(66,10,14,.2),transparent);background:linear-gradient(to right,rgba(66,10,14,.2),transparent);mix-blend-mode:darken}.toaster{-webkit-filter:contrast(1.5) brightness(.9);filter:contrast(1.5) brightness(.9)}.toaster::after{background:-webkit-radial-gradient(circle,#804e0f,#3b003b);background:radial-gradient(circle,#804e0f,#3b003b);mix-blend-mode:screen}.walden{-webkit-filter:brightness(1.1) hue-rotate(-10deg) sepia(.3) saturate(1.6);filter:brightness(1.1) hue-rotate(-10deg) sepia(.3) saturate(1.6)}.walden::after{background:#04c;mix-blend-mode:screen;lighter:.3}.hudson{-webkit-filter:brightness(1.2) contrast(.9) saturate(1.1);filter:brightness(1.2) contrast(.9) saturate(1.1)}.hudson::after{background:-webkit-radial-gradient(circle,#a6b1ff 50%,#342134);background:radial-gradient(circle,#a6b1ff 50%,#342134);mix-blend-mode:multiply;lighter:.5}.earlybird{-webkit-filter:contrast(.9) sepia(.2);filter:contrast(.9) sepia(.2)}.earlybird::after{background:-webkit-radial-gradient(circle,#d0ba8e 20%,#360309 85%,#1d0210 100%);background:radial-gradient(circle,#d0ba8e 20%,#360309 85%,#1d0210 100%);mix-blend-mode:overlay}.mayfair{-webkit-filter:contrast(1.1) saturate(1.1);filter:contrast(1.1) saturate(1.1)}.mayfair::after{background:-webkit-radial-gradient(40% 40%,circle,rgba(255,255,255,.8),rgba(255,200,200,.6),#111 60%);background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.8),rgba(255,200,200,.6),#111 60%);mix-blend-mode:overlay;lighter:.4}.lofi{-webkit-filter:saturate(1.1) contrast(1.5);filter:saturate(1.1) contrast(1.5)}.lofi::after{background:-webkit-radial-gradient(circle,transparent 70%,#222 150%);background:radial-gradient(circle,transparent 70%,#222 150%);mix-blend-mode:multiply}._1977{-webkit-filter:contrast(1.1) brightness(1.1) saturate(1.3);filter:contrast(1.1) brightness(1.1) saturate(1.3)}._1977:after{background:rgba(243,106,188,.3);mix-blend-mode:screen}.brooklyn{-webkit-filter:contrast(.9) brightness(1.1);filter:contrast(.9) brightness(1.1)}.brooklyn::after{background:-webkit-radial-gradient(circle,rgba(168,223,193,.4) 70%,#c4b7c8);background:radial-gradient(circle,rgba(168,223,193,.4) 70%,#c4b7c8);mix-blend-mode:overlay}.xpro2{-webkit-filter:sepia(.3);filter:sepia(.3)}.xpro2::after{background:-webkit-radial-gradient(circle,#e6e7e0 40%,rgba(43,42,161,.6) 110%);background:radial-gradient(circle,#e6e7e0 40%,rgba(43,42,161,.6) 110%);mix-blend-mode:color-burn}.nashville{-webkit-filter:sepia(.2) contrast(1.2) brightness(1.05) saturate(1.2);filter:sepia(.2) contrast(1.2) brightness(1.05) saturate(1.2)}.nashville::after{background:rgba(0,70,150,.4);mix-blend-mode:lighten}.nashville::before{background:rgba(247,176,153,.56);mix-blend-mode:darken}.lark{-webkit-filter:contrast(.9);filter:contrast(.9)}.lark::after{background:rgba(242,242,242,.8);mix-blend-mode:darken}.lark::before{background:#22253f;mix-blend-mode:color-dodge}.moon{-webkit-filter:grayscale(1) contrast(1.1) brightness(1.1);filter:grayscale(1) contrast(1.1) brightness(1.1)}.moon::before{background:#a0a0a0;mix-blend-mode:soft-light}.moon::after{background:#383838;mix-blend-mode:lighten}.clarendon{-webkit-filter:contrast(1.2) saturate(1.35);filter:contrast(1.2) saturate(1.35)}.clarendon:before{background:rgba(127,187,227,.2);mix-blend-mode:overlay}.willow{-webkit-filter:grayscale(.5) contrast(.95) brightness(.9);filter:grayscale(.5) contrast(.95) brightness(.9)}.willow::before{background-color:radial-gradient(40%,circle,#d4a9af 55%,#000 150%);mix-blend-mode:overlay}.willow::after{background-color:#d8cdcb;mix-blend-mode:color}.rise{-webkit-filter:brightness(1.05) sepia(.2) contrast(.9) saturate(.9);filter:brightness(1.05) sepia(.2) contrast(.9) saturate(.9)}.rise::after{background:-webkit-radial-gradient(circle,rgba(232,197,152,.8),transparent 90%);background:radial-gradient(circle,rgba(232,197,152,.8),transparent 90%);mix-blend-mode:overlay;lighter:.6}.rise::before{background:-webkit-radial-gradient(circle,rgba(236,205,169,.15) 55%,rgba(50,30,7,.4));background:radial-gradient(circle,rgba(236,205,169,.15) 55%,rgba(50,30,7,.4));mix-blend-mode:multiply}._1977:after,._1977:before,.aden:after,.aden:before,.brooklyn:after,.brooklyn:before,.clarendon:after,.clarendon:before,.earlybird:after,.earlybird:before,.gingham:after,.gingham:before,.hudson:after,.hudson:before,.inkwell:after,.inkwell:before,.lark:after,.lark:before,.lofi:after,.lofi:before,.mayfair:after,.mayfair:before,.moon:after,.moon:before,.nashville:after,.nashville:before,.perpetua:after,.perpetua:before,.reyes:after,.reyes:before,.rise:after,.rise:before,.slumber:after,.slumber:before,.toaster:after,.toaster:before,.walden:after,.walden:before,.willow:after,.willow:before,.xpro2:after,.xpro2:before{content:\"\";display:block;height:100%;width:100%;top:0;left:0;position:absolute;pointer-events:none}._1977,.aden,.brooklyn,.clarendon,.earlybird,.gingham,.hudson,.inkwell,.lark,.lofi,.mayfair,.moon,.nashville,.perpetua,.reyes,.rise,.slumber,.toaster,.walden,.willow,.xpro2{position:relative}._1977 img,.aden img,.brooklyn img,.clarendon img,.earlybird img,.gingham img,.hudson img,.inkwell img,.lark img,.lofi img,.mayfair img,.moon img,.nashville img,.perpetua img,.reyes img,.rise img,.slumber img,.toaster img,.walden img,.willow img,.xpro2 img{/*width:100%*/;z-index:1}._1977:before,.aden:before,.brooklyn:before,.clarendon:before,.earlybird:before,.gingham:before,.hudson:before,.inkwell:before,.lark:before,.lofi:before,.mayfair:before,.moon:before,.nashville:before,.perpetua:before,.reyes:before,.rise:before,.slumber:before,.toaster:before,.walden:before,.willow:before,.xpro2:before{z-index:2}._1977:after,.aden:after,.brooklyn:after,.clarendon:after,.earlybird:after,.gingham:after,.hudson:after,.inkwell:after,.lark:after,.lofi:after,.mayfair:after,.moon:after,.nashville:after,.perpetua:after,.reyes:after,.rise:after,.slumber:after,.toaster:after,.walden:after,.willow:after,.xpro2:after{z-index:3}.slumber{-webkit-filter:saturate(.66) brightness(1.05);filter:saturate(.66) brightness(1.05)}.slumber::after{background:rgba(125,105,24,.5);mix-blend-mode:soft-light}.slumber::before{background:rgba(69,41,12,.4);mix-blend-mode:lighten}\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w103",
-      "lastVersion": 0,
       "name": "CSSPrettifyThemePrism",
       "description": "",
       "alias": "",
@@ -827,14 +888,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n\n  /* Based on prism.js, default theme by Lea Verou (http://primsjs.com) */\n  .prettify pre.prettyprint { border-radius:0 4px 4px 0; }\n  .prettify pre.prettylines { border-radius: 4px 0 0 4px; \n      color: #999; \n      border-right: 1px solid #ddd;\n  }\n  .prettify pre {\n    color: black;\n    background: #f5f2f0;\n    border:none; \n    text-shadow: 0 1px white;\n    line-height:1.5;\n    font-family: Consolas, Monaco, \u0027Andale Mono\u0027, \u0027Ubuntu Mono\u0027, monospace;\n  }\n  .prettify pre::-moz-selection, .prettify pre ::-moz-selection {\n    text-shadow: none;\n    background: #b3d4fc;\n  }\n  .prettify pre::selection, .prettify pre ::selection {\n    text-shadow: none;\n    background: #b3d4fc;\n  }\n  @media print {\n    .prettify pre { text-shadow: none; }\n  }\n\n  .pln { color: black; }  /* plain text */\n  .str { color: #690; }  /* string content */\n  .kwd { color: #07a; }  /* keyword */\n  .com { color: slategray; }  /* comment */\n  .typ { color: #a67f59; background: hsla(0, 0%, 100%, .5); }  /* type name */\n  .lit { color: #905; }  /* literal value */\n  .pun { color: #999; }  /* punctuation */\n  .opn { color: #07a; }  /* lisp open bracket */\n  .clo { color: #07a; }  /* lisp close bracket */\n  .tag { color: #905; }  /* markup tag name */\n  .atn { color: #690; }  /* markup attribute name */\n  .atv { color: #07a; }  /* markup attribute value */\n  .dec { color: #07a; }  /* declaration */\n  .var { color: #e90; }  /* variable name */\n  .fun { color: #dd4a68; }  /* function name */\n\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n\n  /* Based on prism.js, default theme by Lea Verou (http://primsjs.com) */\n  .prettify pre.prettyprint { border-radius:0 4px 4px 0; }\n  .prettify pre.prettylines { border-radius: 4px 0 0 4px; \n      color: #999; \n      border-right: 1px solid #ddd;\n  }\n  .prettify pre {\n    color: black;\n    background: #f5f2f0;\n    border:none; \n    text-shadow: 0 1px white;\n    line-height:1.5;\n    font-family: Consolas, Monaco, \u0027Andale Mono\u0027, \u0027Ubuntu Mono\u0027, monospace;\n  }\n  .prettify pre::-moz-selection, .prettify pre ::-moz-selection {\n    text-shadow: none;\n    background: #b3d4fc;\n  }\n  .prettify pre::selection, .prettify pre ::selection {\n    text-shadow: none;\n    background: #b3d4fc;\n  }\n  @media print {\n    .prettify pre { text-shadow: none; }\n  }\n\n  .pln { color: black; }  /* plain text */\n  .str { color: #690; }  /* string content */\n  .kwd { color: #07a; }  /* keyword */\n  .com { color: slategray; }  /* comment */\n  .typ { color: #a67f59; background: hsla(0, 0%, 100%, .5); }  /* type name */\n  .lit { color: #905; }  /* literal value */\n  .pun { color: #999; }  /* punctuation */\n  .opn { color: #07a; }  /* lisp open bracket */\n  .clo { color: #07a; }  /* lisp close bracket */\n  .tag { color: #905; }  /* markup tag name */\n  .atn { color: #690; }  /* markup attribute name */\n  .atv { color: #07a; }  /* markup attribute value */\n  .dec { color: #07a; }  /* declaration */\n  .var { color: #e90; }  /* variable name */\n  .fun { color: #dd4a68; }  /* function name */\n\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w104",
-      "lastVersion": 0,
       "name": "CSSPrettifyThemeTomorrowNightBlue",
       "description": "",
       "alias": "",
@@ -850,14 +926,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n  .prettify pre {\n    background: #002451;\n    font-family: Menlo, \"Bitstream Vera Sans Mono\", \"DejaVu Sans Mono\", Monaco, Consolas, monospace;\n    border:none; \n  }\n  pre.prettyprint { border-radius:0 4px 4px 0; }\n  pre.prettylines { border-radius: 4px 0 0 4px; color: #7285b7; }\n  \n  .pln { color: #ffffff; }  /* plain text */\n  .str { color: #d1f1a9; }  /* string content */\n  .kwd { color: #ebbbff; }  /* keyword */\n  .com { color: #7285b7; }  /* comment */\n  .typ { color: #bbdaff; }  /* type name */\n  .lit { color: #ffc58f; }  /* literal value */\n  .pun { color: #ffffff; }  /* punctuation */\n  .opn { color: #ffffff; }  /* lisp open bracket */\n  .clo { color: #ffffff; }  /* lisp close bracket */\n  .tag { color: #ff9da4; }  /* markup tag name */\n  .atn { color: #ffc58f; }  /* markup attribute name */\n  .atv { color: #99ffff; }  /* markup attribute value */\n  .dec { color: #ffc58f; }  /* declaration */\n  .var { color: #ff9da4; }  /* variable name */\n  .fun { color: #bbdaff; }  /* function name */\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n  .prettify pre {\n    background: #002451;\n    font-family: Menlo, \"Bitstream Vera Sans Mono\", \"DejaVu Sans Mono\", Monaco, Consolas, monospace;\n    border:none; \n  }\n  pre.prettyprint { border-radius:0 4px 4px 0; }\n  pre.prettylines { border-radius: 4px 0 0 4px; color: #7285b7; }\n  \n  .pln { color: #ffffff; }  /* plain text */\n  .str { color: #d1f1a9; }  /* string content */\n  .kwd { color: #ebbbff; }  /* keyword */\n  .com { color: #7285b7; }  /* comment */\n  .typ { color: #bbdaff; }  /* type name */\n  .lit { color: #ffc58f; }  /* literal value */\n  .pun { color: #ffffff; }  /* punctuation */\n  .opn { color: #ffffff; }  /* lisp open bracket */\n  .clo { color: #ffffff; }  /* lisp close bracket */\n  .tag { color: #ff9da4; }  /* markup tag name */\n  .atn { color: #ffc58f; }  /* markup attribute name */\n  .atv { color: #99ffff; }  /* markup attribute value */\n  .dec { color: #ffc58f; }  /* declaration */\n  .var { color: #ff9da4; }  /* variable name */\n  .fun { color: #bbdaff; }  /* function name */\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w105",
-      "lastVersion": 0,
       "name": "CSSRibbon",
       "description": "",
       "alias": "",
@@ -873,14 +964,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n.ribbon {\n  position: absolute;\n  top: 0;\n  right: 0;\n  padding: .4em 3em;\n  transform-origin: 100% 0;\n  transform: rotate(90deg) translateX(70.71067814%) rotate(-90deg) rotate(45deg) translateY(-100%);\n  box-shadow: 0 0 .25em rgba(0,0,0,0.3);\n  \n  /*main bootstrap colors */\n  color: white;  /*text color*/\n  /*background:#337ab7; /*primary*/\n  /*background:#5cb85c; /*succes*/\n  background:#5bc0de; /*info*/\n  /*background:#f0ad4e; /*warning*/\n  /*background:#d9534f; /*danger*\n\n  /* red ribbon github\n  background: hsl(350, 80%, 55%);\n  color: #f5ebd6;\n  box-shadow: 0 0.1em 0 0.1em rgba(0, 0, 0, 0.15);\n  */\n}\n.ribbon a { \n  color:inherit; \n  text-decoration:none !important; \n}\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n.ribbon {\n  position: absolute;\n  top: 0;\n  right: 0;\n  padding: .4em 3em;\n  transform-origin: 100% 0;\n  transform: rotate(90deg) translateX(70.71067814%) rotate(-90deg) rotate(45deg) translateY(-100%);\n  box-shadow: 0 0 .25em rgba(0,0,0,0.3);\n  \n  /*main bootstrap colors */\n  color: white;  /*text color*/\n  /*background:#337ab7; /*primary*/\n  /*background:#5cb85c; /*succes*/\n  background:#5bc0de; /*info*/\n  /*background:#f0ad4e; /*warning*/\n  /*background:#d9534f; /*danger*\n\n  /* red ribbon github\n  background: hsl(350, 80%, 55%);\n  color: #f5ebd6;\n  box-shadow: 0 0.1em 0 0.1em rgba(0, 0, 0, 0.15);\n  */\n}\n.ribbon a { \n  color:inherit; \n  text-decoration:none !important; \n}\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w106",
-      "lastVersion": 0,
       "name": "CSSStripedText",
       "description": "",
       "alias": "",
@@ -896,14 +1002,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n.striped-text pre { \n  padding: 0.5em;\n  line-height: 1.5;\n  background-image: linear-gradient(transparent 50%, #fff 0);\n  background-size: auto 3em;\n  background-origin: content-box;\n  font-size: 1em;\n}\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n.striped-text pre { \n  padding: 0.5em;\n  line-height: 1.5;\n  background-image: linear-gradient(transparent 50%, #fff 0);\n  background-size: auto 3em;\n  background-origin: content-box;\n  font-size: 1em;\n}\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w108",
-      "lastVersion": 0,
       "name": "CSSThemeCleanBlue",
       "description": "",
       "alias": "",
@@ -919,14 +1040,29 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "%%add-css\n/* fonts */\n@import url(https://fonts.googleapis.com/css?family\u003dTitillium+Web:300,400,400italic,600,600italic,700|Source+Code+Pro:400,600);\n\nbody {\n  font-family: \"Titillium Web\", \"Candara\", \"Verdana\", \"Arial\", \"Helvetica\", sans-serif ;\n  /*font-size: 90% ;*/\n  line-height: normal ;\n  color: black;\n  background: #fbfbfb;\n}\nh2, h3, h4 {\n  margin: 1em 0 0.5em 0;\n  padding: 0.25em 0;\n  line-height: 1.2;\n}\nh2 { font-size: 180% }\nh3 { font-size: 150% }\nh4 { font-size: 130% }\nh2 .editsection, h2 .hashlink { font-size: 67% }\nh3 .editsection, h3 .hashlink { font-size: 76% }\nh4 .editsection, h4 .hashlink { font-size: 86% }\n\ncode, tt, pre {\n  font-family: \"Source Code Pro\",\"Consolas\",\"Liberation Mono\",\"Courier New\",\"Courier\", \"Monaco\", monospace;\n}\nb { font-weight : 600 ; }\n\n/* header / footer */\n.header {\n    background:rgba(251,251,251,0.8); color:black;\n}\n.pagename, .footer {\n  background: -webkit-linear-gradient(left, #001C37, white);\n  background: linear-gradient(left, #001C37, white);\n  border-radius:.25em;\n  font-family: inherit;\n  color:black;\n}\n.pagename a:link, .pagename a:visited { color:white; }\n.content { background:transparent; margin:0 .5em; }\n.content:after { background:transparent; }\n.sidebar { border-radius:.5em; background:rgba(162,195,223,0.10); /*#A2C3DF \u003d sidebar color*/ }\n\n/* hide jspwiki logo */\na.logo { border:none; text-indent:-99em; }\na.logo b:before { content:\"\"; }\n\n/* put back your own company logo */\na.logo {\n    background-image: url([Clean Blue Theme/logo-hi.png]);\n    background-size: contain;\n    background-repeat: no-repeat;\n    background-position: center;\n    margin-top:.5em;\n    height: 45px;\n    width: 120px; \n}\n\n/* links */\na, a:link { color: #0C4777 ; text-decoration:none;}\na:visited { color: #3D5A73 ; text-decoration:none;border-bottom:none;}\na:hover { border-bottom: 1px dotted #8DC5F2; }\na:active, a.external:active {\n  color: #556B1C ;\n  background-color: #D6EB9F ;\n  text-decoration: none ;\n  border-bottom : 1px dotted #7EA121 ;\n}\na.createpage {color: #74105B;text-decoration:none; border-bottom:1px dotted #B6509D;}\nimg.outlink {display:none;}\na.editsection,a.hashlink {\n  font-size: x-small;\n  line-height: 1.2;\n  padding: .25em;\n  vertical-align: top;\n  color: #B49CDC; text-decoration:none; border-bottom:none;\n}\na.editsection:hover,a.hashlink:hover {\n  background-color: #D3E2FF;\n  color: #0C4777 !important;\n}\n\n\n.lead {\n  font-family: \u0027Goudy Bookletter 1911\u0027, \"Cambria\", \"Times New Roman\", \"Times\", serif;\n}\n\n.panel-success \u003e .panel-heading, \n.success, .bg-success, .label-success, .alert-success, .progress-bar-success { \n  background-color: #E0FFE0;\n  border: thin dotted #9ED39E ;\n}\n.text-success {color:#9ED39E ; }\n\n.panel-info \u003e .panel-heading, \n.info, .bg-info, .label-info, .alert-info, .progress-bar-info { \n  background-color: #CCDEED;\n  border: thin dotted #D3E2FF ;\n}\n.text-info { color:#8DC5F2; }\n\n.panel-warning \u003e .panel-heading, \n.warning, .bg-warning, .label-warning, .alert-warning, .progress-bar-warning { \n  background-color: #FFDFC0;\n  border: thin dotted #FFDF80 ;\n}\n.text-warning { color: #FFDF80;}\n\n.panel-danger \u003e .panel-heading, \n.error, .danger, .bg-danger, .label-danger, .alert-danger,\n.progress-bar-error,.progress-bar-danger{ \n  background-color: #FFC0C0;\n  border: thin dotted #FF8080 ;\n}\n.text-danger { color:#FF8080; }\n\nblockquote {\n  border-left: 4px solid #CCDEED;\n  padding: 0 1em;\n  margin: 0 .5em;\n  font-size: 95% ;\n}\n\n/%\n\n\n[{ALLOW edit Admin}]\n[{ALLOW view All}]\n"
+          "content": "%%add-css\n/* fonts */\n@import url(https://fonts.googleapis.com/css?family\u003dTitillium+Web:300,400,400italic,600,600italic,700|Source+Code+Pro:400,600);\n\nbody {\n  font-family: \"Titillium Web\", \"Candara\", \"Verdana\", \"Arial\", \"Helvetica\", sans-serif ;\n  /*font-size: 90% ;*/\n  line-height: normal ;\n  color: black;\n  background: #fbfbfb;\n}\nh2, h3, h4 {\n  margin: 1em 0 0.5em 0;\n  padding: 0.25em 0;\n  line-height: 1.2;\n}\nh2 { font-size: 180% }\nh3 { font-size: 150% }\nh4 { font-size: 130% }\nh2 .editsection, h2 .hashlink { font-size: 67% }\nh3 .editsection, h3 .hashlink { font-size: 76% }\nh4 .editsection, h4 .hashlink { font-size: 86% }\n\ncode, tt, pre {\n  font-family: \"Source Code Pro\",\"Consolas\",\"Liberation Mono\",\"Courier New\",\"Courier\", \"Monaco\", monospace;\n}\nb { font-weight : 600 ; }\n\n/* header / footer */\n.header {\n    background:rgba(251,251,251,0.8); color:black;\n}\n.pagename, .footer {\n  background: -webkit-linear-gradient(left, #001C37, white);\n  background: linear-gradient(left, #001C37, white);\n  border-radius:.25em;\n  font-family: inherit;\n  color:black;\n}\n.pagename a:link, .pagename a:visited { color:white; }\n.content { background:transparent; margin:0 .5em; }\n.content:after { background:transparent; }\n.sidebar { border-radius:.5em; background:rgba(162,195,223,0.10); /*#A2C3DF \u003d sidebar color*/ }\n\n/* hide jspwiki logo */\na.logo { border:none; text-indent:-99em; }\na.logo b:before { content:\"\"; }\n\n/* put back your own company logo */\na.logo {\n    background-image: url([Clean Blue Theme/logo-hi.png]);\n    background-size: contain;\n    background-repeat: no-repeat;\n    background-position: center;\n    margin-top:.5em;\n    height: 45px;\n    width: 120px; \n}\n\n/* links */\na, a:link { color: #0C4777 ; text-decoration:none;}\na:visited { color: #3D5A73 ; text-decoration:none;border-bottom:none;}\na:hover { border-bottom: 1px dotted #8DC5F2; }\na:active, a.external:active {\n  color: #556B1C ;\n  background-color: #D6EB9F ;\n  text-decoration: none ;\n  border-bottom : 1px dotted #7EA121 ;\n}\na.createpage {color: #74105B;text-decoration:none; border-bottom:1px dotted #B6509D;}\nimg.outlink {display:none;}\na.editsection,a.hashlink {\n  font-size: x-small;\n  line-height: 1.2;\n  padding: .25em;\n  vertical-align: top;\n  color: #B49CDC; text-decoration:none; border-bottom:none;\n}\na.editsection:hover,a.hashlink:hover {\n  background-color: #D3E2FF;\n  color: #0C4777 !important;\n}\n\n\n.lead {\n  font-family: \u0027Goudy Bookletter 1911\u0027, \"Cambria\", \"Times New Roman\", \"Times\", serif;\n}\n\n.panel-success \u003e .panel-heading, \n.success, .bg-success, .label-success, .alert-success, .progress-bar-success { \n  background-color: #E0FFE0;\n  border: thin dotted #9ED39E ;\n}\n.text-success {color:#9ED39E ; }\n\n.panel-info \u003e .panel-heading, \n.info, .bg-info, .label-info, .alert-info, .progress-bar-info { \n  background-color: #CCDEED;\n  border: thin dotted #D3E2FF ;\n}\n.text-info { color:#8DC5F2; }\n\n.panel-warning \u003e .panel-heading, \n.warning, .bg-warning, .label-warning, .alert-warning, .progress-bar-warning { \n  background-color: #FFDFC0;\n  border: thin dotted #FFDF80 ;\n}\n.text-warning { color: #FFDF80;}\n\n.panel-danger \u003e .panel-heading, \n.error, .danger, .bg-danger, .label-danger, .alert-danger,\n.progress-bar-error,.progress-bar-danger{ \n  background-color: #FFC0C0;\n  border: thin dotted #FF8080 ;\n}\n.text-danger { color:#FF8080; }\n\nblockquote {\n  border-left: 4px solid #CCDEED;\n  padding: 0 1em;\n  margin: 0 .5em;\n  font-size: 95% ;\n}\n\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "edit",
+          "roles": [
+            "Admin"
+          ]
+        },
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w9",
-      "lastVersion": 0,
       "name": "InstallationTips",
       "description": "",
       "alias": "",
@@ -952,11 +1088,11 @@
           "content": "[{TableOfContents}]\n\n!! Проблемы Microsoft Windows\n\n! Конфигурация Wiki\nНаименее трудный метод для определения расположения Ваших файлов Wiki – определить\nместоположение их на том же самом диске, где установлен Ваш Tomcat (или другой веб-сервер),\nи задать расположение в формате Unix. Например, каталог C:\\JSPWiki\\files следует описать\nв конфигурационном файле как C\\:/JSPWiki/files (мета символ : требует экранирования).\n\nТакже удостоверьтесь, что Вы изменяете настройки для {{log4j.appender.~FileLog.File}} в {{jspwiki.properties}},\nесли Вы хотите, чтобы был создан файл журнала. Эта установка прячется вполне хорошо около конца файла конфигурации.\nФормат – то же самое как установка {{jspwiki.fileSystemProvider.pageDir}}, то есть наклонные черты влево должны быть дублированы.\n\n!! Проблемы UTF-8\n\nЕсли у Вас есть проблемы с UTF-8 при использовании Tomcat 5.x (или выше) и JSPWiki, пожалуйста, обратите внимание на следующее!\n\nНеобходимо отредактировать файл server.xml Tomcat (расположенный в conf-каталоге Tomcat).\nПожалуйста, добавьте к\n\n{{{\u003cConnector port\u003d\"8080\"\n               maxThreads\u003d\"150\" minSpareThreads\u003d\"25\" maxSpareThreads\u003d\"75\"\n               enableLookups\u003d\"false\" redirectPort\u003d\"8443\" acceptCount\u003d\"100\"\n               debug\u003d\"0\" connectionTimeout\u003d\"20000\" \n               disableUploadTimeout\u003d\"true\"/\u003e\n}}}\n\nтермин \u0027{{{URIEncoding \u003d \"UTF-8\"}}}\u0027.\n\nДолжно быть похоже на следующее:\n\n{{{\u003cConnector port\u003d\"8080\"\n               maxThreads\u003d\"150\" minSpareThreads\u003d\"25\" maxSpareThreads\u003d\"75\"\n               enableLookups\u003d\"false\" redirectPort\u003d\"8443\" acceptCount\u003d\"100\"\n               debug\u003d\"0\" connectionTimeout\u003d\"20000\" \n               disableUploadTimeout\u003d\"true\"\n               URIEncoding\u003d\"UTF-8\"/\u003e\n}}}\n\nПомните, что, если Вы используете mod_jk, следует определить {{URIEncoding}} также для JK Connector:\n\n{{{\n.........\n  \u003cservice name\u003d\"Catalina\"\u003e\n    \u003cconnector port\u003d\"8080\" /\u003e\n.........\n    \u003cconnector protocol\u003d\"AJP/1.3\" uriencoding\u003d\"UTF-8\" port\u003d\"8009\" /\u003e\n.........\n  \u003c/service\u003e\n}}}\n\n!! Другие подсказки\n\n! Редактирование меню на левой стороне.\n\nМеню на левой стороне (там \u003c-----) является лишь стандартной страницей Wiki, названной [LeftMenu | @w4].\n\nЕсли Вы (администратор) и не желаете, чтобы никто больше изменил его, можно всегда изменить [LeftMenu | @w4],\nи затем делать страницу только для чтения, помещая ACL на нее.\n\nНижнюю часть левой стороны, в свою очередь, называют [LeftMenuFooter | @w5], и она также полностью доступна для редактирования.\n\n! Разрешение канала [RSS|http://blogspace.com/rss/]\n\nВ Вашем файле jspwiki.properties, Вы должны будете установить \"jspwiki.rss.generate\" в \"true\",\n\n! Мне не нравится ~ThingsSquashedTogether в названиях страницы. Что я могу сделать?\n\nПоскольку финны говорят, \"voe tokkiinsa\", что значит \"да, конечно\".\nТолько лишь установите свойство \"jspwiki.breakTitleWithSpaces\" в значение \"true\", в Вашем файле jspwiki.properties.\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w5",
-      "lastVersion": 0,
       "name": "LeftMenuFooter",
       "description": "",
       "alias": "",
@@ -975,11 +1111,11 @@
           "content": "----\n\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w4",
-      "lastVersion": 0,
       "name": "LeftMenu",
       "description": "",
       "alias": "",
@@ -1027,21 +1163,21 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Administrator",
           "changeNote": "",
-          "content": "* [Главная страница | @1000]\r\n* [О вики | @1007]\r\n* [Новости|News]\r\n* [Недавние Изменения|Recent Changes]\r\n* [WikiEtiquette | @1010]\r\n\r\n* [Поиск страниц|@cmd.find]\r\n* [Неиспользуемые страницы | @w12]\r\n* [Неопределенные страницы | @w13]\r\n* [Индекс страниц|Page Index]\r\n* [Системная Информация | @w1]\r\n"
+          "content": "* [Главная страница | @1000]\n* [О вики | @1007]\n* [Новости|News]\n* [Недавние Изменения|Recent Changes]\n* [WikiEtiquette | @1010]\n\n* [Поиск страниц|@cmd.find]\n* [Неиспользуемые страницы | @w12]\n* [Неопределенные страницы | @w13]\n* [Индекс страниц|Page Index]\n* [Системная Информация | @w1]\n"
         },
         {
           "version": 3,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Administrator",
           "changeNote": "",
-          "content": "* [Главная страница | @1000]\r\n* [О вики | @1007]\r\n* [Новости | News]\r\n* [Недавние Изменения | @w10]\r\n* [WikiEtiquette | @1010]\r\n\r\n* [Поиск страниц | @cmd.find]\r\n* [Неиспользуемые страницы | @w12]\r\n* [Неопределенные страницы | @w13]\r\n* [Индекс страниц | @w14]\r\n* [Системная Информация | @w1]\r\n"
+          "content": "* [Главная страница | @1000]\n* [О вики | @1007]\n* [Новости | News]\n* [Недавние Изменения | @w10]\n* [WikiEtiquette | @1010]\n\n* [Поиск страниц | @cmd.find]\n* [Неиспользуемые страницы | @w12]\n* [Неопределенные страницы | @w13]\n* [Индекс страниц | @w14]\n* [Системная Информация | @w1]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w3",
-      "lastVersion": 0,
       "name": "MoreMenu",
       "description": "",
       "alias": "",
@@ -1083,14 +1219,14 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "[Недавние Изменения | @w10] \\\\\r\n[Индекс страниц | @w14] \\\\\r\n[О вики | @1007] \\\\\r\n[Системная Информация | @w1] \\\\\r\n\r\n[Неиспользуемые страницы | @w12] \\\\\r\n[Неопределенные страницы | @w13] \\\\\r\n"
+          "content": "[Недавние Изменения | @w10] \\\\\n[Индекс страниц | @w14] \\\\\n[О вики | @1007] \\\\\n[Системная Информация | @w1] \\\\\n\n[Неиспользуемые страницы | @w12] \\\\\n[Неопределенные страницы | @w13] \\\\\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w14",
-      "lastVersion": 0,
       "name": "PageIndex",
       "description": "",
       "alias": "",
@@ -1109,11 +1245,11 @@
           "content": "Это – алфавитный список всех страниц в этой Wiki.\n\n----\n\n[{INSERT IndexPlugin exclude\u003d\u0027SandBox-*\u0027}]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w10",
-      "lastVersion": 0,
       "name": "RecentChanges",
       "description": "",
       "alias": "",
@@ -1140,21 +1276,21 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT RecentChangesPlugin since\u003d30}]\r\n"
+          "content": "Это – изменения, произведенные в этих страницах в течение последних 30 дней.\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\n\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\n\n[{INSERT RecentChangesPlugin since\u003d30}]\n"
         },
         {
           "version": 3,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "Список изменений, произведенных в страницах за последние 30 дней.\r\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\r\n\r\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\r\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\r\n\r\n[{INSERT RecentChangesPlugin since\u003d30}]\r\n"
+          "content": "Список изменений, произведенных в страницах за последние 30 дней.\nПроверьте [FullRecentChanges | @w11] для полного списка всех измененных страниц.\n\nЭтот сервер живет на [{INSERT CurrentTimePlugin format\u003dzzzz}] и время здесь,\n[{INSERT CurrentTimePlugin format\u003d\u0027HH:mm \\\u0027on\\\u0027 dd-MMM-yyyy\u0027}].\n\n[{INSERT RecentChangesPlugin since\u003d30}]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w22",
-      "lastVersion": 0,
       "name": "RejectedMessage",
       "description": "",
       "alias": "",
@@ -1170,14 +1306,22 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "VFedorov",
           "changeNote": "1",
-          "content": "Ваши исправления были отклонены по следующей причине:\n%%(padding: 4px; margin: 3em; border: 1px inset; background: #eeeeee)\n[{$message}]\n%%\n\n[{ALLOW view All}]\n"
+          "content": "Ваши исправления были отклонены по следующей причине:\n%%(padding: 4px; margin: 3em; border: 1px inset; background: #eeeeee)\n[{$message}]\n%%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": [
+        {
+          "isAllow": true,
+          "permission": "view",
+          "roles": [
+            "All"
+          ]
+        }
+      ]
     },
     {
       "id": "w41",
-      "lastVersion": 0,
       "name": "TitleBox",
       "description": "",
       "alias": "",
@@ -1207,21 +1351,21 @@
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "%%center\r\n[Welcome | @w41] to the [JSPWiki | @1007]\r\n/%\r\n"
+          "content": "%%center\n[Welcome | @w41] to the [JSPWiki | @1007]\n/%\n"
         },
         {
           "version": 3,
           "creationDate": "21 Jan 2023 01:02:03.000 +0300",
           "author": "Victor Fedorov",
           "changeNote": "",
-          "content": "%%center\r\n[Welcome | @w41] to the [ElWiki | @1007]\r\n/%\r\n"
+          "content": "%%center\n[Welcome | @w41] to the [ElWiki | @1007]\n/%\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     },
     {
       "id": "w12",
-      "lastVersion": 0,
       "name": "UnusedPages",
       "description": "",
       "alias": "",
@@ -1240,7 +1384,8 @@
           "content": "Это – одинокие страницы, которые не доступны с любой страницы (кроме тех, которые автоматически сгенерированы).\n\n[{INSERT UnusedPagesPlugin}]\n"
         }
       ],
-      "attachments": []
+      "attachments": [],
+      "aclInfos": []
     }
   ]
 }

@@ -57,9 +57,7 @@ public class EditCmdCode extends CmdCode {
 		FilterManager filterManager = engine.getManager(FilterManager.class);
 		ISpamFilter spamFilter = filterManager.getSpamFilter();
 
-		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
-			return;
-		}
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 		if (wikiContext.getCommand().getTarget() == null) {
 			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;
@@ -79,11 +77,11 @@ public class EditCmdCode extends CmdCode {
 		String author = (String) session.getAttribute("author");
 		author = httpRequest.getParameter("author");
 		//TextUtil.replaceEntities( findParam( pageContext, "author" ) );
-		
+
 		String changenote = (String) session.getAttribute("changenote");
 		changenote = httpRequest.getParameter("changenote");
 		//findParam( pageContext, "changenote" );
-		
+
 		String text = httpRequest.getParameter(EditorManager.REQ_EDITEDTEXT);
 		//ContextUtil.getEditedText( pageContext );
 		String link = (String) session.getAttribute("link");

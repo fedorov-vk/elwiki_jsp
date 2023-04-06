@@ -30,9 +30,7 @@ public class WorkflowCmdCode extends CmdCode {
 		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
 		WorkflowManager workflowManager = getEngine().getManager(WorkflowManager.class);
 		
-		if (!authorizationManager.hasAccess(wikiContext, httpResponse)) {
-			return;
-		}
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 		// Extract the wiki session
 		Session wikiSession = wikiContext.getWikiSession();
 

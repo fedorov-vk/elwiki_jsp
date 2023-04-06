@@ -23,6 +23,7 @@ import java.security.AccessController;
 import java.security.Permission;
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wiki.api.core.Session;
@@ -161,6 +162,21 @@ public interface AuthorizationManager {
      */
     boolean hasRoleOrPrincipal( Session session, Principal principal );
 
+	/**
+	 * Checks whether the current user has access to the wiki context, by obtaining the required
+	 * Permission (WikiContext.requiredPermission()) and delegating the access check to
+	 * checkPermission(Session, Permission). If the user is allowed, this method returns, otherwise runs
+	 * web-forward request into message page.<br/>
+	 * Note that this method will automatically forwarding the user to message page, if access fails.
+	 * 
+	 * @param wikiContext  wiki context to check if it is accesible.
+	 * @param httpRequest  the http request.
+	 * @param httpResponse the http response.
+	 * @throws Exception In case something goes wrong.
+	 */
+	void checkAccess(WikiContext wikiContext, HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+			throws Exception;
+
     /**
      * Checks whether the current user has access to the wiki context, by obtaining the required Permission ({@link WikiContext#requiredPermission()})
      * and delegating the access check to {@link #checkPermission(Session, Permission)}. If the user is allowed, this method returns
@@ -173,6 +189,7 @@ public interface AuthorizationManager {
      * @return the result of the access check
      * @throws IOException In case something goes wrong
      */
+	@Deprecated
     default boolean hasAccess( final WikiContext context, final HttpServletResponse response ) throws IOException {
     	boolean result = hasAccess( context, response, true );
         return result;
@@ -192,6 +209,7 @@ public interface AuthorizationManager {
      * @return the result of the access check
      * @throws IOException If something goes wrong
      */
+    @Deprecated
     boolean hasAccess( final WikiContext context, final HttpServletResponse response, final boolean redirect ) throws IOException;
 
     /**

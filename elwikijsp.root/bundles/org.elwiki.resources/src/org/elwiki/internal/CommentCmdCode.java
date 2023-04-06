@@ -60,9 +60,7 @@ public class CommentCmdCode extends CmdCode {
 		@NonNull FilterManager filterManager = wiki.getManager(FilterManager.class);
 		ISpamFilter spamFilter = filterManager.getSpamFilter();
 
-	    if( !authorizationManager.hasAccess( wikiContext, httpResponse ) ) {
-	    	return;
-	    }
+		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 	    if( wikiContext.getCommand().getTarget() == null ) {
 	        httpResponse.sendRedirect( wikiContext.getURL( wikiContext.getRequestContext(), wikiContext.getName() ) );
 	        return;

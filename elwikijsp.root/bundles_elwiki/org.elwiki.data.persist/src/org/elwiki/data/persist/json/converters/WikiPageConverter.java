@@ -85,7 +85,7 @@ public class WikiPageConverter extends DeserialiseStuff
 		JsonArray aclInfos = new JsonArray();
 		result.add(ACL_INFOS, aclInfos);
 		for (AclInfo aclInfo : wikiPage.getAclInfos()) {
-			attachments.add(context.serialize(aclInfo, AclInfo.class));
+			aclInfos.add(context.serialize(aclInfo, AclInfo.class));
 		}
 
 		return result;

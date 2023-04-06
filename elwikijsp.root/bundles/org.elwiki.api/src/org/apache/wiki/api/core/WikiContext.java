@@ -51,6 +51,12 @@ import org.elwiki_data.WikiPage;
  */
 public interface WikiContext extends Cloneable, Command {
 
+	/** Used to pass the status of an http forwarding request into web-filter. */
+	String ATTR_FORWARD_REQUEST = "elwiki.attr.forward.request";
+
+	/** Used to pass message via forward request. */
+	String ATTR_MESSAGE = "elwiki.attr.message";
+
 	/** List of valid values ​​for the "shape" parameter of URL. */
 	List<String> allowedShapes = List.of("raw", "reader");
 

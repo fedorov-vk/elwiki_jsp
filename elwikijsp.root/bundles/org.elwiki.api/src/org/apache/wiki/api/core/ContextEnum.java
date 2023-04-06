@@ -68,7 +68,7 @@ public enum ContextEnum {
     WIKI_LOGIN( "cmd.login", "%u", "?redirect=%n", "LoginContent.jsp" ),
     WIKI_LOSTPASSWORD( "cmd.lostpassword", "%u", "?redirect=%n", "LoginContent.jsp" ),
     WIKI_LOGOUT( "cmd.logout", "%u", "", null ),
-    WIKI_MESSAGE( "Message.jsp", "%u", "", "DisplayMessage.jsp" ),
+    WIKI_MESSAGE( "cmd.message", "%u", "?redirect=%n", "MessageContent.jsp" ),
     WIKI_PREFS( "cmd.prefs", "%u", "", "PreferencesContent.jsp" ),
     WIKI_WORKFLOW( "cmd.workflow", "%u", "", "WorkflowContent.jsp" ),
     WIKI_SCOPE( "cmd.scope", "%u", "", "ScopeContent.jsp" ),

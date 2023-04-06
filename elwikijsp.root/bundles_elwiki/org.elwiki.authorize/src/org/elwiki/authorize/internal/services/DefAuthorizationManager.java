@@ -28,15 +28,22 @@ import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
@@ -47,6 +54,7 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.preferences.Preferences;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -90,38 +98,37 @@ import org.osgi.service.useradmin.Group;
 
 /**
  * <p>
- * Manages all access control and authorization; determines what authenticated users are allowed
- * to do.
+ * Manages all access control and authorization; determines what authenticated users are allowed to
+ * do.
  * </p>
  * <p>
- * Privileges in JSPWiki are expressed as Java-standard {@link java.security.Permission}
- * classes. There are two types of permissions:
+ * Privileges in JSPWiki are expressed as Java-standard {@link java.security.Permission} classes.
+ * There are two types of permissions:
  * </p>
  * <ul>
  * <li>{@link org.elwiki.permissions.WikiPermission} - privileges that apply to an entire wiki
  * instance: <em>e.g.,</em> editing user profiles, creating pages, creating groups</li>
- * <li>{@link org.elwiki.permissions.PagePermission} - privileges that apply to a single wiki
- * page or range of pages: <em>e.g.,</em> reading, editing, renaming
+ * <li>{@link org.elwiki.permissions.PagePermission} - privileges that apply to a single wiki page
+ * or range of pages: <em>e.g.,</em> reading, editing, renaming
  * </ul>
  * <p>
  * Calling classes determine whether they are entitled to perform a particular action by
  * constructing the appropriate permission first, then passing it and the current
- * {@link org.elwiki.api.IElWikiSession} to the
- * {@link #checkPermission(IElWikiSession, Permission)} method. If the session's Subject
- * possesses the permission, the action is allowed.
+ * {@link org.elwiki.api.IElWikiSession} to the {@link #checkPermission(IElWikiSession, Permission)}
+ * method. If the session's Subject possesses the permission, the action is allowed.
  * </p>
  * <p>
- * For WikiPermissions, the decision criteria is relatively simple: the caller either possesses
- * the permission, as granted by the wiki security policy -- or not.
+ * For WikiPermissions, the decision criteria is relatively simple: the caller either possesses the
+ * permission, as granted by the wiki security policy -- or not.
  * </p>
  * <p>
  * For PagePermissions, the logic is exactly the same if the page being checked does not have an
- * access control list. However, if the page does have an ACL, the authorization decision is
- * made based the <em>union</em> of the permissions granted in the ACL and in the security
- * policy. In other words, the user must be named in the ACL (or belong to a group or role that
- * is named in the ACL) <em>and</em> be granted (at least) the same permission in the security
- * policy. We do this to prevent a user from gaining more permissions than they already have,
- * based on the security policy.
+ * access control list. However, if the page does have an ACL, the authorization decision is made
+ * based the <em>union</em> of the permissions granted in the ACL and in the security policy. In
+ * other words, the user must be named in the ACL (or belong to a group or role that is named in the
+ * ACL) <em>and</em> be granted (at least) the same permission in the security policy. We do this to
+ * prevent a user from gaining more permissions than they already have, based on the security
+ * policy.
  * </p>
  * <p>
  * See the {@link #checkPermission(WikiSession, Permission)} and
@@ -196,8 +203,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/**
 	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
 	 * 
-	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation
-	 * to take care of role lookup operations.
+	 * Expects to find extension 'org.elwiki.auth.authorizer' with a valid Authorizer implementation to
+	 * take care of role lookup operations.
 	 */
 	@Override
 	public void initialize() throws WikiException {
@@ -225,10 +232,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/**
 	 * Looks up and obtains a policy configuration file inside this bundle area.
 	 * 
-	 * @param name
-	 *             the file to obtain, <em>e.g.</em>, <code>jspwiki.policy</code>
-	 * @param bc
-	 *             context of this bundle.
+	 * @param name the file to obtain, <em>e.g.</em>, <code>jspwiki.policy</code>
+	 * @param bc   context of this bundle.
 	 *
 	 * @return the URL to the file
 	 */
@@ -261,11 +266,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	}
 
 	/**
-	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a
-	 * WikiException if no entry is found, or if one fails to initialize.
+	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a WikiException
+	 * if no entry is found, or if one fails to initialize.
 	 * 
-	 * @param defaultAuthorizerId
-	 *                            default authorizer Id of extension point.
+	 * @param defaultAuthorizerId default authorizer Id of extension point.
 	 * @return a Authorizer used to get page authorization information
 	 * @throws WikiException
 	 */
@@ -310,7 +314,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		try {
 			Class<?>[] parameterType = new Class[] { Engine.class };
 			authorizer = clazzAuthorizer.getDeclaredConstructor(parameterType).newInstance(this.m_engine);
-		} catch (InstantiationException  | IllegalArgumentException e) {
+		} catch (InstantiationException | IllegalArgumentException e) {
 			log.fatal("Authorizer " + clazzAuthorizer + " cannot be created.", e);
 			throw new WikiException("Authorizer " + clazzAuthorizer + " cannot be created.", e);
 		} catch (IllegalAccessException e) {
@@ -343,12 +347,12 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
-		
+
 		Principal user = session.getLoginPrincipal();
 
 		// Always allow the action if user has AllPermission
-		Permission allPermission = new org.elwiki.permissions.AllPermission(
-				this.wikiConfiguration.getApplicationName(), null);
+		Permission allPermission = new org.elwiki.permissions.AllPermission(this.wikiConfiguration.getApplicationName(),
+				null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
 			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
@@ -423,7 +427,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	protected List<Principal> findPrincipals(WikiPage page, Permission permission) {
 		List<Principal> principals = new ArrayList<>();
 
-		for(AclInfo aclInfo : page.getAclInfos()) {
+		for (AclInfo aclInfo : page.getAclInfos()) {
 			String action = aclInfo.getPermission();
 			PagePermission pagePermission = PermissionFactory.getPagePermission(page, action);
 			if (pagePermission.implies(permission)) {
@@ -473,30 +477,27 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/**
 	 * <p>
 	 * Determines if the Subject associated with a supplied WikiSession contains a desired user
-	 * Principal or built-in Role principal, OR is a member a Group or external Role. The rules are
-	 * as follows:
+	 * Principal or built-in Role principal, OR is a member a Group or external Role. The rules are as
+	 * follows:
 	 * </p>
 	 * <ol>
 	 * <li>First, if desired Principal is a Role or GroupPrincipal, delegate to
 	 * {@link #isUserInRole(WikiSession, Group)} and return the result.</li>
-	 * <li>Otherwise, we're looking for a user Principal, so iterate through the Principal set and
-	 * see if any share the same name as the one we are looking for.</li>
+	 * <li>Otherwise, we're looking for a user Principal, so iterate through the Principal set and see
+	 * if any share the same name as the one we are looking for.</li>
 	 * </ol>
 	 * <p>
-	 * <em>Note: if the Principal parameter is a user principal, the session must be authenticated
-	 * in order for the user to "possess it". Anonymous or asserted sessions will never posseess a
-	 * named user principal.</em>
+	 * <em>Note: if the Principal parameter is a user principal, the session must be authenticated in
+	 * order for the user to "possess it". Anonymous or asserted sessions will never posseess a named
+	 * user principal.</em>
 	 * </p>
 	 * 
-	 * @param session
-	 *                  the current wiki session, which must be non-null. If null, the result of
-	 *                  this method always returns <code>false</code>
-	 * @param principal
-	 *                  the Principal (role, group, or user principal) to look for, which must be
-	 *                  non-null. If null, the result of this method always returns
-	 *                  <code>false</code>
+	 * @param session   the current wiki session, which must be non-null. If null, the result of this
+	 *                  method always returns <code>false</code>
+	 * @param principal the Principal (role, group, or user principal) to look for, which must be
+	 *                  non-null. If null, the result of this method always returns <code>false</code>
 	 * @return <code>true</code> if the Subject supplied with the IWikiContext posesses the Role,
-	 *             GroupPrincipal or desired user Principal, <code>false</code> otherwise
+	 *         GroupPrincipal or desired user Principal, <code>false</code> otherwise
 	 */
 	public boolean hasRoleOrPrincipal(Session session, Principal principal) {
 		// If either parameter is null, always deny
@@ -530,8 +531,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	 * 
 	 * @param session    the WikiSession whose permission status is being queried
 	 * @param permission the Permission the Subject must possess
-	 * @return <code>true</code> if the Subject possesses the permission, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the Subject possesses the permission, <code>false</code> otherwise
 	 */
 	public boolean checkStaticPermission(Session session, Permission permission) {
 		// Try the local policy - check each Role/Group and User Principal
@@ -539,23 +539,20 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	}
 
 	/**
-	 * Checks to see if the wiki security policy allows a particular static Permission. Do not use
-	 * this method for normal permission checks; use
-	 * {@link #checkPermission(Session, Permission)} instead.
+	 * Checks to see if the wiki security policy allows a particular static Permission. Do not use this
+	 * method for normal permission checks; use {@link #checkPermission(Session, Permission)} instead.
 	 * 
-	 * @param principals
-	 *                   the Principals to check. Only handles wiki's principals (Role, Group).
-	 *                   User principals can not has permission info - they can't be handled.   
-	 * @param permission
-	 *                   the Permission.
+	 * @param principals the Principals to check. Only handles wiki's principals (Role, Group). User
+	 *                   principals can not has permission info - they can't be handled.
+	 * @param permission the Permission.
 	 * @return the result
 	 */
 	public boolean allowedByLocalPolicy(Principal[] principals, Permission permission) {
 		for (Principal principal : principals) {
-			if(principal instanceof Aprincipal aprincipal) {
+			if (principal instanceof Aprincipal aprincipal) {
 				String roleName = aprincipal.getUid();
 				PermissionCollection permCollection;
-				if( cachedPermissions.containsKey(roleName) ) {
+				if (cachedPermissions.containsKey(roleName)) {
 					permCollection = cachedPermissions.get(roleName);
 				} else {
 					// Instantiates permissions from groups configuration.
@@ -587,12 +584,12 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 
 				// Check permissions of Role.
 				if (permCollection.implies(permission)) {
-		            return true;
-		        }
+					return true;
+				}
 			}
 		}
 		return false;
-	}	
+	}
 
 	private Constructor<?> getPermissionConstructor(Class<?> clazz) {
 		for (Constructor<?> checkConstructor : clazz.getConstructors()) {
@@ -602,7 +599,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		}
 		return null;
 	}
-	
+
 	private boolean checkParameterTypes(Class<?>[] foundTypes) {
 		if (foundTypes.length != permissionMethodArgs.length) {
 			return false;
@@ -626,6 +623,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 
 		// Check built-in Roles first
 		String uid = this.accountManager.getGroupUid(groupName); //:FVK: workaround - get group by its name, for take group UID
+		if (uid == null) {
+			return new UnresolvedPrincipal(groupName);
+		}
+
 		role = new GroupPrincipal(groupName, uid);
 		if (GroupPrincipal.isBuiltInGroup(role)) {
 			return role;
@@ -660,36 +661,68 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	}
 
 	@Override
+	public void checkAccess(WikiContext wikiContext, HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+			throws Exception {
+		boolean isAllowed = checkPermission(wikiContext.getWikiSession(), wikiContext.requiredPermission());
+
+		if (!isAllowed) {
+			Session wikiSession = wikiContext.getWikiSession();
+			Permission requiredPermission = wikiContext.requiredPermission();
+			Principal currentUser = wikiSession.getUserPrincipal();
+			ResourceBundle rb = Preferences.getBundle(wikiContext);
+			if (wikiContext.getWikiSession().isAuthenticated()) {
+				log.info("User " + currentUser.getName() + " has no access - forbidden (permission="
+						+ requiredPermission + ")");
+				httpRequest.setAttribute(WikiContext.ATTR_MESSAGE,
+						MessageFormat.format(rb.getString("security.error.pageaccess.logged"), wikiContext.getName()));
+			} else {
+				log.info("User " + currentUser.getName() + " has no access - redirecting (permission="
+						+ requiredPermission + ")");
+				httpRequest.setAttribute(WikiContext.ATTR_MESSAGE,
+						MessageFormat.format(rb.getString("security.error.pageaccess"), wikiContext.getName()));
+			}
+			String url = m_engine.getURL(ContextEnum.WIKI_MESSAGE.getRequestContext(), wikiContext.getPage().getId(),
+					null);
+			ServletContext sc = httpRequest.getServletContext().getContext(url);
+			RequestDispatcher rd = sc.getRequestDispatcher(url);
+			httpRequest.setAttribute(WikiContext.ATTR_FORWARD_REQUEST, url);
+			rd.forward(httpRequest, httpResponse);
+		}
+	}
+
+	@Deprecated
+	@Override
 	public boolean hasAccess(WikiContext context, HttpServletResponse response, boolean redirect) throws IOException {
-        //:FVK: final boolean allowed = checkPermission( context.getWikiSession(), context.requiredPermission() );
+		boolean isAllowed = checkPermission(context.getWikiSession(), context.requiredPermission());
+		ResourceBundle rb = Preferences.getBundle(context);
 
-        // Stash the wiki context (:FVK: this is same in the JspServletFilter - here should be removed.)
-        if ( context.getHttpRequest() != null && context.getHttpRequest().getAttribute( WikiContext.ATTR_WIKI_CONTEXT ) == null ) {
-            context.getHttpRequest().setAttribute( WikiContext.ATTR_WIKI_CONTEXT, context );
-        }
+		// Stash the wiki context (:FVK: this is same in the JspServletFilter - here should be removed.)
+		/*:FVK:
+		if (context.getHttpRequest() != null
+				&& context.getHttpRequest().getAttribute(WikiContext.ATTR_WIKI_CONTEXT) == null) {
+			context.getHttpRequest().setAttribute(WikiContext.ATTR_WIKI_CONTEXT, context);
+		}
+		*/
 
-		return true;
-		//:FVK: - здесь был код:
-		/*
-        final ResourceBundle rb = Preferences.getBundle( context, InternationalizationManager.CORE_BUNDLE );
-        
-        // If access not allowed, redirect
-        if( !allowed && redirect ) {
-            final Principal currentUser  = context.getWikiSession().getUserPrincipal();
-            final String pageurl = context.getPage().getName();
-            if( context.getWikiSession().isAuthenticated() ) {
-                log.info( "User " + currentUser.getName() + " has no access - forbidden (permission=" + context.requiredPermission() + ")" );
-                context.getWikiSession().addMessage( MessageFormat.format( rb.getString( "security.error.noaccess.logged" ),
-                                                     context.getName()) );
-            } else {
-                log.info( "User " + currentUser.getName() + " has no access - redirecting (permission=" + context.requiredPermission() + ")" );
-                context.getWikiSession().addMessage( MessageFormat.format( rb.getString("security.error.noaccess"), context.getName() ) );
-            }
-            response.sendRedirect( m_engine.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), pageurl, null ) );
-        }
-        
-        return allowed;
-		 */
+		// If access not allowed, redirect
+		if (!isAllowed && redirect) {
+			Principal currentUser = context.getWikiSession().getUserPrincipal();
+			String pageurl = context.getPage().getName();
+			if (context.getWikiSession().isAuthenticated()) {
+				log.info("User " + currentUser.getName() + " has no access - forbidden (permission="
+						+ context.requiredPermission() + ")");
+				context.getWikiSession().addMessage(
+						MessageFormat.format(rb.getString("security.error.noaccess.logged"), context.getName()));
+			} else {
+				log.info("User " + currentUser.getName() + " has no access - redirecting (permission="
+						+ context.requiredPermission() + ")");
+				context.getWikiSession()
+						.addMessage(MessageFormat.format(rb.getString("security.error.noaccess"), context.getName()));
+			}
+			response.sendRedirect(m_engine.getURL(ContextEnum.WIKI_LOGIN.getRequestContext(), pageurl, null));
+		}
+
+		return isAllowed;
 	}
 
 	@Override
