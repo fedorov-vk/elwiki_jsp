@@ -259,13 +259,13 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__TAGS = COMPARABLE_FEATURE_COUNT + 16;
 
 	/**
-	 * The feature id for the '<em><b>Acl Infos</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Page Acl</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE__ACL_INFOS = COMPARABLE_FEATURE_COUNT + 17;
+	int WIKI_PAGE__PAGE_ACL = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
@@ -1053,14 +1053,14 @@ public interface Elwiki_dataPackage extends EPackage {
 	int TAGS_LIST_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.elwiki_data.impl.AclInfoImpl <em>Acl Info</em>}' class.
+	 * The meta object id for the '{@link org.elwiki_data.impl.PageAclEntryImpl <em>Page Acl Entry</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.elwiki_data.impl.AclInfoImpl
-	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclInfo()
+	 * @see org.elwiki_data.impl.PageAclEntryImpl
+	 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPageAclEntry()
 	 * @generated
 	 */
-	int ACL_INFO = 13;
+	int PAGE_ACL_ENTRY = 13;
 
 	/**
 	 * The feature id for the '<em><b>Allow</b></em>' attribute.
@@ -1069,7 +1069,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_INFO__ALLOW = 0;
+	int PAGE_ACL_ENTRY__ALLOW = 0;
 
 	/**
 	 * The feature id for the '<em><b>Permission</b></em>' attribute.
@@ -1078,7 +1078,7 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_INFO__PERMISSION = 1;
+	int PAGE_ACL_ENTRY__PERMISSION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Roles</b></em>' attribute list.
@@ -1087,25 +1087,25 @@ public interface Elwiki_dataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_INFO__ROLES = 2;
+	int PAGE_ACL_ENTRY__ROLES = 2;
 
 	/**
-	 * The number of structural features of the '<em>Acl Info</em>' class.
+	 * The number of structural features of the '<em>Page Acl Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_INFO_FEATURE_COUNT = 3;
+	int PAGE_ACL_ENTRY_FEATURE_COUNT = 3;
 
 	/**
-	 * The number of operations of the '<em>Acl Info</em>' class.
+	 * The number of operations of the '<em>Page Acl Entry</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ACL_INFO_OPERATION_COUNT = 0;
+	int PAGE_ACL_ENTRY_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '<em>Array String</em>' data type.
@@ -1335,15 +1335,15 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getWikiPage_Tags();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.WikiPage#getAclInfos <em>Acl Infos</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.elwiki_data.WikiPage#getPageAcl <em>Page Acl</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Acl Infos</em>'.
-	 * @see org.elwiki_data.WikiPage#getAclInfos()
+	 * @return the meta object for the containment reference list '<em>Page Acl</em>'.
+	 * @see org.elwiki_data.WikiPage#getPageAcl()
 	 * @see #getWikiPage()
 	 * @generated
 	 */
-	EReference getWikiPage_AclInfos();
+	EReference getWikiPage_PageAcl();
 
 	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
@@ -1937,47 +1937,47 @@ public interface Elwiki_dataPackage extends EPackage {
 	EAttribute getTagsList_Tag();
 
 	/**
-	 * Returns the meta object for class '{@link org.elwiki_data.AclInfo <em>Acl Info</em>}'.
+	 * Returns the meta object for class '{@link org.elwiki_data.PageAclEntry <em>Page Acl Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Acl Info</em>'.
-	 * @see org.elwiki_data.AclInfo
+	 * @return the meta object for class '<em>Page Acl Entry</em>'.
+	 * @see org.elwiki_data.PageAclEntry
 	 * @generated
 	 */
-	EClass getAclInfo();
+	EClass getPageAclEntry();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclInfo#isAllow <em>Allow</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAclEntry#isAllow <em>Allow</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Allow</em>'.
-	 * @see org.elwiki_data.AclInfo#isAllow()
-	 * @see #getAclInfo()
+	 * @see org.elwiki_data.PageAclEntry#isAllow()
+	 * @see #getPageAclEntry()
 	 * @generated
 	 */
-	EAttribute getAclInfo_Allow();
+	EAttribute getPageAclEntry_Allow();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.elwiki_data.AclInfo#getPermission <em>Permission</em>}'.
+	 * Returns the meta object for the attribute '{@link org.elwiki_data.PageAclEntry#getPermission <em>Permission</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Permission</em>'.
-	 * @see org.elwiki_data.AclInfo#getPermission()
-	 * @see #getAclInfo()
+	 * @see org.elwiki_data.PageAclEntry#getPermission()
+	 * @see #getPageAclEntry()
 	 * @generated
 	 */
-	EAttribute getAclInfo_Permission();
+	EAttribute getPageAclEntry_Permission();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link org.elwiki_data.AclInfo#getRoles <em>Roles</em>}'.
+	 * Returns the meta object for the attribute list '{@link org.elwiki_data.PageAclEntry#getRoles <em>Roles</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute list '<em>Roles</em>'.
-	 * @see org.elwiki_data.AclInfo#getRoles()
-	 * @see #getAclInfo()
+	 * @see org.elwiki_data.PageAclEntry#getRoles()
+	 * @see #getPageAclEntry()
 	 * @generated
 	 */
-	EAttribute getAclInfo_Roles();
+	EAttribute getPageAclEntry_Roles();
 
 	/**
 	 * Returns the meta object for data type '<em>Array String</em>'.
@@ -2181,12 +2181,12 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute WIKI_PAGE__TAGS = eINSTANCE.getWikiPage_Tags();
 
 		/**
-		 * The meta object literal for the '<em><b>Acl Infos</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Page Acl</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference WIKI_PAGE__ACL_INFOS = eINSTANCE.getWikiPage_AclInfos();
+		EReference WIKI_PAGE__PAGE_ACL = eINSTANCE.getWikiPage_PageAcl();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.
@@ -2661,14 +2661,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		EAttribute TAGS_LIST__TAG = eINSTANCE.getTagsList_Tag();
 
 		/**
-		 * The meta object literal for the '{@link org.elwiki_data.impl.AclInfoImpl <em>Acl Info</em>}' class.
+		 * The meta object literal for the '{@link org.elwiki_data.impl.PageAclEntryImpl <em>Page Acl Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.elwiki_data.impl.AclInfoImpl
-		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getAclInfo()
+		 * @see org.elwiki_data.impl.PageAclEntryImpl
+		 * @see org.elwiki_data.impl.Elwiki_dataPackageImpl#getPageAclEntry()
 		 * @generated
 		 */
-		EClass ACL_INFO = eINSTANCE.getAclInfo();
+		EClass PAGE_ACL_ENTRY = eINSTANCE.getPageAclEntry();
 
 		/**
 		 * The meta object literal for the '<em><b>Allow</b></em>' attribute feature.
@@ -2676,7 +2676,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ACL_INFO__ALLOW = eINSTANCE.getAclInfo_Allow();
+		EAttribute PAGE_ACL_ENTRY__ALLOW = eINSTANCE.getPageAclEntry_Allow();
 
 		/**
 		 * The meta object literal for the '<em><b>Permission</b></em>' attribute feature.
@@ -2684,7 +2684,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ACL_INFO__PERMISSION = eINSTANCE.getAclInfo_Permission();
+		EAttribute PAGE_ACL_ENTRY__PERMISSION = eINSTANCE.getPageAclEntry_Permission();
 
 		/**
 		 * The meta object literal for the '<em><b>Roles</b></em>' attribute list feature.
@@ -2692,7 +2692,7 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ACL_INFO__ROLES = eINSTANCE.getAclInfo_Roles();
+		EAttribute PAGE_ACL_ENTRY__ROLES = eINSTANCE.getPageAclEntry_Roles();
 
 		/**
 		 * The meta object literal for the '<em>Array String</em>' data type.

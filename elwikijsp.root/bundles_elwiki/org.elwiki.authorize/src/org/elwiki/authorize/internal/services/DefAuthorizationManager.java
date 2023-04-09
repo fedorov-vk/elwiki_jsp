@@ -76,7 +76,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.PermissionFactory;
-import org.elwiki_data.AclInfo;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -384,7 +384,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		//
 		String pageName = ((PagePermission) permission).getPage();
 		WikiPage page = pageManager.getPage(pageName);
-		if (page == null || page.getAclInfos().size() == 0) {
+		if (page == null || page.getPageAcl().size() == 0) {
 			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
 					WikiSecurityEventTopic.PROPERTY_USER, user, //
 					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
@@ -427,11 +427,11 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	protected List<Principal> findPrincipals(WikiPage page, Permission permission) {
 		List<Principal> principals = new ArrayList<>();
 
-		for (AclInfo aclInfo : page.getAclInfos()) {
-			String action = aclInfo.getPermission();
-			PagePermission pagePermission = PermissionFactory.getPagePermission(page, action);
+		for (PageAclEntry aclEntry : page.getPageAcl() ) {
+			String permissionAction = aclEntry.getPermission();
+			PagePermission pagePermission = PermissionFactory.getPagePermission(page, permissionAction);
 			if (pagePermission.implies(permission)) {
-				for (String role : aclInfo.getRoles()) {
+				for (String role : aclEntry.getRoles()) {
 					Principal principal = resolvePrincipal(role);
 					principals.add(principal);
 				}

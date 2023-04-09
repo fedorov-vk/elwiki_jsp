@@ -10,11 +10,10 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
-
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -132,8 +131,8 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 				return createTagsListAdapter();
 			}
 			@Override
-			public Adapter caseAclInfo(AclInfo object) {
-				return createAclInfoAdapter();
+			public Adapter casePageAclEntry(PageAclEntry object) {
+				return createPageAclEntryAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -338,16 +337,16 @@ public class Elwiki_dataAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.elwiki_data.AclInfo <em>Acl Info</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.elwiki_data.PageAclEntry <em>Page Acl Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.elwiki_data.AclInfo
+	 * @see org.elwiki_data.PageAclEntry
 	 * @generated
 	 */
-	public Adapter createAclInfoAdapter() {
+	public Adapter createPageAclEntryAdapter() {
 		return null;
 	}
 

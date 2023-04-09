@@ -17,12 +17,11 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -134,7 +133,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass aclInfoEClass = null;
+	private EClass pageAclEntryEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -403,7 +402,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EReference getWikiPage_AclInfos() {
+	public EReference getWikiPage_PageAcl() {
 		return (EReference)wikiPageEClass.getEStructuralFeatures().get(17);
 	}
 
@@ -973,8 +972,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EClass getAclInfo() {
-		return aclInfoEClass;
+	public EClass getPageAclEntry() {
+		return pageAclEntryEClass;
 	}
 
 	/**
@@ -983,8 +982,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAclInfo_Allow() {
-		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(0);
+	public EAttribute getPageAclEntry_Allow() {
+		return (EAttribute)pageAclEntryEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -993,8 +992,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAclInfo_Permission() {
-		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(1);
+	public EAttribute getPageAclEntry_Permission() {
+		return (EAttribute)pageAclEntryEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1003,8 +1002,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAclInfo_Roles() {
-		return (EAttribute)aclInfoEClass.getEStructuralFeatures().get(2);
+	public EAttribute getPageAclEntry_Roles() {
+		return (EAttribute)pageAclEntryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1084,7 +1083,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(wikiPageEClass, WIKI_PAGE__ATTRIBUTES);
 		createEReference(wikiPageEClass, WIKI_PAGE__UNKNOWN_PAGES);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__TAGS);
-		createEReference(wikiPageEClass, WIKI_PAGE__ACL_INFOS);
+		createEReference(wikiPageEClass, WIKI_PAGE__PAGE_ACL);
 		createEOperation(wikiPageEClass, WIKI_PAGE___COMPARE_TO__OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___CLONE);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_LAST_MODIFIED_DATE);
@@ -1154,10 +1153,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		tagsListEClass = createEClass(TAGS_LIST);
 		createEAttribute(tagsListEClass, TAGS_LIST__TAG);
 
-		aclInfoEClass = createEClass(ACL_INFO);
-		createEAttribute(aclInfoEClass, ACL_INFO__ALLOW);
-		createEAttribute(aclInfoEClass, ACL_INFO__PERMISSION);
-		createEAttribute(aclInfoEClass, ACL_INFO__ROLES);
+		pageAclEntryEClass = createEClass(PAGE_ACL_ENTRY);
+		createEAttribute(pageAclEntryEClass, PAGE_ACL_ENTRY__ALLOW);
+		createEAttribute(pageAclEntryEClass, PAGE_ACL_ENTRY__PERMISSION);
+		createEAttribute(pageAclEntryEClass, PAGE_ACL_ENTRY__ROLES);
 
 		// Create data types
 		arrayStringEDataType = createEDataType(ARRAY_STRING);
@@ -1218,7 +1217,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		getWikiPage_Attributes().getEKeys().add(this.getStringToObjectMap_Key());
 		initEReference(getWikiPage_UnknownPages(), this.getUnknownPage(), this.getUnknownPage_Wikipage(), "unknownPages", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Tags(), ecorePackage.getEString(), "tags", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getWikiPage_AclInfos(), this.getAclInfo(), null, "aclInfos", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getWikiPage_PageAcl(), this.getPageAclEntry(), null, "pageAcl", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getWikiPage__CompareTo__Object(), ecorePackage.getEInt(), "compareTo", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getObject(), "obj", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -1313,10 +1312,10 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEClass(tagsListEClass, TagsList.class, "TagsList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTagsList_Tag(), ecorePackage.getEString(), "tag", null, 0, 1, TagsList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
-		initEClass(aclInfoEClass, AclInfo.class, "AclInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAclInfo_Allow(), ecorePackage.getEBoolean(), "allow", "true", 0, 1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAclInfo_Permission(), ecorePackage.getEString(), "permission", null, 0, 1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAclInfo_Roles(), ecorePackage.getEString(), "roles", null, 0, -1, AclInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(pageAclEntryEClass, PageAclEntry.class, "PageAclEntry", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPageAclEntry_Allow(), ecorePackage.getEBoolean(), "allow", "true", 0, 1, PageAclEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPageAclEntry_Permission(), ecorePackage.getEString(), "permission", null, 0, 1, PageAclEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPageAclEntry_Roles(), ecorePackage.getEString(), "roles", null, 0, -1, PageAclEntry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize data types
 		initEDataType(arrayStringEDataType, String[].class, "ArrayString", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

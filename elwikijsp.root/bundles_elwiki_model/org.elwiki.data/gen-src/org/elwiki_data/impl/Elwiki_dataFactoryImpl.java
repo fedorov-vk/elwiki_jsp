@@ -13,11 +13,10 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.Elwiki_dataPackage;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -81,7 +80,7 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 			case Elwiki_dataPackage.STRING_TO_OBJECT_MAP: return (EObject)createStringToObjectMap();
 			case Elwiki_dataPackage.UNKNOWN_PAGE: return (EObject)createUnknownPage();
 			case Elwiki_dataPackage.TAGS_LIST: return (EObject)createTagsList();
-			case Elwiki_dataPackage.ACL_INFO: return (EObject)createAclInfo();
+			case Elwiki_dataPackage.PAGE_ACL_ENTRY: return (EObject)createPageAclEntry();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -251,9 +250,9 @@ public class Elwiki_dataFactoryImpl extends EFactoryImpl implements Elwiki_dataF
 	 * @generated
 	 */
 	@Override
-	public AclInfo createAclInfo() {
-		AclInfoImpl aclInfo = new AclInfoImpl();
-		return aclInfo;
+	public PageAclEntry createPageAclEntry() {
+		PageAclEntryImpl pageAclEntry = new PageAclEntryImpl();
+		return pageAclEntry;
 	}
 
 	/**

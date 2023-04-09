@@ -49,7 +49,7 @@
     <semanticResources>../target/classes/org/elwiki_data/util/Elwiki_dataSwitch.class</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="70a98078-39f4-416a-a893-ea75f6e6d79c">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="bd2de029-3b15-418f-a4df-398be133952b">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -1368,9 +1368,9 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_YGBiQNIcEe2dS9NpHcg4jA" name="AclInfo" tooltipText="" incomingEdges="_ij2MBtIcEe2dS9NpHcg4jA" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="elwiki_data.ecore#//AclInfo"/>
-      <semanticElements xmi:type="ecore:EClass" href="elwiki_data.ecore#//AclInfo"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_YGBiQNIcEe2dS9NpHcg4jA" name="PageAclEntry" tooltipText="" incomingEdges="_ij2MBtIcEe2dS9NpHcg4jA" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="elwiki_data.ecore#//PageAclEntry"/>
+      <semanticElements xmi:type="ecore:EClass" href="elwiki_data.ecore#//PageAclEntry"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -1379,33 +1379,33 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_6p7wQNLiEe2dS9NpHcg4jA" name="allow : EBoolean = true" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/allow"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/allow"/>
+        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/allow"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/allow"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_8ky6cdLiEe2dS9NpHcg4jA" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_ZTFyUNIcEe2dS9NpHcg4jA" name="permission : EString" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/permission"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/permission"/>
+        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/permission"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/permission"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_bsqRwdIcEe2dS9NpHcg4jA" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_fKJsUNIcEe2dS9NpHcg4jA" name="roles : EString" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/roles"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AclInfo/roles"/>
+        <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/roles"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//PageAclEntry/roles"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_gyotGNIcEe2dS9NpHcg4jA" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_ij2MBtIcEe2dS9NpHcg4jA" name="[0..*] aclInfos" sourceNode="_Xj3q0G-QEeid6OKUsQuIXA" targetNode="_YGBiQNIcEe2dS9NpHcg4jA">
-      <target xmi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/aclInfos"/>
-      <semanticElements xmi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/aclInfos"/>
+    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_ij2MBtIcEe2dS9NpHcg4jA" name="[0..*] pageAcl" sourceNode="_Xj3q0G-QEeid6OKUsQuIXA" targetNode="_YGBiQNIcEe2dS9NpHcg4jA">
+      <target xmi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/pageAcl"/>
+      <semanticElements xmi:type="ecore:EReference" href="elwiki_data.ecore#//WikiPage/pageAcl"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_ij3aINIcEe2dS9NpHcg4jA" description="_aTJ7kG-QEeid6OKUsQuIXA" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_ij3aItIcEe2dS9NpHcg4jA" showIcon="false">
           <customFeatures>labelSize</customFeatures>

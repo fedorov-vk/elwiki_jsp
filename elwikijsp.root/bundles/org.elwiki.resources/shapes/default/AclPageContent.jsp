@@ -46,39 +46,42 @@
          class="accordion-close"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
-    <h4>Создать новый permission</h4>
+    <h4>Создать новое правило доступа</h4>
     <input type="hidden" name="action"  value="save" />
 
+	<!-- TODO: error handling support. -->
     <fmt:message key='newgroup.errorprefix' var="msg"/>
     <wiki:Messages div="alert alert-danger form-col-offset-20 form-col-50" topic="group" prefix="${msg}"/>
 
     <div class="form-group">
-      <label class="control-label form-col-20">Разрешение</label>
-      <input type="text" size="30"
-           class="form-control form-col-50"
-            name="permit" id="permit"
-     placeholder="<fmt:message key="grp.newgroupname"/>"   >
+      <label class="control-label form-col-20"><fmt:message key='acl.page.label.function'/></label>
+      <select class="" id="rule" name="rule">
+        <option value='allow'>ALLOW</option>
+        <option value='disallow'>DISALLOW</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label class="control-label form-col-20">Permission</label>
-      <input type="text" size="30"
-           class="form-control form-col-50"
-            name="permission" id="permission"
-     placeholder="<fmt:message key="grp.newgroupname"/>"   >
+      <label class="control-label form-col-20"><fmt:message key='acl.page.label.permission'/></label>
+      <select class="" id="permission" name="permission">
+          <option value='view'>view</option>
+          <option value='edit'>edit</option>
+          <option value='comment'>comment</option>
+          <option value='upload'>upload</option>
+          <option value='rename'>rename</option>
+          <option value='modify'>modify</option>
+          <option value='delete'>delete</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label class="control-label form-col-20">Роли</label>
+      <label class="control-label form-col-20"><fmt:message key='acl.page.label.roles'/></label>
       <textarea class="form-control form-col-50" rows="5" cols="30"
                  name="roles" id="roles" ></textarea>
     </div>
-    <div class="help-block form-col-offset-20">
-    	The membership for this group. Enter each user’s name or wiki name, separated by carriage returns.
-    </div>
-    <%--<p class="help-block form-col-offset-20"><fmt:message key="grp.formhelp"/></p>--%>
+    <div class="help-block form-col-offset-20"><fmt:message key="acl.page.permission.roles"/></div>
 
-    <input class="btn btn-success form-col-offset-20" type="submit" value="<fmt:message key='acl.save.submit'/>" />
+    <input class="btn btn-success form-col-offset-20" type="submit" value="<fmt:message key='acl.page.permission.submit.save'/>" />
 
 </form>
 
@@ -91,31 +94,31 @@
     </tr>
     <tbody>
     <%
-     List<AclInfo> aclInfos = wikiContext.getPage().getAclInfos();
-     //Collections.sort(aclInfos);
-	 // <c:forEach var="aclInfo" items="< % =aclInfos % >" varStatus="status">*/
+     List<PageAclEntry> pageAcl = wikiContext.getPage().getPageAcl();
+     //Collections.sort(pageAcl);
+	 // <c:forEach var="aclEntry" items="< % =pageAcl % >" varStatus="status">*/
 	 // </c:forEach>
-     for( AclInfo aclInfo : wikiContext.getPage().getAclInfos() ) {
+     for( PageAclEntry aclEntry : wikiContext.getPage().getPageAcl() ) {
     %>
 	<tr>
 	  <td>
-	    <%= aclInfo.isAllow()? "allow" : "disallow" %>
+	    <%= aclEntry.isAllow()? "allow" : "disallow" %>
       </td>
 	  <td>
-	    <%= aclInfo.getPermission() %>
+	    <%= aclEntry.getPermission() %>
 	  </td>
 	  <td>
-	    <%= aclInfo.getRoles().stream().collect(Collectors.joining(", ")) %>
+	    <%= aclEntry.getRoles().stream().collect(Collectors.joining(", ")) %>
 	  </td>
 	  <td>
 	  	<wiki:Link context='<%=WikiContext.PAGE_EDIT_ACL%>' format='anchor' cssClass="btn btn-xs btn-primary"
 	  	           id='<%=wikiContext.getPage().getId()%>'>
-	  	  <wiki:Param name='permission' value='<%=aclInfo.getPermission()%>'/>
-	  	  <fmt:message key="acl.permission.edit"/>
+	  	  <wiki:Param name='permission' value='<%=aclEntry.getPermission()%>'/>
+	  	  <fmt:message key="acl.page.permission.edit"/>
 	  	</wiki:Link>
         <button class="btn btn-xs btn-danger" type="button"
             onclick="document.deleteGroupForm.group.value ='${group.uid}';document.deleteGroupForm.ok.click();">
-          <fmt:message key="actions.deletegroup"/>
+          <fmt:message key="acl.page.permission.delete"/>
         </button>
 	  </td>
 	</tr>

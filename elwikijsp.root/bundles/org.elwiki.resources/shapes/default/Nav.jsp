@@ -406,12 +406,12 @@
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='save'/>
-               ⤵ Save wiki content
+               ⮱⛁ Save all wiki content
           </wiki:Link>
           <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='load'/>
-                ⤴ Load wiki content
+             	⮴⛁ Load all wiki content
           </wiki:Link>
          </li>
          <li class="divider "></li>

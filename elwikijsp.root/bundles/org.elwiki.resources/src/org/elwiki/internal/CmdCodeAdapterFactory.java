@@ -26,7 +26,7 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.PAGE_VIEW, new ViewCmdCode()),
 			Map.entry(ContextEnum.PAGE_EDIT, new EditCmdCode()),
 			Map.entry(ContextEnum.PAGE_ACL, new AclPageCmdCode()),
-			Map.entry(ContextEnum.PAGE_EDIT_ACL, new AclEditCmdCode()),
+			Map.entry(ContextEnum.PAGE_EDIT_ACL, new AclEntryEditCmdCode()),
 			Map.entry(ContextEnum.PAGE_DIFF, new DiffCmdCode()),
 			Map.entry(ContextEnum.PAGE_INFO, new InfoCmdCode()),
 			Map.entry(ContextEnum.PAGE_RENAME, new RenameCmdCode()),

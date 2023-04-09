@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.Elwiki_dataFactory;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -36,7 +36,7 @@ public class WikiPageConverter extends DeserialiseStuff
 	private static String ATTRIBUTES = "attributes";
 	private static String CONTENTS = "contents";
 	private static String ATTACHMENTS = "attachments";
-	private static String ACL_INFOS = "aclInfos";
+	private static String PAGE_ACL = "pageAcl";
 
 	@Override
 	public JsonElement serialize(WikiPage wikiPage, Type typeOfSrc, JsonSerializationContext context) {
@@ -82,10 +82,10 @@ public class WikiPageConverter extends DeserialiseStuff
 			attachments.add(context.serialize(attachment, PageAttachment.class));
 		}
 
-		JsonArray aclInfos = new JsonArray();
-		result.add(ACL_INFOS, aclInfos);
-		for (AclInfo aclInfo : wikiPage.getAclInfos()) {
-			aclInfos.add(context.serialize(aclInfo, AclInfo.class));
+		JsonArray jsonPageAcl = new JsonArray();
+		result.add(PAGE_ACL, jsonPageAcl);
+		for (PageAclEntry aclEntry : wikiPage.getPageAcl()) {
+			jsonPageAcl.add(context.serialize(aclEntry, PageAclEntry.class));
 		}
 
 		return result;
@@ -149,11 +149,11 @@ public class WikiPageConverter extends DeserialiseStuff
 			}
 		}
 
-		EList<AclInfo> aclInfos = wikiPage.getAclInfos();
-		for (JsonElement jsonAclInfos : getArray(jsonObject, ACL_INFOS)) {
-			AclInfo aclInfo = context.deserialize(jsonAclInfos, AclInfo.class);
-			if (aclInfo != null) {
-				aclInfos.add(aclInfo);
+		EList<PageAclEntry> pageAcl = wikiPage.getPageAcl();
+		for (JsonElement jsonPageAcl : getArray(jsonObject, PAGE_ACL)) {
+			PageAclEntry aclEntry = context.deserialize(jsonPageAcl, PageAclEntry.class);
+			if (aclEntry != null) {
+				pageAcl.add(aclEntry);
 			}
 		}
 

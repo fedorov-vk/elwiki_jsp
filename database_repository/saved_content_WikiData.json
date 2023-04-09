@@ -28,7 +28,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w107",
@@ -51,7 +51,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -100,7 +100,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w40",
@@ -127,7 +127,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w33",
@@ -150,7 +150,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w1",
@@ -180,7 +180,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "1000",
@@ -305,7 +305,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": [
+          "pageAcl": [
             {
               "isAllow": true,
               "permission": "view",
@@ -357,7 +357,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1003",
@@ -390,7 +390,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1004",
@@ -413,7 +413,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1005",
@@ -440,7 +440,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1006",
@@ -467,7 +467,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1007",
@@ -494,7 +494,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1008",
@@ -517,7 +517,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1009",
@@ -544,7 +544,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1010",
@@ -580,7 +580,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1011",
@@ -613,7 +613,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         },
         {
           "id": "1012",
@@ -636,7 +636,7 @@
             }
           ],
           "attachments": [],
-          "aclInfos": []
+          "pageAcl": []
         }
       ],
       "attributes": [],
@@ -671,7 +671,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w2",
@@ -694,7 +694,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -732,7 +732,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w21",
@@ -755,7 +755,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w100",
@@ -778,7 +778,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -816,7 +816,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -854,7 +854,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -892,7 +892,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -930,7 +930,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -968,7 +968,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -1006,7 +1006,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -1044,7 +1044,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "edit",
@@ -1089,7 +1089,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w5",
@@ -1112,7 +1112,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w4",
@@ -1174,7 +1174,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w3",
@@ -1223,7 +1223,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w14",
@@ -1246,7 +1246,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w10",
@@ -1287,7 +1287,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w22",
@@ -1310,7 +1310,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": [
+      "pageAcl": [
         {
           "isAllow": true,
           "permission": "view",
@@ -1362,7 +1362,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     },
     {
       "id": "w12",
@@ -1385,7 +1385,7 @@
         }
       ],
       "attachments": [],
-      "aclInfos": []
+      "pageAcl": []
     }
   ]
 }

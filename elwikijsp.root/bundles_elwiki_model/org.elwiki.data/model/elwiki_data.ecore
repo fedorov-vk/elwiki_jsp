@@ -161,8 +161,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="unknownPages" upperBound="-1"
         eType="#//UnknownPage" containment="true" eOpposite="#//UnknownPage/wikipage"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="aclInfos" upperBound="-1"
-        eType="#//AclInfo" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageAcl" upperBound="-1"
+        eType="#//PageAclEntry" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PagesStore">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wikipages" upperBound="-1"
@@ -329,7 +329,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="TagsList">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" ordered="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AclInfo">
+  <eClassifiers xsi:type="ecore:EClass" name="PageAclEntry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="permission" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

@@ -31,7 +31,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/attributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/unknownPages"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//WikiPage/tags"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/aclInfos"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference elwiki_data.ecore#//WikiPage/pageAcl"/>
       <genOperations ecoreOperation="elwiki_data.ecore#//WikiPage/compareTo" body="if (obj instanceof WikiPage) {&#xA;&#x9;WikiPage page = (WikiPage) obj;&#xA;&#x9;String obj1 = this.getName(), obj2 = page.getName();&#xA;&#x9;if (obj1 == null) {&#xA;&#x9;&#x9;return -1;&#xA;&#x9;}&#xA;&#x9;if (obj2 == null) {&#xA;&#x9;&#x9;return 1;&#xA;&#x9;}&#xA;&#x9;if (obj1.equals(obj2)) {&#xA;&#x9;&#x9;return 0;&#xA;&#x9;}&#xA;&#x9;&#x9;return obj1.compareTo(obj2);&#xA;}&#xA;return 0;">
         <genParameters ecoreParameter="elwiki_data.ecore#//WikiPage/compareTo/obj"/>
       </genOperations>
@@ -122,10 +122,10 @@
     <genClasses ecoreClass="elwiki_data.ecore#//TagsList">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//TagsList/tag"/>
     </genClasses>
-    <genClasses ecoreClass="elwiki_data.ecore#//AclInfo">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/allow"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/permission"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//AclInfo/roles"/>
+    <genClasses ecoreClass="elwiki_data.ecore#//PageAclEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAclEntry/allow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAclEntry/permission"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute elwiki_data.ecore#//PageAclEntry/roles"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

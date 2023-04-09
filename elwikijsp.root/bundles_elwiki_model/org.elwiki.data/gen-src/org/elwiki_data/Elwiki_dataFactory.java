@@ -112,13 +112,13 @@ public interface Elwiki_dataFactory extends EFactory {
 	TagsList createTagsList();
 
 	/**
-	 * Returns a new object of class '<em>Acl Info</em>'.
+	 * Returns a new object of class '<em>Page Acl Entry</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Acl Info</em>'.
+	 * @return a new object of class '<em>Page Acl Entry</em>'.
 	 * @generated
 	 */
-	AclInfo createAclInfo();
+	PageAclEntry createPageAclEntry();
 
 	/**
 	 * Returns the package supported by this factory.

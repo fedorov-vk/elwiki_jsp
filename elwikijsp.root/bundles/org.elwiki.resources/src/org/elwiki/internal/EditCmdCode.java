@@ -45,23 +45,22 @@ public class EditCmdCode extends CmdCode {
 	@Override
 	public void applyPrologue(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
 		super.applyPrologue(httpRequest, httpResponse);
-		HttpSession session = httpRequest.getSession();
 
-		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
-		PageManager pageManager = getEngine().getManager(PageManager.class);
-
-		// Get wiki context and check for authorization
+		// Get wiki context and check for authorization.
 		WikiContext wikiContext = ContextUtil.findContext(httpRequest);
-		Engine engine = wikiContext.getEngine();
-		@NonNull
-		FilterManager filterManager = engine.getManager(FilterManager.class);
-		ISpamFilter spamFilter = filterManager.getSpamFilter();
-
+		AuthorizationManager authorizationManager = getEngine().getManager(AuthorizationManager.class);
 		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 		if (wikiContext.getCommand().getTarget() == null) {
 			httpResponse.sendRedirect(wikiContext.getURL(wikiContext.getRequestContext(), wikiContext.getName()));
 			return;
 		}
+
+		HttpSession session = httpRequest.getSession();
+		PageManager pageManager = getEngine().getManager(PageManager.class);
+		Engine engine = wikiContext.getEngine();
+		@NonNull
+		FilterManager filterManager = engine.getManager(FilterManager.class);
+		ISpamFilter spamFilter = filterManager.getSpamFilter();
 
 		String pagereq = wikiContext.getName();
 

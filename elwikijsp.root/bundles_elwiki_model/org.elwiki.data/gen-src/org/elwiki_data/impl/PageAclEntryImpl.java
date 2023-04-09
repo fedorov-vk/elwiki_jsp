@@ -8,31 +8,31 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.internal.cdo.CDOObjectImpl;
 
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.Elwiki_dataPackage;
+import org.elwiki_data.PageAclEntry;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Acl Info</b></em>'.
+ * An implementation of the model object '<em><b>Page Acl Entry</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.impl.AclInfoImpl#isAllow <em>Allow</em>}</li>
- *   <li>{@link org.elwiki_data.impl.AclInfoImpl#getPermission <em>Permission</em>}</li>
- *   <li>{@link org.elwiki_data.impl.AclInfoImpl#getRoles <em>Roles</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAclEntryImpl#isAllow <em>Allow</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAclEntryImpl#getPermission <em>Permission</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.PageAclEntryImpl#getRoles <em>Roles</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
+public class PageAclEntryImpl extends CDOObjectImpl implements PageAclEntry {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AclInfoImpl() {
+	protected PageAclEntryImpl() {
 		super();
 	}
 
@@ -43,7 +43,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return Elwiki_dataPackage.Literals.ACL_INFO;
+		return Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	 */
 	@Override
 	public boolean isAllow() {
-		return (Boolean)eGet(Elwiki_dataPackage.Literals.ACL_INFO__ALLOW, true);
+		return (Boolean)eGet(Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY__ALLOW, true);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	 */
 	@Override
 	public void setAllow(boolean newAllow) {
-		eSet(Elwiki_dataPackage.Literals.ACL_INFO__ALLOW, newAllow);
+		eSet(Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY__ALLOW, newAllow);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	 */
 	@Override
 	public String getPermission() {
-		return (String)eGet(Elwiki_dataPackage.Literals.ACL_INFO__PERMISSION, true);
+		return (String)eGet(Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY__PERMISSION, true);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	 */
 	@Override
 	public void setPermission(String newPermission) {
-		eSet(Elwiki_dataPackage.Literals.ACL_INFO__PERMISSION, newPermission);
+		eSet(Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY__PERMISSION, newPermission);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class AclInfoImpl extends CDOObjectImpl implements AclInfo {
 	@SuppressWarnings("unchecked")
 	@Override
 	public EList<String> getRoles() {
-		return (EList<String>)eGet(Elwiki_dataPackage.Literals.ACL_INFO__ROLES, true);
+		return (EList<String>)eGet(Elwiki_dataPackage.Literals.PAGE_ACL_ENTRY__ROLES, true);
 	}
 
-} //AclInfoImpl
+} //PageAclEntryImpl

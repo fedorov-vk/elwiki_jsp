@@ -8,11 +8,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
-
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataPackage;
 import org.elwiki_data.IHistoryInfo;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -160,9 +159,9 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case Elwiki_dataPackage.ACL_INFO: {
-				AclInfo aclInfo = (AclInfo)theEObject;
-				T result = caseAclInfo(aclInfo);
+			case Elwiki_dataPackage.PAGE_ACL_ENTRY: {
+				PageAclEntry pageAclEntry = (PageAclEntry)theEObject;
+				T result = casePageAclEntry(pageAclEntry);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -366,17 +365,17 @@ public class Elwiki_dataSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Acl Info</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Page Acl Entry</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Acl Info</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Page Acl Entry</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseAclInfo(AclInfo object) {
+	public T casePageAclEntry(PageAclEntry object) {
 		return null;
 	}
 

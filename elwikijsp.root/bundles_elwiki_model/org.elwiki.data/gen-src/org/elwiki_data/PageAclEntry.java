@@ -8,24 +8,24 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Acl Info</b></em>'.
+ * A representation of the model object '<em><b>Page Acl Entry</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.elwiki_data.AclInfo#isAllow <em>Allow</em>}</li>
- *   <li>{@link org.elwiki_data.AclInfo#getPermission <em>Permission</em>}</li>
- *   <li>{@link org.elwiki_data.AclInfo#getRoles <em>Roles</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAclEntry#isAllow <em>Allow</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAclEntry#getPermission <em>Permission</em>}</li>
+ *   <li>{@link org.elwiki_data.PageAclEntry#getRoles <em>Roles</em>}</li>
  * </ul>
  *
- * @see org.elwiki_data.Elwiki_dataPackage#getAclInfo()
+ * @see org.elwiki_data.Elwiki_dataPackage#getPageAclEntry()
  * @model
  * @extends CDOObject
  * @generated
  */
-public interface AclInfo extends CDOObject {
+public interface PageAclEntry extends CDOObject {
 	/**
 	 * Returns the value of the '<em><b>Allow</b></em>' attribute.
 	 * The default value is <code>"true"</code>.
@@ -33,14 +33,14 @@ public interface AclInfo extends CDOObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Allow</em>' attribute.
 	 * @see #setAllow(boolean)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getAclInfo_Allow()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAclEntry_Allow()
 	 * @model default="true"
 	 * @generated
 	 */
 	boolean isAllow();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.AclInfo#isAllow <em>Allow</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.PageAclEntry#isAllow <em>Allow</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Allow</em>' attribute.
@@ -55,14 +55,14 @@ public interface AclInfo extends CDOObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Permission</em>' attribute.
 	 * @see #setPermission(String)
-	 * @see org.elwiki_data.Elwiki_dataPackage#getAclInfo_Permission()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAclEntry_Permission()
 	 * @model
 	 * @generated
 	 */
 	String getPermission();
 
 	/**
-	 * Sets the value of the '{@link org.elwiki_data.AclInfo#getPermission <em>Permission</em>}' attribute.
+	 * Sets the value of the '{@link org.elwiki_data.PageAclEntry#getPermission <em>Permission</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Permission</em>' attribute.
@@ -77,10 +77,10 @@ public interface AclInfo extends CDOObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Roles</em>' attribute list.
-	 * @see org.elwiki_data.Elwiki_dataPackage#getAclInfo_Roles()
+	 * @see org.elwiki_data.Elwiki_dataPackage#getPageAclEntry_Roles()
 	 * @model
 	 * @generated
 	 */
 	EList<String> getRoles();
 
-} // AclInfo
+} // PageAclEntry

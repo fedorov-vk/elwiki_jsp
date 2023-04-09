@@ -40,7 +40,7 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getTags <em>Tags</em>}</li>
- *   <li>{@link org.elwiki_data.WikiPage#getAclInfos <em>Acl Infos</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getPageAcl <em>Page Acl</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -449,16 +449,16 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	EList<String> getTags();
 
 	/**
-	 * Returns the value of the '<em><b>Acl Infos</b></em>' containment reference list.
-	 * The list contents are of type {@link org.elwiki_data.AclInfo}.
+	 * Returns the value of the '<em><b>Page Acl</b></em>' containment reference list.
+	 * The list contents are of type {@link org.elwiki_data.PageAclEntry}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Acl Infos</em>' containment reference list.
-	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_AclInfos()
+	 * @return the value of the '<em>Page Acl</em>' containment reference list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_PageAcl()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<AclInfo> getAclInfos();
+	EList<PageAclEntry> getPageAcl();
 
 	/**
 	 * <!-- begin-user-doc -->

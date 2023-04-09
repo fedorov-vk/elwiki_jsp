@@ -18,8 +18,8 @@ import org.eclipse.emf.common.util.EMap;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.elwiki_data.AclInfo;
 import org.elwiki_data.Elwiki_dataPackage;
+import org.elwiki_data.PageAclEntry;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.PageReference;
@@ -51,7 +51,7 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTags <em>Tags</em>}</li>
- *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getAclInfos <em>Acl Infos</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageAcl <em>Page Acl</em>}</li>
  * </ul>
  *
  * @generated
@@ -360,8 +360,8 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public EList<AclInfo> getAclInfos() {
-		return (EList<AclInfo>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__ACL_INFOS, true);
+	public EList<PageAclEntry> getPageAcl() {
+		return (EList<PageAclEntry>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGE_ACL, true);
 	}
 
 	/**

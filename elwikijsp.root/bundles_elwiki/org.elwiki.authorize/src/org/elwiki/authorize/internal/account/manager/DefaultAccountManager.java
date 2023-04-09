@@ -678,7 +678,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	
 	@Override
 	public boolean isUserInRole(Group rgoup) {
-		return false;
+		return false;//:FVK: workaround?
 	}
 
 	/**
