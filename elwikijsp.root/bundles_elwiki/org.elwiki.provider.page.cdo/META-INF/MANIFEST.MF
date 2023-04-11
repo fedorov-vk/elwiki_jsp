@@ -20,6 +20,7 @@ Import-Package: org.apache.wiki.api,
  org.apache.wiki.api.search,
  org.apache.wiki.auth,
  org.apache.wiki.auth.acl,
+ org.apache.wiki.pages0,
  org.eclipse.core.internal.utils,
  org.elwiki.configuration,
  org.elwiki.services

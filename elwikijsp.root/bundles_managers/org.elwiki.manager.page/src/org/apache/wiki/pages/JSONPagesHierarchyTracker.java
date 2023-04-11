@@ -72,7 +72,7 @@ public class JSONPagesHierarchyTracker implements WikiAjaxServlet {
 		listSpecialPages.clear();
 
 		List<Map<String, Object>> list = new ArrayList<>();
-		list.add(specialPages);
+		//:FVK: no adding special pages -- list.add(specialPages);
 		// adding hierarchy of all pages.
 		for (WikiPage page : upperPages) {
 			HashMap<String, Object> data = preparePage(page);

@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -1776,61 +1777,48 @@ WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()-
 			return;
 		}
 
-		/*if (motionType == PageMotionType.AFTER
-				|| motionType == PageMotionType.BEFORE)*/ {
-			EList<WikiPage> pages;
-			WikiPage parentPage = targetPage.getParent();
-			CDOTransaction transaction = null;
-			try {
-				PagesStore pagesStore = null;
-				transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
-				movedPage = transaction.getObject(movedPage);
+		CDOTransaction transaction = null;
+		try {
+			final CDOTransaction lambdaTransaction = //
+					transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+
+			Function<WikiPage, EList<WikiPage>> getPagesList = (page) -> {
+				WikiPage parentPage = page.getParent();
 				if (parentPage != null) {
-					parentPage = transaction.getObject(parentPage);
-					pages = parentPage.getChildren();
-				} else {
-					pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
-					pagesStore = transaction.getObject(pagesStore);
-					pages = pagesStore.getWikipages();
+					parentPage = lambdaTransaction.getObject(parentPage);
+					return parentPage.getChildren();
 				}
-				int targetIdx = pages.indexOf(targetPage);
+				PagesStore pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
+				pagesStore = lambdaTransaction.getObject(pagesStore);
+				return pagesStore.getWikipages();
+			};
 
-				WikiPage parent1 = movedPage.getParent();
-				if (parent1 != null) {
-					parent1 = transaction.getObject(parent1);
-					parent1.getChildren().remove(movedPage);
-				} else {
-					if (pagesStore == null) {
-						pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
-						pagesStore = transaction.getObject(pagesStore);
-					}
-					pagesStore.getWikipages().remove(movedPage);
-				}
+			EList<WikiPage> listSource = getPagesList.apply(movedPage);
+			if (motionType == PageMotionType.AFTER || motionType == PageMotionType.BEFORE) {
+				EList<WikiPage> listTarget = getPagesList.apply(targetPage);
+				int targetIdx = listTarget.indexOf(targetPage);
+				if (motionType == PageMotionType.AFTER)
+					targetIdx++;
 
-				pages.add(targetIdx, movedPage);
-				transaction.commit();
-			} catch (Exception e) {
-				throw new ProviderException(e);
-			} finally {
-				if (transaction != null && !transaction.isClosed()) {
-					transaction.close();
+				if (listTarget == listSource) {
+					int sourceIdx = listSource.indexOf(movedPage);
+					listTarget.move(targetIdx, sourceIdx);
+				} else {
+					listSource.remove(movedPage);
+					listTarget.add(targetIdx, transaction.getObject(movedPage));
 				}
+			} else { // if (motionType == PageMotionType.BOTTOM )
+				listSource.remove(movedPage);
+				transaction.getObject(targetPage).getChildren().add(transaction.getObject(movedPage));
 			}
-		}
 
-		switch (motionType) {
-		case AFTER: {
-
-			break;
-		}
-		case BEFORE: {
-
-			break;
-		}
-		case BOTTOM: {
-
-			break;
-		}
+			transaction.commit();
+		} catch (Exception e) {
+			throw new ProviderException(e);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
+				transaction.close();
+			}
 		}
 	}
 
