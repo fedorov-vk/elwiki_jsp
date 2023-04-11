@@ -49,7 +49,7 @@
 						<configuration>
 							<cssDestinationFolder>${project.basedir}/resources/shapes/default/</cssDestinationFolder>
 							<wroFile>${project.basedir}/main/config/wro/wro-haddock.xml</wroFile>
-							<targetGroups>haddock,haddock-wysiwyg,haddock-edit,scope-controller</targetGroups>
+							<targetGroups>haddock,haddock-wysiwyg,haddock-edit,scope-controller,hierarchy-controller</targetGroups>
 						</configuration>
 					</execution>
 				</executions>
@@ -114,6 +114,7 @@
 										<include>scripts/</include>
 										<include>favicons/</include>
 										<include>images/</include>
+										<include>assets/</include>
 									</includes>
 								</resource>
 							</resources>

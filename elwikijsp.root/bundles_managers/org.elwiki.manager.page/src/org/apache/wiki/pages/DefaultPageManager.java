@@ -116,6 +116,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 
 	static final String JSON_PAGESHIERARCHY = "pageshierarchyTracker";
+	static final String JSON_ALLPAGESHIERARCHY = "allPagesHierarchyTracker";
 
 	/** Idle lock reaping interval. Seconds.*/
 	private static final int LOCK_REAPING_INTERVAL = 60;
@@ -176,6 +177,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
 		wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker(this.m_engine));
+		wikiAjaxDispatcher.registerServlet(JSON_ALLPAGESHIERARCHY, new JSONAllPagesHierarchyTracker(this.m_engine));
 
 		/*:FVK: - подключить CachingProvider
 		final String classname;
@@ -1053,6 +1055,12 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
             }
 			break;
 		}		
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException {
+		m_provider.movePage(motionType, targetPageId, movedPageId);
 	}
 
 }

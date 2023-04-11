@@ -37,6 +37,7 @@ import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.pages0.PageManager;
+import org.apache.wiki.pages0.PageManager.PageMotionType;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
@@ -643,6 +644,11 @@ public class CachingProvider implements PageProvider {
 	public boolean deleteAttachment(PageAttachment attachment) throws ProviderException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException {
+		// TODO Auto-generated method stub
 	}
 
 }

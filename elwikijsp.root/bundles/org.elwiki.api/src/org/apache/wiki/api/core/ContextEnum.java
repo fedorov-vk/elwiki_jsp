@@ -78,7 +78,8 @@ public enum ContextEnum {
 			//   at org.apache.wiki.tags.ContentTag.doEndTag(ContentTag.java:160)
 			// when saved wiki content under admin.
 			// Using "PageContent.jsp" - temporary fiction
-			"PageContent.jsp" ); 
+			"PageContent.jsp" ),
+	WIKI_CHANGE_HIERARCHY( "cmd.changeHierarchy", "%u", "", "PagesHierarchyContent.jsp" );
 	//@formatter:on
 
 	private final String urlPattern;

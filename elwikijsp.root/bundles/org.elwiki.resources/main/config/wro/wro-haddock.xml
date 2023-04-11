@@ -25,6 +25,7 @@
   <group name="lib" abstract="true">
     <js>/scripts/lib/mootools-core-1.6.0.js</js>
     <js>/scripts/lib/mootools-more-1.6.0.js</js>
+    <js>/scripts/lib/mootools-class-extras.js</js>
     <js>/scripts/lib/prettify4mar13.js</js>
     <js>/scripts/util/polyfills.js</js>
     <js>/scripts/util/cookies.js</js>
@@ -125,6 +126,9 @@
 
   <group name="scope-controller">
     <js>/scripts/scope/ScopeController.js</js>
+  </group>
+  <group name="hierarchy-controller">
+    <js>/scripts/hierarchy/HierarchyController.js</js>
   </group>
 
 </groups>

@@ -27,7 +27,6 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.eclipse.core.runtime.Assert;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -37,6 +36,9 @@ import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
 public interface PageManager {
+
+	/** Defines type of page motion. */
+	enum PageMotionType { AFTER, BEFORE, BOTTOM };
 
     /** The property value for setting the current page provider.  Value is {@value}. */
     String PROP_PAGEPROVIDER = "jspwiki.pageProvider";
@@ -482,5 +484,15 @@ public interface PageManager {
 	 * @return Collection of pages that are not linked to in other pages.
 	 */
 	Collection<WikiPage> getUnreferencedPages() throws ProviderException;
+
+	/**
+	 * Moves the page. 
+	 *
+	 * @param motionType
+	 * @param targetPageId
+	 * @param movedPageId
+	 * @throws ProviderException TODO
+	 */
+	void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException;
 
 }

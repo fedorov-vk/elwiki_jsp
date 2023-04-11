@@ -40,6 +40,7 @@ import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.apache.wiki.pages0.PageManager.PageMotionType;
 import org.apache.wiki.util.FileUtil;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -475,6 +476,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	}
 
 
+	//:FVK: why is this method?
 	@Override
 	public void movePage(String from, String to) throws ProviderException {
 		// TODO Auto-generated method stub
@@ -1762,6 +1764,74 @@ WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()-
 		}
 
 		return true;
+	}
+
+	/** {@inheritDoc} 
+	 * @throws ProviderException */
+	@Override
+	public void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException {
+		WikiPage targetPage = getPageById(targetPageId);
+		WikiPage movedPage = getPageById(movedPageId);
+		if (targetPage == null || movedPage == null) {
+			return;
+		}
+
+		/*if (motionType == PageMotionType.AFTER
+				|| motionType == PageMotionType.BEFORE)*/ {
+			EList<WikiPage> pages;
+			WikiPage parentPage = targetPage.getParent();
+			CDOTransaction transaction = null;
+			try {
+				PagesStore pagesStore = null;
+				transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+				movedPage = transaction.getObject(movedPage);
+				if (parentPage != null) {
+					parentPage = transaction.getObject(parentPage);
+					pages = parentPage.getChildren();
+				} else {
+					pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
+					pagesStore = transaction.getObject(pagesStore);
+					pages = pagesStore.getWikipages();
+				}
+				int targetIdx = pages.indexOf(targetPage);
+
+				WikiPage parent1 = movedPage.getParent();
+				if (parent1 != null) {
+					parent1 = transaction.getObject(parent1);
+					parent1.getChildren().remove(movedPage);
+				} else {
+					if (pagesStore == null) {
+						pagesStore = PageProviderCdoActivator.getStorageCdo().getPagesStore();
+						pagesStore = transaction.getObject(pagesStore);
+					}
+					pagesStore.getWikipages().remove(movedPage);
+				}
+
+				pages.add(targetIdx, movedPage);
+				transaction.commit();
+			} catch (Exception e) {
+				throw new ProviderException(e);
+			} finally {
+				if (transaction != null && !transaction.isClosed()) {
+					transaction.close();
+				}
+			}
+		}
+
+		switch (motionType) {
+		case AFTER: {
+
+			break;
+		}
+		case BEFORE: {
+
+			break;
+		}
+		case BOTTOM: {
+
+			break;
+		}
+		}
 	}
 
 }

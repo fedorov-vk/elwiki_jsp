@@ -97,6 +97,13 @@
             base-name="/shapes/default/images/note.png">
       </resource>
    </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/Assets/*"
+            base-name="/resources/assets">
+      </resource>
+   </extension>
 
 <!-- JSPwiki
    <extension

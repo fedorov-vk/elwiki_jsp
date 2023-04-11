@@ -27,11 +27,11 @@ import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
 import org.apache.wiki.api.search.SearchResult;
+import org.apache.wiki.pages0.PageManager.PageMotionType;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  *  Each Wiki page provider should implement this interface.
@@ -285,5 +285,15 @@ public interface PageProvider extends WikiProvider {
 	 * @throws ProviderException if something goes wrong with the backend.
 	 */
 	boolean deleteAttachment(PageAttachment attachment) throws ProviderException;
-	
+
+	/**
+	 * Moves the page. 
+	 *
+	 * @param motionType
+	 * @param targetPageId
+	 * @param movedPageId
+	 * @throws ProviderException TODO
+	 */
+	void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException;
+
 }

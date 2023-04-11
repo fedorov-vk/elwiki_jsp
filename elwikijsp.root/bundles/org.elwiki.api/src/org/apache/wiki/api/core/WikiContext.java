@@ -29,19 +29,21 @@ import org.elwiki_data.WikiPage;
 
 /**
  * <p>
- * Provides state information throughout the processing of a page. A WikiContext is born when the JSP pages that are
- * the main entry points, are invoked. The JSPWiki engine creates the new WikiContext, which basically holds
- * information about the page, the handling engine, and in which context (view, edit, etc) the call was done.
+ * Provides state information throughout the processing of a page. A WikiContext is born when the
+ * JSP pages that are the main entry points, are invoked. The JSPWiki engine creates the new
+ * WikiContext, which basically holds information about the page, the handling engine, and in which
+ * context (view, edit, etc) the call was done.
  * </p>
  * <p>
- * A WikiContext also provides request-specific variables, which can be used to communicate between plugins on the
- * same page, or between different instances of the same plugin. A WikiContext variable is valid until the
- * processing of the WikiPage has ended. For an example, please see the Counter plugin.
+ * A WikiContext also provides request-specific variables, which can be used to communicate between
+ * plugins on the same page, or between different instances of the same plugin. A WikiContext
+ * variable is valid until the processing of the WikiPage has ended. For an example, please see the
+ * Counter plugin.
  * </p>
  * <p>
- * When a WikiContext is created, it automatically associates a {@link Session} object with the user's HttpSession.
- * The Session contains information about the user's authentication status, and is consulted by
- * {@link #getCurrentUser()} object.
+ * When a WikiContext is created, it automatically associates a {@link Session} object with the
+ * user's HttpSession. The Session contains information about the user's authentication status, and
+ * is consulted by {@link #getCurrentUser()} object.
  * </p>
  * <p>
  * Do not cache the WikiPage object that you get from the WikiContext; always use getPage()!
@@ -112,8 +114,11 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User is commenting something. */
 	String PAGE_COMMENT = ContextEnum.PAGE_COMMENT.getRequestContext();
-	
-	/** User has an internal conflict, and does quite not know what to do. Please provide some counseling. */
+
+	/**
+	 * User has an internal conflict, and does quite not know what to do. Please provide some
+	 * counseling.
+	 */
 	String PAGE_CONFLICT = ContextEnum.PAGE_CONFLICT.getRequestContext();
 
 	/** This is not a JSPWiki context, use it to access static files. */
@@ -127,16 +132,15 @@ public interface WikiContext extends Cloneable, Command {
 
 	// WikiContext identifiers for operations with ATTACHMENT.
 
-	
 	/** User is downloading an attachment via attachment servlet. */
 	String ATTACHMENT_DOGET = ContextEnum.ATTACHMENT_DOGET.getRequestContext();
-	
+
 	/** User is uploading an attachment via attachment servlet. */
-	String ATTACHMENT_DOPOST= ContextEnum.ATTACHMENT_DOPOST.getRequestContext();
+	String ATTACHMENT_DOPOST = ContextEnum.ATTACHMENT_DOPOST.getRequestContext();
 
 	/** User is uploading something. */
 	String ATTACHMENT_UPLOAD = ContextEnum.ATTACHMENT_UPLOAD.getRequestContext();
-	
+
 	/** Inspect all versions of attached file. */
 	String ATTACHMENT_INFO = ContextEnum.ATTACHMENT_INFO.getRequestContext();
 
@@ -166,7 +170,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** The user needs a password reset. */
 	String WIKI_LOSTPASSWORD = ContextEnum.WIKI_LOSTPASSWORD.getRequestContext();
-	
+
 	/** User is preparing to log out. */
 	String WIKI_LOGOUT = ContextEnum.WIKI_LOGOUT.getRequestContext();
 
@@ -179,11 +183,14 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** User wants to view or administer workflows. */
 	String WIKI_WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
-	String NONE_WIKI_WORKFLOW = "!" + WIKI_WORKFLOW; 
+	String NONE_WIKI_WORKFLOW = "!" + WIKI_WORKFLOW;
 
 	/** Persisting wiki content. */
-	String PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();
-	
+	String WIKI_PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();
+
+	/** Context for changing hierarchy of wiki pages. */
+	String WIKI_CHANGE_HIERARCHY = ContextEnum.WIKI_CHANGE_HIERARCHY.getRequestContext();
+
 	/**
 	 * Is used to choose between the different date formats that JSPWiki supports.
 	 * <ul>
@@ -208,14 +215,14 @@ public interface WikiContext extends Cloneable, Command {
 	String ATTR_WIKI_CONTEXT = "jspwiki.context";
 
 	/**
-	 * Variable name which tells whether plugins should be executed or not. Value can be either {@code Boolean.TRUE}
-	 * or {@code Boolean.FALSE}. While not set it's value is {@code null}.
+	 * Variable name which tells whether plugins should be executed or not. Value can be either
+	 * {@code Boolean.TRUE} or {@code Boolean.FALSE}. While not set it's value is {@code null}.
 	 */
 	String VAR_EXECUTE_PLUGINS = "_PluginContent.execute";
 
 	/**
-	 * Name of the variable which is set to Boolean.TRUE or Boolean.FALSE depending on whether WYSIWYG is currently
-	 * in effect.
+	 * Name of the variable which is set to Boolean.TRUE or Boolean.FALSE depending on whether WYSIWYG
+	 * is currently in effect.
 	 */
 	String VAR_WYSIWYG_EDITOR_MODE = "WYSIWYG_EDITOR_MODE";
 
@@ -234,8 +241,8 @@ public interface WikiContext extends Cloneable, Command {
 	/**
 	 * Returns the ID of WikiPage that is being handled.
 	 *
-	 * @return the ID of WikiPage which was fetched. In case of a problem with the current page - returns or ID of
-	 *         'main' page of wiki, or 'SystemInfo' page.
+	 * @return the ID of WikiPage which was fetched. In case of a problem with the current page -
+	 *         returns or ID of 'main' page of wiki, or 'SystemInfo' page.
 	 */
 	String getPageId();
 
@@ -248,14 +255,15 @@ public interface WikiContext extends Cloneable, Command {
 	void setPage(WikiPage wikiPage);
 
 	/**
-	 * Gets a reference to the real WikiPage whose content is currently being rendered. If your plugin e.g. does
-	 * some variable setting, be aware that if it is embedded in the LeftMenu or some other WikiPage added with
-	 * InsertPageTag, you should consider what you want to do - do you wish to really reference the "master"
-	 * WikiPage or the included page.
+	 * Gets a reference to the real WikiPage whose content is currently being rendered. If your plugin
+	 * e.g. does some variable setting, be aware that if it is embedded in the LeftMenu or some other
+	 * WikiPage added with InsertPageTag, you should consider what you want to do - do you wish to
+	 * really reference the "master" WikiPage or the included page.
 	 * <p>
-	 * For example, in the default template, there is a WikiPage called "LeftMenu". Whenever you access a page, e.g.
-	 * "Main", the master WikiPage will be Main, and that's what the getPage() will return - regardless of whether
-	 * your plugin resides on the LeftMenu or on the Main page. However, getRealPage() will return "LeftMenu".
+	 * For example, in the default template, there is a WikiPage called "LeftMenu". Whenever you access
+	 * a page, e.g. "Main", the master WikiPage will be Main, and that's what the getPage() will return
+	 * - regardless of whether your plugin resides on the LeftMenu or on the Main page. However,
+	 * getRealPage() will return "LeftMenu".
 	 *
 	 * @return A reference to the real page.
 	 * @see org.apache.wiki.tags.InsertPageTag
@@ -266,13 +274,13 @@ public interface WikiContext extends Cloneable, Command {
 	/**
 	 * Sets a reference to the real WikiPage whose content is currently being rendered.
 	 * <p>
-	 * Sometimes you may want to render the WikiPage using some other page's context. In those cases, it is highly
-	 * recommended that you set the pushRealPage() to point at the real WikiPage you are rendering. Please see
-	 * InsertPageTag for an example.
+	 * Sometimes you may want to render the WikiPage using some other page's context. In those cases, it
+	 * is highly recommended that you set the pushRealPage() to point at the real WikiPage you are
+	 * rendering. Please see InsertPageTag for an example.
 	 * <p>
-	 * Also, if your plugin e.g. does some variable setting, be aware that if it is embedded in the LeftMenu or some
-	 * other WikiPage added with InsertPageTag, you should consider what you want to do - do you wish to really
-	 * reference the "master" WikiPage or the included page.
+	 * Also, if your plugin e.g. does some variable setting, be aware that if it is embedded in the
+	 * LeftMenu or some other WikiPage added with InsertPageTag, you should consider what you want to do
+	 * - do you wish to really reference the "master" WikiPage or the included page.
 	 *
 	 * @param wikiPage The real WikiPage which is being rendered.
 	 * @since 2.3.14
@@ -322,8 +330,8 @@ public interface WikiContext extends Cloneable, Command {
 	<T> T getVariable(String key);
 
 	/**
-	 * Sets a variable. The variable is valid while the WikiContext is valid, i.e. while WikiPage processing
-	 * continues. The variable data is discarded once the WikiPage processing is finished.
+	 * Sets a variable. The variable is valid while the WikiContext is valid, i.e. while WikiPage
+	 * processing continues. The variable data is discarded once the WikiPage processing is finished.
 	 *
 	 * @param key  The variable name.
 	 * @param data The variable value.
@@ -331,8 +339,8 @@ public interface WikiContext extends Cloneable, Command {
 	void setVariable(String key, Object data);
 
 	/**
-	 * This is just a simple helper method which will first check the context if there is already an override in
-	 * place, and if there is not, it will then check the given properties.
+	 * This is just a simple helper method which will first check the context if there is already an
+	 * override in place, and if there is not, it will then check the given properties.
 	 *
 	 * @param key      What key are we searching for?
 	 * @param defValue Default value for the boolean
@@ -341,9 +349,9 @@ public interface WikiContext extends Cloneable, Command {
 	boolean getBooleanWikiProperty(String key, boolean defValue);
 
 	/**
-	 * This method will safely return any HTTP parameters that might have been defined. You should use this method
-	 * instead of peeking directly into the result of getHttpRequest(), since this method is smart enough to do all
-	 * of the right things, figure out UTF-8 encoded parameters, etc.
+	 * This method will safely return any HTTP parameters that might have been defined. You should use
+	 * this method instead of peeking directly into the result of getHttpRequest(), since this method is
+	 * smart enough to do all of the right things, figure out UTF-8 encoded parameters, etc.
 	 *
 	 * @since 2.0.13.
 	 * @param paramName Parameter name to look for.
@@ -352,9 +360,9 @@ public interface WikiContext extends Cloneable, Command {
 	String getHttpParameter(String paramName);
 
 	/**
-	 * If the request did originate from a HTTP request, then the HTTP request can be fetched here. However, it the
-	 * request did NOT originate from a HTTP request, then this method will return null, and YOU SHOULD CHECK FOR
-	 * IT!
+	 * If the request did originate from a HTTP request, then the HTTP request can be fetched here.
+	 * However, it the request did NOT originate from a HTTP request, then this method will return null,
+	 * and YOU SHOULD CHECK FOR IT!
 	 *
 	 * @return Null, if no HTTP request was done.
 	 * @since 2.0.13.
@@ -378,24 +386,26 @@ public interface WikiContext extends Cloneable, Command {
 	String getShape();
 
 	/**
-	 * Returns the Session associated with the context. This method is guaranteed to always return a valid Session.
-	 * If this context was constructed without an associated HttpServletRequest, it will return a guest session.
+	 * Returns the Session associated with the context. This method is guaranteed to always return a
+	 * valid Session. If this context was constructed without an associated HttpServletRequest, it will
+	 * return a guest session.
 	 *
 	 * @return The Session associate with this context.
 	 */
 	Session getWikiSession();
 
 	/**
-	 * Convenience method that gets the current user. Delegates the lookup to the Session associated with this
-	 * WikiContext. May return null, in case the current user has not yet been determined; or this is an internal
-	 * system. If the Session has not been set, <em>always</em> returns null.
+	 * Convenience method that gets the current user. Delegates the lookup to the Session associated
+	 * with this WikiContext. May return null, in case the current user has not yet been determined; or
+	 * this is an internal system. If the Session has not been set, <em>always</em> returns null.
 	 *
 	 * @return The current user; or maybe null in case of internal calls.
 	 */
 	Principal getCurrentUser();
 
 	/**
-	 * Returns true, if the current user has administrative permissions (i.e. the omnipotent AllPermission).
+	 * Returns true, if the current user has administrative permissions (i.e. the omnipotent
+	 * AllPermission).
 	 *
 	 * @since 2.4.46
 	 * @return true, if the user has all permissions.
@@ -440,8 +450,9 @@ public interface WikiContext extends Cloneable, Command {
 	}
 
 	/**
-	 * Returns an URL from a page. It this WikiContext instance was constructed with an actual HttpServletRequest, we
-	 * will attempt to construct the URL using HttpUtil, which preserves the HTTPS portion if it was used.
+	 * Returns an URL from a page. It this WikiContext instance was constructed with an actual
+	 * HttpServletRequest, we will attempt to construct the URL using HttpUtil, which preserves the
+	 * HTTPS portion if it was used.
 	 *
 	 * @param context The request context (e.g. WikiContext.ATTACHMENT_UPLOAD)
 	 * @param page    The WikiPage to which to link
@@ -458,8 +469,8 @@ public interface WikiContext extends Cloneable, Command {
 	WikiContext clone();
 
 	/**
-	 * Creates a deep clone of the WikiContext. This is useful when you want to be sure that you don't accidentally mess
-	 * with page attributes, etc.
+	 * Creates a deep clone of the WikiContext. This is useful when you want to be sure that you don't
+	 * accidentally mess with page attributes, etc.
 	 *
 	 * @since 2.8.0
 	 * @return A deep clone of the WikiContext.

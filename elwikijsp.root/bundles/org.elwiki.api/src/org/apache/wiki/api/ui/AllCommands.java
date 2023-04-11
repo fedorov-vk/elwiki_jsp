@@ -71,6 +71,7 @@ public interface AllCommands {
             WikiCommand.WORKFLOW,
             WikiCommand.SCOPE,
             WikiCommand.PERSIST_CONTENT,
+            WikiCommand.CHANGE_HIERARCHY,
             WikiCommand.ADMIN,
             WikiCommand.SECURE,
         };

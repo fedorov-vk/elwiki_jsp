@@ -403,15 +403,19 @@
       <wiki:CheckRequestContext context="<%=WikiContext.PAGE_VIEW%>">      
       <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
         <li>
-          <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
+          <wiki:Link path='<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>'>
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='save'/>
-               ⮱⛁ Save all wiki content
+			⮱⛁ Save all wiki content
           </wiki:Link>
-          <wiki:Link path="<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>">
+          <wiki:Link path='<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>'>
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='load'/>
-             	⮴⛁ Load all wiki content
+			⮴⛁ Load all wiki content
+          </wiki:Link>
+          <wiki:Link path='<%=ContextEnum.WIKI_CHANGE_HIERARCHY.getUri()%>'>
+            <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
+			Change hierarchy
           </wiki:Link>
          </li>
          <li class="divider "></li>
