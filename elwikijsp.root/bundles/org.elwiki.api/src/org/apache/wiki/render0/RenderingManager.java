@@ -127,7 +127,8 @@ public interface RenderingManager extends RenderApi, InternalModule {
     String getHTML( WikiContext context, WikiDocument doc ) throws IOException;
 
     /**
-     *  Returns the converted HTML of the page using a different context than the default context.
+     *  Returns the converted HTML of the page using a different context than the default context.<br/>
+     *  After the content of the page, the comments of the page are added through separators.  
      *
      *  @param  context A WikiContext in which you wish to render this page in.
      *  @param  page WikiPage reference.

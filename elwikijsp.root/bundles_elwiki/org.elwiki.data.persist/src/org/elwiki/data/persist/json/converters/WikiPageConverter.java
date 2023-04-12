@@ -31,6 +31,8 @@ public class WikiPageConverter extends DeserialiseStuff
 	private static String REDIRECT = "redirect";
 	private static String VIEW_COUNT = "viewCount";
 	private static String WIKI = "wiki";
+	private static String COMMENTS = "comments";
+	private static String TAGS = "tags";
 	private static String REFERENCES = "references";
 	private static String CHILDREN = "children";
 	private static String ATTRIBUTES = "attributes";
@@ -49,6 +51,18 @@ public class WikiPageConverter extends DeserialiseStuff
 		result.addProperty(REDIRECT, wikiPage.getRedirect());
 		result.addProperty(VIEW_COUNT, wikiPage.getViewCount());
 		result.addProperty(WIKI, wikiPage.getWiki());
+
+		JsonArray comments = new JsonArray();
+		result.add(COMMENTS, comments);
+		for (String comment : wikiPage.getComments()) {
+			comments.add(comment);
+		}
+
+		JsonArray tags = new JsonArray();
+		result.add(TAGS, tags);
+		for (String tag : wikiPage.getTags()) {
+			tags.add(tag);
+		}
 
 		JsonArray references = new JsonArray();
 		result.add(REFERENCES, references);
@@ -113,6 +127,16 @@ public class WikiPageConverter extends DeserialiseStuff
 		wikiPage.setRedirect(redirect);
 		wikiPage.setViewCount(viewCount);
 		wikiPage.setWiki(wiki);
+
+		EList<String> comments = wikiPage.getComments();
+		for (JsonElement jsonComment : getArray(jsonObject, COMMENTS)) {
+			comments.add(jsonComment.getAsString());
+		}
+
+		EList<String> tags = wikiPage.getTags();
+		for (JsonElement jsonTag : getArray(jsonObject, TAGS)) {
+			tags.add(jsonTag.getAsString());
+		}
 
 		EList<PageReference> pageReferences = wikiPage.getPageReferences();
 		for (JsonElement jsonRef : getArray(jsonObject, REFERENCES)) {

@@ -326,11 +326,17 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
     /**
      *  {@inheritDoc}
      */
-    @Override
-    public String getHTML( final WikiContext context, final WikiPage page ) {
+	@Override
+	public String getHTML(final WikiContext context, final WikiPage page) {
 		String pagedata = this.pageManager.getPureText(page, context.getPageVersion());
-        return textToHTML( context, pagedata );
-    }
+
+		for (String comment : page.getComments()) {
+			//  Add a line on top every each comment to separate it from each other.
+			pagedata += "\n\n----\n\n" + comment;
+		}
+
+		return textToHTML(context, pagedata);
+	}
 
     /**
      *  Returns the converted HTML of the page's specific version. The version must be a positive integer, otherwise the current

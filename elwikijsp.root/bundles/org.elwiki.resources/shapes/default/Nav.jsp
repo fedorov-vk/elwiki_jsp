@@ -40,7 +40,8 @@
 	StringTokenizer tokens = new StringTokenizer( text );
 	//avg reading speeds: https://iovs.arvojournals.org/article.aspx?articleid=2166061
 %>
-<c:set var="attachments" value="<%=attachmentManager.listAttachments( wikiContext.getPage() ).size()%>" />
+<c:set var="attachments" value="<%=attachmentManager.listAttachments(wikiContext.getPage()).size()%>" />
+<c:set var="commentsNum" value="<%=wikiContext.getPage().getComments().size()%>" />
 
 <c:set var="wordCount" value="<%= tokens.countTokens() %>" />
 <c:set var="readingTime" value="${wordCount / 228}" />
@@ -170,7 +171,8 @@
       <a href="#" accessKey="i">
         <span class="icon-info-menu"></span>
         <span><fmt:message key='info.tab'/></span>
-        <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
+        <c:if test="${attachments>0 || commentsNum>0}"><span class="badge"
+          ${commentsNum>0 ? "style='background:#A0E8A0'" : ""} >${attachments>0? attachments : '&nbsp;'}</span></c:if>
         <wiki:PageExists><span class="caret"></span></wiki:PageExists>
       </a>
     <ul class="dropdown-menu pull-right" data-hover-parent="li">

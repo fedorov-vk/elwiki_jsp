@@ -56,6 +56,15 @@ public interface PageProvider extends WikiProvider {
     void putPageText( WikiPage page, String text, String author, String changenote ) throws ProviderException;
 
 	/**
+	 * Saves comment text of page.
+	 *
+	 * @param page    The target WikiPage to save comment.
+	 * @param comment Text of the comment.
+	 * @throws ProviderException TODO
+	 */
+	void savePageComment(WikiPage page, String comment) throws ProviderException;
+
+	/**
 	 * Return true, if page exists.
 	 * 
 	 * @param pageId ID of the page.

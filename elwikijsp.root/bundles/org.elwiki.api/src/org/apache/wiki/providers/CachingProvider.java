@@ -342,11 +342,17 @@ public class CachingProvider implements PageProvider {
 
             getPageInfoFromCache( page.getName() );
         }
-    }
+	}
 
-    /**
-     *  {@inheritDoc}
-     */
+	@Override
+	public void savePageComment(WikiPage page, String comment) throws ProviderException {
+		// TODO Auto-generated method stub
+		Assert.isTrue(false, ":FVK: code is not implemented.");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Collection<WikiPage> getUpperPages() throws ProviderException {
 		// TODO Auto-generated method stub

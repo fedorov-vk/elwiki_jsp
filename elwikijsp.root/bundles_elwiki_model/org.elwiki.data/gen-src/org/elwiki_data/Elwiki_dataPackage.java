@@ -268,13 +268,22 @@ public interface Elwiki_dataPackage extends EPackage {
 	int WIKI_PAGE__PAGE_ACL = COMPARABLE_FEATURE_COUNT + 17;
 
 	/**
+	 * The feature id for the '<em><b>Comments</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WIKI_PAGE__COMMENTS = COMPARABLE_FEATURE_COUNT + 18;
+
+	/**
 	 * The number of structural features of the '<em>Wiki Page</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 18;
+	int WIKI_PAGE_FEATURE_COUNT = COMPARABLE_FEATURE_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Compare To</em>' operation.
@@ -1346,6 +1355,17 @@ public interface Elwiki_dataPackage extends EPackage {
 	EReference getWikiPage_PageAcl();
 
 	/**
+	 * Returns the meta object for the attribute list '{@link org.elwiki_data.WikiPage#getComments <em>Comments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Comments</em>'.
+	 * @see org.elwiki_data.WikiPage#getComments()
+	 * @see #getWikiPage()
+	 * @generated
+	 */
+	EAttribute getWikiPage_Comments();
+
+	/**
 	 * Returns the meta object for the '{@link org.elwiki_data.WikiPage#compareTo(java.lang.Object) <em>Compare To</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2187,6 +2207,14 @@ public interface Elwiki_dataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference WIKI_PAGE__PAGE_ACL = eINSTANCE.getWikiPage_PageAcl();
+
+		/**
+		 * The meta object literal for the '<em><b>Comments</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WIKI_PAGE__COMMENTS = eINSTANCE.getWikiPage_Comments();
 
 		/**
 		 * The meta object literal for the '<em><b>Compare To</b></em>' operation.

@@ -496,6 +496,13 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         }
     }
 
+	/** {@inheritDoc} */
+	@Override
+	public void savePageComment(WikiContext wikiContext, String comment) throws WikiException {
+		WikiPage page = wikiContext.getPage();
+		m_provider.savePageComment(page, comment);		
+	}
+
     /**
      * Returns the Engine to which this PageManager belongs to.
      *

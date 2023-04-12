@@ -52,6 +52,7 @@ import org.elwiki_data.WikiPage;
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getTags <em>Tags</em>}</li>
  *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getPageAcl <em>Page Acl</em>}</li>
+ *   <li>{@link org.elwiki_data.impl.WikiPageImpl#getComments <em>Comments</em>}</li>
  * </ul>
  *
  * @generated
@@ -362,6 +363,17 @@ public class WikiPageImpl extends ComparableImpl implements WikiPage {
 	@Override
 	public EList<PageAclEntry> getPageAcl() {
 		return (EList<PageAclEntry>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__PAGE_ACL, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public EList<String> getComments() {
+		return (EList<String>)eGet(Elwiki_dataPackage.Literals.WIKI_PAGE__COMMENTS, true);
 	}
 
 	/**

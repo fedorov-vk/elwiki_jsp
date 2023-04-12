@@ -41,6 +41,7 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.elwiki_data.WikiPage#getUnknownPages <em>Unknown Pages</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getTags <em>Tags</em>}</li>
  *   <li>{@link org.elwiki_data.WikiPage#getPageAcl <em>Page Acl</em>}</li>
+ *   <li>{@link org.elwiki_data.WikiPage#getComments <em>Comments</em>}</li>
  * </ul>
  *
  * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage()
@@ -459,6 +460,18 @@ public interface WikiPage extends CDOObject, Comparable, Cloneable {
 	 * @generated
 	 */
 	EList<PageAclEntry> getPageAcl();
+
+	/**
+	 * Returns the value of the '<em><b>Comments</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Comments</em>' attribute list.
+	 * @see org.elwiki_data.Elwiki_dataPackage#getWikiPage_Comments()
+	 * @model
+	 * @generated
+	 */
+	EList<String> getComments();
 
 	/**
 	 * <!-- begin-user-doc -->

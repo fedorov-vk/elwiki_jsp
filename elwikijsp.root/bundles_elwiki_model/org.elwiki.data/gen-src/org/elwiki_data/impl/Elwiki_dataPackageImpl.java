@@ -412,6 +412,16 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 	 * @generated
 	 */
 	@Override
+	public EAttribute getWikiPage_Comments() {
+		return (EAttribute)wikiPageEClass.getEStructuralFeatures().get(18);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getWikiPage__CompareTo__Object() {
 		return wikiPageEClass.getEOperations().get(0);
 	}
@@ -1084,6 +1094,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		createEReference(wikiPageEClass, WIKI_PAGE__UNKNOWN_PAGES);
 		createEAttribute(wikiPageEClass, WIKI_PAGE__TAGS);
 		createEReference(wikiPageEClass, WIKI_PAGE__PAGE_ACL);
+		createEAttribute(wikiPageEClass, WIKI_PAGE__COMMENTS);
 		createEOperation(wikiPageEClass, WIKI_PAGE___COMPARE_TO__OBJECT);
 		createEOperation(wikiPageEClass, WIKI_PAGE___CLONE);
 		createEOperation(wikiPageEClass, WIKI_PAGE___GET_LAST_MODIFIED_DATE);
@@ -1218,6 +1229,7 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		initEReference(getWikiPage_UnknownPages(), this.getUnknownPage(), this.getUnknownPage_Wikipage(), "unknownPages", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getWikiPage_Tags(), ecorePackage.getEString(), "tags", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getWikiPage_PageAcl(), this.getPageAclEntry(), null, "pageAcl", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWikiPage_Comments(), ecorePackage.getEString(), "comments", null, 0, -1, WikiPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		EOperation op = initEOperation(getWikiPage__CompareTo__Object(), ecorePackage.getEInt(), "compareTo", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getObject(), "obj", 0, 1, IS_UNIQUE, IS_ORDERED);

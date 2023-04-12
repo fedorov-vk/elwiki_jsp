@@ -149,9 +149,27 @@ public class CdoWikiPageProvider implements PageProvider {
 		try {
 			transaction.commit();
 		} catch (CommitException ex) {
-			ex.printStackTrace();
+			throw new ProviderException(ex);
 		} finally {
 			if (!transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void savePageComment(WikiPage page, String comment) throws ProviderException {
+		CDOTransaction transaction = null;
+		try {
+			transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+			WikiPage page1 = transaction.getObject(page);
+			page1.getComments().add(comment);
+			transaction.commit();
+		} catch (CommitException ex) {
+			throw new ProviderException(ex);
+		} finally {
+			if (transaction != null && !transaction.isClosed()) {
 				transaction.close();
 			}
 		}

@@ -7,9 +7,9 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IPath;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.data.persist.json.converters.PageAclEntryConverter;
 import org.elwiki.data.persist.json.converters.AttachmentContentConverter;
 import org.elwiki.data.persist.json.converters.DateConverter;
+import org.elwiki.data.persist.json.converters.PageAclEntryConverter;
 import org.elwiki.data.persist.json.converters.PageAttachmentConverter;
 import org.elwiki.data.persist.json.converters.PageContentConverter;
 import org.elwiki.data.persist.json.converters.PageReferenceConverter;

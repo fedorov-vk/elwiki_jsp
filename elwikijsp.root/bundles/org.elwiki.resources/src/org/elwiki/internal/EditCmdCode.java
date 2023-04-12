@@ -55,7 +55,7 @@ public class EditCmdCode extends CmdCode {
 			return;
 		}
 
-		HttpSession session = httpRequest.getSession();
+		HttpSession httpSession = httpRequest.getSession();
 		PageManager pageManager = getEngine().getManager(PageManager.class);
 		Engine engine = wikiContext.getEngine();
 		@NonNull
@@ -73,23 +73,23 @@ public class EditCmdCode extends CmdCode {
 		String append = httpRequest.getParameter("append");
 		String edit = httpRequest.getParameter("edit");
 
-		String author = (String) session.getAttribute("author");
+		String author = (String) httpSession.getAttribute("author");
 		author = httpRequest.getParameter("author");
 		//TextUtil.replaceEntities( findParam( pageContext, "author" ) );
 
-		String changenote = (String) session.getAttribute("changenote");
+		String changenote = (String) httpSession.getAttribute("changenote");
 		changenote = httpRequest.getParameter("changenote");
 		//findParam( pageContext, "changenote" );
 
 		String text = httpRequest.getParameter(EditorManager.REQ_EDITEDTEXT);
 		//ContextUtil.getEditedText( pageContext );
-		String link = (String) session.getAttribute("link");
+		String link = (String) httpSession.getAttribute("link");
 		link = httpRequest.getParameter("link");
 		//TextUtil.replaceEntities( findParam( pageContext, "link") );
 
-		String spamhash = (String) session.getAttribute(spamFilter.getHashFieldName(httpRequest));
+		String spamhash = (String) httpSession.getAttribute(spamFilter.getHashFieldName(httpRequest));
 		//findParam( pageContext, SpamFilter.getHashFieldName(httpRequest) );
-		String captcha = (String) session.getAttribute("captcha");
+		String captcha = (String) httpSession.getAttribute("captcha");
 		captcha = httpRequest.getParameter("captcha");
 
 		if (!wikiSession.isAuthenticated() && wikiSession.isAnonymous() && author != null) {
@@ -100,7 +100,7 @@ public class EditCmdCode extends CmdCode {
 		//
 		//  WYSIWYG editor sends us its greetings
 		//
-		String htmlText = (String) session.getAttribute("\"htmlPageText\"");
+		String htmlText = (String) httpSession.getAttribute("\"htmlPageText\"");
 		//findParam( pageContext, "htmlPageText" );
 		if (htmlText != null && cancel == null) {
 			text = new HtmlStringToWikiTranslator().translate(htmlText, wikiContext);
@@ -132,7 +132,7 @@ public class EditCmdCode extends CmdCode {
 			//
 			//  Check for session expiry
 			//
-			/*:FVK:
+			/*TODO: check on SpamFilter
 			 if( !SpamFilter.checkHash(wikiContext, pageContext) ) {
 			    return;
 			}
@@ -164,12 +164,12 @@ public class EditCmdCode extends CmdCode {
 				//
 				PageLock lock = pageManager.getCurrentLock(wikipage);
 				pageManager.unlockPage(lock);
-				session.removeAttribute("lock-" + pagereq);
+				httpSession.removeAttribute("lock-" + pagereq);
 
 				if (changenote == null) {
-					changenote = (String) session.getAttribute("changenote"); // TODO: :FVK: replace string.
+					changenote = (String) httpSession.getAttribute("changenote"); // TODO: :FVK: replace string.
 				}
-				session.removeAttribute("changenote");
+				httpSession.removeAttribute("changenote");
 
 				//
 				// Figure out the actual page text.
@@ -185,7 +185,7 @@ public class EditCmdCode extends CmdCode {
 				try {
 					if (captcha != null) {
 						wikiContext.setVariable("captcha", Boolean.TRUE); // TODO: :FVK: replace string.
-						session.removeAttribute("captcha");
+						httpSession.removeAttribute("captcha");
 					}
 
 					if (append != null) {
@@ -203,19 +203,19 @@ public class EditCmdCode extends CmdCode {
 				} catch (RedirectException ex) {
 					// FIXME: Cut-n-paste code.
 					wikiContext.getWikiSession().addMessage(ex.getMessage()); // FIXME: should work, but doesn't
-					session.setAttribute("message", ex.getMessage());
+					httpSession.setAttribute("message", ex.getMessage());
 					/*:FVK:
 					session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
 					*/
-					session.setAttribute(EditorManager.REQ_EDITEDTEXT, "ContextUtil.getEditedText(pageContext)");
+					httpSession.setAttribute(EditorManager.REQ_EDITEDTEXT, "ContextUtil.getEditedText(pageContext)");
 
-					session.setAttribute("author", user);
-					session.setAttribute("link", link != null ? link : "");
+					httpSession.setAttribute("author", user);
+					httpSession.setAttribute("link", link != null ? link : "");
 					if (htmlText != null)
-						session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
+						httpSession.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
 
-					session.setAttribute("changenote", changenote != null ? changenote : "");
-					session.setAttribute(spamFilter.getHashFieldName(httpRequest), spamhash);
+					httpSession.setAttribute("changenote", changenote != null ? changenote : "");
+					httpSession.setAttribute(spamFilter.getHashFieldName(httpRequest), spamhash);
 					httpResponse.sendRedirect(ex.getRedirect());
 					return;
 				}
@@ -229,30 +229,30 @@ public class EditCmdCode extends CmdCode {
 			/*:FVK:
 			session.setAttribute(EditorManager.REQ_EDITEDTEXT, ContextUtil.getEditedText(pageContext));
 			*/
-			session.setAttribute(EditorManager.REQ_EDITEDTEXT, "ContextUtil.getEditedText(pageContext)");
+			httpSession.setAttribute(EditorManager.REQ_EDITEDTEXT, "ContextUtil.getEditedText(pageContext)");
 
-			session.setAttribute("author", user);
-			session.setAttribute("link", link != null ? link : "");
+			httpSession.setAttribute("author", user);
+			httpSession.setAttribute("link", link != null ? link : "");
 
 			if (htmlText != null) {
-				session.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
+				httpSession.setAttribute(EditorManager.REQ_EDITEDTEXT, text);
 			}
 
-			session.setAttribute("changenote", changenote != null ? changenote : "");
+			httpSession.setAttribute("changenote", changenote != null ? changenote : "");
 			httpResponse.sendRedirect(engine.getURL(ContextEnum.PAGE_PREVIEW.getRequestContext(), pagereq, null));
 			return;
 		} else if (cancel != null) {
 			log.debug("Cancelled editing " + pagereq);
-			PageLock lock = (PageLock) session.getAttribute("lock-" + pagereq);
+			PageLock lock = (PageLock) httpSession.getAttribute("lock-" + pagereq);
 			if (lock != null) {
 				pageManager.unlockPage(lock);
-				session.removeAttribute("lock-" + pagereq);
+				httpSession.removeAttribute("lock-" + pagereq);
 			}
 			httpResponse.sendRedirect(wikiContext.getViewURL(wikiContext.getPage().getId()));
 			return;
 		}
 
-		session.removeAttribute(EditorManager.REQ_EDITEDTEXT);
+		httpSession.removeAttribute(EditorManager.REQ_EDITEDTEXT);
 
 		log.info("Editing page " + pagereq + ". User=" + user + ", host=" + HttpUtil.getRemoteAddress(httpRequest));
 
@@ -272,7 +272,7 @@ public class EditCmdCode extends CmdCode {
 		//
 		PageLock lock = pageManager.lockPage(wikipage, user);
 		if (lock != null) {
-			session.setAttribute("lock-" + pagereq, lock);
+			httpSession.setAttribute("lock-" + pagereq, lock);
 		}
 	}
 

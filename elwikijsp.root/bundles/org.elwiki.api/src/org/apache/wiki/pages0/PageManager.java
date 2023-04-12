@@ -178,6 +178,15 @@ public interface PageManager {
 	 */
 	void saveText(WikiContext context, String text, String author, String changenote) throws WikiException;
 
+	/**
+	 * Writes the comment text of a page into the page repository.
+	 * 
+	 * @param wikiContext The current WikiContext.
+	 * @param comment     The Wiki markup for the comment.
+	 * @throws WikiException TODO
+	 */
+	void savePageComment(WikiContext wikiContext, String comment) throws WikiException;
+
     /**
      * Puts the page text into the repository.  Note that this method does NOT update
      * JSPWiki internal data structures, and therefore you should always use saveText()

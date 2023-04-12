@@ -33,17 +33,12 @@
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%--
-   First insert the main page or the corresponding blog-entry page
+   First insert the page content
    Then a horizontal resizer
    And finally the editor for writing the comment
 --%>
 <div class="page-content">
   <div class="row comment-page">
-    <c:set var="mainblogpage" value="${fn:substringBefore(param.page,'_comments_')}" />
-    <c:if test="${not empty mainblogpage}">
-      <c:set var="blogentrypage" value="${fn:replace(param.page,'_comments_','_blogentry_')}" />
-      <wiki:InsertPage pageId="${blogentrypage}" />
-    </c:if>
     <wiki:InsertPage />
   </div>
   <div data-resize=".comment-page" title="<fmt:message key='editor.plain.comment.resize'/>" ></div>
