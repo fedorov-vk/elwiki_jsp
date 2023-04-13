@@ -185,6 +185,9 @@ public interface WikiContext extends Cloneable, Command {
 	String WIKI_WORKFLOW = ContextEnum.WIKI_WORKFLOW.getRequestContext();
 	String NONE_WIKI_WORKFLOW = "!" + WIKI_WORKFLOW;
 
+	/** ElWiki scope page context. */
+	String WIKI_SCOPE = ContextEnum.WIKI_SCOPE.getRequestContext();
+
 	/** Persisting wiki content. */
 	String WIKI_PERSIST_CONTENT = ContextEnum.WIKI_PERSIST_CONTENT.getRequestContext();
 

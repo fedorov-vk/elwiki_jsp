@@ -42,6 +42,7 @@ public enum ContextEnum {
     PAGE_EDIT( "cmd.edit", "%u", "?pageId=%n", "EditContent.jsp" ),
     PAGE_ACL( "cmd.pageAcl", "%u", "?pageId=%n", "AclPageContent.jsp" ),
     PAGE_EDIT_ACL( "cmd.editAcl", "%u", "?pageId=%n", "AclEntryEditContent.jsp" ),
+    PAGE_CREATE_ACL( "cmd.createAcl", "%u", "?pageId=%n", "AclEntryEditContent.jsp" ),
     PAGE_DELETE( "cmd.deletePage", "%u", "?pageId=%n", null ),
     PAGE_INFO( "cmd.info", "%u", "?pageId=%n", "InfoContent.jsp" ),
     PAGE_COMMENT( "cmd.comment", "%u", "?pageId=%n", "CommentContent.jsp" ),

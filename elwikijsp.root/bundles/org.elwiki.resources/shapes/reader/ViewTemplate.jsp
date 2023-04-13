@@ -43,7 +43,7 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiContext" content='<wiki:Variable var="requestcontext" />' />
 <wiki:Permission permission="edit"><meta name="wikiEditPermission" content="true"/></wiki:Permission>
 <meta name="wikiBaseUrl" content='<wiki:BaseURL />' />
-<meta name="wikiPageUrl" content='<wiki:Link format="url"  pageName="#$%"/>' />
+<meta name="wikiPageUrl" content='<wiki:Link format="url" pageName="#$%"/>' />
 <meta name="wikiEditUrl" content='<wiki:EditLink format="url" pageName="#$%"/>' />
 <meta name="wikiCloneUrl" content='<wiki:EditLink format="url" pageName="#$%"/>&clone=<wiki:Variable var="pagename" />' />
 <meta name="wikiJsonUrl" content='<%=  ContextUtil.findContext(pageContext).getURL( WikiContext.PAGE_NONE, "ajax" ) %>' /><%--unusual pagename--%>

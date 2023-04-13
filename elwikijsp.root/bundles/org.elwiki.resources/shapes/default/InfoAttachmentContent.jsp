@@ -100,7 +100,7 @@
 <div>
 <h4 class="pull-left" id="info-attachment-name"><fmt:message key="info.attachment.name"/>:
  <i><c:out value="<%=pageAttachment.getName()%>" escapeXml="true"/></i></h4>
-<form action="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_DELETE%>' pageId='<%=wikiPage.getId()%>' />"
+<form action="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_DELETE%>' pageId='<%=wikiPage.getId()%>'/>"
        class="form-group pull-right"
           id="deletePageVersionForm"
       method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -148,7 +148,7 @@ int MAXATTACHNAMELENGTH = 30;
       <input class="form-control form-col-50" type="text" name="changenote" id="changenote" maxlength="80" size="60" />
     </div>
     <div class="form-group">
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.PAGE_INFO%>' format='url'/>" />
+    <input type="hidden" name="nextpage" value="<wiki:Link format='url' context='<%=WikiContext.PAGE_INFO%>'/>" />
     <input type="hidden" name="idpage" value="<%=wikiContext.getPageId()%>" />
     <input class="btn btn-success form-col-offset-20 form-col-50"
            type="submit" name="upload" id="upload" disabled="disabled" value="<fmt:message key='attach.add.submit'/>" />
@@ -182,7 +182,7 @@ int MAXATTACHNAMELENGTH = 30;
       --%>
       <th scope="col"><fmt:message key="info.changenote"/></th>
     </tr>
-	
+
 <%
 	EList<AttachmentContent> atts = pageAttachment.getAttachContents();
 	Iterator<AttachmentContent> iter = atts.iterator();

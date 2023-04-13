@@ -41,7 +41,7 @@
 
 <div class="page-content">
 
-<form id="idScopeSet" action="<wiki:Link path='cmd.scope' format='url'/>"
+<form id="idScopeSet" action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_SCOPE.getUri()%>'/>"
       class="form-frame scope-set active"
       accept-charset="<wiki:ContentEncoding/>">
 
@@ -56,7 +56,7 @@
       </button>
     </span>
 
-    <wiki:Link cssClass="btn btn-danger pull-right"  pageName="${redirect}" >
+    <wiki:Link pageId='${redirect}' cssClass='btn btn-danger pull-right'>
       <fmt:message key='scope.cancel.submit'/>
     </wiki:Link>
   </div>
@@ -129,7 +129,7 @@
     <label class="control-label form-col-20" style="vertical-align:top;" for="SoftScopeContainer">
       Scope topics
     </label>
-    
+
       <div id="SoftScopeContainer" class="SoftScopeContainer form-col-50">
       </div>
   </div>

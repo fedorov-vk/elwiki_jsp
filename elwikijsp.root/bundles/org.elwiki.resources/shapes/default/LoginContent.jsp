@@ -115,7 +115,9 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
 <c:set var="lostpwTab" value="${param.tab == 'lostpassword' ? 'data-activePane': ''}"/>
 <h3 ${lostpwTab} id="section-lostpw"><fmt:message key="login.lostpw.tab"/></h3>
 
-<form action="<wiki:Link context='<%=WikiContext.WIKI_LOSTPASSWORD%>' format='url'><wiki:Param name='tab' value='lostpassword'/></wiki:Link>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_LOSTPASSWORD.getUri()%>'>
+                <wiki:Param name='tab' value='lostpassword'/>
+              </wiki:Link>"
           id="lostpw"
        class="login-form"
       method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -127,7 +129,11 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
       <wiki:Messages div="information" topic="resetpw" prefix="" />
       <p>
         <fmt:message key="login.lostpw.reset.login">
-          <fmt:param><a href="<wiki:Link path='Login.jsp' />"><fmt:message key="login.lostpw.reset.clickhere"/></a></fmt:param>
+          <fmt:param>
+            <wiki:Link context='<%=WikiContext.WIKI_LOGIN%>'>
+              <fmt:message key="login.lostpw.reset.clickhere"/>
+            </wiki:Link>
+          </fmt:param>
         </fmt:message>
       </p>
   </c:when>
@@ -182,7 +188,9 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
 <c:set var="registerTab" value="${param.tab == 'register' ? 'data-activePane': ''}"/>
 <h3 ${registerTab} id="section-register"><fmt:message key="login.register.tab" /></h3>
 
-<form action="<wiki:Link context='<%=WikiContext.WIKI_LOGIN%>' format='url'><wiki:Param name='tab' value='register'/></wiki:Link>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_LOGIN.getUri()%>'>
+                <wiki:Param name='tab' value='register'/>
+              </wiki:Link>"
           id="editProfile"
        class="login-form"
       method="post" accept-charset="UTF-8">

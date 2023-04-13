@@ -154,6 +154,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 
     /** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public String getFrontPage() {
 		return this.m_frontPage;
 	}

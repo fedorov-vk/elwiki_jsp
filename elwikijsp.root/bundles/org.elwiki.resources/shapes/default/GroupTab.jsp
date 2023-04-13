@@ -44,7 +44,7 @@
 %>
 <wiki:CheckRequestContext context="!<%=WikiContext.GROUP_CREATE%>"><c:set var="createFormClose" value="-close"/></wiki:CheckRequestContext>
 <wiki:Permission permission="createGroups">
-  <form action="<wiki:Link format='url' path='cmd.createGroup'/>"
+  <form action="<wiki:Link format='url' path='<%=ContextEnum.GROUP_CREATE.getUri()%>'/>"
          class="accordion${createFormClose}"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 
@@ -80,7 +80,7 @@
   <wiki:Messages div="alert alert-danger" topic="group" prefix="${msg}" />
 </wiki:CheckRequestContext>
 
-<form action="<wiki:Link format='url' path='cmd.deleteGroup'/>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.GROUP_DELETE.getUri()%>'/>"
       class="hidden"
         name="deleteGroupForm" id="deleteGroupForm"
       method="POST" accept-charset="UTF-8">
@@ -147,7 +147,7 @@
       	if( authorizationManager.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
       %>
           <a class="btn btn-xs btn-primary"
-             href="<wiki:Link context='<%=WikiContext.GROUP_EDIT%>' format='url' id='${group.uid}'/>">
+             href="<wiki:Link format='url' context='<%=WikiContext.GROUP_EDIT%>' id='${group.uid}'/>">
              <fmt:message key="actions.editgroup"/>
           </a>
      <% } %>

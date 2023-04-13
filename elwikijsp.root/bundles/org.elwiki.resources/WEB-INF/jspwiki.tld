@@ -371,6 +371,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>datamodal</name>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>pageName</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

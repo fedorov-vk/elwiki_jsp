@@ -55,7 +55,7 @@
 
 <div class="page-content">
 
-  <form action="<wiki:Link format='url' path='cmd.editGroup' />"
+  <form action="<wiki:Link format='url' path='<%=ContextEnum.GROUP_EDIT.getUri()%>'/>"
             id="editGroup"
         method="POST" accept-charset="UTF-8">
 
@@ -65,9 +65,10 @@
       <button class="btn btn-success" type="submit" name="action" value="save">
         <fmt:message key="editgroup.submit.save"/>
       </button>
-      <a class="btn btn-danger pull-right" href="<wiki:Link format='url' path='cmd.viewGroup'><wiki:Param name='group' value='${name}'/></wiki:Link>" >
+      <wiki:Link path='<%=ContextEnum.GROUP_VIEW.getUri()%>' cssClass="btn btn-danger pull-right">
+        <wiki:Param name='group' value='${name}'/>
         <fmt:message key='editgroup.cancel.submit'/>
-      </a>
+      </wiki:Link>
     </div>
 
     <%--<wiki:Messages div="error help-block" topic="group" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"editgroup.saveerror") %>' />--%>

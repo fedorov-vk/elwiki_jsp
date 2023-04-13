@@ -67,10 +67,10 @@
       </fmt:message>
       </label>
       <div>
-      <wiki:Link cssClass="btn btn-primary" pageId='<%=wikiContext.getPageId()%>'>
+      <wiki:Link pageId="<%=wikiContext.getPageId()%>" cssClass="btn btn-primary">
         <fmt:message key="view.backtolatest" />
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-danger" context="<%=WikiContext.PAGE_EDIT%>" version="${thisVersion}">
+      <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" version="${thisVersion}" cssClass="btn btn-danger">
         <fmt:message key="view.restore" />
       </wiki:Link>
       </div>
@@ -89,12 +89,12 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <p></p>
   <c:set var="blogentrypage" value="${fn:replace(param.page,'_comments_','_blogentry_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default" pageName="${mainblogpage}">
+      <wiki:Link cssClass="btn btn-xs btn-default" pageId="${mainblogpage}">
          <fmt:message key="blog.backtomain">
            <fmt:param>${mainblogpage}</fmt:param>
          </fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-primary" pageName="${blogentrypage}">
+      <wiki:Link cssClass="btn btn-xs btn-primary" pageId="${blogentrypage}">
          <fmt:message key="blog.permalink" />
       </wiki:Link>
   </div>
@@ -114,11 +114,12 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <p></p>
   <c:set var="blogcommentpage" value="${fn:replace(param.page,'_blogentry_','_comments_')}" />
   <div class="pull-right">
-      <wiki:Link cssClass="btn btn-xs btn-default" pageName="${mainblogpage}">
-         <fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
+      <wiki:Link pageId="${mainblogpage}" cssClass="btn btn-xs btn-default">
+      	<fmt:message key="blog.backtomain"><fmt:param>${mainblogpage}</fmt:param></fmt:message>
       </wiki:Link>
-      <wiki:Link cssClass="btn btn-xs btn-default" context="<%=WikiContext.PAGE_COMMENT%>" pageName="${blogcommentpage}">
-        <span class="icon-plus"></span> <fmt:message key="blog.addcomments" />
+      <wiki:Link context="<%=WikiContext.PAGE_COMMENT%>" pageId="${blogcommentpage}" cssClass="btn btn-xs btn-default">
+        <span class="icon-plus"></span>
+        <fmt:message key="blog.addcomments" />
       </wiki:Link>
   </div>
   <c:if test="${not empty blogcommentpage}">
@@ -139,7 +140,7 @@ ISWEBLOG= <%= ContextUtil.findContext( pageContext ).getPage().getAttribute( /*A
   <div class="error">
     <fmt:message key="common.nopage">
       <fmt:param>
-        <wiki:Link cssClass="createpage" context="<%=WikiContext.PAGE_EDIT%>">
+        <wiki:Link context="<%=WikiContext.PAGE_EDIT%>" cssClass="createpage">
           <fmt:message key="common.createit" />
         </wiki:Link>
       </fmt:param>

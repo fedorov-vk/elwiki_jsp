@@ -42,7 +42,7 @@
 <c:set var="permissions"   value="<%=tm.listTimeZones(pageContext)%>" />
  --%>
 
-<form action="<wiki:Link format='url' path='cmd.createAcl'/>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.PAGE_CREATE_ACL.getUri()%>'/>"
          class="accordion-close"
         method="post" accept-charset="<wiki:ContentEncoding />" >
 

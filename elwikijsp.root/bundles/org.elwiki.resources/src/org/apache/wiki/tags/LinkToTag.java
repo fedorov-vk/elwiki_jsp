@@ -83,20 +83,21 @@ public class LinkToTag extends BaseWikiLinkTag {
 	public int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
 		String pageName = m_pageName;
-		String pageId = m_pageId;
+		String pageId = getPageId();
 		boolean isattachment = false;
 		PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
 		AttachmentManager attachmentManager = wikiContext.getEngine().getManager(AttachmentManager.class);
 		
-		if (m_pageId != null) {
-			WikiPage page = pageManager.getPageById(m_pageId);
+		if (getPageId() != null) {
+			WikiPage page = pageManager.getPageById(getPageId());
 			if (page != null) {
 				pageName = m_pageName = page.getName();
 			}
 		} else if (m_pageName != null) {
 			WikiPage page = pageManager.getPage(m_pageName);
 			if (page != null) {
-				pageId = m_pageId = page.getId();
+				pageId = page.getId();
+				setPageId(pageId);
 			}
 		}
 

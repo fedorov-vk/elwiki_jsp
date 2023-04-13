@@ -52,24 +52,24 @@ import org.elwiki_data.WikiPage;
  * Any ParamTag name-value pairs contained in the body are added to this URL to
  * provide support for arbitrary JSP calls.
  * <p>
- * 
- * @since 2.3.50
  */
 public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 	private static final long serialVersionUID = -1659028657261152566L;
 	private static final Logger log = Logger.getLogger(LinkTag.class);
 
-	private String m_path = null;
 	private String m_version = null;
 	private String m_cssClass = null;
+	private String m_datamodal = null;
+
+	private String m_path = null;
 	private String m_style = null;
 	private String m_title = null;
 	private String m_target = null;
 	private String m_compareToVersion = null;
 	private String m_rel = null;
 	private String m_ref = null;
-	private String m_context = ContextEnum.PAGE_VIEW.getRequestContext();
+	private String m_context = WikiContext.PAGE_VIEW;
 	private String m_accesskey = null;
 	private String m_tabindex = null;
 	private String m_templatefile = null;
@@ -88,6 +88,14 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		m_containedParams = new HashMap<>();
 	}
 
+	public String getDatamodal() {
+		return m_datamodal;
+	}
+
+	public void setDatamodal(String arg) {
+		m_datamodal = arg;
+	}
+	
 	public void setPath(final String path) {
 		m_path = path;
 	}
@@ -166,95 +174,26 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	 */
 	private String figureOutURL() throws ProviderException {
 		WikiContext wikiContext = getWikiContext();
-		String url = null;
-		final Engine engine = wikiContext.getEngine();
-		final IWikiConfiguration config = wikiContext.getConfiguration();
-		final WikiPage page;
+		IWikiConfiguration wikiConfig = wikiContext.getConfiguration();
+		Engine engine = wikiContext.getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
+		String url = null;
 
-		String paramId = getId();
-		if (paramId != null) { // :FVK: workaround.
-			String parms = addParamsForRecipient(null, m_containedParams);
-			return engine.getURL(m_context, paramId, parms);
-		}
-
-		if (m_pageId != null) {
-			page = pageManager.getPageById(m_pageId);
-		} else if (m_pageName != null) {
-			page = pageManager.getPage(m_pageName);
-		} else {
-			page = wikiContext.getPage();
-			if (page != null) {
-				m_pageName = page.getName();
-			}
-		}
+		String params = (m_version != null) ? "version=" + getVersion() : null;
+		params = addParamsForRecipient(params, m_containedParams);
 
 		if (m_templatefile != null) {
-			final String params = addParamsForRecipient(null, m_containedParams);
-			final String template = config.getTemplateDir();
-			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(),
-					"shapes/" + template + "/" + m_templatefile, params);
+			String template = wikiConfig.getTemplateDir();
+			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "shapes/" + template + "/" + m_templatefile,
+					params);
 		} else if (m_path != null) {
-			final String params = addParamsForRecipient(null, m_containedParams);
-			//:FVK: url = wikiContext.getURL( ContextEnum.PAGE_NONE.getRequestContext(), m_jsp, params );
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), m_path, params);
-		} else if (m_ref != null) {
-			final int interwikipoint;
-			if (new LinkParsingOperations(wikiContext).isExternalLink(m_ref)) {
-				url = m_ref;
-			} else if ((interwikipoint = m_ref.indexOf(":")) != -1) {
-				final String extWiki = m_ref.substring(0, interwikipoint);
-				final String wikiPage = m_ref.substring(interwikipoint + 1);
-
-				url = engine.getWikiConfiguration().getInterWikiURL(extWiki);
-				if (url != null) {
-					url = TextUtil.replaceString(url, "%s", wikiPage);
-				}
-			} else if (m_ref.startsWith("#")) {
-				// Local link
-			} else if (TextUtil.isNumber(m_ref)) {
-				// Reference
-			} else { //TODO: review followed code. (:FVK: - при получении страницы, и обработки ее как присоединения - это устарело?) 
-				final int hashMark;
-
-				final String parms = (m_version != null) ? "version=" + getVersion() : null;
-
-				// Internal wiki link, but is it an attachment link?
-				if (page instanceof PageAttachment) {
-					url = wikiContext.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), m_pageName);
-				} else if ((hashMark = m_ref.indexOf('#')) != -1) {
-					// It's an internal Wiki link, but to a named section
-
-					final String namedSection = m_ref.substring(hashMark + 1);
-					String reallink = m_ref.substring(0, hashMark);
-					reallink = MarkupParser.cleanLink(reallink);
-					url = makeBasicURL(m_context, reallink, parms);
-				} else {
-					final String reallink = MarkupParser.cleanLink(m_ref);
-					url = makeBasicURL(m_context, reallink, parms);
-				}
-			}
-		} else if (page != null) {
-			String parms = (m_version != null) ? "version=" + getVersion() : null;
-
-			parms = addParamsForRecipient(parms, m_containedParams);
-
-			//TODO: review followed code. (:FVK: - при получении страницы, и обработки ее как присоединения - это устарело?)
-			if (page instanceof PageAttachment) {
-				String ctx = m_context;
-				// Switch context appropriately when attempting to view an
-				// attachment, but don't override the context setting otherwise
-				if (m_context == null || m_context.equals(ContextEnum.PAGE_VIEW.getRequestContext())) {
-					ctx = ContextEnum.ATTACHMENT_DOGET.getRequestContext();
-				}
-				url = engine.getURL(ctx, m_pageName, parms);
-				//:FVK: url = wikiContext.getURL( ctx, m_pageName, parms );
-			} else {
-				url = makeBasicURL(m_context, m_pageName, parms);
-			}
+		} else if (getPageId() == null) {
+			// Here - Id of page is not specified.
+			url = makeBasicURL(m_context, pageManager.getMainPageId(), params);
 		} else {
-			final String frontPageName = config.getFrontPage();
-			url = makeBasicURL(m_context, frontPageName, null);
+			// Here - Id of page is specified.
+			url = makeBasicURL(m_context, getPageId(), params);
 		}
 
 		return url;
@@ -286,7 +225,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		return addTo + buf.toString();
 	}
 
-	private String makeBasicURL(final String context, final String pageId, String parms) {
+	private String makeBasicURL(final String context, String pageId, String parms) {
 		WikiContext wikiContext = getWikiContext();
 		final Engine engine = wikiContext.getEngine();
 		PageManager pageManager = engine.getManager(PageManager.class);
@@ -324,13 +263,18 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			parms = "r1=" + r1 + "&amp;r2=" + r2;
 		}
 
+		/*
 		{//TODO: here should remove the addressing by the page name. The page ID should be used.
 			//:FVK: workaround - вообще, в результате портирования - работа с именем страницы, как с параметром адресации - будет исключена.
 			if (m_pageName != null) {
 				return engine.getURL(m_context, m_pageName, parms);
 			}
-			return engine.getURL(m_context, m_pageId, parms);
+			return engine.getURL(m_context, getPageId(), parms);
 		}
+		*/
+
+		//!!! NEW CODE -- 
+		return engine.getURL(m_context, pageId, parms);
 	}
 
 	@Override
@@ -341,9 +285,8 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	@Override
 	public int doEndTag() {
 		try {
-			final JspWriter out = pageContext.getOut();
+			final JspWriter out = super.pageContext.getOut();
 			final String url = figureOutURL();
-
 			final StringBuilder sb = new StringBuilder(20);
 
 			BiConsumer<String, String> appender = (option, var) -> {
@@ -351,6 +294,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 					sb.append(option + '"' + var + "\" ");
 			};
 			appender.accept("class=", m_cssClass);
+			appender.accept("data-modal=", m_datamodal);
 			appender.accept("style=", m_style);
 			appender.accept("target=", m_target);
 			appender.accept("title=", m_title);
@@ -383,10 +327,10 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			}
 
 			// Finish off by closing opened anchor
-			if (m_format == ANCHOR) {
+			if (m_format == LinkFormat.ANCHOR) {
 				out.print("</a>");
 			}
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			// Yes, we want to catch all exceptions here, including RuntimeExceptions
 			log.error("Tag failed", e);
 		}

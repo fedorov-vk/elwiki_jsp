@@ -30,7 +30,7 @@
 <fmt:setBundle basename="shapes.default"/>
 <div class="page-content">
 
-<form action="<wiki:Link format='url' path='cmd.find'/>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_FIND.getUri()%>'/>"
        class="form-frame"
           id="searchform2"
        accept-charset="<wiki:ContentEncoding/>">

@@ -17,13 +17,14 @@
     under the License.
 --%>
 <!-- ~~ START ~~ SearchBox.jsp (shapes/default) --><%@
+ page import="org.apache.wiki.api.core.*" %><%@
  taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %><%@
  taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${prefs.Language}" />
 <fmt:setBundle basename="shapes.default"/>
 <%-- Provides a simple searchbox --%>
 <%-- Powered by wiki/Findpages.js and wiki/Recents.js  --%>
-<form action="<wiki:Link path='cmd.find' format='url'/>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_FIND.getUri()%>'/>"
   class="form-inline searchbox pull-right"
   id="searchForm" tabindex="0" role="search"
   accept-charset="<wiki:ContentEncoding />">

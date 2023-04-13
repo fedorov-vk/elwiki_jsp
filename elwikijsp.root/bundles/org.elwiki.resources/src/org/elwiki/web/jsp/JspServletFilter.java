@@ -3,6 +3,8 @@ package org.elwiki.web.jsp;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -95,8 +97,18 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	 * @return Wiki context.
 	 */
 	private ContextEnum getContextEnum(String adaptableUri) {
-		return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(adaptableUri)) //
-				.findFirst().orElse(ContextEnum.PAGE_VIEW);
+		//Pattern p = Pattern.compile("^[/]?([.\\\\w]+?)");
+		Pattern p = Pattern.compile("^[/]?([.\\w]++)\\W?.*?$");
+		Matcher m = p.matcher(adaptableUri);
+		if (m.find())
+	    {
+			 String command = m.group(1);
+			 return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(command)) //
+					 .findFirst().orElse(ContextEnum.PAGE_VIEW);
+	    }
+
+		// We are here - is any error happen? :FVK:
+		return ContextEnum.PAGE_VIEW;
 	}
 	
 	@Override
@@ -130,7 +142,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 
 			/* Create Wiki context according to required URI. Stash it into HTTP request.
 			 */
-			ContextEnum contextEnum = getContextEnum(uri.substring(1)); // URI without first symbol '/'.
+			ContextEnum contextEnum = getContextEnum(uri);
 			WikiContext wikiContext = Wiki.context().create(engine, httpRequest, contextEnum.getRequestContext());
 			httpRequest.setAttribute(WikiContext.ATTR_WIKI_CONTEXT, wikiContext);
 			ThreadUtil.setCurrentRequest(httpRequest);

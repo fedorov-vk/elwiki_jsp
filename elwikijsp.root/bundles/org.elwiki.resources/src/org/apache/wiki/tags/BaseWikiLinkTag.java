@@ -34,19 +34,16 @@ import java.io.IOException;
  * <li>format - Either "url" or "anchor". If "url", will provide just the URL
  * for the link. If "anchor", will output proper HTML (&lt;a&gt; href="...).
  * </ul>
- *
- * @since 2.0
  */
 public abstract class BaseWikiLinkTag extends BaseWikiTag {
 
 	private static final long serialVersionUID = 4130732879352134867L;
 
-	public static final int ANCHOR = 0;
-	public static final int URL = 1;
+	enum LinkFormat {ANCHOR, URL};
 
-	protected String m_pageId;
+	private String m_pageId;
 	protected String m_pageName;
-	protected int m_format = ANCHOR;
+	protected LinkFormat m_format = LinkFormat.ANCHOR;
 	protected String m_template;
 
 	public void initTag() {
@@ -79,15 +76,15 @@ public abstract class BaseWikiLinkTag extends BaseWikiTag {
 
 	public void setFormat(String mode) {
 		if ("url".equalsIgnoreCase(mode)) {
-			m_format = URL;
+			m_format = LinkFormat.URL;
 		} else {
-			m_format = ANCHOR;
+			m_format = LinkFormat.ANCHOR;
 		}
 	}
 
 	public int doEndTag() {
 		try {
-			if (m_format == ANCHOR) {
+			if (m_format == LinkFormat.ANCHOR) {
 				pageContext.getOut().print("</a>");
 			}
 		} catch (IOException e) {

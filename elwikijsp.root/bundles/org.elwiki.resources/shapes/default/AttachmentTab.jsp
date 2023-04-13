@@ -43,7 +43,7 @@
 <wiki:Permission permission="upload">
 
 <!-- TODO: understand and release follow //wiki:Link path='attach'// :FVK:  -->
-  <form action="<wiki:Link path='attach' format='url'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"
+  <form action="<wiki:Link format='url' path='attach'><wiki:Param name='progressid' value='${progressId}'/></wiki:Link>"
          class="accordion<wiki:HasAttachments></wiki:HasAttachments>"
             id="uploadform"
         method="post"
@@ -52,7 +52,7 @@
     <h4><span class="icon-paper-clip"></span> <fmt:message key="attach.add"/></h4>
     <%--
      --%>
-    <input type="hidden" name="nextpage" value="<wiki:Link context='<%=WikiContext.ATTACHMENT_UPLOAD%>' format='url' pageId='<%=wikiPage.getId()%>'/>" />
+    <input type="hidden" name="nextpage" value="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_UPLOAD%>' pageId='<%=wikiPage.getId()%>'/>"/>
     <input type="hidden" name="idpage" value="<%=wikiContext.getPageId()%>" />
     <input type="hidden" name="action" value="upload" />
 
@@ -155,11 +155,11 @@
       <td><c:out value="${fn:escapeXml(attContent.author)}"/></td>
 
       <td class="nowrap">
-        <a class="btn btn-primary btn-xs"
-           href="<wiki:Link format='url' context='<%=WikiContext.ATTACHMENT_INFO%>' pageId='${pageAttachment.id}'/>"
-           title="<fmt:message key='attach.moreinfo.title'/>">
+        <wiki:Link context="<%=WikiContext.ATTACHMENT_INFO%>" pageId="${pageAttachment.id}" 
+                   title="<fmt:message key='attach.moreinfo.title'/>" cssClass="btn btn-primary btn-xs" >
+          <wiki:Param name='idattach' value='${pageAttachment.id}' />
           <fmt:message key="attach.moreinfo"/>
-        </a>
+        </wiki:Link>
         <wiki:Permission permission="delete">
           <input type="button"
                 class="btn btn-danger btn-xs"

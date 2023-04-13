@@ -35,11 +35,12 @@
 %>
 <!-- TODO: understand and release follow //wiki:Link path='Login.jsp'// :FVK:  -->
 <form method="post" accept-charset="UTF-8"
-      action="<wiki:CheckRequestContext
-     context='<%=WikiContext.WIKI_LOGIN%>'><wiki:Link path='Login.jsp' format='url'><wiki:Param name='tab'
-       value='profile'/></wiki:Link></wiki:CheckRequestContext><wiki:CheckRequestContext
-     context='<%=WikiContext.NONE_WIKI_LOGIN%>'><wiki:Link path='cmd.prefs' format='url'><wiki:Param name='tab'
-       value='profile'/></wiki:Link></wiki:CheckRequestContext>"
+      action="<wiki:CheckRequestContext context='<%=WikiContext.WIKI_LOGIN%>'>
+                <wiki:Link format='url' path='<%=ContextEnum.WIKI_LOGIN.getUri()%>'><wiki:Param name='tab' value='profile'/></wiki:Link>
+              </wiki:CheckRequestContext>
+              <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_LOGIN%>'>
+                <wiki:Link format='url' path='<%=ContextEnum.WIKI_PREFS.getUri()%>'><wiki:Param name='tab' value='profile'/></wiki:Link>
+              </wiki:CheckRequestContext>"
        class=""
           id="editProfile">
 

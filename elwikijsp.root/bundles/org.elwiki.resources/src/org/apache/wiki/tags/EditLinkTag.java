@@ -83,8 +83,8 @@ public class EditLinkTag extends BaseWikiLinkTag {
 		PageManager pageManager = wikiContext.getEngine().getManager(PageManager.class);
 
 		//  Determine the page and the link.
-		if (m_pageId != null) {
-			page = pageManager.getPageById(m_pageId);
+		if (getPageId() != null) {
+			page = pageManager.getPageById(getPageId());
 		} else if (m_pageName != null) {
 			page = pageManager.getPage(m_pageName);
 		} else {

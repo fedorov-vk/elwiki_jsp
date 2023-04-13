@@ -67,6 +67,7 @@ public interface IWikiConfiguration {
 	 * 
 	 * @return The front page name.
 	 */
+	@Deprecated
 	String getFrontPage();
 
 	/**

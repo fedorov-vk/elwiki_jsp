@@ -77,7 +77,7 @@
   </li>
 
   <li id="cmd_scope">
-    <wiki:Link path="cmd.scope" title="<fmt:message key='scope.cmd.title'/>" >
+    <wiki:Link context='<%=WikiContext.WIKI_SCOPE%>' title="<fmt:message key='scope.cmd.title'/>" >
       <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
       <fmt:message key='scope.cmd' />
       ${empty prefs.scopearea ? "All" : prefs.scopearea}
@@ -120,7 +120,7 @@
   <%-- view --%>
 
   <%-- context upload -> context view&tab=attach ... --%>
-  <%--
+  <%-- :FVK: ???delete this???
   <c:if test="${param.tab eq 'attach'}">
   <li id="view">
     <wiki:Link pageName="${page}" >
@@ -135,7 +135,7 @@
     WikiContext.PAGE_INFO, WikiContext.PAGE_DIFF, WikiContext.ATTACHMENT_UPLOAD, WikiContext.PAGE_RENAME,
     WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT, WikiContext.PAGE_CONFLICT)%>'>
   <li id="view">
-    <wiki:Link pageName="${pageId}" >
+    <wiki:Link pageId="${pageId}">
         <span class="icon-view-menu"></span>
         <span><fmt:message key="view.tab"/></span>
     </wiki:Link>
@@ -201,8 +201,8 @@
       <li class="dropdown-header">
         <c:set var="disabledBtn" value=""/>
         <wiki:CheckRequestContext context="<%=WikiContext.PAGE_INFO%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
-        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=WikiContext.PAGE_INFO%>" pageId="${pageId}" tabindex="0">
+        <wiki:Link context="<%=WikiContext.PAGE_INFO%>" pageId="${pageId}"
+                   cssClass="btn btn-xs btn-default ${disabledBtn}" tabindex="0">
           <fmt:message key="info.moreinfo"/>
         </wiki:Link>
       </li>
@@ -210,8 +210,8 @@
         <c:set var="disabledBtn" value=""/>
         <wiki:CheckRequestContext context="<%=WikiContext.ATTACHMENT_UPLOAD%>"><c:set var="disabledBtn" value="disabled" /></wiki:CheckRequestContext>
         <wiki:Permission permission='!upload'><c:set var="disabledBtn" value="disabled" /></wiki:Permission>
-        <wiki:Link cssClass="btn btn-xs btn-default ${disabledBtn}"
-                    context="<%=WikiContext.ATTACHMENT_UPLOAD%>" pageId="${pageId}" tabindex="0">
+        <wiki:Link context="<%=WikiContext.ATTACHMENT_UPLOAD%>" pageId="${pageId}"
+                   cssClass="btn btn-xs btn-default ${disabledBtn}" tabindex="0">
           <span class="icon-paper-clip"></span>
           <fmt:message key='edit.tab.attachments'/>
           <c:if test="${attachments > 0}"><span class="badge">${attachments}</span></c:if>
@@ -240,45 +240,30 @@
   <%-- help slimbox-link --%>
   <wiki:CheckRequestContext context='<%=WikiContext.WIKI_FIND%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1004' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
+    <wiki:Link pageId="1004" cssClass="slimbox-link" title="Help for search" >
+      <wiki:Param name='shape' value='reader'/>
       <span class="icon-help-menu"></span>
       <span><fmt:message key="find.tab.help" /></span>
-    </a>
+    </wiki:Link>
   </li>
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='<%=ContextUtil.compose(WikiContext.PAGE_EDIT, WikiContext.PAGE_COMMENT)%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1002' ></wiki:Link>">
+    <wiki:Link pageId="1002" cssClass="slimbox-link" title="Help for edit" >
+      <wiki:Param name='shape' value='reader'/>
       <span class="icon-help-menu"></span>
       <span><fmt:message key="edit.tab.help" /></span>
-    </a>
-    <%--
-      <wiki:NoSuchPage pageName="EditPageHelp">
-        <div class="error">
-        <fmt:message key="comment.edithelpmissing">
-        <fmt:param><wiki:EditLink pageName="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
-        </fmt:message>
-        </div>
-      </wiki:NoSuchPage>
-    --%>
+    </wiki:Link>
   </li>
   </wiki:CheckRequestContext>
   <wiki:CheckRequestContext context='<%=WikiContext.WIKI_LOGIN%>'>
   <li>
-    <a class="slimbox-link" href="<wiki:Link format='url' pageName='1006' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
+    <wiki:Link pageId="1006" cssClass="slimbox-link" title="Help for login" >
+      <wiki:Param name='shape' value='reader'/>
       <span class="icon-help-menu"></span>
       <span><fmt:message key="login.tab.help" /></span>
-    </a>
+    </wiki:Link>
   </li>
-  <%--
-  <wiki:NoSuchPage pageName="LoginHelp">
-  <div class="error">
-    <fmt:message key="login.loginhelpmissing">
-       <fmt:param><wiki:EditLink pageName="LoginHelp">LoginHelp</wiki:EditLink></fmt:param>
-    </fmt:message>
-  </div>
-  </wiki:NoSuchPage>
-  --%>
   </wiki:CheckRequestContext>
 
   <%-- page actions menu --%>
@@ -296,13 +281,13 @@
       <%-- View RAW page source --%>
       <li>      
         <wiki:CheckVersion mode="latest">
-          <wiki:Link cssClass="slimbox-link" pageId="${pageId}">
+          <wiki:Link pageId="${pageId}" cssClass="slimbox-link">
             <wiki:Param name='shape' value='raw'/>
             <fmt:message key='actions.page.rawpage' />
           </wiki:Link>
         </wiki:CheckVersion>
         <wiki:CheckVersion mode="notlatest">
-          <wiki:Link cssClass="slimbox-link" version='${param.version}' pageId="${pageId}">
+          <wiki:Link version='${param.version}' pageId="${pageId}" cssClass="slimbox-link">
             <wiki:Param name='shape' value='raw'/>
             <fmt:message key='actions.page.rawpage' />
           </wiki:Link>
@@ -318,7 +303,7 @@
           </wiki:Link>
         </wiki:CheckVersion>
         <wiki:CheckVersion mode="notlatest">
-          <wiki:Link cssClass="interwiki" version="${param.version}" pageId="${pageId}">
+          <wiki:Link version="${param.version}" pageId="${pageId}" cssClass="interwiki">
             <wiki:Param name='shape' value='reader'/>
             <fmt:message key='actions.page.showreaderview' />
           </wiki:Link>
@@ -364,7 +349,7 @@
       </li>
 
       <%-- delete page --%>
-      <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>' />"
+      <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>'/>"
              class="form-group "
                 id="cmdDeletePageForm"
             method="post" accept-charset="<wiki:ContentEncoding />" >

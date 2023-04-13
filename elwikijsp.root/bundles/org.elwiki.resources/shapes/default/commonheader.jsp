@@ -114,7 +114,7 @@ String.I18N.PREFIX = "javascript.";
 <link rel="help"   href="<wiki:LinkTo format='url' pageName='1003'/>"
     title="Help" />
 <c:set var="frontpage"><wiki:Variable var="jspwiki.frontPage" /></c:set>
-<link rel="start"  href="<wiki:Link pageName='${frontpage}' format='url' />" title="Front page" />
+<link rel="start"  href="<wiki:Link format='url' pageName='${frontpage}'/>" title="Front page" />
 <link rel="alternate stylesheet" type="text/css" href="<wiki:Link format='url' templatefile='haddock.css'/>"
     title="Standard" />
 

@@ -82,7 +82,7 @@
 
           <%-- Possible actions (outcomes) --%>
           <td class="nowrap" style="background:AliceBlue;">
-            <form action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
+            <form action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_WORKFLOW.getUri()%>'/>"
                       id="decision.${decision.id}"
                   method="POST" accept-charset="UTF-8">
               <input type="hidden" name="action" value="decide" />
@@ -165,7 +165,7 @@
           <%-- Actions --%>
           <td style="background:AliceBlue;">
             <form id="workflow.${workflow.id}"
-              action="<wiki:Link context='<%=WikiContext.WIKI_WORKFLOW%>' format='url'/>"
+              action="<wiki:Link format='url' path='<%=ContextEnum.WIKI_WORKFLOW.getUri()%>'/>"
               method="POST" accept-charset="UTF-8">
               <input class="btn btn-danger btn-xs" type="submit" name="submit" value="<fmt:message key='<%=Outcome.STEP_ABORT.getMessageKey()%>'/>" />
               <input type="hidden" name="action" value="abort" />

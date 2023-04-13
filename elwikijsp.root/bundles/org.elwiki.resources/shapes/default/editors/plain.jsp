@@ -83,7 +83,7 @@ if( usertext == null ) usertext = "";
 %>
 
 <form method="post" accept-charset="<wiki:ContentEncoding/>"
-      action="<wiki:Link context='${context}' format='url'/>"
+      action="<wiki:Link format='url' context='${context}'/>"
        class="editform"
           id="editform"
      enctype="application/x-www-form-urlencoded" >
@@ -172,65 +172,56 @@ if( usertext == null ) usertext = "";
       <%-- note: 'dropdown-toggle' is only here to style the last button properly! --%>
       <button class="btn btn-default" type="button"><span class="icon-wrench"></span><span class="caret"></span></button>
       <ul class="dropdown-menu" data-hover-parent="div">
+        <li>
+          <wiki:Link pageId="1002" cssClass="slimbox-link">
+            <wiki:Param name='shape' value='reader'/>
+            <fmt:message key="edit.tab.help" />
+          </wiki:Link>
+        </li>
 
-            <li>
-        <a class="slimbox-link" href="<wiki:Link format='url' pageName='1002' ><wiki:Param name='shape' value='reader'/></wiki:Link>">
-          <fmt:message key="edit.tab.help" />
-        </a>
-    <%--
-      <wiki:NoSuchPage pageName="EditPageHelp">
-        <div class="error">
-        <fmt:message key="comment.edithelpmissing">
-        <fmt:param><wiki:EditLink pageName="EditPageHelp">EditPageHelp</wiki:EditLink></fmt:param>
-        </fmt:message>
-        </div>
-      </wiki:NoSuchPage>
-    --%>
-      </li>
-      <li class="divider"></li>
+        <li class="divider"></li>
 
-            <li>
-              <a>
-                <label for="autosuggest">
-                  <input type="checkbox" data-cmd="autosuggest" id="autosuggest" ${prefs.autosuggest ? 'checked="checked"' : ''}/>
-                  <fmt:message key='editor.plain.autosuggest'/>
-                </label>
-              </a>
-            </li>
-            <li>
-              <a>
-                <label for="tabcompletion">
-                  <input type="checkbox" data-cmd="tabcompletion" id="tabcompletion" ${prefs.tabcompletion ? 'checked="checked"' : ''}/>
-                  <fmt:message key='editor.plain.tabcompletion'/>
-                </label>
-              </a>
-            </li>
-            <li>
-              <a>
-                <label for="smartpairs">
-                  <input type="checkbox" data-cmd="smartpairs" id="smartpairs" ${prefs.smartpairs ? 'checked="checked"' : ''}/>
-                  <fmt:message key='editor.plain.smartpairs'/>
-                </label>
-              </a>
-            </li>
-            <li class="divider"></li>
-            <li>
-              <a>
-                <label for="livepreview">
-                  <input type="checkbox" data-cmd="livepreview" id="livepreview" ${prefs.livepreview ? 'checked="checked"' : ''}/>
-                  <fmt:message key='editor.plain.livepreview'/> <span class="icon-refresh"/>
-                </label>
-              </a>
-            </li>
-            <li>
-              <a>
-                <label for="previewcolumn">
-                  <input type="checkbox" data-cmd="previewcolumn" id="previewcolumn" ${prefs.previewcolumn ? 'checked="checked"' : ''}/>
-                  <fmt:message key='editor.plain.sidebysidepreview'/> <span class="icon-columns"/>
-                </label>
-              </a>
-            </li>
-
+        <li>
+          <a>
+            <label for="autosuggest">
+              <input type="checkbox" data-cmd="autosuggest" id="autosuggest" ${prefs.autosuggest ? 'checked="checked"' : ''}/>
+              <fmt:message key='editor.plain.autosuggest'/>
+            </label>
+          </a>
+        </li>
+        <li>
+          <a>
+            <label for="tabcompletion">
+              <input type="checkbox" data-cmd="tabcompletion" id="tabcompletion" ${prefs.tabcompletion ? 'checked="checked"' : ''}/>
+              <fmt:message key='editor.plain.tabcompletion'/>
+            </label>
+          </a>
+        </li>
+        <li>
+          <a>
+            <label for="smartpairs">
+              <input type="checkbox" data-cmd="smartpairs" id="smartpairs" ${prefs.smartpairs ? 'checked="checked"' : ''}/>
+              <fmt:message key='editor.plain.smartpairs'/>
+            </label>
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a>
+            <label for="livepreview">
+              <input type="checkbox" data-cmd="livepreview" id="livepreview" ${prefs.livepreview ? 'checked="checked"' : ''}/>
+              <fmt:message key='editor.plain.livepreview'/> <span class="icon-refresh"/>
+            </label>
+          </a>
+        </li>
+        <li>
+          <a>
+            <label for="previewcolumn">
+              <input type="checkbox" data-cmd="previewcolumn" id="previewcolumn" ${prefs.previewcolumn ? 'checked="checked"' : ''}/>
+              <fmt:message key='editor.plain.sidebysidepreview'/> <span class="icon-columns"/>
+            </label>
+          </a>
+        </li>
       </ul>
     </div>
 

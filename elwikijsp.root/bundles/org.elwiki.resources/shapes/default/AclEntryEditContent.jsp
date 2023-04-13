@@ -58,7 +58,7 @@
 
 <div class="page-content">
 
-<form action="<wiki:Link path='<%=ContextEnum.PAGE_EDIT_ACL.getUri()%>' format='url'/>"
+<form action="<wiki:Link format='url' path='<%=ContextEnum.PAGE_EDIT_ACL.getUri()%>'/>"
       id="idAclSet"
       method="POST" accept-charset="<wiki:ContentEncoding />" >
 
@@ -71,10 +71,10 @@
         <fmt:message key='acl.page.permission.submit.save'/>
       </button>
     </span>
-      <a class="btn btn-danger pull-right"
-         href="<wiki:Link format='url' path='cmd.pageAcl'><wiki:Param name='pageId' value='<%=wikiContext.getPageId()%>'/></wiki:Link>" >
+      <wiki:Link context="<%=WikiContext.PAGE_ACL%>" pageId="<%=wikiContext.getPageId()%>" 
+                 cssClass="btn btn-danger pull-right" >
         <fmt:message key='acl.page.permission.submit.cancel'/>
-      </a>
+      </wiki:Link>
   </div>
 
   <div class="form-group">

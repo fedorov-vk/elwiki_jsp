@@ -47,7 +47,7 @@
   <div class="topline">
     <div class="cage pull-left" tabindex="0">
         <a class="logo pull-left"
-           href="<wiki:Link pageId='${frontpageId}' format='url' />"
+           href="<wiki:Link format='url' pageId='${frontpageId}'/>"
            title="<fmt:message key='actions.home.title' ><fmt:param>${frontpageName}</fmt:param></fmt:message>">
            EL<b>&#x03C9;iki</b>           
         </a>

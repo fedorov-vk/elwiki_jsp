@@ -119,7 +119,7 @@
 
   <wiki:Permission permission="rename">
     <wiki:Messages div="alert alert-danger" topic="rename" prefix='<%=LocaleSupport.getLocalizedMessage(pageContext,"prefs.errorprefix.rename")%>'/>
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=wikiContext.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_RENAME%>' pageId='<%=wikiContext.getPageId()%>'/>"
            class="form-group form-inline"
               id="renameform"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -139,7 +139,7 @@
   </wiki:Permission>
 
   <wiki:Permission permission="delete">
-    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>' />"
+    <form action="<wiki:Link format='url' context='<%=WikiContext.PAGE_DELETE%>' pageId='<%=wikiContext.getPageId()%>'/>"
            class="form-group"
               id="deletePageForm"
           method="post" accept-charset="<wiki:ContentEncoding />" >
@@ -199,11 +199,17 @@
         <td class="nowrap">
           <c:if test="${not status.last}">
             <c:set var="nextVersion" value="${pageContents[status.index+1].version}" />
-            <wiki:Link version="${version}" compareToVersion="${nextVersion}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"><fmt:message key="info.difftoprev"/></wiki:Link>
+            <wiki:Link context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"
+                       version="${version}" compareToVersion="${nextVersion}">
+              <fmt:message key="info.difftoprev"/>
+            </wiki:Link>
           </c:if>
           ${not status.last && not status.first? '|' : ''}
           <c:if test="${not status.first}">
-            <wiki:Link version="${maxVersion}" compareToVersion="${version}" context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"><fmt:message key="info.difftolast"/></wiki:Link>
+            <wiki:Link context="<%=WikiContext.PAGE_DIFF%>" pageId="<%=wikiContext.getPageId()%>"
+                       version="${maxVersion}" compareToVersion="${version}">
+              <fmt:message key="info.difftolast"/>
+            </wiki:Link>
           </c:if>
         </td>
 
@@ -277,7 +283,7 @@
       <c:set var="newdiff" value="${param.r2}" />
       <c:set var="pageContents" value="<%=wikiPage.getPageContentsReversed()%>"/>
       <c:set var="diffprovider" value='<%=variableManager.getVariable(wikiContext,"jspwiki.diffProvider")%>' />
-      <form action="<wiki:Link path='cmd.diff' format='url' />"
+      <form action="<wiki:Link format='url' path='<%=ContextEnum.PAGE_DIFF.getUri()%>'/>"
              class="diffbody form-inline"
             method="get" accept-charset="UTF-8">
         <input type="hidden" name="page" value="<wiki:PageName />" />

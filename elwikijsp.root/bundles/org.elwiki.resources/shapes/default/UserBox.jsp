@@ -43,7 +43,7 @@
   <ul class="dropdown-menu pull-right" data-hover-parent=".userbox">
     <li>
       <wiki:UserCheck status="anonymous">
-        <wiki:Link path="cmd.prefs">
+        <wiki:Link context='<%=WikiContext.WIKI_PREFS%>'>
           <span class="icon-user"></span>
           <fmt:message key="fav.greet.anonymous"/>
         </wiki:Link>
@@ -69,12 +69,12 @@
       --%>
       <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_PREFS%>'>
         <wiki:CheckRequestContext context='<%=WikiContext.NONE_PAGE_PREVIEW%>'>
-          <wiki:Link cssClass="btn btn-default btn-block" path="cmd.prefs">
+          <wiki:Link context='<%=WikiContext.WIKI_PREFS%>' cssClass="btn btn-default btn-block">
             <wiki:Param name='redirect' value='${redirect}'/>
            <fmt:message key="actions.prefs" />
           </wiki:Link>
         <wiki:Permission permission="createGroups">
-          <wiki:Link cssClass="btn btn-default btn-block" path="cmd.prefs">
+          <wiki:Link context='<%=WikiContext.WIKI_PREFS%>' cssClass="btn btn-default btn-block">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='groups'/>
             <span class="icon-group"></span> <fmt:message key="actions.groups" />
@@ -88,14 +88,14 @@
       <wiki:UserCheck status="notAuthenticated">
         <wiki:CheckRequestContext context='<%=WikiContext.NONE_WIKI_LOGIN%>'>
         <wiki:Permission permission="login">
-          <wiki:Link cssClass="btn btn-primary btn-block login" path="cmd.login">
+          <wiki:Link context='<%=WikiContext.WIKI_LOGIN%>' cssClass="btn btn-primary btn-block login">
             <wiki:Param name='redirect' value='${redirect}'/>
             <span class="icon-signin"></span>
             <fmt:message key="actions.login" />
           </wiki:Link>
         </wiki:Permission>
         <wiki:Permission permission='editProfile'>
-          <wiki:Link cssClass="btn btn-link btn-block register" path="cmd.login">
+          <wiki:Link context='<%=WikiContext.WIKI_LOGIN%>' cssClass="btn btn-link btn-block register">
             <wiki:Param name='redirect' value='${redirect}'/>
             <wiki:Param name='tab' value='register'/>
             <fmt:message key="actions.registernow" />
@@ -107,11 +107,11 @@
            logout button
       --%>
       <wiki:UserCheck status="authenticated">
-        <a href="<wiki:Link context='<%=WikiContext.WIKI_LOGOUT%>' format='url' />"
-          class="btn btn-default btn-block logout" data-modal=".modal">
-            <span class="icon-signout"></span> <fmt:message key="actions.logout"/>
+        <wiki:Link context='<%=WikiContext.WIKI_LOGOUT%>' cssClass="btn btn-default btn-block logout" datamodal=".modal">
+          <span class="icon-signout"></span>
+          <fmt:message key="actions.logout"/>
           <div class="modal"><fmt:message key='actions.confirmlogout'/></div>
-        </a>
+        </wiki:Link>
       </wiki:UserCheck>
     </li>
   </ul>

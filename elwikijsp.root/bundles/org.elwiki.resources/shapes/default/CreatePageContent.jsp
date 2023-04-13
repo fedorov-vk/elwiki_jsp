@@ -26,7 +26,7 @@
 
 <div class="page-content">
 
-<form id="idFormCreatePage" action="<wiki:Link path='cmd.createPage' format='url'/>"
+<form id="idFormCreatePage" action="<wiki:Link format='url' path='<%=ContextEnum.PAGE_CREATE.getUri()%>'/>"
       class="form-frame"
       accept-charset="<wiki:ContentEncoding/>">
 
@@ -48,7 +48,7 @@
       </button>
     </span>
 
-    <wiki:Link cssClass="btn btn-danger pull-right" pageName="${redirect}" >
+    <wiki:Link pageId="${redirect}" cssClass="btn btn-danger pull-right">
       Cancel
     </wiki:Link>
   </div>
