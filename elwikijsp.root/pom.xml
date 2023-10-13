@@ -19,6 +19,7 @@
 		<module>bundles_elwiki</module>
 		<module>bundles_elwiki_model</module>
 		<module>bundles_plugins</module>
+		<module>bundles_import</module>
 		<module>features</module>
 
 <!--
