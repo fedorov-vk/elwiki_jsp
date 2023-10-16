@@ -404,6 +404,10 @@
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
 			Change hierarchy
           </wiki:Link>
+          <wiki:Link path='<%=ContextEnum.WIKI_IMPORTPAGES.getUri()%>'>
+            <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
+			Import
+          </wiki:Link>
          </li>
          <li class="divider "></li>
        </wiki:Permission>

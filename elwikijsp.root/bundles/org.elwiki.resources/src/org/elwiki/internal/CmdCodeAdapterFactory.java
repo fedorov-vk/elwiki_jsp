@@ -41,7 +41,8 @@ public class CmdCodeAdapterFactory implements IAdapterFactory {
 			Map.entry(ContextEnum.WIKI_SCOPE, new ScopeCmdCode()),
 			Map.entry(ContextEnum.PAGE_COMMENT, new CommentCmdCode()),
 			Map.entry(ContextEnum.WIKI_PERSIST_CONTENT, new PersistContentCmdCode()),
-			Map.entry(ContextEnum.WIKI_WORKFLOW, new WorkflowCmdCode())
+			Map.entry(ContextEnum.WIKI_WORKFLOW, new WorkflowCmdCode()),
+			Map.entry(ContextEnum.WIKI_IMPORTPAGES, new ImportPages())
 	); //@formatter:on
 
 	@Override

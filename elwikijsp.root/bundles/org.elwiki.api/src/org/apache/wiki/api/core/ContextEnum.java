@@ -80,7 +80,8 @@ public enum ContextEnum {
 			// when saved wiki content under admin.
 			// Using "PageContent.jsp" - temporary fiction
 			"PageContent.jsp" ),
-	WIKI_CHANGE_HIERARCHY( "cmd.changeHierarchy", "%u", "", "PagesHierarchyContent.jsp" );
+	WIKI_CHANGE_HIERARCHY( "cmd.changeHierarchy", "%u", "", "PagesHierarchyContent.jsp" ),
+	WIKI_IMPORTPAGES( "cmd.import", "%u", "", "ImportPages.jsp" );
 	//@formatter:on
 
 	private final String urlPattern;

@@ -1213,11 +1213,11 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
 				String nameWikiContext = ContextEnum.getWikiContextName("cmd." + cmdName);
 				makeLink(LinkType.CMD, nameWikiContext, linkText, null, link.getAttributes());				
-			} else if (linkRef.matches("@.+")) {
+			} else if (linkRef.matches("\s*?@.+")) {
 				// Internal wiki link (by pageId, which can be unknown).
 				// Working up link of ElWiki format.
 				LinkType linkType = LinkType.EMPTY;
-				String pageId = linkRef.substring(1); // :FVK: Workaround: =1 is length of prefix '@'
+				String pageId = linkRef.trim().substring(1); // :FVK: Workaround: =1 is length of prefix '@'
 				WikiPage wikiPage = this.m_context.getPageById(pageId);
 				if (wikiPage != null) {
 					if (!link.hasReference()) {

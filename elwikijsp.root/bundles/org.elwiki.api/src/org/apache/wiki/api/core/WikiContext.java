@@ -194,6 +194,9 @@ public interface WikiContext extends Cloneable, Command {
 	/** Context for changing hierarchy of wiki pages. */
 	String WIKI_CHANGE_HIERARCHY = ContextEnum.WIKI_CHANGE_HIERARCHY.getRequestContext();
 
+	/** ElWiki import. */
+	String WIKI_IMPORTPAGES = ContextEnum.WIKI_IMPORTPAGES.getRequestContext();
+	
 	/**
 	 * Is used to choose between the different date formats that JSPWiki supports.
 	 * <ul>

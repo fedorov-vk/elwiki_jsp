@@ -74,6 +74,7 @@ public interface AllCommands {
             WikiCommand.CHANGE_HIERARCHY,
             WikiCommand.ADMIN,
             WikiCommand.SECURE,
+            WikiCommand.IMPORTPAGES,
         };
     }
 
