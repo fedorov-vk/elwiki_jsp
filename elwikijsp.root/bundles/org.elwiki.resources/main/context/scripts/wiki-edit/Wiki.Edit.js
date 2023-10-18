@@ -209,6 +209,7 @@ function livepreview(content, preview, previewToggle){
             url: wiki.XHRPreview,
             data: {
                 page: wiki.PageName,
+                pageId: wiki.PageId,
                 wikimarkup: content
             },
             update: preview,

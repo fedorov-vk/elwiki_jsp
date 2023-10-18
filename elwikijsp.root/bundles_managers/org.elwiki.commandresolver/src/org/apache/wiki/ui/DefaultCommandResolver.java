@@ -130,7 +130,7 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 		Command command = null;
 
 		// Determine the name of the page (which may be null)
-		String pageName = extractPageFromParameter(defaultContext, request);
+		WikiPage wikiPage = extractPageFromParameter(defaultContext, request);
 
 		// If we haven't found a matching command yet, extract the JSP path and compare to our list of
 		// special pages
@@ -147,33 +147,31 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 		}
 
 		// For PageCommand.VIEW, default to front page if a page wasn't supplied
-		if (PageCommand.VIEW.equals(command) && pageName == null) {
-			pageName = this.wikiConfiguration.getFrontPage();
+		if (PageCommand.VIEW.equals(command) && wikiPage == null) {
+			try {
+				wikiPage = this.pageManager.getPageById(pageManager.getMainPageId());
+			} catch (ProviderException e) {
+				log.error("Unable to create command", e);
+				throw new InternalWikiException("Big internal booboo, please check logs.", e);
+			}
 		}
 
 		//:FVK: workaround - for /attach/ request.
 		if (PageCommand.ATTACH.equals(command)) {
-			pageName = request.getParameter("pageId");
-			if (pageName != null) {
-				WikiPage page = null;
-				try {
-					page = this.pageManager.getPageById(pageName);
-				} catch (ProviderException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (page != null)
-					return command.targetedCommand(page);
+			if (wikiPage != null) {
+					return command.targetedCommand(wikiPage);
 			}
 		}
 
 		// These next blocks handle targeting requirements
 
 		// If we were passed a page parameter, try to resolve it
-		if (command instanceof PageCommand && pageName != null) {
+		if (command instanceof PageCommand && wikiPage != null) {
 			// If there's a matching WikiPage, "wrap" the command
-			final WikiPage page = resolvePage(request, pageName);
-			return command.targetedCommand(page);
+			
+			//@Deprecated //:FVK: возможно вызов этого метода - не уместен, т.к. версия контента потом выбирается из Wiki-страницы...
+			//final WikiPage page = resolvePage(request, pageName);
+			return command.targetedCommand(wikiPage);
 		}
 
 		// If "create group" command, target this wiki
@@ -250,39 +248,17 @@ public final class DefaultCommandResolver implements CommandResolver, WikiManage
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String extractPageFromParameter(final String requestContext, final HttpServletRequest request) {
+	public WikiPage extractPageFromParameter(final String requestContext, final HttpServletRequest request) {
 		// Extract the page name/number from the URL directly
 		try {
-			String page = this.urlConstructor.parsePage(requestContext, request,
-					this.wikiConfiguration.getContentEncodingCs());
-			if (page != null) {
-				/*:FVK: - getFinalPageName() COMMENTED - the call of actions with the compilation of the page name. 
-				try {
-					// Look for singular/plural variants; if one not found, take the one the user supplied
-					final String finalPage = getFinalPageName(page);
-					if (finalPage != null) {
-						page = finalPage;
-					}
-				} catch (final ProviderException e) {
-					// FIXME: Should not ignore!
-				}
-				*/
-				return page;
-			} else {
-				// extract page number.
-				String pageId = this.urlConstructor.parsePageId(request);
-				WikiPage wikiPage = this.pageManager.getPageById(pageId);
-				if (wikiPage != null) {
-					return wikiPage.getName();
-				}
-			}
-		} catch (final IOException | ProviderException e) {
+			// extract page number.
+			String pageId = this.urlConstructor.parsePageId(request);
+			WikiPage wikiPage = this.pageManager.getPageById(pageId);
+			return wikiPage;
+		} catch (final ProviderException e) {
 			log.error("Unable to create context", e);
 			throw new InternalWikiException("Big internal booboo, please check logs.", e);
 		}
-
-		// Didn't resolve; return null
-		return null;
 	}
 
 	/**

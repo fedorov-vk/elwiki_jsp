@@ -364,17 +364,41 @@ public class WikiContextImpl implements WikiContext, Command {
 	public WikiPage getPage() {
 		return m_page;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getPageName() {
+		String pageName = null;
+		try {
+			if (m_page != null) {
+				pageName = m_page.getName();
+			}
+		} catch (Exception ex) {
+			//:FVK: unexpected error.
+		}
+
+		if (pageName == null) {
+			pageName = "System Info"; //:FVK: workaround - name of "SystemInfo" page.
+		}
+
+		return pageName;
+	}
 
 	@Override
 	public String getPageId() {
+		String pageId = null;
 		try {
 			if (m_page != null) {
-				return m_page.getId();
+				pageId = m_page.getId();
+			} else {
+				pageId = getEngine().getManager(PageManager.class).getMainPageId();
 			}
-			return getEngine().getManager(PageManager.class).getMainPageId();
 		} catch (Exception ex) {
-			return "1"; //:FVK: workaround - id of "SystemInfo" page.
+			//:FVK: unexpected error.
+			pageId = "w1"; //:FVK: workaround - id of "SystemInfo" page.
 		}
+
+		return pageId;
 	}
 
 	/**

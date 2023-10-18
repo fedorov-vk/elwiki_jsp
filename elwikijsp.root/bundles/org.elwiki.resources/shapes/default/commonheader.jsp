@@ -95,6 +95,7 @@ String.I18N.PREFIX = "javascript.";
 <meta name="wikiCloneUrl" content='<wiki:EditLink format="url" pageName="#$%"/>&clone=<wiki:Variable var="pagename" />' />
 <meta name="wikiJsonUrl" content='<%= ContextUtil.findContext(pageContext).getURL( WikiContext.PAGE_NONE, "ajax" ) %>' /><%--unusual pagename--%>
 <meta name="wikiPageName" content='<wiki:Variable var="pagename" />' /><%--pagename without blanks--%>
+<meta name="wikiPageId" content='<wiki:Variable var="pageid" />' />
 <meta name="wikiUserName" content='<wiki:UserName />' />
 <meta name="wikiTemplateUrl" content='<wiki:Link format="url" templatefile="" />' />
 <meta name="wikiApplicationName" content='<wiki:Variable var="ApplicationName" />' />

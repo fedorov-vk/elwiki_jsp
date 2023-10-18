@@ -406,6 +406,7 @@ var Wiki = {
         * wikiEditUrl : edit page url
         * wikiJsonUrl : JSON-RPC / AJAX url
         * wikiPageName : pagename without blanks
+        * wikiPageId : ID of page
         * wikiUserName
         * wikiTemplateUrl : path of the jsp template
         * wikiApplicationName

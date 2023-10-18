@@ -97,6 +97,7 @@ public interface CommandResolver {
      * @return The rewritten page name, or <code>null</code>, if the page does not exist.
      * @throws ProviderException if the underlyng page provider that locates pages throws an exception
      */
+    @Deprecated
     String getFinalPageName( String page ) throws ProviderException;
 
     /**
@@ -115,7 +116,7 @@ public interface CommandResolver {
      * @param request the HTTP request
      * @return the resolved page name
      */
-    String extractPageFromParameter( String requestContext, HttpServletRequest request );
+    WikiPage extractPageFromParameter( String requestContext, HttpServletRequest request );
 
     /**
      * Looks up and returns the correct, versioned WikiPage based on a supplied page name and optional <code>version</code> parameter

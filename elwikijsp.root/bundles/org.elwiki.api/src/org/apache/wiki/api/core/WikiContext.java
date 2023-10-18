@@ -196,7 +196,7 @@ public interface WikiContext extends Cloneable, Command {
 
 	/** ElWiki import. */
 	String WIKI_IMPORTPAGES = ContextEnum.WIKI_IMPORTPAGES.getRequestContext();
-	
+
 	/**
 	 * Is used to choose between the different date formats that JSPWiki supports.
 	 * <ul>
@@ -238,6 +238,13 @@ public interface WikiContext extends Cloneable, Command {
 	 * @return the WikiPage which was fetched.
 	 */
 	WikiPage getPage();
+
+	/**
+	 * Returns name of the WikiPage that is being handled.
+	 * 
+	 * @return name of the WikiPage.
+	 */
+	String getPageName();
 
 	/**
 	 * @return The page version in question. (or attachment version)

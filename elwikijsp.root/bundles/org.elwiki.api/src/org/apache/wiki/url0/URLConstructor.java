@@ -54,6 +54,7 @@ public interface URLConstructor {
      *  @return This method must return the name of the resource.
      *  @throws IOException If parsing failes
      */
+    @Deprecated
     String parsePage( String context, HttpServletRequest request, Charset encoding ) throws IOException;
 
     /**

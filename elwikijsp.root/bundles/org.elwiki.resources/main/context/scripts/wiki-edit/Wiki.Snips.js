@@ -473,7 +473,7 @@ Wiki.Snips = {
 
             new Request({
             url: Wiki.XHRPreview,
-            data: { page: Wiki.PageName, wikimarkup: "[{Groups}]" },
+            data: { page: Wiki.PageName, pageId: Wiki.PageId, wikimarkup: "[{Groups}]" },
             onSuccess: function(responseText){
 
                 var body = "Anonymous|Asserted|Authenticated|All";

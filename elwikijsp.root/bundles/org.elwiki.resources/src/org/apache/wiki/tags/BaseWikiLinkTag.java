@@ -20,6 +20,8 @@ package org.apache.wiki.tags;
 
 import java.io.IOException;
 
+import org.apache.wiki.api.core.WikiContext;
+
 /**
  * Root class for different internal wiki links. Cannot be used directly, but
  * provides basic stuff for other classes.
@@ -55,6 +57,11 @@ public abstract class BaseWikiLinkTag extends BaseWikiTag {
 	}
 
 	public String getPageName() {
+		if (m_pageName == null) {
+			WikiContext ctx = getWikiContext();
+			if (ctx != null)
+				return ctx.getPageName();
+		}
 		return m_pageName;
 	}
 
@@ -63,6 +70,11 @@ public abstract class BaseWikiLinkTag extends BaseWikiTag {
 	}
 
 	public String getPageId() {
+		if (m_pageId == null) {
+			WikiContext ctx = getWikiContext();
+			if (ctx != null)
+				return ctx.getPageId();
+		}
 		return m_pageId;
 	}
 

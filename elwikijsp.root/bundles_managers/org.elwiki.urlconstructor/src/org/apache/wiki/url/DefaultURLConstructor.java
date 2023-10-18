@@ -175,6 +175,11 @@ public class DefaultURLConstructor implements URLConstructor, WikiManager, Event
     @Override
     public String parsePage( final String context, final HttpServletRequest request, final Charset encoding ) {
         String pagereq = request.getParameter( "page" );
+        if(pagereq!=null) {
+        	//:FVK: параметр page - устарел!!! и приводит к ошибке - вывод содержимого страницы по имени, а не по pageId.
+        	System.out.println(":FVK: deprecated (1)");
+        	log.error(":FVK: deprecated (1)");
+        }
         if( context.equals( WikiContext.ATTACHMENT_DOGET ) ) {
             pagereq = URLConstructor.parsePageFromURL( request, encoding );
         }

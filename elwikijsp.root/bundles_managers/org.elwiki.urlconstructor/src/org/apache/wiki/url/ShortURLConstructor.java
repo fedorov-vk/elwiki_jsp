@@ -152,6 +152,11 @@ public class ShortURLConstructor extends DefaultURLConstructor {
     @Override
     public String parsePage( final String context, final HttpServletRequest request, final Charset encoding ) {
         final String pagereq = request.getParameter( "page" );
+        if(pagereq!=null) {
+        	//:FVK: параметр page - устарел!!! и приводит к ошибке - вывод содержимого страницы по имени, а не по pageId.
+        	System.out.println(":FVK: deprecated (2)");
+        	log.error(":FVK: deprecated (2)");
+        }
         if( pagereq == null ) {
             return URLConstructor.parsePageFromURL( request, encoding );
         }
