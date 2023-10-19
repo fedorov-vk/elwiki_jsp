@@ -1213,7 +1213,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
 				String nameWikiContext = ContextEnum.getWikiContextName("cmd." + cmdName);
 				makeLink(LinkType.CMD, nameWikiContext, linkText, null, link.getAttributes());				
-			} else if (linkRef.matches("\s*?@.+")) {
+			} else if (linkRef.matches("^\s*?@.+")) {
 				// Internal wiki link (by pageId, which can be unknown).
 				// Working up link of ElWiki format.
 				LinkType linkType = LinkType.EMPTY;
@@ -1244,8 +1244,10 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
                     if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
                         attachment = m_context.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), attachment );
+                        attachment += "?pageId=" + m_context.getPageId();
                         sb.append( handleImageLink( attachment, linkText, link.hasReference() ) );
                     } else {
+                    	attachment += "?pageId=" + m_context.getPageId();
                         makeLink( LinkType.ATTACHMENT, attachment, linkText, null, link.getAttributes() );
                     }
                 } else if( ( hashMark = linkRef.indexOf( '#' ) ) != -1 ) {

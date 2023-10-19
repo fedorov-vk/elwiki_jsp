@@ -167,24 +167,39 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 
     /** {@inheritDoc} */
     @Override
-	public AttachmentContent getAttachmentContent(WikiContext context, String attachmentName, int version)
+	public AttachmentContent getAttachmentContent(WikiContext context, String attachment, int version)
 			throws ProviderException {
         if( m_provider == null ) {
             return null;
         }
 
-        WikiPage currentPage = null;
+        WikiPage pageOfAttachment = null;
+        String attachmentName = null;
 
-        if( context != null ) {
-            currentPage = context.getPage();
-        }
-
+        // Figure out the parent page of this attachment. If we can't find it, we'll assume this refers directly to the attachment.
+        String[] params = attachment.split("/");
+        if(params.length==1) {
+        	// attachment is from current page.
+            if( context != null ) {
+                pageOfAttachment = context.getPage();
+            }
+            attachmentName = params[0].trim();
+        } else if(params.length==2) {
+        	// attachment is from desired page.
+        	String pageId = params[0].trim().substring(1);
+        	pageOfAttachment = pageManager.getPageById(pageId);
+        	attachmentName = params[1].trim();
+        } else {
+        	// incorrect attachment required name.
+        	return null;
+        }        
+        
         // If the page cannot be determined, we cannot possibly find the attachments.
-        if(currentPage == null) {
+        if(pageOfAttachment == null) {
             return null;
         }
 
-        AttachmentContent attachmentContent = m_provider.getAttachmentContent(currentPage, attachmentName, version);
+        AttachmentContent attachmentContent = m_provider.getAttachmentContent(pageOfAttachment, attachmentName, version);
 
         return attachmentContent;
     }

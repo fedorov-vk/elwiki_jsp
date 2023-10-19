@@ -125,12 +125,12 @@ public interface AttachmentManager {
      *  Figures out the attachment metadata from the context and attachment name.
      *
      *  @param context The current WikiContext
-     *  @param attachmentname The file name of the attachment.
+     *  @param attachment The file name of the attachment. Can contain page Id, e.g. "@1304/note.png".
      *  @param version A particular version.
      *  @return Attachment, or null, if no such attachment or version exists.
      *  @throws ProviderException If something goes wrong.
      */
-    AttachmentContent getAttachmentContent( WikiContext context, String attachmentname, int version ) throws ProviderException;
+    AttachmentContent getAttachmentContent( WikiContext context, String attachment, int version ) throws ProviderException;
 
     /**
      *  Figures out the full attachment name from the context and attachment name.

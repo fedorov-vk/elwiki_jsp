@@ -29,6 +29,7 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.AttachmentContent;
+import org.elwiki_data.PageAttachment;
 
 /**
  * Provides an image plugin for better control than is possible with a simple image inclusion. <br>
@@ -145,8 +146,9 @@ public class ImagePlugin implements WikiPlugin, InitializablePlugin {
 			AttachmentContent att = this.attachmentManager.getAttachmentContent(context, src);
 
 			if (att != null) {
-				src = context.getURL(WikiContext.ATTACHMENT_DOGET, att.getPageAttachment().getName(),
-						"pageId=" + context.getPageId());
+				PageAttachment attachment = att.getPageAttachment();
+				src = context.getURL(WikiContext.ATTACHMENT_DOGET, attachment.getName(),
+						"pageId=" + attachment.getWikipage().getId());
 			}
 		} catch (ProviderException e) {
 			throw new PluginException("Attachment info failed: " + e.getMessage());
