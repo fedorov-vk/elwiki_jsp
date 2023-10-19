@@ -25,10 +25,10 @@ public class ImportJspWikiData {
 
 	private DB db;
 
-	static final String SUBDIR = "archive";
-	static final String ATTACHMENT_SUBDIR = "Wiki_Attach-EMF";
+	static final String JspWiki_NAME = "BIRT"; // имя JSPwiki.
 
-	static final String JspWiki_XmlName = "EMF"; // имя XML архива (без расширения)
+	static final String SUBDIR = "archive";
+	static final String ATTACHMENT_SUBDIR = "Wiki_Attach-";
 
 	public ImportJspWikiData(IPath workspacePath) {
 		this.workspacePath = workspacePath;
@@ -39,7 +39,7 @@ public class ImportJspWikiData {
 	}
 
 	public void readXmlData() {
-		IPath fileName = workspacePath.append(SUBDIR).append(JspWiki_XmlName).addFileExtension("xml");
+		IPath fileName = workspacePath.append(SUBDIR).append(JspWiki_NAME).addFileExtension("xml");
 		File f = fileName.toFile();
 		if (!f.isFile()) {
 			return;
@@ -57,7 +57,7 @@ public class ImportJspWikiData {
 	}
 
 	public InputStream importAttachmentData(String fileName) throws FileNotFoundException {
-		IPath fileName1 = workspacePath.append(SUBDIR).append(ATTACHMENT_SUBDIR).append(fileName);
+		IPath fileName1 = workspacePath.append(SUBDIR).append(ATTACHMENT_SUBDIR+JspWiki_NAME).append(fileName);
 		File file = fileName1.toFile();
 		InputStream in = new FileInputStream(file);
 

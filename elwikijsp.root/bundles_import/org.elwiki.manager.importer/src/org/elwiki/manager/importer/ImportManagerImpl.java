@@ -1,6 +1,12 @@
 package org.elwiki.manager.importer;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +24,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.pages0.PageManager;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.ImportManager;
 import org.elwiki.api.WikiServiceReference;
@@ -64,13 +71,13 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 	// -- OSGi service handling ------------------------(end)--
 
 	private List<String> reservedPages = new ArrayList<String>(Arrays.asList(new String[] { "Main",
-			"Category.Wiki_Введение", "SearchPageHelp", "EditPageHelp", "TextFormattingRules", "Wiki.Name",
-			"Wiki.About", "Wiki.Этикет", "Wiki.Wiki", "Wiki.AdminPage", "Wiki.EditFindAndReplaceHelp", "Wiki.MainPage",
-			"Wiki.Category", "LoginHelp", "SandBox", "Песочница", "Category.Wiki_Администрирование",
-			"Wiki.Зарезервированные страницы", "PageIndex", "RecentChanges", "FullRecentChanges", "UndefinedPages",
-			"UnusedPages", "LeftMenu", "LeftMenuFooter", "MoreMenu", "SystemInfo", "Wiki.PageFilters", "TitleBox",
-			"PageAliases", "Category.Документация", "CopyrightNotice", "ApprovalRequiredForUserProfiles",
-			"ApprovalRequiredForPageChanges", "RejectedMessage" }));
+			"Category.Документация", "Category.Wiki", "Category.Wiki_Введение", "Category.Wiki_Администрирование",
+			"Category.Документация Wiki", "Wiki.Category", "Wiki.About", "Wiki.Этикет", "Wiki.Wiki", "Wiki.AdminPage",
+			"Wiki.EditFindAndReplaceHelp", "Wiki.Name", "Wiki.MainPage", "Wiki.Зарезервированные страницы",
+			"Wiki.PageFilters", "SearchPageHelp", "EditPageHelp", "TextFormattingRules", "LoginHelp", "SandBox",
+			"Песочница", "PageIndex", "RecentChanges", "FullRecentChanges", "UndefinedPages", "UnusedPages", "LeftMenu",
+			"LeftMenuFooter", "MoreMenu", "SystemInfo", "TitleBox", "PageAliases", "CopyrightNotice",
+			"ApprovalRequiredForUserProfiles", "ApprovalRequiredForPageChanges", "RejectedMessage", }));
 
 	private DB db;
 
@@ -99,10 +106,10 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 		db = wikiDataImporter.getDb();
 
 		/*
-		IPath fileName = wikiConfiguration.getWorkspacePath().append("names.txt");
-		Path filePath = Path.of(fileName.toOSString());
+		IPath fileName1 = wikiConfiguration.getWorkspacePath().append("names_jspWiki.txt");
+		Path filePath = Path.of(fileName1.toOSString());
 		try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8, //
-				StandardOpenOption.CREATE, StandardOpenOption.APPEND);) {
+				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);) {
 			for (Page oldPage : db.getPages()) {
 				writer.write(oldPage.getName() + "\n");
 			}
@@ -110,7 +117,10 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		*/
+		
+		if (1 == 1)
+			return;
+		 */
 
 		/* Извлечение страниц, составление карт соответствия.
 		 */
@@ -121,18 +131,30 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 
 		PageManager pm = m_engine.getManager(PageManager.class);
 
-		WikiPage emfMainPage = pm.createPage("EMFbook", pm.getMainPageId());
-		String emfMainPageId = emfMainPage.getId();
-		for (Page oldPage : db.getPages()) {
-			if (reservedPages.contains(oldPage.getName()))
+		/* Создание корневой страницы книги. (например, соответствует странице "Main") */
+		final String BOOK_MAIN_PAGE_NAME = "Integrating and Extending BIRT";
+		WikiPage rootBooksPage = pm.getPage("Books");
+		WikiPage bookMainPage = pm.createPage(BOOK_MAIN_PAGE_NAME, rootBooksPage.getId());
+		mapPageId.put(bookMainPage, bookMainPage.getId());
+		mapIdPage.put(bookMainPage.getId(), bookMainPage);
+		mapPageNameId.put("Main", bookMainPage.getId());
+		Page oldPage = db.getPages().stream().filter(page -> "Main".equals(page.getName())).findAny().orElse(null);
+		if (oldPage == null)
+			throw new Exception("не найдена страница 'Main'.");
+		mapNewOld.put(bookMainPage, oldPage);
+		// 
+
+		String bookMainPageId = bookMainPage.getId();
+		for (Page jspWikiPage : db.getPages()) {
+			if (reservedPages.contains(jspWikiPage.getName()))
 				continue;
-			String pageName = oldPage.getName();
-			WikiPage wikiPage = pm.createPage(pageName, emfMainPageId);
+			String jspWikiPageName = jspWikiPage.getName();
+			WikiPage wikiPage = pm.createPage(jspWikiPageName, bookMainPageId);
 
 			mapPageId.put(wikiPage, wikiPage.getId());
 			mapIdPage.put(wikiPage.getId(), wikiPage);
-			mapPageNameId.put(pageName, wikiPage.getId());
-			mapNewOld.put(wikiPage, oldPage);
+			mapPageNameId.put(jspWikiPageName, wikiPage.getId());
+			mapNewOld.put(wikiPage, jspWikiPage);
 		}
 
 		/* Обработка:
@@ -145,13 +167,19 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			Page jspWikiPage = mapNewOld.get(wikiPage);
 			PageVersion pageVersion = getPageVersionData(jspWikiPage);
 
-			String content = changePageText(pageVersion.getContent());
-			//XMLGregorianCalendar modified = pageVersion.getModified();
-			String author = pageVersion.getAuthor();
-			String changeNote = pageVersion.getChangenote();
-			//String description = pageVersion.getDescription();
-			/* запись контента страницы. */
-			pm.putPageText(wikiPage, content, author, changeNote);
+			if (pageVersion != null) {
+				String jspPageContent = "";
+				jspPageContent = pageVersion.getContent();
+				String content = changePageText(jspPageContent);
+				//XMLGregorianCalendar modified = pageVersion.getModified();
+				String author = pageVersion.getAuthor();
+				String changeNote = pageVersion.getChangenote();
+				//String description = pageVersion.getDescription();
+				/* запись контента страницы. */
+				pm.putPageText(wikiPage, content, author, changeNote);
+			} else {
+				System.err.println("FVK:ERROR");
+			}
 		}
 
 		/* Портирование присоединений. */
@@ -192,7 +220,7 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 		final Pattern linkPattern = Pattern.compile("\\[([^\\[{].+?)\\]");
 
 		Matcher linkMatcher = linkPattern.matcher(pageText);
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(3000);
 		while (linkMatcher.find()) {
 			String baseStr = linkMatcher.group(0);
 			String str = linkMatcher.group(1);
@@ -201,7 +229,7 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			if (res.length > 1) {
 				String link = getPageLink(res[1]);
 				if (link != null) {
-					replacer = String.format("%s | %s", res[0], link);
+					replacer = String.format("%s | %s", res[0].trim(), link);
 					for (int n = 2; n < res.length - 1; n++) {
 						replacer = replacer.concat(" | " + res[n]);
 					}
@@ -214,9 +242,25 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			}
 
 			if (replacer != null) {
-				linkMatcher.appendReplacement(sb, "[ " + replacer + " ]");
+				try {
+					if (replacer.indexOf('$') >= 0) {
+						replacer = replacer.replace("$", "\\$");
+					}
+					linkMatcher.appendReplacement(sb, "[" + replacer + "]");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
-				linkMatcher.appendReplacement(sb, baseStr);
+				try {
+					if (baseStr.indexOf('$') >= 0) {
+						baseStr = baseStr.replace("$", "\\$");
+					}
+					linkMatcher.appendReplacement(sb, baseStr);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		linkMatcher.appendTail(sb);
