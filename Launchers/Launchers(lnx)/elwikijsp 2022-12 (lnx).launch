@@ -141,6 +141,7 @@
         <setEntry value="xmlrpc@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="dwe.data@default:default"/>
         <setEntry value="org.elwiki.ajax-dispatcher@default:default"/>
         <setEntry value="org.elwiki.api@default:default"/>
         <setEntry value="org.elwiki.authorize@default:default"/>
@@ -154,6 +155,7 @@
         <setEntry value="org.elwiki.manager.difference@default:default"/>
         <setEntry value="org.elwiki.manager.editor@default:default"/>
         <setEntry value="org.elwiki.manager.filters@default:default"/>
+        <setEntry value="org.elwiki.manager.importer@default:default"/>
         <setEntry value="org.elwiki.manager.page@default:default"/>
         <setEntry value="org.elwiki.manager.pagerenamer@default:default"/>
         <setEntry value="org.elwiki.manager.plugins@default:default"/>

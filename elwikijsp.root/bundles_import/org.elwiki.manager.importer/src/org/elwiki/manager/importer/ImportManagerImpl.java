@@ -70,14 +70,27 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 
 	// -- OSGi service handling ------------------------(end)--
 
-	private List<String> reservedPages = new ArrayList<String>(Arrays.asList(new String[] { "Main",
-			"Category.Документация", "Category.Wiki", "Category.Wiki_Введение", "Category.Wiki_Администрирование",
-			"Category.Документация Wiki", "Wiki.Category", "Wiki.About", "Wiki.Этикет", "Wiki.Wiki", "Wiki.AdminPage",
-			"Wiki.EditFindAndReplaceHelp", "Wiki.Name", "Wiki.MainPage", "Wiki.Зарезервированные страницы",
-			"Wiki.PageFilters", "SearchPageHelp", "EditPageHelp", "TextFormattingRules", "LoginHelp", "SandBox",
-			"Песочница", "PageIndex", "RecentChanges", "FullRecentChanges", "UndefinedPages", "UnusedPages", "LeftMenu",
-			"LeftMenuFooter", "MoreMenu", "SystemInfo", "TitleBox", "PageAliases", "CopyrightNotice",
-			"ApprovalRequiredForUserProfiles", "ApprovalRequiredForPageChanges", "RejectedMessage", }));
+	private List<String> reservedPages = new ArrayList<String>(Arrays.asList(new String[] {
+			//@formatter:off
+			"Main",
+			"Category.Документация",
+			"Category.Документация Wiki",
+			"Category.Wiki",
+			"Category.Wiki_Введение",
+			"Category.Wiki_Администрирование",
+			"Category.Документация Wiki",
+			"Wiki.Category", "Wiki.About", "Wiki.Этикет", "Wiki.Wiki",
+			"Wiki.AdminPage", "Wiki.EditFindAndReplaceHelp", "Wiki.Name",
+			"Wiki.MainPage", "Wiki.Зарезервированные страницы", "Wiki.PageFilters",
+			"SearchPageHelp", "EditPageHelp", "TextFormattingRules", "LoginHelp",
+			"SandBox", "Песочница",
+			"PageIndex", "RecentChanges", "FullRecentChanges",
+			"UndefinedPages", "UnusedPages",
+			"LeftMenu", "LeftMenuFooter", "MoreMenu",
+			"SystemInfo", "TitleBox", "PageAliases", "CopyrightNotice",
+			"ApprovalRequiredForUserProfiles", "ApprovalRequiredForPageChanges", "RejectedMessage",
+			//@formatter:on
+			}));
 
 	private DB db;
 
@@ -132,8 +145,10 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 		PageManager pm = m_engine.getManager(PageManager.class);
 
 		/* Создание корневой страницы книги. (например, соответствует странице "Main") */
-		final String BOOK_MAIN_PAGE_NAME = "Integrating and Extending BIRT";
-		WikiPage rootBooksPage = pm.getPage("Books");
+		final String BOOK_MAIN_PAGE_NAME = "Tools";
+		WikiPage rootBooksPage;
+		//= pm.getPage("Books");
+		rootBooksPage = pm.getPageById("1000"); // "Main"
 		WikiPage bookMainPage = pm.createPage(BOOK_MAIN_PAGE_NAME, rootBooksPage.getId());
 		mapPageId.put(bookMainPage, bookMainPage.getId());
 		mapIdPage.put(bookMainPage.getId(), bookMainPage);
@@ -178,7 +193,7 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 				/* запись контента страницы. */
 				pm.putPageText(wikiPage, content, author, changeNote);
 			} else {
-				System.err.println("FVK:ERROR");
+				System.err.println("FVK:ERROR, jspWikiPage name: " + jspWikiPage.getName());
 			}
 		}
 
