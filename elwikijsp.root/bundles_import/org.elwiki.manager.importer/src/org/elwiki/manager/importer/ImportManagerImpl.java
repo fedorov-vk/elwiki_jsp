@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -90,7 +91,7 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			"LeftMenu", "LeftMenuFooter", "MoreMenu",
 			"SystemInfo", "TitleBox", "PageAliases", "CopyrightNotice",
 			"ApprovalRequiredForUserProfiles", "ApprovalRequiredForPageChanges", "RejectedMessage",
-			/*"About",
+			"About",
 			"Community",
 			"EditFindAndReplaceHelp",
 			"InstallationTips",
@@ -99,9 +100,9 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			"Wiki.Main",
 			"WikiEtiquette",
 			"WikiName",
-			"WikiWiki",*/
+			"WikiWiki",
 			//@formatter:on
-			}));
+	}));
 
 	private DB db;
 
@@ -128,26 +129,33 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 
 	@Override
 	public void ImportPages(WikiContext wikiContext) throws Exception {
-		ImportJspWikiData wikiDataImporter = new ImportJspWikiData(wikiConfiguration.getWorkspacePath());
+		if (1 == 1) {
+			return;
+		}
+
+		ImportJspWikiData wikiDataImporter = new ImportJspWikiData("BIRT2", wikiConfiguration.getWorkspacePath());
 		wikiDataImporter.readXmlData();
 		db = wikiDataImporter.getDb();
 
 		/*
-		IPath fileName1 = wikiConfiguration.getWorkspacePath().append("names_jspWiki(" + ImportJspWikiData.JspWiki_NAME + ").txt");
-		Path filePath = Path.of(fileName1.toOSString());
-		try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8, //
-				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);) {
-			for (Page oldPage : db.getPages()) {
-				writer.write(oldPage.getName() + "\n");
+		{// Сканирование страниц... (для ручного устраниения служебныз wiki-страниц.)
+			IPath fileName1 = wikiConfiguration.getWorkspacePath()
+					.append("names_jspWiki(" + ImportJspWikiData.JspWiki_NAME + ").txt");
+			Path filePath = Path.of(fileName1.toOSString());
+			try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8, //
+					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);) {
+				for (Page oldPage : db.getPages()) {
+					writer.write(oldPage.getName() + "\n");
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
-		 */
-		
+
 		if (1 == 1)
 			return;
+		 */
 
 		/* Извлечение страниц, составление карт соответствия.
 		 */
@@ -206,11 +214,12 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 				//String description = pageVersion.getDescription();
 				/* запись контента страницы. */
 				pm.putPageText(wikiPage, content, author, changeNote);
-				{// установка времени модификации контента страницы.
+				if (pageVersion.getModified() != null) {
+					// установка времени модификации контента страницы.
 					PageProvider pageProvider = pm.getProvider();
 					XMLGregorianCalendar timestamp = pageVersion.getModified();
 					pageProvider.setPageTimestamp(wikiPage, timestamp.toGregorianCalendar().getTime());
-				}				
+				}
 			} else {
 				System.err.println("FVK:ERROR, jspWikiPage name: " + jspWikiPage.getName());
 			}
@@ -241,6 +250,54 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 				}
 			}
 
+		}
+	}
+
+	/**
+	 * Устанавливает страницам дату модификации, согласно страницам JSPwiki.
+	 * 
+	 * @param wikiContext
+	 */
+	private void setPageDate(WikiContext wikiContext) {
+		String[] wikiNames = new String[] {
+				//@formatter:off
+				"BIRT",
+				"BIRT2",
+				"CDO",
+				"DevSoft",
+				"Eclipse",
+				"Eclipse4PDE",
+				"EMF",
+				"GEF",
+				"GEF4",
+				"OSGi2",
+				"OSGiEquinox",
+				"RAP",
+				"RCP",
+				"SoftwareDesign",
+				"SWT1",
+				"Tools",
+				"XtextXtend",
+				//@formatter:on
+		};
+		PageManager pm = m_engine.getManager(PageManager.class);
+		PageProvider pageProvider = pm.getProvider();
+
+		for (String wikiName : wikiNames) {
+			ImportJspWikiData wikiDataImporter = new ImportJspWikiData(wikiName, wikiConfiguration.getWorkspacePath());
+			wikiDataImporter.readXmlData();
+			db = wikiDataImporter.getDb();
+
+			for (Page jspWikiPage : db.getPages().stream().filter(page -> !reservedPages.contains(page.getName()))
+					.collect(Collectors.toList())) {
+				WikiPage wikiPage = pm.getPage(jspWikiPage.getName());
+				/* установка времени модификации контента страницы. */
+				PageVersion pageVersion = getPageVersionData(jspWikiPage);
+				if (wikiPage != null && pageVersion != null && pageVersion.getModified() != null) {
+					XMLGregorianCalendar timestamp = pageVersion.getModified();
+					pageProvider.setPageTimestamp(wikiPage, timestamp.toGregorianCalendar().getTime());
+				}
+			}
 		}
 	}
 

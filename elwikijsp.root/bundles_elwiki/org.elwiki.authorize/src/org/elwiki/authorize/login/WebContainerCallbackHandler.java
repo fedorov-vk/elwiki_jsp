@@ -58,8 +58,7 @@ public final class WebContainerCallbackHandler implements CallbackHandler {
 	 */
 	@Override
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-		for (int i = 0; i < callbacks.length; i++) {
-			Callback callback = callbacks[i];
+		for (Callback callback : callbacks) {
 			if (callback instanceof HttpRequestCallback httpRqCallback) {
 				httpRqCallback.setRequest(this.m_request);
 			} else if (callback instanceof WikiEngineCallback wikiEngineCallback) {

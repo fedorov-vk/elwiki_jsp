@@ -141,7 +141,7 @@ public class Preferences extends HashMap<String, String> {
 	 * @param prefs   The default hashmap of preferences
 	 */
 	private static void parseJSONPreferences(final HttpServletRequest request, final Preferences prefs) {
-		final String prefVal = TextUtil.urlDecodeUTF8(HttpUtil.retrieveCookieValue(request, "JSPWikiUserPrefs"));
+		final String prefVal = TextUtil.urlDecodeUTF8(HttpUtil.retrieveCookieValue(request, "ElWikiUserPrefs"));
 		if (prefVal != null) {
 			// Convert prefVal JSON to a generic hashmap
 			@SuppressWarnings("unchecked")

@@ -138,9 +138,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 						//
 						//  Tag the file so that we know that it has been accessed recently.
 						//
-						cookieFile.setLastModified(System.currentTimeMillis());
-
-						return true;
+						return cookieFile.setLastModified(System.currentTimeMillis());
 					} catch (IOException e) {
 						return false;
 					}

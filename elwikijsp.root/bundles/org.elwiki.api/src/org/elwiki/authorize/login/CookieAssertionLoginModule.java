@@ -59,7 +59,7 @@ import org.elwiki.data.authorize.WikiPrincipal;
 public class CookieAssertionLoginModule extends AbstractLoginModule {
 
 	/** The name of the cookie that gets stored to the user browser. */
-	public static final String PREFS_COOKIE_NAME = "JSPWikiAssertedName";
+	public static final String PREFS_COOKIE_NAME = "ElWikiAssertedName";
 
 	/**
 	 * Believed to be unused.

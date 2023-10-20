@@ -190,7 +190,7 @@ var Wiki = {
 
     /*
     Function: prefs
-        Read/Write the JSPWikiUserPrefs cookie, JSON-encoded.
+        Read/Write the ElWikiUserPrefs cookie, JSON-encoded.
         Uses $.cookie.json
 
     > wiki.prefs("version");                //get version
@@ -199,7 +199,7 @@ var Wiki = {
     */
     prefs: function(key, value){
 
-        return $.cookie.json({name:"JSPWikiUserPrefs", path:this.BaseUrl, expiry:20}, key, value);
+        return $.cookie.json({name:"ElWikiUserPrefs", path:this.BaseUrl, expiry:20}, key, value);
     },
 
     /*

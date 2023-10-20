@@ -21,16 +21,18 @@ import dwedata.DB;
  */
 public class ImportJspWikiData {
 
-	private IPath workspacePath;
-
-	private DB db;
-
-	static final String JspWiki_NAME = "JavaPatterns"; // имя JSPwiki.
-
 	static final String SUBDIR = "archive";
 	static final String ATTACHMENT_SUBDIR = "Wiki_Attach-";
 
-	public ImportJspWikiData(IPath workspacePath) {
+	/** имя JSPwiki. */
+	private final String JspWiki_NAME;
+
+	private final IPath workspacePath;
+
+	private DB db;
+
+	public ImportJspWikiData(String jspWikiName, IPath workspacePath) {
+		this.JspWiki_NAME = jspWikiName;
 		this.workspacePath = workspacePath;
 	}
 
@@ -57,7 +59,7 @@ public class ImportJspWikiData {
 	}
 
 	public InputStream importAttachmentData(String fileName) throws FileNotFoundException {
-		IPath fileName1 = workspacePath.append(SUBDIR).append(ATTACHMENT_SUBDIR+JspWiki_NAME).append(fileName);
+		IPath fileName1 = workspacePath.append(SUBDIR).append(ATTACHMENT_SUBDIR + JspWiki_NAME).append(fileName);
 		File file = fileName1.toFile();
 		InputStream in = new FileInputStream(file);
 

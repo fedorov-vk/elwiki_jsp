@@ -305,7 +305,7 @@ var Wiki = {
 
 		if( this.BasePath == '' ) this.BasePath = '/';
 
-		this.prefs = new Hash.Cookie('JSPWikiUserPrefs', {path:Wiki.BasePath, duration:20});
+		this.prefs = new Hash.Cookie('ElWikiUserPrefs', {path:Wiki.BasePath, duration:20});
 
 		this.PermissionEdit = !!$$('a.edit')[0]; //deduct permission level
 		this.url = null;
@@ -1310,7 +1310,7 @@ var Collapsible =
 	render: function(page, name){
 		page = $(page); if(!page) return;
         //:FVK: workaround - follow  string constant can changed in java code.
-		var cookie = Wiki.Context.test(/view|edit|comment/) ? "JSPWikiCollapse"+ name: "";
+		var cookie = Wiki.Context.test(/view|edit|comment/) ? "ElWikiCollapse"+ name: "";
 
 		if(!this.bullet) {
 			this.bullet = new Element('div',{'class':'collapseBullet'}).setHTML('&bull;');

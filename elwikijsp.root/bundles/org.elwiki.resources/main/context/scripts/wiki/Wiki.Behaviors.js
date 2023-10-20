@@ -394,7 +394,7 @@ function collapseFn(elements, pagename){
 
     new Collapsible( elements, {
         cookie: {
-            name: "JSPWiki.Collapse." + (pagename || wiki.PageName),
+            name: "ElWiki.Collapse." + wiki.PageId,
             path: wiki.BaseUrl,
             duration: 20
         }

@@ -1842,6 +1842,9 @@ WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()-
 
 	@Override
 	public void setPageTimestamp(WikiPage wikiPage, Date date) {
+		if (wikiPage == null || date == null)
+			return;
+
 		PageContent lastContent = wikiPage.getLastContent();
 		if (lastContent == null) { //:FVK: workaround.
 			log.error("Page " + wikiPage.getName() + " [" + wikiPage.getId() + "] - has not content.");

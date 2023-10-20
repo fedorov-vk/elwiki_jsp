@@ -97,7 +97,10 @@ public final class WikiPrincipal extends Aprincipal implements Comparable<Princi
 	 */
 	public WikiPrincipal(String name, String type) {
 		super(name);
-		if (type == null || Arrays.binarySearch(VALID_TYPES, type) < 0) {
+		if (type == null) {
+			throw new IllegalArgumentException("Principal type is invalid, it is null.");
+		}
+		if (Arrays.binarySearch(VALID_TYPES, type) < 0) {
 			throw new IllegalArgumentException("Principal type '" + type + "' is invalid.");
 		}
 		this.m_type = type;
