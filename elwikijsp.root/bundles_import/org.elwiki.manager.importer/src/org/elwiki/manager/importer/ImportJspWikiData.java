@@ -25,7 +25,7 @@ public class ImportJspWikiData {
 
 	private DB db;
 
-	static final String JspWiki_NAME = "Tools"; // имя JSPwiki.
+	static final String JspWiki_NAME = "JavaPatterns"; // имя JSPwiki.
 
 	static final String SUBDIR = "archive";
 	static final String ATTACHMENT_SUBDIR = "Wiki_Attach-";

@@ -23,6 +23,7 @@ import org.apache.wiki.api.attachment.AttachmentManager;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.pages0.PageManager;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
@@ -89,6 +90,16 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			"LeftMenu", "LeftMenuFooter", "MoreMenu",
 			"SystemInfo", "TitleBox", "PageAliases", "CopyrightNotice",
 			"ApprovalRequiredForUserProfiles", "ApprovalRequiredForPageChanges", "RejectedMessage",
+			/*"About",
+			"Community",
+			"EditFindAndReplaceHelp",
+			"InstallationTips",
+			"OneMinuteWiki",
+			"PageAlias",
+			"Wiki.Main",
+			"WikiEtiquette",
+			"WikiName",
+			"WikiWiki",*/
 			//@formatter:on
 			}));
 
@@ -107,8 +118,11 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 
 	}
 
+	/** ElWiki: wikiPage -> "page Id" */
 	Map<WikiPage, String> mapPageId = new HashMap<>();
+	/** ElWiki: "page Id" -> wikiPage */
 	Map<String, WikiPage> mapIdPage = new HashMap<>();
+	/** JSPwiki "page name" -> ElWiki "page Id" */
 	Map<String, String> mapPageNameId = new HashMap<>();
 	Map<WikiPage, Page> mapNewOld = new HashMap<>();
 
@@ -119,7 +133,7 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 		db = wikiDataImporter.getDb();
 
 		/*
-		IPath fileName1 = wikiConfiguration.getWorkspacePath().append("names_jspWiki.txt");
+		IPath fileName1 = wikiConfiguration.getWorkspacePath().append("names_jspWiki(" + ImportJspWikiData.JspWiki_NAME + ").txt");
 		Path filePath = Path.of(fileName1.toOSString());
 		try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8, //
 				StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);) {
@@ -130,10 +144,10 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		 */
 		
 		if (1 == 1)
 			return;
-		 */
 
 		/* Извлечение страниц, составление карт соответствия.
 		 */
@@ -145,10 +159,10 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 		PageManager pm = m_engine.getManager(PageManager.class);
 
 		/* Создание корневой страницы книги. (например, соответствует странице "Main") */
-		final String BOOK_MAIN_PAGE_NAME = "Tools";
-		WikiPage rootBooksPage;
-		//= pm.getPage("Books");
-		rootBooksPage = pm.getPageById("1000"); // "Main"
+		final String BOOK_MAIN_PAGE_NAME = "Java Patterns";
+		WikiPage rootBooksPage; // родитель страницы в ElWiki.
+		//rootBooksPage = pm.getPage("Books");
+		rootBooksPage = pm.getPageById("1000"); // "Main", "Techinfo (Eclipse)", ...
 		WikiPage bookMainPage = pm.createPage(BOOK_MAIN_PAGE_NAME, rootBooksPage.getId());
 		mapPageId.put(bookMainPage, bookMainPage.getId());
 		mapIdPage.put(bookMainPage.getId(), bookMainPage);
@@ -192,6 +206,11 @@ public class ImportManagerImpl implements ImportManager, WikiManager {
 				//String description = pageVersion.getDescription();
 				/* запись контента страницы. */
 				pm.putPageText(wikiPage, content, author, changeNote);
+				{// установка времени модификации контента страницы.
+					PageProvider pageProvider = pm.getProvider();
+					XMLGregorianCalendar timestamp = pageVersion.getModified();
+					pageProvider.setPageTimestamp(wikiPage, timestamp.toGregorianCalendar().getTime());
+				}				
 			} else {
 				System.err.println("FVK:ERROR, jspWikiPage name: " + jspWikiPage.getName());
 			}

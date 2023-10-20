@@ -657,4 +657,9 @@ public class CachingProvider implements PageProvider {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public void setPageTimestamp(WikiPage wikiPage, Date time) {
+		// TODO Auto-generated method stub
+	}
+
 }

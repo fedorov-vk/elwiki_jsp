@@ -305,4 +305,6 @@ public interface PageProvider extends WikiProvider {
 	 */
 	void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException;
 
+	void setPageTimestamp(WikiPage wikiPage, Date time);
+
 }

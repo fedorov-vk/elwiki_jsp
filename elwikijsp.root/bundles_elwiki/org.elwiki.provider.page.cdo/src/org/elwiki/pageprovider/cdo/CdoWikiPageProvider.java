@@ -1840,4 +1840,26 @@ WikiPage.allInstances()->select(p:WikiPage|p.id <> PageReference.allInstances()-
 		}
 	}
 
+	@Override
+	public void setPageTimestamp(WikiPage wikiPage, Date date) {
+		PageContent lastContent = wikiPage.getLastContent();
+		if (lastContent == null) { //:FVK: workaround.
+			log.error("Page " + wikiPage.getName() + " [" + wikiPage.getId() + "] - has not content.");
+			return;
+		}
+		CDOTransaction transaction = PageProviderCdoActivator.getStorageCdo().getTransactionCDO();
+		PageContent pageContent = transaction.getObject(lastContent);
+		pageContent.setCreationDate(date);
+
+		try {
+			transaction.commit();
+		} catch (CommitException e) {
+			log.error("Ошибка", e);
+		} finally {
+			if (!transaction.isClosed()) {
+				transaction.close();
+			}
+		}
+	}
+
 }
