@@ -97,6 +97,12 @@
            name="ListLocksPlugin">
      </wikiPlugin>
      <wikiPlugin
+           alias="PluginList"
+           author="David Vittor"
+           class="org.elwiki.plugins.PluginListPlugin"
+           name="PluginListPlugin">
+     </wikiPlugin>
+     <wikiPlugin
            alias="Note"
            class="org.elwiki.plugins.NotePlugin"
            name="NotePlugin">

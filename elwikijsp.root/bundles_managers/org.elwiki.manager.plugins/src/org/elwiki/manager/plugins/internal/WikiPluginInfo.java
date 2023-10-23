@@ -89,6 +89,7 @@ final class WikiPluginInfo extends WikiModuleInfo {
 	private void build(IConfigurationElement el) throws Exception {
 		this.m_alias = el.getAttribute("alias");
 		this.m_ajaxAlias = el.getAttribute("ajaxAlias");
+		this.m_author = el.getAttribute("author");
 
 		String contributorName = el.getContributor().getName();
 		String className = el.getAttribute("class");
@@ -159,13 +160,13 @@ final class WikiPluginInfo extends WikiModuleInfo {
         return m_className;
     }
 
-    /**
-     *  Returns the alias name for this object.
-     *  @return An alias name for the plugin.
-     */
-    public String getAlias() {
-        return m_alias;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getAlias() {
+		return m_alias;
+	}
 
     /**
      *  Returns the ajax alias name for this object.

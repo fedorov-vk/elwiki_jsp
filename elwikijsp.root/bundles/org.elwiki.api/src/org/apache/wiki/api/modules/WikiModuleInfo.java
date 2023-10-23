@@ -32,6 +32,7 @@ import java.net.URL;
  *  @since 2.4
  */
 public class WikiModuleInfo implements Comparable< WikiModuleInfo > {
+
     protected String m_name;
     protected String m_description;
     protected String m_moduleUrl;
@@ -119,6 +120,14 @@ public class WikiModuleInfo implements Comparable< WikiModuleInfo > {
     public String getName() {
         return m_name;
     }
+    
+	/**
+	 *  Returns the alias name for this object.
+	 *  @return An alias name for the plugin.
+	 */
+	public String getAlias() {
+		return m_name;
+	}
     
     /**
      *  The description of what this module does.

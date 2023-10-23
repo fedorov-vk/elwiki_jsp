@@ -48,7 +48,7 @@ import org.osgi.service.event.EventHandler;
 /**
  *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under shapes/default/editors
  *  If you want your editor to include any scripts or something, you can simply request it by adding the following in your
- *  {@code ini/jspwiki_module.xml}:
+ *  {@code ini/elwiki_editors.xml}:
  *
  *  <pre>
  *  &lt;modules>
@@ -72,6 +72,8 @@ import org.osgi.service.event.EventHandler;
 public class DefaultEditorManager extends BaseModuleManager implements EditorManager, WikiManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultEditorManager.class);
+
+	static final String CONFIGURATION_FILE = "ini/elwiki_editors.xml";
 
 	private Map<String, WikiEditorInfo> m_editors;
 
@@ -98,13 +100,13 @@ public class DefaultEditorManager extends BaseModuleManager implements EditorMan
 
 	// -- OSGi service handling ----------------------( end )--
 
-    /** This method goes through the jspwiki_module.xml files and hunts for editors. Any editors found are put in the registry. */
+    /** This method goes through the elwiki_editors.xml file and hunts for editors. Any editors found are put in the registry. */
     private void registerEditors() {
         log.info( "Registering editor modules" );
         m_editors = new HashMap<>();
 
         // Register all editors which have created a resource containing its properties. Get all resources of all modules
-        final List< Element > editors = XmlUtil.parse( EditorActivator.getContext().getBundle(), PLUGIN_RESOURCE_LOCATION, "/modules/editor" );
+        final List< Element > editors = XmlUtil.parse( EditorActivator.getContext().getBundle(), CONFIGURATION_FILE, "/modules/editor" );
         for( final Element pluginEl : editors ) {
             final String name = pluginEl.getAttributeValue( "name" );
             final WikiEditorInfo info = WikiEditorInfo.newInstance( name, pluginEl );

@@ -104,6 +104,8 @@ import org.osgi.service.event.EventHandler;
 //@formatter:on
 public class DefaultFilterManager extends BaseModuleManager implements FilterManager, WikiManager, EventHandler {
 
+	static final String CONFIGURATION_FILE = "ini/elwiki_filters.xml";
+	
     private PriorityList< PageFilter > m_pageFilters = new PriorityList<>();
 
     private Map< String, PageFilterInfo > m_filterClassMap = new HashMap<>();
@@ -420,7 +422,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
     	}
     	
         log.info( "Registering filters" );
-        final List< Element > filters = XmlUtil.parse(FiltersActivator.getContext().getBundle(), PLUGIN_RESOURCE_LOCATION, "/modules/filter" );
+        final List< Element > filters = XmlUtil.parse(FiltersActivator.getContext().getBundle(), CONFIGURATION_FILE, "/modules/filter" );
 
         //
         // Register all filters which have created a resource containing its properties.
