@@ -17,7 +17,6 @@
 		<module>org.elwiki.commandresolver</module>
 		<module>org.elwiki.manager.attachment</module>
 		<module>org.elwiki.manager.difference</module>
-		<module>org.elwiki.manager.editor</module>
 		<module>org.elwiki.manager.filters</module>
 		<module>org.elwiki.manager.page</module>
 		<module>org.elwiki.manager.pagerenamer</module>
