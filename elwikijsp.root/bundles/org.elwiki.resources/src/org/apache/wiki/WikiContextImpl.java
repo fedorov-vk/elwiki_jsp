@@ -318,14 +318,6 @@ public class WikiContextImpl implements WikiContext, Command {
 		return m_realPage;
 	}
 
-	/**
-	 * Figure out to which page we are really going to. Considers special page names from the
-	 * jspwiki.properties, and possible aliases. This method forwards requests to
-	 * {@link org.apache.wiki.api.ui.CommandResolver#getSpecialPageReference(String)}.
-	 * 
-	 * @return A complete URL to the new page to redirect to
-	 * @since 2.2
-	 */
 	@Override
 	public String getRedirectURL() {
 		final String pagename = m_page.getName();
@@ -593,7 +585,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 *
 	 * @param context e.g. WikiContext.PAGE_EDIT
 	 * @param page    The page to which to link
-	 * @return An URL to the page, honours the absolute/relative setting in jspwiki.properties
+	 * @return An URL to the page, honours the absolute/relative setting in preferences.ini
 	 */
 	@Override
 	public String getURL(final String context, final String page) {

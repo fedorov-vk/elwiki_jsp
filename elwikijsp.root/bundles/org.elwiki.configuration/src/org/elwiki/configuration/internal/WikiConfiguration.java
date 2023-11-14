@@ -2,6 +2,7 @@ package org.elwiki.configuration.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,10 +19,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -45,6 +49,9 @@ public class WikiConfiguration implements IWikiConfiguration {
     /** The name used for the default template. The value is {@value}. */
     private final String DEFAULT_TEMPLATE_NAME = "default";
 	
+	/** File name for properties of any interwiki references. Current value - {@value} */
+    private final String FILE_INTERWIKI_REFERENCES = "interwikirefs.properties";
+
     /** Property for application name */
     String PROP_APPNAME = "jspwiki.applicationName";
 
@@ -79,11 +86,8 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** Wiki configuration preferences store. */
 	private final IPreferenceStore prefs;
 
-	/** Approvers preferences store. */
-	private final IPreferenceStore prefsApprovers;
-
-	/** InterWiki references preferences store. */
-	private final IPreferenceStore prefsInterWikiRef;
+	/** InterWiki references preferences map. */
+	private final Map<String,String> interwikiLinks = new HashMap<>();
 
 	/**
 	 * Stores wikiengine attributes.</br>
@@ -106,12 +110,21 @@ public class WikiConfiguration implements IWikiConfiguration {
 		}
 
 		this.prefs = new ScopedPreferenceStore(InstanceScope.INSTANCE, cfgBundleName);
-		this.prefsApprovers = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-				cfgBundleName + "/" + IWikiPreferences.NODE_APPROVERS_REFERENCES);
-		this.prefsInterWikiRef = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-				cfgBundleName + "/" + IWikiPreferences.NODE_INTERWIKI_REFERENCES);
-
 		this.pathWorkspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		
+		// Read InterWiki links.
+		try (InputStream stream = //
+				FileLocator.openStream(ConfigurationActivator.getContext().getBundle(),
+				Path.fromPortableString(FILE_INTERWIKI_REFERENCES), false)) {
+			Properties config = new Properties();
+			config.load(stream);
+			for (Entry<Object, Object> entry : config.entrySet()) {
+				if (entry.getKey() instanceof String key && entry.getValue() instanceof String value)
+					interwikiLinks.put(key, value);
+			}
+		} catch (IOException e) {
+			log.error("Failed to read InterWiki links", e);
+		}
 		
 		// :FVK: refactoring
         m_useUTF8 = StandardCharsets.UTF_8.name().equals( TextUtil.getStringProperty( prefs, IWikiPreferences.PROP_ENCODING, StandardCharsets.ISO_8859_1.name() ) );
@@ -396,29 +409,16 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return Arrays.asList(patternsSeq.split(","));
 	}
 
-	@Override
-	public IPreferenceStore getApprovers() {
-		return this.prefsApprovers;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String getInterWikiURL(String wikiName) {
-		return this.prefsInterWikiRef.getString(wikiName);
+		return this.interwikiLinks.get(wikiName);
 	}
-	
-    /** {@inheritDoc} */
+
+	/** {@inheritDoc} */
 	@Override
 	public Collection<String> getAllInterWikiLinks() {
-		List<String> result = new ArrayList<>();
-		String keysSeq = this.prefsInterWikiRef.getString("keys");
-		String[] keys = keysSeq.split(":");
-		for (String key : keys) {
-			String val = this.prefsInterWikiRef.getString(key);
-			if (val.trim().length() > 0) {
-				result.add(val);
-			}
-		}
-		return result;
+		return this.interwikiLinks.keySet();
 	}
 
 	@Override

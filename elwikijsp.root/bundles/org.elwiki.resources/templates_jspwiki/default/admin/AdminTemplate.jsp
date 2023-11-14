@@ -38,7 +38,7 @@
 <div id="page" >
 <h1>JSPWiki Administration</h1>
 <div class="information">Not all things can be configured here.  Some things need to be configured
-in your <code>jspwiki.properties</code> file.</div>
+in your <code>preferences.ini</code> file.</div>
 
 <%
 Engine wiki = Wiki.engine().find( getServletConfig() );

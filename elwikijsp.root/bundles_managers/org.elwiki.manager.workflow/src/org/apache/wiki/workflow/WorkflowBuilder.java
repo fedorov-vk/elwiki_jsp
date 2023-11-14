@@ -88,7 +88,7 @@ public final class WorkflowBuilder implements IWorkflowBuilder {
 
 		// If Decision required, create a simple approval workflow
 		if (isDecisionRequired) {
-			// Look up the name of the approver (user or group) listed in jspwiki.properties; approvals go to the approver's decision queue
+			// Look up the name of the approver (user or group) listed in preferences.ini; approvals go to the approver's decision queue
 			Principal approver = mgr.getApprover(workflowApproverKey);
 			Decision decision = new SimpleDecision(workflow.getId(), workflow.getAttributes(), decisionKey, approver,
 					submitter);

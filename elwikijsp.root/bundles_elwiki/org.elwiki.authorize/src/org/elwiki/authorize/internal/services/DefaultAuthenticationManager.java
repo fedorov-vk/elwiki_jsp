@@ -110,9 +110,6 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
     /** Static Boolean for lazily-initializing the "allows cookie authentication" flag */
     private boolean m_allowsCookieAuthentication = false;
 
-    /** If true, logs the IP address of the editor */
-    private boolean m_storeIPAddress = true;
-
     /** Keeps a list of the usernames who have attempted a login recently. */
     private TimedCounterList< String > m_lastLoginAttempts = new TimedCounterList<>();
 
@@ -145,8 +142,6 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	/** {@inheritDoc} */
 	@Override
     public void initialize() throws WikiException {
-        m_storeIPAddress = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_STOREIPADDRESS, m_storeIPAddress );
-
         // Should we allow cookies for assertions? (default: yes)
         m_allowsCookieAssertions = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_ALLOW_COOKIE_ASSERTIONS,true );
 
@@ -175,7 +170,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
     /**
      * Initializes the options Map supplied to the configured LoginModule every time it is invoked. The properties and values extracted from
-     * <code>jspwiki.properties</code> are of the form <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where
+     * <code>preferences.ini</code> are of the form <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where
      * <var>param</var> is the key name, and <var>value</var> is the value.
      *
      * @param props the properties used to initialize JSPWiki

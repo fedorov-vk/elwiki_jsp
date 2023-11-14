@@ -30,7 +30,6 @@ import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -42,7 +41,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
@@ -96,8 +94,6 @@ public class Preferences extends HashMap<String, String> {
 		final Preferences prefs = new Preferences();
 		Engine engine = ContextUtil.findContext(request).getEngine();
 
-		// :FVK: - replaced: Properties props = PropertyReader.loadWebAppProps(
-		// pageContext.getServletContext() );
 		IPreferenceStore props = engine.getWikiPreferences();
 
 		final WikiContext ctx = ContextUtil.findContext(request);

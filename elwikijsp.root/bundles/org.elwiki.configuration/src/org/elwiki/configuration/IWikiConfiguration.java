@@ -95,9 +95,13 @@ public interface IWikiConfiguration {
 	 */
 	public Collection<String> getAllInlinedImagePatterns();
 
-	IPreferenceStore getApprovers();
-
-	public String getInterWikiURL(String extWiki);
+	/**
+	 * Returns an InterWiki link of required wiki name.
+	 * 
+	 * @param wikiName required wiki name.
+	 * @return InterWiki link.
+	 */
+	public String getInterWikiURL(String wikiName);
 
 	/**
 	 * Returns a collection of all supported InterWiki links.

@@ -35,7 +35,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Writes an image link to a JSPWiki RSS file. If RSS generation has been turned
- * off in jspwiki.properties, returns an empty string.
+ * off in preferences.ini, returns an empty string.
  * <p>
  * <b>Attributes</b>
  * </p>

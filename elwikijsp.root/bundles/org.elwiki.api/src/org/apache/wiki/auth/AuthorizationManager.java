@@ -67,7 +67,7 @@ public interface AuthorizationManager {
     /** Name of the default security policy file, in WEB-INF. */
     String DEFAULT_POLICY = "jspwiki.policy";
 
-    /** The property name in jspwiki.properties for specifying the external {@link Authorizer}. */
+    /** The property name in preferences.ini for specifying the external {@link Authorizer}. */
     String PROP_AUTHORIZER = "jspwiki.authorizer";
 
     /**

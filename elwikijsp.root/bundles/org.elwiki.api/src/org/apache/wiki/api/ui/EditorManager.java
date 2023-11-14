@@ -65,7 +65,7 @@ public interface EditorManager extends ModuleManager {
      *  <p>
      *  Determines the editor to use by the following order of conditions:
      *  1. Editor set in User Preferences
-     *  2. Default Editor set in jspwiki.properties
+     *  2. Default Editor set in jspwiki.properties (:FVK: is this true?) 
      *  <p>
      *  For the PREVIEW context, this method returns the "preview" editor.
      *

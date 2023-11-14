@@ -18,26 +18,25 @@
  */
 package org.apache.wiki.api.exceptions;
 
-
-
 /**
- *  Marks an erroneus jspwiki.properties file.  Certain properties have been marked as "required", and if you 
- *  do not provide a good value for a property, you'll see this exception.
- *  <P>
- *  Check <TT>jspwiki.properties</TT> for the required properties.
+ * Marks an erroneus of ElWiki configuration file preferences.ini. Certain properties have been
+ * marked as "required", and if you do not provide a good value for a property, you'll see this
+ * exception.
+ * <p>
+ * Check <tt>preferences.ini</tt> for the required properties.
  */
 public class NoRequiredPropertyException extends WikiException {
-	
-    private static final long          serialVersionUID = 1L;
 
-    /**
-     *  Constructs an exception.
-     *
-     *  @param msg Message to show
-     *  @param key The key of the property in question.
-     */
-    public NoRequiredPropertyException( final String msg, final String key ) {
-        super( msg + " For key '" + key + "'" );
-    }
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructs an exception.
+	 *
+	 * @param msg Message to show
+	 * @param key The key of the property in question.
+	 */
+	public NoRequiredPropertyException(final String msg, final String key) {
+		super(msg + " For key '" + key + "'");
+	}
 
 }

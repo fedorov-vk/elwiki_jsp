@@ -42,11 +42,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * <p>Contains static methods for sending e-mails to recipients using JNDI-supplied
  * <a href="http://java.sun.com/products/javamail/">JavaMail</a>
  * Sessions supplied by a web container (preferred) or configured via
- * <code>jspwiki.properties</code>; both methods are described below.
+ * <code>preferences.ini</code>; both methods are described below.
  * Because most e-mail servers require authentication,
  * for security reasons implementors are <em>strongly</em> encouraged to use
  * container-managed JavaMail Sessions so that passwords are not exposed in
- * <code>jspwiki.properties</code>.</p>
+ * <code>preferences.ini</code>.</p>
  * <p>To enable e-mail functions within JSPWiki, administrators must do three things:
  * ensure that the required JavaMail JARs are on the runtime classpath, configure
  * JavaMail appropriately, and (recommdended) configure the JNDI JavaMail session factory.</p>
@@ -62,7 +62,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * there instead of keeping them in <code>/WEB-INF/lib</code>.</p>
  * <strong>JavaMail configuration</strong>
  * <p>Regardless of the method used for supplying JavaMail sessions (JNDI container-managed
- * or via <code>jspwiki.properties</code>, JavaMail needs certain properties
+ * or via <code>preferences.ini</code>, JavaMail needs certain properties
  * set in order to work correctly. Configurable properties are these:</p>
  * <table border="1">
  *   <tr>
@@ -130,13 +130,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
  *   </tr>
  * </table>
  * <p>*These defaults apply only if the stand-alone Session factory is used
- * (that is, these values are obtained from <code>jspwiki.properties</code>).
+ * (that is, these values are obtained from <code>preferences.ini</code>).
  * If using a container-managed JNDI Session factory, the container will
  * likely supply its own default values, and you should probably override
  * them (see the next section).</p>
  * <strong>Container JNDI Session factory configuration</strong>
  * <p>You are strongly encouraged to use a container-managed JNDI factory for
- * JavaMail sessions, rather than configuring JavaMail through <code>jspwiki.properties</code>.
+ * JavaMail sessions, rather than configuring JavaMail through <code>preferences.ini</code>.
  * To do this, you need to two things: uncomment the <code>&lt;resource-ref&gt;</code> block
  * in <code>/WEB-INF/web.xml</code> that enables container-managed JavaMail, and
  * configure your container's JavaMail resource factory. The <code>web.xml</code>
@@ -248,7 +248,7 @@ public final class MailUtil {
     /**
      * <p>Sends an e-mail to a specified receiver using a JavaMail Session supplied
      * by a JNDI mail session factory (preferred) or a locally initialized
-     * session based on properties in <code>jspwiki.properties</code>.
+     * session based on properties in <code>preferences.ini</code>.
      * See the top-level JavaDoc for this class for a description of
      * required properties and their default values.</p>
      * <p>The e-mail address used for the <code>to</code> parameter must be in
@@ -303,7 +303,7 @@ public final class MailUtil {
 
     /**
      * Gets the Sender's email address from JNDI Session if available, otherwise
-     * from the jspwiki.properties or lastly the default value.
+     * from the preferences.ini or lastly the default value.
      * @param pSession <code>Session</code>
      * @param pProperties <code>Properties</code>
      * @return <code>String</code>
@@ -325,7 +325,7 @@ public final class MailUtil {
                 c_fromAddress = TextUtil.getStringProperty(pProperties, PROP_MAIL_SENDER, DEFAULT_SENDER );
                 if( log.isDebugEnabled() )
                     log.debug( "Attempt to get the sender's mail address from the JNDI mail session failed, will use \""
-                               + c_fromAddress + "\" (configured via jspwiki.properties or the internal default)." );
+                               + c_fromAddress + "\" (configured via preferences.ini or the internal default)." );
             }
             else
             {
@@ -369,7 +369,7 @@ public final class MailUtil {
         if (result == null)
         {
             if ( log.isDebugEnabled() )
-                log.debug("Getting a standalone mail session configured by jspwiki.properties and/or internal default values.");
+                log.debug("Getting a standalone mail session configured by preferences.ini and/or internal default values.");
             result = getStandaloneMailSession(props);
         }
         return result;

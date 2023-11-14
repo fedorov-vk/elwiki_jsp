@@ -79,14 +79,14 @@ import org.osgi.service.event.EventHandler;
  *
  *  For example, in the following line of code:
  *  <pre>
- *  [{INSERT org.apache.wiki.plugin.FunnyPlugin  foo='bar'
+ *  [{INSERT org.elwiki.plugins.FunnyPlugin  foo='bar'
  *  blob='goo'
  *
  *  abcdefghijklmnopqrstuvw
  *  01234567890}]
  *  </pre>
  *
- *  The plugin class is "org.apache.wiki.plugin.FunnyPlugin", the
+ *  The plugin class is "org.elwiki.plugins.FunnyPlugin", the
  *  parameters are "foo" and "blob" (having values "bar" and "goo",
  *  respectively), and the plugin body is then
  *  "abcdefghijklmnopqrstuvw\n01234567890".   The plugin body is
@@ -98,10 +98,10 @@ import org.osgi.service.event.EventHandler;
  *  <P>
  *  The class name can be shortened, and marked without the package.
  *  For example, "FunnyPlugin" would be expanded to
- *  "org.apache.wiki.plugin.FunnyPlugin" automatically.  It is also
+ *  "org.elwiki.plugins.FunnyPlugin" automatically.  It is also
  *  possible to define other packages, by setting the
  *  "jspwiki.plugin.searchPath" property.  See the included
- *  jspwiki.properties file for examples.
+ *  preferences.ini file for examples.
  *  <P>
  *  Even though the nominal way of writing the plugin is
  *  <pre>

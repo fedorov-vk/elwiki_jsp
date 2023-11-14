@@ -15,7 +15,7 @@ public interface IWorkflowBuilder {
 	 * </p>
 	 * <p>
 	 * The Principal who approves the activity is determined by looking up the property
-	 * <code>jspwiki.approver.<var>workflowApproverKey</var></code> in <code>jspwiki.properties</code>.
+	 * <code>jspwiki.approver.<var>workflowApproverKey</var></code> in <code>preferences.ini</code>.
 	 * If that Principal resolves to a known user, Group Role, a Decision will be placed in the
 	 * respective workflow queue (or multiple queues, if necessary). Only one approver needs to make the
 	 * Decision, and if the request is approved, the completion task will be executed. If the request is

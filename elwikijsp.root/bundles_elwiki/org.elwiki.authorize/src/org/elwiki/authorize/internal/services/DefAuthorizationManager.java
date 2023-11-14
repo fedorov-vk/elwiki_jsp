@@ -158,7 +158,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/** Extension's specific ID of default external Authorizer. Current value - {@value} */
 	protected static final String DEFAULT_AUTHORIZER = "DefaultAuthorizer";//:FVK: "WebContainerAuthorizer"; 
 
-	/** The property name in jspwiki.properties for specifying the external {@link Authorizer}. */
+	/** The property name in preferences.ini for specifying the external {@link Authorizer}. */
 	protected static final String PROP_AUTHORIZER = "jspwiki.authorizer";
 
 	/** Name of the default security policy file, as bundle resource. */

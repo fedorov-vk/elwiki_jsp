@@ -22,12 +22,8 @@ import org.apache.wiki.api.spi.ContentsDSL;
 import org.apache.wiki.api.spi.ContentsSPI;
 import org.apache.wiki.api.spi.ContextDSL;
 import org.apache.wiki.api.spi.ContextSPI;
-//:FVK:import org.apache.wiki.util.PropertyReader;
 
 public class Wiki {
-
-	// default values
-	// :FVK:private static Properties properties = PropertyReader.getDefaultProperties();
 
 	private static ContextSPI contextSPI;
 

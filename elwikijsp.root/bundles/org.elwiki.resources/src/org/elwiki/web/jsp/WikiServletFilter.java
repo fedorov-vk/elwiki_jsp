@@ -147,7 +147,7 @@ public class WikiServletFilter implements Filter {
             out.print("<!DOCTYPE html><html lang=\"en\"><head><title>Fatal problem with JSPWiki</title></head>");
             out.print("<body>");
             out.print("<h1>JSPWiki has not been started</h1>");
-            out.print("<p>JSPWiki is not running.  This is probably due to a configuration error in your jspwiki.properties file, ");
+            out.print("<p>JSPWiki is not running.  This is probably due to a configuration error in your preferences.ini file, ");
             out.print("or a problem with your servlet container.  Please double-check everything before issuing a bug report ");
             out.print("at jspwiki.apache.org.</p>");
             out.print("<p>We apologize for the inconvenience.  No, really, we do.  We're trying to ");

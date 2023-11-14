@@ -159,7 +159,7 @@ public interface PageManager {
     }
 
 	/**
-	 * Writes the WikiText of a page into the page repository. If the <code>jspwiki.properties</code>
+	 * Writes the WikiText of a page into the page repository. If the <code>preferences.ini</code>
 	 * file contains the property <code>jspwiki.approver.workflow.saveWikiPage</code> and its value
 	 * resolves to a valid user, {@link IGroupWiki} or {@link org.elwiki.data.authorize.GroupPrincipal},
 	 * this method will place a {@link org.apache.wiki.workflow.IDecision} in the approver's workflow

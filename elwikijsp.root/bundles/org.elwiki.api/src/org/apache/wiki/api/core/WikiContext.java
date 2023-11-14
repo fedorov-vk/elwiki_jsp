@@ -49,7 +49,7 @@ import org.elwiki_data.WikiPage;
  * Do not cache the WikiPage object that you get from the WikiContext; always use getPage()!
  * </p>
  *
- * @see org.apache.wiki.plugin.Counter
+ * @see org.elwiki.plugins.CounterPlugin
  */
 public interface WikiContext extends Cloneable, Command {
 
@@ -436,8 +436,8 @@ public interface WikiContext extends Cloneable, Command {
 	}
 
 	/**
-	 * Figure out to which WikiPage we are really going to. Considers special WikiPage names from the
-	 * jspwiki.properties, and possible aliases.
+	 * Figure out to which WikiPage we are really going to.
+	 * Considers special WikiPage names, satisfying them the special naming rule.
 	 *
 	 * @return A complete URL to the new WikiPage to redirect to
 	 * @since 2.2

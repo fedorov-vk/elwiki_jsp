@@ -110,7 +110,7 @@
 <!-- Notify users which JAAS configs we need to find -->
 <p>ElWiki подключает свой собственный JAAS для определения процесса аутентификации и не полагается на конфигурацию JRE.
 По умолчанию ElWiki настраивает свой стек входа в систему JAAS на использование AccountRegistryLoginModule.
-Вы можете указать пользовательский модуль входа, установив  <code>jspwiki.loginModule.class</code> в <code>jspwiki.properties</code>.</p>
+Вы можете указать пользовательский модуль входа, установив  <code>jspwiki.loginModule.class</code> в <code>preferences.ini</code>.</p>
 
 <wiki:Messages div="information" topic='<%=SecurityVerifier.INFO+"java.security.auth.login.config"%>' prefix="Good news: "/>
 <wiki:Messages div="warning" topic='<%=SecurityVerifier.WARNING+"java.security.auth.login.config"%>' prefix="We found some potential problems with your configuration: "/>
@@ -277,7 +277,7 @@ If the container requires that users accessing <code>Edit.jsp</code> possess the
 <h2>User and Group Databases</h2>
 
 <h3>User Database Configuration</h3>
-<p>The user database stores user profiles. It's pretty important that it functions properly. We will try to determine what your current UserDatabase implementation is, based on the current value of the <code>jspwiki.userdatabase</code> property in your <code>jspwiki.properties</code> file. In addition, once we establish that the UserDatabase has been initialized properly, we will try to add (then, delete) a random test user. If all of these things work they way they should, then you should have no problems with user self-registration.</p>
+<p>The user database stores user profiles. It's pretty important that it functions properly. We will try to determine what your current UserDatabase implementation is, based on the current value of the <code>jspwiki.userdatabase</code> property in your <code>preferences.ini</code> file. In addition, once we establish that the UserDatabase has been initialized properly, we will try to add (then, delete) a random test user. If all of these things work they way they should, then you should have no problems with user self-registration.</p>
 
 <wiki:Messages div="information" topic="<%=SecurityVerifier.INFO_DB%>" prefix="Good news: "/>
 <wiki:Messages div="warning" topic="<%=SecurityVerifier.WARNING_DB%>" prefix="We found some potential problems with your configuration: "/>
@@ -287,7 +287,7 @@ If the container requires that users accessing <code>Edit.jsp</code> possess the
 <p>The group database stores wiki groups. It's pretty important that it functions properly.
 We will try to determine what your current AccountRegistry implementation is,
  based on the current value of the <code>jspwiki.groupdatabase</code> property
- in your <code>jspwiki.properties</code> file.
+ in your <code>preferences.ini</code> file.
 In addition, once we establish that the AccountRegistry has been initialized properly,
  we will try to add (then, delete) a random test group.
 If all of these things work they way they should, then you should have no problems

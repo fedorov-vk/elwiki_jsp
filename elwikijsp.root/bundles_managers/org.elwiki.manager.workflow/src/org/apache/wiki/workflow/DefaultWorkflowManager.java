@@ -129,11 +129,11 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 	 */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore prefsApprovers = wikiConfiguration.getApprovers();
+		IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
 		Consumer<String> optionReader = new Consumer<String>() {
 			@Override
 			public void accept(String action) {
-				String approver = prefsApprovers.getString(action);
+				String approver = prefs.getString(action);
 				if (approver != null && approver.length() > 0) {
 					m_approvers.put(action, new UnresolvedPrincipal(approver));
 				}

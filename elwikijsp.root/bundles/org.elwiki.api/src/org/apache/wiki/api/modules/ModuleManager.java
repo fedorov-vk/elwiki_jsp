@@ -5,7 +5,16 @@ import java.util.Collection;
 @Deprecated
 public interface ModuleManager {
 
-    /** Location of the property-files of plugins. (Each plugin should include this property-file in its jar-file) */
+	/**
+	 * Location of the property-files of plugins. (Each plugin should include this property-file in its jar-file)
+	 */
+	/* Example of content "ini/jspwiki_module.xml" :
+	<plugin class="org.apache.wiki.plugin.IfPlugin">
+	  <author>Janne Jalkanen</author>
+	  <minVersion>2.4</minVersion>
+	  <alias>If</alias>
+	</plugin>
+	*/
 	@Deprecated
     String PLUGIN_RESOURCE_LOCATION = "ini/jspwiki_module.xml";
 

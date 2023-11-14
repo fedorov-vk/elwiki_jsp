@@ -33,8 +33,8 @@ import org.apache.wiki.api.exceptions.WikiException;
  */
 public interface WorkflowManager {
 
-    /** The name of the key from jspwiki.properties which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
-    String WF_WP_SAVE_APPROVER = "workflow.saveWikiPage";
+    /** The name of the key from preferences.ini which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
+    String WF_WP_SAVE_APPROVER = "jspwiki.approver.workflow.saveWikiPage";
     /** The message key for storing the Decision text for saving a page.  Value is {@value}. */
     String WF_WP_SAVE_DECISION_MESSAGE_KEY = "wf.decision.saveWikiPage";
     /** The message key for rejecting the decision to save the page.  Value is {@value}. */
@@ -52,8 +52,8 @@ public interface WorkflowManager {
 
     /** The workflow attribute which stores the user profile. */
     String WF_UP_CREATE_SAVE_ATTR_SAVED_PROFILE = "userProfile";
-    /** The name of the key from jspwiki.properties which defines who shall approve the workflow of creating a user profile.  Value is <tt>{@value}</tt> */
-    String WF_UP_CREATE_SAVE_APPROVER = "workflow.createUserProfile";
+    /** The name of the key from preferences.ini which defines who shall approve the workflow of creating a user profile.  Value is <tt>{@value}</tt> */
+    String WF_UP_CREATE_SAVE_APPROVER = "jspwiki.approver.workflow.createUserProfile";
     /** The message key for storing the Decision text for saving a user profile.  Value is {@value}. */
     String WF_UP_CREATE_SAVE_DECISION_MESSAGE_KEY = "wf.decision.createUserProfile";
     /** Fact name for storing a the submitter name. Value is {@value}. */
@@ -64,9 +64,6 @@ public interface WorkflowManager {
     String WF_UP_CREATE_SAVE_FACT_PREFS_FULL_NAME = "prefs.fullname";
     /** Fact name for storing the preferences' email. Value is {@value}. */
     String WF_UP_CREATE_SAVE_FACT_PREFS_EMAIL = "prefs.email";
-
-    /** The prefix to use for looking up <code>jspwiki.properties</code> approval roles. */
-    String PROPERTY_APPROVER_PREFIX = "jspwiki.approver.";
 
     IWorkflowBuilder getWorkflowBuilder();
     

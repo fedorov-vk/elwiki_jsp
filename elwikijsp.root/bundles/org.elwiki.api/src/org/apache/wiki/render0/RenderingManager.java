@@ -94,7 +94,7 @@ public interface RenderingManager extends RenderApi, InternalModule {
 
     /**
      * Returns a WikiRenderer instance, initialized with the given context and doc. The object is an XHTMLRenderer,
-     * unless overridden in jspwiki.properties with PROP_RENDERER.
+     * unless overridden in preferences.ini with PROP_RENDERER.
      *
      * @param context The WikiContext
      * @param doc The document to render
@@ -105,7 +105,7 @@ public interface RenderingManager extends RenderApi, InternalModule {
     /**
      * Returns a WikiRenderer instance meant for WYSIWYG editing, initialized with the given
      * context and doc. The object is an WysiwygEditingRenderer, unless overridden
-     * in jspwiki.properties with PROP_WYSIWYG_RENDERER.
+     * in preferences.ini with PROP_WYSIWYG_RENDERER.
      *
      * @param context The WikiContext
      * @param doc The document to render

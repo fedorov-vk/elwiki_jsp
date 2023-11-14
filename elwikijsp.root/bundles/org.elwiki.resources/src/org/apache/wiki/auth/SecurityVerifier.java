@@ -546,7 +546,7 @@ public final class SecurityVerifier {
 
 	/**
 	 * Verfies the JAAS configuration. The configuration is valid if value of the
-	 * <code>jspwiki.properties<code> property
+	 * <code>preferences.ini<code> property
 	 * {@value org.apache.wiki.auth.AuthenticationManager#PROP_LOGIN_MODULE} resolves to a valid class
 	 * on the classpath.
 	 */
@@ -754,7 +754,7 @@ public final class SecurityVerifier {
 		{
 		    m_session.addMessage( ERROR_DB, "UserDatabase is DummyUserDatabase; JSPWiki " +
 		            "may not have been able to initialize the database you supplied in " +
-		            "jspwiki.properties, or you left the 'jspwiki.userdatabase' property " +
+		            "preferences.ini, or you left the 'jspwiki.userdatabase' property " +
 		            "blank. Check the error logs." );
 		}*/
 

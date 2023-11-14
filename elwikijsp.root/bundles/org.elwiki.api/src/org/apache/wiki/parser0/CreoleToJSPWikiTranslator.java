@@ -39,8 +39,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * See http://www.wikicreole.org for the WikiCreole spec.</p>
  *
  * <p>This translator can be configured through properties defined in
- * jspwiki.properties starting with "creole.*". See the
- * jspwiki.properties file for an explanation of the properties</p>
+ * preferences.ini starting with "creole.*". See the
+ * preferences.ini file for an explanation of the properties</p>
  *
  * <p><b>WARNING</b>: This is an experimental feature, and known to be
  * broken.  Use at your own risk.</o>

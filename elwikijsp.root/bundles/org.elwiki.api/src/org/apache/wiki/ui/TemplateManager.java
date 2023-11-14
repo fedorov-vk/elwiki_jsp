@@ -150,7 +150,7 @@ public interface TemplateManager extends ModuleManager {
     Map< String, String > listLanguages( final PageContext pageContext );
 
     /**
-     * List all available timeformats, read from the jspwiki.properties
+     * List all available timeformats, read from the preferences.ini
      *
      * @param pageContext page context
      * @return map of TimeFormats
