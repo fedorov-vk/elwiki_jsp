@@ -23,6 +23,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 /**
  *  Indicates that an non-existing version was specified.
  */
+//TODO: wiki should use this exception.
 public class NoSuchVersionException
     extends ProviderException
 {

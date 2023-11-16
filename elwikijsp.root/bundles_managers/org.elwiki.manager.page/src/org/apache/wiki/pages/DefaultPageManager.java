@@ -181,6 +181,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 		/*:FVK: - подключить CachingProvider
 		final String classname;
+        final boolean useCache = TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
+
 		//  If user wants to use a cache, then we'll use the CachingProvider.
 		if( useCache ) {
 		    classname = "org.apache.wiki.providers.CachingProvider";
@@ -283,59 +285,6 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 		return pageProvider;
 	}
-
-	/**
-     * Creates a new PageManager.
-     *
-     * @param engine Engine instance
-     * @param props  Properties to use for initialization
-     * @throws NoSuchElementException {@value #PROP_PAGEPROVIDER} property not found on Engine properties
-     * @throws WikiException If anything goes wrong, you get this.
-     */
-    public DefaultPageManager(final Engine engine) throws NoSuchElementException, WikiException {
-    	if(1==1)throw new WikiException("Код не должен выполняться (это сервис)."); // :FVK: - перенесено в метод initialize(Engine engine) 
-        m_engine = engine;
-        IPreferenceStore props = engine.getWikiPreferences();
-        final String classname;
-        
-        @Deprecated
-        final boolean useCache = false; //:FVK: TextUtil.getBooleanProperty(props, PROP_USECACHE, true); 
-        m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60 );
-
-        //  If user wants to use a cache, then we'll use the CachingProvider.
-        if( useCache ) {
-            classname = "org.apache.wiki.providers.CachingProvider";
-        } else {
-            classname = TextUtil.getRequiredProperty( props, PROP_PAGEPROVIDER );
-        }
-
-        pageSorter.initialize( props );
-
-        try {
-            log.debug("Page provider class: '" + classname + "'");
-            final Class<?> providerclass = ClassUtil.findClass("org.apache.wiki.providers", classname);
-            m_provider = ( PageProvider ) providerclass.newInstance();
-
-            log.debug("Initializing page provider class " + m_provider);
-            m_provider.initialize(m_engine);
-        } catch (final ClassNotFoundException e) {
-            log.error("Unable to locate provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("No provider class. (" + e.getMessage() + ")", e);
-        } catch (final InstantiationException e) {
-            log.error("Unable to create provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("Faulty provider class. (" + e.getMessage() + ")", e);
-        } catch (final IllegalAccessException e) {
-            log.error("Illegal access to provider class '" + classname + "' (" + e.getMessage() + ")", e);
-            throw new WikiException("Illegal provider class. (" + e.getMessage() + ")", e);
-        } catch (final NoRequiredPropertyException e) {
-            log.error("Provider did not found a property it was looking for: " + e.getMessage(), e);
-            throw e;  // Same exception works.
-        } catch (final IOException e) {
-            log.error("An I/O exception occurred while trying to create a new page provider: " + classname, e);
-            throw new WikiException("Unable to start page provider: " + e.getMessage(), e);
-        }
-
-    }
 
     /**
      * {@inheritDoc}

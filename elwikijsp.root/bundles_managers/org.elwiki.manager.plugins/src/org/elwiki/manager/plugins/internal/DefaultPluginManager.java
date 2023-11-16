@@ -98,10 +98,7 @@ import org.osgi.service.event.EventHandler;
  *  <P>
  *  The class name can be shortened, and marked without the package.
  *  For example, "FunnyPlugin" would be expanded to
- *  "org.elwiki.plugins.FunnyPlugin" automatically.  It is also
- *  possible to define other packages, by setting the
- *  "jspwiki.plugin.searchPath" property.  See the included
- *  preferences.ini file for examples.
+ *  "org.elwiki.plugins.FunnyPlugin" automatically.
  *  <P>
  *  Even though the nominal way of writing the plugin is
  *  <pre>
