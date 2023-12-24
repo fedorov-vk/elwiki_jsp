@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-PIDFile=/run/elwiki.pid
+PIDFile=/opt/elwiki/elwiki.pid
 WorkingDirectory=/opt/elwiki
 
 #User=myunit
