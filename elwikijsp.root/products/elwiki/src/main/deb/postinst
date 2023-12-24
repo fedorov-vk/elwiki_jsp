@@ -1,0 +1,16 @@
+# postinst script for deployment elwiki product.
+
+if [ ! -d /opt ]; then
+        mkdir "/opt"
+        #chown vfedorov:users "/opt/elwiki/"
+fi
+
+cd /opt
+tar axf /tmp/elwiki/elwiki.tar
+
+ln -s /opt/elwiki/elwiki.service /etc/systemd/system/elwiki.service
+systemctl daemon-reload
+systemctl enable elwiki
+#systemctl start elwiki
+
+exit 0

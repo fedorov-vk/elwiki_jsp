@@ -10,6 +10,39 @@
 	<name>Global building configuration</name>
 	<description>Global building configuration.</description>
 
+	<inceptionYear>2023</inceptionYear>
+	<developers>
+		<developer>
+			<id>vfedorov</id>
+			<name>Victor Fedorov</name>
+			<email>fedorov.vk@yandex.ru</email>
+			<url></url>
+			<organization></organization>
+			<organizationUrl></organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-3</timezone>
+			<properties />
+		</developer>
+	</developers>
+	<licenses>
+		<!--
+		<license>
+			<name>Apache-2</name>
+			<url>https://www.eclipse.org/legal/epl-v20.html</url>
+			<distribution>package</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+		-->
+		<license>
+			<name>BSD</name> <!-- workaround -->
+			<url>https://www.eclipse.org/legal/epl-v20.html</url>
+			<distribution>package</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -17,7 +50,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-		<tycho.version>2.7.4</tycho.version>
+		<tycho.version>4.0.4</tycho.version>
 		<!-- definitions of resources plugin build -->
 		<wro4j.version>1.10.1</wro4j.version>
 		<minimize>false</minimize> <!-- wro4j compression -->
@@ -162,7 +195,6 @@
 					<artifactId>target-platform-configuration</artifactId>
 					<version>${tycho.version}</version>
 					<configuration>
-						<resolver>p2</resolver>
 						<executionEnvironment>JavaSE-17</executionEnvironment>
 						<!-- :FVK: что это определяет?
 						<target>

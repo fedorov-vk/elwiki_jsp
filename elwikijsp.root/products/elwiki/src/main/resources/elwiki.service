@@ -1,0 +1,23 @@
+[Unit]
+Description=ElWiki product
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/elwiki.pid
+WorkingDirectory=/opt/elwiki
+
+#User=myunit
+#Group=myunit
+
+ExecStart=/opt/elwiki/run.sh
+#ExecStop=
+#ExecReload=
+#TimeoutSec=30
+
+#StandardOutput=syslog
+#StandardError=syslog
+#SyslogIdentifier=%n
+
+[Install]
+WantedBy=multi-user.target

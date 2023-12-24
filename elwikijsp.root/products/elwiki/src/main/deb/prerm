@@ -1,0 +1,19 @@
+# prerm script for elwiki
+case "$1" in
+    purge|remove|abort-install|disappear)
+        systemctl is-active --quiet elwiki && systemctl stop elwiki &>/dev/null || :
+        systemctl disable elwiki
+        systemctl daemon-reload
+        [ -d /opt/elwiki ] && rm -rf /opt/elwiki
+    ;;
+
+    upgrade|failed-upgrade|abort-upgrade)
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

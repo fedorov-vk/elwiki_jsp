@@ -9,9 +9,7 @@
 		<location path="/home/repository/eclipse/releases/2022-12" type="Directory"/>
 	</locations>
 	<includeBundles>
-		<plugin id="org.eclipse.equinox.http.registry"/>
 		<plugin id="com.google.gson" version="2.9.1"/>
-		<plugin id="org.eclipse.equinox.http.registry.source"/>
 		<plugin id="com.sun.el"/>
 		<plugin id="com.sun.el.source"/>
 		<plugin id="jakarta.servlet-api"/>
@@ -106,6 +104,8 @@
 		<plugin id="org.eclipse.equinox.console.source"/>
 		<plugin id="org.eclipse.equinox.event.source"/>
 		<plugin id="org.eclipse.equinox.http.jetty.source"/>
+		<plugin id="org.eclipse.equinox.http.registry"/>
+		<plugin id="org.eclipse.equinox.http.registry.source"/>
 		<plugin id="org.eclipse.equinox.http.servlet.source"/>
 		<plugin id="org.eclipse.equinox.jsp.jasper.registry.source"/>
 		<plugin id="org.eclipse.equinox.jsp.jasper.source"/>

@@ -1,0 +1,4 @@
+# postrm script for elwiki
+echo --FVK postrm--
+
+exit 0

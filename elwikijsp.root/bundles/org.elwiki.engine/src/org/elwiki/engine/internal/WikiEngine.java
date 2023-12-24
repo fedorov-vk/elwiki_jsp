@@ -148,7 +148,7 @@ public class WikiEngine implements Engine {
 			}
 		}
 	}
-	
+
 	/**
 	 * Creates ServiceTracker for tracking component of Session type.
 	 * 
@@ -264,8 +264,8 @@ public class WikiEngine implements Engine {
 		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
 
 		Set<Object> managers = new HashSet<>(this.managers.values());
-		for(Object managerInstance : managers) {
-			if(managerInstance instanceof WikiManager wikiManager) {
+		for (Object managerInstance : managers) {
+			if (managerInstance instanceof WikiManager wikiManager) {
 				try {
 					wikiManager.initialize();
 				} catch (Exception e) {

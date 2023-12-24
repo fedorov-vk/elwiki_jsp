@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>elwiki</artifactId>
+	<packaging>eclipse-repository</packaging>
+	<name>FVK Elwiki product</name>
+	<description>FVK Elwiki product creator</description>
+	<parent>
+		<groupId>elwiki</groupId>
+		<artifactId>products</artifactId>
+		<version>1.0.0</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<build>
+		<plugins>
+			<!-- enable tycho build extension -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+			</plugin>
+
+			<!-- Configure qualifier replacement -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+			</plugin>
+
+			<!-- Configure the p2 director -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Make tar archive (before - files copy,rename) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resources.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/elwiki</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/products/elwiki/linux/gtk/x86_64</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources_script</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/elwiki</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/resources</directory>
+									<includes>
+										<include>elwiki.service</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<finalName>elwiki</finalName>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Make deb package -->
+			<plugin>
+				<groupId>com.aerse.maven</groupId>
+				<artifactId>deb-maven-plugin</artifactId>
+				<version>1.18</version>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>package</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<debBaseDir>${project.basedir}/src/main/deb</debBaseDir>
+					<unixUserId>vfedorov</unixUserId>
+					<unixGroupId>users</unixGroupId>
+					<installDir>/tmp/</installDir>
+					<osDependencies></osDependencies>
+					<customCopyRightFile>${project.basedir}/src/main/resources/customText.txt</customCopyRightFile>
+					<generateVersion>false</generateVersion>
+					<attachArtifact>false</attachArtifact>
+					<javaServiceWrapper>false</javaServiceWrapper>
+					<fileSets>
+						<!--
+						<fileSet>
+							<source>${basedir}/src/main/deb</source>
+							<target>/</target>
+						</fileSet>
+						-->
+						<fileSet>
+							<source>${project.build.directory}/elwiki-bundle.tar</source>
+							<target>elwiki.tar</target>
+						</fileSet>
+					</fileSets>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

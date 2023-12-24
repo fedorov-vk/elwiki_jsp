@@ -51,8 +51,6 @@ public class JsonDeserialiser {
 				.registerTypeAdapter(Date.class, new DateConverter())
 				.create(); //@formatter:on
 
-		// Writer writer = new FileWriter(JsonConstants.FILE_NAME);
-
 		try (Reader input = new FileReader(workPath.append(PersistConstants.FILE_NAME).toFile())) {
 			gson.fromJson(input, PagesStore.class);
 		}

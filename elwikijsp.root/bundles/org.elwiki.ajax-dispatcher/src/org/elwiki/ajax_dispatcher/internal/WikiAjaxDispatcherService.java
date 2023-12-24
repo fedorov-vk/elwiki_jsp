@@ -28,12 +28,11 @@ import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -43,7 +42,7 @@ import org.osgi.service.event.EventHandler;
 /**
  * This provides service for registering HttpServlet classes. need to be registered using
  * {@link WikiAjaxDispatcherService#registerServlet(WikiAjaxServlet)}. <br/>
- * Servlet {@link WikiAjaxDispatcherServlet} handling /ajax/<ClassName> requests as a simple
+ * Servlet {@link WikiAjaxDispatcherService} handling /ajax/<ClassName> requests as a simple
  * ajax functionality.
  */
 //@formatter:off
@@ -58,8 +57,6 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManage
 
 	private static final Map<String, AjaxServletContainer> ajaxServlets = new ConcurrentHashMap<>();
 
-	private String PATH_AJAX = "/ajax/";
-
 	// -- OSGi service handling ----------------------(start)--
 
 	/** Stores configuration. */
@@ -69,6 +66,11 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManage
 	@WikiServiceReference
 	public Engine m_engine;
 
+	@Activate
+	protected void startup() {
+		log.debug("«web» start " + WikiAjaxDispatcherService.class.getSimpleName());
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 *
@@ -79,9 +81,6 @@ public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManage
 	 */
 	@Override
 	public  void initialize() throws WikiException {
-		IPreferenceStore prefs = this.wikiConfiguration.getWikiPreferences();
-		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax")
-				+ "/";
 		log.debug("«initialized» " + WikiAjaxDispatcherService.class.getSimpleName());
 	}
 

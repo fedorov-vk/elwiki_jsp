@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>dwe.data</module>
+		<module>org.elwiki.manager.importer</module>
 <!--
 		<module>com.opcoach.e4.preferences.mainmenu</module>
 -->

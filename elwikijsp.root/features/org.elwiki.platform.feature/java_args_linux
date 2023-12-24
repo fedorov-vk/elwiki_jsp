@@ -1,0 +1,23 @@
+-Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true
+-Declipse.ignoreApp=true
+-Dosgi.noShutdown=true
+--add-modules=ALL-SYSTEM
+-Djava.security.manager=allow
+-Dfile.encoding=UTF-8
+-Dstdout.encoding=UTF-8
+-Dstderr.encoding=UTF-8
+-XX:+ShowCodeDetailsInExceptionMessages
+#-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000
+-Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/
+-Dorg.osgi.service.http.port=8088
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+-Dstorage.cdo.port=2039
+-classpath plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar:
+org.eclipse.equinox.launcher.Main
+-configuration file:configuration/
+-os linux
+-ws gtk
+-arch x86_64
+-nl en_US
+-consoleLog
+-console 10008

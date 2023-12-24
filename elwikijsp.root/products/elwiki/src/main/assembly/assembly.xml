@@ -1,0 +1,15 @@
+<assembly>
+	<id>bundle</id>
+	<formats>
+		<format>tar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}/elwiki</directory>
+			<outputDirectory>/elwiki</outputDirectory>
+			<!-- <fileMode>0755</fileMode> -->
+			<directoryMode>0755</directoryMode>
+		</fileSet>
+	</fileSets>
+</assembly>
