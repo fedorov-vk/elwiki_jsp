@@ -479,13 +479,10 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * @return {@code true} or {@code false}.
 	 */
 	@Override
-	public boolean getBooleanWikiProperty(final String key, final boolean defValue) {
-		final String bool = getVariable(key);
-		if (bool != null) {
-			return BooleanUtils.toBooleanObject(bool);
-		}
+	public boolean getBooleanWikiProperty(String key, boolean defValue) {
+		var value = BooleanUtils.toBooleanObject((String) getVariable(key));
 
-		return wikiConfiguration.getBooleanProperty(key, defValue);
+		return (value != null) ? value : wikiConfiguration.getBooleanProperty(key, defValue);
 	}
 
 	/**

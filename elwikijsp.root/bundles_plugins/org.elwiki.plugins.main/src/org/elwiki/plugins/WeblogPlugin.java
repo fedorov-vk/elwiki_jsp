@@ -234,7 +234,8 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 			startDay = context.getHttpParameter("weblog." + PARAM_STARTDATE);
 		}
 
-		if (BooleanUtils.toBooleanObject(params.get(PARAM_ALLOWCOMMENTS))) {
+		var value = BooleanUtils.toBooleanObject(params.get(PARAM_ALLOWCOMMENTS));
+		if (value != null && value) {
 			hasComments = true;
 		}
 

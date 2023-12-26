@@ -232,7 +232,9 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 			return false;
 		}
 
-		return !this.pageManager.pageExistsByName(page) ^ BooleanUtils.toBooleanObject(exists);
+		var value = BooleanUtils.toBooleanObject(exists);
+		boolean isExists = (value != null) ? value : false;
+		return !this.pageManager.pageExistsByName(page) ^ isExists;
 	}
 
 	private boolean checkVarExists(String varContent, String exists) {
@@ -240,7 +242,9 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 			return false;
 		}
 
-		return varContent == null ^ BooleanUtils.toBooleanObject(exists);
+		var value = BooleanUtils.toBooleanObject(exists);
+		boolean isExists = (value != null) ? value : false;
+		return varContent == null ^ isExists;
 	}
 
 	private boolean checkGroup(WikiContext context, String group) {

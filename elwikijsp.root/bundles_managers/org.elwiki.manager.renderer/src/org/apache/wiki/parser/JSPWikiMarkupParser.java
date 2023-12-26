@@ -230,7 +230,8 @@ public class JSPWikiMarkupParser extends MarkupParser {
         final String cclinks = ":FVK:"; //:FVK: m_context.getPage().getAttribute( PROP_CAMELCASELINKS );
 
         if( cclinks != null ) {
-            m_camelCaseLinks = BooleanUtils.toBooleanObject(cclinks);
+        	var value = BooleanUtils.toBooleanObject(cclinks);
+            m_camelCaseLinks = (value != null)? value : false;
         } else {
             m_camelCaseLinks  = this.wikiConfig.getBooleanProperty( PROP_CAMELCASELINKS, m_camelCaseLinks );
         }

@@ -502,7 +502,8 @@ public class WikiConfiguration implements IWikiConfiguration {
 			return defval;
 		}
 
-		return BooleanUtils.toBooleanObject(val);
+		var value = BooleanUtils.toBooleanObject(val);
+		return (value != null) ? value : false;
 	}
 
 	public int getIntegerProperty(final String key, final int defVal) {

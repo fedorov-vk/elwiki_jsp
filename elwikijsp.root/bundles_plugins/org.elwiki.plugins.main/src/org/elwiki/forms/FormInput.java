@@ -85,8 +85,10 @@ public class FormInput extends FormElement {
         // map, prefix the variable name here. It will be stripped
         // when the handler plugin is executed.
         
-        final Element field = XhtmlUtil.input(inputType,HANDLERPARAM_PREFIX + inputName,inputValue);
-        field.setAttribute( XHTML.ATTR_class, String.valueOf(BooleanUtils.toBooleanObject(checked) || "checked".equalsIgnoreCase( checked ) ) );
+		final Element field = XhtmlUtil.input(inputType, HANDLERPARAM_PREFIX + inputName, inputValue);
+		var value = BooleanUtils.toBooleanObject(checked);
+		boolean isChecked = (value != null) ? value : false;
+		field.setAttribute(XHTML.ATTR_class, String.valueOf(isChecked || "checked".equalsIgnoreCase(checked)));
 
         final String oldValue = previousValues.get( inputName );
         if ( oldValue != null ) {

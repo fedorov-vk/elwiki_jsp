@@ -307,7 +307,8 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 			return "";
 		}
 
-		boolean debug = BooleanUtils.toBooleanObject(params.get(PARAM_DEBUG));
+		var value = BooleanUtils.toBooleanObject(params.get(PARAM_DEBUG));
+		boolean debug = (value != null) ? value : false;
 		try {
 			//   Get...
 			WikiPlugin plugin = getWikiPlugin(pluginName, context);

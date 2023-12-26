@@ -189,7 +189,8 @@ public class CommentCmdCode extends CmdCode {
 					allCommentText.append("\n\n%%signature\n" + signature + ", " + fmt.format(cal.getTime()) + "\n/%");
 				}
 
-				if (BooleanUtils.toBooleanObject(remember)) {
+				var isRemember = BooleanUtils.toBooleanObject(remember);
+				if (isRemember != null && isRemember) {
 					if (link != null) {
 						Cookie linkcookie = new Cookie("link", TextUtil.urlEncodeUTF8(link));
 						linkcookie.setMaxAge(1001 * 24 * 60 * 60);

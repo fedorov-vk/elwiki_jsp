@@ -97,7 +97,8 @@ public class CounterPlugin implements WikiPlugin {
 
 		// check if we want to hide the result (just count, don't show result on the page
 		String showObj = params.get(PARAM_SHOW_RESULT);
-		boolean show = (showObj != null) ? show = BooleanUtils.toBooleanObject(showObj) : DEFAULT_SHOW_RESULT;
+		var value = BooleanUtils.toBooleanObject(showObj);
+		boolean show = (value != null) ? value : DEFAULT_SHOW_RESULT;
 
 		if (show) {
 			return val.toString();
