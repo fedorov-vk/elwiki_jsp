@@ -40,9 +40,6 @@ import org.h2.jdbcx.JdbcDataSource;
  */
 abstract class Repository implements IPasswordCredentialsProvider {
 
-	//:FVK: workaround (is it temporary?)	
-	private static final String SYSPROP_H2_DATABASE_PLACE = "elwiki.h2.database.place";
-
 	private String name = "repo_elwiki";
 
 	private boolean tcpDisabled = false;
@@ -96,10 +93,7 @@ abstract class Repository implements IPasswordCredentialsProvider {
 		session.close();
 	}
 
-	private String getFolder() {
-		String path = System.getProperties().getProperty(SYSPROP_H2_DATABASE_PLACE, null);
-		return path;
-	}
+	abstract protected String getFolder();
 
 	/**
 	 * Repository name.

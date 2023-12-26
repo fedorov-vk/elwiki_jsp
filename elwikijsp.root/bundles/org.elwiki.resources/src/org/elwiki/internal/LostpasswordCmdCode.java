@@ -19,8 +19,8 @@ import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.url0.URLConstructor;
-import org.apache.wiki.util.MailUtil;
 import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.util0.MailUtil;
 import org.eclipse.jdt.annotation.NonNull;
 
 public class LostpasswordCmdCode extends CmdCode {
@@ -90,7 +90,7 @@ public class LostpasswordCmdCode extends CmdCode {
             String mailMessage = MessageFormat.format( rb.getString( "lostpwd.newpassword.email" ), args );
 
             Object[] args2 = { applicationName };
-            MailUtil.sendMessage( wiki.getWikiPreferences(), 
+            MailUtil.sendMessage( wiki.getWikiConfiguration(), 
             		              email, 
             		              MessageFormat.format( rb.getString( "lostpwd.newpassword.subject" ), args2 ),
                                   mailMessage );

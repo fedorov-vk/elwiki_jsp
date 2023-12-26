@@ -26,6 +26,7 @@ import org.apache.wiki.api.diff.DiffProvider;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -87,7 +88,8 @@ public class ExternalDiffProvider implements DiffProvider {
      */
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
-        m_diffCommand = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_DIFFCOMMAND, null);
+    	IWikiConfiguration wikiConfig = engine.getWikiConfiguration(); 
+        m_diffCommand = wikiConfig.getStringProperty(PROP_DIFFCOMMAND, null);
         if( m_diffCommand == null || m_diffCommand.trim().equals( "" ) ) {
             throw new NoRequiredPropertyException( "ExternalDiffProvider missing required property", PROP_DIFFCOMMAND );
         }

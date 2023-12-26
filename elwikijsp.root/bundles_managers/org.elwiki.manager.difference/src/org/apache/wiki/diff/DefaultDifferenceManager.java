@@ -87,9 +87,8 @@ public class DefaultDifferenceManager implements DifferenceManager, WikiManager,
 	// -- OSGi service handling ------------------------(end)--
 
     private void loadProvider() {
-        final String providerClassName = TextUtil.getStringProperty(
-        		this.wikiConfiguration.getWikiPreferences(),
-        		PROP_DIFF_PROVIDER, TraditionalDiffProvider.class.getName() );
+		final String providerClassName = wikiConfiguration.getStringProperty(PROP_DIFF_PROVIDER,
+				TraditionalDiffProvider.class.getName());
         /*:FVK:
         try {
             final Class< ? > providerClass = ClassUtil.findClass("org.apache.wiki.diff", providerClassName );

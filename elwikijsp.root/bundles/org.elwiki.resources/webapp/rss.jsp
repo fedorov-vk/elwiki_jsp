@@ -88,7 +88,7 @@ if (m_cacheManager.cacheExists(cacheName)) {
     StringBuffer result = new StringBuffer();
     SimpleDateFormat iso8601fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    Properties properties = wiki.getWikiPreferences();
+    Properties properties = wiki.getWikiConfiguration().getWikiPreferences();
     String channelDescription = TextUtil.getRequiredProperty( properties, RssGenerator.PROP_CHANNEL_DESCRIPTION );
     String channelLanguage    = TextUtil.getRequiredProperty( properties, RssGenerator.PROP_CHANNEL_LANGUAGE );
 

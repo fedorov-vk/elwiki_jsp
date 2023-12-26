@@ -6,11 +6,10 @@ Automatic-Module-Name: org.elwiki.configuration
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.configuration.bundle.ConfigurationActivator
 Require-Bundle: org.eclipse.core.resources,
- org.eclipse.jface;bundle-version="3.24.0",
- org.apache.log4j,
  org.eclipse.core.commands;bundle-version="3.9.700",
- org.elwiki.util,
- org.elwiki.configuration
+ org.apache.log4j,
+ org.apache.commons.lang3;bundle-version="3.12.0",
+ org.elwiki.util
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Import-Package: java.io;resolution:=optional,

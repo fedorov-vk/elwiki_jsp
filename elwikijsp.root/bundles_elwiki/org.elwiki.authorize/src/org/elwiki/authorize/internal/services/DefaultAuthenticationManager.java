@@ -42,7 +42,6 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.TimedCounterList;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -64,6 +63,7 @@ import org.elwiki.authorize.login.CookieAuthenticationLoginModule;
 import org.elwiki.authorize.login.WebContainerCallbackHandler;
 import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.framework.Bundle;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -130,6 +130,10 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	@Reference
 	protected EventAdmin eventAdmin;
 
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+
 	@WikiServiceReference
     private Engine m_engine = null;
 
@@ -143,13 +147,13 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	@Override
     public void initialize() throws WikiException {
         // Should we allow cookies for assertions? (default: yes)
-        m_allowsCookieAssertions = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_ALLOW_COOKIE_ASSERTIONS,true );
+        m_allowsCookieAssertions = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_ASSERTIONS, true);
 
         // Should we allow cookies for authentication? (default: no)
-        m_allowsCookieAuthentication = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_ALLOW_COOKIE_AUTH, false );
+        m_allowsCookieAuthentication = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_AUTH, false);
 
         // Should we throttle logins? (default: yes)
-        m_throttleLogins = TextUtil.getBooleanProperty( m_engine.getWikiPreferences(), PROP_LOGIN_THROTTLING, true );
+        m_throttleLogins = wikiConfiguration.getBooleanProperty(PROP_LOGIN_THROTTLING, true);
 
         // Look up the LoginModule class
         //final String loginModuleClassName = TextUtil.getStringProperty( props, PROP_LOGIN_MODULE, DEFAULT_LOGIN_MODULE );
@@ -165,7 +169,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		this.loginModuleClass = getLoginModule(loginModuleClassName);
 
         // Initialize the LoginModule options
-        initLoginModuleOptions( m_engine.getWikiPreferences() );
+        initLoginModuleOptions(wikiConfiguration.getWikiPreferences());
     }
 
     /**

@@ -245,22 +245,22 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
     @Override
     public void initialize( final Engine engine ) throws FilterException {
     	super.initialize(engine);
-    	IPreferenceStore properties = engine.getWikiPreferences();
-        m_forbiddenWordsPage = TextUtil.getStringProperty(properties, PROP_WORDLIST, m_forbiddenWordsPage );
-        m_forbiddenIPsPage = TextUtil.getStringProperty(properties, PROP_IPLIST, m_forbiddenIPsPage);
-        m_pageNameMaxLength = TextUtil.getStringProperty(properties, PROP_MAX_PAGENAME_LENGTH, m_pageNameMaxLength);
-        m_errorPage = TextUtil.getStringProperty(properties, PROP_ERRORPAGE, m_errorPage );
-        m_limitSinglePageChanges = TextUtil.getIntegerProperty( properties, PROP_PAGECHANGES, m_limitSinglePageChanges );
+    	IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
+        m_forbiddenWordsPage = wikiConfig.getStringProperty(PROP_WORDLIST, m_forbiddenWordsPage );
+        m_forbiddenIPsPage = wikiConfig.getStringProperty(PROP_IPLIST, m_forbiddenIPsPage);
+        m_pageNameMaxLength = wikiConfig.getStringProperty(PROP_MAX_PAGENAME_LENGTH, m_pageNameMaxLength);
+        m_errorPage = wikiConfig.getStringProperty(PROP_ERRORPAGE, m_errorPage );
+        m_limitSinglePageChanges = wikiConfig.getIntegerProperty( PROP_PAGECHANGES, m_limitSinglePageChanges );
         
-        m_limitSimilarChanges = TextUtil.getIntegerProperty( properties, PROP_SIMILARCHANGES, m_limitSimilarChanges );
+        m_limitSimilarChanges = wikiConfig.getIntegerProperty( PROP_SIMILARCHANGES, m_limitSimilarChanges );
 
-        m_maxUrls = TextUtil.getIntegerProperty( properties, PROP_MAXURLS, m_maxUrls );
-        m_banTime = TextUtil.getIntegerProperty( properties, PROP_BANTIME, m_banTime );
-        m_blacklist = TextUtil.getStringProperty(properties, PROP_BLACKLIST, m_blacklist );
+        m_maxUrls = wikiConfig.getIntegerProperty( PROP_MAXURLS, m_maxUrls );
+        m_banTime = wikiConfig.getIntegerProperty( PROP_BANTIME, m_banTime );
+        m_blacklist = wikiConfig.getStringProperty(PROP_BLACKLIST, m_blacklist );
 
-        m_ignoreAuthenticated = TextUtil.getBooleanProperty( properties, PROP_IGNORE_AUTHENTICATED, m_ignoreAuthenticated );
+        m_ignoreAuthenticated = wikiConfig.getBooleanProperty( PROP_IGNORE_AUTHENTICATED, m_ignoreAuthenticated );
 
-        m_useCaptcha = TextUtil.getStringProperty(properties, PROP_CAPTCHA, "" ).equals("asirra");
+        m_useCaptcha = wikiConfig.getStringProperty(PROP_CAPTCHA, "" ).equals("asirra");
 
         try {
             m_urlPattern = m_compiler.compile( URL_REGEXP );
@@ -269,8 +269,8 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
             throw new InternalWikiException( "Faulty pattern." , e);
         }
 
-        m_akismetAPIKey = TextUtil.getStringProperty( properties, PROP_AKISMET_API_KEY, m_akismetAPIKey );
-        m_stopAtFirstMatch = TextUtil.getStringProperty( properties, PROP_FILTERSTRATEGY, STRATEGY_EAGER ).equals( STRATEGY_EAGER );
+        m_akismetAPIKey = wikiConfig.getStringProperty( PROP_AKISMET_API_KEY, m_akismetAPIKey );
+        m_stopAtFirstMatch = wikiConfig.getStringProperty( PROP_FILTERSTRATEGY, STRATEGY_EAGER ).equals( STRATEGY_EAGER );
 
         log.info( "# Spam filter initialized.  Temporary ban time " + m_banTime +
                   " mins, max page changes/minute: " + m_limitSinglePageChanges );

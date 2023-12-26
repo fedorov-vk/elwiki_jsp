@@ -58,7 +58,8 @@ public class PingWeblogsComFilter extends BasePageFilter {
      */
     @Override
     public void initialize( final Engine engine ) {
-        m_pingURL = TextUtil.getStringProperty(engine.getWikiPreferences(), PROP_PINGURL, "http://rpc.weblogs.com/RPC2" );
+    	IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
+        m_pingURL = wikiConfig.getStringProperty(PROP_PINGURL, "http://rpc.weblogs.com/RPC2" );
     }
 
     /**

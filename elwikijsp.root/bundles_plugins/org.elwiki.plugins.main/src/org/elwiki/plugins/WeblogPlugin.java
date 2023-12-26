@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -224,7 +226,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 			if (days.equalsIgnoreCase("all")) {
 				numDays = Integer.MAX_VALUE;
 			} else {
-				numDays = TextUtil.parseIntParameter(days, DEFAULT_DAYS);
+				numDays = NumberUtils.toInt(days, DEFAULT_DAYS);
 			}
 		}
 
@@ -232,11 +234,11 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 			startDay = context.getHttpParameter("weblog." + PARAM_STARTDATE);
 		}
 
-		if (TextUtil.isPositive(params.get(PARAM_ALLOWCOMMENTS))) {
+		if (BooleanUtils.toBooleanObject(params.get(PARAM_ALLOWCOMMENTS))) {
 			hasComments = true;
 		}
 
-		maxEntries = TextUtil.parseIntParameter(params.get(PARAM_MAXENTRIES), Integer.MAX_VALUE);
+		maxEntries = NumberUtils.toInt(params.get(PARAM_MAXENTRIES), Integer.MAX_VALUE);
 
 		//
 		//  Determine the date range which to include.
@@ -337,7 +339,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 		buffer.append("</div>\n");
 		buffer.append("<div class=\"weblogentrybody\">\n");
 
-		int preview = TextUtil.parseIntParameter(params.get(PARAM_PREVIEW), 0);
+		int preview = NumberUtils.toInt(params.get(PARAM_PREVIEW), 0); 
 		if (preview > 0) {
 			//
 			// We start with the first 'preview' number of characters from the text,

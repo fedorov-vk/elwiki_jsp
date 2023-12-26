@@ -22,6 +22,7 @@ package org.elwiki.plugins;
 import java.security.Principal;
 import java.util.Map;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
@@ -39,7 +40,6 @@ import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
@@ -232,7 +232,7 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 			return false;
 		}
 
-		return !this.pageManager.pageExistsByName(page) ^ TextUtil.isPositive(exists);
+		return !this.pageManager.pageExistsByName(page) ^ BooleanUtils.toBooleanObject(exists);
 	}
 
 	private boolean checkVarExists(String varContent, String exists) {
@@ -240,7 +240,7 @@ public class IfPlugin implements WikiPlugin, InitializablePlugin {
 			return false;
 		}
 
-		return varContent == null ^ TextUtil.isPositive(exists);
+		return varContent == null ^ BooleanUtils.toBooleanObject(exists);
 	}
 
 	private boolean checkGroup(WikiContext context, String group) {

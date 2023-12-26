@@ -55,6 +55,7 @@ import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -210,15 +211,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	public void initialize() throws WikiException {
 		log.debug("Initialize.");
 
-		IPreferenceStore properties = this.wikiConfiguration.getWikiPreferences();
-
 		//
 		//  JAAS authorization continues.
 		//
-		String authorizerName = properties.getString(PROP_AUTHORIZER);
-		if (authorizerName.length() == 0) {
-			authorizerName = DEFAULT_AUTHORIZER;
-		}
+		String authorizerName = wikiConfiguration.getStringProperty(PROP_AUTHORIZER, DEFAULT_AUTHORIZER);
 		this.m_authorizer = getAuthorizerImplementation(authorizerName);
 		/*:FVK:
 		this.m_authorizer.initialize(this.m_engine);

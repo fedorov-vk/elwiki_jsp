@@ -87,8 +87,7 @@ public class NotePlugin implements WikiPlugin, InitializablePlugin {
 	}
 
 	private String imageUrl(WikiContext ctx) {
-		String commentImage = TextUtil.getStringProperty(wikiConfiguration.getWikiPreferences(), PROP_NOTE_IMAGE,
-				DEFAULT_NOTE_IMAGE);
+		String commentImage = wikiConfiguration.getStringProperty(PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE);
 		commentImage = "images/" + commentImage;
 
 		String templateDir = this.wikiConfiguration.getTemplateDir();

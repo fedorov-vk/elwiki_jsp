@@ -107,20 +107,16 @@ public class DefaultRssGenerator implements RssGenerator, WikiManager, EventHand
 
 	@Activate
 	protected void startup(ComponentContext componentContext) {
-		isRequiredRssGenerator = TextUtil.getBooleanProperty(//
-				this.wikiConfiguration.getWikiPreferences(),
-				RssGenerator.PROP_GENERATE_RSS, false);
+		isRequiredRssGenerator = wikiConfiguration.getBooleanProperty(RssGenerator.PROP_GENERATE_RSS, false);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
 		if (isRequiredRssGenerator) {
-			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-			m_channelDescription = TextUtil.getStringProperty(preferences, PROP_CHANNEL_DESCRIPTION,
-					m_channelDescription);
-			m_channelLanguage = TextUtil.getStringProperty(preferences, PROP_CHANNEL_LANGUAGE, m_channelLanguage);
-			m_rssFile = TextUtil.getStringProperty(preferences, DefaultRssGenerator.PROP_RSSFILE, "rss.rdf");
+			m_channelDescription = wikiConfiguration.getStringProperty(PROP_CHANNEL_DESCRIPTION, m_channelDescription);
+			m_channelLanguage = wikiConfiguration.getStringProperty(PROP_CHANNEL_LANGUAGE, m_channelLanguage);
+			m_rssFile = wikiConfiguration.getStringProperty(DefaultRssGenerator.PROP_RSSFILE, "rss.rdf");
 		}
 	}
 
@@ -137,8 +133,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiManager, EventHand
 			} else { // relative path names are anchored from the webapp root path
 				rssFile = new File(m_engine.getRootPath(), m_rssFile);
 			}
-			IPreferenceStore preferences = wikiConfiguration.getWikiPreferences();
-			int rssInterval = TextUtil.getIntegerProperty(preferences, DefaultRssGenerator.PROP_INTERVAL, 3600);
+			int rssInterval = wikiConfiguration.getIntegerProperty(DefaultRssGenerator.PROP_INTERVAL, 3600);
 
 			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 			Actor rssActor = new RssActor(m_engine, rssFile);

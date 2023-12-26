@@ -62,7 +62,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki_data.AttachmentContent;
@@ -110,6 +110,10 @@ public class AttachmentServlet extends HttpServlet {
 	/** Default expiry period is 1 day */
 	protected static final long DEFAULT_EXPIRY = 1 * 24 * 60 * 60 * 1000;
 
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
+	
 	@Reference
 	private Engine m_engine;
 
@@ -150,9 +154,8 @@ public class AttachmentServlet extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		IPreferenceStore props = m_engine.getWikiPreferences();
-		String allowed = TextUtil.getStringProperty(props, AttachmentManager.PROP_ALLOWEDEXTENSIONS, null);
-		m_maxSize = TextUtil.getIntegerProperty(props, AttachmentManager.PROP_MAXSIZE, Integer.MAX_VALUE);
+		String allowed = wikiConfiguration.getStringProperty(AttachmentManager.PROP_ALLOWEDEXTENSIONS, null);
+		m_maxSize = wikiConfiguration.getIntegerProperty(AttachmentManager.PROP_MAXSIZE, Integer.MAX_VALUE);
 
 		if (allowed != null && allowed.length() > 0) {
 			m_allowedPatterns = allowed.toLowerCase().split("\\s");
@@ -160,7 +163,7 @@ public class AttachmentServlet extends HttpServlet {
 			m_allowedPatterns = new String[0];
 		}
 
-		String forbidden = TextUtil.getStringProperty(props, AttachmentManager.PROP_FORBIDDENEXTENSIONS, null);
+		String forbidden = wikiConfiguration.getStringProperty(AttachmentManager.PROP_FORBIDDENEXTENSIONS, null);
 		if (forbidden != null && forbidden.length() > 0) {
 			m_forbiddenPatterns = forbidden.toLowerCase().split("\\s");
 		} else {

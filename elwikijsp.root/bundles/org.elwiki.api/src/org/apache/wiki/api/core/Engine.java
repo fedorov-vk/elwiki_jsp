@@ -35,7 +35,6 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 
@@ -110,15 +109,6 @@ public interface Engine {
      * @return {@code true} if it has, {@code false} otherwise.
      */
     boolean isConfigured();
-
-    /**
-     *  Returns the set of properties that the Engine was initialized with.  Note that this method returns a direct reference, so it's
-     *  possible to manipulate the properties.  However, this is not advised unless you really know what you're doing.
-     *
-     *  @return The wiki properties
-     */
-	@Deprecated
-    IPreferenceStore getWikiPreferences();
 
     /**
      *  Returns the moment when this engine was started.

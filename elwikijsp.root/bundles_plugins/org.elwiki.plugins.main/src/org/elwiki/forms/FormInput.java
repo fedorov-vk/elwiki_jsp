@@ -19,10 +19,10 @@
 
 package org.elwiki.forms;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.elwiki.plugins.internal.PluginsActivator;
@@ -86,7 +86,7 @@ public class FormInput extends FormElement {
         // when the handler plugin is executed.
         
         final Element field = XhtmlUtil.input(inputType,HANDLERPARAM_PREFIX + inputName,inputValue);
-        field.setAttribute( XHTML.ATTR_class, String.valueOf( TextUtil.isPositive( checked ) || "checked".equalsIgnoreCase( checked ) ) );
+        field.setAttribute( XHTML.ATTR_class, String.valueOf(BooleanUtils.toBooleanObject(checked) || "checked".equalsIgnoreCase( checked ) ) );
 
         final String oldValue = previousValues.get( inputName );
         if ( oldValue != null ) {

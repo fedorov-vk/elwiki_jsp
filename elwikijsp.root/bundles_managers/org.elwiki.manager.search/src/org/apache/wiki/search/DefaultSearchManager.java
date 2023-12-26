@@ -285,8 +285,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 
     private void loadSearchProvider() {
         // See if we're using Lucene, and if so, ensure that its index directory is up to date.
-    	IPreferenceStore prefStore = this.wikiConfiguration.getWikiPreferences();
-        final String providerClassName = TextUtil.getStringProperty(prefStore, PROP_SEARCHPROVIDER, DEFAULT_SEARCHPROVIDER );
+        final String providerClassName = wikiConfiguration.getStringProperty(PROP_SEARCHPROVIDER, DEFAULT_SEARCHPROVIDER );
 
         /*:FVK: - old code
         try {

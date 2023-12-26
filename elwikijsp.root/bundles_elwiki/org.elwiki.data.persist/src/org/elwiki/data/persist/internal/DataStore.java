@@ -64,6 +64,11 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 
 	// -- OSGi service handling ------------------------(end)--
 
+	@Override
+	protected String getFolder() {
+		return wikiConfiguration.getDbPlace();
+	}
+
 	private void createResource(String path, EObject eObject) {
 		CDOTransaction transaction = this.session.openTransaction();
 		try {

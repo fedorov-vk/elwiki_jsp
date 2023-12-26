@@ -43,6 +43,7 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.Assert;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -122,8 +123,9 @@ public class CachingProvider implements PageProvider {
 
         // engine is used for getting the search engine
         m_engine = engine;
+        IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
 
-        final String cacheName = engine.getWikiConfiguration().getApplicationName() + "." + CACHE_NAME;
+        final String cacheName = wikiConfig.getApplicationName() + "." + CACHE_NAME;
         if (m_cacheManager.cacheExists(cacheName)) {
             m_cache = m_cacheManager.getCache(cacheName);
         } else {
@@ -132,7 +134,7 @@ public class CachingProvider implements PageProvider {
             m_cacheManager.addCache(m_cache);
         }
 
-        final String textCacheName = engine.getWikiConfiguration().getApplicationName() + "." + TEXTCACHE_NAME;
+        final String textCacheName = wikiConfig.getApplicationName() + "." + TEXTCACHE_NAME;
         if (m_cacheManager.cacheExists(textCacheName)) {
             m_textCache= m_cacheManager.getCache(textCacheName);
         } else {
@@ -141,7 +143,7 @@ public class CachingProvider implements PageProvider {
             m_cacheManager.addCache(m_textCache);
         }
 
-        final String historyCacheName = engine.getWikiConfiguration().getApplicationName() + "." + HISTORYCACHE_NAME;
+        final String historyCacheName = wikiConfig.getApplicationName() + "." + HISTORYCACHE_NAME;
         if (m_cacheManager.cacheExists(historyCacheName)) {
             m_historyCache= m_cacheManager.getCache(historyCacheName);
         } else {
@@ -158,7 +160,7 @@ public class CachingProvider implements PageProvider {
         //
         final String classname;
         try {
-            classname = TextUtil.getRequiredProperty( engine.getWikiPreferences(), PageManager.PROP_PAGEPROVIDER );
+            classname = wikiConfig.getRequiredProperty(PageManager.PROP_PAGEPROVIDER);
         } catch( final NoSuchElementException e ) {
             throw new NoRequiredPropertyException( e.getMessage(), PageManager.PROP_PAGEPROVIDER );
         }

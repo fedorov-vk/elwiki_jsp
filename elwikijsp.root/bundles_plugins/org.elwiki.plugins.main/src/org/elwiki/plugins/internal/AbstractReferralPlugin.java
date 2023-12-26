@@ -19,6 +19,7 @@
 package org.elwiki.plugins.internal;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.GlobCompiler;
 import org.apache.oro.text.regex.MalformedPatternException;
@@ -30,10 +31,8 @@ import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.core.Engine;
-import org.elwiki_data.PageReference;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.parser0.MarkupParser;
@@ -154,7 +153,7 @@ public abstract class AbstractReferralPlugin implements WikiPlugin {
     	this.renderingManager = m_engine.getManager(RenderingManager.class);
 
     	m_dateFormat = Preferences.getDateFormat( context, TimeFormat.DATETIME );
-    	m_maxwidth = TextUtil.parseIntParameter( params.get( PARAM_MAXWIDTH ), Integer.MAX_VALUE );
+		m_maxwidth = NumberUtils.toInt(params.get(PARAM_MAXWIDTH), Integer.MAX_VALUE);
         if( m_maxwidth < 0 ) m_maxwidth = 0;
 
         String s = params.get( PARAM_SEPARATOR );

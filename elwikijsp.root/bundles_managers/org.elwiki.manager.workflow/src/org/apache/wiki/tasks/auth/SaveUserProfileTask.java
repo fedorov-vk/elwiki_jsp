@@ -9,7 +9,7 @@ import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.UserProfile;
-import org.apache.wiki.util.MailUtil;
+import org.apache.wiki.util0.MailUtil;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
@@ -68,7 +68,7 @@ public class SaveUserProfileTask extends Task {
                                                      profile.getFullname(),
                                                      profile.getEmail(),
                                                      m_engine.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), null, null ) );
-                    MailUtil.sendMessage( m_engine.getWikiPreferences(), to, subject, content );
+					MailUtil.sendMessage(m_engine.getWikiConfiguration(), to, subject, content);
                 } catch ( final AddressException e) {
                     LOG.debug( e.getMessage(), e );
                 } catch ( final MessagingException me ) {

@@ -56,7 +56,7 @@ public abstract class MarkupParser {
     /** Current position in reader stream. */
     private int m_pos = -1;
 
-    protected IWikiConfiguration wikiConfig;
+    protected final IWikiConfiguration wikiConfig;
     protected Engine m_engine;
     protected WikiContext m_context;
 

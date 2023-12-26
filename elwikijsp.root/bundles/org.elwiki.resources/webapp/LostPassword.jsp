@@ -72,7 +72,7 @@
             String mailMessage = MessageFormat.format( rb.getString( "lostpwd.newpassword.email" ), args );
 
             Object[] args2 = { wiki.getApplicationName() };
-            MailUtil.sendMessage( wiki.getWikiPreferences(), 
+            MailUtil.sendMessage( wiki.getWikiConfiguration().getWikiPreferences(), 
             		              email, 
             		              MessageFormat.format( rb.getString( "lostpwd.newpassword.subject" ), args2 ),
                                   mailMessage );

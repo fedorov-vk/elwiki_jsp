@@ -210,7 +210,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 
 	@Reference
 	private EventAdmin eventAdmin;
-	
+
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;

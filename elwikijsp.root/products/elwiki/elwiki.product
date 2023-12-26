@@ -152,6 +152,7 @@
       <plugin id="org.elwiki.data.persist" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.engine" autoStart="true" startLevel="6" />
       <plugin id="org.elwiki.log4.definition" autoStart="true" startLevel="3" />
+      <plugin id="org.elwiki.mail" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.attachment" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.difference" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.filters" autoStart="true" startLevel="3" />

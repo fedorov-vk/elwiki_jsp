@@ -79,8 +79,6 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	 */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
-
 		wikiAjaxDispatcher.registerServlet(JSONWikiScopeTracker.JSON_WIKISCOPE, new JSONWikiScopeTracker(m_engine));
 	}
 

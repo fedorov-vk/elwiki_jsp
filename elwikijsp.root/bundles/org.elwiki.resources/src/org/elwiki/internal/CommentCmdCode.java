@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -188,7 +189,7 @@ public class CommentCmdCode extends CmdCode {
 					allCommentText.append("\n\n%%signature\n" + signature + ", " + fmt.format(cal.getTime()) + "\n/%");
 				}
 
-				if (TextUtil.isPositive(remember)) {
+				if (BooleanUtils.toBooleanObject(remember)) {
 					if (link != null) {
 						Cookie linkcookie = new Cookie("link", TextUtil.urlEncodeUTF8(link));
 						linkcookie.setMaxAge(1001 * 24 * 60 * 60);

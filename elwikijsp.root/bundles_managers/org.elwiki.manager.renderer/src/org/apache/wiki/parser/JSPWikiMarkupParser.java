@@ -36,6 +36,7 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -58,7 +59,6 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.parser0.Heading;
 import org.apache.wiki.parser0.HeadingListener;
 import org.apache.wiki.parser0.LinkParser;
@@ -230,9 +230,9 @@ public class JSPWikiMarkupParser extends MarkupParser {
         final String cclinks = ":FVK:"; //:FVK: m_context.getPage().getAttribute( PROP_CAMELCASELINKS );
 
         if( cclinks != null ) {
-            m_camelCaseLinks = TextUtil.isPositive( cclinks );
+            m_camelCaseLinks = BooleanUtils.toBooleanObject(cclinks);
         } else {
-            m_camelCaseLinks  = TextUtil.getBooleanProperty( props, PROP_CAMELCASELINKS, m_camelCaseLinks );
+            m_camelCaseLinks  = this.wikiConfig.getBooleanProperty( PROP_CAMELCASELINKS, m_camelCaseLinks );
         }
 
         final Boolean wysiwygVariable = m_context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );

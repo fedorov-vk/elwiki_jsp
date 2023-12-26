@@ -22,12 +22,12 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki.plugins.internal.PluginsActivator;
 import org.elwiki_data.WikiPage;
@@ -59,7 +59,7 @@ public class ReferringUndefinedPagesPlugin extends AbstractReferralPlugin {
 
 			/* Parse parameters.
 			 */
-			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
+			int items = NumberUtils.toInt(params.get(PARAM_MAX), ALL_ITEMS);
 			String extras = params.get(PARAM_EXTRAS);
 			if (extras == null) {
 				extras = PluginsActivator.getMessage("referringundefinedpagesplugin.more",

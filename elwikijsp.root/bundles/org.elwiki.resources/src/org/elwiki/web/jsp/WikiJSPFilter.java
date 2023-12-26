@@ -28,6 +28,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.IWikiPreferences;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
@@ -116,8 +117,11 @@ public class WikiJSPFilter extends WikiServletFilter {
     @Override
     public void init( final FilterConfig config ) throws ServletException {
         super.init( config );
-        m_wiki_encoding = m_engine.getWikiPreferences().getString( IWikiPreferences.PROP_ENCODING );
-        useEncoding = !TextUtil.getBooleanProperty(getWikiConfiguration().getWikiPreferences(), Engine.PROP_NO_FILTER_ENCODING, false);
+        IWikiConfiguration wikiConfig = m_engine.getWikiConfiguration();
+        m_wiki_encoding = wikiConfig.getStringProperty(IWikiPreferences.PROP_ENCODING,
+        		IWikiPreferences.DEFAULT_ENCODING);
+        useEncoding = !wikiConfig.getBooleanProperty(Engine.PROP_NO_FILTER_ENCODING,
+        		false);
     }
 
     @Override

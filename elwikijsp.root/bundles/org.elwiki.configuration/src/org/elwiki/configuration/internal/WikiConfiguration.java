@@ -4,24 +4,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -46,14 +46,17 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	private static final Logger log = Logger.getLogger(WikiConfiguration.class);
 
-    /** The name used for the default template. The value is {@value}. */
-    private final String DEFAULT_TEMPLATE_NAME = "default";
-	
-	/** File name for properties of any interwiki references. Current value - {@value} */
-    private final String FILE_INTERWIKI_REFERENCES = "interwikirefs.properties";
+	/** The name used for the default template. The value is {@value}. */
+	private final String DEFAULT_TEMPLATE_NAME = "default";
 
-    /** Property for application name */
-    String PROP_APPNAME = "jspwiki.applicationName";
+	/** File name for properties of any interwiki references. Current value - {@value} */
+	private final String FILE_INTERWIKI_REFERENCES = "interwikirefs.properties";
+
+	/** Property for application name */
+	String PROP_APPNAME = "jspwiki.applicationName";
+
+	/** Store the file path to the H2 database. */
+	private IPath dbStorePath;
 
 	/** Store the file path to the page's attachment data. */
 	private IPath attachmentStorePath;
@@ -74,7 +77,10 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** If true, all titles will be cleaned. */
 	private boolean m_beautifyTitle;
 
-	/** Stores the template path. This is relative to "shapes". (:FVK: here  it is necessary to eliminate connection with resource plugin) */
+	/**
+	 * Stores the template path. This is relative to "shapes". (:FVK: here it is necessary to eliminate
+	 * connection with resource plugin)
+	 */
 	private String m_templateDir;
 
 	/** The default front page name. Defaults to "Main". */
@@ -87,7 +93,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 	private final IPreferenceStore prefs;
 
 	/** InterWiki references preferences map. */
-	private final Map<String,String> interwikiLinks = new HashMap<>();
+	private final Map<String, String> interwikiLinks = new HashMap<>();
 
 	/**
 	 * Stores wikiengine attributes.</br>
@@ -111,11 +117,16 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 		this.prefs = new ScopedPreferenceStore(InstanceScope.INSTANCE, cfgBundleName);
 		this.pathWorkspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-		
+		try {
+			checkDirectory(this.pathWorkspace.toFile(), "${workspace_loc}");
+		} catch (IOException e) {
+			log.error("Workspace directory can not used. It has problem :: " + e.getMessage());
+		}
+
 		// Read InterWiki links.
 		try (InputStream stream = //
 				FileLocator.openStream(ConfigurationActivator.getContext().getBundle(),
-				Path.fromPortableString(FILE_INTERWIKI_REFERENCES), false)) {
+						Path.fromPortableString(FILE_INTERWIKI_REFERENCES), false)) {
 			Properties config = new Properties();
 			config.load(stream);
 			for (Entry<Object, Object> entry : config.entrySet()) {
@@ -125,10 +136,16 @@ public class WikiConfiguration implements IWikiConfiguration {
 		} catch (IOException e) {
 			log.error("Failed to read InterWiki links", e);
 		}
-		
+
 		// :FVK: refactoring
-        m_useUTF8 = StandardCharsets.UTF_8.name().equals( TextUtil.getStringProperty( prefs, IWikiPreferences.PROP_ENCODING, StandardCharsets.ISO_8859_1.name() ) );
-		
+		m_useUTF8 = StandardCharsets.UTF_8.name()
+				.equals(getStringProperty(IWikiPreferences.PROP_ENCODING, StandardCharsets.ISO_8859_1.name()));
+
+	}
+
+	@Override
+	public String getDbPlace() {
+		return this.dbStorePath.toOSString();
 	}
 
 	@Override
@@ -165,7 +182,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return this.m_templateDir;
 	}
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	@Deprecated
 	public String getFrontPage() {
@@ -179,40 +196,40 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	// -- :FVK: refactoring (some global utility methods) ----------------------
 
-    /** {@inheritDoc} */
-    @Override
-    public String encodeName( final String pagename ) throws IOException {
-        try {
-            return URLEncoder.encode( pagename, m_useUTF8 ? "UTF-8" : "ISO-8859-1" );
-        } catch( final UnsupportedEncodingException e ) {
-            // :FVK: throw new InternalWikiException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked." , e);
-        	throw new IOException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String encodeName(final String pagename) throws IOException {
+		try {
+			return URLEncoder.encode(pagename, m_useUTF8 ? "UTF-8" : "ISO-8859-1");
+		} catch (final UnsupportedEncodingException e) {
+			// :FVK: throw new InternalWikiException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked." , e);
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public String decodeName( final String pagerequest ) throws IOException {
-        try {
-            return URLDecoder.decode( pagerequest, m_useUTF8 ? "UTF-8" : "ISO-8859-1" );
-        } catch( final UnsupportedEncodingException e ) {
-            //:FVK: throw new InternalWikiException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.", e);
-        	throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
-        }
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String decodeName(final String pagerequest) throws IOException {
+		try {
+			return URLDecoder.decode(pagerequest, m_useUTF8 ? "UTF-8" : "ISO-8859-1");
+		} catch (final UnsupportedEncodingException e) {
+			//:FVK: throw new InternalWikiException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.", e);
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public Charset getContentEncodingCs() {
-        if( m_useUTF8 ) {
-            return StandardCharsets.UTF_8;
-        }
-        return StandardCharsets.ISO_8859_1;
-    }
-    
+	/** {@inheritDoc} */
+	@Override
+	public Charset getContentEncodingCs() {
+		if (m_useUTF8) {
+			return StandardCharsets.UTF_8;
+		}
+		return StandardCharsets.ISO_8859_1;
+	}
+
 	// -- service support ---------------------------------
 
-    protected void startup(BundleContext bc) {
+	protected void startup(BundleContext bc) {
 		log.debug("** Startup ** Configuration ** Service **");
 
 		/*
@@ -250,6 +267,15 @@ public class WikiConfiguration implements IWikiConfiguration {
 		}
 		log.info("Working directory is: '" + this.pathWorkDir + "'");
 
+		// Finds H2 database directory or take the default (in the workspace place of Workbench).
+		try {
+			this.dbStorePath = getDirectoryPlace(IWikiPreferences.PROP_H2_DATABASE_PLACE);
+		} catch (Exception e) {
+			log.error("H2 database directory is assigned by default. Its definition in configuration have problems :: "
+					+ e.getMessage());
+			this.dbStorePath = this.pathWorkDir;
+		}
+
 		// Finds attachment`s directory or take the default (in the workspace place of Workbench).
 		try {
 			this.attachmentStorePath = getDirectoryPlace(IWikiPreferences.PROP_ATTACHMENTDIR);
@@ -257,8 +283,8 @@ public class WikiConfiguration implements IWikiConfiguration {
 			log.error("Attachment directory is assigned by default. Its definition in configuration have problems :: "
 					+ e.getMessage());
 			// default attachment directory of ElWiki - in the Workbench`s workspace area.
-			this.attachmentStorePath = this.pathWorkspace.append("pages_attachment");
-			
+			this.attachmentStorePath = this.pathWorkDir.append("pages_attachment");
+
 			// Create attachment subdirectory in the default workspace.
 			File dir = this.attachmentStorePath.toFile();
 			if (!dir.exists()) {
@@ -274,7 +300,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 		this.m_saveUserInfo = this.prefs.getBoolean(IWikiPreferences.PROP_STOREUSERNAME);
 
-		this.m_baseURL = this.prefs.getString(IWikiPreferences.PROP_BASEURL);
+		this.m_baseURL = getStringProperty(IWikiPreferences.PROP_BASEURL, IWikiPreferences.DEFAULT_BASEURL);
 
 		/* :FVK: if (!this.m_baseURL.endsWith("/")) {
 			this.m_baseURL = this.m_baseURL + "/";
@@ -285,19 +311,18 @@ public class WikiConfiguration implements IWikiConfiguration {
 		this.m_templateDir = this.prefs.getString(IWikiPreferences.PROP_TEMPLATEDIR);
 		enforceValidTemplateDirectory();
 
-		this.m_frontPage = TextUtil.getStringProperty(this.prefs, IWikiPreferences.PROP_FRONTPAGE, "Main" );
+		this.m_frontPage = getStringProperty(IWikiPreferences.PROP_FRONTPAGE, "Main");
 	}
 
 	/**
 	 * Checks if the template directory specified in the wiki's properties actually exists. If it
 	 * doesn't, then {@code m_templateDir} is set to {@link #DEFAULT_TEMPLATE_NAME}.
 	 * <p>
-	 * This checks the existence of the <tt>ViewTemplate.jsp</tt> file, which exists in every
-	 * template using {@code m_servletContext.getRealPath("/")}.
+	 * This checks the existence of the <tt>ViewTemplate.jsp</tt> file, which exists in every template
+	 * using {@code m_servletContext.getRealPath("/")}.
 	 * <p>
-	 * {@code m_servletContext.getRealPath("/")} can return {@code null} on certain
-	 * servers/conditions (f.ex, packed wars), an extra check against
-	 * {@code m_servletContext.getResource} is made.
+	 * {@code m_servletContext.getRealPath("/")} can return {@code null} on certain servers/conditions
+	 * (f.ex, packed wars), an extra check against {@code m_servletContext.getResource} is made.
 	 */
 	void enforceValidTemplateDirectory() {
 		if (m_templateDir.length() == 0) {
@@ -351,39 +376,35 @@ public class WikiConfiguration implements IWikiConfiguration {
 	}
 
 	/**
-	 * Gets string path of directory from preferences store and check it sanity for local file
-	 * system.
+	 * Gets string path of directory from preferences store and check it sanity for local file system.
 	 * 
 	 * @param preferenceKey
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	//TODO: - возвращаемый Exception трансформировать в ElWiki-ErrorException.
-	private IPath getDirectoryPlace(String preferenceKey) throws Exception {
-		IPath result = null;
-
-		String dir = prefs.getString(preferenceKey);
-		if (dir != null && dir.length()!=0 ) {
-			File fileDir = new File(dir);
-			if (!fileDir.exists()) {
-				throw new AccessDeniedException("Directory does not exist: " + dir);
-			}
-			if (!fileDir.canRead()) {
-				throw new AccessDeniedException("No permission to read directory: " + dir); 
-			}
-			if (!fileDir.canWrite()) {
-				throw new AccessDeniedException("No permission to write to directory: " + dir);
-			}
-			if (!fileDir.isDirectory()) {
-				throw new NotDirectoryException(preferenceKey + " does not point to a directory: " + dir);
-			}
-
-			result = new Path(fileDir.getCanonicalPath());
-		} else {
-			throw new Exception("Directory does not defined, by " + preferenceKey + "=<directory>");
+	private IPath getDirectoryPlace(String preferenceKey) throws IOException {
+		String dir = getStringProperty(preferenceKey, "");
+		if (dir != null && dir.length() != 0) {
+			return checkDirectory(new File(dir), preferenceKey);
 		}
+		throw new IllegalArgumentException("Directory does not defined, by " + preferenceKey + "=<directory>");
+	}
 
-		return result;
+	private IPath checkDirectory(File fileDir, String specifier) throws IOException {
+		String dir = fileDir.getAbsolutePath();
+		if (!fileDir.exists()) {
+			throw new AccessDeniedException("Directory does not exist: " + dir);
+		}
+		if (!fileDir.canRead()) {
+			throw new AccessDeniedException("No permission to read directory: " + dir);
+		}
+		if (!fileDir.canWrite()) {
+			throw new AccessDeniedException("No permission to write to directory: " + dir);
+		}
+		if (!fileDir.isDirectory()) {
+			throw new NotDirectoryException("Target of " + specifier + " - is not a directory:: " + dir);
+		}
+		return new Path(fileDir.getCanonicalPath());
 	}
 
 	protected void shutdown() {
@@ -402,7 +423,7 @@ public class WikiConfiguration implements IWikiConfiguration {
 		this.m_attributes.put(key, value);
 	}
 
-    /** {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public Collection<String> getAllInlinedImagePatterns() {
 		String patternsSeq = this.prefs.getString(IWikiPreferences.NODE_INLINE_PATTERNS);
@@ -426,25 +447,70 @@ public class WikiConfiguration implements IWikiConfiguration {
 		return this.pathWorkspace;
 	}
 
-    /** {@inheritDoc} */
-    @Override
-    public String getApplicationName() {
-        final String appName = TextUtil.getStringProperty( prefs, PROP_APPNAME, ":FVK: Release.APPNAME" );
-        return TextUtil.cleanString( appName, TextUtil.PUNCTUATION_CHARS_ALLOWED );
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getApplicationName() {
+		final String appName = getStringProperty(PROP_APPNAME, ":FVK: Release.APPNAME");
+		return TextUtil.cleanString(appName, TextUtil.PUNCTUATION_CHARS_ALLOWED);
+	}
 
-    // -- :FVK: -- Далее - 'динамическая конфигурация'. То есть, данные относятся к сессии HTTP.
+	// -- :FVK: -- Далее - 'динамическая конфигурация'. То есть, данные относятся к сессии HTTP.
 
-    private String baseURL;
-    
-    /** {@inheritDoc} */
-    @Override
-    public String getBaseURL() {
-        return this.baseURL;
-    }
+	private String baseURL;
 
-    public void setBaseURL(String baseURL) {
-        this.baseURL= baseURL; 
-    }
+	/** {@inheritDoc} */
+	@Override
+	public String getBaseURL() {
+		return this.baseURL;
+	}
+
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStringProperty(String key, String defval) {
+		String val = System.getProperties().getProperty(key, System.getenv(StringUtils.replace(key, ".", "_")));
+		if (val == null) {
+			val = this.prefs.getString(key);
+		}
+		if (val == null || val.length() == 0) {
+			return defval;
+		}
+		return val.trim();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getRequiredProperty(String key) throws NoSuchElementException {
+		final String value = getStringProperty(key, null);
+		if (value == null) {
+			throw new NoSuchElementException("Required property not found: " + key);
+		}
+		return value;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean getBooleanProperty(String key, boolean defval) {
+		String val = System.getProperties().getProperty(key, System.getenv(StringUtils.replace(key, ".", "_")));
+		if (val == null) {
+			val = this.prefs.getString(key);
+		}
+		if (val == null || val.length() == 0) {
+			return defval;
+		}
+
+		return BooleanUtils.toBooleanObject(val);
+	}
+
+	public int getIntegerProperty(final String key, final int defVal) {
+		String val = System.getProperties().getProperty(key, System.getenv(StringUtils.replace(key, ".", "_")));
+		if (val == null) {
+			val = this.prefs.getString(key);
+		}
+		return NumberUtils.toInt(val, defVal);
+	}
 
 }

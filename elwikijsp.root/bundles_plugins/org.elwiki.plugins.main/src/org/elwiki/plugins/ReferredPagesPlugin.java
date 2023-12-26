@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
@@ -123,7 +124,7 @@ public class ReferredPagesPlugin implements WikiPlugin, InitializablePlugin {
 				}
 			}
 
-			m_depth = TextUtil.parseIntParameter(params.get(PARAM_DEPTH), MIN_DEPTH);
+			m_depth = NumberUtils.toInt(params.get(PARAM_DEPTH), MIN_DEPTH);
 			m_depth = Math.max(m_depth, MIN_DEPTH);
 			m_depth = Math.min(m_depth, MAX_DEPTH);
 

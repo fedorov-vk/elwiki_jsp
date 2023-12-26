@@ -552,8 +552,8 @@ public final class SecurityVerifier {
 	 */
 	protected void verifyJaas() {
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
-		String jaasClass = TextUtil.getStringProperty(m_engine.getWikiPreferences(),
-				AuthenticationManager.PROP_LOGIN_MODULE, null);
+		String jaasClass = m_engine.getWikiConfiguration().getStringProperty(AuthenticationManager.PROP_LOGIN_MODULE,
+				null);
 		if (jaasClass == null || jaasClass.length() == 0) {
 			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.PROP_LOGIN_MODULE
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "

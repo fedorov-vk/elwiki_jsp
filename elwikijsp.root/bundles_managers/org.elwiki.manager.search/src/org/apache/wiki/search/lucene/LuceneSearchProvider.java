@@ -68,13 +68,11 @@ import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 
 import java.io.File;
@@ -83,14 +81,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -157,15 +152,15 @@ public class LuceneSearchProvider implements SearchProvider {
         this.attachmentManager = engine.getManager(AttachmentManager.class);
         this.authorizationManager = engine.getManager(AuthorizationManager.class);
         searchExecutor = Executors.newCachedThreadPool();
+        IWikiConfiguration wikiConfig = this.m_engine.getWikiConfiguration();
 
 		IPath workDir = engine.getWikiConfiguration().getWorkDir();
 		m_luceneDirectory = workDir.append(LUCENE_DIR).toString();
 
-        IPreferenceStore props = engine.getWikiPreferences();
-		final int initialDelay = TextUtil.getIntegerProperty( props , PROP_LUCENE_INITIALDELAY, LuceneUpdater.INITIAL_DELAY );
-        final int indexDelay   = TextUtil.getIntegerProperty( props, PROP_LUCENE_INDEXDELAY, LuceneUpdater.INDEX_DELAY );
+		final int initialDelay = wikiConfig.getIntegerProperty( PROP_LUCENE_INITIALDELAY , LuceneUpdater.INITIAL_DELAY );
+        final int indexDelay   = wikiConfig.getIntegerProperty( PROP_LUCENE_INDEXDELAY, LuceneUpdater.INDEX_DELAY );
 
-        m_analyzerClass = TextUtil.getStringProperty( props, PROP_LUCENE_ANALYZER, m_analyzerClass );
+		m_analyzerClass = wikiConfig.getStringProperty(PROP_LUCENE_ANALYZER, m_analyzerClass);
         // FIXME: Just to be simple for now, we will do full reindex
         // only if no files are in lucene directory.
 

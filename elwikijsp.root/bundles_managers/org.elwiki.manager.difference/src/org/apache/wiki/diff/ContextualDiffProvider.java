@@ -116,8 +116,8 @@ public class ContextualDiffProvider implements DiffProvider {
      */
     @Override
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
-        final String configuredLimit = TextUtil.getStringProperty( 
-        		engine.getWikiPreferences(), PROP_UNCHANGED_CONTEXT_LIMIT, Integer.toString( LIMIT_MAX_VALUE ) );
+        final String configuredLimit = engine.getWikiConfiguration().getStringProperty( 
+        		PROP_UNCHANGED_CONTEXT_LIMIT, Integer.toString(LIMIT_MAX_VALUE));
         int limit = LIMIT_MAX_VALUE;
         try {
             limit = Integer.parseInt( configuredLimit );

@@ -171,9 +171,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		IPreferenceStore props = wikiConfiguration.getWikiPreferences();
-
-		m_expiryTime = TextUtil.getIntegerProperty(props, PROP_LOCKEXPIRY, 60);
+		m_expiryTime = wikiConfiguration.getIntegerProperty(PROP_LOCKEXPIRY, 60);
 
 		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
 		wikiAjaxDispatcher.registerServlet(JSON_PAGESHIERARCHY, new JSONPagesHierarchyTracker(this.m_engine));
@@ -408,8 +406,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         }
 
         // Check if creation of empty pages is allowed; bail if not
-		boolean allowEmpty = TextUtil.getBooleanProperty(
-				this.wikiConfiguration.getWikiPreferences(),
+		boolean allowEmpty = wikiConfiguration.getBooleanProperty(
 				Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
 				false);
 		if (!allowEmpty && !wikiPageExists(page) && text.trim().equals("")) {

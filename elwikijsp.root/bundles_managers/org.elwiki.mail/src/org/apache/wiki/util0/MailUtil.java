@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.  
  */
-package org.apache.wiki.util;
+package org.apache.wiki.util0;
 
 import java.util.Date;
 import java.util.Properties;
@@ -35,7 +35,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 
 
 /**
@@ -192,6 +192,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public final class MailUtil {
 
+	protected static final Logger log = Logger.getLogger(MailUtil.class);
+
     private static final String JAVA_COMP_ENV = "java:comp/env";
 
     private static final String FALSE = "false";
@@ -201,8 +203,6 @@ public final class MailUtil {
     private static boolean c_useJndi = true;
 
     private static final String PROP_MAIL_AUTH = "mail.smtp.auth";
-
-    protected static final Logger log = Logger.getLogger(MailUtil.class);
 
     protected static final String DEFAULT_MAIL_JNDI_NAME       = "mail/Session";
 
@@ -261,18 +261,18 @@ public final class MailUtil {
      * <p>Note that the first form allows a "friendly" user name to be supplied
      * in addition to the actual e-mail address.</p>
      *
-     * @param props the properties that contain mail session properties
+     * @param iWikiConfiguration the properties that contain mail session properties
      * @param to the receiver
      * @param subject the subject line of the message
      * @param content the contents of the mail message, as plain text
      * @throws AddressException If the address is invalid
      * @throws MessagingException If the message cannot be sent.
      */
-    public static void sendMessage( IPreferenceStore props, String to, String subject, String content)
+    public static void sendMessage( IWikiConfiguration wikiConfiguration, String to, String subject, String content)
         throws AddressException, MessagingException
     {
-        Session session = getMailSession( props );
-        getSenderEmailAddress(session, props);
+        Session session = getMailSession( wikiConfiguration );
+        getSenderEmailAddress(session, wikiConfiguration);
 
         try
         {
@@ -305,10 +305,10 @@ public final class MailUtil {
      * Gets the Sender's email address from JNDI Session if available, otherwise
      * from the preferences.ini or lastly the default value.
      * @param pSession <code>Session</code>
-     * @param pProperties <code>Properties</code>
+     * @param wikiConfiguration <code>Properties</code>
      * @return <code>String</code>
      */
-    protected static String getSenderEmailAddress(Session pSession, IPreferenceStore pProperties)
+    protected static String getSenderEmailAddress(Session pSession, IWikiConfiguration wikiConfiguration)
     {
         if( c_fromAddress == null )
         {
@@ -322,7 +322,7 @@ public final class MailUtil {
             // default.
             if( c_fromAddress == null )
             {
-                c_fromAddress = TextUtil.getStringProperty(pProperties, PROP_MAIL_SENDER, DEFAULT_SENDER );
+                c_fromAddress = wikiConfiguration.getStringProperty(PROP_MAIL_SENDER, DEFAULT_SENDER );
                 if( log.isDebugEnabled() )
                     log.debug( "Attempt to get the sender's mail address from the JNDI mail session failed, will use \""
                                + c_fromAddress + "\" (configured via preferences.ini or the internal default)." );
@@ -339,13 +339,13 @@ public final class MailUtil {
 
     /**
      * Returns the Mail Session from either JNDI or creates a stand-alone.
-     * @param props a the properties that contain mail session properties
+     * @param wikiConfiguration a the properties that contain mail session properties
      * @return <code>Session</code>
      */
-    private static Session getMailSession(IPreferenceStore props)
+    private static Session getMailSession(IWikiConfiguration wikiConfiguration)
     {
         Session result = null;
-        String jndiName = TextUtil.getStringProperty(props, PROP_MAIL_JNDI_NAME, DEFAULT_MAIL_JNDI_NAME);
+        String jndiName = wikiConfiguration.getStringProperty(PROP_MAIL_JNDI_NAME, DEFAULT_MAIL_JNDI_NAME);
 
         if (c_useJndi)
         {
@@ -370,7 +370,7 @@ public final class MailUtil {
         {
             if ( log.isDebugEnabled() )
                 log.debug("Getting a standalone mail session configured by preferences.ini and/or internal default values.");
-            result = getStandaloneMailSession(props);
+            result = getStandaloneMailSession(wikiConfiguration);
         }
         return result;
     }
@@ -382,18 +382,18 @@ public final class MailUtil {
      * a value that is non-<code>null</code> and of non-zero length, the
      * Session will be initialized with an instance of
      * {@link javax.mail.Authenticator}.
-     * @param props the properties that contain mail session properties
+     * @param wikiConfiguration the properties that contain mail session properties
      * @return the initialized JavaMail Session
      */
-    protected static Session getStandaloneMailSession( IPreferenceStore props ) {
+    protected static Session getStandaloneMailSession( IWikiConfiguration wikiConfiguration ) {
         // Read the JSPWiki settings from the properties
-        String host     = TextUtil.getStringProperty(props, PROP_MAIL_HOST, DEFAULT_MAIL_HOST );
-        String port     = TextUtil.getStringProperty(props, PROP_MAIL_PORT, DEFAULT_MAIL_PORT );
-        String account  = TextUtil.getStringProperty(props, PROP_MAIL_ACCOUNT , null);
-        String password = TextUtil.getStringProperty(props, PROP_MAIL_PASSWORD , null);
-        String timeout  = TextUtil.getStringProperty(props, PROP_MAIL_TIMEOUT, DEFAULT_MAIL_TIMEOUT);
-        String conntimeout = TextUtil.getStringProperty(props, PROP_MAIL_CONNECTION_TIMEOUT, DEFAULT_MAIL_CONN_TIMEOUT );
-        boolean starttls = TextUtil.getBooleanProperty( props, PROP_MAIL_STARTTLS, true);
+        String host     = wikiConfiguration.getStringProperty(PROP_MAIL_HOST, DEFAULT_MAIL_HOST );
+        String port     = wikiConfiguration.getStringProperty(PROP_MAIL_PORT, DEFAULT_MAIL_PORT );
+        String account  = wikiConfiguration.getStringProperty(PROP_MAIL_ACCOUNT , null);
+        String password = wikiConfiguration.getStringProperty(PROP_MAIL_PASSWORD , null);
+        String timeout  = wikiConfiguration.getStringProperty(PROP_MAIL_TIMEOUT, DEFAULT_MAIL_TIMEOUT);
+        String conntimeout = wikiConfiguration.getStringProperty(PROP_MAIL_CONNECTION_TIMEOUT, DEFAULT_MAIL_CONN_TIMEOUT );
+        boolean starttls = wikiConfiguration.getBooleanProperty(PROP_MAIL_STARTTLS, true);
         
         boolean useAuthentication = account != null && account.length() > 0;
 

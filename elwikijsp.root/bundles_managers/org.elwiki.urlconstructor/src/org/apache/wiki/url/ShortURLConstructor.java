@@ -61,8 +61,7 @@ public class ShortURLConstructor extends DefaultURLConstructor {
     public void initialize() throws WikiException {
         super.initialize();
         
-        IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
-        m_urlPrefix = TextUtil.getStringProperty( prefs, PROP_PREFIX, null );
+        m_urlPrefix = wikiConfiguration.getStringProperty(PROP_PREFIX, null);
         
         if( m_urlPrefix == null ) {
             m_urlPrefix = DEFAULT_PREFIX;

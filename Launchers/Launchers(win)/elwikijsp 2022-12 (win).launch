@@ -22,7 +22,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console 10008"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=D:/devj/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/&#13;&#10;&#13;&#10;-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.osgi.service.http.port=8088&#13;&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#13;&#10;&#13;&#10;-Dstorage.cdo.port=2039&#13;&#10;-Xmx4G&#13;&#10;-Xms1G"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=D:\devj\dev_wikijsp\ws_elwikijsp\__runtime-elwikijsp_2022-12\workspace\_temp_wiki_db&#13;&#10;-Declipse.ignoreApp=true&#13;&#10;-Dosgi.noShutdown=true&#13;&#10;-Dorg.osgi.service.http.port=8088&#13;&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#13;&#10;-Dstorage.cdo.port=2039&#13;&#10;-Xmx4G&#13;&#10;-Xms1G"/>
     <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp_2022-12"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_features">
@@ -159,6 +159,7 @@
         <setEntry value="org.elwiki.data@default:default"/>
         <setEntry value="org.elwiki.engine@5:default"/>
         <setEntry value="org.elwiki.log4.definition@default:false"/>
+        <setEntry value="org.elwiki.mail@default:default"/>
         <setEntry value="org.elwiki.manager.attachment@default:default"/>
         <setEntry value="org.elwiki.manager.difference@default:default"/>
         <setEntry value="org.elwiki.manager.filters@default:default"/>
@@ -181,7 +182,7 @@
         <setEntry value="org.elwiki.util@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
-    <stringAttribute key="timestamp" value="1679581765969"/>
+    <stringAttribute key="timestamp" value="1703584234294"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfigArea" value="true"/>

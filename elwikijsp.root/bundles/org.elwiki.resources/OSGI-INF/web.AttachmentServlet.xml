@@ -10,5 +10,6 @@
    <reference cardinality="1..1" field="m_engine" interface="org.apache.wiki.api.core.Engine" name="m_engine"/>
    <reference cardinality="1..1" field="pageManager" interface="org.apache.wiki.pages0.PageManager" name="pageManager"/>
    <reference cardinality="1..1" field="progressManager" interface="org.apache.wiki.api.ui.progress.ProgressManager" name="progressManager"/>
+   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.apache.wiki.attachment.AttachmentServlet"/>
 </scr:component>

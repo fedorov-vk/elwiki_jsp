@@ -30,9 +30,7 @@ import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.url0.URLConstructor;
-import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiEngineEventTopic;
@@ -277,8 +275,6 @@ public class WikiEngine implements Engine {
 		log.debug("◄►initialization◄► STAGE TWO.");
 		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO, Collections.emptyMap()));
 
-		IPreferenceStore preferences = this.wikiConfiguration.getWikiPreferences();
-
 		//
 		// Initialize the important modules. Any exception thrown by the managers means that we will not
 		// start up.
@@ -286,7 +282,7 @@ public class WikiEngine implements Engine {
 		try {
 			String def = "org.apache.wiki.auth.acl.AclManager"; // :FVK: ClassUtil.getMappedClass(
 																// AclManager.class.getName() ).getName();
-			final String aclClassName = TextUtil.getStringProperty(preferences, PROP_ACL_MANAGER_IMPL, def);
+			final String aclClassName = wikiConfiguration.getStringProperty(PROP_ACL_MANAGER_IMPL, def);
 
 			// initService(CommandResolver.class);
 			// initComponent( CommandResolver.class, this, props );
@@ -380,13 +376,6 @@ public class WikiEngine implements Engine {
 	@Override
 	public boolean isConfigured() {
 		return m_isConfigured;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public IPreferenceStore getWikiPreferences() {
-		return this.wikiConfiguration.getWikiPreferences();
 	}
 
 	/** {@inheritDoc} */

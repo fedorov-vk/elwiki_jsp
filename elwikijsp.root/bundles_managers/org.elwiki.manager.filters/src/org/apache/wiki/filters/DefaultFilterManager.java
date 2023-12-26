@@ -147,7 +147,7 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
 	public void initialize() throws WikiException {
         InputStream xmlStream = null;
-		final String xmlFile = TextUtil.getStringProperty(wikiConfiguration.getWikiPreferences(), PROP_FILTERXML, null);
+		final String xmlFile = wikiConfiguration.getStringProperty(PROP_FILTERXML, null);
 
         try {
             registerFilters();

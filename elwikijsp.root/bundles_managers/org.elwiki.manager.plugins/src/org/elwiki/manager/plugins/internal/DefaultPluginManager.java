@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
@@ -47,7 +48,6 @@ import org.apache.wiki.api.modules.BaseModuleManager;
 import org.apache.wiki.api.modules.WikiModuleInfo;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.FileUtil;
-import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -307,7 +307,7 @@ public class DefaultPluginManager extends BaseModuleManager implements PluginMan
 			return "";
 		}
 
-		boolean debug = TextUtil.isPositive(params.get(PARAM_DEBUG));
+		boolean debug = BooleanUtils.toBooleanObject(params.get(PARAM_DEBUG));
 		try {
 			//   Get...
 			WikiPlugin plugin = getWikiPlugin(pluginName, context);

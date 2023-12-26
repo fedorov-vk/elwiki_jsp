@@ -45,6 +45,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 
 /**
@@ -167,7 +168,8 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	 * @return A File handle, or null, if there was a problem.
 	 */
 	private static File getCookieFile(final Engine engine, final String uid) {
-		String workDir = engine.getWikiConfiguration().getWorkDir().toString();
+		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
+		String workDir = wikiConfig.getWorkDir().toString();
 		File cookieDir = new File(workDir, COOKIE_DIR);
 
 		if (!cookieDir.exists()) {
@@ -190,7 +192,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 		long now = System.currentTimeMillis();
 
 		if (now > (c_lastScrubTime + SCRUB_PERIOD)) {
-			scrub(TextUtil.getIntegerProperty(engine.getWikiPreferences(), PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS),
+			scrub(wikiConfig.getIntegerProperty(PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS),
 					cookieDir);
 			c_lastScrubTime = now;
 		}
@@ -229,7 +231,8 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	//           get rid of jug.jar
 	public static void setLoginCookie(final Engine engine, HttpServletResponse response, String username) {
 		UUID uid = UUID.randomUUID();
-		int days = TextUtil.getIntegerProperty(engine.getWikiPreferences(), PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS);
+		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
+		int days = wikiConfig.getIntegerProperty(PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS);
 		Cookie userId = new Cookie(LOGIN_COOKIE_NAME, uid.toString());
 		userId.setMaxAge(days * 24 * 60 * 60);
 		response.addCookie(userId);

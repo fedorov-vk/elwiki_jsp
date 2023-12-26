@@ -20,9 +20,9 @@ package org.elwiki.plugins;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.plugin.WikiPlugin;
 
 /**
@@ -97,7 +97,7 @@ public class CounterPlugin implements WikiPlugin {
 
 		// check if we want to hide the result (just count, don't show result on the page
 		String showObj = params.get(PARAM_SHOW_RESULT);
-		boolean show = (showObj != null) ? show = TextUtil.isPositive(showObj) : DEFAULT_SHOW_RESULT;
+		boolean show = (showObj != null) ? show = BooleanUtils.toBooleanObject(showObj) : DEFAULT_SHOW_RESULT;
 
 		if (show) {
 			return val.toString();

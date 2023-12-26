@@ -24,6 +24,7 @@ package org.apache.wiki.util;
  *  
  * @author Ichiro Furusato
  */
+@Deprecated
 public class ByteUtils
 {
     private static final char[] hexArray = "0123456789abcdef".toCharArray();

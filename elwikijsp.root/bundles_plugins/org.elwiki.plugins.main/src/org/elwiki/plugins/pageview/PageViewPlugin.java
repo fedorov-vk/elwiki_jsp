@@ -322,9 +322,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 				String pagename = page.getName();
 				String count = params.get(PARAM_COUNT);
 				String show = params.get(PARAM_SHOW);
-				int entries = TextUtil.parseIntParameter(params.get(PARAM_MAX_ENTRIES), Integer.MAX_VALUE);
-				int max = TextUtil.parseIntParameter(params.get(PARAM_MAX_COUNT), Integer.MAX_VALUE);
-				int min = TextUtil.parseIntParameter(params.get(PARAM_MIN_COUNT), Integer.MIN_VALUE);
+				int entries = NumberUtils.toInt(params.get(PARAM_MAX_ENTRIES), Integer.MAX_VALUE); 
+				int max = NumberUtils.toInt(params.get(PARAM_MAX_COUNT), Integer.MAX_VALUE); 
+				int min = NumberUtils.toInt(params.get(PARAM_MIN_COUNT), Integer.MIN_VALUE); 
 				String sort = params.get(PARAM_SORT);
 				String body = params.get(PluginManager.PARAM_BODY);
 				Pattern[] exclude = compileGlobs(PARAM_EXCLUDE, params.get(PARAM_EXCLUDE));

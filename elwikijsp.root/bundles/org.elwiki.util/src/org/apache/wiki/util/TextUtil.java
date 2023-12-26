@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Random;
 
@@ -37,10 +36,10 @@ import java.util.Random;
  */
 public final class TextUtil {
 
-    static final String HEX_DIGITS = "0123456789ABCDEF";
+    private static final String HEX_DIGITS = "0123456789ABCDEF";
 
     /** Pick from some letters that won't be easily mistaken for each other to compose passwords. So, for example, omit o O and 0, 1 l and L.*/
-    static final String PWD_BASE = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789+@";
+    private static final String PWD_BASE = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789+@";
 
     /** Length of password. {@link #generateRandomPassword() */
     public static final int PASSWORD_LENGTH = 8;
@@ -304,117 +303,6 @@ public final class TextUtil {
     }
 
     /**
-     *  Parses an integer parameter, returning a default value if the value is null or a non-number.
-     *
-     *  @param value The value to parse
-     *  @param defvalue A default value in case the value is not a number
-     *  @return The parsed value (or defvalue).
-     */
-    public static int parseIntParameter( final String value, final int defvalue ) {
-		if (value == null)
-			return defvalue;
-    	try {
-            return Integer.parseInt( value.trim() );
-        } catch( final Exception e ) {}
-
-        return defvalue;
-    }
-
-    /**
-     *  Gets an integer-valued property from a standard Properties list.
-     *
-     *  Before inspecting the props, we first check if there is a Java System Property with the same name, if it exists we use that value,
-     *  if not we check an environment variable with that (almost) same name, almost meaning we replace dots with underscores.
-     *
-     *  If the value does not exist, or is a non-integer, returns defVal.
-     *
-     *  @since 2.1.48.
-     *  @param props The property set to look through
-     *  @param key   The key to look for
-     *  @param defVal If the property is not found or is a non-integer, returns this value.
-     *  @return The property value as an integer (or defVal).
-     */
-    public static int getIntegerProperty( IPreferenceStore props, final String key, final int defVal ) {
-        String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
-        if( val == null ) {
-            val = props.getString( key );
-        }
-        return parseIntParameter( val, defVal );
-    }
-
-    /**
-     *  Gets a boolean property from a standard Properties list. Returns the default value, in case the key has not been set.
-     *  Before inspecting the props, we first check if there is a Java System Property with the same name, if it exists
-     *  we use that value, if not we check an environment variable with that (almost) same name, almost meaning we replace
-     *  dots with underscores.
-     *  <P>
-     *  The possible values for the property are "true"/"false", "yes"/"no", or "on"/"off".  Any value not recognized is always defined
-     *  as "false".
-     *
-     *  @param props   A list of properties to search.
-     *  @param key     The property key.
-     *  @param defval  The default value to return.
-     *
-     *  @return True, if the property "key" was set to "true", "on", or "yes".
-     *
-     *  @since 2.0.11
-     */
-    public static boolean getBooleanProperty( IPreferenceStore props, String key, boolean defval ) {
-        String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
-        if( val == null ) {
-            val = props.getString( key );
-        }
-        if( val == null || val.length() == 0 ) {
-            return defval;
-        }
-
-        return isPositive( val );
-    }
-
-    /**
-     *  Fetches a String property from the set of Properties.  This differs from Properties.getProperty() in a
-     *  couple of key respects: First, property value is trim()med (so no extra whitespace back and front).
-     *
-     *  Before inspecting the props, we first check if there is a Java System Property with the same name, if it exists
-     *  we use that value, if not we check an environment variable with that (almost) same name, almost meaning we replace
-     *  dots with underscores.
-     *
-     *  @param preferences The Properties to search through
-     *  @param key   The property key
-     *  @param defval A default value to return, if the property does not exist.
-     *  @return The property value.
-     *  @since 2.1.151
-     */
-    public static String getStringProperty( final IPreferenceStore preferences, final String key, final String defval ) {
-        String val = System.getProperties().getProperty( key, System.getenv( StringUtils.replace( key,".","_" ) ) );
-        if( val == null ) {
-            val = preferences.getString( key );
-        }
-        if( val == null || val.length() == 0 ) {
-            return defval;
-        }
-        return val.trim();
-    }
-
-    /**
-     *  Throws an exception if a property is not found.
-     *
-     *  @param props A set of properties to search the key in.
-     *  @param key The key to look for.
-     *  @return The required property
-     *
-     *  @throws NoSuchElementException If the search key is not in the property set.
-     *  @since 2.0.26 (on TextUtils, moved To WikiEngine on 2.11.0-M1 and back to TextUtils on 2.11.0-M6)
-     */
-    public static String getRequiredProperty( IPreferenceStore props, String key ) throws NoSuchElementException {
-        final String value = getStringProperty( props, key, null );
-        if( value == null ) {
-            throw new NoSuchElementException( "Required property not found: " + key );
-        }
-        return value;
-    }
-
-    /**
      *  Fetches a file path property from the set of Properties.
      *
      *  Before inspecting the props, we first check if there is a Java System Property with the same name, if it exists we use that value,
@@ -445,25 +333,6 @@ public final class TextUtil {
             result = val.trim();
         }
         return result;
-    }
-
-    /**
-     *  Returns true, if the string "val" denotes a positive string.  Allowed values are "yes", "on", and "true".
-     *  Comparison is case-insignificant. Null values are safe.
-     *
-     *  @param val Value to check.
-     *  @return True, if val is "true", "on", or "yes"; otherwise false.
-     *
-     *  @since 2.0.26
-     */
-    public static boolean isPositive( String val ) {
-        if( val == null ) {
-        	return false;
-        }
-        val = val.trim();
-        return val.equalsIgnoreCase( "true" )
-               || val.equalsIgnoreCase( "on" )
-               || val.equalsIgnoreCase( "yes" );
     }
 
     /**

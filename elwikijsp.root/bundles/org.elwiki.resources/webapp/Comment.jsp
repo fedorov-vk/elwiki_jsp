@@ -220,7 +220,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
         }
 
-        if( TextUtil.isPositive(remember) ) {
+        if( BooleanUtils.toBooleanObject(remember) ) {
             if( link != null ) {
                 Cookie linkcookie = new Cookie("link", TextUtil.urlEncodeUTF8(link) );
                 linkcookie.setMaxAge(1001*24*60*60);

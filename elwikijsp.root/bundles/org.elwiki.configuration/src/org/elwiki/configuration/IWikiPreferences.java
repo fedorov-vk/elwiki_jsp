@@ -11,14 +11,20 @@ public interface IWikiPreferences {
 	String NODE_INLINE_PATTERNS = "node.translatorReader.inlinePatterns";
 
 	/**
-	 * Property name for where the ElWiki work directory should be. If not specified, sets to
-	 * workspace place.
+	 * Property name for where the ElWiki work directory should be. If not specified, sets to workspace
+	 * place.
 	 */
 	String PROP_WORKDIR = "elwiki.workDir";
 
 	/**
-	 * Property name for where the ElWiki attachment directory should be. If not specified, sets to
-	 * area in the workspace place.
+	 * Property name for where the H2 database should be located. If not specified, sets to area in the
+	 * workspace place - ${workspace_loc}/.
+	 */
+	String PROP_H2_DATABASE_PLACE = "elwiki.h2.database.place";
+
+	/**
+	 * Property name for where the ElWiki attachment directory should be. If not specified, it is
+	 * defined as a directory located in the working directory.
 	 */
 	String PROP_ATTACHMENTDIR = "elwiki.attachmentDir";
 

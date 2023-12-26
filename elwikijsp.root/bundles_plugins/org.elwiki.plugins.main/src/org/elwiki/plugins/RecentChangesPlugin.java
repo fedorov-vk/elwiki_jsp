@@ -27,13 +27,13 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.preferences.Preferences;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.elwiki.api.plugin.WikiPlugin;
@@ -92,7 +92,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiP
 		/* Parse parameters.
 		 */
 		Calendar sincedate = new GregorianCalendar();
-		int since = TextUtil.parseIntParameter(params.get("since"), -1);
+		int since = NumberUtils.toInt(params.get("since"), -1); 
 		if (since > 0) {
 			sincedate.add(Calendar.DAY_OF_MONTH, -since);
 		} else if (since < 0) {

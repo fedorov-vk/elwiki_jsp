@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
@@ -113,8 +114,8 @@ public class InsertPagePlugin implements WikiPlugin, InitializablePlugin {
 		String style = params.get(PARAM_STYLE);
 		boolean showOnce = "once".equals(params.get(PARAM_SHOW));
 		String defaultstr = params.get(PARAM_DEFAULT);
-		int section = TextUtil.parseIntParameter(params.get(PARAM_SECTION), -1);
-		int maxlen = TextUtil.parseIntParameter(params.get(PARAM_MAXLENGTH), -1);
+		int section = NumberUtils.toInt(params.get(PARAM_SECTION), -1); 
+		int maxlen = NumberUtils.toInt(params.get(PARAM_MAXLENGTH), -1); 
 
 		ResourceBundle rb = PluginsActivator.getBundle(Preferences.getLocale(context));
 

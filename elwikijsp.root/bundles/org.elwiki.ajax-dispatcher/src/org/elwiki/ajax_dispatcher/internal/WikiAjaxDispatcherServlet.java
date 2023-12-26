@@ -90,8 +90,7 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
 		super.init(config);
-		IPreferenceStore prefs = wikiConfiguration.getWikiPreferences();
-		PATH_AJAX = "/" + TextUtil.getStringProperty(prefs, "jspwiki.ajax.url.prefix", "ajax") + "/";
+		PATH_AJAX = "/" + wikiConfiguration.getStringProperty("jspwiki.ajax.url.prefix", "ajax") + "/";
 		log.debug("«web» init  " + WikiAjaxDispatcherServlet.class.getSimpleName() + " (AJAX path: " + PATH_AJAX + ")");
 	}
 

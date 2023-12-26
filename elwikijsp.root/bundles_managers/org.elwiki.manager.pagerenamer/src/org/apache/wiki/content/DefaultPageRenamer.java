@@ -42,6 +42,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
 import org.elwiki_data.WikiPage;
@@ -74,6 +75,10 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
     @Reference
     EventAdmin eventAdmin;
+
+	/** Stores configuration. */
+	@Reference
+	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -218,8 +223,7 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 			final String sourceText = pageManager.getPureText(p, context.getPageVersion());
 			String newText = replaceReferrerString(context, sourceText, fromPage.getName(), toPage.getName());
 
-			IPreferenceStore wikiPreferences = engine.getWikiPreferences();
-			m_camelCase = TextUtil.getBooleanProperty(wikiPreferences, MarkupParser.PROP_CAMELCASELINKS, m_camelCase);
+			m_camelCase = wikiConfiguration.getBooleanProperty(MarkupParser.PROP_CAMELCASELINKS, m_camelCase);
 			if (m_camelCase) {
 				newText = replaceCCReferrerString(context, newText, fromPage.getName(), toPage.getName());
 			}

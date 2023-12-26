@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
@@ -32,7 +33,6 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XHTML;
 import org.apache.wiki.util.XhtmlUtil;
 import org.elwiki.api.plugin.InitializablePlugin;
@@ -94,7 +94,7 @@ public class SearchPlugin implements WikiPlugin, InitializablePlugin {
 		 */
 		String queryString = params.get(PARAM_QUERY);
 
-		int maxItems = TextUtil.parseIntParameter(params.get(PARAM_MAX), Integer.MAX_VALUE);
+		int maxItems = NumberUtils.toInt(params.get(PARAM_MAX), Integer.MAX_VALUE);
 
 		String set = params.get(PARAM_SET);
 		if (set == null) {

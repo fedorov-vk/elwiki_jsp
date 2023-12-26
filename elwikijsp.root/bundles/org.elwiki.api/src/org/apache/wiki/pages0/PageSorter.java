@@ -24,6 +24,7 @@ import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.comparators.JavaNaturalComparator;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -92,10 +93,10 @@ public class PageSorter implements Comparator< String > {
      * @param props this Engine's properties.
      */
     @SuppressWarnings( "unchecked" )
-    public void initialize(IPreferenceStore props) {
+    public void initialize(IWikiConfiguration wikiConfiguration) {
         // Default is Java natural order
         m_comparator = JavaNaturalComparator.DEFAULT_JAVA_COMPARATOR;
-        final String className = TextUtil.getStringProperty(props, PROP_PAGE_NAME_COMPARATOR,null );
+        final String className = wikiConfiguration.getStringProperty(PROP_PAGE_NAME_COMPARATOR, null);
         if( className != null && className.length() > 0 ) {
             try {
                 m_comparator = ( Comparator< String > )ClassUtil.findClass( "org.apache.wiki.util.comparators", className ).newInstance();

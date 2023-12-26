@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.WikiContext;
@@ -90,7 +91,7 @@ public class ReferringPagesPlugin extends AbstractReferralPlugin {
 			}
 			pageId = page.getId();
 
-			int items = TextUtil.parseIntParameter(params.get(PARAM_MAX), ALL_ITEMS);
+			int items = NumberUtils.toInt(params.get(PARAM_MAX), ALL_ITEMS); 
 
 			String extras = TextUtil.replaceEntities(params.get(PARAM_EXTRAS));
 			if (extras == null) {

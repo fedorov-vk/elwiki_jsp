@@ -27,6 +27,7 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
@@ -43,7 +44,6 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -482,10 +482,10 @@ public class WikiContextImpl implements WikiContext, Command {
 	public boolean getBooleanWikiProperty(final String key, final boolean defValue) {
 		final String bool = getVariable(key);
 		if (bool != null) {
-			return TextUtil.isPositive(bool);
+			return BooleanUtils.toBooleanObject(bool);
 		}
 
-		return TextUtil.getBooleanProperty(getEngine().getWikiPreferences(), key, defValue);
+		return wikiConfiguration.getBooleanProperty(key, defValue);
 	}
 
 	/**

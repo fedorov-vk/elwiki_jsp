@@ -19,6 +19,7 @@ Export-Package: org.apache.wiki.tasks,
  org.apache.wiki.workflow
 Import-Package: javax.mail;version="1.4.0",
  javax.mail.internet;version="1.4.0",
+ org.apache.wiki.util0,
  org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.osgi.service.component;version="1.4.0",

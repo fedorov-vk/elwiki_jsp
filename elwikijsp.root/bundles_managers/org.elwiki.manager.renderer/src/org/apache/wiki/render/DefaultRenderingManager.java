@@ -144,8 +144,7 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
      */
 	@Override
     public void initialize() throws WikiException {
-        IPreferenceStore properties = wikiConfiguration.getWikiPreferences();        
-        m_markupParserClass = TextUtil.getStringProperty(properties, PROP_PARSER, DEFAULT_PARSER );
+        m_markupParserClass = wikiConfiguration.getStringProperty(PROP_PARSER, DEFAULT_PARSER );
         /*:FVK:
         if( !ClassUtil.assignable( m_markupParserClass, MarkupParser.class.getName() ) ) {
         	log.warn( m_markupParserClass + " does not subclass " + MarkupParser.class.getName() + " reverting to default markup parser." );
@@ -153,7 +152,7 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
         }*/
         log.info( "Using " + m_markupParserClass + " as markup parser." );
 
-        m_beautifyTitle  = TextUtil.getBooleanProperty( properties, PROP_BEAUTIFYTITLE, m_beautifyTitle );
+        m_beautifyTitle  = wikiConfiguration.getBooleanProperty( PROP_BEAUTIFYTITLE, m_beautifyTitle );
         m_useCache = true; //:FVK: - removed option: TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
         if( m_useCache ) {
             final String documentCacheName = wikiConfiguration.getApplicationName() + "." + DOCUMENTCACHE_NAME;
@@ -166,8 +165,8 @@ public class DefaultRenderingManager implements RenderingManager, WikiManager, E
             }
         }
 
-        final String renderImplName = TextUtil.getStringProperty(properties, PROP_RENDERER, DEFAULT_RENDERER );
-        final String renderWysiwygImplName = TextUtil.getStringProperty(properties, PROP_WYSIWYG_RENDERER, DEFAULT_WYSIWYG_RENDERER );
+        final String renderImplName = wikiConfiguration.getStringProperty(PROP_RENDERER, DEFAULT_RENDERER );
+        final String renderWysiwygImplName = wikiConfiguration.getStringProperty(PROP_WYSIWYG_RENDERER, DEFAULT_WYSIWYG_RENDERER );
 
         final Class< ? >[] rendererParams = { WikiContext.class, WikiDocument.class };
         m_rendererConstructor = initRenderer( renderImplName, rendererParams );

@@ -41,7 +41,6 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.configuration.IWikiPreferences;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -58,7 +58,7 @@ public class BasePageFilter implements PageFilter {
     	this.pageManager = m_engine.getManager(PageManager.class);
     	this.attachmentManager = m_engine.getManager(AttachmentManager.class);
     	this.renderingManager = m_engine.getManager(RenderingManager.class);
-        
+
 //TODO: :FVK: - рефлексия. ? убрать ?
         final Method m = methodOfNonPublicAPI( this, "initialize", "org.apache.wiki.WikiEngine", "java.util.Properties" );
         executePageFilterPhase( () -> null, m, this, engine );

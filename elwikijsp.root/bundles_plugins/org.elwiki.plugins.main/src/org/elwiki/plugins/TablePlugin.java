@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.engine.RenderApi;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.render0.RenderingManager;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki_data.WikiPage;
@@ -208,7 +208,7 @@ public class TablePlugin implements WikiPlugin, InitializablePlugin {
 		m_styleRowEven = (String) params.get(PARAM_STYLE_ROW_EVEN);
 		m_styleRowOdd = (String) params.get(PARAM_STYLE_ROW_ODD);
 
-		m_startRow = TextUtil.parseIntParameter((String) params.get(PARAM_ROW_NUMBER), 0);
+		m_startRow = NumberUtils.toInt((String) params.get(PARAM_ROW_NUMBER), 0);
 
 		log.info("Running TABLE plugin\n");
 

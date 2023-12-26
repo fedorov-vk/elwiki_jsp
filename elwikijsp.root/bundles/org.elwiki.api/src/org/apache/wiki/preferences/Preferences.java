@@ -32,6 +32,7 @@ import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -93,8 +94,7 @@ public class Preferences extends HashMap<String, String> {
 	public static void reloadPreferences(HttpServletRequest request) {
 		final Preferences prefs = new Preferences();
 		Engine engine = ContextUtil.findContext(request).getEngine();
-
-		IPreferenceStore props = engine.getWikiPreferences();
+		IWikiConfiguration wikiConfig = engine.getWikiConfiguration(); 
 
 		final WikiContext ctx = ContextUtil.findContext(request);
 		InternationalizationManager i18n = engine.getManager(InternationalizationManager.class);
@@ -102,27 +102,27 @@ public class Preferences extends HashMap<String, String> {
 
 		/*:FVK:
 		*///@formatter:off
-		prefs.put("SkinName", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.skinname", "PlainVanilla"));
-		prefs.put("DateFormat", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.dateformat", dateFormat));
-		prefs.put("TimeZone", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.timezone", java.util.TimeZone.getDefault().getID()));
-		prefs.put("Orientation", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.orientation", "fav-left"));
-		prefs.put("Sidebar", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.sidebar", "active"));
-		prefs.put("Layout", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.layout", "fluid"));
-		prefs.put("Language", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.language", getLocale(ctx).toString()));
-		prefs.put("SectionEditing", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.sectionediting", "true"));
-		prefs.put("Appearance", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.appearance", "true"));
+		prefs.put("SkinName", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.skinname", "PlainVanilla"));
+		prefs.put("DateFormat", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.dateformat", dateFormat));
+		prefs.put("TimeZone", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.timezone", java.util.TimeZone.getDefault().getID()));
+		prefs.put("Orientation", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.orientation", "fav-left"));
+		prefs.put("Sidebar", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.sidebar", "active"));
+		prefs.put("Layout", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.layout", "fluid"));
+		prefs.put("Language", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.language", getLocale(ctx).toString()));
+		prefs.put("SectionEditing", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.sectionediting", "true"));
+		prefs.put("Appearance", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.appearance", "true"));
 
-		prefs.put("SidePanel", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.sidepanel", "menu"));
+		prefs.put("SidePanel", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.sidepanel", "menu"));
 
 		//editor cookies
-		prefs.put("autosuggest", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.autosuggest", "true"));
-		prefs.put("tabcompletion", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.tabcompletion", "true"));
-		prefs.put("smartpairs", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.smartpairs", "false"));
-		prefs.put("livepreview", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.livepreview", "true"));
-		prefs.put("previewcolumn", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.previewcolumn", "true"));
+		prefs.put("autosuggest", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.autosuggest", "true"));
+		prefs.put("tabcompletion", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.tabcompletion", "true"));
+		prefs.put("smartpairs", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.smartpairs", "false"));
+		prefs.put("livepreview", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.livepreview", "true"));
+		prefs.put("previewcolumn", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.previewcolumn", "true"));
 
 		// FIXME: editormanager reads jspwiki.editor -- which of both properties should continue
-		prefs.put("editor", TextUtil.getStringProperty(props, "jspwiki.defaultprefs.template.editor", "plain"));
+		prefs.put("editor", wikiConfig.getStringProperty("jspwiki.defaultprefs.template.editor", "plain"));
 		//@formatter:on
 
 		parseJSONPreferences(request, prefs);
@@ -197,7 +197,7 @@ public class Preferences extends HashMap<String, String> {
 	public static Locale getConfiguredLocale(Engine engine) {
 		Locale result = null;
 		if (engine != null) {
-			String locale = engine.getWikiPreferences().getString("jspwiki.preferences.default-locale");
+			String locale = engine.getWikiConfiguration().getWikiPreferences().getString("jspwiki.preferences.default-locale");
 			try {
 				result = LocaleUtils.toLocale(locale);
 			} catch (final IllegalArgumentException iae) {
