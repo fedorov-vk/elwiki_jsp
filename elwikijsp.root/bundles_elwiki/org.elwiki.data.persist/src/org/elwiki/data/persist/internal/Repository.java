@@ -95,6 +95,8 @@ abstract class Repository implements IPasswordCredentialsProvider {
 
 	abstract protected String getFolder();
 
+	abstract protected String getH2CacheSize();
+
 	/**
 	 * Repository name.
 	 * 
@@ -135,7 +137,7 @@ abstract class Repository implements IPasswordCredentialsProvider {
 		String repositoryName = getName();
 
 		JdbcDataSource dataSource = new JdbcDataSource();
-		dataSource.setURL("jdbc:h2:" + getFolder() + "/" + getName());
+		dataSource.setURL("jdbc:h2:" + getFolder() + "/" + getName() + ";CACHE_SIZE=" + getH2CacheSize());
 
 		IDBStore store = getStore(dataSource);
 		repository = CDOServerUtil.createRepository(repositoryName, store, getRepositoryProperties());

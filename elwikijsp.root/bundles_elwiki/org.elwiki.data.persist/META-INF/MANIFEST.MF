@@ -31,3 +31,4 @@ Import-Package: javax.inject,
 Export-Package: org.elwiki.data.persist,
  org.elwiki.data.persist.internal
 Service-Component: OSGI-INF/elwiki.StorageCdo.xml
+Eclipse-BundleShape: dir

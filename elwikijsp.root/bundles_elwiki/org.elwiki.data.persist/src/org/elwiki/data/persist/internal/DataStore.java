@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.IStorageCdo;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.cdo.eresource.CDOResource;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
@@ -15,18 +16,21 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.net4j.util.WrappedException;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.data.persist.IDataStore;
 import org.elwiki.data.persist.json.JsonDeserialiser;
 import org.elwiki.data.persist.json.JsonSerialiser;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PagesStore;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
 /**
  * Provides access to the CDO repository.
- *  
+ * 
  * @author vfedorov
  */
 //@formatter:off
@@ -39,9 +43,14 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 
 	protected static final Logger log = Logger.getLogger(DataStore.class);
 
+	protected static final String H2_CACHE_SIZE = "elwiki.h2.cache_size";
+	protected static final String H2_CACHE_SIZE_DEFAULT = "131072";
+
 	private static final String PAGES_STORE_PATH = "Pages/";
 
 	private PagesStore pagesStore;
+
+	private ScopedPreferenceStore prefs;
 
 	/**
 	 * Instantiate DataStore.
@@ -56,6 +65,12 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
+	@Activate
+	protected void startup(BundleContext bc) {
+		String bundleName = bc.getBundle().getSymbolicName();
+		this.prefs = new ScopedPreferenceStore(InstanceScope.INSTANCE, bundleName);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
@@ -67,6 +82,17 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 	@Override
 	protected String getFolder() {
 		return wikiConfiguration.getDbPlace();
+	}
+
+	@Override
+	protected String getH2CacheSize() {
+		String h2CacheSize = this.prefs.getDefaultString(H2_CACHE_SIZE);
+		try {
+			Integer.parseInt(h2CacheSize);
+			return h2CacheSize;
+		} catch (NumberFormatException e) {
+			return H2_CACHE_SIZE_DEFAULT;
+		}
 	}
 
 	private void createResource(String path, EObject eObject) {
@@ -107,9 +133,9 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 	}
 
 	/* == IStorageCdo ====================================================== */
-	
+
 	private boolean isActive = false;
-	
+
 	@Override
 	public boolean isStorageActive() {
 		return isActive;
@@ -167,5 +193,5 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo, Wi
 		JsonSerialiser jsonSerialiser = new JsonSerialiser(wikiConfiguration);
 		jsonSerialiser.SaveData();
 	}
-	
+
 }
