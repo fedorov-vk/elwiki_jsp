@@ -132,6 +132,11 @@ public class JspServletFilter extends HttpFilter implements Filter {
 					: new URI(httpRequest.getRequestURL().toString()).getPath();
 
 			log.debug("◄►doFilter◄► " + uri);
+			if(uri.equals("/")) {
+				// :FVK: workaround - executing the page's view command for an empty query.
+				uri = "/" + ContextEnum.PAGE_VIEW.getUri();
+			}
+
 			if (uri.startsWith("/cmd.")) {
 				// catch URI "/cmd.*"
 				log.debug("Request URI starts with '/cmd.'");
