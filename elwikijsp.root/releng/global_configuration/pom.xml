@@ -80,27 +80,22 @@
 			<url>${platform-repo.url}</url>
 		</repository>
 		<repository>
-			<id>apcahe-tools</id>
-			<layout>p2</layout>
-			<url>${apachetools-repo.url}</url>
-		</repository>
-		<repository>
-			<id>custom-p2-repo01</id>
+			<id>apcahe-tools-repo</id>
 			<layout>p2</layout>
 			<url>${custom-repo01.url}</url>
 		</repository>
 		<repository>
-			<id>custom-p2-repo02</id>
+			<id>custom-p2-repo-A</id>
 			<layout>p2</layout>
 			<url>${custom-repo02.url}</url>
 		</repository>
 		<repository>
-			<id>custom-p2-repo03</id>
+			<id>custom-p2-repo-B</id>
 			<layout>p2</layout>
 			<url>${custom-repo03.url}</url>
 		</repository>
 		<repository>
-			<id>for-test-repo(repo04)</id>
+			<id>for-test-repo-C</id>
 			<layout>p2</layout>
 			<url>${custom-repo04.url}</url>
 		</repository>
@@ -289,7 +284,6 @@
 			</activation>
 			<properties>
 				<platform-repo.url>file:${env.PLATFORM_REPO}</platform-repo.url>
-				<apachetools-repo.url>file:${env.APACHETOOLS_REPO}</apachetools-repo.url>
 				<custom-repo01.url>file:${env.CUSTOM_REPO01}</custom-repo01.url>
 				<custom-repo02.url>file:${env.CUSTOM_REPO02}</custom-repo02.url>
 				<custom-repo03.url>file:${env.CUSTOM_REPO03}</custom-repo03.url>
@@ -321,7 +315,6 @@
 			</activation>
 			<properties>
 				<platform-repo.url>file:///${env.PLATFORM_REPO}</platform-repo.url>
-				<apachetools-repo.url>file:///${env.APACHETOOLS_REPO}</apachetools-repo.url>
 				<custom-repo01.url>file:///${env.CUSTOM_REPO01}</custom-repo01.url>
 				<custom-repo02.url>file:///${env.CUSTOM_REPO02}</custom-repo02.url>
 				<custom-repo03.url>file:///${env.CUSTOM_REPO03}</custom-repo03.url>

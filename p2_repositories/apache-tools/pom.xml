@@ -34,6 +34,18 @@
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
+									<id>oro:oro:2.0.8</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>javax.el:javax.el-api:3.0.0</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+									<id>org.apache.felix:org.apache.felix.webconsole:4.9.6</id>
+									<source>false</source>
+								</artifact>
+								<artifact>
 									<id>org.apache.lucene:lucene-core:9.4.2</id>
 									<source>true</source>
 									<transitive>true</transitive>
@@ -82,10 +94,6 @@
 								<artifact>
 									<id>xmlrpc:xmlrpc:2.0.1</id>
 									<source>true</source>
-								</artifact>
-								<artifact>
-									<id>org.apache.felix:org.apache.felix.webconsole:4.3.16</id>
-									<source>false</source>
 								</artifact>
 								<artifact>
 									<id>javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1</id>

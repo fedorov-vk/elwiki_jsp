@@ -10,7 +10,6 @@ additional-artifacts	-
 apache-tools			- repository with Apache artifacts.
 custom-p2-site
 for-test-site
-from-eclipse			- here the artifats of previous version of eclipse repository.
 
 --------------------------------------------------------------------------------
 Tool for making list of artifacts.

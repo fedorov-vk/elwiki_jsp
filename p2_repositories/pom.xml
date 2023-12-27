@@ -49,7 +49,6 @@
 		<module>apache-tools</module>
 		<module>custom-p2-site</module>
 		<module>additional-artifacts</module>
-		<module>from-eclipse</module>
 		<module>for-test-site</module>
 	</modules>
 </project>
