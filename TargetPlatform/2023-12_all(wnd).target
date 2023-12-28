@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="2022-12_all + p2 repos">
+<target name="2023-12_all + p2 repos. (windows)">
 	<locations>
-		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/p2_repositories/custom-p2-site/target/repository" type="Directory"/>
-		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/p2_repositories/apache-tools/target/repository" type="Directory"/>
-		<location path="/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/p2_repositories/additional-artifacts/target/repository" type="Directory"/>
-		<location path="/home/repository/eclipse/releases/2022-12" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\GIT\elwiki_jsp_2023-12\p2_repositories\apache-tools\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\GIT\elwiki_jsp_2023-12\p2_repositories\custom-p2-site\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\GIT\elwiki_jsp_2023-12\p2_repositories\additional-artifacts\target\repository" type="Directory"/>
+		<location path="D:\devj\dev_wikijsp\GIT\elwiki_jsp_2023-12\p2_repositories\for-test-site\target\repository" type="Directory"/>
+		<location path="C:\Users\v.fedorov\p2\eclipse\releases\2023-12" type="Directory"/>
 	</locations>
 	<includeBundles>
-		<plugin id="com.google.gson" version="2.9.1"/>
-		<plugin id="com.sun.el"/>
-		<plugin id="com.sun.el.source"/>
-		<plugin id="jakarta.servlet-api"/>
-		<plugin id="jakarta.servlet-api.source"/>
+		<plugin id="com.google.gson"/>
+		<plugin id="jakarta.servlet-api" version="4.0.0"/>
+		<plugin id="jakarta.servlet-api.source" version="4.0.0"/>
+		<plugin id="javax.activation" version="1.2.2.v20221203-1659"/>
 		<plugin id="javax.activation" version="1.1.0.v201211130549"/>
-		<plugin id="javax.activation" version="1.2.2.v20221112-0806"/>
-		<plugin id="javax.annotation"/>
 		<plugin id="javax.el-api"/>
 		<plugin id="javax.el-api.source"/>
-		<plugin id="javax.inject"/>
-		<plugin id="javax.inject.source"/>
 		<plugin id="javax.mail"/>
-		<plugin id="javax.servlet.jsp-api"/>
-		<plugin id="javax.servlet.jsp-api.source"/>
 		<plugin id="javax.xml"/>
-		<plugin id="jaxen"/>
-		<plugin id="jaxen.source"/>
+		<plugin id="jaxen" version="2.0.0"/>
+		<plugin id="jaxen.source" version="2.0.0"/>
 		<plugin id="lpg.runtime.java"/>
 		<plugin id="lpg.runtime.java.source"/>
 		<plugin id="net.sf.ehcache"/>
@@ -33,41 +27,34 @@
 		<plugin id="net.sourceforge.akismet-java"/>
 		<plugin id="net.sourceforge.akismet-java.source"/>
 		<plugin id="org.apache.commons.codec"/>
-		<plugin id="org.apache.commons.codec.source"/>
 		<plugin id="org.apache.commons.commons-fileupload"/>
 		<plugin id="org.apache.commons.io"/>
 		<plugin id="org.apache.commons.logging"/>
 		<plugin id="org.apache.commons.logging.source"/>
-		<plugin id="org.apache.commons.lang3" version="3.12.0"/>
-		<plugin id="org.apache.commons.lang3.source"/>
-		<plugin id="org.apache.commons.commons-text"/>
-		<plugin id="org.apache.commons.commons-text.source"/>
-		<plugin id="org.apache.felix.gogo.command" version="1.1.2.v20221112-0806"/>
-		<plugin id="org.apache.felix.gogo.command.source" version="1.1.2.v20221112-0806"/>
+		<plugin id="org.apache.commons.lang3" version="3.13.0"/>
+		<plugin id="org.apache.commons.lang3.source" version="3.13.0"/>
+		<plugin id="org.apache.felix.gogo.command"/>
+		<plugin id="org.apache.felix.gogo.command.source"/>
 		<plugin id="org.apache.felix.gogo.runtime"/>
 		<plugin id="org.apache.felix.gogo.runtime.source"/>
-		<plugin id="org.apache.felix.gogo.shell" version="1.1.4.v20221112-0806"/>
-		<plugin id="org.apache.felix.gogo.shell.source" version="1.1.4.v20221112-0806"/>
+		<plugin id="org.apache.felix.gogo.shell"/>
+		<plugin id="org.apache.felix.gogo.shell.source"/>
 		<plugin id="org.apache.felix.scr"/>
 		<plugin id="org.apache.felix.scr.source"/>
-		<plugin id="org.apache.jasper.glassfish"/>
-		<plugin id="org.apache.jasper.glassfish.source"/>
 		<plugin id="org.apache.log4j"/>
 		<plugin id="org.apache.log4j.source"/>
 		<plugin id="org.apache.lucene.core" version="9.4.2"/>
 		<plugin id="org.apache.lucene.core.source" version="9.4.2"/>
 		<plugin id="org.apache.lucene.highlighter"/>
 		<plugin id="org.apache.lucene.highlighter.source"/>
-		<plugin id="org.apache.lucene.queries"/>
 		<plugin id="org.apache.lucene.queries.source"/>
 		<plugin id="org.apache.lucene.queryparser" version="9.4.2"/>
 		<plugin id="org.apache.lucene.queryparser.source"/>
 		<plugin id="org.apache.lucene.memory"/>
 		<plugin id="org.apache.lucene.memory.source"/>
-		<plugin id="org.apache.lucene.sandbox"/>
+		<plugin id="org.apache.lucene.sandbox" version="9.4.2"/>
 		<plugin id="org.apache.lucene.sandbox.source"/>
-		<plugin id="org.apache.lucene.analysis-common"/>
-		<plugin id="org.apache.lucene.analysis-common.source"/>
+		<plugin id="org.apache.lucene.analysis-common" version="9.4.2"/>
 		<plugin id="org.apache.xalan"/>
 		<plugin id="org.apache.xerces"/>
 		<plugin id="org.apache.xml.resolver"/>
@@ -138,20 +125,20 @@
 		<plugin id="org.eclipse.equinox.security.source"/>
 		<plugin id="org.eclipse.equinox.useradmin"/>
 		<plugin id="org.eclipse.equinox.useradmin.source"/>
-		<plugin id="org.eclipse.jdt.annotation" version="2.2.700.v20220826-1026"/>
-		<plugin id="org.eclipse.jdt.annotation.source" version="2.2.700.v20220826-1026"/>
-		<plugin id="org.eclipse.jetty.http"/>
-		<plugin id="org.eclipse.jetty.http.source"/>
-		<plugin id="org.eclipse.jetty.io"/>
-		<plugin id="org.eclipse.jetty.io.source"/>
-		<plugin id="org.eclipse.jetty.security"/>
-		<plugin id="org.eclipse.jetty.security.source"/>
-		<plugin id="org.eclipse.jetty.server"/>
-		<plugin id="org.eclipse.jetty.server.source"/>
+		<plugin id="org.eclipse.jdt.annotation" version="2.2.800.v20231029-1039"/>
+		<plugin id="org.eclipse.jdt.annotation.source" version="2.2.800.v20231029-1039"/>
+		<plugin id="org.eclipse.jetty.http" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.http.source" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.io" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.io.source" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.security" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.security.source" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.server" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.server.source" version="12.0.3"/>
 		<plugin id="org.eclipse.jetty.servlet"/>
 		<plugin id="org.eclipse.jetty.servlet.source"/>
-		<plugin id="org.eclipse.jetty.util"/>
-		<plugin id="org.eclipse.jetty.util.source"/>
+		<plugin id="org.eclipse.jetty.util" version="12.0.3"/>
+		<plugin id="org.eclipse.jetty.util.source" version="12.0.3"/>
 		<plugin id="org.eclipse.jetty.util.ajax"/>
 		<plugin id="org.eclipse.jetty.util.ajax.source"/>
 		<plugin id="org.eclipse.jetty.xml"/>
@@ -221,12 +208,19 @@
 		<plugin id="org.osgi.util.promise.source"/>
 		<plugin id="org.osgi.util.xml"/>
 		<plugin id="org.osgi.util.xml.source"/>
-		<plugin id="org.slf4j.api"/>
 		<plugin id="oro"/>
 		<plugin id="oro.source"/>
-		<plugin id="slf4j.api" version="1.7.36"/>
-		<plugin id="slf4j.api.source"/>
+		<plugin id="slf4j.api" version="2.0.9"/>
+		<plugin id="slf4j.api.source" version="2.0.9"/>
 		<plugin id="xmlrpc"/>
 		<plugin id="xmlrpc.source"/>
+		<plugin id="jakarta.servlet.jsp"/>
+		<plugin id="org.mortbay.jasper.apache-jsp.source"/>
+		<plugin id="org.mortbay.jasper.apache-jsp"/>
+		<plugin id="jakarta.servlet.source"/>
+		<plugin id="org.apache.commons.text.source"/>
+		<plugin id="org.apache.commons.text"/>
+		<plugin id="org.apache.lucene.analysis-common.source" version="9.4.2"/>
+		<plugin id="org.apache.lucene.queries" version="9.4.2"/>
 	</includeBundles>
 </target>

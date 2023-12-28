@@ -67,8 +67,9 @@ public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 	}
 
 	@Override
-	public void service(final HttpServletRequest request, final HttpServletResponse response, final String actionName,
-			final List<String> params) throws ServletException, IOException {
+	public void service(HttpServletRequest request,
+			HttpServletResponse response, String actionName,
+			List<String> params) throws ServletException, IOException {
 		try {
 			Thread.sleep(5000); // Wait 5 seconds
 		} catch (final Exception e) {

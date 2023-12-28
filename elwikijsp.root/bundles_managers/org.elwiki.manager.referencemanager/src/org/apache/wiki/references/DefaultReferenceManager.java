@@ -203,6 +203,9 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 			final ArrayList<WikiPage> pages = new ArrayList<>();
 			pages.addAll(pageManager.getAllPages());
 			this.initialize(pages);
+		} catch (ProviderException ex) {
+			//TODO: когда база пустая - не выдавать ошибку. (возможно это нормально?) 
+			log.error("Problem with get all pages:");
 		} catch (Exception e) {
 			throw new WikiException("Could not populate ReferenceManager.", e);
 		}

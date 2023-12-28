@@ -8,7 +8,7 @@
 -Dstderr.encoding=UTF-8
 -XX:+ShowCodeDetailsInExceptionMessages
 #-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000
--Delwiki.h2.database.place=D:/devj/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/
+-Delwiki.h2.database.place=D:/devj/dev_wikijsp/GIT/elwiki_jsp_2023-12/database_repository/
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
 -Declipse.ignoreApp=true
 -Dosgi.noShutdown=true

@@ -21,5 +21,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.annotation;bundle-version="2.2.300",
  org.apache.log4j
 Bundle-ActivationPolicy: lazy
-Import-Package: javax.servlet.http;version="4.0.0",
- org.apache.wiki.util
+Import-Package: org.apache.wiki.util

@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.filters
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
+Require-Bundle: jakarta.servlet-api;bundle-version="4.0.0",
+ org.mortbay.jasper.apache-jsp;bundle-version="9.0.52",
+ org.eclipse.osgi;bundle-version="3.15.200",
  org.apache.log4j;bundle-version="1.2.15",
  oro;bundle-version="2.0.8",
  org.jvnet.hudson.org.suigeneris.jrcs.diff;bundle-version="0.4.2",
@@ -18,10 +20,7 @@ Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
  org.elwiki.util,
  xmlrpc;bundle-version="2.0.1",
  org.osgi.service.event
-Import-Package: javax.servlet;version="3.1.0",
- javax.servlet.http;version="3.1.0",
- javax.servlet.jsp;version="2.2.0",
- org.eclipse.jface.preference,
+Import-Package: org.eclipse.jface.preference,
  org.elwiki.configuration,
  org.osgi.service.component;version="1.4.0",
  org.osgi.service.component.annotations;version="1.2.0"

@@ -1,7 +1,7 @@
 #
 # This file defines the location of p2 repositories, needed to build ElWiki.
 #
-export PLATFORM_REPO=/repo/eclipse/releases/2022-12
+export PLATFORM_REPO=/repo/eclipse/releases/2023-12
 
 P2_REPO_PLACE=$PWD/../p2_repositories
 # APACHETOOLS_REPO - probably not used anymore.

@@ -46,6 +46,10 @@
 									<source>false</source>
 								</artifact>
 								<artifact>
+									<id>org.apache.commons:commons-text:1.11.0</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
 									<id>org.apache.lucene:lucene-core:9.4.2</id>
 									<source>true</source>
 									<transitive>true</transitive>
@@ -86,10 +90,6 @@
 									<id>org.apache.lucene:lucene-sandbox:9.4.2</id>
 									<source>true</source>
 									<transitive>true</transitive>
-								</artifact>
-								<artifact>
-									<id>org.apache.commons:commons-text:1.10.0</id>
-									<source>true</source>
 								</artifact>
 								<artifact>
 									<id>xmlrpc:xmlrpc:2.0.1</id>

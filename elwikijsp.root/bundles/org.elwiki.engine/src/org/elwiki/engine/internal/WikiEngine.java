@@ -96,7 +96,7 @@ public class WikiEngine implements Engine {
 			@SuppressWarnings("unchecked")
 			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
 			Class<?> clazz = service.getClass();
-			// log.debug(" ~~ clazz: " + clazz.getSimpleName());
+			log.debug(" ~~ clazz: " + clazz.getSimpleName());
 			counterOfRegistered++;
 			Class<?>[] interfaces = clazz.getInterfaces();
 			for (Class<?> iface : interfaces) {

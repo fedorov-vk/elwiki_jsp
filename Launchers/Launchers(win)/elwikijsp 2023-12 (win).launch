@@ -7,7 +7,7 @@
     <stringAttribute key="bootstrap" value=""/>
     <stringAttribute key="checked" value="[NONE]"/>
     <booleanAttribute key="clearConfig" value="true"/>
-    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/elwikijsp 2022-12 (win)"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/elwikijsp 2023-12 (win)"/>
     <booleanAttribute key="default" value="true"/>
     <booleanAttribute key="default_auto_start" value="true"/>
     <intAttribute key="default_start_level" value="4"/>
@@ -22,8 +22,8 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console 10008"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=D:\devj\dev_wikijsp\ws_elwikijsp\__runtime-elwikijsp_2022-12\workspace\_temp_wiki_db&#13;&#10;-Declipse.ignoreApp=true&#13;&#10;-Dosgi.noShutdown=true&#13;&#10;-Dorg.osgi.service.http.port=8088&#13;&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#13;&#10;-Dstorage.cdo.port=2039&#13;&#10;-Xmx4G&#13;&#10;-Xms1G"/>
-    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp_2022-12"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=D:\devj\dev_wikijsp\ws_elwikijsp_2023-12\__runtime-elwikijsp_2023-12\database_repository\&#13;&#10;-Declipse.ignoreApp=true&#13;&#10;-Dosgi.noShutdown=true&#13;&#10;-Dorg.osgi.service.http.port=8088&#13;&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#13;&#10;-Dstorage.cdo.port=2039&#13;&#10;-Xmx4G&#13;&#10;-Xms1G"/>
+    <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp_2023-12"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_features">
         <setEntry value="elwiki.test.feature:default"/>
@@ -34,31 +34,29 @@
     </setAttribute>
     <setAttribute key="selected_target_bundles">
         <setEntry value="com.google.gson@default:default"/>
-        <setEntry value="com.sun.el@default:default"/>
+        <setEntry value="com.sun.el.javax.el@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.activation*1.1.0.v201211130549@default:default"/>
-        <setEntry value="javax.activation*1.2.2.v20221112-0806@default:default"/>
-        <setEntry value="javax.annotation@default:default"/>
+        <setEntry value="javax.activation*1.2.2.v20221203-1659@default:default"/>
         <setEntry value="javax.el-api@default:default"/>
-        <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.mail@default:default"/>
-        <setEntry value="javax.servlet.jsp-api@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jaxen@default:default"/>
         <setEntry value="lpg.runtime.java@default:default"/>
         <setEntry value="net.sf.ehcache@default:default"/>
         <setEntry value="net.sourceforge.akismet-java@default:default"/>
+        <setEntry value="org.apache.aries.spifly.dynamic.bundle@default:default"/>
         <setEntry value="org.apache.commons.codec@default:default"/>
         <setEntry value="org.apache.commons.commons-fileupload@default:default"/>
-        <setEntry value="org.apache.commons.commons-text@default:default"/>
+        <setEntry value="org.apache.commons.httpclient@default:default"/>
         <setEntry value="org.apache.commons.io@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
+        <setEntry value="org.apache.commons.text@default:default"/>
         <setEntry value="org.apache.felix.gogo.command@default:default"/>
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
         <setEntry value="org.apache.felix.scr@1:true"/>
-        <setEntry value="org.apache.jasper.glassfish@default:default"/>
         <setEntry value="org.apache.log4j@default:default"/>
         <setEntry value="org.apache.lucene.analysis-common@default:default"/>
         <setEntry value="org.apache.lucene.core@default:default"/>
@@ -66,6 +64,7 @@
         <setEntry value="org.apache.lucene.memory@default:default"/>
         <setEntry value="org.apache.lucene.queries@default:default"/>
         <setEntry value="org.apache.lucene.queryparser@default:default"/>
+        <setEntry value="org.apache.lucene.sandbox@default:default"/>
         <setEntry value="org.apache.xalan@default:default"/>
         <setEntry value="org.apache.xerces@default:default"/>
         <setEntry value="org.apache.xml.resolver@default:default"/>
@@ -104,14 +103,17 @@
         <setEntry value="org.eclipse.equinox.security@default:default"/>
         <setEntry value="org.eclipse.equinox.useradmin@default:default"/>
         <setEntry value="org.eclipse.jdt.annotation@default:default"/>
+        <setEntry value="org.eclipse.jdt.core.compiler.batch@default:default"/>
+        <setEntry value="org.eclipse.jetty.ee8.security@default:default"/>
+        <setEntry value="org.eclipse.jetty.ee8.server@default:default"/>
+        <setEntry value="org.eclipse.jetty.ee8.servlet@default:default"/>
         <setEntry value="org.eclipse.jetty.http@default:default"/>
         <setEntry value="org.eclipse.jetty.io@default:default"/>
         <setEntry value="org.eclipse.jetty.security@default:default"/>
         <setEntry value="org.eclipse.jetty.server@default:default"/>
-        <setEntry value="org.eclipse.jetty.servlet@default:default"/>
-        <setEntry value="org.eclipse.jetty.util.ajax@default:default"/>
+        <setEntry value="org.eclipse.jetty.servlet-api@default:default"/>
+        <setEntry value="org.eclipse.jetty.session@default:default"/>
         <setEntry value="org.eclipse.jetty.util@default:default"/>
-        <setEntry value="org.eclipse.jetty.xml@default:default"/>
         <setEntry value="org.eclipse.jface@default:default"/>
         <setEntry value="org.eclipse.net4j.db.h2@default:default"/>
         <setEntry value="org.eclipse.net4j.db.jdbc@default:default"/>
@@ -131,7 +133,14 @@
         <setEntry value="org.h2@default:default"/>
         <setEntry value="org.jdom.2@default:default"/>
         <setEntry value="org.jvnet.hudson.org.suigeneris.jrcs.diff@default:default"/>
+        <setEntry value="org.mortbay.jasper.apache-jsp@default:default"/>
+        <setEntry value="org.objectweb.asm.commons@default:default"/>
+        <setEntry value="org.objectweb.asm.tree.analysis@default:default"/>
+        <setEntry value="org.objectweb.asm.tree@default:default"/>
+        <setEntry value="org.objectweb.asm.util@default:default"/>
+        <setEntry value="org.objectweb.asm@default:default"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
+        <setEntry value="org.osgi.service.component.annotations@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
         <setEntry value="org.osgi.service.device@default:default"/>
         <setEntry value="org.osgi.service.event@default:default"/>
@@ -146,42 +155,43 @@
         <setEntry value="org.osgi.util.position@default:default"/>
         <setEntry value="org.osgi.util.promise@default:default"/>
         <setEntry value="org.osgi.util.xml@default:default"/>
-        <setEntry value="org.slf4j.api@default:default"/>
         <setEntry value="oro@default:default"/>
+        <setEntry value="slf4j.api@default:default"/>
+        <setEntry value="slf4j.simple@default:default"/>
         <setEntry value="xmlrpc@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="dwe.data@default:default"/>
-        <setEntry value="org.elwiki.ajax-dispatcher@default:default"/>
-        <setEntry value="org.elwiki.api@default:default"/>
-        <setEntry value="org.elwiki.authorize@default:default"/>
-        <setEntry value="org.elwiki.commandresolver@default:default"/>
-        <setEntry value="org.elwiki.configuration@default:default"/>
-        <setEntry value="org.elwiki.data.persist@default:default"/>
-        <setEntry value="org.elwiki.data@default:default"/>
-        <setEntry value="org.elwiki.engine@5:default"/>
+        <setEntry value="dwe.data@3:default"/>
+        <setEntry value="org.elwiki.ajax-dispatcher@3:default"/>
+        <setEntry value="org.elwiki.api@3:default"/>
+        <setEntry value="org.elwiki.authorize@3:default"/>
+        <setEntry value="org.elwiki.commandresolver@3:default"/>
+        <setEntry value="org.elwiki.configuration@3:default"/>
+        <setEntry value="org.elwiki.data.persist@3:default"/>
+        <setEntry value="org.elwiki.data@3:default"/>
+        <setEntry value="org.elwiki.engine@6:default"/>
         <setEntry value="org.elwiki.log4.definition@default:false"/>
-        <setEntry value="org.elwiki.mail@default:default"/>
-        <setEntry value="org.elwiki.manager.attachment@default:default"/>
-        <setEntry value="org.elwiki.manager.difference@default:default"/>
-        <setEntry value="org.elwiki.manager.filters@default:default"/>
-        <setEntry value="org.elwiki.manager.importer@default:default"/>
-        <setEntry value="org.elwiki.manager.page@default:default"/>
-        <setEntry value="org.elwiki.manager.pagerenamer@default:default"/>
-        <setEntry value="org.elwiki.manager.plugins@default:default"/>
-        <setEntry value="org.elwiki.manager.referencemanager@default:default"/>
-        <setEntry value="org.elwiki.manager.renderer@default:default"/>
-        <setEntry value="org.elwiki.manager.search@default:default"/>
-        <setEntry value="org.elwiki.manager.variables@default:default"/>
-        <setEntry value="org.elwiki.manager.wikiscope@default:default"/>
-        <setEntry value="org.elwiki.manager.workflow@default:default"/>
-        <setEntry value="org.elwiki.plugin.bugreporthandler@default:default"/>
+        <setEntry value="org.elwiki.mail@3:default"/>
+        <setEntry value="org.elwiki.manager.attachment@3:default"/>
+        <setEntry value="org.elwiki.manager.difference@3:default"/>
+        <setEntry value="org.elwiki.manager.filters@3:default"/>
+        <setEntry value="org.elwiki.manager.importer@3:default"/>
+        <setEntry value="org.elwiki.manager.page@3:default"/>
+        <setEntry value="org.elwiki.manager.pagerenamer@3:default"/>
+        <setEntry value="org.elwiki.manager.plugins@3:default"/>
+        <setEntry value="org.elwiki.manager.referencemanager@3:default"/>
+        <setEntry value="org.elwiki.manager.renderer@3:default"/>
+        <setEntry value="org.elwiki.manager.search@3:default"/>
+        <setEntry value="org.elwiki.manager.variables@3:default"/>
+        <setEntry value="org.elwiki.manager.wikiscope@3:default"/>
+        <setEntry value="org.elwiki.manager.workflow@3:default"/>
+        <setEntry value="org.elwiki.plugin.bugreporthandler@3:default"/>
         <setEntry value="org.elwiki.plugins.main@default:default"/>
-        <setEntry value="org.elwiki.provider.page.cdo@default:default"/>
-        <setEntry value="org.elwiki.resources@default:default"/>
-        <setEntry value="org.elwiki.rssgenerator@default:default"/>
-        <setEntry value="org.elwiki.urlconstructor@default:default"/>
-        <setEntry value="org.elwiki.util@default:default"/>
+        <setEntry value="org.elwiki.provider.page.cdo@3:default"/>
+        <setEntry value="org.elwiki.resources@3:default"/>
+        <setEntry value="org.elwiki.rssgenerator@3:default"/>
+        <setEntry value="org.elwiki.urlconstructor@3:default"/>
+        <setEntry value="org.elwiki.util@3:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="timestamp" value="1703668609483"/>

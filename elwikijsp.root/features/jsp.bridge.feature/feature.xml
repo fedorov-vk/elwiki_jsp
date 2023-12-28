@@ -25,7 +25,7 @@
          unpack="false"/>
 
    <plugin
-         id="javax.servlet.jsp-api"
+         id="jakarta.servlet.jsp"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -200,7 +200,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.jasper.glassfish"
+         id="org.mortbay.jasper.apache-jsp"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -236,13 +236,6 @@
 
    <plugin
          id="org.eclipse.jetty.util.ajax"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="javax.inject"
          download-size="0"
          install-size="0"
          version="0.0.0"
