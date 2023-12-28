@@ -7,8 +7,8 @@
 # The destination directory is created automatically.
 #
 
-SRC="https://download.eclipse.org/releases/2022-12"
-DST=2022-12
+SRC="https://download.eclipse.org/releases/2023-12"
+DST=2023-12
 
 ECLIPSE=/home/vfedorov/local/Eclipse_photon/eclipse_pde/eclipse
 #ECLIPSE=/home/vfedorov/local/Eclipse_neon_Release/eclipse_jee_46/eclipse
