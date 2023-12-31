@@ -12,7 +12,7 @@ Bundle-Vendor: FVK
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.elwiki.plugins.main
 Bundle-ActivationPolicy: lazy
-Require-Bundle: jakarta.servlet-api;bundle-version="4.0.0",
+Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  org.mortbay.jasper.apache-jsp;bundle-version="9.0.52",
  org.eclipse.osgi,
  org.eclipse.osgi.services;bundle-version="3.8.0",

@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: FVK
 Automatic-Module-Name: org.elwiki.manager.filters
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: jakarta.servlet-api;bundle-version="4.0.0",
+Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  org.mortbay.jasper.apache-jsp;bundle-version="9.0.52",
  org.eclipse.osgi;bundle-version="3.15.200",
  org.apache.log4j;bundle-version="1.2.15",

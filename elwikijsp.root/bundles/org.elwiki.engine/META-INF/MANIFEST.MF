@@ -9,7 +9,7 @@ Automatic-Module-Name: org.elwiki.engine
 Import-Package: org.eclipse.jdt.annotation,
  org.elwiki.configuration,
  org.osgi.framework;version="1.3.0"
-Require-Bundle: jakarta.servlet-api;bundle-version="4.0.0",
+Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  org.eclipse.osgi;bundle-version="3.18.200",
  org.eclipse.osgi.services;bundle-version="3.11.100",
  org.eclipse.equinox.common;bundle-version="3.17.0",
