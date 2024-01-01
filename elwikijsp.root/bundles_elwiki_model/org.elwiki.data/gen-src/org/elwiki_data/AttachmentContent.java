@@ -24,6 +24,7 @@ package org.elwiki_data;
 public interface AttachmentContent extends IHistoryInfo {
 	/**
 	 * Returns the value of the '<em><b>Place</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -35,7 +36,7 @@ public interface AttachmentContent extends IHistoryInfo {
 	 * @return the value of the '<em>Place</em>' attribute.
 	 * @see #setPlace(String)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getAttachmentContent_Place()
-	 * @model
+	 * @model default=""
 	 * @generated
 	 */
 	String getPlace();
@@ -52,6 +53,7 @@ public interface AttachmentContent extends IHistoryInfo {
 
 	/**
 	 * Returns the value of the '<em><b>Size</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -63,7 +65,7 @@ public interface AttachmentContent extends IHistoryInfo {
 	 * @return the value of the '<em>Size</em>' attribute.
 	 * @see #setSize(long)
 	 * @see org.elwiki_data.Elwiki_dataPackage#getAttachmentContent_Size()
-	 * @model
+	 * @model default="0"
 	 * @generated
 	 */
 	long getSize();

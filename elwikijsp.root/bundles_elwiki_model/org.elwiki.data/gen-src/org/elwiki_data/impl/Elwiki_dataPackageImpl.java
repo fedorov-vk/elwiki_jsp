@@ -1288,8 +1288,8 @@ public class Elwiki_dataPackageImpl extends EPackageImpl implements Elwiki_dataP
 		addEParameter(op, ecorePackage.getEInt(), "desiredVersion", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(attachmentContentEClass, AttachmentContent.class, "AttachmentContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAttachmentContent_Place(), ecorePackage.getEString(), "place", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAttachmentContent_Size(), ecorePackage.getELong(), "size", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAttachmentContent_Place(), ecorePackage.getEString(), "place", "", 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAttachmentContent_Size(), ecorePackage.getELong(), "size", "0", 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAttachmentContent_PageAttachment(), this.getPageAttachment(), this.getPageAttachment_AttachContents(), "pageAttachment", null, 0, 1, AttachmentContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(objectEClass, Object.class, "Object", IS_ABSTRACT, IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
