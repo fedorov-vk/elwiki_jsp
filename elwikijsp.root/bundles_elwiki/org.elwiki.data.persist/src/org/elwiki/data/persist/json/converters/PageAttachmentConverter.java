@@ -2,6 +2,7 @@ package org.elwiki.data.persist.json.converters;
 
 import java.lang.reflect.Type;
 
+import org.eclipse.emf.common.util.EList;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
@@ -50,6 +51,12 @@ public class PageAttachmentConverter extends DeserialiseStuff
 		String id = getString(jsonObject, ID);
 		String name = getString(jsonObject, NAME);
 		int lastVersion = getInt(jsonObject, LAST_VERSION);
+		
+		EList<AttachmentContent> contents = pageAttachment.getAttachContents();
+		for (JsonElement jsonContent : getArray(jsonObject, ATTACH_CONTENTS)) {
+			AttachmentContent attachmentContent = context.deserialize(jsonContent, AttachmentContent.class);
+			contents.add(attachmentContent);
+		}		
 
 		pageAttachment.setId(id);
 		pageAttachment.setName(name);
