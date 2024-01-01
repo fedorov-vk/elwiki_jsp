@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -22,6 +23,7 @@ public class DateConverter implements JsonSerializer<Date>, JsonDeserializer<Dat
 	public DateConverter() {
 		super();
 		this.dateFormatter = new SimpleDateFormat(PATTERN, Locale.UK);
+		this.dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
 	@Override

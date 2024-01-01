@@ -171,6 +171,9 @@ public class PageAttachmentImpl extends CDOObjectImpl implements PageAttachment 
 			}
 		}
 		
+		if (result == null)
+			return Elwiki_dataFactoryImpl.eINSTANCE.createAttachmentContent();
+		
 		return result;
 	}
 

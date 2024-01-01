@@ -18,6 +18,9 @@
  */
 package org.apache.wiki.references;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -203,6 +206,9 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 			final ArrayList<WikiPage> pages = new ArrayList<>();
 			pages.addAll(pageManager.getAllPages());
 			this.initialize(pages);
+		} catch (ProviderException ex) {
+			//TODO: когда база пустая - не выдавать ошибку. (возможно это нормально? в менеджере страниц - сделать: нет страниц - возврат пустой список) 
+			log.error("Problem with get all pages:");
 		} catch (Exception e) {
 			throw new WikiException("Could not populate ReferenceManager.", e);
 		}
@@ -240,71 +246,87 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      */
     @Deprecated
     @Override
-    public void initialize( final Collection< WikiPage > pages ) throws ProviderException {
-        log.debug( "Initializing new ReferenceManager with " + pages.size() + " initial pages." );
-        final StopWatch sw = new StopWatch();
-        sw.start();
-        log.info( "Starting cross reference scan of WikiPages" );
+	public void initialize(final Collection<WikiPage> pages) throws ProviderException {
+		log.debug("Initializing new ReferenceManager with " + pages.size() + " initial pages.");
 
-        //  First, try to serialize old data from disk.  If that fails, we'll go and update the entire reference lists (which'll take time)
-        try {
-            //  Unserialize things.  The loop below cannot be combined with the other loop below, simply because
-            //  engine.getPage() has side effects such as loading initializing the user databases, which in turn want all
-            //  of the pages to be read already...
-            //
-            //  Yes, this is a kludge.  We know.  Will be fixed.
-            final long saved = Long.MAX_VALUE; /*:FVK: WORKAROUND. unserializeFromDisk(); */
+		Job job = new Job("cross reference scaning") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				final StopWatch sw = new StopWatch();
+				sw.start();
+				log.info("Starting cross reference scan of WikiPages");
 
-            for( final WikiPage page : pages ) {
-                unserializeAttrsFromDisk( page );
-            }
+				//  First, try to serialize old data from disk.  If that fails, we'll go and update the entire reference lists (which'll take time)
+				try {
+					//  Unserialize things.  The loop below cannot be combined with the other loop below, simply because
+					//  engine.getPage() has side effects such as loading initializing the user databases, which in turn want all
+					//  of the pages to be read already...
+					//
+					//  Yes, this is a kludge.  We know.  Will be fixed.
+					final long saved = Long.MAX_VALUE; /*:FVK: WORKAROUND. unserializeFromDisk(); */
 
-            //  Now we must check if any of the pages have been changed  while we were in the electronic la-la-land,
-            //  and update the references for them.
-            for( final WikiPage page : pages ) {
-                if( !( page instanceof PageAttachment ) ) {
-                    // Refresh with the latest copy
-                    final WikiPage wp = pageManager.getPage( page.getName() );
+					for (final WikiPage page : pages) {
+						unserializeAttrsFromDisk(page);
+					}
 
-                    if( wp.getLastModifiedDate() == null ) {
-                        log.fatal( "Provider returns null lastModified.  Please submit a bug report." );
-                        /*:FVK: workaround
-						EList<PageContent> pageContents = wp.getPageContents();
-						PageContent pageContent = pageContents.get(pageContents.size()-1);
-                        this.storageCdo.modify(pageContent, new ITransactionalOperation<PageContent>() {
-							@Override
-							public Object execute(PageContent pc1, CDOTransaction transaction) {
-								PageContent pageContent = transaction.getObject(pc1);
-								pageContent.setLastModify(new GregorianCalendar(1972, 1, 12).getTime());
-								return page;
+					//  Now we must check if any of the pages have been changed  while we were in the electronic la-la-land,
+					//  and update the references for them.
+					for (final WikiPage page : pages) {
+						if (!(page instanceof PageAttachment)) {
+							// Refresh with the latest copy
+							final WikiPage wp = pageManager.getPage(page.getName());
+
+							if (wp.getLastModifiedDate() == null) {
+								log.fatal("Provider returns null lastModified.  Please submit a bug report.");
+								/*:FVK: workaround
+								EList<PageContent> pageContents = wp.getPageContents();
+								PageContent pageContent = pageContents.get(pageContents.size()-1);
+								this.storageCdo.modify(pageContent, new ITransactionalOperation<PageContent>() {
+									@Override
+									public Object execute(PageContent pc1, CDOTransaction transaction) {
+										PageContent pageContent = transaction.getObject(pc1);
+										pageContent.setLastModify(new GregorianCalendar(1972, 1, 12).getTime());
+										return page;
+									}
+								});
+								*/
+							} else if (wp.getLastModifiedDate().getTime() > saved) {
+								updatePageReferences(wp);
 							}
-						});
-						*/
-                    } else if( wp.getLastModifiedDate().getTime() > saved ) {
-                        updatePageReferences( wp );
-                    }
-                }
-            }
+						}
+					}
 
-        } catch( final Exception e ) {
-            log.info( "Unable to unserialize old refmgr information, rebuilding database: " + e.getMessage() );
-            buildKeyLists( pages );
+				} catch (final Exception e) {
+					log.info("Unable to unserialize old refmgr information, rebuilding database: " + e.getMessage());
+					buildKeyLists(pages);
 
-            // Scan the existing pages from disk and update references in the manager.
-            for( final WikiPage page : pages ) {
-                // We cannot build a reference list from the contents of attachments, so we skip them.
-                if( !( page instanceof PageAttachment ) ) {
-                    updatePageReferences( page );
-                    serializeAttrsToDisk( page );
-                }
-            }
+					// Scan the existing pages from disk and update references in the manager.
+					for (final WikiPage page : pages) {
+						// We cannot build a reference list from the contents of attachments, so we skip them.
+						if (!(page instanceof PageAttachment)) {
+							try {
+								updatePageReferences(page);
+							} catch (ProviderException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							serializeAttrsToDisk(page);
+						}
+					}
 
-            serializeToDisk();
-        }
+					serializeToDisk();
+				}
 
-        sw.stop();
-        log.info( "Cross reference scan done in "+sw );
-    }
+				sw.stop();
+				log.info("Cross reference scan done in " + sw);
+
+				return null;
+			}
+		};
+		job.setSystem(false);
+		job.setUser(false);
+		job.schedule();
+	}
 
     /**
      *  Reads the serialized data from the disk back to memory. Returns the date when the data was last written on disk

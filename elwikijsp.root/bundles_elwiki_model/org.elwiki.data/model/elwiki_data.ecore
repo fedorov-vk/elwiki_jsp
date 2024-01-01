@@ -216,7 +216,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="PageAttachment">
     <eOperations name="forLastContent" eType="#//AttachmentContent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="AttachmentContent result = null;&#xA;int version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;int contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;return result;"/>
+        <details key="body" value="AttachmentContent result = null;&#xA;int version = 0;&#xA;EList&lt;AttachmentContent> attachContents = getAttachContents();&#xA;for (AttachmentContent attContent : attachContents) {&#xA;&#x9;int contentVersion = attContent.getVersion();&#xA;&#x9;if (version &lt; contentVersion) {&#xA;&#x9;&#x9;version = contentVersion;&#xA;&#x9;&#x9;result = attContent;&#xA;&#x9;}&#xA;}&#xA;&#xA;if (result == null)&#xA;&#x9;return Elwiki_dataFactoryImpl.eINSTANCE.createAttachmentContent();&#xA;&#xA;return result;"/>
         <details key="documentation" value="Returns last item of attachContents reference. And set reference of AttachmentContent.\n&lt;/br>Can be NULL."/>
       </eAnnotations>
     </eOperations>
@@ -249,12 +249,14 @@
         eType="#//AttachmentContent" containment="true" eOpposite="#//AttachmentContent/pageAttachment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttachmentContent" eSuperTypes="#//IHistoryInfo">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="place" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="place" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Place&lt;/em>' attribute isn't clear,&#xA;there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        defaultValueLiteral="0">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="&lt;p>&#xA;If the meaning of the '&lt;em>Size&lt;/em>' attribute isn't clear,&#xA; there really should be more of a description here...&#xA;&lt;/p>"/>
       </eAnnotations>

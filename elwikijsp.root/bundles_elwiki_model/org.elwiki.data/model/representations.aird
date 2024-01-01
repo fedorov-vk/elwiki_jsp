@@ -49,7 +49,7 @@
     <semanticResources>../target/classes/org/elwiki_data/util/Elwiki_dataSwitch.class</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_NX9QcG-QEeid6OKUsQuIXA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="b81ce4e1-f200-4a46-bbc9-3ef709f05c1a">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_VOKXsG-QEeid6OKUsQuIXA" name="elwiki_data class diagram" repPath="#_VOGtUG-QEeid6OKUsQuIXA" changeId="e8ebe752-febb-4ae3-a358-c5a3519ce988">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="elwiki_data.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -1255,7 +1255,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_aSxhEW-QEeid6OKUsQuIXA" name="size : ELong" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_aSxhEW-QEeid6OKUsQuIXA" name="size : ELong = 0" tooltipText="">
         <target xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AttachmentContent/size"/>
         <semanticElements xmi:type="ecore:EAttribute" href="elwiki_data.ecore#//AttachmentContent/size"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_aSyIIG-QEeid6OKUsQuIXA" labelAlignment="LEFT">
