@@ -169,8 +169,8 @@
 		<plugin id="org.freshcookies.security"/>
 		<plugin id="org.freshcookies.security.source"/>
 		<plugin id="org.h2"/>
-		<plugin id="org.jdom.2"/>
-		<plugin id="org.jdom.2.source"/>
+		<plugin id="org.jdom2"/>
+		<plugin id="org.jdom2.source"/>
 		<plugin id="org.jvnet.hudson.org.suigeneris.jrcs.diff"/>
 		<plugin id="org.jvnet.hudson.org.suigeneris.jrcs.diff.source"/>
 		<plugin id="org.osgi.service.cm"/>

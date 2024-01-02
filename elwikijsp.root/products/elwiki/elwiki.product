@@ -174,7 +174,7 @@
       <plugin id="org.elwiki.util" autoStart="true" startLevel="3" />
       <plugin id="org.freshcookies.security" autoStart="true" startLevel="0" />
       <plugin id="org.h2" autoStart="true" startLevel="0" />
-      <plugin id="org.jdom.2" autoStart="true" startLevel="0" />
+      <plugin id="org.jdom2" autoStart="true" startLevel="0" />
       <plugin id="org.jvnet.hudson.org.suigeneris.jrcs.diff" autoStart="true" startLevel="0" />
       <plugin id="org.mortbay.jasper.apache-jsp" autoStart="true" startLevel="0" />
       <plugin id="org.osgi.service.cm" autoStart="true" startLevel="0" />

@@ -20,6 +20,7 @@ package org.apache.wiki.references;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -323,7 +324,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 				sw.stop();
 				log.info("Cross reference scan done in " + sw);
 
-				return null;
+				return Status.OK_STATUS;
 			}
 		};
 		job.setSystem(false);

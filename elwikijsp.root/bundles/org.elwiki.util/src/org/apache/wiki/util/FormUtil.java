@@ -26,8 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-//import javax.servlet.http.HttpServletRequest;
-
 /**
  * A collection of (static) utilities used by the WikiForms code.
  * FormUtil is mainly concerned with mapping HTTP parameters to

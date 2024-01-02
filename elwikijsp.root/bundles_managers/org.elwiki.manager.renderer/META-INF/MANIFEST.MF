@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  net.sf.ehcache,
  org.elwiki.util,
  oro,
- org.jdom.2,
+ org.jdom2,
  org.osgi.service.event
 Service-Component: OSGI-INF/elwiki.DefaultRenderingManager.xml

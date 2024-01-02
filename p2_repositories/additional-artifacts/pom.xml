@@ -39,10 +39,6 @@
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
 								<artifact>
-									<id>org.jdom:jdom2:2.0.6</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
 									<id>jaxen:jaxen:1.2.0</id>
 									<source>true</source>
 								</artifact>
@@ -62,12 +58,6 @@
 									<id>org.freshcookies:freshcookies-security:0.60</id>
 									<source>true</source>
 								</artifact>
-<!-- removed. It was used for AtomAPIServlet servlet of JSPwiki.
-								<artifact>
-									<id>net.sourceforge:sandler:0.5</id>
-									<source>true</source>
-								</artifact>
--->
 							</artifacts>
 						</configuration>
 					</execution>

@@ -133,7 +133,7 @@
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.freshcookies.security@default:default"/>
         <setEntry value="org.h2@default:default"/>
-        <setEntry value="org.jdom.2@default:default"/>
+        <setEntry value="org.jdom2@default:default"/>
         <setEntry value="org.jvnet.hudson.org.suigeneris.jrcs.diff@default:default"/>
         <setEntry value="org.mortbay.jasper.apache-jsp@default:default"/>
         <setEntry value="org.objectweb.asm.commons@default:default"/>

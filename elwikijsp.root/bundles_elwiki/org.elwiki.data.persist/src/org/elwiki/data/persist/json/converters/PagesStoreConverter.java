@@ -3,6 +3,7 @@ package org.elwiki.data.persist.json.converters;
 import java.lang.reflect.Type;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.IStorageCdo;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.cdo.util.CommitException;
 import org.eclipse.emf.cdo.util.ConcurrentAccessException;
@@ -56,8 +57,9 @@ public class PagesStoreConverter extends DeserialiseStuff
 		String nextAttachmentId = getString(jsonObject, NEXT_ATTACHMENT_ID);
 		JsonArray jsonPages = getArray(jsonObject, PAGES);
 
-		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
-		CDOTransaction transaction = PluginActivator.getDefault().getDataStore().getTransactionCDO();
+		IStorageCdo storageCdo = PluginActivator.getDefault().getService(IStorageCdo.class);
+		PagesStore pagesStore = storageCdo.getPagesStore();
+		CDOTransaction transaction = storageCdo.getTransactionCDO();
 		pagesStore = transaction.getObject(pagesStore);
 
 		pagesStore.setMainPageId(mainPageId);

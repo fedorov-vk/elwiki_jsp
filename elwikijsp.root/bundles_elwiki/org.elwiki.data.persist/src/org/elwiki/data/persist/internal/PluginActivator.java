@@ -1,8 +1,6 @@
 package org.elwiki.data.persist.internal;
 
-import org.apache.wiki.api.IStorageCdo;
 import org.eclipse.core.runtime.jobs.Job;
-import org.elwiki.data.persist.IDataStore;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -50,12 +48,13 @@ public class PluginActivator implements BundleActivator {
 		jobActivating.setPriority(Job.LONG);
 		jobActivating.schedule();
 		*/
-
-		//		Thread thread = new Thread(() -> {
-		//PluginActivator.this.dataStore.doConnect();
-		//System.out.println("--- Repository Activated. ---");
-		//		});
-		//		thread.start();
+		/*
+		Thread thread = new Thread(() -> {
+			PluginActivator.this.dataStore.doConnect();
+			System.out.println("--- Repository Activated. ---");
+		});
+		thread.start();
+		*/
 	}
 
 	private void deactivateRepository() {
@@ -88,22 +87,25 @@ public class PluginActivator implements BundleActivator {
 			System.out.println("--- Repository Deactivated. ---");
 		});
 		thread.start();
-
 	}
 
 	public static PluginActivator getDefault() {
 		return PluginActivator.instance;
 	}
 
-	public IDataStore getDataStore() {
-		IStorageCdo dataStore1 = null;
-
-		ServiceReference<?> ref = bundleContext.getServiceReference(IStorageCdo.class.getName());
-		if (ref != null) {
-			dataStore1 = (IStorageCdo) bundleContext.getService(ref);
+	@SuppressWarnings("unchecked")
+	public <T> T getService(Class<T> clazz) {
+		try {
+			ServiceReference<?> ref = bundleContext.getServiceReference(clazz.getName());
+			Object service = bundleContext.getService(ref);
+			if (clazz.isAssignableFrom(service.getClass()))
+				return (T) service;
+		} catch (Exception e) {
+			// TODO: e.printStackTrace();
+			e.printStackTrace();
 		}
 
-		return (IDataStore) dataStore1;
+		return null;
 	}
 
 }
