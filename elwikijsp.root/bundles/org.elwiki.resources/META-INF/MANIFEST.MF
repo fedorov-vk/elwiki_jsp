@@ -33,7 +33,6 @@ Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  org.elwiki.data,
  org.elwiki.plugins.main;bundle-version="1.0.0"
 Import-Package: javax.mail;version="1.4.0",
- org.apache.commons.io,
  org.apache.wiki.tags,
  org.apache.wiki.util0,
  org.eclipse.core.internal.preferences,

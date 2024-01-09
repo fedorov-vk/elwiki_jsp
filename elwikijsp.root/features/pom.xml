@@ -16,6 +16,7 @@
 	</parent>
 
 	<modules>
+		<module>org.elwiki.lucene.feature</module>
 		<module>org.elwiki.feature</module>
 		<module>jsp.bridge.feature</module>
 		<module>org.elwiki.platform.feature</module>

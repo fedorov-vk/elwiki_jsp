@@ -50,7 +50,7 @@
 									<source>true</source>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-core:9.4.2</id>
+									<id>org.apache.lucene:lucene-core:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 <!--
@@ -62,32 +62,32 @@
 -->
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-analysis-common:9.4.2</id>
+									<id>org.apache.lucene:lucene-analysis-common:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-queries:9.4.2</id>
+									<id>org.apache.lucene:lucene-queries:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-highlighter:9.4.2</id>
+									<id>org.apache.lucene:lucene-highlighter:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-queryparser:9.4.2</id>
+									<id>org.apache.lucene:lucene-queryparser:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-memory:9.4.2</id>
+									<id>org.apache.lucene:lucene-memory:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
 								<artifact>
-									<id>org.apache.lucene:lucene-sandbox:9.4.2</id>
+									<id>org.apache.lucene:lucene-sandbox:9.8.0</id>
 									<source>true</source>
 									<transitive>true</transitive>
 								</artifact>
