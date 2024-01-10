@@ -50,6 +50,7 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 /**
  *  <p>Manages Sessions for different Engines.</p>
@@ -59,7 +60,11 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.SessionMonitor",
-	service = { org.apache.wiki.auth.ISessionMonitor.class, WikiManager.class, EventHandler.class },
+	service = { org.apache.wiki.auth.ISessionMonitor.class, HttpSessionListener.class, WikiManager.class, EventHandler.class },
+	property = {
+	        	HttpWhiteboardConstants.HTTP_WHITEBOARD_LISTENER + "=true",
+	        	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
+	        	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpSessionListener, EventHandler {
@@ -210,28 +215,27 @@ public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpS
         return p;
     }
 
-    /**
-     * Fires when the web container creates a new HTTP session.
-     * 
-     * @param se the HTTP session event
-     */ //:FVK: TODO: обеспечить вызов метода.
-    @Override
-    public void sessionCreated( final HttpSessionEvent se ) {
-        final HttpSession session = se.getSession();
-        log.debug( "Created session: " + session.getId() + "." );
-    }
+	/**
+	 * {@inheritDoc} <br/>
+	 * Fires when the web container creates a new HTTP session.
+	 */
+	@Override
+	public void sessionCreated(HttpSessionEvent se) {
+		HttpSession session = se.getSession();
+		log.debug("Created Http session: " + session.getId());
+	}
 
-    /**
-     * Removes the user's WikiSession from the internal session cache when the web
-     * container destroys an HTTP session.
-     * @param se the HTTP session event
-     */ //:FVK: TODO: обеспечить вызов метода.
-    @Override
-	public void sessionDestroyed(final HttpSessionEvent se) {
-		final HttpSession session = se.getSession();
-		final Session storedSession = this.findSession(session);
+	/**
+	 * {@inheritDoc} <br/>
+	 * Removes the user's WikiSession from the internal session cache when the web container destroys an
+	 * HTTP session.
+	 */
+	@Override
+	public void sessionDestroyed(HttpSessionEvent se) {
+		HttpSession session = se.getSession();
+		Session storedSession = this.findSession(session);
 		this.remove(session);
-		log.debug("Removed session " + session.getId() + ".");
+		log.debug("Removed Http session: " + session.getId());
 		if (storedSession != null) {
 			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_SESSION_EXPIRED,
 					Map.of(WikiSecurityEventTopic.PROPERTY_SESSION, storedSession)));
