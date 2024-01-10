@@ -10,6 +10,7 @@
 #-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000
 -Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/
 -Dorg.osgi.service.http.port=8088
+-Dorg.eclipse.equinox.http.jetty.context.sessioninactiveinterval=600
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
 -Dstorage.cdo.port=2039
 -classpath plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar:

@@ -13,6 +13,7 @@
 -Declipse.ignoreApp=true
 -Dosgi.noShutdown=true
 -Dorg.osgi.service.http.port=8088
+-Dorg.eclipse.equinox.http.jetty.context.sessioninactiveinterval=600
 -Dstorage.cdo.port=2039
 -classpath "plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar;"
 org.eclipse.equinox.launcher.Main
