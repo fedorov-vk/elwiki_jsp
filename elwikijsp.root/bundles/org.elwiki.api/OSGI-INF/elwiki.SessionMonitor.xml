@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="shutdown" name="elwiki.SessionMonitor">
+   <property name="osgi.http.whiteboard.listener" value="true"/>
+   <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <service scope="singleton">
       <provide interface="org.apache.wiki.auth.ISessionMonitor"/>
+      <provide interface="javax.servlet.http.HttpSessionListener"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>

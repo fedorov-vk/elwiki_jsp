@@ -3,10 +3,8 @@ package org.elwiki.web.jsp;
 import javax.servlet.Servlet;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Engine;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
