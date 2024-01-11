@@ -38,7 +38,6 @@
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.activation*1.1.0.v201211130549@default:default"/>
         <setEntry value="javax.activation*1.2.2.v20221203-1659@default:default"/>
-        <setEntry value="javax.el-api@default:default"/>
         <setEntry value="javax.mail@default:default"/>
         <setEntry value="javax.xml@default:default"/>
         <setEntry value="jaxen@default:default"/>

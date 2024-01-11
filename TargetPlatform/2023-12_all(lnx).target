@@ -25,8 +25,6 @@
 		<plugin id="jakarta.transaction-api.source"/>
 		<plugin id="javax.activation" version="1.1.0.v201211130549"/>
 		<plugin id="javax.activation" version="1.2.2.v20221203-1659"/>
-		<plugin id="javax.el-api"/>
-		<plugin id="javax.el-api.source"/>
 		<plugin id="javax.mail"/>
 		<plugin id="javax.xml"/>
 		<plugin id="jaxen" version="2.0.0"/>

@@ -26,10 +26,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="javax.el-api"
-         version="0.0.0"/>
-
-   <plugin
          id="javax.mail"
          version="0.0.0"/>
 
