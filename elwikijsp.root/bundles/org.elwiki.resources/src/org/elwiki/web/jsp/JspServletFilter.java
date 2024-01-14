@@ -131,7 +131,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			String uri = (isForward == null) ? httpRequest.getRequestURI()
 					: new URI(httpRequest.getRequestURL().toString()).getPath();
 
-			log.debug("◄►doFilter◄► " + uri);
+			log.debug("◄►doFilter◄► " + uri + "\n");
 			if(uri.equals("/")) {
 				// :FVK: workaround - executing the page's view command for an empty query.
 				uri = "/" + ContextEnum.PAGE_VIEW.getUri();

@@ -38,8 +38,9 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.AuthenticationManager;
+import org.apache.wiki.auth.AuthenticationManagerOptions;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TimedCounterList;
@@ -52,6 +53,7 @@ import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
@@ -82,14 +84,14 @@ import org.osgi.service.useradmin.UserAdmin;
 	service = { AuthenticationManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements AuthenticationManager, WikiManager, EventHandler {
+public class DefaultAuthenticationManager implements AuthenticationManager, WikiManager, WikiPrefs, EventHandler {
+
+    private static final Logger log = Logger.getLogger(DefaultAuthenticationManager.class);
 
     /** How many milliseconds the logins are stored before they're cleaned away. */
     private static final long LASTLOGINS_CLEANUP_TIME = 10 * 60 * 1_000L; // Ten minutes
 
     private static final long MAX_LOGIN_DELAY = 20 * 1_000L; // 20 seconds
-
-    private static final Logger log = Logger.getLogger( DefaultAuthenticationManager.class );
 
     /** Class (of type LoginModule) to use for custom authentication. */
     protected Class< ? extends LoginModule > m_loginModuleClass = AccountRegistryLoginModule.class;
@@ -100,15 +102,15 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
     /** The default {@link LoginModule} class name to use for custom authentication. */
     private static final String DEFAULT_LOGIN_MODULE = AccountRegistryLoginModule.class.getCanonicalName(); 
-    		//:FVK: "org.apache.wiki.auth.login.AccountRegistryLoginModule";
+    //:FVK: "org.apache.wiki.auth.login.AccountRegistryLoginModule";
 
     /** Static Boolean for lazily-initializing the "allows assertions" flag */
     private boolean m_allowsCookieAssertions = true;
 
-    private boolean m_throttleLogins = true;
-
     /** Static Boolean for lazily-initializing the "allows cookie authentication" flag */
     private boolean m_allowsCookieAuthentication = false;
+
+    private boolean m_throttleLogins = true;
 
     /** Keeps a list of the usernames who have attempted a login recently. */
     private TimedCounterList< String > m_lastLoginAttempts = new TimedCounterList<>();
@@ -121,6 +123,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
+
+    final AuthenticationManagerOptionsImpl options = new AuthenticationManagerOptionsImpl();
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -146,14 +150,16 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	/** {@inheritDoc} */
 	@Override
     public void initialize() throws WikiException {
+		options.initialize(m_engine);
+
         // Should we allow cookies for assertions? (default: yes)
-        m_allowsCookieAssertions = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_ASSERTIONS, true);
+        m_allowsCookieAssertions = options.isCookieAssertions();
 
         // Should we allow cookies for authentication? (default: no)
-        m_allowsCookieAuthentication = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_AUTH, false);
+        m_allowsCookieAuthentication = options.isCookieAuthentication();
 
         // Should we throttle logins? (default: yes)
-        m_throttleLogins = wikiConfiguration.getBooleanProperty(PROP_LOGIN_THROTTLING, true);
+        m_throttleLogins = options.isLoginThrottling();
 
         // Look up the LoginModule class
         //final String loginModuleClassName = TextUtil.getStringProperty( props, PROP_LOGIN_MODULE, DEFAULT_LOGIN_MODULE );
@@ -523,6 +529,16 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		switch (topic) {
 			break;
 		}*/
+	}
+
+	@Override
+	public String getConfigurationEntry() {
+		return options.getConfigurationEntry();
+	}
+
+	@Override
+	public AuthenticationManagerOptions getOptions() {
+		return options;
 	}
 
 }

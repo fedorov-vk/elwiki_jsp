@@ -35,6 +35,7 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 
@@ -267,5 +268,13 @@ public interface Engine {
     Charset getContentEncoding();
 
 	WikiPage getPageById(String pageId) throws ProviderException;
+
+	/**
+	 * Retrieves ElWiki managers that provide a {@link WikiPrefs} interface.
+	 *
+	 * @return collection of requested objects implementing the WikiPrefs interface, {@code empty} list if none
+	 *         available.
+	 */
+	List<WikiPrefs> getConfigurableManagers();
 
 }

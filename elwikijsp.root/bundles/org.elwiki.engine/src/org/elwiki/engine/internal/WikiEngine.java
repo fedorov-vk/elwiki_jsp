@@ -33,6 +33,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -374,6 +375,7 @@ public class WikiEngine implements Engine {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean isConfigured() {
 		return m_isConfigured;
 	}
@@ -495,6 +497,17 @@ public class WikiEngine implements Engine {
 	public <T> List<T> getManagers(Class<T> manager) {
 		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<WikiPrefs> getConfigurableManagers() {
+		//@formatter:off
+		List<WikiPrefs> result = (List<WikiPrefs>) managers.entrySet().stream()
+				.filter(e -> WikiPrefs.class.isAssignableFrom(e.getKey()))
+				.map(e -> (WikiPrefs)e.getValue())
+				.collect(Collectors.toList());
+		//@formatter:on
+		return result;
 	}
 
 }

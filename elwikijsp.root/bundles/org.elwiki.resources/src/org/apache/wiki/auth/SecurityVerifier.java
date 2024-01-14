@@ -37,8 +37,6 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.authorization.WebAuthorizer;
@@ -47,7 +45,6 @@ import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.permissions.WikiPermission;
-
 import org.freshcookies.security.policy.PolicyReader;
 
 /**
@@ -545,17 +542,16 @@ public final class SecurityVerifier {
 	}
 
 	/**
-	 * Verfies the JAAS configuration. The configuration is valid if value of the
-	 * <code>preferences.ini<code> property
-	 * {@value org.apache.wiki.auth.AuthenticationManager#PROP_LOGIN_MODULE} resolves to a valid class
-	 * on the classpath.
+	 * Verfies the JAAS configuration. The configuration is valid if value of the LoginModuleClass
+	 * option from AuthenticationManager resolves to a valid class on the classpath.
 	 */
 	protected void verifyJaas() {
+		AuthenticationManager authenticationManager = m_engine.getManager(AuthenticationManager.class);
+		String jaasClass = authenticationManager.getOptions().getLoginModuleClass();
+
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
-		String jaasClass = m_engine.getWikiConfiguration().getStringProperty(AuthenticationManager.PROP_LOGIN_MODULE,
-				null);
 		if (jaasClass == null || jaasClass.length() == 0) {
-			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.PROP_LOGIN_MODULE
+			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
 					+ "on the classpath.");
 			return;
@@ -564,7 +560,7 @@ public final class SecurityVerifier {
 		// See if we can find the LoginModule on the classpath
 		Class<?> c = null;
 		try {
-			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManager.PROP_LOGIN_MODULE
+			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE
 					+ "' specified the class '" + jaasClass + ".'");
 			c = Class.forName(jaasClass);
 

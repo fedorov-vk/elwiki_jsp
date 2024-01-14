@@ -6,7 +6,7 @@
     <stringAttribute key="bootstrap" value=""/>
     <stringAttribute key="checked" value="[NONE]"/>
     <booleanAttribute key="clearConfig" value="true"/>
-    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/elwikijsp 2023-12 (lnx) (1)"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/elwikijsp 2023-12 (lnx)"/>
     <booleanAttribute key="default" value="true"/>
     <booleanAttribute key="default_auto_start" value="true"/>
     <intAttribute key="default_start_level" value="4"/>
@@ -21,7 +21,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console 10009"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/ws_elwikijsp_2023/__runtime-elwikijsp_2023-12/database/&#10;&#10;-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#10;-Dorg.osgi.service.http.port=8089&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#10;&#10;-Dstorage.cdo.port=2039"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/ws_elwikijsp_2023/__runtime-elwikijsp_2023-12/database/&#10;&#10;-Declipse.ignoreApp=true&#10;-Dosgi.noShutdown=true&#10;&#10;-Dorg.osgi.service.http.port=8089&#10;-Dorg.eclipse.equinox.http.jetty.context.sessioninactiveinterval=600&#10;&#10;-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector&#10;-Dstorage.cdo.port=2039"/>
     <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc}/__runtime-elwikijsp_2023-12"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <setAttribute key="selected_target_bundles">

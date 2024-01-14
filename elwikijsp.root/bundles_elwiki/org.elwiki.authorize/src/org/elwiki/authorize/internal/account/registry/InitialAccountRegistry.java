@@ -111,7 +111,7 @@ public abstract class InitialAccountRegistry extends AbstractAccountRegistry {
 
 		JsonContent data = null;
 
-		URL url = new URL("platform:/plugin/" + AuthorizePluginActivator.PLIGIN_ID + "/users+groups.json");
+		URL url = new URL("platform:/plugin/" + AuthorizePluginActivator.getDefault().getName() + "/users+groups.json");
 
 		try (InputStream inputStream = url.openConnection().getInputStream();
 				InputStreamReader isr = new InputStreamReader(inputStream)) {

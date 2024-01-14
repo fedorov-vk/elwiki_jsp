@@ -75,6 +75,7 @@ public interface AllCommands {
             WikiCommand.ADMIN,
             WikiCommand.SECURE,
             WikiCommand.IMPORTPAGES,
+            WikiCommand.PREFERENCES,
         };
     }
 

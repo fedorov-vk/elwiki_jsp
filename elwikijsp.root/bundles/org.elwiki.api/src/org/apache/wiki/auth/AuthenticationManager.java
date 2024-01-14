@@ -40,21 +40,10 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
  */
 public interface AuthenticationManager {
-    
-    /** If this preferences.ini property is <code>true</code>, allow cookies to be used for authentication. */
-    String PROP_ALLOW_COOKIE_AUTH = "jspwiki.cookieAuthentication";
-    
-    /** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
-    String PROP_LOGIN_THROTTLING = "jspwiki.login.throttling";
 
     /** Prefix for LoginModule options key/value pairs. */
+	@Deprecated
     String PREFIX_LOGIN_MODULE_OPTIONS = "jspwiki.loginModule.options.";
-
-    /** If this preferences.ini property is <code>true</code>, allow cookies to be used to assert identities. */
-    String PROP_ALLOW_COOKIE_ASSERTIONS = "jspwiki.cookieAssertions";
-
-    /** The {@link LoginModule} to use for custom authentication. */
-    String PROP_LOGIN_MODULE = "jspwiki.loginModule.class";
 
     /**
      * Returns true if this Engine uses container-managed authentication. This method is used primarily for cosmetic purposes in the
@@ -188,5 +177,8 @@ public interface AuthenticationManager {
 		}
 		return null;
     }
+
+    //:FVK: workaround - для получения старого параметра: LoginModuleClass
+    AuthenticationManagerOptions getOptions();
 
 }
