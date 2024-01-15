@@ -5,8 +5,8 @@ Bundle-SymbolicName: org.elwiki.rssgenerator;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Import-Package: org.apache.commons.lang3;version="3.12.0",
  org.apache.commons.lang3.time;version="3.12.0",
- org.apache.log4j;version="1.2.19",
  org.apache.wiki,
+ org.apache.wiki.ajax,
  org.apache.wiki.api,
  org.apache.wiki.api.attachment,
  org.apache.wiki.api.core,
@@ -18,10 +18,8 @@ Import-Package: org.apache.commons.lang3;version="3.12.0",
  org.apache.wiki.pages0,
  org.apache.wiki.render0,
  org.apache.wiki.util,
+ org.eclipse.core.runtime.preferences;version="3.5.0",
  org.eclipse.jface.preference,
- org.elwiki.api,
- org.elwiki.api.component,
- org.elwiki.api.event,
  org.elwiki.configuration,
  org.elwiki.permissions,
  org.elwiki_data,
@@ -29,11 +27,15 @@ Import-Package: org.apache.commons.lang3;version="3.12.0",
  org.jdom2.output,
  org.osgi.service.component;version="1.5.0",
  org.osgi.service.component.annotations;version="1.3.0",
- org.osgi.service.event;version="1.4.1"
+ org.osgi.service.event;version="1.4.1",
+ org.osgi.service.prefs;version="1.1.2"
 Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
- org.eclipse.osgi;bundle-version="3.18.200"
+ org.eclipse.osgi;bundle-version="3.18.200",
+ org.apache.log4j;bundle-version="1.2.24",
+ org.elwiki.api;bundle-version="1.0.0"
 Service-Component: OSGI-INF/elwiki.DefaultRssGenerator.xml
 Bundle-Vendor: fvk
 Automatic-Module-Name: org.elwiki.rssgenerator
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.elwiki.rss.internal.bundle.ActivatorRssGenerator
 Bundle-RequiredExecutionEnvironment: JavaSE-17

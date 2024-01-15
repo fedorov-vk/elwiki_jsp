@@ -46,8 +46,10 @@ import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
+import org.elwiki.rss.internal.options.RssGeneratorOptionsImpl;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.ComponentContext;
@@ -74,7 +76,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRssGenerator implements RssGenerator, EventHandler {
+public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultRssGenerator.class);
 
@@ -85,6 +87,8 @@ public class DefaultRssGenerator implements RssGenerator, EventHandler {
 	private boolean m_enabled = true;
 
 	private static final int MAX_CHARACTERS = Integer.MAX_VALUE - 1;
+
+    final RssGeneratorOptionsImpl options = new RssGeneratorOptionsImpl();
 
 	/**
 	 * Constructs the RSS generator.
@@ -107,12 +111,14 @@ public class DefaultRssGenerator implements RssGenerator, EventHandler {
 
 	@Activate
 	protected void startup(ComponentContext componentContext) {
-		isRequiredRssGenerator = wikiConfiguration.getBooleanProperty(RssGenerator.PROP_GENERATE_RSS, false);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
+		options.initialize(m_engine);
+		isRequiredRssGenerator = options.isGenerateRss();
+
 		if (isRequiredRssGenerator) {
 			m_channelDescription = wikiConfiguration.getStringProperty(PROP_CHANNEL_DESCRIPTION, m_channelDescription);
 			m_channelLanguage = wikiConfiguration.getStringProperty(PROP_CHANNEL_LANGUAGE, m_channelLanguage);
@@ -469,6 +475,12 @@ public class DefaultRssGenerator implements RssGenerator, EventHandler {
 			}
 			break;
 		}
+	}
+
+	@Override
+	public String getConfigurationEntry() {
+		String jspPage = options.getConfigurationJspPage();
+		return jspPage;
 	}
 
 }

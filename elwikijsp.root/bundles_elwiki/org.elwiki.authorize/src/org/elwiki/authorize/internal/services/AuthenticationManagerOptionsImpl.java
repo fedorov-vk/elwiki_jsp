@@ -266,7 +266,7 @@ It's still considered to be unsafe, <br/>
   </span>""", jsonTracker.getServletMapping() + "/" + ACT_APPLY);
 
 		String text =
-"<h4>Authentication Manager</h4>" +
+"<h4>Authentication manager</h4>" +
 textCookieAssertions +
 textCookieAuthentication +
 textLoginThrottling + """

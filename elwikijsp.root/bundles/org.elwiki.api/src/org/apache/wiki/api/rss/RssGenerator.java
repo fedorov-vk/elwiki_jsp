@@ -77,13 +77,6 @@ public interface RssGenerator extends WikiManager {
     String PROP_CHANNEL_TITLE = "jspwiki.rss.channelTitle";
 
     /**
-     *  Defines the property name for the RSS generator main switch.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_GENERATE_RSS = "jspwiki.rss.generate";
-
-    /**
      *  Defines the property name for the RSS file that the wiki should generate.
      *
      *  @since 1.7.6.
