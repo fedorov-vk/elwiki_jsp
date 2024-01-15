@@ -111,7 +111,7 @@ import org.osgi.service.event.EventHandler;
 	service = { PageManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageManager implements PageManager, WikiManager, EventHandler {
+public class DefaultPageManager implements PageManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 

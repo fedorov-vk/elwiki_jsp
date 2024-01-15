@@ -7,8 +7,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
+import org.elwiki.api.component.WikiManager;
 
-public interface ISessionMonitor {
+public interface ISessionMonitor extends WikiManager {
 
 	/**
 	 * Just looks for a WikiSession; does not create a new one.

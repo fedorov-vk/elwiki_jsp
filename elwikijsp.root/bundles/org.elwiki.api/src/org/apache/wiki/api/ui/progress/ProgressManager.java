@@ -18,6 +18,8 @@
  */
 package org.apache.wiki.api.ui.progress;
 
+import org.elwiki.api.component.WikiManager;
+
 /**
  *  Manages progressing items.  In general this class is used whenever JSPWiki is doing something which may require a long time.
  *  In addition, this manager provides a JSON interface for finding remotely what the progress is.  The JSON object name is
@@ -25,7 +27,7 @@ package org.apache.wiki.api.ui.progress;
  *
  *  @since  2.6
  */
-public interface ProgressManager {
+public interface ProgressManager extends WikiManager {
 
     String JSON_PROGRESSTRACKER = "progressTracker";
 

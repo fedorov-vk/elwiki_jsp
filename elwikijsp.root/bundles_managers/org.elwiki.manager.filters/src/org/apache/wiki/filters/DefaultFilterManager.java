@@ -102,7 +102,7 @@ import org.osgi.service.event.EventHandler;
 	service = { FilterManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultFilterManager extends BaseModuleManager implements FilterManager, WikiManager, EventHandler {
+public class DefaultFilterManager extends BaseModuleManager implements FilterManager, EventHandler {
 
 	static final String CONFIGURATION_FILE = "ini/elwiki_filters.xml";
 	

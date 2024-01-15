@@ -41,7 +41,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 	service = { TasksManager.class, WikiManager.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultTasksManager implements TasksManager, WikiManager {
+public class DefaultTasksManager implements TasksManager {
 
 	// -- OSGi service handling ----------------------(start)--
 

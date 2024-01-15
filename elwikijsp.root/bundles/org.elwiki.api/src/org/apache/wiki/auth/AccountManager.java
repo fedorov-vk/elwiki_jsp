@@ -25,13 +25,14 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.authorization.IGroupManager;
+import org.elwiki.api.component.WikiManager;
 
 /**
  * Provides a facade for obtaining user information.
  *
  * @since 2.3
  */
-public interface AccountManager extends IGroupManager {
+public interface AccountManager extends WikiManager, IGroupManager {
 
     /** Message key for the "save profile" message. */
 	@Deprecated // :FVK: так как пока понятие база - не рассматривается (только из-за совместимости с кодом JSPwiki)

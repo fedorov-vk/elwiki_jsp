@@ -28,6 +28,7 @@ import org.apache.wiki.api.modules.InternalModule;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.parser0.WikiDocument;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -40,7 +41,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since  2.4
  */
-public interface RenderingManager extends RenderApi, InternalModule {
+public interface RenderingManager extends WikiManager, RenderApi, InternalModule {
 
     /** markup parser property. */
     String PROP_PARSER = "jspwiki.renderingManager.markupParser";

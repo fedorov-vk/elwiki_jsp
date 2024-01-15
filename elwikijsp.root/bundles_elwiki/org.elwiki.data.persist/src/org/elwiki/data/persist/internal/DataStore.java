@@ -39,7 +39,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 	service = { IStorageCdo.class, WikiManager.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DataStore extends Repository implements IDataStore, IStorageCdo, WikiManager {
+public class DataStore extends Repository implements IDataStore, IStorageCdo {
 
 	protected static final Logger log = Logger.getLogger(DataStore.class);
 

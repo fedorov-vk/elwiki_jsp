@@ -54,7 +54,7 @@ import dwedata.PageVersion;
 	service = { ImportManager.class, WikiManager.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class ImportManagerImpl implements ImportManager, WikiManager {
+public class ImportManagerImpl implements ImportManager {
 
 	private static final Logger log = Logger.getLogger(ImportManagerImpl.class);
 

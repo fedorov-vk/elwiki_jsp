@@ -67,7 +67,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 	        	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class SessionMonitor implements ISessionMonitor, WikiManager, HttpSessionListener, EventHandler {
+public final class SessionMonitor implements ISessionMonitor, HttpSessionListener, EventHandler {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
 

@@ -50,7 +50,7 @@ import org.osgi.service.event.EventHandler;
 	service = { DifferenceManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultDifferenceManager implements DifferenceManager, WikiManager, EventHandler {
+public class DefaultDifferenceManager implements DifferenceManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultDifferenceManager.class);
 

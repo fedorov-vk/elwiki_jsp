@@ -24,10 +24,11 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.ModuleManager;
+import org.elwiki.api.component.WikiManager;
 
 import java.util.List;
 
-public interface FilterManager extends ModuleManager {
+public interface FilterManager extends WikiManager, ModuleManager {
 
     /** Property name for setting the filter XML property file.  Value is <tt>{@value}</tt>. */
     String PROP_FILTERXML = "jspwiki.filterConfig";

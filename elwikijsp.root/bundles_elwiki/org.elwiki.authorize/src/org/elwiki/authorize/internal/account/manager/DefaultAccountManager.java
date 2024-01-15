@@ -107,7 +107,7 @@ import com.google.gson.Gson;
 	service = { AccountManager.class, WikiManager.class, EventHandler.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class DefaultAccountManager extends UserSupport implements AccountManager, WikiManager, EventHandler {
+public final class DefaultAccountManager extends UserSupport implements AccountManager, EventHandler {
 
 	// -- workflow task inner classes -----------------------------------------
 

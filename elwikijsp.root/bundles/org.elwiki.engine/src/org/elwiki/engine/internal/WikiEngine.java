@@ -3,6 +3,7 @@ package org.elwiki.engine.internal;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -97,14 +98,17 @@ public class WikiEngine implements Engine {
 			@SuppressWarnings("unchecked")
 			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
 			Class<?> clazz = service.getClass();
-			log.debug(" ~~ clazz: " + clazz.getSimpleName());
 			counterOfRegistered++;
-			Class<?>[] interfaces = clazz.getInterfaces();
-			for (Class<?> iface : interfaces) {
-				managers.put(iface, service);
+			for (Class<?> iface : clazz.getInterfaces()) {
+				// check that super interface is WikiManager.
+				boolean isWikiManager = Arrays.stream(iface.getInterfaces()).anyMatch(WikiManager.class::equals);
+				if (isWikiManager) {
+					managers.put(iface, service);
+					// log.debug(" ~~ clazz: " + clazz.getSimpleName() + " instance of " + iface.getSimpleName());
+				}
 			}
 		}
-		log.debug(" ~~ Registered (" + counterOfRegistered + ") ElWiki managers.");
+		log.debug(" ~~ Registered (" + counterOfRegistered + ") ElWiki components.");
 
 		/* Processing the @WikiServiceReference annotation for ElWiki components fields.
 		 */
@@ -503,7 +507,7 @@ public class WikiEngine implements Engine {
 	public List<WikiPrefs> getConfigurableManagers() {
 		//@formatter:off
 		List<WikiPrefs> result = (List<WikiPrefs>) managers.entrySet().stream()
-				.filter(e -> WikiPrefs.class.isAssignableFrom(e.getKey()))
+				.filter(e -> WikiPrefs.class.isAssignableFrom(e.getValue().getClass()))
 				.map(e -> (WikiPrefs)e.getValue())
 				.collect(Collectors.toList());
 		//@formatter:on

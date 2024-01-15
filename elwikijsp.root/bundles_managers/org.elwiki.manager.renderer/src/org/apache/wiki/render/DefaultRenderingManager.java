@@ -83,7 +83,7 @@ import net.sf.ehcache.Element;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRenderingManager implements RenderingManager, WikiManager, EventHandler {
+public class DefaultRenderingManager implements RenderingManager, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultRenderingManager.class );
 

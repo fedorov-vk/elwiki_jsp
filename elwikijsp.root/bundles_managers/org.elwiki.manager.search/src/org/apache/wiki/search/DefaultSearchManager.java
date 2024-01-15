@@ -79,7 +79,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiManager, EventHandler {
+public class DefaultSearchManager extends BasePageFilter implements SearchManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultSearchManager.class);
 

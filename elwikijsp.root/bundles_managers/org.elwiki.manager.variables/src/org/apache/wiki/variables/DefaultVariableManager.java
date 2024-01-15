@@ -63,7 +63,7 @@ import org.osgi.service.event.EventHandler;
 	service = { VariableManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultVariableManager implements VariableManager, WikiManager, EventHandler {
+public class DefaultVariableManager implements VariableManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultVariableManager.class);
 
@@ -377,6 +377,7 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
             return res.toString();
         }
 
+        @Deprecated //:FVK: not used anywhere.
         public String getInlinedimages() {
             final StringBuilder res = new StringBuilder();
             for( final String ptrn : wikiConfiguration.getAllInlinedImagePatterns() ) {

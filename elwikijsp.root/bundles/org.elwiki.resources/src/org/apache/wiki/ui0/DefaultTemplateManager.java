@@ -77,7 +77,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 	service = {TemplateManager.class, WikiManager.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager, WikiManager {
+public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager {
 
 	private static final Logger log = Logger.getLogger(DefaultTemplateManager.class);
 

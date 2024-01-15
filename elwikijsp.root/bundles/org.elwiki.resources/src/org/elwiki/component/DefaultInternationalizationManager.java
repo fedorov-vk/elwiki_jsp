@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 	service = { InternationalizationManager.class, WikiManager.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultInternationalizationManager implements InternationalizationManager, WikiManager {
+public class DefaultInternationalizationManager implements InternationalizationManager {
 
 	@Reference
 	private BundleLocalization bundleLocalization;

@@ -69,7 +69,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAdminBeanManager implements AdminBeanManager, WikiManager, EventHandler {
+public class DefaultAdminBeanManager implements AdminBeanManager, EventHandler {
 
 	private ArrayList<AdminBean> m_allBeans;
 	private MBeanServer m_mbeanServer;

@@ -149,7 +149,7 @@ import org.osgi.service.useradmin.Group;
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, WikiManager, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 

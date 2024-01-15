@@ -50,7 +50,7 @@ import org.osgi.service.event.EventHandler;
 	service = { URLConstructor.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultURLConstructor implements URLConstructor, WikiManager, EventHandler {
+public class DefaultURLConstructor implements URLConstructor, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultURLConstructor.class );
 

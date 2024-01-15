@@ -51,7 +51,7 @@ import org.osgi.service.event.EventHandler;
 	service = { WikiAjaxDispatcher.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManager, EventHandler {
+public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class);
 

@@ -44,7 +44,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, EventHandler {
+public class BackgroundThreadsImpl implements BackgroundThreads, EventHandler {
 
 	private static final Logger log = Logger.getLogger(BackgroundThreadsImpl.class);
 

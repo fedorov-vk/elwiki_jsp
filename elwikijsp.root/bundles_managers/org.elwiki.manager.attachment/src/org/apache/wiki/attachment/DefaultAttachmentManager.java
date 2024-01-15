@@ -72,7 +72,7 @@ import net.sf.ehcache.Element;
 	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAttachmentManager implements AttachmentManager, WikiManager, EventHandler {
+public class DefaultAttachmentManager implements AttachmentManager, EventHandler {
 
 	/** List of attachment types which are forced to be downloaded */
 	@Deprecated

@@ -26,8 +26,9 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.modules.ModuleManager;
+import org.elwiki.api.component.WikiManager;
 
-public interface PluginManager extends ModuleManager {
+public interface PluginManager extends WikiManager, ModuleManager {
 
     /** The name of the body content. Current value is "_body". */
     String PARAM_BODY      = "_body";

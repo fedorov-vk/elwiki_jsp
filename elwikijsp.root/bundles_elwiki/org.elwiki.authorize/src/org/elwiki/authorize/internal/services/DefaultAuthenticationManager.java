@@ -84,7 +84,7 @@ import org.osgi.service.useradmin.UserAdmin;
 	service = { AuthenticationManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements AuthenticationManager, WikiManager, WikiPrefs, EventHandler {
+public class DefaultAuthenticationManager implements AuthenticationManager, WikiPrefs, EventHandler {
 
     private static final Logger log = Logger.getLogger(DefaultAuthenticationManager.class);
 

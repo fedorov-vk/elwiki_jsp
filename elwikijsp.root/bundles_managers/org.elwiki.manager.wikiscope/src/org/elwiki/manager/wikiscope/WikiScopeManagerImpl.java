@@ -35,7 +35,7 @@ import com.google.gson.reflect.TypeToken;
 	service = { WikiScopeManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, EventHandler {
+public class WikiScopeManagerImpl implements WikiScopeManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiScopeManagerImpl.class);
 

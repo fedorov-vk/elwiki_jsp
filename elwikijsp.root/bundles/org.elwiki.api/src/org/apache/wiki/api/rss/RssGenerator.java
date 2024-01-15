@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -38,7 +39,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since  1.7.5.
  */
-public interface RssGenerator {
+public interface RssGenerator extends WikiManager {
 
     /** Parameter value to represent RSS 1.0 feeds.  Value is <tt>{@value}</tt>. */
     String RSS10 = "rss10";

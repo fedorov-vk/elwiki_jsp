@@ -20,6 +20,7 @@ package org.apache.wiki.content0;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.elwiki.api.component.WikiManager;
 
 /**
  * Provides page renaming functionality. Note that there used to be a similarly named class in 2.6, but due to unclear copyright, the
@@ -27,7 +28,7 @@ import org.apache.wiki.api.exceptions.WikiException;
  *
  * @since 2.8
  */
-public interface PageRenamer {
+public interface PageRenamer extends WikiManager {
 
     /**
      *  Renames a page.

@@ -28,6 +28,7 @@ import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Session;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
@@ -39,7 +40,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * login attempt during that time incurs a penalty of 2^login attempts milliseconds - that is, 10 login attempts incur a login penalty
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
  */
-public interface AuthenticationManager {
+public interface AuthenticationManager extends WikiManager {
 
     /** Prefix for LoginModule options key/value pairs. */
 	@Deprecated

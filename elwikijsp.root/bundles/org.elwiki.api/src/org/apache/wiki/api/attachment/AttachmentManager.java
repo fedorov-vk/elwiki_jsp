@@ -30,6 +30,7 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.WikiProvider;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -43,7 +44,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since 1.9.28
  */
-public interface AttachmentManager {
+public interface AttachmentManager extends WikiManager {
 
     /** The property name for defining the attachment provider class name. */
     String PROP_PROVIDER = "jspwiki.attachmentProvider";

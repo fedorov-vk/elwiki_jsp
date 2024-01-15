@@ -44,7 +44,7 @@ import org.osgi.service.useradmin.UserAdmin;
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class DefaultAccountRegistry extends InitialAccountRegistry
-		implements AccountRegistry, WikiManager, EventHandler {
+		implements AccountRegistry, EventHandler {
 
 	protected static final Logger log = Logger.getLogger(DefaultAccountRegistry.class);
 

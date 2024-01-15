@@ -5,13 +5,14 @@ import java.security.Principal;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.component.WikiManager;
 import org.osgi.service.useradmin.Group;
 import org.osgi.service.useradmin.User;
 
 /**
  * Defines an interface for loading, persisting and storing users and groups.
  */
-public interface AccountRegistry {
+public interface AccountRegistry extends WikiManager {
 
 	String UID = "uid";
 

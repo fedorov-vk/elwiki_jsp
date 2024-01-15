@@ -74,7 +74,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRssGenerator implements RssGenerator, WikiManager, EventHandler {
+public class DefaultRssGenerator implements RssGenerator, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultRssGenerator.class);
 

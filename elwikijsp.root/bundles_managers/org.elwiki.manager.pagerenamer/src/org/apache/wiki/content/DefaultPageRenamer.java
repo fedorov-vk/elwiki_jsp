@@ -65,7 +65,7 @@ import org.osgi.service.event.EventHandler;
 	service = { PageRenamer.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandler {
+public class DefaultPageRenamer implements PageRenamer, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageRenamer.class);
 

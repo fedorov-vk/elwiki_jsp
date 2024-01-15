@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.component.WikiManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 
@@ -56,7 +57,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * @since 2.3
  * @see AuthenticationManager
  */
-public interface AuthorizationManager {
+public interface AuthorizationManager extends WikiManager {
 
     /** The default external Authorizer is the {@link WebContainerAuthorizer} */
     String DEFAULT_AUTHORIZER = "org.apache.wiki.auth.authorize.WebContainerAuthorizer";

@@ -55,7 +55,7 @@ import org.osgi.service.event.EventHandler;
 	service = { ProgressManager.class, WikiManager.class, EventHandler.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultProgressManager implements ProgressManager, WikiManager, EventHandler {
+public class DefaultProgressManager implements ProgressManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultProgressManager.class);
 

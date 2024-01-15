@@ -76,7 +76,7 @@ import org.osgi.service.event.EventHandler;
 		EventConstants.EVENT_TOPIC + "=" + WikiWorkflowEventTopic.TOPIC_WORKFLOW_ALL
 	})
 //@formatter:on
-public class DefaultWorkflowManager implements WorkflowManager, WikiManager, EventHandler {
+public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultWorkflowManager.class);
 

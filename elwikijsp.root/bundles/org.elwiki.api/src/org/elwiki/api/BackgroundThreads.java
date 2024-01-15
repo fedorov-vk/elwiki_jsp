@@ -1,6 +1,8 @@
 package org.elwiki.api;
 
-public interface BackgroundThreads {
+import org.elwiki.api.component.WikiManager;
+
+public interface BackgroundThreads extends WikiManager {
 
 	/**
 	 * Abstract subclass that operates in the background; a subclassed class are controlled by

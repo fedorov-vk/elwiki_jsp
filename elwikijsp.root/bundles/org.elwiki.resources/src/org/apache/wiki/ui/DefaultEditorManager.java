@@ -69,7 +69,7 @@ import org.osgi.service.event.EventHandler;
 	service = { EditorManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultEditorManager extends BaseModuleManager implements EditorManager, WikiManager, EventHandler {
+public class DefaultEditorManager extends BaseModuleManager implements EditorManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultEditorManager.class);
 

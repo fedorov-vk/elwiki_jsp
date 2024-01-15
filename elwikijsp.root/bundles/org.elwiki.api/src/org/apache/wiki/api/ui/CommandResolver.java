@@ -21,6 +21,7 @@ package org.apache.wiki.api.ui;
 import org.apache.wiki.api.core.Command;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
+import org.elwiki.api.component.WikiManager;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ import java.util.Arrays;
  *
  * @since 2.4.22
  */
-public interface CommandResolver {
+public interface CommandResolver extends WikiManager {
 
     /**
      * Attempts to locate a wiki command for a supplied request context. The resolution technique is simple: we examine the list of

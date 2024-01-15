@@ -141,7 +141,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, WikiManager, EventHandler {
+public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, EventHandler {
 
 	/**
 	 * Maps page wikiname to a Collection of pages it refers to. The Collection must contain Strings.

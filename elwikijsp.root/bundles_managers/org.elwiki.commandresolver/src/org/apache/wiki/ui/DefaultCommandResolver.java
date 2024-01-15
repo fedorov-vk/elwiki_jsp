@@ -66,7 +66,7 @@ import org.osgi.service.event.EventHandler;
 	service = { CommandResolver.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class DefaultCommandResolver implements CommandResolver, WikiManager, EventHandler {
+public final class DefaultCommandResolver implements CommandResolver, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultCommandResolver.class);
 

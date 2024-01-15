@@ -23,6 +23,8 @@ import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.elwiki.api.component.WikiManager;
+
 /**
  *  Provides an interface through which JSPWiki constructs URLs. JSPWiki calls the methods of this interface whenever an URL
  *  that points to any JSPWiki internals is required.  For example, if you need to find an URL to the editor page for page
@@ -30,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  *  @since 2.2
  */
-public interface URLConstructor {
+public interface URLConstructor extends WikiManager {
 
     /**
      *  Constructs the URL with a bunch of parameters.

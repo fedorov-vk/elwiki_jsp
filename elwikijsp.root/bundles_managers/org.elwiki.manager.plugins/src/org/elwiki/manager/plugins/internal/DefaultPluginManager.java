@@ -158,7 +158,7 @@ import org.osgi.service.event.EventHandler;
 	service = { PluginManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPluginManager extends BaseModuleManager implements PluginManager, WikiManager, EventHandler {
+public class DefaultPluginManager extends BaseModuleManager implements PluginManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPluginManager.class);
 
