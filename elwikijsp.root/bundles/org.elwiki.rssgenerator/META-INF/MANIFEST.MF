@@ -37,5 +37,4 @@ Service-Component: OSGI-INF/elwiki.DefaultRssGenerator.xml
 Bundle-Vendor: fvk
 Automatic-Module-Name: org.elwiki.rssgenerator
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.elwiki.rss.internal.bundle.ActivatorRssGenerator
 Bundle-RequiredExecutionEnvironment: JavaSE-17

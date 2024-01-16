@@ -64,6 +64,7 @@ public interface RssGenerator extends WikiManager {
      *
      *  @since 1.7.6.
      */
+    @Deprecated
     String PROP_CHANNEL_DESCRIPTION = "jspwiki.rss.channelDescription";
 
     /**
@@ -71,24 +72,11 @@ public interface RssGenerator extends WikiManager {
      *
      *  @since 1.7.6.
      */
+    @Deprecated
     String PROP_CHANNEL_LANGUAGE = "jspwiki.rss.channelLanguage";
 
     /** Defines the property name for the RSS channel title.  Value is <tt>{@value}</tt>. */
     String PROP_CHANNEL_TITLE = "jspwiki.rss.channelTitle";
-
-    /**
-     *  Defines the property name for the RSS file that the wiki should generate.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_RSSFILE = "jspwiki.rss.fileName";
-
-    /**
-     *  Defines the property name for the RSS generation interval in seconds.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_INTERVAL = "jspwiki.rss.interval";
 
     /** Defines the property name for the RSS author.  Value is <tt>{@value}</tt>. */
     String PROP_RSS_AUTHOR = "jspwiki.rss.author";

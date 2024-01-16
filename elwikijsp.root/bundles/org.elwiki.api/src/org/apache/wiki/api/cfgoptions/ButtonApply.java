@@ -1,4 +1,4 @@
-package org.elwiki.rss.internal.options;
+package org.apache.wiki.api.cfgoptions;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class ButtonApply implements IJspCode, ICallbackAction {
 	public ButtonApply(List<Option<?>> options, WikiAjaxServlet jsonTracker) {
 		this.options = options;
 		this.jsonTracker = jsonTracker;
-		this.id = "id" + String.valueOf(this.hashCode());
+		this.id = "idApply_" + String.valueOf(this.hashCode());
 	}
 
 	@Override

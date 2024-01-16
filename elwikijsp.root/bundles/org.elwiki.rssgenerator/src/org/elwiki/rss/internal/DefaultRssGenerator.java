@@ -52,7 +52,7 @@ import org.elwiki.permissions.PagePermission;
 import org.elwiki.rss.internal.options.RssGeneratorOptionsImpl;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
-import org.osgi.service.component.ComponentContext;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -90,6 +90,8 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
     final RssGeneratorOptionsImpl options = new RssGeneratorOptionsImpl();
 
+    private BundleContext bundleContext;
+
 	/**
 	 * Constructs the RSS generator.
 	 */
@@ -110,19 +112,20 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 	private boolean isRequiredRssGenerator = false;
 
 	@Activate
-	protected void startup(ComponentContext componentContext) {
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		options.initialize(m_engine);
+		options.initialize(bundleContext, m_engine);
 		isRequiredRssGenerator = options.isGenerateRss();
 
 		if (isRequiredRssGenerator) {
-			m_channelDescription = wikiConfiguration.getStringProperty(PROP_CHANNEL_DESCRIPTION, m_channelDescription);
-			m_channelLanguage = wikiConfiguration.getStringProperty(PROP_CHANNEL_LANGUAGE, m_channelLanguage);
-			m_rssFile = wikiConfiguration.getStringProperty(DefaultRssGenerator.PROP_RSSFILE, "rss.rdf");
+			m_rssFile = options.rssFilename();
+			m_channelDescription = options.rssChannelDescription();
+			m_channelLanguage = options.rssChannelLanguage();
 		}
 	}
 
@@ -139,7 +142,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 			} else { // relative path names are anchored from the webapp root path
 				rssFile = new File(m_engine.getRootPath(), m_rssFile);
 			}
-			int rssInterval = wikiConfiguration.getIntegerProperty(DefaultRssGenerator.PROP_INTERVAL, 3600);
+			int rssInterval = options.rssInterval();
 
 			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 			Actor rssActor = new RssActor(m_engine, rssFile);

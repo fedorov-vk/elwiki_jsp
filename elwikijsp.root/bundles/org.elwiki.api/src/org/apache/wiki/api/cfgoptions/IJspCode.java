@@ -1,4 +1,4 @@
-package org.elwiki.rss.internal.options;
+package org.apache.wiki.api.cfgoptions;
 
 public interface IJspCode {
 

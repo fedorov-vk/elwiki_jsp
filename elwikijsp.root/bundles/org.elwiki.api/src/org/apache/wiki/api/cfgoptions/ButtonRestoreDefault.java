@@ -1,4 +1,4 @@
-package org.elwiki.rss.internal.options;
+package org.apache.wiki.api.cfgoptions;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class ButtonRestoreDefault implements IJspCode, ICallbackAction {
 	public ButtonRestoreDefault(List<Option<?>> options, WikiAjaxServlet jsonTracker) {
 		this.options = options;
 		this.jsonTracker = jsonTracker;
-		this.id = "id" + String.valueOf(this.hashCode());
+		this.id = "idRestore_" + String.valueOf(this.hashCode());
 	}
 
 	@Override
@@ -26,7 +26,10 @@ public class ButtonRestoreDefault implements IJspCode, ICallbackAction {
 """, jsonTracker.getServletMapping() + "/" + getId());
 
 		for(Option<?> option:options) {
-			textRestoreDefault += option.getDefaultJsCode();
+			String text = option.getDefaultJsCode();
+			text = text.replaceAll("\n", "\\\\n");
+			text = text.replaceAll("'", "\\'");
+			textRestoreDefault += text + "\n";
 		}
 
 		textRestoreDefault += """
@@ -35,13 +38,6 @@ public class ButtonRestoreDefault implements IJspCode, ICallbackAction {
       Restore Defaults
     </button>
   </span>""";
-/*
-  , jsonTracker.getServletMapping() + "/" + getId(),
-  			getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, true)? "true" : "",
-  			getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_AUTH, false)? "true" : "",
-  			getDefaultPrefs().getBoolean(PROP_LOGIN_THROTTLING, true)? "true" : ""
-		);
-*/
 //@formatter:on
 
 		return textRestoreDefault;

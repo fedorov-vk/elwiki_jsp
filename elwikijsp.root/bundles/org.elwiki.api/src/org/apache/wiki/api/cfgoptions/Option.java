@@ -1,6 +1,10 @@
-package org.elwiki.rss.internal.options;
+package org.apache.wiki.api.cfgoptions;
 
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.eclipse.core.runtime.preferences.BundleDefaultsScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 
 public abstract class Option<T> implements ICallbackAction, IJspCode {
@@ -9,15 +13,23 @@ public abstract class Option<T> implements ICallbackAction, IJspCode {
 	private String label;
 	private String info;
 	private WikiAjaxServlet jsonTracker;
+
 	private final String id;
 
 	T currentValue;
 
-	public Option(String prefsId, String label, String info, WikiAjaxServlet jsonTracker) {
+	private IEclipsePreferences defaultPrefs;
+	private IEclipsePreferences instancePrefs;
+
+	public Option(BundleContext bundleContext, String prefsId, String label, String info, WikiAjaxServlet jsonTracker) {
 		this.prefsId = prefsId;
 		this.label = label;
 		this.info = info;
 		this.jsonTracker = jsonTracker;
+
+		String bundleName = bundleContext.getBundle().getSymbolicName();
+		defaultPrefs = BundleDefaultsScope.INSTANCE.getNode(bundleName);
+		instancePrefs = InstanceScope.INSTANCE.getNode(bundleName);
 
 		id = "id" + String.valueOf(this.hashCode());
 		currentValue = getInstanceValue();
@@ -25,12 +37,12 @@ public abstract class Option<T> implements ICallbackAction, IJspCode {
 
 	abstract String getDefaultJsCode();
 
-	abstract T getDefaultValue();
+	public abstract T getDefaultValue();
 
-	abstract T getInstanceValue();
+	public abstract T getInstanceValue();
 
 	abstract void restoreDefault();
-	
+
 	abstract void applyValue() throws BackingStoreException;
 
 	boolean isDirty() {
@@ -56,6 +68,14 @@ public abstract class Option<T> implements ICallbackAction, IJspCode {
 
 	public WikiAjaxServlet getJsonTracker() {
 		return jsonTracker;
+	}
+
+	protected IEclipsePreferences getDefaultPrefs() {
+		return defaultPrefs;
+	}
+
+	protected IEclipsePreferences getInstancePrefs() {
+		return instancePrefs;
 	}
 
 }

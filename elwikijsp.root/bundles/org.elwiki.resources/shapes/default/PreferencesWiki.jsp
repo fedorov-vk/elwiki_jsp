@@ -74,39 +74,6 @@ List<WikiPrefs> components = engine.getConfigurableManagers();
 %>
 <div class="leftAccordion">
 <%= components.stream().map(e -> e.getConfigurationEntry()).collect(Collectors.joining()) %>
-
-<h4> Sample</h4>
-text line 1<br/>
-line 2
-
-  <div class="form-group form-inline ">
-    <label class="control-label form-col-20" for="prefAppearance"><fmt:message key="prefs.user.appearance"/></label>
-    <label class="form-control form-switch xpref-appearance">
-      <!--<fmt:message key="prefs.user.appearance.light"/>-->
-      <input id="prefAppearance" name="prefAppearance"  data-pref="Appearance"
-           type="checkbox" class="" value="on" ${prefs.Appearance ? 'checked="checked"' : ''} >
-      <!--<fmt:message key="prefs.user.appearance.dark"/>-->
-    </label>
-  </div>
-
-  <div class="form-group form-inline">
-    <br/><span class="form-col-20 control-label"></span>
-
-    <span class="dropdown" style="display:inline-block" >
-      <button id="idRestoreDefault" class="btn btn-info" name="restoreDefault">
-        <!-- <fmt:message key='prefs.save.prefs.submit'/> -->
-        Restore Defaults
-      </button>
-    </span>
-      
-    <span class="dropdown" style="display:inline-block" >
-      <button id="idBtnApply" class="btn btn-info" name="aapply">
-        Apply
-        <!-- <fmt:message key='prefs.cancel.submit'/> -->
-      </button>
-    </span>
-  </div>
-
 </div>
 
 </div>
