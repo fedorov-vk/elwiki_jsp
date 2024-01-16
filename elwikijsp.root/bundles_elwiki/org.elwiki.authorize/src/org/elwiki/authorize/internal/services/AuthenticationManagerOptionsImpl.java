@@ -1,12 +1,7 @@
 package org.elwiki.authorize.internal.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.cfgoptions.ButtonApply;
 import org.apache.wiki.api.cfgoptions.ButtonRestoreDefault;
-import org.apache.wiki.api.cfgoptions.ICallbackAction;
 import org.apache.wiki.api.cfgoptions.Option;
 import org.apache.wiki.api.cfgoptions.OptionBoolean;
 import org.apache.wiki.api.cfgoptions.OptionString;
@@ -29,11 +24,6 @@ public class AuthenticationManagerOptionsImpl extends Options implements Authent
 	/** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
 	private static final String PROP_LOGIN_THROTTLING = "login.throttling";
 
-	private final List<Option<?>> options = new ArrayList<>();
-	private final List<ICallbackAction> actions = new ArrayList<>();
-
-	private WikiAjaxServlet jsonTracker;
-
 	private OptionBoolean optCookieAssertions;
 	private OptionBoolean optCookieAuthentication;
 	private OptionBoolean optLoginThrottling;
@@ -41,7 +31,6 @@ public class AuthenticationManagerOptionsImpl extends Options implements Authent
 
 	private ButtonRestoreDefault restoreDefaultButton;
 	private ButtonApply applyButton;
-
 
 	@Override
 	public void initialize(BundleContext bundleContext, Engine engine) {

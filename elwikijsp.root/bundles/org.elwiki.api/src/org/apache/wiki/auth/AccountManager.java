@@ -34,11 +34,6 @@ import org.elwiki.api.component.WikiManager;
  */
 public interface AccountManager extends WikiManager, IGroupManager {
 
-    /** Message key for the "save profile" message. */
-	@Deprecated // :FVK: так как пока понятие база - не рассматривается (только из-за совместимости с кодом JSPwiki)
-    String PROP_DATABASE = "jspwiki.userdatabase"; 
-    String JSON_USERS = "users";
-
     /**
      * <p>Retrieves the {@link org.apache.wiki.auth.UserProfile} for the user in a session. If the user is authenticated, the
      * UserProfile returned will be the one stored in the user database; if one does not exist, a new one will be initialized and returned.

@@ -1,12 +1,7 @@
 package org.elwiki.rss.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.cfgoptions.ButtonApply;
 import org.apache.wiki.api.cfgoptions.ButtonRestoreDefault;
-import org.apache.wiki.api.cfgoptions.ICallbackAction;
 import org.apache.wiki.api.cfgoptions.Option;
 import org.apache.wiki.api.cfgoptions.OptionBoolean;
 import org.apache.wiki.api.cfgoptions.OptionInteger;
@@ -26,11 +21,6 @@ public class RssGeneratorOptions extends Options {
 	private static final String PROP_RSS_INTERVAL = "rss.interval";
 	private static final String PROP_RSS_CHANNEL_DESCRIPTION = "rss.channelDescription";
 	private static final String PROP_RSS_CHANNEL_LANGUAGE = "rss.channelLanguage";
-
-	private final List<Option<?>> options = new ArrayList<>();
-	private final List<ICallbackAction> actions = new ArrayList<>();
-
-	private WikiAjaxServlet jsonTracker;
 
 	private OptionBoolean optRssGenerate;
 	private OptionString optRssFilename;

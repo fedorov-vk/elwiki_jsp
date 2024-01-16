@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" deactivate="shutdown" factory="elwiki.GroupManager.factory" name="elwiki.GroupManager">
-   <service>
-      <provide interface="org.elwiki.api.authorization.IGroupManager"/>
-   </service>
-   <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService"/>
-   <implementation class="org.elwiki.authorize.internal.services.GroupManager"/>
-</scr:component>

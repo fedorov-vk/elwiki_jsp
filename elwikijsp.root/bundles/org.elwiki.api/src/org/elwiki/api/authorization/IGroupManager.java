@@ -63,8 +63,6 @@ public interface IGroupManager {
 	/** Key used for adding UI messages to a user's WikiSession. */
 	String MESSAGES_KEY = "group";
 
-	String PROP_GROUPDATABASE = "jspwiki.groupdatabase";
-
 	//@formatter:off
 	public static String[] RESTRICTED_GROUPNAMES = new String[] {
 			"Anonymous",

@@ -542,8 +542,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 	@Override
 	public String getConfigurationEntry() {
-		String jspPage = options.getConfigurationJspPage();
-		return jspPage;
+		String jspItems = options.getConfigurationJspPage();
+		return jspItems;
 	}
 
 	@Override

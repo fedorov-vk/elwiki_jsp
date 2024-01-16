@@ -481,8 +481,8 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	@Override
 	public String getConfigurationEntry() {
-		String jspPage = options.getConfigurationJspPage();
-		return jspPage;
+		String jspItems = options.getConfigurationJspPage();
+		return jspItems;
 	}
 
 }

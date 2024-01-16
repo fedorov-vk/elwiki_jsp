@@ -59,17 +59,11 @@ import org.elwiki.data.authorize.GroupPrincipal;
  */
 public interface AuthorizationManager extends WikiManager {
 
-    /** The default external Authorizer is the {@link WebContainerAuthorizer} */
-    String DEFAULT_AUTHORIZER = "org.apache.wiki.auth.authorize.WebContainerAuthorizer";
-
     /** Property that supplies the security policy file name, in WEB-INF. */
     String POLICY = "jspwiki.policy.file";
 
     /** Name of the default security policy file, in WEB-INF. */
     String DEFAULT_POLICY = "jspwiki.policy";
-
-    /** The property name in preferences.ini for specifying the external {@link Authorizer}. */
-    String PROP_AUTHORIZER = "jspwiki.authorizer";
 
     /**
      * Returns <code>true</code> or <code>false</code>, depending on whether a Permission is allowed for the Subject associated with

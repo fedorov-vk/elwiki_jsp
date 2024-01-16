@@ -67,6 +67,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
@@ -149,18 +150,12 @@ import org.osgi.service.useradmin.Group;
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
 	/** The extension ID for access to implementation set of {@link Authorizer}. */
 	private static final String ID_EXTENSION_AUTHORIZER = "authorizer";
-
-	/** Extension's specific ID of default external Authorizer. Current value - {@value} */
-	protected static final String DEFAULT_AUTHORIZER = "DefaultAuthorizer";//:FVK: "WebContainerAuthorizer"; 
-
-	/** The property name in preferences.ini for specifying the external {@link Authorizer}. */
-	protected static final String PROP_AUTHORIZER = "jspwiki.authorizer";
 
 	/** Name of the default security policy file, as bundle resource. */
 	protected static final String DEFAULT_POLICY = "jspwiki.policy";
@@ -173,6 +168,10 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
+
+	final AuthorizationManagerOptions options = new AuthorizationManagerOptions();
+
+	private BundleContext bundleContext;
 
 	// == CODE ================================================================
 
@@ -201,6 +200,12 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	@WikiServiceReference
 	PageManager pageManager;
 
+
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
+
 	/**
 	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
 	 * 
@@ -210,12 +215,14 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	@Override
 	public void initialize() throws WikiException {
 		log.debug("Initialize.");
+		options.initialize(bundleContext, m_engine);
 
 		//
 		//  JAAS authorization continues.
 		//
-		String authorizerName = wikiConfiguration.getStringProperty(PROP_AUTHORIZER, DEFAULT_AUTHORIZER);
+		String authorizerName = options.getAuthorizer(); 
 		this.m_authorizer = getAuthorizerImplementation(authorizerName);
+
 		/*:FVK:
 		this.m_authorizer.initialize(this.m_engine);
 
@@ -265,11 +272,11 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a WikiException
 	 * if no entry is found, or if one fails to initialize.
 	 * 
-	 * @param defaultAuthorizerId default authorizer Id of extension point.
+	 * @param rqAuthorizerId required authorizer Id of extension point.
 	 * @return a Authorizer used to get page authorization information
 	 * @throws WikiException
 	 */
-	private Authorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
+	private Authorizer getAuthorizerImplementation(String rqAuthorizerId) throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
@@ -300,10 +307,10 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 			}
 		}
 
-		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
+		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(rqAuthorizerId);
 		if (clazzAuthorizer == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
+			throw new NoRequiredPropertyException("Unable to find Authorizer with ID=" + rqAuthorizerId,
+					options.getAuthorizerKey());
 		}
 
 		Authorizer authorizer = null;
@@ -726,6 +733,12 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 		/*String topic = event.getTopic();
 		switch (topic) {
 		}*/
+	}
+
+	@Override
+	public String getConfigurationEntry() {
+		String jspItems = options.getConfigurationJspPage();
+		return jspItems;
 	}
 
 }
