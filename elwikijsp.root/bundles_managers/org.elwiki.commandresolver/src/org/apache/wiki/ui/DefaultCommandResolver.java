@@ -42,6 +42,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -99,6 +100,9 @@ public final class DefaultCommandResolver implements CommandResolver, EventHandl
 
 	@WikiServiceReference
 	private Engine m_engine;
+
+	@WikiServiceReference
+	GlobalPreferences globalPrefs;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -175,7 +179,7 @@ public final class DefaultCommandResolver implements CommandResolver, EventHandl
 		}
 
 		// If "create group" command, target this wiki
-		final String wiki = this.wikiConfiguration.getApplicationName();
+		final String wiki = this.globalPrefs.getApplicationName();
 		if (WikiCommand.CREATE_GROUP.equals(command)) {
 			return WikiCommand.CREATE_GROUP.targetedCommand(wiki);
 		}

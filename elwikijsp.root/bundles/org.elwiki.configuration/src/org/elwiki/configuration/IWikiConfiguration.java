@@ -124,13 +124,6 @@ public interface IWikiConfiguration {
 	IPath getWorkspacePath();
 
 	/**
-	 * Returns the name of the application.
-	 *
-	 * @return A string describing the name of this application.
-	 */
-	String getApplicationName();
-
-	/**
 	 * Turns a WikiName into something that can be called through using an URL.
 	 *
 	 * @since 1.4.1

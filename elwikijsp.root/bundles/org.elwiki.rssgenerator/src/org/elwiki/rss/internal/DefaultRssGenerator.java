@@ -44,6 +44,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.component.WikiPrefs;
@@ -87,9 +88,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	private static final int MAX_CHARACTERS = Integer.MAX_VALUE - 1;
 
-    final RssGeneratorOptions options = new RssGeneratorOptions();
-
-    private BundleContext bundleContext;
+    RssGeneratorOptions options;
 
 	/**
 	 * Constructs the RSS generator.
@@ -112,13 +111,13 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
+		options = new RssGeneratorOptions(bundleContext);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		options.initialize(bundleContext, m_engine);
+		options.initialize(m_engine);
 		isRequiredRssGenerator = options.isGenerateRss();
 
 		if (isRequiredRssGenerator) {
@@ -287,7 +286,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 		PageManager pageManager = this.m_engine.getManager(PageManager.class);
 		ISessionMonitor sessionMonitor = this.m_engine.getManager(ISessionMonitor.class);
 		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
-		feed.setChannelTitle(m_engine.getWikiConfiguration().getApplicationName());
+		feed.setChannelTitle(m_engine.getManager(GlobalPreferences.class).getApplicationName());
 		feed.setFeedURL(m_engine.getWikiConfiguration().getBaseURL());
 		feed.setChannelLanguage(m_channelLanguage);
 		feed.setChannelDescription(m_channelDescription);
@@ -330,7 +329,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 	public String generateWikiPageRSS(final WikiContext wikiContext, final List<WikiPage> changed, final IFeed feed) {
 		VariableManager variableManager = this.m_engine.getManager(VariableManager.class);
 		feed.setChannelTitle(
-				m_engine.getWikiConfiguration().getApplicationName() + ": " + wikiContext.getPage().getName());
+				m_engine.getManager(GlobalPreferences.class).getApplicationName() + ": " + wikiContext.getPage().getName());
 		feed.setFeedURL(wikiContext.getViewURL(wikiContext.getPage().getName()));
 		final String language = variableManager.getVariable(wikiContext, PROP_CHANNEL_LANGUAGE);
 
@@ -388,7 +387,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 			feed.setChannelTitle(ctitle);
 		} else {
 			feed.setChannelTitle(
-					m_engine.getWikiConfiguration().getApplicationName() + ":" + wikiContext.getPage().getName());
+					m_engine.getManager(GlobalPreferences.class).getApplicationName() + ":" + wikiContext.getPage().getName());
 		}
 
 		feed.setFeedURL(wikiContext.getViewURL(wikiContext.getPage().getName()));

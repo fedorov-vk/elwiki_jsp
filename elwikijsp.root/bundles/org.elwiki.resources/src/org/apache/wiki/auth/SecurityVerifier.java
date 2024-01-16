@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.authorization.WebAuthorizer;
@@ -188,7 +189,7 @@ public final class SecurityVerifier {
 		*/
 
 		// Principal[] roles = principals.toArray(new Principal[principals.size()]); //:FVK: m_policyPrincipals;
-		String wiki = m_engine.getWikiConfiguration().getApplicationName();
+		String wiki = m_engine.getManager(GlobalPreferences.class).getApplicationName();
 
 		String[] pages = new String[] { "Main", "Index", "GroupTest", "GroupAdmin" };
 		String[] pageActions = new String[] { "view", "edit", "modify", "rename", "delete" };

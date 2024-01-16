@@ -7,21 +7,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
-import org.apache.wiki.api.core.Engine;
 
 public class OptionsJsonTracker implements WikiAjaxServlet {
 
 	private final String servletMapping;
 	private final List<ICallbackAction> actions;
 
-	public OptionsJsonTracker(String id, List<ICallbackAction> actions, Engine engine) {
+	public OptionsJsonTracker(String id, List<ICallbackAction> actions) {
 		servletMapping = id + "_" + this.hashCode();
 		this.actions = actions;
-
-		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-		wikiAjaxDispatcher.registerServlet(this);
 	}
 
 	@Override

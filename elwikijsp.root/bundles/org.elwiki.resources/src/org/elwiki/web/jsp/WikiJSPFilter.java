@@ -128,7 +128,7 @@ public class WikiJSPFilter extends WikiServletFilter {
     public void doFilter( final ServletRequest  request, final ServletResponse response, final FilterChain chain ) throws ServletException, IOException {
         final WatchDog w = WatchDog.getCurrentWatchDog( m_engine );
         try {
-            NDC.push( getWikiConfiguration().getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
+            NDC.push( getGlobalPreferences().getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
             w.enterState("Filtering for URL "+((HttpServletRequest)request).getRequestURI(), 90 );
             final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper( ( HttpServletResponse )response, m_wiki_encoding, useEncoding );
 

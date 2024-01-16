@@ -43,6 +43,7 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.Assert;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.IOException;
@@ -50,7 +51,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.TreeSet;
 
 /**
@@ -124,8 +124,9 @@ public class CachingProvider implements PageProvider {
         // engine is used for getting the search engine
         m_engine = engine;
         IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
+        GlobalPreferences globalPrefs = engine.getManager(GlobalPreferences.class);
 
-        final String cacheName = wikiConfig.getApplicationName() + "." + CACHE_NAME;
+        final String cacheName = globalPrefs.getApplicationName() + "." + CACHE_NAME;
         if (m_cacheManager.cacheExists(cacheName)) {
             m_cache = m_cacheManager.getCache(cacheName);
         } else {
@@ -134,7 +135,7 @@ public class CachingProvider implements PageProvider {
             m_cacheManager.addCache(m_cache);
         }
 
-        final String textCacheName = wikiConfig.getApplicationName() + "." + TEXTCACHE_NAME;
+        final String textCacheName = globalPrefs.getApplicationName() + "." + TEXTCACHE_NAME;
         if (m_cacheManager.cacheExists(textCacheName)) {
             m_textCache= m_cacheManager.getCache(textCacheName);
         } else {
@@ -143,7 +144,7 @@ public class CachingProvider implements PageProvider {
             m_cacheManager.addCache(m_textCache);
         }
 
-        final String historyCacheName = wikiConfig.getApplicationName() + "." + HISTORYCACHE_NAME;
+        final String historyCacheName = globalPrefs.getApplicationName() + "." + HISTORYCACHE_NAME;
         if (m_cacheManager.cacheExists(historyCacheName)) {
             m_historyCache= m_cacheManager.getCache(historyCacheName);
         } else {

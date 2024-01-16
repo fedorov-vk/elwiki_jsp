@@ -52,9 +52,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** File name for properties of any interwiki references. Current value - {@value} */
 	private final String FILE_INTERWIKI_REFERENCES = "interwikirefs.properties";
 
-	/** Property for application name */
-	String PROP_APPNAME = "jspwiki.applicationName";
-
 	/** Store the file path to the H2 database. */
 	private IPath dbStorePath;
 
@@ -445,13 +442,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 	@Override
 	public IPath getWorkspacePath() {
 		return this.pathWorkspace;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getApplicationName() {
-		final String appName = getStringProperty(PROP_APPNAME, ":FVK: Release.APPNAME");
-		return TextUtil.cleanString(appName, TextUtil.PUNCTUATION_CHARS_ALLOWED);
 	}
 
 	// -- :FVK: -- Далее - 'динамическая конфигурация'. То есть, данные относятся к сессии HTTP.

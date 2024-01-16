@@ -47,6 +47,7 @@ import org.apache.wiki.render0.WikiRenderer;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiPageEventTopic;
@@ -122,6 +123,9 @@ public class DefaultRenderingManager implements RenderingManager, EventHandler {
 	private Engine m_engine;
 
 	@WikiServiceReference
+	GlobalPreferences globalPrefs;
+
+	@WikiServiceReference
 	private AttachmentManager attachmentManager;
 
 	@WikiServiceReference
@@ -155,7 +159,7 @@ public class DefaultRenderingManager implements RenderingManager, EventHandler {
         m_beautifyTitle  = wikiConfiguration.getBooleanProperty( PROP_BEAUTIFYTITLE, m_beautifyTitle );
         m_useCache = true; //:FVK: - removed option: TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
         if( m_useCache ) {
-            final String documentCacheName = wikiConfiguration.getApplicationName() + "." + DOCUMENTCACHE_NAME;
+            final String documentCacheName = globalPrefs.getApplicationName() + "." + DOCUMENTCACHE_NAME;
             if (m_cacheManager.cacheExists(documentCacheName)) {
                 m_documentCache = m_cacheManager.getCache(documentCacheName);
             } else {

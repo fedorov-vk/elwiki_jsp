@@ -58,6 +58,7 @@ import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.IGroupWiki;
@@ -347,7 +348,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	@Override
 	public void setUserProfile(Session session, UserProfile profile) throws DuplicateUserException, WikiException {
 		// Verify user is allowed to save profile!
-		Permission p = new WikiPermission(this.m_engine.getWikiConfiguration().getApplicationName(),
+		Permission p = new WikiPermission(this.m_engine.getManager(GlobalPreferences.class).getApplicationName(),
 				WikiPermission.EDIT_PROFILE_ACTION);
 		if (!getAuthorizationManager().checkPermission(session, p)) {
 			throw new WikiSecurityException("You are not allowed to save wiki profiles.");

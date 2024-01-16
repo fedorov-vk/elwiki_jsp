@@ -44,6 +44,8 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -100,6 +102,7 @@ public class WikiContextImpl implements WikiContext, Command {
 
 	private Session m_session;
 	final private IWikiConfiguration wikiConfiguration;
+	private @NonNull GlobalPreferences globalPrefs;
 
 	/** The page version in question. (or attachment version) */
 	private int m_version = 0;
@@ -172,6 +175,7 @@ public class WikiContextImpl implements WikiContext, Command {
 			throw new IllegalArgumentException("Parameter engine and command must not be null.");
 		}
 		this.wikiConfiguration = engine.getWikiConfiguration();
+		this.globalPrefs = engine.getManager(GlobalPreferences.class);
 
 		m_engine = engine;
 		m_request = request;
@@ -710,7 +714,7 @@ public class WikiContextImpl implements WikiContext, Command {
 			} catch (final NoSuchPrincipalException e) {
 				return DUMMY_PERMISSION;
 			}
-			return new AllPermission(wikiConfiguration.getApplicationName(), null);
+			return new AllPermission(globalPrefs.getApplicationName(), null);
 		}
 
 		// TODO: we should really break the contract so that this
@@ -749,7 +753,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	public boolean hasAdminPermissions() {
 		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
 		return authorizationManager.checkPermission(getWikiSession(),
-				new AllPermission(wikiConfiguration.getApplicationName(), null));
+				new AllPermission(globalPrefs.getApplicationName(), null));
 	}
 
 	/**

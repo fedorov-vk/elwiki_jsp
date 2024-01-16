@@ -41,6 +41,7 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -86,6 +87,9 @@ public class DefaultVariableManager implements VariableManager, EventHandler {
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	GlobalPreferences globalPrefs;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -329,7 +333,7 @@ public class DefaultVariableManager implements VariableManager, EventHandler {
 
         public String getApplicationname()
         {
-            return wikiConfiguration.getApplicationName();
+            return globalPrefs.getApplicationName();
         }
 
         public String getElwikiversion()

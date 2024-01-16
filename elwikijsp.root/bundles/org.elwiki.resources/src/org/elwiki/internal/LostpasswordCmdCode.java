@@ -22,6 +22,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util0.MailUtil;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
 
 public class LostpasswordCmdCode extends CmdCode {
 
@@ -77,7 +78,7 @@ public class LostpasswordCmdCode extends CmdCode {
                 profile = accountRegistry.findByEmail( name );
             }
 
-            String applicationName = wiki.getWikiConfiguration().getApplicationName();
+            String applicationName = wiki.getManager(GlobalPreferences.class).getApplicationName();
             String email = profile.getEmail();
             String randomPassword = TextUtil.generateRandomPassword();
 

@@ -32,6 +32,7 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.ui.GroupCommand;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
@@ -141,8 +142,8 @@ public class PermissionTag extends BaseWikiTag {
 				gotPermission = mgr.checkPermission(session, new GroupPermission(groupName, action));
 			}
 		} else if (ALL_PERMISSION.equals(permission)) {
-			gotPermission = mgr.checkPermission(session,
-					new AllPermission(wikiContext.getEngine().getWikiConfiguration().getApplicationName(), null));
+			String applicationName = wikiContext.getEngine().getManager(GlobalPreferences.class).getApplicationName();
+			gotPermission = mgr.checkPermission(session, new AllPermission(applicationName, null));
 		} else if (page != null) {
 			//
 			//  Edit tag also checks that we're not trying to edit an old version: they cannot be edited.

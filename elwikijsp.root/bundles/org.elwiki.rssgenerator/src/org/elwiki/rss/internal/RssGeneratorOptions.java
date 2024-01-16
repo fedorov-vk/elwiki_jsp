@@ -1,15 +1,10 @@
 package org.elwiki.rss.internal;
 
-import org.apache.wiki.api.cfgoptions.ButtonApply;
-import org.apache.wiki.api.cfgoptions.ButtonRestoreDefault;
-import org.apache.wiki.api.cfgoptions.Option;
 import org.apache.wiki.api.cfgoptions.OptionBoolean;
 import org.apache.wiki.api.cfgoptions.OptionInteger;
 import org.apache.wiki.api.cfgoptions.OptionString;
 import org.apache.wiki.api.cfgoptions.OptionText;
 import org.apache.wiki.api.cfgoptions.Options;
-import org.apache.wiki.api.cfgoptions.OptionsJsonTracker;
-import org.apache.wiki.api.core.Engine;
 import org.osgi.framework.BundleContext;
 
 public class RssGeneratorOptions extends Options {
@@ -28,13 +23,22 @@ public class RssGeneratorOptions extends Options {
 	private OptionText optRssChannelDescription;
 	private OptionString optRssChannelLanguage;
 
-	private ButtonRestoreDefault restoreDefaultButton;
-	private ButtonApply applyButton;
+	public RssGeneratorOptions(BundleContext bundleContext) {
+		super(bundleContext);
+	}
 
 	@Override
-	public void initialize(BundleContext bundleContext, Engine engine) {
-		jsonTracker = new OptionsJsonTracker(SERVLET_MAPPING, actions, engine);
+	protected String getServletMapping() {
+		return SERVLET_MAPPING;
+	}
 
+	@Override
+	protected String getPreferencesSection() {
+		return "RSS generator";
+	}
+	
+	@Override
+	protected void populateOptions(BundleContext bundleContext) {
 		optRssGenerate = new OptionBoolean(bundleContext, PROP_RSS_GENERATE, "RSS generate",
 				"Determine if the RSS file should be generated at all.", jsonTracker);
 		options.add(optRssGenerate);
@@ -59,36 +63,6 @@ public class RssGeneratorOptions extends Options {
 				"The language of your Wiki.", jsonTracker);
 		options.add(optRssChannelLanguage);
 		actions.add(optRssChannelLanguage);
-
-		restoreDefaultButton = new ButtonRestoreDefault(options, jsonTracker);
-		actions.add(restoreDefaultButton);
-
-		applyButton = new ButtonApply(options, jsonTracker);
-		actions.add(applyButton);
-	}
-
-	@Override
-	public String getConfigurationJspPage() {
-		String textOptions = "";
-		for (Option<?> option : options) {
-			textOptions += "\n" + option.getJsp();
-		}
-
-		String textRestoreDefault = restoreDefaultButton.getJsp();
-		String textApply = applyButton.getJsp();
-
-//@formatter:off
-		String result =
-"<h4>RSS generator</h4>" +
-textOptions + """
-  <div class="form-group form-inline">
-    <br/><span class="form-col-20 control-label"></span>""" +
-textRestoreDefault +
-textApply +
-  "</div>";
-//@formatter:on
-
-		return result;
 	}
 
 	/**

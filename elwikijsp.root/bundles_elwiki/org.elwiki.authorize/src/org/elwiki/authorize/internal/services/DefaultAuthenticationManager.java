@@ -126,9 +126,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
 
-	final AuthenticationManagerOptionsImpl options = new AuthenticationManagerOptionsImpl();
-
-	private BundleContext bundleContext;
+	AuthenticationManagerOptionsImpl options;
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -153,13 +151,13 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
+		options = new AuthenticationManagerOptionsImpl(bundleContext);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		options.initialize(bundleContext, m_engine);
+		options.initialize(m_engine);
 
         // Should we allow cookies for assertions? (default: yes)
         m_allowsCookieAssertions = options.isCookieAssertions();

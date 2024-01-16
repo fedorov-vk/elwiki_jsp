@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.component.WikiManager;
@@ -169,9 +170,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
-	final AuthorizationManagerOptions options = new AuthorizationManagerOptions();
-
-	private BundleContext bundleContext;
+	AuthorizationManagerOptions options;
 
 	// == CODE ================================================================
 
@@ -193,6 +192,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 
 	@WikiServiceReference
 	private Engine m_engine;
+	
+	@WikiServiceReference
+	GlobalPreferences globalPrefs;
 
 	@WikiServiceReference
 	private AccountManager accountManager;
@@ -203,7 +205,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
+		options = new AuthorizationManagerOptions(bundleContext);
 	}
 
 	/**
@@ -215,7 +217,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	@Override
 	public void initialize() throws WikiException {
 		log.debug("Initialize.");
-		options.initialize(bundleContext, m_engine);
+		options.initialize(m_engine);
 
 		//
 		//  JAAS authorization continues.
@@ -354,7 +356,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 		Principal user = session.getLoginPrincipal();
 
 		// Always allow the action if user has AllPermission
-		Permission allPermission = new org.elwiki.permissions.AllPermission(this.wikiConfiguration.getApplicationName(),
+		Permission allPermission = new org.elwiki.permissions.AllPermission(this.globalPrefs.getApplicationName(),
 				null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {

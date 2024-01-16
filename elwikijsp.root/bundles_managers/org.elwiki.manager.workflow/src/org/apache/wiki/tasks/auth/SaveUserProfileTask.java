@@ -13,6 +13,7 @@ import org.apache.wiki.util0.MailUtil;
 import org.apache.wiki.workflow0.Outcome;
 import org.apache.wiki.workflow0.Task;
 import org.apache.wiki.workflow0.WorkflowManager;
+import org.elwiki.api.GlobalPreferences;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -59,7 +60,7 @@ public class SaveUserProfileTask extends Task {
             if ( to != null && to.length() > 0) { // :FVK: TODO: реализовать проверку правильности email address. возможно не здесь.
                 try {
                     final InternationalizationManager i18n = m_engine.getManager(InternationalizationManager.class);
-                    final String app = m_engine.getWikiConfiguration().getApplicationName();
+                    final String app = m_engine.getManager(GlobalPreferences.class).getApplicationName();
                     final String subject = i18n.get(m_loc, "wf.notification.createUserProfile.accept.subject", app );
 
                     final String content = i18n.get(m_loc,

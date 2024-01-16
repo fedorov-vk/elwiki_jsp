@@ -6,6 +6,7 @@
    <service scope="prototype">
       <provide interface="javax.servlet.Filter"/>
    </service>
+   <reference cardinality="1..1" field="globalPreferences" interface="org.elwiki.api.GlobalPreferences" name="globalPreferences"/>
    <reference cardinality="1..1" field="m_engine" interface="org.apache.wiki.api.core.Engine" name="m_engine"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.web.jsp.WikiServletFilter"/>
