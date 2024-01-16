@@ -67,6 +67,8 @@ import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -124,7 +126,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	/** Class (of type LoginModule) to use for custom authentication. */
 	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
 
-    final AuthenticationManagerOptionsImpl options = new AuthenticationManagerOptionsImpl();
+	final AuthenticationManagerOptionsImpl options = new AuthenticationManagerOptionsImpl();
+
+	private BundleContext bundleContext;
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -147,10 +151,15 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	@WikiServiceReference
 	private ISessionMonitor sessionMonitor;
 
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
+
 	/** {@inheritDoc} */
 	@Override
-    public void initialize() throws WikiException {
-		options.initialize(m_engine);
+	public void initialize() throws WikiException {
+		options.initialize(bundleContext, m_engine);
 
         // Should we allow cookies for assertions? (default: yes)
         m_allowsCookieAssertions = options.isCookieAssertions();
@@ -533,7 +542,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 	@Override
 	public String getConfigurationEntry() {
-		return options.getConfigurationEntry();
+		String jspPage = options.getConfigurationJspPage();
+		return jspPage;
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class OptionString extends Option<String> {
   <div class="form-group">
     <label class="control-label form-col-20"> %s </label>
     <input oninput="Wiki.jsonrpc('/%s',event.target.value)"
-       id="%s" type="text" class="form-control form-col-25" value="%s" />
+       id="%s" type="text" class="form-control form-col-50" value="%s" />
     <label class="dropdown" style="display:inline-block; vertical-align:top;" >
       &#9432;
       <ul class="dropdown-menu" data-hover-parent=".dropdown">

@@ -49,7 +49,6 @@ import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
-import org.elwiki.rss.internal.options.RssGeneratorOptionsImpl;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
@@ -88,7 +87,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	private static final int MAX_CHARACTERS = Integer.MAX_VALUE - 1;
 
-    final RssGeneratorOptionsImpl options = new RssGeneratorOptionsImpl();
+    final RssGeneratorOptions options = new RssGeneratorOptions();
 
     private BundleContext bundleContext;
 

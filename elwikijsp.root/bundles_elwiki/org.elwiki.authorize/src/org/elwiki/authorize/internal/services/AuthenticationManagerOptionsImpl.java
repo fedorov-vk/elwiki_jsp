@@ -1,306 +1,130 @@
 package org.elwiki.authorize.internal.services;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.ajax.WikiAjaxServlet;
+import org.apache.wiki.api.cfgoptions.ButtonApply;
+import org.apache.wiki.api.cfgoptions.ButtonRestoreDefault;
+import org.apache.wiki.api.cfgoptions.ICallbackAction;
+import org.apache.wiki.api.cfgoptions.Option;
+import org.apache.wiki.api.cfgoptions.OptionBoolean;
+import org.apache.wiki.api.cfgoptions.OptionString;
+import org.apache.wiki.api.cfgoptions.Options;
+import org.apache.wiki.api.cfgoptions.OptionsJsonTracker;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.auth.AuthenticationManagerOptions;
-import org.eclipse.core.runtime.preferences.BundleDefaultsScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
-import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.framework.BundleContext;
 
-public class AuthenticationManagerOptionsImpl implements AuthenticationManagerOptions {
+public class AuthenticationManagerOptionsImpl extends Options implements AuthenticationManagerOptions {
 
-	private class JSONtracker implements WikiAjaxServlet {
-		private static final String SERVLET_AM_CFG = "CfgAuthenticationManager";
+	private static final String SERVLET_MAPPING = "AuthenticationManager";
 
-		@Override
-		public String getServletMapping() {
-			return SERVLET_AM_CFG;
-		}
+	/** If this property is <code>true</code>, allow cookies to be used to assert identities. */
+	private static final String PROP_ALLOW_COOKIE_ASSERTIONS = "cookieAssertions";
 
-		@Override
-		public void service(HttpServletRequest request, HttpServletResponse response, String actionName,
-				List<String> params) throws ServletException, IOException {
-			switch (actionName) {
-			case ACT_COOKIE_ASSERTIONS:
-				actCookieAssertions(params);
-				break;
-			case ACT_COOKIE_AUTHENTICATION:
-				actCookieAuthentication(params);
-				break;
-			case ACT_LOGIN_THROTTLING:
-				actLoginThrottling(params);
-				break;
-			case ACT_RESTORE_DEFAULT:
-				actRestoreDefault();
-				break;
-			case ACT_APPLY:
-				try {
-					actApply();
-				} catch (BackingStoreException e) {
-					throw new IOException(e);
-				}
-				break;
-			}
-		}
-	}
+	/** If this property is <code>true</code>, allow cookies to be used for authentication. */
+	private static final String PROP_ALLOW_COOKIE_AUTH = "cookieAuthentication";
 
-	class Option<T> {
-		private T oldValue;
-		private T newValue;
+	/** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
+	private static final String PROP_LOGIN_THROTTLING = "login.throttling";
 
-		public Option(T oldValue) {
-			this.oldValue = oldValue;
-			this.newValue = oldValue;
-		}
+	private final List<Option<?>> options = new ArrayList<>();
+	private final List<ICallbackAction> actions = new ArrayList<>();
 
-		boolean isDirty() {
-			return oldValue != newValue;
-		}
+	private WikiAjaxServlet jsonTracker;
 
-		void setValue(T newValue) {
-			this.newValue = newValue;
-		}
+	private OptionBoolean optCookieAssertions;
+	private OptionBoolean optCookieAuthentication;
+	private OptionBoolean optLoginThrottling;
+	private OptionString optLoginModuleClass;
 
-		public T getNewValue() {
-			return this.newValue;
-		}
-	}
+	private ButtonRestoreDefault restoreDefaultButton;
+	private ButtonApply applyButton;
 
-	private static final String ACT_COOKIE_ASSERTIONS = "cookieAssertions";
-	private static final String ACT_COOKIE_AUTHENTICATION = "cookieAuthentication";
-	private static final String ACT_LOGIN_THROTTLING = "loginThrottling";
-	private static final String ACT_RESTORE_DEFAULT = "restoreDefault";
-	private static final String ACT_APPLY = "apply";
 
-	private final JSONtracker jsonTracker = new JSONtracker();
+	@Override
+	public void initialize(BundleContext bundleContext, Engine engine) {
+		jsonTracker = new OptionsJsonTracker(SERVLET_MAPPING, actions, engine);
 
-	Map<String, Option<?>> values = new HashMap<>();
-
-	protected void actCookieAssertions(List<String> params) {
-		@SuppressWarnings("unchecked")
-		Option<Boolean> option = (Option<Boolean>) values.get(ACT_COOKIE_ASSERTIONS);
-		option.setValue(Boolean.valueOf(params.get(0)));
-	}
-
-	protected void actCookieAuthentication(List<String> params) {
-		@SuppressWarnings("unchecked")
-		Option<Boolean> option = (Option<Boolean>) values.get(ACT_COOKIE_AUTHENTICATION);
-		option.setValue(Boolean.valueOf(params.get(0)));
-	}
-
-	protected void actLoginThrottling(List<String> params) {
-		@SuppressWarnings("unchecked")
-		Option<Boolean> option = (Option<Boolean>) values.get(ACT_LOGIN_THROTTLING);
-		option.setValue(Boolean.valueOf(params.get(0)));
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void actRestoreDefault() {
-		IEclipsePreferences defaultPrefs = getDefaultPrefs();
-		boolean defValue;
-		Option<Boolean> option;
-
-		option = (Option<Boolean>) values.get(ACT_COOKIE_ASSERTIONS);
-		defValue = defaultPrefs.getBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, true);
-		option.setValue(defValue);
-
-		option = (Option<Boolean>) values.get(ACT_COOKIE_AUTHENTICATION);
-		defValue = defaultPrefs.getBoolean(PROP_ALLOW_COOKIE_AUTH, false);
-		option.setValue(defValue);
-
-		option = (Option<Boolean>) values.get(ACT_LOGIN_THROTTLING);
-		defValue = defaultPrefs.getBoolean(PROP_LOGIN_THROTTLING, true);
-		option.setValue(defValue);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void actApply() throws BackingStoreException {
-		Option<Boolean> option;
-		boolean isDirty = false;
-		IEclipsePreferences instancePrefs = getInstancePrefs();
-
-		option = (Option<Boolean>) values.get(ACT_COOKIE_ASSERTIONS);
-		if (option.isDirty()) {
-			instancePrefs.putBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, option.getNewValue());
-			isDirty = true;
-		}
-
-		option = (Option<Boolean>) values.get(ACT_COOKIE_AUTHENTICATION);
-		if (option.isDirty()) {
-			instancePrefs.putBoolean(PROP_ALLOW_COOKIE_AUTH, option.getNewValue());
-			isDirty = true;
-		}
-
-		option = (Option<Boolean>) values.get(ACT_LOGIN_THROTTLING);
-		if (option.isDirty()) {
-			instancePrefs.putBoolean(PROP_LOGIN_THROTTLING, option.getNewValue());
-			isDirty = true;
-		}
-
-		if (isDirty) {
-			instancePrefs.flush();
-		}
-	}
-
-	void initialize(Engine engine) {
-		WikiAjaxDispatcher wikiAjaxDispatcher = engine.getManager(WikiAjaxDispatcher.class);
-		wikiAjaxDispatcher.registerServlet(jsonTracker);
-	}
-
-	private IEclipsePreferences getDefaultPrefs() {
-		String bundleName = AuthorizePluginActivator.getDefault().getName();
-		return BundleDefaultsScope.INSTANCE.getNode(bundleName);
-	}
-
-	private IEclipsePreferences getInstancePrefs() {
-		String bundleName = AuthorizePluginActivator.getDefault().getName();
-		return InstanceScope.INSTANCE.getNode(bundleName);
-	}
-
-	public String getConfigurationEntry() {
-		values.clear();
-		values.put(ACT_COOKIE_ASSERTIONS, new Option<Boolean>(isCookieAssertions()));
-		values.put(ACT_COOKIE_AUTHENTICATION, new Option<Boolean>(isCookieAuthentication()));
-		values.put(ACT_LOGIN_THROTTLING, new Option<Boolean>(isLoginThrottling()));
-
-//@formatter:off
 		String infoCookieAssertions = """
-If this value is set to "true", then JSPWiki <br/>
- will allow you to "assert" an identity using a cookie. <br/>
-It's still considered to be unsafe, <br/>
- just like no login at all, but it is useful <br/>
- when you have no need to force everyone to login. """;
-		String textCookieAssertions = String.format("""
-  <div class="form-group form-inline ">
-    <label class="control-label form-col-20"> Cookie assertions </label>
-    <label class="form-control form-switch xpref-appearance">
-      <!--<fmt:message key="prefs.user.appearance.light"/>-->
-      <input oninput="Wiki.jsonrpc('/%s',event.target.checked)"
-          id="idCookieAssertions" type="checkbox" class="" %s>
-      <!--<fmt:message key="prefs.user.appearance.dark"/>-->
-    </label>
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
-  </div>""", jsonTracker.getServletMapping() + "/" + ACT_COOKIE_ASSERTIONS,
-  			isCookieAssertions()? "checked='true'" : "", infoCookieAssertions);
+				If this value is set to "true", then JSPWiki <br/>
+				 will allow you to "assert" an identity using a cookie. <br/>
+				It's still considered to be unsafe, <br/>
+				 just like no login at all, but it is useful <br/>
+				 when you have no need to force everyone to login. """;
+		optCookieAssertions = new OptionBoolean(bundleContext, PROP_ALLOW_COOKIE_ASSERTIONS, "Cookie assertions",
+				infoCookieAssertions, jsonTracker);
+		options.add(optCookieAssertions);
+		actions.add(optCookieAssertions);
 
 		String infoCookieAuthentication = ":FVK:foo";
-		String textCookieAuthentication = String.format("""
-  <div class="form-group form-inline ">
-    <label class="control-label form-col-20"> Cookie authentication </label>
-    <label class="form-control form-switch xpref-appearance">
-      <!--<fmt:message key="prefs.user.appearance.light"/>-->
-      <input oninput="Wiki.jsonrpc('/%s',event.target.checked)"
-          id="idCookieAuthentication" type="checkbox" class="" %s>
-      <!--<fmt:message key="prefs.user.appearance.dark"/>-->
-    </label>
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
-  </div>""", jsonTracker.getServletMapping() + "/" + ACT_COOKIE_AUTHENTICATION,
-  			isCookieAuthentication()? "checked='true'" : "", infoCookieAuthentication);
+		optCookieAuthentication = new OptionBoolean(bundleContext, PROP_ALLOW_COOKIE_AUTH, "Cookie authentication",
+				infoCookieAuthentication, jsonTracker);
+		options.add(optCookieAuthentication);
+		actions.add(optCookieAuthentication);
 
 		String infoLoginThrottling = "Whether logins should be throttled to limit bruce-force attempts.";
-		String textLoginThrottling = String.format("""
-  <div class="form-group form-inline ">
-    <label class="control-label form-col-20"> Login throttling </label>
-    <label class="form-control form-switch xpref-appearance">
-      <!--<fmt:message key="prefs.user.appearance.light"/>-->
-      <input oninput="Wiki.jsonrpc('/%s',event.target.checked)"
-          id="idLoginThrottling" type="checkbox" class="" %s>
-      <!--<fmt:message key="prefs.user.appearance.dark"/>-->
-    </label>
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
-  </div>""", jsonTracker.getServletMapping() + "/" + ACT_LOGIN_THROTTLING,
-  			isLoginThrottling()? "checked='true'" : "", infoLoginThrottling);
+		optLoginThrottling = new OptionBoolean(bundleContext, PROP_LOGIN_THROTTLING, "Login throttling",
+				infoLoginThrottling, jsonTracker);
+		options.add(optLoginThrottling);
+		actions.add(optLoginThrottling);
 
-		String textRestoreDefault = String.format("""
-  <span class="dropdown" style="display:inline-block" >
-    <button class="btn btn-info" name="restoreDefault"
-      onclick="Wiki.jsonrpc('/%s',0,function(result){
-          $('idCookieAssertions').checked='%s';
-          $('idCookieAuthentication').checked='%s';
-          $('idLoginThrottling').checked='%s';
-      })">
-      <!-- <fmt:message key='prefs.save.prefs.submit'/> -->
-      Restore Defaults
-    </button>
-  </span>""", jsonTracker.getServletMapping() + "/" + ACT_RESTORE_DEFAULT,
-  			getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, true)? "true" : "",
-  			getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_AUTH, false)? "true" : "",
-  			getDefaultPrefs().getBoolean(PROP_LOGIN_THROTTLING, true)? "true" : ""
-		);
+		String infoLoginModuleClass = "Supply the JAAS LoginModule class used for custom authentication here.";
+		optLoginModuleClass = new OptionString(bundleContext, PROP_LOGIN_MODULE_CLASS, "JAAS login class",
+				infoLoginModuleClass, jsonTracker);
+		options.add(optLoginModuleClass);
+		actions.add(optLoginModuleClass);
 
-		String textApply = String.format("""
-  &nbsp;
-  <span class="dropdown" style="display:inline-block" >
-    <button class="btn btn-info" name="apply"
-      onclick="Wiki.jsonrpc('/%s',0)">
-      <!-- <fmt:message key='prefs.cancel.submit'/> -->
-      Apply
-    </button>
-  </span>""", jsonTracker.getServletMapping() + "/" + ACT_APPLY);
+		restoreDefaultButton = new ButtonRestoreDefault(options, jsonTracker);
+		actions.add(restoreDefaultButton);
 
-		String text =
+		applyButton = new ButtonApply(options, jsonTracker);
+		actions.add(applyButton);
+	}
+
+	@Override
+	public String getConfigurationJspPage() {
+		String textOptions = "";
+		for (Option<?> option : options) {
+			textOptions += "\n" + option.getJsp();
+		}
+
+		String textRestoreDefault = restoreDefaultButton.getJsp();
+		String textApply = applyButton.getJsp();
+
+//@formatter:off
+		String result =
 "<h4>Authentication manager</h4>" +
-textCookieAssertions +
-textCookieAuthentication +
-textLoginThrottling + """
+textOptions + """
   <div class="form-group form-inline">
     <br/><span class="form-col-20 control-label"></span>""" +
 textRestoreDefault +
 textApply +
   "</div>";
-//@formatter:on		
-		return text;
+//@formatter:on
+
+		return result;
 	}
 
 	@Override
 	public boolean isCookieAssertions() {
-		boolean defaultValue = getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, true);
-		return getInstancePrefs().getBoolean(PROP_ALLOW_COOKIE_ASSERTIONS, defaultValue);
+		return optCookieAssertions.getInstanceValue();
 	}
 
 	@Override
 	public boolean isCookieAuthentication() {
-		boolean defaultValue = getDefaultPrefs().getBoolean(PROP_ALLOW_COOKIE_AUTH, false);
-		return getInstancePrefs().getBoolean(PROP_ALLOW_COOKIE_AUTH, defaultValue);
+		return optCookieAuthentication.getInstanceValue();
 	}
 
 	@Override
 	public boolean isLoginThrottling() {
-		boolean defaultValue = getDefaultPrefs().getBoolean(PROP_LOGIN_THROTTLING, true);
-		return getInstancePrefs().getBoolean(PROP_LOGIN_THROTTLING, defaultValue);
+		return optLoginThrottling.getInstanceValue();
 	}
 
 	@Override
 	public String getLoginModuleClass() {
-		String defaultValue = getDefaultPrefs().get(PROP_LOGIN_MODULE, "");
-		return getInstancePrefs().get(PROP_LOGIN_MODULE, defaultValue);
+		return optLoginModuleClass.getInstanceValue();
 	}
 
 }

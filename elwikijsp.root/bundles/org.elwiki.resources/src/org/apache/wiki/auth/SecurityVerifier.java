@@ -551,7 +551,7 @@ public final class SecurityVerifier {
 
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
 		if (jaasClass == null || jaasClass.length() == 0) {
-			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE
+			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE_CLASS
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
 					+ "on the classpath.");
 			return;
@@ -560,7 +560,7 @@ public final class SecurityVerifier {
 		// See if we can find the LoginModule on the classpath
 		Class<?> c = null;
 		try {
-			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE
+			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE_CLASS
 					+ "' specified the class '" + jaasClass + ".'");
 			c = Class.forName(jaasClass);
 
