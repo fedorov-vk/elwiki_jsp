@@ -77,6 +77,7 @@ import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -89,6 +90,8 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -111,7 +114,7 @@ import org.osgi.service.event.EventHandler;
 	service = { PageManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageManager implements PageManager, EventHandler {
+public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 
@@ -132,6 +135,8 @@ public class DefaultPageManager implements PageManager, EventHandler {
 	private Thread m_reaper = null;
 
 	private PageSorter pageSorter = new PageSorter();
+
+	private PageManagerOptions options;
 
 	/**
 	 * Create instance of DefaultPageManager.
@@ -168,9 +173,15 @@ public class DefaultPageManager implements PageManager, EventHandler {
 	@WikiServiceReference
 	private WorkflowManager workflowManager;
 
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		options = new PageManagerOptions(bundleContext);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
+		options.initialize(m_engine);
 		m_expiryTime = wikiConfiguration.getIntegerProperty(PROP_LOCKEXPIRY, 60);
 
 		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
@@ -206,8 +217,9 @@ public class DefaultPageManager implements PageManager, EventHandler {
 		*/
 
 		try {
-			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
-			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/);
+			String requiredId = options.getPageManager();
+			this.m_provider = getPageProvider(requiredId);
+			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/
 			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
 		} catch (WikiException | IOException e) {
 			// TODO Auto-generated catch block
@@ -217,14 +229,22 @@ public class DefaultPageManager implements PageManager, EventHandler {
 
 	// -- OSGi service handling ------------------------(end)--
 
+	/**
+	 * Attempts to locate and initialize an PageProvider to use with this manager. Throws a WikiException
+	 * if no entry is found, or if one fails to initialize.
+	 * 
+	 * @param requiredId required PageProvider ID for extension point.
+	 * @return a PageProvider according to required ID.
+	 * @throws WikiException
+	 */
 	private PageProvider getPageProvider(String requiredId) throws WikiException {
-		//
-		// Сканирование расширений провайдеров страниц.
-		//
 		String namespace = PageManagerActivator.PLIGIN_ID;
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
 
+		//
+		// Load an PageProvider from Equinox extension "org.elwiki.manager.page.pageProvider".
+		//
 		Class<? extends PageProvider> clazzPageProvider = null;
 		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_PAGEPROVIDER);
 		if (ep != null) {
@@ -239,9 +259,10 @@ public class DefaultPageManager implements PageManager, EventHandler {
 						try {
 							clazzPageProvider = clazz.asSubclass(PageProvider.class);
 						} catch (ClassCastException e) {
-							log.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
-							throw new WikiException(
-									"Page provider " + className + " is not extends PageProvider interface.", e);
+							log.fatal("Page provider " + className + " is not extends interface "
+									+ PageProvider.class.getSimpleName(), e);
+							throw new WikiException("Page provider " + className + " is not extends interface "
+									+ PageProvider.class.getSimpleName(), e);
 						}
 					} catch (ClassNotFoundException e) {
 						log.fatal("Page provider " + className + " cannot be found.", e);
@@ -253,9 +274,8 @@ public class DefaultPageManager implements PageManager, EventHandler {
 		}
 
 		if (clazzPageProvider == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find a " + PROP_PAGEPROVIDER + " entry in the properties.",
-					PROP_PAGEPROVIDER);
+			throw new NoRequiredPropertyException("Unable to find PageManager with ID=" + requiredId,
+					options.getPageManagerKey());
 		}
 
 		PageProvider pageProvider = null;
@@ -1014,6 +1034,12 @@ public class DefaultPageManager implements PageManager, EventHandler {
 	@Override
 	public void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException {
 		m_provider.movePage(motionType, targetPageId, movedPageId);
+	}
+
+	@Override
+	public String getConfigurationEntry() {
+		String jspItems = options.getConfigurationJspPage();
+		return jspItems;
 	}
 
 }
