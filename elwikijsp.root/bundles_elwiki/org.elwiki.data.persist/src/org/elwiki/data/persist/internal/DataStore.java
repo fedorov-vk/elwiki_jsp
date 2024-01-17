@@ -14,6 +14,7 @@ import org.eclipse.emf.cdo.view.CDOView;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.net4j.util.WrappedException;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
@@ -65,6 +66,9 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
+	@Reference
+	private GlobalPreferences globalPreferences;
+
 	@Activate
 	protected void startup(BundleContext bc) {
 		String bundleName = bc.getBundle().getSymbolicName();
@@ -81,7 +85,7 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 
 	@Override
 	protected String getFolder() {
-		return wikiConfiguration.getDbPlace();
+		return globalPreferences.getDbPlace().toString();
 	}
 
 	@Override
@@ -184,13 +188,13 @@ public class DataStore extends Repository implements IDataStore, IStorageCdo {
 
 	@Override
 	public void loadAllContent() throws IOException {
-		JsonDeserialiser jsonDeserialiser = new JsonDeserialiser(wikiConfiguration);
+		JsonDeserialiser jsonDeserialiser = new JsonDeserialiser(globalPreferences);
 		jsonDeserialiser.LoadData();
 	}
 
 	@Override
 	public void saveAllContent() throws IOException {
-		JsonSerialiser jsonSerialiser = new JsonSerialiser(wikiConfiguration);
+		JsonSerialiser jsonSerialiser = new JsonSerialiser(globalPreferences);
 		jsonSerialiser.SaveData();
 	}
 

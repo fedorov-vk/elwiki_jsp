@@ -42,6 +42,7 @@ public interface PageManager extends WikiManager {
 	enum PageMotionType { AFTER, BEFORE, BOTTOM };
 
     /** The property value for setting the current page provider.  Value is {@value}. */
+	@Deprecated
     String PROP_PAGEPROVIDER = "jspwiki.pageProvider";
 
     /** The property value for setting the amount of time before the page locks expire. Value is {@value}. */

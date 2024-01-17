@@ -28,6 +28,7 @@ import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.pages0.PageManager;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.ImportManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
@@ -63,6 +64,9 @@ public class ImportManagerImpl implements ImportManager {
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
 	private Engine m_engine;
@@ -133,7 +137,7 @@ public class ImportManagerImpl implements ImportManager {
 			return;
 		}
 
-		ImportJspWikiData wikiDataImporter = new ImportJspWikiData("BIRT2", wikiConfiguration.getWorkspacePath());
+		ImportJspWikiData wikiDataImporter = new ImportJspWikiData("BIRT2", globalPreferences.getWorkspacePath());
 		wikiDataImporter.readXmlData();
 		db = wikiDataImporter.getDb();
 
@@ -284,7 +288,7 @@ public class ImportManagerImpl implements ImportManager {
 		PageProvider pageProvider = pm.getProvider();
 
 		for (String wikiName : wikiNames) {
-			ImportJspWikiData wikiDataImporter = new ImportJspWikiData(wikiName, wikiConfiguration.getWorkspacePath());
+			ImportJspWikiData wikiDataImporter = new ImportJspWikiData(wikiName, globalPreferences.getWorkspacePath());
 			wikiDataImporter.readXmlData();
 			db = wikiDataImporter.getDb();
 

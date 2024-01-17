@@ -2,6 +2,7 @@ package org.elwiki.services;
 
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.eclipse.core.runtime.IPath;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
@@ -50,5 +51,24 @@ public class GlobalPreferencesImpl implements GlobalPreferences, WikiPrefs {
 		return options.getApplicationName();
 	}
 
-	
+	@Override
+	public IPath getWorkDir() {
+		return options.getWorkDir();
+	}
+
+	@Override
+	public IPath getDbPlace() {
+		return options.getDbPlace();
+	}
+
+	@Override
+	public IPath getAttachmentPath() {
+		return options.getAttachmentPath();
+	}
+
+	@Override
+	public IPath getWorkspacePath() {
+		return options.getWorkspacePath();
+	}
+
 }

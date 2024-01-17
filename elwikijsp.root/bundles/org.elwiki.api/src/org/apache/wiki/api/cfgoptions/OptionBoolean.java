@@ -25,12 +25,7 @@ public class OptionBoolean extends Option<Boolean> {
           id="%s" type="checkbox" class="" %s>
       <!--<fmt:message key="prefs.user.appearance.dark"/>-->
     </label>
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
+    %s
   </div>""",
   			getLabel(),
   			getJsonTracker().getServletMapping() + "/" + getId(),

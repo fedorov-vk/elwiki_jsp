@@ -54,6 +54,7 @@ import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.api.plugin.InitializablePlugin;
@@ -212,7 +213,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		 */
 		public synchronized void initialize(Engine engine) {
 			log.info("initializing PageView Manager");
-			m_workDir = engine.getWikiConfiguration().getWorkDir().toString();
+			m_workDir = engine.getManager(GlobalPreferences.class).getWorkDir().toString();
 
 			if (m_counters == null) {
 				// Load the counters into a collection

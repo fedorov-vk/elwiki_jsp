@@ -10,24 +10,6 @@ public interface IWikiPreferences {
 	/** Property node for set of inline image patterns. Current value - {@value} */
 	String NODE_INLINE_PATTERNS = "node.translatorReader.inlinePatterns";
 
-	/**
-	 * Property name for where the ElWiki work directory should be. If not specified, sets to workspace
-	 * place.
-	 */
-	String PROP_WORKDIR = "elwiki.workDir";
-
-	/**
-	 * Property name for where the H2 database should be located. If not specified, sets to area in the
-	 * workspace place - ${workspace_loc}/.
-	 */
-	String PROP_H2_DATABASE_PLACE = "elwiki.h2.database.place";
-
-	/**
-	 * Property name for where the ElWiki attachment directory should be. If not specified, it is
-	 * defined as a directory located in the working directory.
-	 */
-	String PROP_ATTACHMENTDIR = "elwiki.attachmentDir";
-
 	/** If true, then the user name will be stored with the page data. */
 	String PROP_STOREUSERNAME = "jspwiki.storeUserName";
 

@@ -22,14 +22,10 @@ public class OptionText extends Option<String> {
     <textarea oninput="Wiki.jsonrpc('/%s',event.target.value)"
         id="%s" style="width:50%%; display:inline-block;
                        min-width:200px; min-height:30px;
-                       max-width:600px; max-height:150px;">%s
+                       max-width:600px; max-height:150px;">
+      %s
     </textarea>
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
+    %s
   </div>""",
   			getLabel(),
   			getJsonTracker().getServletMapping() + "/" + getId(),

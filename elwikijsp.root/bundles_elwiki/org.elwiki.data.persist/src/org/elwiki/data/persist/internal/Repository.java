@@ -137,7 +137,8 @@ abstract class Repository implements IPasswordCredentialsProvider {
 		String repositoryName = getName();
 
 		JdbcDataSource dataSource = new JdbcDataSource();
-		dataSource.setURL("jdbc:h2:" + getFolder() + "/" + getName() + ";CACHE_SIZE=" + getH2CacheSize());
+		String url = "jdbc:h2:" + getFolder() + "/" + getName() + ";CACHE_SIZE=" + getH2CacheSize();
+		dataSource.setURL(url);
 
 		IDBStore store = getStore(dataSource);
 		repository = CDOServerUtil.createRepository(repositoryName, store, getRepositoryProperties());

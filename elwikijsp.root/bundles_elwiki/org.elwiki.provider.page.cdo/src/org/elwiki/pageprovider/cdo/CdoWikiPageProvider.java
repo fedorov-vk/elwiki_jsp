@@ -1337,7 +1337,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	
 					// Копирование данных
 					// IWikiConfiguration wikiConfiguration = Engine.getConfiguration();
-					IPath dstPath = getWikiConfiguration().getAttachmentPath();
+					IPath dstPath = globalPreferences.getAttachmentPath();
 	
 					File outputFile = File.createTempFile(ATTFILE_PREFIX, ATTFILE_SUFFIX, dstPath.toFile());
 					try (OutputStream outputStream = new FileOutputStream(outputFile);

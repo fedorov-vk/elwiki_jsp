@@ -65,7 +65,7 @@ public class Installer {
     public static final String STORAGE_DIR = AttachmentProvider.PROP_STORAGEDIR;
     @Deprecated
     public static final String PAGE_DIR = ""; //FileSystemProvider.PROP_PAGEDIR;
-    public static final String WORK_DIR = IWikiPreferences.PROP_WORKDIR;
+    public static final String WORK_DIR = ""; //IWikiPreferences.PROP_WORKDIR;
     public static final String ADMIN_GROUP = "Admin";
     public static final String PROPFILENAME = "jspwiki-custom.properties" ;
     public static final String TMP_DIR = System.getProperty("java.io.tmpdir");

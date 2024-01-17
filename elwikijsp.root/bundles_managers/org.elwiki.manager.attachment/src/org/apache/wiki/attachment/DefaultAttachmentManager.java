@@ -43,6 +43,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -99,6 +100,9 @@ public class DefaultAttachmentManager implements AttachmentManager, EventHandler
 
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+	
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
 	private Engine m_engine;
@@ -369,7 +373,7 @@ public class DefaultAttachmentManager implements AttachmentManager, EventHandler
 
 	@Override
 	public void releaseAttachmentStore(List<String> filesList) {
-		IPath attachmentDirectory = this.wikiConfiguration.getAttachmentPath();
+		IPath attachmentDirectory = this.globalPreferences.getAttachmentPath();
 		/* Remove attachment files. */
 		for (String fileName : filesList) {
 			try {

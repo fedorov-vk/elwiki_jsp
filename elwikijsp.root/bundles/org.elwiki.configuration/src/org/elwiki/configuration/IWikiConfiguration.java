@@ -21,28 +21,6 @@ public interface IWikiConfiguration {
 	IPreferenceStore getWikiPreferences();
 
 	/**
-	 * Returns the H2 database path. Database has content of pages.
-	 *
-	 * @return A path to where the H2 database is placed in the local file system.
-	 */
-	String getDbPlace();
-
-	/**
-	 * Returns the attachment path. The attachment path is where the attachment files is located in the
-	 * file system.
-	 *
-	 * @return A path to where the attachment files is placed in the local file system.
-	 */
-	IPath getAttachmentPath();
-
-	/**
-	 * Returns the ElWiki working directory set with "elwiki.workDir".
-	 *
-	 * @return The working directory.
-	 */
-	IPath getWorkDir();
-
-	/**
 	 * Returns the IANA name of the character set encoding we're supposed to be using right now.
 	 *
 	 * @since 1.5.3
@@ -114,14 +92,6 @@ public interface IWikiConfiguration {
 	 * @return A Collection of Strings.
 	 */
 	public Collection<String> getAllInterWikiLinks();
-
-	/**
-	 * Returns the workspace path. The workspace path is where the workspace is located in the file
-	 * system.
-	 * 
-	 * @return the workspace path.
-	 */
-	IPath getWorkspacePath();
 
 	/**
 	 * Turns a WikiName into something that can be called through using an URL.

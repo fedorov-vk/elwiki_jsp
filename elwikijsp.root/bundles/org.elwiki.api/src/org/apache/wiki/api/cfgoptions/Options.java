@@ -25,7 +25,7 @@ public abstract class Options {
 
 	protected abstract String getServletMapping();
 
-	protected abstract String getPreferencesSection();
+	protected abstract String getPreferencesSectionName();
 
 	protected abstract void populateOptions(BundleContext bundleContext);
 
@@ -51,7 +51,7 @@ public abstract class Options {
 
 //@formatter:off
 		String result =
-"<h4>" + getPreferencesSection() + "</h4>" +
+"<h4>" + getPreferencesSectionName() + "</h4>" +
 textOptions + """
   <div class="form-group form-inline">
     <br/><span class="form-col-20 control-label"></span>""" +

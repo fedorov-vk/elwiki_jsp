@@ -33,7 +33,7 @@ public class RssGeneratorOptions extends Options {
 	}
 
 	@Override
-	protected String getPreferencesSection() {
+	protected String getPreferencesSectionName() {
 		return "RSS generator";
 	}
 	

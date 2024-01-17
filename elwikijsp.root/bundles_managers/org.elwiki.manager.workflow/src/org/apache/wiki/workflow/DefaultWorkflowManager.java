@@ -49,6 +49,7 @@ import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.apache.wiki.workflow0.Workflow.WfState;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiWorkflowEventTopic;
@@ -110,6 +111,9 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
+	@Reference
+	private GlobalPreferences globalPreferences;
+
 	@WikiServiceReference
 	private Engine m_engine = null;
 
@@ -143,7 +147,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 		optionReader.accept(WorkflowManager.WF_WP_SAVE_APPROVER);
 		optionReader.accept(WorkflowManager.WF_UP_CREATE_SAVE_APPROVER);
 		
-		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
+		String workDir = globalPreferences.getWorkDir().toString();
 		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
 	}
 
@@ -392,7 +396,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
 			break;
 		}
 
-		serializeToDisk(new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE));
+		serializeToDisk(new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_FILE));
 	}
 
 }

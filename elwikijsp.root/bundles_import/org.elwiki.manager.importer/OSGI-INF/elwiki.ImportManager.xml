@@ -4,6 +4,7 @@
       <provide interface="org.elwiki.api.ImportManager"/>
       <provide interface="org.elwiki.api.component.WikiManager"/>
    </service>
+   <reference cardinality="1..1" field="globalPreferences" interface="org.elwiki.api.GlobalPreferences" name="globalPreferences"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.manager.importer.ImportManagerImpl"/>
 </scr:component>

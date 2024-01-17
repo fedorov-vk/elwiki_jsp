@@ -34,7 +34,7 @@ public class AuthenticationManagerOptionsImpl extends Options implements Authent
 	}
 
 	@Override
-	protected String getPreferencesSection() {
+	protected String getPreferencesSectionName() {
 		return "Authentication manager";
 	}
 
@@ -51,9 +51,8 @@ public class AuthenticationManagerOptionsImpl extends Options implements Authent
 		options.add(optCookieAssertions);
 		actions.add(optCookieAssertions);
 
-		String infoCookieAuthentication = ":FVK:foo";
-		optCookieAuthentication = new OptionBoolean(bundleContext, PROP_ALLOW_COOKIE_AUTH, "Cookie authentication",
-				infoCookieAuthentication, jsonTracker);
+		optCookieAuthentication = new OptionBoolean(bundleContext, PROP_ALLOW_COOKIE_AUTH, "Cookie authentication", "",
+				jsonTracker);
 		options.add(optCookieAuthentication);
 		actions.add(optCookieAuthentication);
 

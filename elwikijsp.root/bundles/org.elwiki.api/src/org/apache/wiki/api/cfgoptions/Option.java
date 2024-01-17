@@ -63,7 +63,20 @@ public abstract class Option<T> implements ICallbackAction, IJspCode {
 	}
 
 	public String getInfo() {
-		return info;
+		String jspInfo = "";
+		if(info != null && !info.isBlank()) {
+			jspInfo = String.format(
+"""
+    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
+      &#9432;
+      <ul class="dropdown-menu" data-hover-parent=".dropdown">
+        <li class="dropdown" style="width:700px;"> %s </li>
+      </ul>
+    </label>
+""", info); 
+		}
+
+		return jspInfo;
 	}
 
 	public WikiAjaxServlet getJsonTracker() {

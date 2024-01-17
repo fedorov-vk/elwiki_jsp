@@ -6,7 +6,7 @@ import java.io.Reader;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IPath;
-import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.data.persist.json.converters.AttachmentContentConverter;
 import org.elwiki.data.persist.json.converters.DateConverter;
 import org.elwiki.data.persist.json.converters.PageAclEntryConverter;
@@ -29,12 +29,12 @@ import com.google.gson.GsonBuilder;
 public class JsonDeserialiser {
 
 	@SuppressWarnings("unused")
-	private IWikiConfiguration wikiConfiguration;
+	private GlobalPreferences globalPreferences;
 	private IPath workPath;
 
-	public JsonDeserialiser(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-		this.workPath = wikiConfiguration.getWorkDir();
+	public JsonDeserialiser(GlobalPreferences globalPreferences) {
+		this.globalPreferences = globalPreferences;
+		this.workPath = globalPreferences.getWorkDir();
 	}
 
 	public void LoadData() throws IOException {

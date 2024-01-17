@@ -45,6 +45,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 
@@ -169,7 +170,8 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	 */
 	private static File getCookieFile(final Engine engine, final String uid) {
 		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
-		String workDir = wikiConfig.getWorkDir().toString();
+		GlobalPreferences globalPreferences = engine.getManager(GlobalPreferences.class); 
+		String workDir = globalPreferences.getWorkDir().toString();
 		File cookieDir = new File(workDir, COOKIE_DIR);
 
 		if (!cookieDir.exists()) {

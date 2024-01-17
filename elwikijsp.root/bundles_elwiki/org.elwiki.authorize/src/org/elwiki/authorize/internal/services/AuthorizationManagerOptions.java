@@ -22,13 +22,13 @@ public class AuthorizationManagerOptions extends Options {
 	}
 
 	@Override
-	protected String getPreferencesSection() {
+	protected String getPreferencesSectionName() {
 		return "Authorization manager";
 	}
 
 	@Override
 	protected void populateOptions(BundleContext bundleContext) {
-		String infoAuthorizer = "Specifying the Authorizer.";
+		String infoAuthorizer = "Specifying ID of the Authorizer.";
 		optAuthorizer = new OptionString(bundleContext, PROP_AUTHORIZER, "Authorizer", infoAuthorizer, jsonTracker);
 		options.add(optAuthorizer);
 		actions.add(optAuthorizer);

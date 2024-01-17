@@ -58,6 +58,7 @@ import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiEngineEventTopic;
@@ -184,6 +185,9 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 	@Reference //(cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC)
 	private IWikiConfiguration wikiConfiguration;
 
+	@Reference
+	private GlobalPreferences globalPreferences;
+	
 	@WikiServiceReference
 	private IStorageCdo storageCdo; //:FVK: - unused?
 
@@ -340,7 +344,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
     private synchronized long unserializeFromDisk() throws IOException, ClassNotFoundException {
         final long saved;
 
-		final File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE);
+		final File f = new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_FILE);
         try( final ObjectInputStream in = new ObjectInputStream( new BufferedInputStream( new FileInputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -370,7 +374,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
      */
     @Deprecated
     private synchronized void serializeToDisk() {
-		final File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE);
+		final File f = new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_FILE);
         try( final ObjectOutputStream out = new ObjectOutputStream( new BufferedOutputStream( new FileOutputStream( f ) ) ) ) {
             final StopWatch sw = new StopWatch();
             sw.start();
@@ -413,7 +417,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
         //  Find attribute cache, and check if it exists
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
+			File f = new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_DIR);
             f = new File( f, hashName );
             if( !f.exists() ) {
                 return 0L;
@@ -464,7 +468,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( p.getName() );
         if( hashName != null ) {
-			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
+			File f = new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_DIR);
             if( !f.exists() ) {
                 f.mkdirs();
             }
@@ -599,7 +603,7 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 
         final String hashName = getHashFileName( pageName );
         if( hashName != null ) {
-			File f = new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_DIR);
+			File f = new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_DIR);
             f = new File( f, getHashFileName( pageName ) );
             if( f.exists() ) {
                 f.delete();

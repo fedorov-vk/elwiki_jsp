@@ -28,7 +28,8 @@ Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
  org.jvnet.hudson.org.suigeneris.jrcs.diff;bundle-version="0.4.2",
  net.sf.ehcache,
  org.elwiki.util,
- org.elwiki.data
+ org.elwiki.data,
+ org.eclipse.core.resources
 Export-Package: org.apache.wiki,
  org.apache.wiki.ajax,
  org.apache.wiki.api,

@@ -21,12 +21,7 @@ public class OptionString extends Option<String> {
     <label class="control-label form-col-20"> %s </label>
     <input oninput="Wiki.jsonrpc('/%s',event.target.value)"
        id="%s" type="text" class="form-control form-col-50" value="%s" />
-    <label class="dropdown" style="display:inline-block; vertical-align:top;" >
-      &#9432;
-      <ul class="dropdown-menu" data-hover-parent=".dropdown">
-        <li class="dropdown" style="width:700px;"> %s </li>
-      </ul>
-    </label>
+    %s
   </div>""",
   			getLabel(),
   			getJsonTracker().getServletMapping() + "/" + getId(),

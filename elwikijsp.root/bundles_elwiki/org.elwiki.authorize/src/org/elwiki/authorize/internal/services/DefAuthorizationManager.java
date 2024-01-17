@@ -202,7 +202,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	@WikiServiceReference
 	PageManager pageManager;
 
-
 	@Activate
 	protected void startup(BundleContext bundleContext) {
 		options = new AuthorizationManagerOptions(bundleContext);
@@ -271,20 +270,20 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	}
 
 	/**
-	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a WikiException
+	 * Attempts to locate and initialize an Authorizer to use with this manager. Throws a WikiException
 	 * if no entry is found, or if one fails to initialize.
 	 * 
-	 * @param rqAuthorizerId required authorizer Id of extension point.
-	 * @return a Authorizer used to get page authorization information
+	 * @param requiredId required Authorizer ID for extension point.
+	 * @return a Authorizer according to required ID.
 	 * @throws WikiException
 	 */
-	private Authorizer getAuthorizerImplementation(String rqAuthorizerId) throws WikiException {
+	private Authorizer getAuthorizerImplementation(String requiredId) throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
 
 		//
-		// Load an Authorizer from Equinox extensions.
+		// Load an Authorizer from Equinox extension "org.elwiki.authorize.authorizer".
 		//
 		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_AUTHORIZER);
 		if (ep != null) {
@@ -299,8 +298,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 						Class<? extends Authorizer> cl = clazz.asSubclass(Authorizer.class);
 						this.authorizerClasses.put(authorizerId, (Class<? extends Authorizer>) cl);
 					} catch (ClassCastException e) {
-						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
-						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
+						log.fatal("Authorizer " + className + " is not extends interface "
+								+ Authorizer.class.getSimpleName(), e);
+						throw new WikiException("Authorizer " + className + " is not extends interface "
+								+ Authorizer.class.getSimpleName(), e);
 					}
 				} catch (ClassNotFoundException e) {
 					log.fatal("Authorizer " + className + " cannot be found.", e);
@@ -309,9 +310,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 			}
 		}
 
-		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(rqAuthorizerId);
+		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(requiredId);
 		if (clazzAuthorizer == null) {
-			throw new NoRequiredPropertyException("Unable to find Authorizer with ID=" + rqAuthorizerId,
+			throw new NoRequiredPropertyException("Unable to find Authorizer with ID=" + requiredId,
 					options.getAuthorizerKey());
 		}
 

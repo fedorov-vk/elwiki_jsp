@@ -9,5 +9,6 @@ org/elwiki/events/page/DELETED
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.references.DefaultReferenceManager"/>
+   <reference cardinality="1..1" field="globalPreferences" interface="org.elwiki.api.GlobalPreferences" name="globalPreferences"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
 </scr:component>
