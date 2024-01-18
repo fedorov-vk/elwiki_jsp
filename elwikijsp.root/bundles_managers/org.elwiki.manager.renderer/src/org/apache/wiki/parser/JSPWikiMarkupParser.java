@@ -155,9 +155,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
     /** Keep track of duplicate header names.  */
     private Map<String, Integer>   m_titleSectionCounter = new HashMap<>();
 
-    /** If true, then considers CamelCase links as well. */
-    private boolean                m_camelCaseLinks      = false;
-
     /** If true, then generate special output for wysiwyg editing in certain cases */
     private boolean                m_wysiwygEditorMode     = false;
 
@@ -175,16 +172,9 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
     private PatternCompiler        m_compiler = new Perl5Compiler();
 
-    static final String WIKIWORD_REGEX = "(^|[[:^alnum:]]+)([[:upper:]]+[[:lower:]]+[[:upper:]]+[[:alnum:]]*|(http://|https://|mailto:)([A-Za-z0-9_/\\.\\+\\?\\#\\-\\@=&;~%]+))";
-
-    private PatternMatcher         m_camelCaseMatcher = new Perl5Matcher();
-    private Pattern                m_camelCasePattern;
-
     private int                    m_rowNum              = 1;
 
     private Heading                m_lastHeading         = null;
-
-    private static final String CAMELCASE_PATTERN     = "JSPWikiMarkupParser.camelCasePattern";
     
     private AccountRegistry accountRegistry;
     
@@ -213,28 +203,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
     // FIXME: parsers should be pooled for better performance.
     private void initialize() {
         initInlineImagePatterns();
-
-        m_camelCasePattern = m_engine.getAttribute( CAMELCASE_PATTERN );
-        if( m_camelCasePattern == null ) {
-            try {
-                m_camelCasePattern = m_compiler.compile( WIKIWORD_REGEX,Perl5Compiler.DEFAULT_MASK|Perl5Compiler.READ_ONLY_MASK );
-            } catch( final MalformedPatternException e ) {
-                log.fatal("Internal error: Someone put in a faulty pattern.",e);
-                throw new InternalWikiException("Faulty camelcasepattern in TranslatorReader", e);
-            }
-            m_engine.setAttribute( CAMELCASE_PATTERN, m_camelCasePattern );
-        }
-
-        //  Set the properties.
-        IPreferenceStore props = wikiConfig.getWikiPreferences();
-        final String cclinks = ":FVK:"; //:FVK: m_context.getPage().getAttribute( PROP_CAMELCASELINKS );
-
-        if( cclinks != null ) {
-        	var value = BooleanUtils.toBooleanObject(cclinks);
-            m_camelCaseLinks = (value != null)? value : false;
-        } else {
-            m_camelCaseLinks  = this.wikiConfig.getBooleanProperty( PROP_CAMELCASELINKS, m_camelCaseLinks );
-        }
 
         final Boolean wysiwygVariable = m_context.getVariable( WikiContext.VAR_WYSIWYG_EDITOR_MODE );
         if( wysiwygVariable != null ) {
@@ -505,102 +473,17 @@ public class JSPWikiMarkupParser extends MarkupParser {
             {
                 buf = m_plainTextBuf.toString();
             }
-            //
-            //  We must first empty the buffer because the side effect of
-            //  calling makeCamelCaseLink() is to call this routine.
-            //
 
+            //
+            //  We must first empty the buffer because the side effect, 
+            //  of calling some routine is to call this routine. (for example, was makeCamelCaseLink())
+            //
             m_plainTextBuf = new StringBuilder(20);
 
             try
             {
-                //
-                //  This is the heaviest part of parsing, and therefore we can
-                //  do some optimization here.
-                //
-                //  1) Only when the length of the buffer is big enough, we try to do the match
-                //
-
-                if( m_camelCaseLinks && !m_isEscaping && buf.length() > 3 )
-                {
-                    // System.out.println("Buffer="+buf);
-
-                    while( m_camelCaseMatcher.contains( buf, m_camelCasePattern ) )
-                    {
-                        final MatchResult result = m_camelCaseMatcher.getMatch();
-
-                        final String firstPart = buf.substring(0,result.beginOffset(0));
-                        String prefix = result.group(1);
-
-                        if( prefix == null ) prefix = "";
-
-                        final String camelCase = result.group(2);
-                        final String protocol  = result.group(3);
-                        String uri       = protocol+result.group(4);
-                        buf              = buf.substring(result.endOffset(0));
-
-                        m_currentElement.addContent( firstPart );
-
-                        //
-                        //  Check if the user does not wish to do URL or WikiWord expansion
-                        //
-                        if( prefix.endsWith("~") || prefix.indexOf('[') != -1 )
-                        {
-                            if( prefix.endsWith("~") )
-                            {
-                                if( m_wysiwygEditorMode )
-                                {
-                                    m_currentElement.addContent( "~" );
-                                }
-                                prefix = prefix.substring(0,prefix.length()-1);
-                            }
-                            if( camelCase != null )
-                            {
-                                m_currentElement.addContent( prefix+camelCase );
-                            }
-                            else if( protocol != null )
-                            {
-                                m_currentElement.addContent( prefix+uri );
-                            }
-                            continue;
-                        }
-
-                        //
-                        //  Fine, then let's check what kind of a link this was
-                        //  and emit the proper elements
-                        //
-                        if( protocol != null )
-                        {
-                            final char c = uri.charAt(uri.length()-1);
-                            if( c == '.' || c == ',' )
-                            {
-                                uri = uri.substring(0,uri.length()-1);
-                                buf = c + buf;
-                            }
-                            // System.out.println("URI match "+uri);
-                            m_currentElement.addContent( prefix );
-                            makeDirectURILink( uri );
-                        }
-                        else
-                        {
-                            // System.out.println("Matched: '"+camelCase+"'");
-                            // System.out.println("Split to '"+firstPart+"', and '"+buf+"'");
-                            // System.out.println("prefix="+prefix);
-                            m_currentElement.addContent( prefix );
-
-                            makeCamelCaseLink( camelCase );
-                        }
-                    }
-
-                    m_currentElement.addContent( buf );
-                }
-                else
-                {
-                    //
-                    //  No camelcase asked for, just add the elements
-                    //
-                    m_currentElement.addContent( buf );
-                }
+				// just add the elements
+				m_currentElement.addContent(buf);
             }
             catch( final IllegalDataException e )
             {
@@ -919,26 +802,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         return el;
     }
 
-    /**
-     *  When given a link to a WikiName, we just return
-     *  a proper HTML link for it.  The local link mutator
-     *  chain is also called.
-     */
-    private Element makeCamelCaseLink( final String wikiname )
-    {
-        final String matchedLink = m_linkParsingOperations.linkIfExists( wikiname );
-
-        collectLink( m_localLinkCollectors, wikiname );
-
-        if( matchedLink != null ) {
-            makeLink( LinkType.READ, matchedLink, wikiname, null, null );
-        } else {
-            makeLink( LinkType.CREATE, wikiname, wikiname, null, null );
-        }
-
-        return m_currentElement;
-    }
-
     /** Holds the image URL for the duration of this parser */
     private String m_outlinkImageURL = null;
 
@@ -967,42 +830,6 @@ public class JSPWikiMarkupParser extends MarkupParser {
         }
 
         return el;
-    }
-
-    /**
-     *  Takes an URL and turns it into a regular wiki link.  Unfortunately,
-     *  because of the way that flushPlainText() works, it already encodes
-     *  all of the XML entities.  But so does WikiContext.getURL(), so we
-     *  have to do a reverse-replace here, so that it can again be replaced in makeLink.
-     *  <p>
-     *  What a crappy problem.
-     *
-     * @param url
-     * @return An anchor Element containing the link.
-     */
-    private Element makeDirectURILink( String url ) {
-        final Element result;
-        String last = null;
-
-        if( url.endsWith( "," ) || url.endsWith( "." ) ) {
-            last = url.substring( url.length() - 1 );
-            url = url.substring( 0, url.length() - 1 );
-        }
-
-        collectLink( m_externalLinkCollectors, url );
-
-        if( m_linkParsingOperations.isImageLink( url, isImageInlining(), getInlineImagePatterns() ) ) {
-            result = handleImageLink( StringUtils.replace( url, "&amp;", "&" ), url, false );
-        } else {
-            result = makeLink( LinkType.EXTERNAL, StringUtils.replace( url, "&amp;", "&" ), url, null, null );
-            addElement( outlinkImage() );
-        }
-
-        if( last != null ) {
-            m_plainTextBuf.append( last );
-        }
-
-        return result;
     }
 
     /**

@@ -38,7 +38,6 @@ import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.api.event.WikiPageEventTopic;
@@ -68,8 +67,6 @@ import org.osgi.service.event.EventHandler;
 public class DefaultPageRenamer implements PageRenamer, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageRenamer.class);
-
-	private boolean m_camelCase = false;
 
 	// -- OSGi service handling --------------------( start )--
 
@@ -223,11 +220,6 @@ public class DefaultPageRenamer implements PageRenamer, EventHandler {
 			final String sourceText = pageManager.getPureText(p, context.getPageVersion());
 			String newText = replaceReferrerString(context, sourceText, fromPage.getName(), toPage.getName());
 
-			m_camelCase = wikiConfiguration.getBooleanProperty(MarkupParser.PROP_CAMELCASELINKS, m_camelCase);
-			if (m_camelCase) {
-				newText = replaceCCReferrerString(context, newText, fromPage.getName(), toPage.getName());
-			}
-
 			if (!sourceText.equals(newText)) {
 				PageContent content = p.getLastContent();
 				content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
@@ -263,36 +255,6 @@ public class DefaultPageRenamer implements PageRenamer, EventHandler {
 			log.error("Provider error while fetching attachments for rename", e);
 		}
 		return referrers;
-	}
-
-	/**
-	 * Replaces camelcase links.
-	 */
-	private String replaceCCReferrerString(final WikiContext context, final String sourceText, final String from,
-			final String to) {
-		final StringBuilder sb = new StringBuilder(sourceText.length() + 32);
-		final Pattern linkPattern = Pattern.compile("\\p{Lu}+\\p{Ll}+\\p{Lu}+[\\p{L}\\p{Digit}]*");
-		final Matcher matcher = linkPattern.matcher(sourceText);
-		int start = 0;
-
-		while (matcher.find(start)) {
-			final String match = matcher.group();
-			sb.append(sourceText.substring(start, matcher.start()));
-			final int lastOpenBrace = sourceText.lastIndexOf('[', matcher.start());
-			final int lastCloseBrace = sourceText.lastIndexOf(']', matcher.start());
-
-			if (match.equals(from) && lastCloseBrace >= lastOpenBrace) {
-				sb.append(to);
-			} else {
-				sb.append(match);
-			}
-
-			start = matcher.end();
-		}
-
-		sb.append(sourceText.substring(start));
-
-		return sb.toString();
 	}
 
 	private String replaceReferrerString(final WikiContext context, final String sourceText, final String from,
