@@ -152,7 +152,7 @@ public class RecentChangesPlugin extends AbstractReferralPlugin implements WikiP
 				String href = context
 						.getURL(pageref instanceof PageAttachment ? ContextEnum.ATTACHMENT_DOGET.getRequestContext()
 								: ContextEnum.PAGE_VIEW.getRequestContext(), pageref.getId());
-				Element link = XhtmlUtil.link(href, super.renderingManager.beautifyTitle(pageref.getName()));
+				Element link = XhtmlUtil.link(href, pageref.getName());
 				Element row = XhtmlUtil.element(XHTML.tr);
 				Element col = XhtmlUtil.element(XHTML.td);
 				col.setAttribute(XHTML.ATTR_width, "30%");

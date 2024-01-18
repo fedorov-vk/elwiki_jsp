@@ -38,8 +38,6 @@ public interface IWikiConfiguration {
 	 */
 	// :FVK: String getBaseURL();
 
-	boolean isBeautifyTitle();
-
 	/**
 	 * Returns the current template directory.
 	 * 

@@ -24,9 +24,6 @@ public interface IWikiPreferences {
 	@Deprecated
 	String DEFAULT_BASEURL = "/?servicehandler=org.elwiki.core.serviceHandler01"; // WORKAROUND.
 
-	/** Property name for the "spaces in titles" -hack. */
-	String PROP_BEAUTIFYTITLE = "jspwiki.breakTitleWithSpaces";
-
 	/** Property name for the template that is used. If not specified, sets to "default". */
 	String PROP_TEMPLATEDIR = "jspwiki.templateDir";
 

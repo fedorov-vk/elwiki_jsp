@@ -420,6 +420,7 @@ public final class TextUtil {
      *  @return A beautified string.
      *  @since 2.1.127
      */
+    @Deprecated //:FVK: possibly. because was used for "jspwiki.breakTitleWithSpaces"
     public static String beautifyString( final String s, final String space ) {
         if( s == null || s.length() == 0 ) {
         	return "";

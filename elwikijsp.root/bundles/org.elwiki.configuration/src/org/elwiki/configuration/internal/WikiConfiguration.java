@@ -54,9 +54,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 	/** Stores the base URL. */
 	private String m_baseURL;
 
-	/** If true, all titles will be cleaned. */
-	private boolean m_beautifyTitle;
-
 	/**
 	 * Stores the template path. This is relative to "shapes". (:FVK: here it is necessary to eliminate
 	 * connection with resource plugin)
@@ -129,11 +126,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 	}
 
 	@Override
-	public boolean isBeautifyTitle() {
-		return this.m_beautifyTitle;
-	}
-
-	@Override
 	public String getTemplateDir() {
 		return this.m_templateDir;
 	}
@@ -195,8 +187,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 		/* :FVK: if (!this.m_baseURL.endsWith("/")) {
 			this.m_baseURL = this.m_baseURL + "/";
 		}*/
-
-		this.m_beautifyTitle = this.prefs.getBoolean(IWikiPreferences.PROP_BEAUTIFYTITLE);
 
 		this.m_templateDir = this.prefs.getString(IWikiPreferences.PROP_TEMPLATEDIR);
 		enforceValidTemplateDirectory();

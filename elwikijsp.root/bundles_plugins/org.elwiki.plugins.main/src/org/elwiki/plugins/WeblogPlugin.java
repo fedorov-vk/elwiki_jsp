@@ -383,7 +383,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 		if (author != null) {
 			if (this.pageManager.pageExistsByName(author)) {
 				author = "<a href=\"" + entryCtx.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), author) + "\">"
-						+ this.renderingManager.beautifyTitle(author) + "</a>";
+						+ author + "</a>";
 			}
 		} else {
 			author = "AnonymousCoward";

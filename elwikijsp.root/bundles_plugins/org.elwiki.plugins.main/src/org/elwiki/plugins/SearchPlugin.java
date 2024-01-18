@@ -157,7 +157,7 @@ public class SearchPlugin implements WikiPlugin, InitializablePlugin {
 
 			name.addContent(
 					XhtmlUtil.link(context.getURL(ContextEnum.PAGE_VIEW.getRequestContext(), sr.getPage().getName()),
-							this.renderingManager.beautifyTitle(sr.getPage().getName())));
+							sr.getPage().getName()));
 
 			row.addContent(name);
 

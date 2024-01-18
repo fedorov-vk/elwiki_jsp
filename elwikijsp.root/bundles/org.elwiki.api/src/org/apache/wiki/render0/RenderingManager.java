@@ -52,30 +52,8 @@ public interface RenderingManager extends WikiManager, RenderApi, InternalModule
     /** default wysiwyg renderer property. */
     String PROP_WYSIWYG_RENDERER = "jspwiki.renderingManager.renderer.wysiwyg";
 
-    String PROP_BEAUTIFYTITLE = "jspwiki.breakTitleWithSpaces";
-
     /** Name of the regular page cache. */
     String DOCUMENTCACHE_NAME = "jspwiki.renderingCache";
-
-    /**
-     *  Beautifies the title of the page by appending spaces in suitable places, if the user has so decreed in the properties when
-     *  constructing this Engine.  However, attachment names are only beautified by the name.
-     *
-     *  @param title The title to beautify
-     *  @return A beautified title (or, if beautification is off, returns the title without modification)
-     *  @since 1.7.11, moved to PageManager on 2.11.0
-     */
-    String beautifyTitle( String title );
-
-    /**
-     *  Beautifies the title of the page by appending non-breaking spaces in suitable places.  This is really suitable only for HTML output,
-     *  as it uses the &amp;nbsp; -character.
-     *
-     *  @param title The title to beautify
-     *  @return A beautified title.
-     *  @since 2.1.127
-     */
-    String beautifyTitleNoBreak( String title );
 
     /**
      *  Returns the wiki Parser

@@ -103,9 +103,6 @@ public class DefaultRenderingManager implements RenderingManager, EventHandler {
     private final CacheManager m_cacheManager = CacheManager.getInstance();
     private final int m_cacheExpiryPeriod = 24*60*60; // This can be relatively long
 
-    /** If true, all titles will be cleaned. */
-    private boolean m_beautifyTitle = false;
-
     /** Stores the WikiDocuments that have been cached. */
     private Cache m_documentCache;
 
@@ -156,7 +153,6 @@ public class DefaultRenderingManager implements RenderingManager, EventHandler {
         }*/
         log.info( "Using " + m_markupParserClass + " as markup parser." );
 
-        m_beautifyTitle  = wikiConfiguration.getBooleanProperty( PROP_BEAUTIFYTITLE, m_beautifyTitle );
         m_useCache = true; //:FVK: - removed option: TextUtil.getBooleanProperty(properties, PageManager.PROP_USECACHE, true );
         if( m_useCache ) {
             final String documentCacheName = globalPrefs.getApplicationName() + "." + DOCUMENTCACHE_NAME;
@@ -197,40 +193,6 @@ public class DefaultRenderingManager implements RenderingManager, EventHandler {
             throw new WikiException( "Failed to get WikiRenderer '" + renderImplName + "'." );
         }
         return c;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String beautifyTitle( final String title ) {
-        if( m_beautifyTitle ) {
-            try {
-                final AttachmentContent att = this.attachmentManager.getAttachmentContent( title );
-                if( att == null ) {
-                    return TextUtil.beautifyString( title );
-                }
-
-                final String parent = ":FVK:"; //:FVK: TextUtil.beautifyString( att.getParentName() );
-                return parent + "/" + att.getPageAttachment().getName();
-            } catch( final ProviderException e ) {
-                return title;
-            }
-        }
-
-        return title;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String beautifyTitleNoBreak( final String title ) {
-        if( m_beautifyTitle ) {
-            return TextUtil.beautifyString( title, "&nbsp;" );
-        }
-
-        return title;
     }
 
     /**

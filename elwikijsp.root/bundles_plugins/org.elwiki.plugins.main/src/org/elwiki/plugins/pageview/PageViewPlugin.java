@@ -461,7 +461,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 							}
 
 							if (use) {
-								args[1] = renderingManager.beautifyTitle(name);
+								args[1] = name;
 								args[2] = entry.getValue();
 
 								fmt.format(args, buf, null);
