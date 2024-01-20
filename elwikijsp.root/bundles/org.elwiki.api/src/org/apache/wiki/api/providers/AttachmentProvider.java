@@ -23,6 +23,7 @@ import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.search.QueryItem;
+import org.elwiki.api.component.WikiPrefs;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,7 +39,7 @@ import java.util.List;
  *  While there are quite a lot of similarities in how we handle things, many providers can really use just one.  In addition,
  *  since binary files can be really large, we rely on Input/OutputStreams.
  */
-public interface AttachmentProvider extends WikiProvider {
+public interface AttachmentProvider extends WikiProvider, WikiPrefs {
 
     /** Property that supplies the directory used to store attachments. */
     String PROP_STORAGEDIR = "jspwiki.basicAttachmentProvider.storageDir";
@@ -140,5 +141,3 @@ public interface AttachmentProvider extends WikiProvider {
     void moveAttachmentsForPage( String oldParent, String newParent ) throws ProviderException;
 
 }
-
-

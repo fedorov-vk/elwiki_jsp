@@ -46,10 +46,13 @@ import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -73,7 +76,7 @@ import net.sf.ehcache.Element;
 	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAttachmentManager implements AttachmentManager, EventHandler {
+public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, EventHandler {
 
 	/** List of attachment types which are forced to be downloaded */
 	@Deprecated
@@ -113,12 +116,17 @@ public class DefaultAttachmentManager implements AttachmentManager, EventHandler
 	@WikiServiceReference
 	private ReferenceManager referenceManager;
 
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		m_provider = new BasicAttachmentProvider();
+		((BasicAttachmentProvider)m_provider).startup(bundleContext);
+	}
+
 	/** {@inheritDoc} */
 	// FIXME: Perhaps this should fail somehow.
 	@Override
 	public void initialize() throws WikiException {
-		try {
-			m_provider = new BasicAttachmentProvider();
+		try {			
 			m_provider.initialize(m_engine);
 		} catch (NoRequiredPropertyException e1) {
 			log.error("Attachment provider did not find a property that it needed: " + e1.getMessage(), e1);
@@ -390,6 +398,11 @@ public class DefaultAttachmentManager implements AttachmentManager, EventHandler
 		switch (topic) {
 			break;
 		}*/		
+	}
+
+	@Override
+	public String getConfigurationEntry() {
+		return m_provider.getConfigurationEntry();
 	}
 
 }
