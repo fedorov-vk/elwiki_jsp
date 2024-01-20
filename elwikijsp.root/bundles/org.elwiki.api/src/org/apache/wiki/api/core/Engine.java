@@ -70,9 +70,6 @@ public interface Engine {
     /** The name of the property containing the ACLManager implementing class. The value is {@value}. */
     String PROP_ACL_MANAGER_IMPL = "jspwiki.aclManager";
 
-    /** If this property is set to false, we don't allow the creation of empty pages */
-    String PROP_ALLOW_CREATION_OF_EMPTY_PAGES = "jspwiki.allowCreationOfEmptyPages";
-
     /**
      * Adapt Engine to a concrete type.
      *

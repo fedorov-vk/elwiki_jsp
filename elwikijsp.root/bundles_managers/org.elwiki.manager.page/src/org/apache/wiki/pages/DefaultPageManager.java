@@ -74,6 +74,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
@@ -154,6 +155,9 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
 	private Engine m_engine;
@@ -426,9 +430,7 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
         }
 
         // Check if creation of empty pages is allowed; bail if not
-		boolean allowEmpty = wikiConfiguration.getBooleanProperty(
-				Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
-				false);
+		boolean allowEmpty = globalPreferences.isAllowCreationOfEmptyPages(); 
 		if (!allowEmpty && !wikiPageExists(page) && text.trim().equals("")) {
 			return;
 		}

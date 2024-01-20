@@ -37,4 +37,5 @@ public interface GlobalPreferences extends WikiManager {
 	 */
 	IPath getWorkspacePath();
 
+	boolean isAllowCreationOfEmptyPages();	
 }

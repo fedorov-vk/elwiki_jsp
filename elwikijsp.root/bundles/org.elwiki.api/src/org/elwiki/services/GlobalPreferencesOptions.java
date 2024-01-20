@@ -6,6 +6,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
 
 import org.apache.log4j.Logger;
+import org.apache.wiki.api.cfgoptions.OptionBoolean;
 import org.apache.wiki.api.cfgoptions.OptionString;
 import org.apache.wiki.api.cfgoptions.Options;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -21,7 +22,10 @@ public class GlobalPreferencesOptions extends Options {
 	private static final String SERVLET_MAPPING = "PreferencesGlobal";
 
 	private static final String PROP_APP_NAME = "applicationName";
-	
+
+	/** If this property is set to false, we don't allow the creation of empty pages */
+	private static final String PROP_ALLOW_CREATION_OF_EMPTY_PAGES = "allowCreationOfEmptyPages";
+
 	/**
 	 * Property name for where the ElWiki work directory should be. If not specified, sets to workspace
 	 * place.
@@ -39,10 +43,11 @@ public class GlobalPreferencesOptions extends Options {
 	 * defined as a 'pages_attachment' directory located in the Workbench workspace directory.
 	 */
 	private static final String SYSTEM_PROP_ATTACHMENTDIR = "elwiki.attachmentDir";
-	
+
 	private static String ATTACHMENTS_SUBDIRECTORY = "pages_attachment";
 
 	private OptionString optAppName;
+	private OptionBoolean optAllowCreationOfEmptyPages;
 
 	private final IPath pathWorkspace = ResourcesPlugin.getWorkspace().getRoot().getLocation();
 	private final IPath pathWorkDir;
@@ -130,6 +135,11 @@ public class GlobalPreferencesOptions extends Options {
 		optAppName = new OptionString(bundleContext, PROP_APP_NAME, "Application name", infoAppName, jsonTracker);
 		options.add(optAppName);
 		actions.add(optAppName);
+
+		optAllowCreationOfEmptyPages = new OptionBoolean(bundleContext, PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
+				"Allow creation empty pages", "", jsonTracker);
+		options.add(optAllowCreationOfEmptyPages);
+		actions.add(optAllowCreationOfEmptyPages);
 	}
 
 	public String getApplicationName() {
@@ -150,6 +160,11 @@ public class GlobalPreferencesOptions extends Options {
 
 	public IPath getWorkspacePath() {
 		return pathWorkspace;
+	}
+
+	/** If this property is set to false, we don't allow the creation of empty pages */
+	public boolean isAllowCreationOfEmptyPages() {
+		return optAllowCreationOfEmptyPages.getInstanceValue();
 	}
 
 }

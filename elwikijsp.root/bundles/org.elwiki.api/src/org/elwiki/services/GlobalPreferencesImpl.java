@@ -71,4 +71,9 @@ public class GlobalPreferencesImpl implements GlobalPreferences, WikiPrefs {
 		return options.getWorkspacePath();
 	}
 
+	@Override
+	public boolean isAllowCreationOfEmptyPages() {
+		return options.isAllowCreationOfEmptyPages();
+	}
+
 }
