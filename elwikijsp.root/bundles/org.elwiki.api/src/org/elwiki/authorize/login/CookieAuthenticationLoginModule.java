@@ -235,7 +235,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 		UUID uid = UUID.randomUUID();
 		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
 		int days = wikiConfig.getIntegerProperty(PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS);
-		Cookie userId = new Cookie(LOGIN_COOKIE_NAME, uid.toString());
+		Cookie userId = getLoginCookie(uid.toString());
 		userId.setMaxAge(days * 24 * 60 * 60);
 		response.addCookie(userId);
 
@@ -266,7 +266,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	 *            Servlet response
 	 */
 	public static void clearLoginCookie(Engine engine, HttpServletRequest request, HttpServletResponse response) {
-		Cookie userId = new Cookie(LOGIN_COOKIE_NAME, "");
+		Cookie userId = getLoginCookie("");
 		userId.setMaxAge(0);
 		response.addCookie(userId);
 
