@@ -172,7 +172,7 @@ public class WikiServletFilter implements Filter {
         HttpServletRequest httpRequest = ( HttpServletRequest )request;
         
         // Set the character encoding
-        httpRequest.setCharacterEncoding( getWikiConfiguration().getContentEncodingCs().displayName() );
+        httpRequest.setCharacterEncoding( engine.getContentEncoding().displayName() );
 
         if ( !isWrapped( request ) ) {
             // Prepare the Session

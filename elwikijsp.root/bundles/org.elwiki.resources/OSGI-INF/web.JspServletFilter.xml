@@ -10,6 +10,5 @@ FORWARD
       <provide interface="javax.servlet.Filter"/>
    </service>
    <reference cardinality="1..1" field="engine" interface="org.apache.wiki.api.core.Engine" name="engine"/>
-   <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>
    <implementation class="org.elwiki.web.jsp.JspServletFilter"/>
 </scr:component>

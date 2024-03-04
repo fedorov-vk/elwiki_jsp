@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.elwiki.preferences.ui.preferencePages">
+      <page
+            class="org.elwiki.rss.internal.RssGeneratorPreferencePage"
+            id="org.elwiki.rssgenerator.page.preferences"
+            name="Rss Generator">
+      </page>
+   </extension>
+
+</plugin>

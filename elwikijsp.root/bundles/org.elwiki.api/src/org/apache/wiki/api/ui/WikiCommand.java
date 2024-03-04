@@ -50,7 +50,6 @@ public final class WikiCommand extends AbstractCommand {
     public static final Command PERSIST_CONTENT = new WikiCommand( ContextEnum.WIKI_PERSIST_CONTENT, null, null );
     public static final Command CHANGE_HIERARCHY = new WikiCommand( ContextEnum.WIKI_CHANGE_HIERARCHY, null, null );
     public static final Command IMPORTPAGES = new WikiCommand( ContextEnum.WIKI_IMPORTPAGES, null, null );
-    public static final Command PREFERENCES = new WikiCommand( ContextEnum.WIKI_PREFERENCES, null, null );
 
     private final String m_action;
     

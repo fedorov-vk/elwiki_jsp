@@ -342,7 +342,7 @@ public class DefaultVariableManager implements VariableManager, EventHandler {
         }
 
         public String getEncoding() {
-            return m_context.getConfiguration().getContentEncodingCs().displayName();
+            return m_context.getEngine().getContentEncoding().displayName();
         }
 
         public String getTotalpages() {
@@ -384,7 +384,7 @@ public class DefaultVariableManager implements VariableManager, EventHandler {
         @Deprecated //:FVK: not used anywhere.
         public String getInlinedimages() {
             final StringBuilder res = new StringBuilder();
-            for( final String ptrn : wikiConfiguration.getAllInlinedImagePatterns() ) {
+            for( final String ptrn : globalPrefs.getAllInlinedImagePatterns() ) {
                 if( res.length() > 0 ) {
                     res.append( ", " );
                 }

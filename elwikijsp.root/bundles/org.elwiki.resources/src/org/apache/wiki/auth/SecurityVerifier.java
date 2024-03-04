@@ -548,11 +548,11 @@ public final class SecurityVerifier {
 	 */
 	protected void verifyJaas() {
 		AuthenticationManager authenticationManager = m_engine.getManager(AuthenticationManager.class);
-		String jaasClass = authenticationManager.getOptions().getLoginModuleClass();
+		String jaasClassId = authenticationManager.getPreference(AuthenticationManager.Prefs.LOGIN_MODULE_ID, String.class);
 
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
-		if (jaasClass == null || jaasClass.length() == 0) {
-			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE_CLASS
+		if (jaasClassId == null || jaasClassId.length() == 0) {
+			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.Prefs.LOGIN_MODULE_ID
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
 					+ "on the classpath.");
 			return;
@@ -561,21 +561,21 @@ public final class SecurityVerifier {
 		// See if we can find the LoginModule on the classpath
 		Class<?> c = null;
 		try {
-			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManagerOptions.PROP_LOGIN_MODULE_CLASS
-					+ "' specified the class '" + jaasClass + ".'");
-			c = Class.forName(jaasClass);
+			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManager.Prefs.LOGIN_MODULE_ID
+					+ "' specified the of login module ID '" + jaasClassId + ".'");
+			c = authenticationManager.getLoginModule(jaasClassId);
 
 			// Is the specified class actually a LoginModule?
 			if (LoginModule.class.isAssignableFrom(c)) {
-				m_session.addMessage(INFO_JAAS, "We found the the class '" + jaasClass
+				m_session.addMessage(INFO_JAAS, "We found the the class '" + jaasClassId
 						+ "' on the classpath, and it is a LoginModule implementation. Good!");
 			} else {
-				m_session.addMessage(ERROR_JAAS, "We found the the class '" + jaasClass
+				m_session.addMessage(ERROR_JAAS, "We found the the class '" + jaasClassId
 						+ "' on the classpath, but it does not seem to be LoginModule implementation! This is fatal error.");
 			}
-		} catch (ClassNotFoundException e) {
+		} catch (WikiException e) {
 			m_session.addMessage(ERROR_JAAS,
-					"We could not find the the class '" + jaasClass + "' on the " + "classpath. This is fatal error.");
+					"We could not find the the class '" + jaasClassId + "' on the " + "classpath. This is fatal error.");
 		}
 	}
 

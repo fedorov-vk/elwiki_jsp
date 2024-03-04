@@ -22,11 +22,11 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.Platform;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.configuration.IWikiPreferences;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.component.IWikiPreferencesConstants;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.framework.Constants;
@@ -65,10 +65,6 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	private static final String PATH_ADMIN_VIEW = "/shapes/admin/Admin.jsp";
 	private static final String PATH_SECURITY_VIEW = "/shapes/security/SecurityConfig.jsp";
 
-	/** Stores configuration. */
-	@Reference
-	private IWikiConfiguration wikiConfiguration;
-
 	@Reference
 	private Engine engine;
 
@@ -84,10 +80,11 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		servletContext = config.getServletContext();
-		m_wiki_encoding = wikiConfiguration.getStringProperty(IWikiPreferences.PROP_ENCODING,
-        		IWikiPreferences.DEFAULT_ENCODING);
-		useEncoding = !wikiConfiguration.getBooleanProperty(Engine.PROP_NO_FILTER_ENCODING,
-				false);
+		
+		@NonNull
+		GlobalPreferences globalPrefs = engine.getManager(GlobalPreferences.class);
+		m_wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
+		useEncoding = !globalPrefs.getPreference(IWikiPreferencesConstants.PROP_NO_FILTER_ENCODING, Boolean.class);
 	}
 
 	@Override

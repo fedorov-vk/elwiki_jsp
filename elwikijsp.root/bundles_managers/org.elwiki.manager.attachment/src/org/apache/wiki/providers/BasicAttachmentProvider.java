@@ -42,7 +42,6 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.GlobalPreferences;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.File;
@@ -115,12 +114,6 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     
     private static final Logger log = Logger.getLogger( BasicAttachmentProvider.class );
 
-    BasicAttachmentProviderOptionsImpl options;
-
-	public void startup(BundleContext bundleContext) {
-		options = new BasicAttachmentProviderOptionsImpl(bundleContext);
-	}
-
     /**
      *  {@inheritDoc}
      */
@@ -129,8 +122,6 @@ public class BasicAttachmentProvider implements AttachmentProvider {
         m_engine = engine;
         wikiConfiguration = m_engine.getWikiConfiguration();
         globalPreferences = m_engine.getManager(GlobalPreferences.class);
-
-        options.initialize(m_engine);
     }
 
     /**
@@ -322,11 +313,6 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 		* FIXME: :FVK: Add into CDO manager - move Attachments from one Page to another..
 		*/
     }
-
-	@Override
-	public String getConfigurationEntry() {
-		return options.getConfigurationJspPage();
-	}
 
 }
 

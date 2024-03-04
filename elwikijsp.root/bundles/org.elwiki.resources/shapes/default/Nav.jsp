@@ -390,10 +390,10 @@
       <wiki:CheckRequestContext context="<%=WikiContext.PAGE_VIEW%>">      
       <wiki:Permission permission="<%=PermissionTag.ALL_PERMISSION%>">
         <li>
-          <wiki:Link path='<%=ContextEnum.WIKI_PREFERENCES.getUri()%>'>
+          <wiki:Link pageId="1002" cssClass="slimbox-link" path='configuration'>
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
-			Wiki preferences
-          </wiki:Link>
+			Wiki configuration
+          </wiki:Link>          
           <wiki:Link path='<%=ContextEnum.WIKI_PERSIST_CONTENT.getUri()%>'>
             <wiki:Param name='redirect' value='<%=wikiContext.getPageId()%>'/>
             <wiki:Param name='action' value='save'/>

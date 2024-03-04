@@ -44,7 +44,6 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.resources.ResourcesActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;

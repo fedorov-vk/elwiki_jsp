@@ -79,13 +79,13 @@ public class WeblogEntryPlugin implements WikiPlugin, InitializablePlugin {
 	 */
 	public static final String PARAM_BLOGNAME = "page";
 
-	private IWikiConfiguration wikiConfiguration;
+	private Engine engine;
 
 	private PageManager pageManager;
 
 	@Override
 	public void initialize(Engine engine) throws PluginException {
-		this.wikiConfiguration = engine.getWikiConfiguration();
+		this.engine = engine;
 		this.pageManager = engine.getManager(PageManager.class);
 	}
 
@@ -124,7 +124,7 @@ public class WeblogEntryPlugin implements WikiPlugin, InitializablePlugin {
 		String url = null;
 		try {
 			url = context.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "NewBlogEntry.jsp",
-					"page=" + wikiConfiguration.encodeName(weblogName));
+					"page=" + engine.encodeName(weblogName));
 		} catch (IOException e) {
 			throw new PluginException(e.getMessage());
 		}

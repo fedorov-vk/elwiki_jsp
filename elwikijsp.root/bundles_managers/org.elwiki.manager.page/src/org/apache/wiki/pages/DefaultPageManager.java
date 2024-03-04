@@ -20,7 +20,6 @@ package org.apache.wiki.pages;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,13 +29,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
@@ -53,16 +50,14 @@ import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.UserProfile;
-import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.pages0.PageTimeComparator;
-import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
-import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Workflow;
@@ -71,14 +66,11 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
-import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -115,7 +107,7 @@ import org.osgi.service.event.EventHandler;
 	service = { PageManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler {
+public class DefaultPageManager implements PageManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 
@@ -137,8 +129,8 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 
 	private PageSorter pageSorter = new PageSorter();
 
-	private PageManagerOptions options;
-
+	private BundleContext bundleContext;
+	
 	/**
 	 * Create instance of DefaultPageManager.
 	 */
@@ -179,13 +171,12 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		options = new PageManagerOptions(bundleContext);
+		this.bundleContext = bundleContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		options.initialize(m_engine);
 		m_expiryTime = wikiConfiguration.getIntegerProperty(PROP_LOCKEXPIRY, 60);
 
 		WikiAjaxDispatcher wikiAjaxDispatcher = m_engine.getManager(WikiAjaxDispatcher.class);
@@ -221,7 +212,7 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 		*/
 
 		try {
-			String requiredId = options.getPageManager();
+			String requiredId = getPreference(PageManager.Prefs.PAGE_MANAGER, String.class);			
 			this.m_provider = getPageProvider(requiredId);
 			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/
 			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
@@ -232,6 +223,11 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 	}
 
 	// -- OSGi service handling ------------------------(end)--
+
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
 
 	/**
 	 * Attempts to locate and initialize an PageProvider to use with this manager. Throws a WikiException
@@ -279,7 +275,7 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 
 		if (clazzPageProvider == null) {
 			throw new NoRequiredPropertyException("Unable to find PageManager with ID=" + requiredId,
-					options.getPageManagerKey());
+					PageManager.Prefs.PAGE_MANAGER);
 		}
 
 		PageProvider pageProvider = null;
@@ -1036,12 +1032,6 @@ public class DefaultPageManager implements PageManager, WikiPrefs, EventHandler 
 	@Override
 	public void movePage(PageMotionType motionType, String targetPageId, String movedPageId) throws ProviderException {
 		m_provider.movePage(motionType, targetPageId, movedPageId);
-	}
-
-	@Override
-	public String getConfigurationEntry() {
-		String jspItems = options.getConfigurationJspPage();
-		return jspItems;
 	}
 
 }

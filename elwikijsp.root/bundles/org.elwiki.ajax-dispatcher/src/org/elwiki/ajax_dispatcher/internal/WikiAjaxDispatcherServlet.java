@@ -132,8 +132,8 @@ public class WikiAjaxDispatcherServlet extends HttpServlet {
 			if (container != null) {
 				final WikiAjaxServlet servlet = container.servlet;
 				if (validatePermission(req, container)) {
-					req.setCharacterEncoding(wikiConfiguration.getContentEncodingCs().displayName());
-					res.setCharacterEncoding(wikiConfiguration.getContentEncodingCs().displayName());
+					req.setCharacterEncoding(engine.getContentEncoding().displayName());
+					res.setCharacterEncoding(engine.getContentEncoding().displayName());
 					final String actionName = AjaxUtil.getNextPathPart(req.getRequestURI(),
 							servlet.getServletMapping());
 					log.debug("actionName=" + actionName);

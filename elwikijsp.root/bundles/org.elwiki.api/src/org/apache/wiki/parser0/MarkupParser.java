@@ -28,6 +28,7 @@ import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
 import org.jdom2.Text;
@@ -279,7 +280,7 @@ public abstract class MarkupParser {
 
         if( compiledpatterns == null ) {
             compiledpatterns = new ArrayList< >( 20 );
-            final Collection< String > ptrns = m_engine.getWikiConfiguration().getAllInlinedImagePatterns();
+            final Collection< String > ptrns = m_engine.getManager(GlobalPreferences.class).getAllInlinedImagePatterns();
 
             //  Make them into Regexp Patterns.  Unknown patterns are ignored.
             for( final String pattern : ptrns ) {

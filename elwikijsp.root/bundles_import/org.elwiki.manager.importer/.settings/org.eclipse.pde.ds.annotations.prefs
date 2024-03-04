@@ -1,6 +1,6 @@
 dsVersion=V1_3
 eclipse.preferences.version=1
-enabled=true
+enabled=false
 generateBundleActivationPolicyLazy=true
 path=OSGI-INF
 validationErrorLevel=error

@@ -2,12 +2,6 @@ package org.elwiki.configuration.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,11 +16,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.configuration.IWikiPreferences;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.configuration.bundle.ConfigurationActivator;
 import org.osgi.framework.BundleContext;
@@ -38,27 +30,14 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	private static final Logger log = Logger.getLogger(WikiConfiguration.class);
 
+	/** Property name for the default front page. */
+	private static final String PROP_FRONTPAGE = "jspwiki.frontPage";
+
 	/** The name used for the default template. The value is {@value}. */
 	private final String DEFAULT_TEMPLATE_NAME = "default";
 
 	/** File name for properties of any interwiki references. Current value - {@value} */
 	private final String FILE_INTERWIKI_REFERENCES = "interwikirefs.properties";
-
-	/** Should the user info be saved with the page data as well? */
-	private boolean m_saveUserInfo;
-
-	/** If true, uses UTF8 encoding for all data */
-	@Deprecated // see this.isUseUtf8() 
-	private boolean m_useUTF8 = true;
-
-	/** Stores the base URL. */
-	private String m_baseURL;
-
-	/**
-	 * Stores the template path. This is relative to "shapes". (:FVK: here it is necessary to eliminate
-	 * connection with resource plugin)
-	 */
-	private String m_templateDir;
 
 	/** The default front page name. Defaults to "Main". */
 	private String m_frontPage;
@@ -77,18 +56,30 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	// == CODE ================================================================
 
+	// -- OSGi service handling ----------------------(start)--
+
+	protected void startup(BundleContext bc) {
+		log.debug("** Startup ** Configuration ** Service **");
+
+		/* :FVK: if (!this.m_baseURL.endsWith("/")) {
+			this.m_baseURL = this.m_baseURL + "/";
+		}*/
+
+		this.m_frontPage = getStringProperty(PROP_FRONTPAGE, "Main");
+	}
+
+	protected void shutdown() {
+		//
+	}
+
+	// -- OSGi service handling ------------------------(end)--
+
 	/**
 	 * Default Constructor.
 	 */
 	public WikiConfiguration() {
 		super();
 		String cfgBundleName = ConfigurationActivator.getContext().getBundle().getSymbolicName();
-
-		String extraBundle = System.getProperties().getProperty(IWikiPreferences.SYSPROP_CUSTOM_CONFIG, null);
-		if (extraBundle != null && Platform.getBundle(extraBundle) != null) {
-			cfgBundleName = extraBundle;
-		}
-
 		this.prefs = new ScopedPreferenceStore(InstanceScope.INSTANCE, cfgBundleName);
 		
 		// Read InterWiki links.
@@ -104,30 +95,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 		} catch (IOException e) {
 			log.error("Failed to read InterWiki links", e);
 		}
-
-		// :FVK: refactoring
-		m_useUTF8 = StandardCharsets.UTF_8.name()
-				.equals(getStringProperty(IWikiPreferences.PROP_ENCODING, StandardCharsets.ISO_8859_1.name()));
-
-	}
-
-	@Override
-	public boolean isUseUtf8() {
-		return "UTF-8".equalsIgnoreCase(getContentEncoding());
-	}
-
-	@Override
-	public String getContentEncoding() {
-		String contentEncoding = this.prefs.getString(IWikiPreferences.PROP_ENCODING);
-		if (contentEncoding.length() == 0) {
-			return IWikiPreferences.DEFAULT_ENCODING;
-		}
-		return contentEncoding;
-	}
-
-	@Override
-	public String getTemplateDir() {
-		return this.m_templateDir;
 	}
 
 	/** {@inheritDoc} */
@@ -144,100 +111,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 
 	// -- :FVK: refactoring (some global utility methods) ----------------------
 
-	/** {@inheritDoc} */
-	@Override
-	public String encodeName(final String pagename) throws IOException {
-		try {
-			return URLEncoder.encode(pagename, m_useUTF8 ? "UTF-8" : "ISO-8859-1");
-		} catch (final UnsupportedEncodingException e) {
-			// :FVK: throw new InternalWikiException( "ISO-8859-1 not a supported encoding!?!  Your platform is borked." , e);
-			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String decodeName(final String pagerequest) throws IOException {
-		try {
-			return URLDecoder.decode(pagerequest, m_useUTF8 ? "UTF-8" : "ISO-8859-1");
-		} catch (final UnsupportedEncodingException e) {
-			//:FVK: throw new InternalWikiException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.", e);
-			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Charset getContentEncodingCs() {
-		if (m_useUTF8) {
-			return StandardCharsets.UTF_8;
-		}
-		return StandardCharsets.ISO_8859_1;
-	}
-
-	// -- service support ---------------------------------
-
-	protected void startup(BundleContext bc) {
-		log.debug("** Startup ** Configuration ** Service **");
-
-		this.m_saveUserInfo = this.prefs.getBoolean(IWikiPreferences.PROP_STOREUSERNAME);
-
-		this.m_baseURL = getStringProperty(IWikiPreferences.PROP_BASEURL, IWikiPreferences.DEFAULT_BASEURL);
-
-		/* :FVK: if (!this.m_baseURL.endsWith("/")) {
-			this.m_baseURL = this.m_baseURL + "/";
-		}*/
-
-		this.m_templateDir = this.prefs.getString(IWikiPreferences.PROP_TEMPLATEDIR);
-		enforceValidTemplateDirectory();
-
-		this.m_frontPage = getStringProperty(IWikiPreferences.PROP_FRONTPAGE, "Main");
-	}
-
-	/**
-	 * Checks if the template directory specified in the wiki's properties actually exists. If it
-	 * doesn't, then {@code m_templateDir} is set to {@link #DEFAULT_TEMPLATE_NAME}.
-	 * <p>
-	 * This checks the existence of the <tt>ViewTemplate.jsp</tt> file, which exists in every template
-	 * using {@code m_servletContext.getRealPath("/")}.
-	 * <p>
-	 * {@code m_servletContext.getRealPath("/")} can return {@code null} on certain servers/conditions
-	 * (f.ex, packed wars), an extra check against {@code m_servletContext.getResource} is made.
-	 */
-	void enforceValidTemplateDirectory() {
-		if (m_templateDir.length() == 0) {
-			this.m_templateDir = DEFAULT_TEMPLATE_NAME;
-		}
-
-		//TODO: перенести вычисление размещения JSP - относительно osgi-bundle, вместо данных из ServletContext. 
-		// Место размещения JSP файлов темплейта - определялось из ServletContext.
-		// Для ElWiki - это работает через bundle.
-		/*
-		if (m_servletContext != null) {
-			final String viewTemplate = "shapes" + File.separator + getTemplateDir() + File.separator
-					+ "ViewTemplate.jsp";
-			boolean exists = new File(m_servletContext.getRealPath("/") + viewTemplate).exists();
-			if (!exists) {
-				try {
-					final URL url = m_servletContext.getResource(viewTemplate);
-					exists = url != null && !url.getFile().isEmpty();
-				} catch (final MalformedURLException e) {
-					log.warn("template not found with viewTemplate " + viewTemplate);
-				}
-			}
-			if (!exists) {
-				log.warn(getTemplateDir() + " template not found, updating WikiEngine's default template to "
-						+ DEFAULT_TEMPLATE_NAME);
-				m_templateDir = DEFAULT_TEMPLATE_NAME;
-			}
-		}
-		*/
-	}
-
-	protected void shutdown() {
-		//
-	}
-
 	// -- any attributes support ------------------------------------
 
 	@Override
@@ -248,13 +121,6 @@ public class WikiConfiguration implements IWikiConfiguration {
 	@Override
 	public void setAttribute(String key, Object value) {
 		this.m_attributes.put(key, value);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Collection<String> getAllInlinedImagePatterns() {
-		String patternsSeq = this.prefs.getString(IWikiPreferences.NODE_INLINE_PATTERNS);
-		return Arrays.asList(patternsSeq.split(","));
 	}
 
 	/** {@inheritDoc} */

@@ -40,7 +40,7 @@ WikiContext wikiContext = ContextUtil.findContext( pageContext );
     	loginURL = wikiContext.getURL( ContextEnum.WIKI_LOGIN.getRequestContext(), redir );
     }
 %>
-<c:set var="allowsCookieAuthentication" value="<%= authenticationManager.allowsCookieAuthentication() %>" />
+<c:set var="allowsCookieAuthentication" value="<%= authenticationManager.isAllowsCookieAuthentication() %>" />
 <div class="page-content">
 <div class="tabs">
 

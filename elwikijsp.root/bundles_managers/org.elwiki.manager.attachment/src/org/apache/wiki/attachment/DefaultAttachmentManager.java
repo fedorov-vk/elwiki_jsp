@@ -46,7 +46,6 @@ import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -76,7 +75,7 @@ import net.sf.ehcache.Element;
 	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, EventHandler {
+public class DefaultAttachmentManager implements AttachmentManager, EventHandler {
 
 	/** List of attachment types which are forced to be downloaded */
 	@Deprecated
@@ -91,6 +90,8 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, E
 	@Deprecated
 	private Cache m_dynamicAttachments;
 
+	private BundleContext bundleContext;
+	
 	/**
 	 * Creates instance of DefaultAttachmentManager.
 	 */
@@ -118,8 +119,8 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, E
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
 		m_provider = new BasicAttachmentProvider();
-		((BasicAttachmentProvider)m_provider).startup(bundleContext);
 	}
 
 	/** {@inheritDoc} */
@@ -141,6 +142,12 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, E
 
 	// -- OSGi service handling ------------------------(end)--
 
+
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+	
 	/** {@inheritDoc} */
     @Override
     public boolean attachmentsEnabled() {
@@ -398,11 +405,6 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiPrefs, E
 		switch (topic) {
 			break;
 		}*/		
-	}
-
-	@Override
-	public String getConfigurationEntry() {
-		return m_provider.getConfigurationEntry();
 	}
 
 }

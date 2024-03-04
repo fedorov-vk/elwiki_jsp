@@ -47,7 +47,6 @@ import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki_data.PageAttachment;
@@ -76,7 +75,7 @@ import org.osgi.service.event.EventHandler;
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandler {
+public class DefaultRssGenerator implements RssGenerator, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultRssGenerator.class);
 
@@ -88,8 +87,8 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	private static final int MAX_CHARACTERS = Integer.MAX_VALUE - 1;
 
-    RssGeneratorOptions options;
-
+	private BundleContext bundleContext;
+    
 	/**
 	 * Constructs the RSS generator.
 	 */
@@ -111,19 +110,17 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		options = new RssGeneratorOptions(bundleContext);
+		this.bundleContext = bundleContext;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		options.initialize(m_engine);
-		isRequiredRssGenerator = options.isGenerateRss();
-
+		isRequiredRssGenerator = getPreference(RssGenerator.Prefs.RSS_GENERATE, Boolean.class); 
 		if (isRequiredRssGenerator) {
-			m_rssFile = options.rssFilename();
-			m_channelDescription = options.rssChannelDescription();
-			m_channelLanguage = options.rssChannelLanguage();
+			m_rssFile = getPreference(RssGenerator.Prefs.RSS_FILENAME, String.class); 
+			m_channelDescription = getPreference(RssGenerator.Prefs.RSS_CHANNEL_DESCRIPTION, String.class); 
+			m_channelLanguage = getPreference(RssGenerator.Prefs.RSS_CHANNEL_LANGUAGE, String.class); 
 		}
 	}
 
@@ -140,7 +137,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 			} else { // relative path names are anchored from the webapp root path
 				rssFile = new File(m_engine.getRootPath(), m_rssFile);
 			}
-			int rssInterval = options.rssInterval();
+			int rssInterval = getPreference(RssGenerator.Prefs.RSS_INTERVAL, Integer.class); 
 
 			BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 			Actor rssActor = new RssActor(m_engine, rssFile);
@@ -153,6 +150,11 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 	}
 
 	// -- OSGi service handling ------------------------(end)--
+
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
 
 	private String getAuthor(final WikiPage page) {
 		String author = page.getAuthor();
@@ -476,12 +478,6 @@ public class DefaultRssGenerator implements RssGenerator, WikiPrefs, EventHandle
 			}
 			break;
 		}
-	}
-
-	@Override
-	public String getConfigurationEntry() {
-		String jspItems = options.getConfigurationJspPage();
-		return jspItems;
 	}
 
 }

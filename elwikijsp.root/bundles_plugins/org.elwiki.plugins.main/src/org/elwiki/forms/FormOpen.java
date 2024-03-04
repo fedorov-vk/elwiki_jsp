@@ -122,7 +122,7 @@ public class FormOpen extends FormElement {
 
         return "<div class=\"wikiform\">\n" +
                   "<form action=\"" + submitServlet + "\" name=\"" + formName + "\" " +
-                        "accept-charset=\"" + ctx.getConfiguration().getContentEncodingCs() + "\" " +
+                        "accept-charset=\"" + ctx.getEngine().getContentEncoding() + "\" " +
                         "method=\"" + method + "\" enctype=\"application/x-www-form-urlencoded\">\n" +
                   "  <input type=\"hidden\" name=\"" + PARAM_FORMNAMEHIDDEN + "\" value=\"" + formName + "\"/>\n";
     }

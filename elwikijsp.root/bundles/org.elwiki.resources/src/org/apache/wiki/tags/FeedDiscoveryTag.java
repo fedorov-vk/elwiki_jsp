@@ -47,7 +47,7 @@ public class FeedDiscoveryTag extends BaseWikiTag {
 		final IWikiConfiguration config = wikiContext.getConfiguration();
 		final WikiPage page = wikiContext.getPage();
 
-		final String encodedName = config.encodeName(page.getName());
+		final String encodedName = engine.encodeName(page.getName());
 		final String rssURL = engine.getGlobalRSSURL();
 		final String rssFeedURL = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp",
 				"page=" + encodedName + "&amp;mode=wiki");

@@ -90,7 +90,7 @@ public class WysiwygEditingRenderer extends WikiRenderer {
                         String newHref = hrefAttr.getValue().substring( wikiPageLinkUrl.length() );
 
                         // Convert "This%20Pagename%20Has%20Spaces" to "This Pagename Has Spaces"
-                        newHref = m_context.getConfiguration().decodeName( newHref );
+                        newHref = m_context.getEngine().decodeName( newHref );
 
                         // Handle links with section anchors.
                         // For example, we need to translate the html string "TargetPage#section-TargetPage-Heading2"
@@ -107,7 +107,7 @@ public class WysiwygEditingRenderer extends WikiRenderer {
                         }
 
                         String newHref = hrefAttr.getValue().substring( editPageLinkUrl.length() );
-                        newHref = m_context.getConfiguration().decodeName( newHref );
+                        newHref = m_context.getEngine().decodeName( newHref );
 
                         hrefAttr.setValue( newHref );
                     } else if( classValue.equals( MarkupParser.HASHLINK ) ) {

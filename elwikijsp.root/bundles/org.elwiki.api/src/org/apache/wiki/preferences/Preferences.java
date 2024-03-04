@@ -31,7 +31,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 
 import javax.servlet.http.HttpServletRequest;

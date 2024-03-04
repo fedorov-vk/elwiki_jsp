@@ -105,7 +105,7 @@ public class UserCheckTag extends BaseWikiTag {
 		AuthenticationManager authMgr = wikiContext.getEngine().getManager(AuthenticationManager.class);
 		
 		boolean containerAuth = authMgr.isContainerAuthenticated();
-		boolean cookieAssertions = authMgr.allowsCookieAssertions();
+		boolean cookieAssertions = authMgr.isAllowsCookieAssertions();
 
 		int result = SKIP_BODY;
 		if (m_status != null) {

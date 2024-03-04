@@ -179,8 +179,6 @@
 		<plugin id="org.eclipse.jetty.util.ajax"/>
 		<plugin id="org.eclipse.jetty.util.ajax.source"/>
 		<plugin id="org.eclipse.jetty.xml"/>
-		<plugin id="org.eclipse.jface"/>
-		<plugin id="org.eclipse.jface.source"/>
 		<plugin id="org.eclipse.net4j"/>
 		<plugin id="org.eclipse.net4j.source"/>
 		<plugin id="org.eclipse.net4j.db"/>
@@ -272,5 +270,11 @@
 		<plugin id="slf4j.simple.source"/>
 		<plugin id="xmlrpc"/>
 		<plugin id="xmlrpc.source"/>
+		<plugin id="org.eclipse.rap.rwt"/>
+		<plugin id="org.eclipse.rap.rwt.osgi"/>
+		<plugin id="org.eclipse.rap.rwt.osgi.source"/>
+		<plugin id="org.eclipse.rap.rwt.source"/>
+		<plugin id="org.eclipse.rap.jface.source"/>
+		<plugin id="org.eclipse.rap.jface"/>
 	</includeBundles>
 </target>

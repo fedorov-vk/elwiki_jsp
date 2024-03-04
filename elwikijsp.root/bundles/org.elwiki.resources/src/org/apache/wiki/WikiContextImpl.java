@@ -762,7 +762,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * @param request the HTTP request
 	 */
 	protected void setDefaultShape(final HttpServletRequest request) {
-		final String defaultTemplate = wikiConfiguration.getTemplateDir();
+		final String defaultTemplate = m_engine.getManager(GlobalPreferences.class).getTemplateDir();
 
 		//:FVK: workaround - assign admin shape.
 		if (m_command != null) {

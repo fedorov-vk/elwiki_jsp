@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="preferencePages" name="Preference Pages" schema="schema/PreferencePages.exsd"/>
+   <extension
+         point="org.elwiki.preferences.ui.preferencePages">
+      <page
+            class="org.elwiki.global_preferences.GlobalPreferencesPage"
+            id="org.elwiki.api.page.global_preferences"
+            name="Global preferences">
+      </page>
+   </extension>
+
+</plugin>

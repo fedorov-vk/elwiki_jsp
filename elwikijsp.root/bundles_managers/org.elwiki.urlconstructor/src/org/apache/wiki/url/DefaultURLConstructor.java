@@ -26,11 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.service.component.annotations.Component;
@@ -65,6 +67,9 @@ public class DefaultURLConstructor implements URLConstructor, EventHandler {
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	private Engine engine;
 
 	/** {@inheritDoc} */
 	@Override
@@ -108,7 +113,7 @@ public class DefaultURLConstructor implements URLConstructor, EventHandler {
      */
     private String encodeURI( String uri ) {
         try {
-			uri = this.wikiConfiguration.encodeName(uri);
+			uri = this.engine.encodeName(uri);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

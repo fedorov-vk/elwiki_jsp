@@ -35,7 +35,6 @@ import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 
@@ -54,15 +53,9 @@ public interface Engine {
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
 
-    /** Do not use encoding in WikiJSPFilter, default is false for most servers.
-     Double negative, cause for most servers you don't need the property */
-    String PROP_NO_FILTER_ENCODING = "jspwiki.nofilterencoding";
-
     /** The name of the cookie that gets stored to the user browser. */
     String PREFS_COOKIE_NAME = "JSPWikiUserProfile";
 
-    /** Property name for the template that is used. */
-    String PROP_TEMPLATEDIR = "jspwiki.templateDir";
 
     /** Property name for setting the url generator instance */
     String PROP_URLCONSTRUCTOR = "jspwiki.urlConstructor";
@@ -259,19 +252,32 @@ public interface Engine {
      *
      *  Returns the IANA name of the character set encoding we're supposed to be using right now.
      *
-     *  @since 1.5.3
-     *  @return The content encoding (either UTF-8 or ISO-8859-1).
+     *  @return The content encoding (either UTF-8, ISO-8859-1 or any specified in the preferences).
      */
     Charset getContentEncoding();
 
-	WikiPage getPageById(String pageId) throws ProviderException;
 
 	/**
-	 * Retrieves ElWiki managers that provide a {@link WikiPrefs} interface.
+	 * Turns a WikiName into something that can be called through using an URL.
 	 *
-	 * @return collection of requested objects implementing the WikiPrefs interface, {@code empty} list if none
-	 *         available.
+	 * @since 1.4.1
+	 * @param pagename A name. Can be actually any string.
+	 * @return A properly encoded name.
+	 * @throws Exception;
+	 * @see #decodeName(String)
 	 */
-	List<WikiPrefs> getConfigurableManagers();
+	String encodeName(String pagename) throws IOException;
+
+	/**
+	 * Decodes a URL-encoded request back to regular life. This properly heeds the encoding as defined
+	 * in the settings file.
+	 *
+	 * @param pagerequest The URL-encoded string to decode
+	 * @return A decoded string.
+	 * @see #encodeName(String)
+	 */
+	String decodeName(String pagerequest) throws IOException;
+    
+	WikiPage getPageById(String pageId) throws ProviderException;
 
 }

@@ -28,6 +28,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -36,7 +37,11 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
-public interface PageManager extends WikiManager {
+public interface PageManager extends WikiManager, IModulePreferences {
+
+	interface Prefs {
+		String PAGE_MANAGER = "pageManager";
+	}
 
 	/** Defines type of page motion. */
 	enum PageMotionType { AFTER, BEFORE, BOTTOM };

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.elwiki.preferences.ui.preferencePages">
+      <page
+            class="org.apache.wiki.attachment.AttachmentManagerPreferencePage"
+            id="org.elwiki.manager.attachment.page.basic_attachment_provider"
+            name="Attachments">
+      </page>
+   </extension>
+
+</plugin>

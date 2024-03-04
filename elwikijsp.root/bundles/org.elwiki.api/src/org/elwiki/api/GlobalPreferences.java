@@ -1,11 +1,28 @@
 package org.elwiki.api;
 
+import java.util.Collection;
+
 import org.eclipse.core.runtime.IPath;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki.api.component.WikiManager;
 
-public interface GlobalPreferences extends WikiManager {
+public interface GlobalPreferences extends WikiManager, IModulePreferences {
+
+	interface Prefs {
+		String APP_NAME = "applicationName";
+
+		/** If this property is set to false, we don't allow the creation of empty pages. */
+		String ALLOW_CREATION_OF_EMPTY_PAGES = "allowCreationOfEmptyPages";
+	}
 
 	String getApplicationName();
+
+	/**
+	 * If this property is set to false, we don't allow the creation of empty pages.
+	 * 
+	 * @return
+	 */
+	boolean isAllowCreationOfEmptyPages();	
 
 	/**
 	 * Returns the ElWiki working directory. Can be set with "elwiki.workDir".
@@ -37,5 +54,17 @@ public interface GlobalPreferences extends WikiManager {
 	 */
 	IPath getWorkspacePath();
 
-	boolean isAllowCreationOfEmptyPages();	
+	/**
+	 * Returns the current template directory.
+	 * 
+	 * @return The template directory as initialized by the configuration.
+	 */
+	String getTemplateDir();
+
+	/**
+	 * Returns a collection of all image types that get inlined.
+	 *
+	 * @return A Collection of Strings with a regexp pattern.
+	 */
+	public Collection<String> getAllInlinedImagePatterns();
 }

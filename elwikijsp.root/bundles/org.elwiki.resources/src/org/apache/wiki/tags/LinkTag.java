@@ -37,10 +37,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.parser0.LinkParsingOperations;
-import org.apache.wiki.parser0.MarkupParser;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
@@ -174,8 +171,8 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	 */
 	private String figureOutURL() throws ProviderException {
 		WikiContext wikiContext = getWikiContext();
-		IWikiConfiguration wikiConfig = wikiContext.getConfiguration();
 		Engine engine = wikiContext.getEngine();
+		GlobalPreferences globalPreferences = engine.getManager(GlobalPreferences.class);
 		PageManager pageManager = engine.getManager(PageManager.class);
 		String url = null;
 
@@ -183,7 +180,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		params = addParamsForRecipient(params, m_containedParams);
 
 		if (m_templatefile != null) {
-			String template = wikiConfig.getTemplateDir();
+			String template = globalPreferences.getTemplateDir();
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "shapes/" + template + "/" + m_templatefile,
 					params);
 		} else if (m_path != null) {

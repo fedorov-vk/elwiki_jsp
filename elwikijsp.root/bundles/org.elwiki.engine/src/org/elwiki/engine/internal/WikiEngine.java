@@ -1,6 +1,10 @@
 package org.elwiki.engine.internal;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -32,9 +36,10 @@ import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
+import org.elwiki.api.component.IWikiPreferencesConstants;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -235,6 +240,9 @@ public class WikiEngine implements Engine {
 		}
 	};
 
+	/** If true, uses UTF8 encoding for all data */
+	private boolean isUtf8Encoding;
+
 	// =========================================================================
 
 	/**
@@ -264,6 +272,12 @@ public class WikiEngine implements Engine {
 		}
 
 		log.debug("◄►initialization◄► STAGE ONE.");
+		
+		//workaround - added flag "isUtf8Encoding".
+		GlobalPreferences globalPrefs = getManager(GlobalPreferences.class);
+		isUtf8Encoding = StandardCharsets.UTF_8.name()
+				.equalsIgnoreCase(globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class));
+
 		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
 
 		Set<Object> managers = new HashSet<>(this.managers.values());
@@ -439,9 +453,31 @@ public class WikiEngine implements Engine {
 	/** {@inheritDoc} */
 	@Override
 	public Charset getContentEncoding() {
-		return StandardCharsets.UTF_8; // :FVK: WORKAROUND.
+		GlobalPreferences globalPrefs = getManager(GlobalPreferences.class);
+		String wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
+		return Charset.forName(wiki_encoding);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String encodeName(String pagename) throws IOException {
+		try {
+			return URLEncoder.encode(pagename, isUtf8Encoding ? "UTF-8" : "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String decodeName(String pagerequest) throws IOException {
+		try {
+			return URLDecoder.decode(pagerequest, isUtf8Encoding ? "UTF-8" : "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getRootPath() {
@@ -501,17 +537,6 @@ public class WikiEngine implements Engine {
 	public <T> List<T> getManagers(Class<T> manager) {
 		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
-	}
-
-	@Override
-	public List<WikiPrefs> getConfigurableManagers() {
-		//@formatter:off
-		List<WikiPrefs> result = (List<WikiPrefs>) managers.entrySet().stream()
-				.filter(e -> WikiPrefs.class.isAssignableFrom(e.getValue().getClass()))
-				.map(e -> (WikiPrefs)e.getValue())
-				.collect(Collectors.toList());
-		//@formatter:on
-		return result;
 	}
 
 }

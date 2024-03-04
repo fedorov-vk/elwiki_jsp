@@ -68,7 +68,6 @@ import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.component.WikiPrefs;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
@@ -151,7 +150,7 @@ import org.osgi.service.useradmin.Group;
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
@@ -170,16 +169,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
-	AuthorizationManagerOptions options;
-
-	// == CODE ================================================================
-
-	/**
-	 * Constructs a new AuthorizationManager instance.
-	 */
-	public DefAuthorizationManager() {
-		//
-	}
+	private BundleContext bundleContext;
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -192,7 +182,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 
 	@WikiServiceReference
 	private Engine m_engine;
-	
+
 	@WikiServiceReference
 	GlobalPreferences globalPrefs;
 
@@ -204,7 +194,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
-		options = new AuthorizationManagerOptions(bundleContext);
+		this.bundleContext = bundleContext;
 	}
 
 	/**
@@ -216,21 +206,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	@Override
 	public void initialize() throws WikiException {
 		log.debug("Initialize.");
-		options.initialize(m_engine);
 
-		//
-		//  JAAS authorization continues.
-		//
-		String authorizerName = options.getAuthorizer(); 
-		this.m_authorizer = getAuthorizerImplementation(authorizerName);
-
-		/*:FVK:
-		this.m_authorizer.initialize(this.m_engine);
-
-		// Make the AuthorizationManager listen for WikiEvents
-		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
-		m_engine.getAuthenticationManager().addWikiEventListener(this);
-		*/
+		// JAAS authorization continues.
+		String authorizerId = getPreference(AuthorizationManager.Prefs.AUTHORIZER_ID, String.class);
+		this.m_authorizer = getAuthorizerImplementation(authorizerId);
 	}
 
 	/**
@@ -313,7 +292,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(requiredId);
 		if (clazzAuthorizer == null) {
 			throw new NoRequiredPropertyException("Unable to find Authorizer with ID=" + requiredId,
-					options.getAuthorizerKey());
+					AuthorizationManager.Prefs.AUTHORIZER_ID);
 		}
 
 		Authorizer authorizer = null;
@@ -343,9 +322,14 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	// -- OSGi service handling ------------------------(end)--
 
 	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+
+	@Override
 	public boolean checkPermission(Session session, Permission permission) {
 		//
-		//  A slight sanity check.
+		// A slight sanity check.
 		//
 		if (session == null || permission == null) {
 			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
@@ -398,9 +382,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 		}
 
 		//
-		//  Next, iterate through the Principal objects assigned
-		//  this permission. If the context's subject possesses
-		//  any of these, the action is allowed.
+		// Next, iterate through the Principal objects assigned
+		// this permission. If the context's subject possesses
+		// any of these, the action is allowed.
 
 		List<Principal> aclPrincipals = findPrincipals(page, permission);
 
@@ -433,7 +417,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 	protected List<Principal> findPrincipals(WikiPage page, Permission permission) {
 		List<Principal> principals = new ArrayList<>();
 
-		for (PageAclEntry aclEntry : page.getPageAcl() ) {
+		for (PageAclEntry aclEntry : page.getPageAcl()) {
 			String permissionAction = aclEntry.getPermission();
 			PagePermission pagePermission = PermissionFactory.getPagePermission(page, permissionAction);
 			if (pagePermission.implies(permission)) {
@@ -580,7 +564,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 						} catch (Exception e) {
 							/* If the class isn't there,
 							 * or if the constructor isn't corrected - we fail. */
-							e.printStackTrace();//:FVK:
+							e.printStackTrace();// :FVK:
 							continue;
 						}
 						permCollection.add(perm);
@@ -628,7 +612,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 		Principal principal = null;
 
 		// Check built-in Roles first
-		String uid = this.accountManager.getGroupUid(groupName); //:FVK: workaround - get group by its name, for take group UID
+		String uid = this.accountManager.getGroupUid(groupName); // :FVK: workaround - get group by its name, for take
+																	// group UID
 		if (uid == null) {
 			return new UnresolvedPrincipal(groupName);
 		}
@@ -736,12 +721,6 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiPrefs,
 		/*String topic = event.getTopic();
 		switch (topic) {
 		}*/
-	}
-
-	@Override
-	public String getConfigurationEntry() {
-		String jspItems = options.getConfigurationJspPage();
-		return jspItems;
 	}
 
 }

@@ -69,7 +69,7 @@ public class WikiAjaxDispatcherServlet0 extends HttpServlet {
      */
     public WikiAjaxDispatcherServlet0() {
 		super();
-		BundleContext context = null; //ApiActivator.getContext();
+		BundleContext context = null; //ApiActivator.getContext(); //TODO: ...
 		ServiceReference<?> ref = context.getServiceReference(Engine.class.getName());
 		m_engine = (ref != null) ? (Engine) context.getService(ref) : null;
 		if (m_engine == null) {
@@ -152,8 +152,8 @@ public class WikiAjaxDispatcherServlet0 extends HttpServlet {
             if( container != null ) {
                 final WikiAjaxServlet servlet = container.servlet;
                 if ( validatePermission( req, container ) ) {
-                    req.setCharacterEncoding( wikiConfig.getContentEncodingCs().displayName() );
-                    res.setCharacterEncoding( wikiConfig.getContentEncodingCs().displayName() );
+                    req.setCharacterEncoding( m_engine.getContentEncoding().displayName() );
+                    res.setCharacterEncoding( m_engine.getContentEncoding().displayName() );
                     final String actionName = AjaxUtil.getNextPathPart( req.getRequestURI(), servlet.getServletMapping() );
                     log.debug( "actionName=" + actionName );
                     final String params = req.getParameter( "params" );

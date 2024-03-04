@@ -12,9 +12,14 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.Authorizer;
 
 public class DefaultAuthorizer implements Authorizer {
-	
+
 	private @NonNull AccountManager accountManager;
 
+	/**
+	 * Creates instance of DefaultAuthorizer
+	 * 
+	 * @param engine
+	 */
 	public DefaultAuthorizer(Engine engine) {
 		this.accountManager = engine.getManager(AccountManager.class);
 	}
@@ -28,7 +33,7 @@ public class DefaultAuthorizer implements Authorizer {
 	@Override
 	public Principal findRole(String role) {
 		Principal principal = this.accountManager.findRole(role);
-		//--OLDCODE-- gp = new GroupPrincipal("Admin", uid);
+		// --OLDCODE-- gp = new GroupPrincipal("Admin", uid);
 
 		return principal;
 	}

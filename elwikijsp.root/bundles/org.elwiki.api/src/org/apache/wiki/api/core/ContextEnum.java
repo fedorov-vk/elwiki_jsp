@@ -81,8 +81,7 @@ public enum ContextEnum {
 			// Using "PageContent.jsp" - temporary fiction
 			"PageContent.jsp" ),
 	WIKI_CHANGE_HIERARCHY( "cmd.changeHierarchy", "%u", "", "PagesHierarchyContent.jsp" ),
-	WIKI_IMPORTPAGES( "cmd.import", "%u", "", "ImportPages.jsp" ),
-	WIKI_PREFERENCES( "cmd.wikiprefs", "%u", "", "PreferencesWiki.jsp" );
+	WIKI_IMPORTPAGES( "cmd.import", "%u", "", "ImportPages.jsp" );
 	//@formatter:on
 
 	private final String urlPattern;

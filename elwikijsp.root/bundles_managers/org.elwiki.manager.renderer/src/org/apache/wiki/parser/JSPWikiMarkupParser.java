@@ -735,7 +735,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
     private String makeHeadingAnchor( final String baseName, String title, final Heading hd ) throws IOException {
         hd.m_titleText = title;
         title = MarkupParser.wikifyLink( title );
-			hd.m_titleSection = this.wikiConfig.encodeName(title);
+			hd.m_titleSection = this.m_engine.encodeName(title);
 
         if( m_titleSectionCounter.containsKey( hd.m_titleSection ) ) {
             final Integer count = m_titleSectionCounter.get( hd.m_titleSection ) + 1;
@@ -745,7 +745,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
             m_titleSectionCounter.put( hd.m_titleSection, 1 );
         }
 
-        hd.m_titleAnchor = "section-" + this.wikiConfig.encodeName( baseName ) + "-" + hd.m_titleSection;
+        hd.m_titleAnchor = "section-" + this.m_engine.encodeName( baseName ) + "-" + hd.m_titleSection;
         hd.m_titleAnchor = hd.m_titleAnchor.replace( '%', '_' );
         hd.m_titleAnchor = hd.m_titleAnchor.replace( '/', '_' );
 
@@ -1090,7 +1090,7 @@ public class JSPWikiMarkupParser extends MarkupParser {
 
                     final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
                     if( matchedLink != null ) {
-                        String sectref = "section-" + this.wikiConfig.encodeName( matchedLink + "-" + wikifyLink( namedSection ) );
+                        String sectref = "section-" + this.m_engine.encodeName( matchedLink + "-" + wikifyLink( namedSection ) );
                         sectref = sectref.replace( '%', '_' );
                         makeLink( LinkType.READ, matchedLink, linkText, sectref, link.getAttributes() );
                     } else {

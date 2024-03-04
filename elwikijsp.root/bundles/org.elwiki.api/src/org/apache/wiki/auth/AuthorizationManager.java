@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wiki.api.core.Session;
 import org.apache.wiki.api.core.WikiContext;
 import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 
@@ -57,7 +58,12 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * @since 2.3
  * @see AuthenticationManager
  */
-public interface AuthorizationManager extends WikiManager {
+public interface AuthorizationManager extends WikiManager, IModulePreferences {
+
+	interface Prefs {
+		/// Preferences names of Authorization Manager.
+		String AUTHORIZER_ID = "authorizer";
+	}
 
     /** Property that supplies the security policy file name, in WEB-INF. */
     String POLICY = "jspwiki.policy.file";

@@ -7,6 +7,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.elwiki.configuration.bundle.ConfigurationActivator
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.commands;bundle-version="3.9.700",
+ org.eclipse.equinox.registry;bundle-version="3.11.400",
+ org.eclipse.rap.jface;bundle-version="3.27.0",
  org.apache.log4j,
  org.apache.commons.lang3;bundle-version="3.12.0",
  org.elwiki.util
@@ -25,6 +27,6 @@ Import-Package: java.io;resolution:=optional,
  org.eclipse.jface.util,
  org.osgi.framework;version="1.8.0",
  org.osgi.service.prefs;version="1.1.1"
+Export-Package: org.elwiki.configuration
 Service-Component: OSGI-INF/component.xml
 Eclipse-BundleShape: dir
-Export-Package: org.elwiki.configuration

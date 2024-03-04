@@ -2,5 +2,13 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="pageProvider" name="Page Provider" schema="schema/pageProvider.exsd"/>
+   <extension
+         point="org.elwiki.preferences.ui.preferencePages">
+      <page
+            class="org.apache.wiki.pages.PageManagerPreferencePage"
+            id="org.elwiki.manager.page.page_manager"
+            name="Page Manager">
+      </page>
+   </extension>
 
 </plugin>

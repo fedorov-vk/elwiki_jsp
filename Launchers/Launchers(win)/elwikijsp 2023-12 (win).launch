@@ -111,7 +111,6 @@
         <setEntry value="org.eclipse.jetty.servlet-api@default:default"/>
         <setEntry value="org.eclipse.jetty.session@default:default"/>
         <setEntry value="org.eclipse.jetty.util@default:default"/>
-        <setEntry value="org.eclipse.jface@default:default"/>
         <setEntry value="org.eclipse.net4j.db.h2@default:default"/>
         <setEntry value="org.eclipse.net4j.db.jdbc@default:default"/>
         <setEntry value="org.eclipse.net4j.db@default:default"/>

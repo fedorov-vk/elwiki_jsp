@@ -28,6 +28,8 @@ import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki.api.component.WikiManager;
 import org.elwiki.data.authorize.GroupPrincipal;
 
@@ -40,11 +42,35 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * login attempt during that time incurs a penalty of 2^login attempts milliseconds - that is, 10 login attempts incur a login penalty
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
  */
-public interface AuthenticationManager extends WikiManager {
+public interface AuthenticationManager extends WikiManager, IModulePreferences {
 
-    /** Prefix for LoginModule options key/value pairs. */
+	interface Prefs {
+		/// Preferences names of Authentication Manager.
+		/** If this property is <code>true</code>, allow cookies to be used to assert identities. */
+		String ALLOW_COOKIE_ASSERTIONS = "cookieAssertions";
+
+		/** If this property is <code>true</code>, allow cookies to be used for authentication. */
+		String ALLOW_COOKIE_AUTH = "cookieAuthentication";
+
+		/** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
+		String LOGIN_THROTTLING = "login.throttling";
+
+		/** The {@link LoginModule} to use for custom authentication. */
+		String LOGIN_MODULE_ID = "loginModule.id";
+	}
+
+	/** Prefix for LoginModule options key/value pairs. */
 	@Deprecated
-    String PREFIX_LOGIN_MODULE_OPTIONS = "jspwiki.loginModule.options.";
+	String PREFIX_LOGIN_MODULE_OPTIONS = "jspwiki.loginModule.options.";
+
+	/**
+	 * Looks up the LoginModule class, via extension point "org.elwiki.authorize.loginModule".
+	 *
+	 * @param loginModuleId
+	 * @return
+	 * @throws WikiException
+	 */
+	Class<? extends LoginModule> getLoginModule(String loginModuleId) throws WikiException;
 
     /**
      * Returns true if this Engine uses container-managed authentication. This method is used primarily for cosmetic purposes in the
@@ -128,20 +154,20 @@ public interface AuthenticationManager extends WikiManager {
 
     /**
      * Determines whether this Engine allows users to assert identities using cookies instead of passwords. This is determined by inspecting
-     * the Engine property {@link #PROP_ALLOW_COOKIE_ASSERTIONS}.
+     * the property {@link #ALLOW_COOKIE_ASSERTIONS}.
      *
      * @return <code>true</code> if cookies are allowed
      */
-    boolean allowsCookieAssertions();
+    boolean isAllowsCookieAssertions();
 
     /**
      * Determines whether this Engine allows users to authenticate using cookies instead of passwords. This is determined by inspecting
-     * the Engine property {@link #PROP_ALLOW_COOKIE_AUTH}.
+     * the property {@link #ALLOW_COOKIE_AUTH}.
      *
      *  @return <code>true</code> if cookies are allowed for authentication
      *  @since 2.5.62
      */
-    boolean allowsCookieAuthentication();
+    boolean isAllowsCookieAuthentication();
 
     /**
      * Determines whether the supplied Principal is a "role principal".
@@ -178,8 +204,5 @@ public interface AuthenticationManager extends WikiManager {
 		}
 		return null;
     }
-
-    //:FVK: workaround - для получения старого параметра: LoginModuleClass
-    AuthenticationManagerOptions getOptions();
 
 }
