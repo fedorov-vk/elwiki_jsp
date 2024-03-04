@@ -3,9 +3,8 @@ package org.elwiki.api;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki.api.component.WikiManager;
 
-public interface WikiScopeManager extends WikiManager {
+public interface WikiScopeManager {
 	String getData();
 
 	String[] getScopeList(HttpServletRequest request);

@@ -18,14 +18,13 @@
  */
 package org.apache.wiki.api.references;
 
-import org.elwiki_data.WikiPage;
+import java.util.Collection;
+import java.util.Set;
+
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.InternalModule;
-import org.elwiki.api.component.WikiManager;
-
-import java.util.Collection;
-import java.util.Set;
+import org.elwiki_data.WikiPage;
 
 /**
  *  Keeps track of wikipage references:
@@ -42,7 +41,7 @@ import java.util.Set;
  *  The owning class must take responsibility of filling in any pre-existing information, probably by loading each and every WikiPage
  *  and calling this class to update the references when created.
  */
-public interface ReferenceManager extends WikiManager, PageFilter, InternalModule {
+public interface ReferenceManager extends PageFilter, InternalModule {
 
     /**
      *  Initializes the entire reference manager with the initial set of pages from the collection.

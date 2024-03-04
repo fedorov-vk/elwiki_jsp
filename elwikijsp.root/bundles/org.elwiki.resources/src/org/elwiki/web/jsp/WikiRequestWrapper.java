@@ -19,7 +19,7 @@
 package org.elwiki.web.jsp;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.ISessionMonitor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ import java.security.Principal;
  */
 public class WikiRequestWrapper extends HttpServletRequestWrapper {
 
-    private final Session m_session;
+    private final WikiSession m_session;
 
     /**
      * Constructs a new wrapped request.
@@ -52,8 +52,8 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
     /**
      * Returns the remote user for the HTTP request, taking into account both container and JSPWiki custom authentication status.
      * Specifically, if the wrapped request contains a remote user, this method returns that remote user. Otherwise, if the user's
-     * Session is an authenticated session (that is, {@link Session#isAuthenticated()} returns <code>true</code>,
-     * this method returns the name of the principal returned by {@link Session#getLoginPrincipal()}.
+     * Session is an authenticated session (that is, {@link WikiSession#isAuthenticated()} returns <code>true</code>,
+     * this method returns the name of the principal returned by {@link WikiSession#getLoginPrincipal()}.
      */
     @Override
     public String getRemoteUser() {
@@ -70,8 +70,8 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
     /**
      * Returns the user principal for the HTTP request, taking into account both container and JSPWiki custom authentication status.
      * Specifically, if the wrapped request contains a user principal, this method returns that principal. Otherwise, if the user's
-     * Session is an authenticated session (that is, {@link Session#isAuthenticated()} returns
-     * <code>true</code>, this method returns the value of {@link Session#getLoginPrincipal()}.
+     * Session is an authenticated session (that is, {@link WikiSession#isAuthenticated()} returns
+     * <code>true</code>, this method returns the value of {@link WikiSession#getLoginPrincipal()}.
      */
     @Override
     public Principal getUserPrincipal() {
@@ -89,7 +89,7 @@ public class WikiRequestWrapper extends HttpServletRequestWrapper {
      * Determines whether the current user possesses a supplied role, taking into account both container and JSPWIki custom authentication
      * status. Specifically, if the wrapped request shows that the user possesses the role, this method returns <code>true</code>. If not,
      * this method iterates through the built-in Role objects (<em>e.g.</em>, ANONYMOUS, ASSERTED, AUTHENTICATED) returned by
-     * {@link Session#getRoles()} and checks to see if any of these principals' names match the supplied role.
+     * {@link WikiSession#getRoles()} and checks to see if any of these principals' names match the supplied role.
      */
     @Override
     public boolean isUserInRole( final String role ) {

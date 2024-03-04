@@ -5,7 +5,7 @@ org/elwiki/events/page/DELETED
    </property>
    <service scope="singleton">
       <provide interface="org.apache.wiki.api.references.ReferenceManager"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.references.DefaultReferenceManager"/>

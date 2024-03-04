@@ -37,7 +37,7 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.util.XmlUtil;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.resources.ResourcesActivator;
 import org.jdom2.Element;
 import org.osgi.service.component.annotations.Component;
@@ -66,10 +66,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultEditorManager",
-	service = { EditorManager.class, WikiManager.class, EventHandler.class },
+	service = { EditorManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultEditorManager extends BaseModuleManager implements EditorManager, EventHandler {
+public class DefaultEditorManager extends BaseModuleManager implements EditorManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultEditorManager.class);
 

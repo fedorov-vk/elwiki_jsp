@@ -18,13 +18,13 @@
  */
 package org.apache.wiki.api.ui;
 
-import org.apache.wiki.api.core.Command;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.api.component.WikiManager;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+
+import org.apache.wiki.api.core.Command;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.elwiki_data.WikiPage;
 
 /**
  * <p>Resolves special pages, JSPs and Commands on behalf of a Engine. CommandResolver will automatically resolve page names
@@ -45,7 +45,7 @@ import java.util.Arrays;
  *
  * @since 2.4.22
  */
-public interface CommandResolver extends WikiManager {
+public interface CommandResolver {
 
     /**
      * Attempts to locate a wiki command for a supplied request context. The resolution technique is simple: we examine the list of

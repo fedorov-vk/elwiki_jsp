@@ -60,7 +60,7 @@ import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -135,14 +135,14 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultReferenceManager",
-	service = { ReferenceManager.class, WikiManager.class, EventHandler.class },
+	service = { ReferenceManager.class, WikiComponent.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
 		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETED,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, EventHandler {
+public class DefaultReferenceManager extends BasePageFilter implements ReferenceManager, WikiComponent, EventHandler {
 
 	/**
 	 * Maps page wikiname to a Collection of pages it refers to. The Collection must contain Strings.

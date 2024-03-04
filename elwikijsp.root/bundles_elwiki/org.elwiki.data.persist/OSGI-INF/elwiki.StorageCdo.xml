@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.StorageCdo">
    <service scope="singleton">
       <provide interface="org.apache.wiki.api.IStorageCdo"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
    </service>
    <reference cardinality="1..1" field="globalPreferences" interface="org.elwiki.api.GlobalPreferences" name="globalPreferences"/>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>

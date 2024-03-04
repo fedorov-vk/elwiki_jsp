@@ -4,7 +4,7 @@ import java.security.Principal;
 import java.util.Properties;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
@@ -44,7 +44,7 @@ public class DefaultAuthorizer implements Authorizer {
 	}
 
 	@Override
-	public boolean isUserInRole(Session session, Principal role) {
+	public boolean isUserInRole(WikiSession session, Principal role) {
 		Assert.isTrue(false, "code is not implemented.");
 		// TODO Auto-generated method stub
 		return false;

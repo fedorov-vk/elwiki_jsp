@@ -46,7 +46,7 @@ import org.apache.wiki.ui.admin.beans.UserBean;
 import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -63,13 +63,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAdminBeanManager",
-	service = { AdminBeanManager.class, WikiManager.class, EventHandler.class },
+	service = { AdminBeanManager.class, WikiComponent.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAdminBeanManager implements AdminBeanManager, EventHandler {
+public class DefaultAdminBeanManager implements AdminBeanManager, WikiComponent, EventHandler {
 
 	private ArrayList<AdminBean> m_allBeans;
 	private MBeanServer m_mbeanServer;

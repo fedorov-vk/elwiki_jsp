@@ -23,7 +23,7 @@ import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.framework.InvalidSyntaxException;
@@ -40,11 +40,11 @@ import org.osgi.service.useradmin.UserAdmin;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAccountRegistry",
-	service = { AccountRegistry.class, WikiManager.class, EventHandler.class },
+	service = { AccountRegistry.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
 public final class DefaultAccountRegistry extends InitialAccountRegistry
-		implements AccountRegistry, EventHandler {
+		implements AccountRegistry, WikiComponent, EventHandler {
 
 	protected static final Logger log = Logger.getLogger(DefaultAccountRegistry.class);
 

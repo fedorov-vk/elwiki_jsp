@@ -6,7 +6,7 @@ import org.apache.wiki.api.exceptions.WikiException;
  * Manager's interface for Engine's components. <br/>
  * It can be initialized.
  */
-public interface WikiManager {
+public interface WikiComponent {
 
 	/**
 	 * <p>

@@ -18,14 +18,13 @@
  */
 package org.apache.wiki.api.tasks;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.workflow0.Step;
-import org.elwiki.api.component.WikiManager;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.workflow0.Step;
 
 /**
  * Manager responsible of creation of the different JSPWiki {@link Step}s.
@@ -34,7 +33,7 @@ import java.util.Locale;
  * {@link org.apache.wiki.workflow.WorkflowBuilder#buildApprovalWorkflow(Principal, String, Step, String, List, Step, String)};
  * they will not function correctly otherwise.
  */
-public interface TasksManager extends WikiManager {
+public interface TasksManager {
 
     /** The message key for storing the text for the presave task.  Value is <tt>{@value}</tt>. */
     String WIKIPAGE_PRESAVE_TASK_MESSAGE_KEY = "task.preSaveWikiPage";

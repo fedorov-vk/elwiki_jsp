@@ -44,7 +44,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki_data.WikiPage;
@@ -64,10 +64,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultCommandResolver",
-	service = { CommandResolver.class, WikiManager.class, EventHandler.class },
+	service = { CommandResolver.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class DefaultCommandResolver implements CommandResolver, EventHandler {
+public final class DefaultCommandResolver implements CommandResolver, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultCommandResolver.class);
 

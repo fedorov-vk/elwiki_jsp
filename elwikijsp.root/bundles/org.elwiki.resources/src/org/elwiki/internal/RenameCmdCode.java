@@ -12,7 +12,7 @@ import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.content0.PageRenamer;
@@ -58,7 +58,7 @@ public class RenameCmdCode extends CmdCode {
 		log.info("Page rename request for page '" + renameFrom + "' to new name '" + renameTo + "' from "
 				+ HttpUtil.getRemoteAddress(httpRequest) + " by " + httpRequest.getRemoteUser());
 
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 		try {
 			HttpSession session = httpRequest.getSession();
 			if (renameTo.length() > 0) {

@@ -49,7 +49,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
@@ -78,13 +78,13 @@ import net.sf.ehcache.Element;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultRenderingManager",
-	service = { RenderingManager.class, WikiManager.class, EventHandler.class },
+	service = { RenderingManager.class, WikiComponent.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRenderingManager implements RenderingManager, EventHandler {
+public class DefaultRenderingManager implements RenderingManager, WikiComponent, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultRenderingManager.class );
 

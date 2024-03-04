@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -46,7 +46,7 @@ import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.elwiki_data.PageAttachment;
@@ -69,13 +69,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultRssGenerator",
-	service = { RssGenerator.class, WikiManager.class, EventHandler.class  },
+	service = { RssGenerator.class, WikiComponent.class, EventHandler.class  },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultRssGenerator implements RssGenerator, EventHandler {
+public class DefaultRssGenerator implements RssGenerator, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultRssGenerator.class);
 
@@ -295,7 +295,7 @@ public class DefaultRssGenerator implements RssGenerator, EventHandler {
 
 		final Set<WikiPage> changed = pageManager.getRecentChanges();
 
-		final Session session = sessionMonitor.createGuestSession(null);
+		final WikiSession session = sessionMonitor.createGuestSession(null);
 		int items = 0;
 		for (final Iterator<WikiPage> i = changed.iterator(); i.hasNext() && items < 15; items++) {
 			final WikiPage page = i.next();

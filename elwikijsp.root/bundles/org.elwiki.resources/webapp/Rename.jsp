@@ -63,7 +63,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
     log.info("Page rename request for page '"+renameFrom+ "' to new name '"+renameTo+"' from "+HttpUtil.getRemoteAddress(request)+" by "+request.getRemoteUser() );
 
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     try
     {
         if (renameTo.length() > 0)

@@ -19,7 +19,7 @@
 package org.apache.wiki.ui;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.preferences.Preferences;
 
 import java.text.MessageFormat;
@@ -52,7 +52,7 @@ public final class InputValidator {
     protected static final Pattern UNSAFE_PATTERN = Pattern.compile( "[\\x00\\r\\n\\x0f\"':<>\\[\\];#&@\\xff{}\\$%\\\\]" );
 
     private final String m_form;
-    private final Session m_session;
+    private final WikiSession m_session;
     private final WikiContext m_context;
 
     /**

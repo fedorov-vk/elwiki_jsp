@@ -23,12 +23,10 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.elwiki.api.component.WikiManager;
-
 /**
  * Manages all internationalization in ElWiki (accessed from Java code).
  */
-public interface InternationalizationManager extends WikiManager {
+public interface InternationalizationManager {
 
 	/**
 	 * Finds a resource bundle.

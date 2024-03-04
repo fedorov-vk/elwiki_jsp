@@ -35,7 +35,7 @@ import javax.security.auth.spi.LoginModule;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.authorization.Authorizer;
@@ -65,7 +65,7 @@ public final class SecurityVerifier {
 
 	private Principal[] m_policyPrincipals = new Principal[0];
 
-	private Session m_session;
+	private WikiSession m_session;
 
 	/** Message prefix for errors. */
 	public static final String ERROR = "Error.";
@@ -136,7 +136,7 @@ public final class SecurityVerifier {
 	 * @param engine  the wiki engine
 	 * @param session the wiki session (typically, that of an administrator)
 	 */
-	public SecurityVerifier(Engine engine, Session session) {
+	public SecurityVerifier(Engine engine, WikiSession session) {
 		m_engine = engine;
 		m_session = session;
 		m_session.clearMessages();

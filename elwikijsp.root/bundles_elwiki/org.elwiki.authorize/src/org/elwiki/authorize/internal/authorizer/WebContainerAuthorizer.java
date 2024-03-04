@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.data.authorize.GroupPrincipal;
@@ -168,11 +168,11 @@ public class WebContainerAuthorizer implements WebAuthorizer {
 	 * @param role    the role to check
 	 * @return <code>true</code> if the user is considered to be in the role, <code>false</code>
 	 *         otherwise
-	 * @see org.apache.wiki.auth.Authorizer#isUserInRole(org.apache.wiki.api.core.Session,
+	 * @see org.apache.wiki.auth.Authorizer#isUserInRole(org.apache.wiki.api.core.WikiSession,
 	 *      java.security.Principal)
 	 */
 	   @Override
-    public boolean isUserInRole( final Session session, final Principal role ) {
+    public boolean isUserInRole( final WikiSession session, final Principal role ) {
         if ( session == null || role == null ) {
             return false;
         }
@@ -180,7 +180,7 @@ public class WebContainerAuthorizer implements WebAuthorizer {
     }
 
 	//:FVK: @Override
-	public boolean isUserInRole(Session session, Group rgoup) {
+	public boolean isUserInRole(WikiSession session, Group rgoup) {
 		if (session == null || rgoup == null) {
 			return false;
 		}

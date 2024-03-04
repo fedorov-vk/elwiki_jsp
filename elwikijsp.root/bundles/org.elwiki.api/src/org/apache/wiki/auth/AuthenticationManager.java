@@ -27,10 +27,10 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.component.IModulePreferences;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
@@ -42,7 +42,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * login attempt during that time incurs a penalty of 2^login attempts milliseconds - that is, 10 login attempts incur a login penalty
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
  */
-public interface AuthenticationManager extends WikiManager, IModulePreferences {
+public interface AuthenticationManager extends IModulePreferences {
 
 	interface Prefs {
 		/// Preferences names of Authentication Manager.
@@ -123,7 +123,7 @@ public interface AuthenticationManager extends WikiManager, IModulePreferences {
 	 * @return always returns <code>true</code> (because anonymous login, at least, will always succeed)
 	 * @throws WikiSecurityException if the user cannot be logged in for any reason
 	 */
-	boolean login(HttpServletRequest request, Session session) throws WikiSecurityException;
+	boolean login(HttpServletRequest request, WikiSession session) throws WikiSecurityException;
     
     /**
      * Attempts to perform a Session login for the given username/password combination using JSPWiki's custom authentication mode. In
@@ -141,7 +141,7 @@ public interface AuthenticationManager extends WikiManager, IModulePreferences {
      * @return true, if the username/password is valid
      * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer or AccountManager cannot be obtained
      */
-    boolean loginAsserted( Session session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
+    boolean loginAsserted( WikiSession session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
 
     /**
      * Logs the user out by retrieving the Session associated with the HttpServletRequest and unbinding all of the Subject's Principals,

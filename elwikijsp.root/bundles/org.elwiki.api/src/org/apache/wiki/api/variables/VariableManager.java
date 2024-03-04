@@ -20,14 +20,13 @@ package org.apache.wiki.api.variables;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
-import org.elwiki.api.component.WikiManager;
 
 /**
  *  Manages variables.  Variables are case-insensitive.  A list of all available variables is on a Wiki page called "WikiVariables".
  *
  *  @since 1.9.20.
  */
-public interface VariableManager extends WikiManager {
+public interface VariableManager {
 
     // FIXME: These are probably obsolete.
     String VAR_ERROR = "error";

@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -67,7 +67,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
@@ -144,13 +144,13 @@ import org.osgi.service.useradmin.Group;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthorizationManager",
-	service = {AuthorizationManager.class, WikiManager.class, EventHandler.class},
+	service = {AuthorizationManager.class, WikiComponent.class, EventHandler.class},
 	//property = {
 		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
@@ -327,7 +327,7 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	}
 
 	@Override
-	public boolean checkPermission(Session session, Permission permission) {
+	public boolean checkPermission(WikiSession session, Permission permission) {
 		//
 		// A slight sanity check.
 		//
@@ -435,7 +435,7 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	 * @see org.elwiki.core.auth.IAuthorizationManager#isUserInRole(org.elwiki.core.common.WikiSession, java.security.Principal)
 	 */
 	@Override
-	public boolean isUserInRole(Session session, Principal principal) {
+	public boolean isUserInRole(WikiSession session, Principal principal) {
 		if (session == null || principal == null || AuthenticationManager.isUserPrincipal(principal)) {
 			return false;
 		}
@@ -489,7 +489,7 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	 * @return <code>true</code> if the Subject supplied with the IWikiContext posesses the Role,
 	 *         GroupPrincipal or desired user Principal, <code>false</code> otherwise
 	 */
-	public boolean hasRoleOrPrincipal(Session session, Principal principal) {
+	public boolean hasRoleOrPrincipal(WikiSession session, Principal principal) {
 		// If either parameter is null, always deny
 		if (session == null || principal == null) {
 			return false;
@@ -523,14 +523,14 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 	 * @param permission the Permission the Subject must possess
 	 * @return <code>true</code> if the Subject possesses the permission, <code>false</code> otherwise
 	 */
-	public boolean checkStaticPermission(Session session, Permission permission) {
+	public boolean checkStaticPermission(WikiSession session, Permission permission) {
 		// Try the local policy - check each Role/Group and User Principal
 		return allowedByLocalPolicy(session.getRoles(), permission);
 	}
 
 	/**
 	 * Checks to see if the wiki security policy allows a particular static Permission. Do not use this
-	 * method for normal permission checks; use {@link #checkPermission(Session, Permission)} instead.
+	 * method for normal permission checks; use {@link #checkPermission(WikiSession, Permission)} instead.
 	 * 
 	 * @param principals the Principals to check. Only handles wiki's principals (Role, Group). User
 	 *                   principals can not has permission info - they can't be handled.
@@ -657,7 +657,7 @@ public class DefAuthorizationManager implements AuthorizationManager, EventHandl
 		boolean isAllowed = checkPermission(wikiContext.getWikiSession(), wikiContext.requiredPermission());
 
 		if (!isAllowed) {
-			Session wikiSession = wikiContext.getWikiSession();
+			WikiSession wikiSession = wikiContext.getWikiSession();
 			Permission requiredPermission = wikiContext.requiredPermission();
 			Principal currentUser = wikiSession.getUserPrincipal();
 			ResourceBundle rb = Preferences.getBundle(wikiContext);

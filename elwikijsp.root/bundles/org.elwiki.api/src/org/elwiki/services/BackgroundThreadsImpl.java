@@ -24,7 +24,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -38,13 +38,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.BackgroundThreads",
-	service = { BackgroundThreads.class, WikiManager.class, EventHandler.class },
+	service = { BackgroundThreads.class, WikiComponent.class, EventHandler.class },
 	property = {
 		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class BackgroundThreadsImpl implements BackgroundThreads, EventHandler {
+public class BackgroundThreadsImpl implements BackgroundThreads, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(BackgroundThreadsImpl.class);
 

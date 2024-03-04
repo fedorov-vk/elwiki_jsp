@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.GlobalPreferences">
    <service scope="singleton">
       <provide interface="org.elwiki.api.GlobalPreferences"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
    </service>
    <implementation class="org.elwiki.global_preferences.GlobalPreferencesImpl"/>
 </scr:component>

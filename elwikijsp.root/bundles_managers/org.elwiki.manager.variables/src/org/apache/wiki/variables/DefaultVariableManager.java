@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -43,7 +43,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -61,10 +61,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultVariableManager",
-	service = { VariableManager.class, WikiManager.class, EventHandler.class },
+	service = { VariableManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultVariableManager implements VariableManager, EventHandler {
+public class DefaultVariableManager implements VariableManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultVariableManager.class);
 
@@ -413,7 +413,7 @@ public class DefaultVariableManager implements VariableManager, EventHandler {
         }
 
         public String getLoginstatus() {
-            final Session session = m_context.getWikiSession();
+            final WikiSession session = m_context.getWikiSession();
             ResourceBundle rcBundle = Preferences.getBundle( m_context );
             return rcBundle.getString( "varmgr." + session.getLoginStatus().getId());
         }

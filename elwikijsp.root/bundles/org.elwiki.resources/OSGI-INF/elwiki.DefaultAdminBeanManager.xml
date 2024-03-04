@@ -3,7 +3,7 @@
    <property name="event.topics" value="org/elwiki/events/engine/*"/>
    <service scope="singleton">
       <provide interface="org.apache.wiki.ui.admin0.AdminBeanManager"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.apache.wiki.ui.admin.DefaultAdminBeanManager"/>

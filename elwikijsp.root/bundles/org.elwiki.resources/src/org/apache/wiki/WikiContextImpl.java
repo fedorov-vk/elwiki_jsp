@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -67,7 +67,7 @@ import org.elwiki_data.WikiPage;
  * please see the Counter plugin.
  * </p>
  * <p>
- * When a WikiContext is created, it automatically associates a {@link WikiSession} object with
+ * When a WikiContext is created, it automatically associates a {@link WikiSessionImpl} object with
  * the user's HttpSession. The WikiSession contains information about the user's authentication
  * status, and is consulted by {@link #getCurrentUser()} object.
  * </p>
@@ -100,7 +100,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 */
 	protected HttpServletRequest m_request;
 
-	private Session m_session;
+	private WikiSession m_session;
 	final private IWikiConfiguration wikiConfiguration;
 	private @NonNull GlobalPreferences globalPrefs;
 
@@ -684,13 +684,13 @@ public class WikiContextImpl implements WikiContext, Command {
 	/**
 	 * Returns the Session associated with the context. This method is guaranteed to always return a
 	 * valid Session. If this context was constructed without an associated HttpServletRequest, it
-	 * will return {@link org.apache.wiki.WikiSession#guestSession(Engine)}.
+	 * will return {@link org.apache.api.wiki.WikiSessionImpl#guestSession(Engine)}.
 	 *
 	 * @return The Session associated with this context.
 	 */
 	@Override
-	public WikiSession getWikiSession() {
-		return (WikiSession) m_session;
+	public WikiSessionImpl getWikiSession() {
+		return (WikiSessionImpl) m_session;
 	}
 
 	/**

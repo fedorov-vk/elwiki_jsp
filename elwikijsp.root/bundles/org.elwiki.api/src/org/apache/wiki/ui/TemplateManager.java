@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.modules.ModuleManager;
 import org.apache.wiki.preferences.Preferences;
-import org.elwiki.api.component.WikiManager;
 
 
 /**
@@ -42,7 +41,7 @@ import org.elwiki.api.component.WikiManager;
  *
  *  @since 2.1.62
  */
-public interface TemplateManager extends WikiManager, ModuleManager {
+public interface TemplateManager extends ModuleManager {
 
     /** Requests a JavaScript function to be called during window.onload. Value is {@value}. */
     String RESOURCE_JSFUNCTION = "jsfunction";

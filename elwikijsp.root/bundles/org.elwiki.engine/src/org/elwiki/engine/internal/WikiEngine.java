@@ -2,6 +2,7 @@ package org.elwiki.engine.internal;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.references.ReferenceManager;
@@ -39,7 +40,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.IWikiPreferencesConstants;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEngineEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -75,7 +76,7 @@ public class WikiEngine implements Engine {
 
 	private BundleContext bundleContext;
 
-	/** Custimized ServiceTracker of {@link Session} component. */
+	/** Custimized ServiceTracker of {@link WikiSession} component. */
 	private ServiceTracker<?, ?> sessionServiceTracker;
 
 	@Reference
@@ -92,32 +93,35 @@ public class WikiEngine implements Engine {
 
 		ServiceReference<?>[] refs = null;
 		try {
-			refs = bundleContext.getAllServiceReferences(WikiManager.class.getName(), null);
+			refs = bundleContext.getAllServiceReferences(WikiComponent.class.getName(), null);
 		} catch (InvalidSyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		int counterOfRegistered = 0;
+		int counterOfFounded = 0;
 		for (ServiceReference<?> ref : refs) {
+			counterOfFounded++;
 			@SuppressWarnings("unchecked")
-			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
+			WikiComponent service = bundleContext.getService((ServiceReference<WikiComponent>) ref);
 			Class<?> clazz = service.getClass();
-			counterOfRegistered++;
-			for (Class<?> iface : clazz.getInterfaces()) {
-				// check that super interface is WikiManager.
-				boolean isWikiManager = Arrays.stream(iface.getInterfaces()).anyMatch(WikiManager.class::equals);
-				if (isWikiManager) {
-					managers.put(iface, service);
-					// log.debug(" ~~ clazz: " + clazz.getSimpleName() + " instance of " + iface.getSimpleName());
-				}
+			
+			Class<?>[] ifaces = clazz.getInterfaces();
+			boolean isWikiComponent = Arrays.stream(ifaces).anyMatch(WikiComponent.class::equals);
+			if (isWikiComponent) {
+				Class<?> ifaceComponent = ifaces[0]; // workaround!
+				components.put(ifaceComponent, service);
+				// log.debug(" ~~ clazz: " + clazz.getSimpleName() + " instance of " + ifaceComponent.getSimpleName());
+				counterOfRegistered++;
 			}
 		}
-		log.debug(" ~~ Registered (" + counterOfRegistered + ") ElWiki components.");
+		log.debug(" ~~ Registered (" + counterOfRegistered
+				+ ") ElWiki components. From founded: " + counterOfFounded);
 
 		/* Processing the @WikiServiceReference annotation for ElWiki components fields.
 		 */
-		for (Object serviceInstance : managers.values()) {
+		for (Object serviceInstance : components.values()) {
 			initialiseAnnotatedFileds(serviceInstance);
 		}
 
@@ -146,7 +150,7 @@ public class WikiEngine implements Engine {
 			if (field.isAnnotationPresent(WikiServiceReference.class)) {
 				try {
 					Class<?> typeField = field.getType();
-					Object targetService = managers.get(typeField);
+					Object targetService = components.get(typeField);
 					field.setAccessible(true);
 					field.set(serviceInstance, targetService);
 				} catch (Exception e) {
@@ -166,12 +170,12 @@ public class WikiEngine implements Engine {
 		Filter filter = null;
 		try {
 			filter = bundleContext.createFilter(
-					"(&(" + org.osgi.framework.Constants.OBJECTCLASS + "=" + Session.class.getName() + "))");
+					"(&(" + org.osgi.framework.Constants.OBJECTCLASS + "=" + WikiSession.class.getName() + "))");
 		} catch (InvalidSyntaxException e) {
 			// should never happen.
 		}
-		ServiceTrackerCustomizer<Session, ServiceReference<Session>> stCustomizer = createStCustomizer();
-		this.sessionServiceTracker = new ServiceTracker<Session, ServiceReference<Session>>(bundleContext, filter,
+		ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>> stCustomizer = createStCustomizer();
+		this.sessionServiceTracker = new ServiceTracker<WikiSession, ServiceReference<WikiSession>>(bundleContext, filter,
 				stCustomizer);
 		this.sessionServiceTracker.open(true);
 	}
@@ -181,25 +185,25 @@ public class WikiEngine implements Engine {
 	 * 
 	 * @return ServiceTracker for tracking component of Session type.
 	 */
-	private ServiceTrackerCustomizer<Session, ServiceReference<Session>> createStCustomizer() {
-		return new ServiceTrackerCustomizer<Session, ServiceReference<Session>>() {
+	private ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>> createStCustomizer() {
+		return new ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>>() {
 
 			@Override
-			public ServiceReference<Session> addingService(ServiceReference<Session> serviceRef) {
+			public ServiceReference<WikiSession> addingService(ServiceReference<WikiSession> serviceRef) {
 				//for(String key:reference.getPropertyKeys()) {}
 				log.debug("~~ ~~ adding service: " + serviceRef);
-				Session serviceInstance = bundleContext.getService((ServiceReference<Session>) serviceRef);
+				WikiSession serviceInstance = bundleContext.getService((ServiceReference<WikiSession>) serviceRef);
 				initialiseAnnotatedFileds(serviceInstance);
 				return null;
 			}
 
 			@Override
-			public void modifiedService(ServiceReference<Session> reference, ServiceReference<Session> service) {
+			public void modifiedService(ServiceReference<WikiSession> reference, ServiceReference<WikiSession> service) {
 				log.debug("~~ ~~ modified service");
 			}
 
 			@Override
-			public void removedService(ServiceReference<Session> reference, ServiceReference<Session> service) {
+			public void removedService(ServiceReference<WikiSession> reference, ServiceReference<WikiSession> service) {
 				log.debug("~~ ~~ removed service");
 			}
 		};
@@ -233,7 +237,7 @@ public class WikiEngine implements Engine {
 	private Map<String, Object> m_attributes = new ConcurrentHashMap<>();
 
 	/** Stores WikiEngine's associated managers- <interface, instance>. */
-	protected Map<Class<?>, Object> managers = new ConcurrentHashMap<>() {
+	protected Map<Class<?>, Object> components = new ConcurrentHashMap<>() {
 		private static final long serialVersionUID = 8475550897265370262L;
 		{
 			put(Engine.class, WikiEngine.this);
@@ -280,13 +284,13 @@ public class WikiEngine implements Engine {
 
 		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
 
-		Set<Object> managers = new HashSet<>(this.managers.values());
-		for (Object managerInstance : managers) {
-			if (managerInstance instanceof WikiManager wikiManager) {
+		Set<Object> components = new HashSet<>(this.components.values());
+		for (Object componentInstance : components) {
+			if (componentInstance instanceof WikiComponent wikiComponent) {
 				try {
-					wikiManager.initialize();
+					wikiComponent.initialize();
 				} catch (Exception e) {
-					log.error("Failed intialization of " + managerInstance.getClass().getSimpleName(), e);
+					log.error("Failed intialization of " + componentInstance.getClass().getSimpleName(), e);
 				}
 			}
 		}
@@ -526,7 +530,7 @@ public class WikiEngine implements Engine {
 	@SuppressWarnings("unchecked")
 	@NonNull
 	public <T> @NonNull T getManager(Class<T> manager) {
-		T result = (T) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+		T result = (T) components.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElse(null);
 		return result;
 	}
@@ -535,7 +539,7 @@ public class WikiEngine implements Engine {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getManagers(Class<T> manager) {
-		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+		return (List<T>) components.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
 	}
 

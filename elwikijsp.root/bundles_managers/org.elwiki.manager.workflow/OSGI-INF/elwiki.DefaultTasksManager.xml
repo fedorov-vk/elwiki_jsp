@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.DefaultTasksManager">
    <service scope="singleton">
       <provide interface="org.apache.wiki.api.tasks.TasksManager"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
    </service>
    <implementation class="org.apache.wiki.tasks.DefaultTasksManager"/>
 </scr:component>

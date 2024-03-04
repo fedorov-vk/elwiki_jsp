@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
@@ -39,7 +39,7 @@ public class LostpasswordCmdCode extends CmdCode {
 
 	    ResourceBundle rb = null; //:FVK: Preferences.getBundle( wikiContext, "CoreResources" );
 
-	    Session wikiSession = wikiContext.getWikiSession();
+	    WikiSession wikiSession = wikiContext.getWikiSession();
 	    String action = httpRequest.getParameter( "action" );
 
 	    boolean done = false;

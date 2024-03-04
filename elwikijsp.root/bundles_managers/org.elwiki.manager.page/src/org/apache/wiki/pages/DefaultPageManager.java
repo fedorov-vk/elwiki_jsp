@@ -70,7 +70,7 @@ import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -104,10 +104,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultPageManager",
-	service = { PageManager.class, WikiManager.class, EventHandler.class },
+	service = { PageManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageManager implements PageManager, EventHandler {
+public class DefaultPageManager implements PageManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 

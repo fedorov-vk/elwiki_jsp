@@ -2,10 +2,9 @@ package org.apache.wiki.ajax;
 
 import java.security.Permission;
 
-import org.elwiki.api.component.WikiManager;
 import org.elwiki.permissions.PagePermission;
 
-public interface WikiAjaxDispatcher extends WikiManager {
+public interface WikiAjaxDispatcher {
 
 	String WIKI_AJAX_DISPATCHER_FACTORY = "elwiki.WikiAjaxDispatcher.factory";
 

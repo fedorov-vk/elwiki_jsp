@@ -25,7 +25,7 @@ import javax.servlet.jsp.JspTagException;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
@@ -112,7 +112,7 @@ public class PermissionTag extends BaseWikiTag {
 	 */
 	private boolean checkPermission(final String permission) {
 		WikiContext wikiContext = getWikiContext();
-		final Session session = wikiContext.getWikiSession();
+		final WikiSession session = wikiContext.getWikiSession();
 		final WikiPage page = wikiContext.getPage();
 		AuthorizationManager mgr = wikiContext.getEngine().getManager(AuthorizationManager.class);
 		boolean gotPermission = false;

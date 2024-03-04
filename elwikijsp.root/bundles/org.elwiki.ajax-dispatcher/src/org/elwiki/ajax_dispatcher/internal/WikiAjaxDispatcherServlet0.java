@@ -39,15 +39,13 @@ import org.apache.wiki.ajax.AjaxUtil;
 import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
-import org.apache.wiki.util.TextUtil;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
 
 /**
  * This provides a simple ajax servlet for handling /ajax/<ClassName> requests. HttpServlet classes need to be registered using
@@ -189,7 +187,7 @@ public class WikiAjaxDispatcherServlet0 extends HttpServlet {
 
 		boolean valid = false;
         if( container != null ) {
-        	Session wikiSession = sessionMonitor.getWikiSession(request);
+        	WikiSession wikiSession = sessionMonitor.getWikiSession(request);
             valid = authorizationManager.checkPermission(wikiSession, container.permission );
         }
         return valid;

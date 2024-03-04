@@ -33,7 +33,7 @@ import javax.servlet.jsp.JspWriter;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
@@ -252,7 +252,7 @@ public class CalendarTag extends BaseWikiTag {
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
 		Engine engine = wikiContext.getEngine(); 
-		Session session = wikiContext.getWikiSession();
+		WikiSession session = wikiContext.getWikiSession();
 		Locale locale = session.getLocale();
 		final JspWriter out = pageContext.getOut();
 		final Calendar cal = Calendar.getInstance(locale);

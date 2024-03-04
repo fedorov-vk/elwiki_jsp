@@ -33,7 +33,7 @@ import org.apache.wiki.api.ui.CommandResolver;
 import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -49,10 +49,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultUrlConstructor",
-	service = { URLConstructor.class, WikiManager.class, EventHandler.class },
+	service = { URLConstructor.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultURLConstructor implements URLConstructor, EventHandler {
+public class DefaultURLConstructor implements URLConstructor, WikiComponent, EventHandler {
 
     private static final Logger log = Logger.getLogger( DefaultURLConstructor.class );
 

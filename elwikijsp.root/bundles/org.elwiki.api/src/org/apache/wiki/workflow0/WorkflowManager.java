@@ -22,9 +22,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.elwiki.api.component.WikiManager;
 
 /**
  * <p>
@@ -32,7 +31,7 @@ import org.elwiki.api.component.WikiManager;
  * particular Workflows.
  * </p>
  */
-public interface WorkflowManager extends WikiManager {
+public interface WorkflowManager {
 
     /** The name of the key from preferences.ini which defines who shall approve the workflow of storing a wikipage.  Value is <tt>{@value}</tt> */
     String WF_WP_SAVE_APPROVER = "jspwiki.approver.workflow.saveWikiPage";
@@ -110,12 +109,12 @@ public interface WorkflowManager extends WikiManager {
 
     /**
      * Returns the current workflows a wiki session owns. These are workflows whose {@link Workflow#getOwner()} method returns a Principal
-     * also possessed by the wiki session (see {@link org.apache.wiki.api.core.Session#getPrincipals()}). If the wiki session is not
+     * also possessed by the wiki session (see {@link org.apache.wiki.api.core.WikiSession#getPrincipals()}). If the wiki session is not
      * authenticated, this method returns an empty Collection.
      *
      * @param session the wiki session
      * @return the collection workflows the wiki session owns, which may be empty
      */
-    List< Workflow > getOwnerWorkflows( Session session );
+    List< Workflow > getOwnerWorkflows( WikiSession session );
 
 }

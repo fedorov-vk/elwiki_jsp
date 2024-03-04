@@ -20,26 +20,27 @@ package org.apache.wiki.content0;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.elwiki.api.component.WikiManager;
 
 /**
- * Provides page renaming functionality. Note that there used to be a similarly named class in 2.6, but due to unclear copyright, the
- * class was completely rewritten from scratch for 2.8.
+ * Provides page renaming functionality. Note that there used to be a similarly
+ * named class in 2.6, but due to unclear copyright, the class was completely
+ * rewritten from scratch for 2.8.
  *
  * @since 2.8
  */
-public interface PageRenamer extends WikiManager {
+public interface PageRenamer {
 
-    /**
-     *  Renames a page.
-     *  
-     *  @param context The current context.
-     *  @param renameFrom The name from which to rename.
-     *  @param renameTo The new name.
-     *  @param changeReferrers If true, also changes all the referrers.
-     *  @return The final new name (in case it had to be modified)
-     *  @throws WikiException If the page cannot be renamed.
-     */
-    String renamePage( WikiContext context, String renameFrom, String renameTo, boolean changeReferrers ) throws WikiException;
+	/**
+	 * Renames a page.
+	 * 
+	 * @param context         The current context.
+	 * @param renameFrom      The name from which to rename.
+	 * @param renameTo        The new name.
+	 * @param changeReferrers If true, also changes all the referrers.
+	 * @return The final new name (in case it had to be modified)
+	 * @throws WikiException If the page cannot be renamed.
+	 */
+	String renamePage(WikiContext context, String renameFrom, String renameTo, boolean changeReferrers)
+			throws WikiException;
 
 }

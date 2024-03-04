@@ -53,7 +53,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
@@ -72,14 +72,14 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultSearchManager",
-	service = { SearchManager.class, WikiManager.class, EventHandler.class },
+	service = { SearchManager.class, WikiComponent.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
 		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_REINDEX,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultSearchManager extends BasePageFilter implements SearchManager, EventHandler {
+public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultSearchManager.class);
 

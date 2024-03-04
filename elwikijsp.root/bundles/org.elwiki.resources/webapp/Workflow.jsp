@@ -22,7 +22,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine" %>
-<%@ page import="org.apache.wiki.api.core.Session" %>
+<%@ page import="org.apache.wiki.api.core.WikiSession" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
@@ -46,7 +46,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     
     // Extract the wiki session
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     
     // Get the current decisions
     DecisionQueue dq = WikiEngine.getWorkflowManager().getDecisionQueue();

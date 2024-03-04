@@ -34,11 +34,11 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.osgi.service.component.ComponentFactory;
@@ -60,21 +60,21 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 //@formatter:off
 @Component(
 	name = "elwiki.SessionMonitor",
-	service = { org.apache.wiki.auth.ISessionMonitor.class, HttpSessionListener.class, WikiManager.class, EventHandler.class },
+	service = { ISessionMonitor.class, WikiComponent.class, HttpSessionListener.class, EventHandler.class },
 	property = {
 	        	HttpWhiteboardConstants.HTTP_WHITEBOARD_LISTENER + "=true",
 	        	HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT + "=("
 	        	+ HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "=eclipse)"},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public final class SessionMonitor implements ISessionMonitor, HttpSessionListener, EventHandler {
+public final class SessionMonitor implements ISessionMonitor, WikiComponent, HttpSessionListener, EventHandler {
 
     private static final Logger log = Logger.getLogger( SessionMonitor.class );
 
-    private static ThreadLocal< Session > c_guestSession = new ThreadLocal<>();
+    private static ThreadLocal< WikiSession > c_guestSession = new ThreadLocal<>();
     
     /** Weak hashmap with HttpSessions as keys, and WikiSessions as values. */
-    private final Map< String, Session > m_sessions = new WeakHashMap<>();
+    private final Map< String, WikiSession > m_sessions = new WeakHashMap<>();
 
     private final PrincipalComparator m_comparator = new PrincipalComparator();
 
@@ -91,7 +91,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	volatile protected EventAdmin eventAdmin;
 
     @Reference(target = "(component.factory=elwiki.WikiSession.factory)")
-    private ComponentFactory<Session> factoryWikiSession;
+    private ComponentFactory<WikiSession> factoryWikiSession;
 
 	@WikiServiceReference
 	private AuthenticationManager authenticationManager;
@@ -121,10 +121,10 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      *  @return the WikiSession, if found. Can be null.
      */
 	@Override
-    public Session findSession( final HttpSession session ) {
-        Session wikiSession = null;
+    public WikiSession findSession( final HttpSession session ) {
+        WikiSession wikiSession = null;
         final String sessionId = ( session == null ) ? "(null)" : session.getId();
-        final Session storedSession = m_sessions.get( sessionId );
+        final WikiSession storedSession = m_sessions.get( sessionId );
 
         // If the weak reference returns a wiki session, return it
         if( storedSession != null ) {
@@ -141,9 +141,9 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      * {@inheritDoc}
      */
     //@Override //TODO: убрать @Override, сделать protected - так как этот метод заменен методом getWikiSession
-    public Session find(HttpServletRequest request) {
+    public WikiSession find(HttpServletRequest request) {
     	HttpSession session = request.getSession();
-        Session wikiSession = findSession( session );
+        WikiSession wikiSession = findSession( session );
         final String sid = ( session == null ) ? "(null)" : session.getId();
 
         // Otherwise, create a new guest session and stash it.
@@ -186,7 +186,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
             throw new IllegalArgumentException( "Session cannot be null." );
         }
         synchronized( m_sessions ) {
-            Session wikiSession = m_sessions.remove( session.getId() );
+            WikiSession wikiSession = m_sessions.remove( session.getId() );
             c_guestSession.remove();
         }
     }
@@ -206,7 +206,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     public Principal[] userPrincipals() {
         final Collection<Principal> principals = new ArrayList<>();
         synchronized ( m_sessions ) {
-            for ( final Session session : m_sessions.values()) {
+            for ( final WikiSession session : m_sessions.values()) {
                 principals.add( session.getUserPrincipal() );
             }
         }
@@ -233,7 +233,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
-		Session storedSession = this.findSession(session);
+		WikiSession storedSession = this.findSession(session);
 		this.remove(session);
 		log.debug("Removed Http Session: " + session.getId());
 		if (storedSession != null) {
@@ -246,7 +246,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Session getWikiSession(HttpServletRequest request) {
+	public WikiSession getWikiSession(HttpServletRequest request) {
 		if (request == null) {
 			if (log.isDebugEnabled()) {
 				log.debug("Looking up WikiSession for NULL HttpRequest: returning createGuestSession()");
@@ -255,7 +255,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 		}
 
 		// Look for a WikiSession associated with the user's Http Session and create one if it isn't there yet.
-		Session wikiSession = this.find(request);
+		WikiSession wikiSession = this.find(request);
 		wikiSession.setCachedLocale(request.getLocale()); //:FVK: workaround?
 
 		return wikiSession;
@@ -266,14 +266,14 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
 	 * @param sessionId 
 	 */
 	@Override
-	public Session createGuestSession(String sessionId) {
+	public WikiSession createGuestSession(String sessionId) {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		if (sessionId != null) {
 			properties.put(EventConstants.EVENT_FILTER,
 					"(" + WikiEventTopic.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
 		}
 
-		Session wikiSession = (Session) this.factoryWikiSession.newInstance(properties).getInstance();
+		WikiSession wikiSession = (WikiSession) this.factoryWikiSession.newInstance(properties).getInstance();
 
 		// Add the session as listener for GroupManager, AuthManager, AccountManager events
 		//TODO: add listeners...
@@ -298,8 +298,8 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
      */
     // FIXME: Should really use WeakReferences to clean away unused sessions.
 	// :FVK: Deprecated? не использовать?
-    private Session staticGuestSession() {
-        Session session = c_guestSession.get();
+    private WikiSession staticGuestSession() {
+        WikiSession session = c_guestSession.get();
         if( session == null ) {
             session = createGuestSession(null);
             c_guestSession.set( session );
@@ -309,7 +309,7 @@ public final class SessionMonitor implements ISessionMonitor, HttpSessionListene
     }
 
 	@Override
-	public String getSessionId(Session session) {
+	public String getSessionId(WikiSession session) {
 		String sessionId = null;
 		synchronized (m_sessions) {
 			sessionId = m_sessions.entrySet().stream().filter(entry -> session.equals(entry.getValue()))

@@ -20,7 +20,6 @@ package org.apache.wiki.api.ui;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.modules.ModuleManager;
-import org.elwiki.api.component.WikiManager;
 
 /**
  *  Defines an editor manager.  An editor can be added by adding a suitable JSP file under shapes/default/editors
@@ -40,7 +39,7 @@ import org.elwiki.api.component.WikiManager;
  *
  *  @since 2.4
  */
-public interface EditorManager extends WikiManager, ModuleManager {
+public interface EditorManager extends ModuleManager {
 
     /** The property name for setting the editor. Current value is "jspwiki.editor" - not used anymore: replaced by defaultpref.template.editor */
     String PROP_EDITORTYPE = "jspwiki.editor";

@@ -18,17 +18,16 @@
  */
 package org.apache.wiki.filters0;
 
+import java.util.List;
+
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.ModuleManager;
-import org.elwiki.api.component.WikiManager;
 
-import java.util.List;
-
-public interface FilterManager extends WikiManager, ModuleManager {
+public interface FilterManager extends ModuleManager {
 
     /** Property name for setting the filter XML property file.  Value is <tt>{@value}</tt>. */
     String PROP_FILTERXML = "jspwiki.filterConfig";

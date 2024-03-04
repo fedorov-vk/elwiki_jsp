@@ -20,13 +20,11 @@
 package org.apache.wiki.api.diff;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki.api.component.WikiManager;
-
 
 /**
  * Load, initialize and delegate to the DiffProvider that will actually do the work.
  */
-public interface DifferenceManager extends WikiManager {
+public interface DifferenceManager {
 
     /** Property value for storing a diff provider.  Value is {@value}. */
     String PROP_DIFF_PROVIDER = "jspwiki.diffProvider";

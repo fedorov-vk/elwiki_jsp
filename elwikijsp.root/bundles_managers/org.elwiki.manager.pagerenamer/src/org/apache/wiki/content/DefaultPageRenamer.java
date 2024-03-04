@@ -39,7 +39,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.PageAttachment;
@@ -61,10 +61,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultPageRenamer",
-	service = { PageRenamer.class, WikiManager.class, EventHandler.class },
+	service = { PageRenamer.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageRenamer implements PageRenamer, EventHandler {
+public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageRenamer.class);
 

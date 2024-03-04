@@ -26,7 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.WikiSecurityException;
 //import org.elwiki.api.event.WikiEventListener;
 //import org.elwiki.api.event.WikiEventProvider;
@@ -198,7 +198,7 @@ public interface IGroupManager {
 	 * @param group   the Group, which may not be <code>null</code>.
 	 * @throws WikiSecurityException if the Group cannot be saved by the back-end.
 	 */
-	void setGroup(Session session, IGroupWiki group) throws WikiSecurityException;
+	void setGroup(WikiSession session, IGroupWiki group) throws WikiSecurityException;
 
 	/**
 	 * Returns useradmin OSGi group by specified name.

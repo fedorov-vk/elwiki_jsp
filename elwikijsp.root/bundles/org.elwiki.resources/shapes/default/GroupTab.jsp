@@ -143,7 +143,7 @@
      <%
       	IGroupWiki group = (IGroupWiki)pageContext.getAttribute("group");
       	String grouName = group.getName();
-      	Session wikiSession = wikiContext.getWikiSession();
+      	WikiSession wikiSession = wikiContext.getWikiSession();
       	if( authorizationManager.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
       %>
           <a class="btn btn-xs btn-primary"

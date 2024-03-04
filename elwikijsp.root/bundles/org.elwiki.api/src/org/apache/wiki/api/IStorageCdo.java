@@ -6,14 +6,13 @@ import org.eclipse.emf.cdo.CDOObject;
 import org.eclipse.emf.cdo.transaction.CDOTransaction;
 import org.eclipse.emf.cdo.view.CDOView;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.PagesStore;
 
 /**
  * This interface provides access to the repository's CDO service from anywhere in ElWiki.
  *
  */
-public interface IStorageCdo extends WikiManager {
+public interface IStorageCdo {
 
 	public interface ITransactionalOperation<T extends CDOObject> {
 		public Object execute(T object, CDOTransaction transaction);

@@ -4,9 +4,9 @@
 org/elwiki/events/secur/*
    </property>
    <service>
-      <provide interface="org.apache.wiki.api.core.Session"/>
+      <provide interface="org.apache.wiki.api.core.WikiSession"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <reference cardinality="1..1" field="userAdminService" interface="org.osgi.service.useradmin.UserAdmin" name="userAdminService"/>
-   <implementation class="org.apache.wiki.WikiSession"/>
+   <implementation class="org.apache.wiki.WikiSessionImpl"/>
 </scr:component>

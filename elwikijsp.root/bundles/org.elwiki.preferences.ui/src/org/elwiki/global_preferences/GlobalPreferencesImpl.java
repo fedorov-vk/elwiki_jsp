@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -24,10 +24,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:off
 @Component(
 	name = "elwiki.GlobalPreferences",
-	service = { GlobalPreferences.class, WikiManager.class },
+	service = { GlobalPreferences.class, WikiComponent.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class GlobalPreferencesImpl implements GlobalPreferences, WikiManager {
+public class GlobalPreferencesImpl implements GlobalPreferences, WikiComponent {
 
 	private static final Logger log = Logger.getLogger(GlobalPreferencesImpl.class);
 

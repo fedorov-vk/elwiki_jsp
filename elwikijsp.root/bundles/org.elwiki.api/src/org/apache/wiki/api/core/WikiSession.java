@@ -60,7 +60,7 @@ import org.osgi.service.useradmin.User;
  * privileges associated with that group; he or she does not need to re-authenticate.
  * </p>
  */
-public interface Session {
+public interface WikiSession {
 
     /**
      * Returns <code>true</code> if the user is considered asserted via a session cookie; that is, the Subject contains the Principal
@@ -228,7 +228,7 @@ public interface Session {
      * @throws java.security.AccessControlException if the action is not permitted by the security policy
      */
     @Deprecated
-    static Object doPrivileged( final Session session, final PrivilegedAction<?> action ) throws AccessControlException {
+    static Object doPrivileged( final WikiSession session, final PrivilegedAction<?> action ) throws AccessControlException {
         return Subject.doAsPrivileged( session.getSubject(), action, null );
     }
 

@@ -24,7 +24,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.WikiSecurityException;
 
 /**
@@ -49,7 +49,7 @@ import org.apache.wiki.auth.WikiSecurityException;
  * to the user's Session. To determine which roles should be injected, the Authorizer is queried for
  * the roles it knows about by calling {@link Authorizer#getRoles()}. Then,
  * each role returned by the Authorizer is tested by calling
- * {@link Authorizer#isUserInRole(Session, Principal)}. If this check fails,
+ * {@link Authorizer#isUserInRole(WikiSession, Principal)}. If this check fails,
  * and the Authorizer is of type WebAuthorizer, AuthenticationManager checks the role again by
  * calling
  * {@link org.elwiki.api.authorization.WebAuthorizer#isUserInRole(javax.servlet.http.HttpServletRequest, Principal)}).
@@ -99,6 +99,6 @@ public interface Authorizer {
 	 * @return <code>true</code> if the user is considered to be in the role, <code>false</code>
 	 *         otherwise
 	 */
-	boolean isUserInRole(Session session, Principal role);
+	boolean isUserInRole(WikiSession session, Principal role);
 
 }

@@ -31,7 +31,7 @@ import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.ImportManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.Elwiki_dataFactory;
@@ -52,10 +52,10 @@ import dwedata.PageVersion;
 //@formatter:off
 @Component(
 	name = "elwiki.ImportManager",
-	service = { ImportManager.class, WikiManager.class },
+	service = { ImportManager.class, WikiComponent.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class ImportManagerImpl implements ImportManager {
+public class ImportManagerImpl implements ImportManager, WikiComponent {
 
 	private static final Logger log = Logger.getLogger(ImportManagerImpl.class);
 

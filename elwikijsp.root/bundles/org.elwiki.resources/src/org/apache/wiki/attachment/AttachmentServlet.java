@@ -49,7 +49,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.RedirectException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -367,7 +367,7 @@ public class AttachmentServlet extends HttpServlet {
 		} catch (RedirectException e) {
 			//TODO: remove from here accessing into WikiEngine.
 			Engine engine = ContextUtil.findContext(req).getEngine();
-			Session session = engine.getManager(ISessionMonitor.class).getWikiSession(req);
+			WikiSession session = engine.getManager(ISessionMonitor.class).getWikiSession(req);
 			session.addMessage(e.getMessage());
 
 			req.getSession().setAttribute("msg", e.getMessage());

@@ -44,7 +44,7 @@ import org.apache.wiki.util.PriorityList;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiPageEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
@@ -99,10 +99,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultFilterManager",
-	service = { FilterManager.class, WikiManager.class, EventHandler.class },
+	service = { FilterManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultFilterManager extends BaseModuleManager implements FilterManager, EventHandler {
+public class DefaultFilterManager extends BaseModuleManager implements FilterManager, WikiComponent, EventHandler {
 
 	static final String CONFIGURATION_FILE = "ini/elwiki_filters.xml";
 	

@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.AuthorizationManager;
@@ -51,7 +51,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.WebAuthorizer;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
@@ -81,10 +81,10 @@ import org.osgi.service.useradmin.UserAdmin;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthenticationManager",
-	service = { AuthenticationManager.class, WikiManager.class, EventHandler.class },
+	service = { AuthenticationManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements AuthenticationManager, EventHandler {
+public class DefaultAuthenticationManager implements AuthenticationManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultAuthenticationManager.class);
 
@@ -276,7 +276,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Even
 	 */
 	@Override
 	public boolean login(final HttpServletRequest request) throws WikiSecurityException {
-		final Session session = sessionMonitor.getWikiSession(request);
+		final WikiSession session = sessionMonitor.getWikiSession(request);
 		return login(request, session);
 	}
 
@@ -284,7 +284,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Even
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean login(final HttpServletRequest request, Session session) throws WikiSecurityException {
+	public boolean login(final HttpServletRequest request, WikiSession session) throws WikiSecurityException {
 		CallbackHandler handler = null;
 		final Map<String, String> options = Collections.emptyMap();
 
@@ -345,7 +345,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Even
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean loginAsserted(final Session session, final HttpServletRequest request, final String username,
+	public boolean loginAsserted(final WikiSession session, final HttpServletRequest request, final String username,
 			final String password) throws WikiSecurityException {
 		if (session == null) {
 			log.error("No wiki session provided, cannot log in.");
@@ -478,7 +478,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Even
 	 * After successful login, this method is called to inject authorized role Principals into the
 	 * Session. To determine which roles should be injected, the configured Authorizer is queried for
 	 * the roles it knows about by calling {@link Authorizer#getRoles()}. Then, each role returned by
-	 * the authorizer is tested by calling {@link Authorizer#isUserInRole(Session, Principal)}. If this
+	 * the authorizer is tested by calling {@link Authorizer#isUserInRole(WikiSession, Principal)}. If this
 	 * check fails, and the Authorizer is of type IWebAuthorizer, the role is checked again by calling
 	 * {@link WebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test
 	 * are injected into the Subject by firing appropriate authentication events.
@@ -487,7 +487,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Even
 	 * @param authorizer the Engine's configured Authorizer
 	 * @param request    the user's HTTP session, which may be <code>null</code>
 	 */
-	private void injectAuthorizerRoles(Session session, Authorizer authorizer, HttpServletRequest request) {
+	private void injectAuthorizerRoles(WikiSession session, Authorizer authorizer, HttpServletRequest request) {
 		Set<Principal> principals = new HashSet<>();
 		// Test each role the authorizer knows about
 		for (final Principal role : authorizer.getRoles()) {

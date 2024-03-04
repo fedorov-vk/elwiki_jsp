@@ -31,11 +31,9 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.elwiki.api.component.IModulePreferences;
-import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
-
 
 /**
  *  Provides facilities for handling attachments.  All attachment handling goes through this class.
@@ -45,7 +43,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since 1.9.28
  */
-public interface AttachmentManager extends WikiManager, IModulePreferences {
+public interface AttachmentManager extends IModulePreferences {
 
 	interface Prefs {
 		String DISABLE_CACHE = "disableCache";

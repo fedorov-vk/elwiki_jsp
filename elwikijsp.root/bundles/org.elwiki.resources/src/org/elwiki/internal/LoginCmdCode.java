@@ -14,7 +14,7 @@ import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
@@ -53,7 +53,7 @@ public class LoginCmdCode extends CmdCode {
 		WikiContext wikiContext = getWikiContext();
 		// :FVK: ?? надо ли указывать PageContext.REQUEST_SCOPE - уже должен быть установлен.
 		// httpRequest.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 		ResourceBundle rb = Preferences.getBundle(wikiContext); // :FVK: это ресурсы в заданном
 
 		// Set the redirect-page variable if one was passed as a parameter.

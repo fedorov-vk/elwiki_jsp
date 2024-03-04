@@ -25,7 +25,6 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.InternalModule;
-import org.elwiki.api.component.WikiManager;
 import org.elwiki_data.WikiPage;
 
 
@@ -34,7 +33,7 @@ import org.elwiki_data.WikiPage;
  *
  *  @since 2.2.21.
  */
-public interface SearchManager extends WikiManager, PageFilter, InternalModule {
+public interface SearchManager extends PageFilter, InternalModule {
 
     String DEFAULT_SEARCHPROVIDER = "org.apache.wiki.search.lucene.LuceneSearchProvider";
 

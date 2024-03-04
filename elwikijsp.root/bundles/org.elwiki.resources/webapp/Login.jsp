@@ -42,7 +42,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     AuthenticationManager mgr = WikiEngine.getAuthenticationManager();
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI_LOGIN.getRequestContext() );
     pageContext.setAttribute( WikiContext.ATTR_WIKI_CONTEXT, wikiContext, PageContext.REQUEST_SCOPE );
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
 
     // Set the redirect-page variable if one was passed as a parameter

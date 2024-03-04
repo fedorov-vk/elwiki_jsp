@@ -74,7 +74,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     String pagereq = wikiContext.getName();
 
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     String storedUser = wikiSession.getUserPrincipal().getName();
 
     if( wikiSession.isAnonymous() ) {

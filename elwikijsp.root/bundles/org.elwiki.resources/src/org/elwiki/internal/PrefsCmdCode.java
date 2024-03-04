@@ -83,7 +83,7 @@ public class PrefsCmdCode extends CmdCode {
 
 		// Extract the user profile and action attributes
 		AccountManager userMgr = getEngine().getManager(AccountManager.class);
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 
 		/* FIXME: Obsolete
 		if( request.getParameter(EditorManager.PARA_EDITOR) != null )

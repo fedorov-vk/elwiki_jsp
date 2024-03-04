@@ -24,7 +24,7 @@ import javax.management.NotCompliantMBeanException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
@@ -58,7 +58,7 @@ public class UserBean extends SimpleAdminBean {
     @Override
     public String doPost( final WikiContext context ) {
         final HttpServletRequest request = context.getHttpRequest();
-        final Session session = context.getWikiSession();
+        final WikiSession session = context.getWikiSession();
         //:FVK: final AccountManager accountManager = super.m_engine.getManager(AccountManager.class);
         AccountRegistry accountRegistry = this.engine.getManager(AccountRegistry.class);
         final String loginid = request.getParameter( "loginid" );

@@ -20,19 +20,18 @@ package org.apache.wiki.auth;
 
 import java.security.Principal;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.DuplicateUserException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.authorization.IGroupManager;
-import org.elwiki.api.component.WikiManager;
 
 /**
  * Provides a facade for obtaining user information.
  *
  * @since 2.3
  */
-public interface AccountManager extends WikiManager, IGroupManager {
+public interface AccountManager extends IGroupManager {
 
     /**
      * <p>Retrieves the {@link org.apache.wiki.auth.UserProfile} for the user in a session. If the user is authenticated, the
@@ -49,7 +48,7 @@ public interface AccountManager extends WikiManager, IGroupManager {
      * @return the user's profile, which will be newly initialized if the user is anonymous or asserted, or if the user cannot be found in
      *         the user database
      */
-    UserProfile getUserProfile( Session session );
+    UserProfile getUserProfile( WikiSession session );
 
 	/**
 	 * <p>
@@ -87,9 +86,9 @@ public interface AccountManager extends WikiManager, IGroupManager {
 	 *                                other WikiException indicate a condition that is not normal is
 	 *                                probably due to mis-configuration
 	 */
-	   void setUserProfile( Session session, UserProfile profile ) throws DuplicateUserException, WikiException;
+	   void setUserProfile( WikiSession session, UserProfile profile ) throws DuplicateUserException, WikiException;
 
-    void startUserProfileCreationWorkflow( Session session, UserProfile profile ) throws WikiException;
+    void startUserProfileCreationWorkflow( WikiSession session, UserProfile profile ) throws WikiException;
 
     /**
      * <p> Extracts user profile parameters from the HTTP request and populates a UserProfile with them. The UserProfile will either be a
@@ -104,7 +103,7 @@ public interface AccountManager extends WikiManager, IGroupManager {
      * <li>In all cases, the created/last modified timestamps of the user's existing or new profile always override whatever values the user
      * supplied.</li>
      * <li>If container authentication is used, the login name property of the profile is set to the name of
-     * {@link org.apache.wiki.api.core.Session#getLoginPrincipal()}. Otherwise, the value of the <code>loginname</code> parameter is used.</li>
+     * {@link org.apache.wiki.api.core.WikiSession#getLoginPrincipal()}. Otherwise, the value of the <code>loginname</code> parameter is used.</li>
      * </ul>
      *
      * @param context the current wiki context
@@ -117,7 +116,7 @@ public interface AccountManager extends WikiManager, IGroupManager {
      * make sure it isn't null. Otherwise, the password is checked for length and that it matches the value of the 'password2' HTTP
      * parameter. Note that we have a special case when container-managed authentication is used and the user is not authenticated;
      * this will always cause validation to fail. Any validation errors are added to the wiki session's messages collection
-     * (see {@link org.apache.wiki.api.core.Session#getMessages()}.
+     * (see {@link org.apache.wiki.api.core.WikiSession#getMessages()}.
      *
      * @param context the current wiki context
      * @param profile the supplied UserProfile

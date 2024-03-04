@@ -4,8 +4,8 @@
    <property name="osgi.http.whiteboard.context.select" value="(osgi.http.whiteboard.context.name=eclipse)"/>
    <service scope="singleton">
       <provide interface="org.apache.wiki.auth.ISessionMonitor"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
       <provide interface="javax.servlet.http.HttpSessionListener"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <reference cardinality="1..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin" policy="dynamic"/>

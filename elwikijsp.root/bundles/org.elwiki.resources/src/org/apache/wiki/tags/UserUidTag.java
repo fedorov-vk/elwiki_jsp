@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.auth.ISessionMonitor;
@@ -54,7 +54,7 @@ public class UserUidTag extends BaseWikiTag {
 		final Engine engine = wikiContext.getEngine();
 		ISessionMonitor sessionMonitor = engine.getManager(ISessionMonitor.class);
 		
-		final Session wikiSession = sessionMonitor
+		final WikiSession wikiSession = sessionMonitor
 				.getWikiSession((HttpServletRequest) pageContext.getRequest());
 		final Principal user = wikiSession.getUserPrincipal();
 

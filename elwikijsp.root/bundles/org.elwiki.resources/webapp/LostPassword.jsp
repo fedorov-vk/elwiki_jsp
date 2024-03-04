@@ -25,7 +25,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine"%>
-<%@ page import="org.apache.wiki.api.core.Session"%>
+<%@ page import="org.apache.wiki.api.core.WikiSession"%>
 <%@ page import="org.apache.wiki.Wiki"%>
 <%@ page import="org.apache.wiki.auth.*"%>
 <%@ page import="org.apache.wiki.auth.user.*"%>
@@ -115,7 +115,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
 
     ResourceBundle rb = Preferences.getBundle( wikiContext, "CoreResources" );
 
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     String action = request.getParameter( "action" );
 
     boolean done = false;

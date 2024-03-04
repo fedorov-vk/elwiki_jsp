@@ -4,9 +4,8 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.IPath;
 import org.elwiki.api.component.IModulePreferences;
-import org.elwiki.api.component.WikiManager;
 
-public interface GlobalPreferences extends WikiManager, IModulePreferences {
+public interface GlobalPreferences extends IModulePreferences {
 
 	interface Prefs {
 		String APP_NAME = "applicationName";

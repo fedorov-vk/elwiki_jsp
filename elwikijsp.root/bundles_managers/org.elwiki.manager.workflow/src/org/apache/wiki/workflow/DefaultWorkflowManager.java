@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.DecisionQueue;
@@ -51,7 +51,7 @@ import org.apache.wiki.workflow0.Workflow.WfState;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiWorkflowEventTopic;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
@@ -71,13 +71,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultWorkflowManager",
-	service = { WorkflowManager.class, WikiManager.class, EventHandler.class },
+	service = { WorkflowManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON,
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiWorkflowEventTopic.TOPIC_WORKFLOW_ALL
 	})
 //@formatter:on
-public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
+public class DefaultWorkflowManager implements WorkflowManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultWorkflowManager.class);
 
@@ -298,7 +298,7 @@ public class DefaultWorkflowManager implements WorkflowManager, EventHandler {
      * {@inheritDoc}
      */
     @Override
-    public List< Workflow > getOwnerWorkflows( final Session session ) {
+    public List< Workflow > getOwnerWorkflows( final WikiSession session ) {
         final List< Workflow > workflows = new ArrayList<>();
         if ( session.isAuthenticated() ) {
             final Principal[] sessionPrincipals = session.getPrincipals();

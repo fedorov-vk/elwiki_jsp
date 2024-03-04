@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
@@ -72,10 +72,10 @@ import net.sf.ehcache.Element;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAttachmentManager",
-	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
+	service = { AttachmentManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAttachmentManager implements AttachmentManager, EventHandler {
+public class DefaultAttachmentManager implements AttachmentManager, WikiComponent, EventHandler {
 
 	/** List of attachment types which are forced to be downloaded */
 	@Deprecated

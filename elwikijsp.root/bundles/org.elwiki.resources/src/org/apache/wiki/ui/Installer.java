@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.apache.wiki.api.providers.AttachmentProvider;
@@ -68,7 +68,7 @@ public class Installer {
     public static final String ADMIN_GROUP = "Admin";
     public static final String PROPFILENAME = "jspwiki-custom.properties" ;
     public static final String TMP_DIR = System.getProperty("java.io.tmpdir");
-    private final Session m_session;
+    private final WikiSession m_session;
     private final File m_propertyFile;
     private final Properties m_props;
     private final Engine m_engine;

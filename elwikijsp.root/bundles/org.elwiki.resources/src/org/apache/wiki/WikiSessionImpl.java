@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.security.auth.Subject;
 
 import org.apache.log4j.Logger;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
 import org.apache.wiki.auth.AuthenticationManager;
@@ -59,22 +59,22 @@ import org.osgi.service.useradmin.UserAdmin;
 
 /**
  * <p>
- * Default implementation for {@link Session}.
+ * Default implementation for {@link WikiSession}.
  * </p>
  */
 //@formatter:off
 @Component(
 	name = "elwiki.WikiSession",
-	service = { org.apache.wiki.api.core.Session.class, EventHandler.class },
+	service = { WikiSession.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + WikiLoginEventTopic.TOPIC_LOGGING_ALL,
 		EventConstants.EVENT_TOPIC + "=" + WikiSecurityEventTopic.TOPIC_SECUR_ALL
 	},
 	factory = "elwiki.WikiSession.factory")
 //@formatter:on
-public final class WikiSession implements Session, EventHandler {
+public final class WikiSessionImpl implements WikiSession, EventHandler {
 
-    private static final Logger log                   = Logger.getLogger( WikiSession.class );
+    private static final Logger log                   = Logger.getLogger( WikiSessionImpl.class );
 
     private static final String ALL                   = "*";
 
@@ -110,7 +110,7 @@ public final class WikiSession implements Session, EventHandler {
      * TODO: hide this class into *.internal package --
      * to prevent WikiSession from being instantiated directly. 
      */
-    public WikiSession() {
+    public WikiSessionImpl() {
     	//
     }
 
@@ -419,7 +419,7 @@ public final class WikiSession implements Session, EventHandler {
     /**
      * Injects GroupPrincipal objects into the user's Principal set based on the groups the user belongs to. For Groups, the algorithm
      * first calls the {@link GroupManager#getGroups()} to obtain the array of GroupPrincipals the authorizer knows about. Then, the
-     * method {@link GroupManager#isUserInRole(Session, Principal)} is called for each Principal. If the user is a member of the
+     * method {@link GroupManager#isUserInRole(WikiSession, Principal)} is called for each Principal. If the user is a member of the
      * group, an equivalent GroupPrincipal is injected into the user's principal set. Existing GroupPrincipals are flushed and replaced.
      * This method should generally be called after a user's {@link org.apache.wiki.auth.UserProfile} is saved. If the wiki session
      * is null, or there is no matching user profile, the method returns silently.

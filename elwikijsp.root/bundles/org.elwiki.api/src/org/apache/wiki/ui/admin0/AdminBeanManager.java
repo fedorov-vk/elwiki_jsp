@@ -21,9 +21,7 @@ package org.apache.wiki.ui.admin0;
 
 import java.util.List;
 
-import org.elwiki.api.component.WikiManager;
-
-public interface AdminBeanManager extends WikiManager {
+public interface AdminBeanManager {
 
 	/**
 	 *  Lists all administration beans which are currently known

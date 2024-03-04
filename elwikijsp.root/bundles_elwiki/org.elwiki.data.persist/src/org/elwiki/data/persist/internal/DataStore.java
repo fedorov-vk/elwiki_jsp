@@ -15,7 +15,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.net4j.util.WrappedException;
 import org.elwiki.api.GlobalPreferences;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.data.persist.IDataStore;
@@ -37,10 +37,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:off
 @Component(
 	name = "elwiki.StorageCdo",
-	service = { IStorageCdo.class, WikiManager.class },
+	service = { IStorageCdo.class, WikiComponent.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DataStore extends Repository implements IDataStore, IStorageCdo {
+public class DataStore extends Repository implements IStorageCdo, WikiComponent, IDataStore {
 
 	protected static final Logger log = Logger.getLogger(DataStore.class);
 
