@@ -36,11 +36,11 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.data.authorize.PrincipalComparator;
 import org.osgi.service.component.ComponentFactory;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -75,8 +75,6 @@ public final class SessionMonitor implements ISessionMonitor, WikiComponent, Htt
     
     /** Weak hashmap with HttpSessions as keys, and WikiSessions as values. */
     private final Map< String, WikiSession > m_sessions = new WeakHashMap<>();
-
-    private final PrincipalComparator m_comparator = new PrincipalComparator();
 
     /**
      * Construct the SessionListener
@@ -211,7 +209,7 @@ public final class SessionMonitor implements ISessionMonitor, WikiComponent, Htt
             }
         }
         final Principal[] p = principals.toArray( new Principal[ principals.size() ] );
-        Arrays.sort( p, m_comparator );
+        Arrays.sort( p, PrincipalComparator.INSTANCE );
         return p;
     }
 

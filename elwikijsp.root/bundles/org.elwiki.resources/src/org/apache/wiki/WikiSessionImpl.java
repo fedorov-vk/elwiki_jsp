@@ -46,6 +46,7 @@ import org.elwiki.api.event.WikiEventTopic;
 import org.elwiki.api.event.WikiLoginEventTopic;
 import org.elwiki.api.event.WikiSecurityEventTopic;
 import org.elwiki.data.authorize.GroupPrincipal;
+import org.elwiki.data.authorize.PrincipalComparator;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -270,7 +271,7 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 
         // Return a defensive copy
         final Principal[] roleArray = roles.toArray( new Principal[ roles.size() ] );
-        Arrays.sort( roleArray, WikiPrincipal.COMPARATOR );
+        Arrays.sort( roleArray, PrincipalComparator.INSTANCE );
         return roleArray;
     }
 
