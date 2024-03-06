@@ -80,7 +80,7 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		servletContext = config.getServletContext();
-		
+
 		@NonNull
 		GlobalPreferences globalPrefs = engine.getManager(GlobalPreferences.class);
 		m_wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
@@ -93,43 +93,45 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Get WikiContext according given URI. If URI is not determined as known - then returns
-	 * default, ContextEnum.PAGE_VIEW.
+	 * Get WikiContext according given URI. If URI is not determined as known - then returns default,
+	 * ContextEnum.PAGE_VIEW.
 	 * 
 	 * @param adaptableUri
 	 * @return Wiki context.
 	 */
 	private ContextEnum getContextEnum(String adaptableUri) {
-		//Pattern p = Pattern.compile("^[/]?([.\\\\w]+?)");
+		// Pattern p = Pattern.compile("^[/]?([.\\\\w]+?)");
 		Pattern p = Pattern.compile("^[/]?([.\\w]++)\\W?.*?$");
 		Matcher m = p.matcher(adaptableUri);
-		if (m.find())
-	    {
-			 String command = m.group(1);
-			 return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(command)) //
-					 .findFirst().orElse(ContextEnum.PAGE_VIEW);
-	    }
+		if (m.find()) {
+			String command = m.group(1);
+			return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(command)) //
+					.findFirst().orElse(ContextEnum.PAGE_VIEW);
+		}
 
 		// We are here - is any error happen? :FVK:
 		return ContextEnum.PAGE_VIEW;
 	}
-	
+
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
 			throws IOException, ServletException {
 		try {
 			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, null);
-			
+
 			// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 			// WatchDog.getCurrentWatchDog( m_engine );
 			boolean isAjaxPage = false;
 
 			String isForward = (String) httpRequest.getAttribute(WikiContext.ATTR_FORWARD_REQUEST);
 			String uri = (isForward == null) ? httpRequest.getRequestURI()
-					: new URI(httpRequest.getRequestURL().toString()).getPath();
+					// :FVK: (например, при запросе редактирования группы, при недостаточных правах)
+					// следующий код вызывал зацикливание: (зачем это было?)
+					// : new URI(httpRequest.getRequestURL().toString()).getPath();
+					: isForward;
 
 			log.debug("◄►doFilter◄► " + uri + "\n");
-			if(uri.equals("/")) {
+			if (uri.equals("/")) {
 				// :FVK: workaround - executing the page's view command for an empty query.
 				uri = "/" + ContextEnum.PAGE_VIEW.getUri();
 			}
@@ -137,12 +139,12 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			if (uri.startsWith("/cmd.")) {
 				// catch URI "/cmd.*"
 				log.debug("Request URI starts with '/cmd.'");
-			} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
+			} else if (uri.matches(".+?AJAX.+?$")) {// :FVK: - workaround, using the specified part of the name.
 				// catch URI "/*AJAX*"
 				log.debug("Request URI is matched '.+?AJAX.+?$'.");
 				isAjaxPage = true;
 			} else {
-				// skip all other URI. 
+				// skip all other URI.
 				log.debug("Request URI isn't matched anything.");
 				super.doFilter(httpRequest, httpResponse, chain);
 				return;

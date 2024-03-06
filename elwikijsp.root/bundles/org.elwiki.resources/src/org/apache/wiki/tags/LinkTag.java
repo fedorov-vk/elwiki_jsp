@@ -44,10 +44,9 @@ import org.elwiki_data.WikiPage;
 /**
  * Provides a generic link tag for all kinds of linking purposes.
  * <p>
- * If parameter <i>path</i> is defined, constructs a URL pointing to the
- * specified path of URL (command, file), under the baseURL known by the Engine.
- * Any ParamTag name-value pairs contained in the body are added to this URL to
- * provide support for arbitrary JSP calls.
+ * If parameter <i>path</i> is defined, constructs a URL pointing to the specified path of URL
+ * (command, file), under the baseURL known by the Engine. Any ParamTag name-value pairs contained
+ * in the body are added to this URL to provide support for arbitrary JSP calls.
  * <p>
  */
 public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
@@ -92,7 +91,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	public void setDatamodal(String arg) {
 		m_datamodal = arg;
 	}
-	
+
 	public void setPath(final String path) {
 		m_path = path;
 	}
@@ -163,8 +162,8 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	}
 
 	/**
-	 * This method figures out what kind of an URL should be output. It mirrors
-	 * heavily on JSPWikiMarkupParser.handleHyperlinks();
+	 * This method figures out what kind of an URL should be output. It mirrors heavily on
+	 * JSPWikiMarkupParser.handleHyperlinks();
 	 *
 	 * @return the URL
 	 * @throws ProviderException
@@ -178,6 +177,9 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 
 		String params = (m_version != null) ? "version=" + getVersion() : null;
 		params = addParamsForRecipient(params, m_containedParams);
+		if (m_ref != null) {
+			params += "#" + m_ref;
+		}
 
 		if (m_templatefile != null) {
 			String template = globalPreferences.getTemplateDir();
@@ -270,7 +272,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		}
 		*/
 
-		//!!! NEW CODE -- 
+		// !!! NEW CODE --
 		return engine.getURL(m_context, pageId, parms);
 	}
 
@@ -299,7 +301,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			appender.accept("accesskey=", m_accesskey);
 			appender.accept("tabindex=", m_tabindex);
 
-			//TODO: пересмотреть код - страница не наследует Attach
+			// TODO: пересмотреть код - страница не наследует Attach
 			PageManager pageManager = getWikiContext().getEngine().getManager(PageManager.class);
 			AttachmentManager attachmentManager = getWikiContext().getEngine().getManager(AttachmentManager.class);
 			if (m_pageName != null && pageManager.getPage(m_pageName) instanceof PageAttachment) {

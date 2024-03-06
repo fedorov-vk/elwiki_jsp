@@ -674,8 +674,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 			}
 			String url = m_engine.getURL(ContextEnum.WIKI_MESSAGE.getRequestContext(), wikiContext.getPage().getId(),
 					null);
-			ServletContext sc = httpRequest.getServletContext().getContext(url);
-			RequestDispatcher rd = sc.getRequestDispatcher(url);
+			RequestDispatcher rd = httpRequest.getRequestDispatcher(url);
 			httpRequest.setAttribute(WikiContext.ATTR_FORWARD_REQUEST, url);
 			rd.forward(httpRequest, httpResponse);
 		}
