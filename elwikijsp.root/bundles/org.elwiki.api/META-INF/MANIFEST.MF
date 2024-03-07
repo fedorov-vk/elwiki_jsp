@@ -29,7 +29,8 @@ Require-Bundle: org.eclipse.osgi;bundle-version="3.15.200",
  org.jvnet.hudson.org.suigeneris.jrcs.diff;bundle-version="0.4.2",
  net.sf.ehcache,
  org.elwiki.util,
- org.elwiki.data
+ org.elwiki.data,
+ org.osgi.service.event
 Export-Package: org.apache.wiki,
  org.apache.wiki.ajax,
  org.apache.wiki.api,

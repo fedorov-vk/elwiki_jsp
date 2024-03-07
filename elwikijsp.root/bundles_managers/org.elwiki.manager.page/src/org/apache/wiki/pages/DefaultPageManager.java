@@ -794,9 +794,6 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
                     }
                 }*/
                 deletePage( p );
-                
-        		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETED,
-        				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
             }
         }
     }

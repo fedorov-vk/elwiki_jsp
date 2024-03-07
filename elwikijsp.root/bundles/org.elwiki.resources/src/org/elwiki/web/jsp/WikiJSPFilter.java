@@ -92,7 +92,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
-@Deprecated//:FVK: --!!!-- он шлет PageEvent.Topic.REQUESTED 
+@Deprecated//:FVK: --!!!-- он шлет PageEvent.Topic.REQUESTED, DELIVERED
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
@@ -130,7 +130,7 @@ public class WikiJSPFilter extends WikiServletFilter {
             w.enterState("Filtering for URL "+((HttpServletRequest)request).getRequestURI(), 90 );
             final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper( ( HttpServletResponse )response, m_wiki_encoding, useEncoding );
 
-            // fire PAGE_REQUESTED event
+            // fire PAGE REQUESTED event
             final String pagename = URLConstructor.parsePageFromURL( ( HttpServletRequest )request, Charset.forName( response.getCharacterEncoding() ) );
     		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.REQUESTED,
     				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
@@ -159,7 +159,7 @@ public class WikiJSPFilter extends WikiServletFilter {
                     wikiContext.getWikiSession().clearMessages();
                 }
 
-                // fire PAGE_DELIVERED event
+                // fire PAGE DELIVERED event
         		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELIVERED,
         				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
             } finally {
