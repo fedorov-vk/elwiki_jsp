@@ -21,7 +21,7 @@ package org.apache.wiki.workflow0;
 import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.event.WorkflowEvent;
 import org.osgi.service.event.Event;
 
 import java.io.Serializable;
@@ -125,8 +125,8 @@ public class DecisionQueue implements Serializable {
             remove( decision );
         }
 
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_DECIDE,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_DECIDE,
+				Map.of(WorkflowEvent.PROPERTY_DECISION, decision)));
     }
 
     /**
@@ -140,8 +140,8 @@ public class DecisionQueue implements Serializable {
         if( decision.isReassignable() ) {
             decision.reassign( owner );
 
-    		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REASSIGN,
-    				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
+    		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_REASSIGN,
+    				Map.of(WorkflowEvent.PROPERTY_DECISION, decision)));
 
             return;
         }

@@ -55,8 +55,8 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
-import org.elwiki.api.event.WikiEngineEventTopic;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.EngineEvent;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
@@ -234,9 +234,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 
 			/* Register this for listen events from EventAdmin. */
 			String[] topics = new String[] { //
-					WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN, //
-					WikiPageEventTopic.TOPIC_PAGE_RENAMED, //
-					WikiPageEventTopic.TOPIC_PAGE_DELETED, //
+					EngineEvent.Topic.SHUTDOWN, //
+					PageEvent.Topic.RENAMED, //
+					PageEvent.Topic.DELETED, //
 			};
 			Dictionary<String, Object> properties = new Hashtable<String, Object>();
 			properties.put(EventConstants.EVENT_TOPIC, topics);
@@ -278,13 +278,13 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		public void handleEvent(Event event) {
 			String topic = event.getTopic();
 			switch (topic) {
-			case WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN:
+			case EngineEvent.Topic.SHUTDOWN:
 				log.info("Detected wiki engine shutdown");
 				handleShutdown();
 				break;
-			case WikiPageEventTopic.TOPIC_PAGE_RENAMED:
-				String oldPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME);
-				String newPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME);
+			case PageEvent.Topic.RENAMED:
+				String oldPageName = (String) event.getProperty(PageEvent.PROPERTY_OLD_PAGE_NAME);
+				String newPageName = (String) event.getProperty(PageEvent.PROPERTY_NEW_PAGE_NAME);
 				Counter oldCounter = m_counters.get(oldPageName);
 				if (oldCounter != null) {
 					m_storage.remove(oldPageName);
@@ -294,8 +294,8 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 					m_dirty = true;
 				}
 				break;
-			case WikiPageEventTopic.TOPIC_PAGE_DELETED:
-				String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+			case PageEvent.Topic.DELETED:
+				String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 				m_storage.remove(pageId);
 				m_counters.remove(pageId);
 				break;

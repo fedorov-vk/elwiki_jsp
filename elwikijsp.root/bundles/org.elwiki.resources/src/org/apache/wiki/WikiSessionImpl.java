@@ -42,9 +42,9 @@ import org.apache.wiki.util.HttpUtil;
 import org.elwiki.IWikiConstants.AuthenticationStatus;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupWiki;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiLoginEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.LoginEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
 import org.elwiki.data.authorize.PrincipalComparator;
 import org.elwiki.data.authorize.WikiPrincipal;
@@ -68,8 +68,8 @@ import org.osgi.service.useradmin.UserAdmin;
 	name = "elwiki.WikiSession",
 	service = { WikiSession.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiLoginEventTopic.TOPIC_LOGGING_ALL,
-		EventConstants.EVENT_TOPIC + "=" + WikiSecurityEventTopic.TOPIC_SECUR_ALL
+		EventConstants.EVENT_TOPIC + "=" + LoginEvent.Topic.ALL,
+		EventConstants.EVENT_TOPIC + "=" + SecurityEvent.Topic.ALL
 	},
 	factory = "elwiki.WikiSession.factory")
 //@formatter:on
@@ -292,18 +292,18 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiLoginEventTopic.TOPIC_LOGIN_INITIATED: {
+		case LoginEvent.Topic.INITIATED: {
 			// Do nothing
 		}
 			break;
-		case WikiLoginEventTopic.TOPIC_LOGOUT: {
+		case LoginEvent.Topic.LOGOUT: {
 			this.invalidate();
 		}
 			break;
-		case WikiLoginEventTopic.TOPIC_PRINCIPALS_ADD: {
+		case LoginEvent.Topic.PRINCIPALS_ADD: {
 			@SuppressWarnings("unchecked")
 			Collection<Principal> eventPrincipals = (Collection<Principal>) event
-					.getProperty(WikiEventTopic.PROPERTY_PRINCIPALS);
+					.getProperty(WikiEvent.PROPERTY_PRINCIPALS);
 			Set<Principal> subjectPrincipals = m_subject.getPrincipals();
 			// bypass wrong logging status - don't add ANONYMOUS, ASSERTED roles.
 			if (isAuthenticated() && !eventPrincipals.contains(GroupPrincipal.ASSERTED)
@@ -312,10 +312,10 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 			}
 		}
 			break;
-		case WikiLoginEventTopic.TOPIC_LOGIN_ANONYMOUS: {
+		case LoginEvent.Topic.ANONYMOUS: {
 			@SuppressWarnings("unchecked")
 			Collection<Principal> eventPrincipals = (Collection<Principal>) event
-					.getProperty(WikiEventTopic.PROPERTY_PRINCIPALS);
+					.getProperty(WikiEvent.PROPERTY_PRINCIPALS);
 
 			// Set the login/user principals and login status
 			m_loginPrincipal = m_userPrincipal = AuthenticationManager.getLoginPrincipal(eventPrincipals);
@@ -329,10 +329,10 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 			subjectPrincipals.add(GroupPrincipal.ANONYMOUS);
 		}
 			break;
-		case WikiLoginEventTopic.TOPIC_LOGIN_ASSERTED: {
+		case LoginEvent.Topic.ASSERTED: {
 			@SuppressWarnings("unchecked")
 			Collection<Principal> eventPrincipals = (Collection<Principal>) event
-					.getProperty(WikiEventTopic.PROPERTY_PRINCIPALS);
+					.getProperty(WikiEvent.PROPERTY_PRINCIPALS);
 
 			// Set the login/user principals and login status
 			m_loginPrincipal = m_userPrincipal = AuthenticationManager.getLoginPrincipal(eventPrincipals);
@@ -346,10 +346,10 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 			subjectPrincipals.add(GroupPrincipal.ASSERTED);
 		}
 			break;
-		case WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED: {
+		case LoginEvent.Topic.AUTHENTICATED: {
 			@SuppressWarnings("unchecked")
 			Collection<Principal> eventPrincipals = (Collection<Principal>) event
-					.getProperty(WikiEventTopic.PROPERTY_PRINCIPALS);
+					.getProperty(WikiEvent.PROPERTY_PRINCIPALS);
 
 			// Set the login/user principals and login status
 			m_loginPrincipal = m_userPrincipal = AuthenticationManager.getLoginPrincipal(eventPrincipals);
@@ -367,17 +367,17 @@ public final class WikiSessionImpl implements WikiSession, EventHandler {
 			injectGroupPrincipals(); // Inject group principals
 		}
 			break;
-		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_SAVE: {
+		case SecurityEvent.Topic.PROFILE_SAVE: {
 			injectUserProfilePrincipals(); // Add principals for the user profile
 			injectGroupPrincipals(); // Inject group principals
 		}
 			break;
-		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED: {
+		case SecurityEvent.Topic.PROFILE_NAME_CHANGED: {
             // Refresh user principals based on new user profile
             if( this.isAuthenticated()) {
                 // To prepare for refresh, set the new full name as the primary principal
 				UserProfile[] profiles = (UserProfile[]) event
-						.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+						.getProperty(SecurityEvent.PROPERTY_PROFILES);
                 UserProfile newProfile = profiles[ 1 ];
                 if( newProfile.getFullname() == null ) {
                     throw new IllegalStateException( "User profile FullName cannot be null." );

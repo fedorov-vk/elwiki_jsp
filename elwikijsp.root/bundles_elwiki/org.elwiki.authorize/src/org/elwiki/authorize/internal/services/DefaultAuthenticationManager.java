@@ -52,8 +52,8 @@ import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.WebAuthorizer;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiLoginEventTopic;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.LoginEvent;
 import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.AccountRegistryLoginModule;
@@ -303,9 +303,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 			// If the container logged the user in successfully,
 			// tell the Session (and add all of the Principals)
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.AUTHENTICATED, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 
 				// Add all appropriate Authorizer roles
 				injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), request);
@@ -319,9 +319,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 			// Execute the cookie assertion login module
 			final Set<Principal> principals = this.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ASSERTED, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.ASSERTED, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -330,9 +330,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		if (session.isAnonymous()) {
 			final Set<Principal> principals = this.doJAASLogin(AnonymousLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ANONYMOUS, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.ANONYMOUS, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -364,8 +364,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		if (principals.size() > 0) {
 			String httpSessionId = (request != null) ? request.getSession().getId() : "";
 			eventAdmin.sendEvent(
-					new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED, Map.of(WikiEventTopic.PROPERTY_KEY_TARGET,
-							httpSessionId, WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+					new Event(LoginEvent.Topic.AUTHENTICATED, Map.of(WikiEvent.PROPERTY_KEY_TARGET,
+							httpSessionId, WikiEvent.PROPERTY_PRINCIPALS, principals)));
 
 			// Add all appropriate Authorizer roles
 			injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), null);
@@ -412,8 +412,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 		HttpSession httpSession = request.getSession();
 		String httpSessionId = (httpSession != null) ? httpSession.getId() : null;
-		eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGOUT, Map.of( //
-				WikiEventTopic.PROPERTY_KEY_TARGET, httpSessionId)));
+		eventAdmin.sendEvent(new Event(LoginEvent.Topic.LOGOUT, Map.of( //
+				WikiEvent.PROPERTY_KEY_TARGET, httpSessionId)));
 
 		// We need to flush the HTTP session too
 		if (httpSession != null) {
@@ -511,9 +511,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		}
 		if (request != null) {
 			String wikiSessionId = request.getSession().getId();
-			eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_PRINCIPALS_ADD, Map.of( //
-					WikiEventTopic.PROPERTY_KEY_TARGET, wikiSessionId, //
-					WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+			eventAdmin.sendEvent(new Event(LoginEvent.Topic.PRINCIPALS_ADD, Map.of( //
+					WikiEvent.PROPERTY_KEY_TARGET, wikiSessionId, //
+					WikiEvent.PROPERTY_PRINCIPALS, principals)));
 		}
 	}
 

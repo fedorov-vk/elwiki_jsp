@@ -40,7 +40,7 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.BackgroundThreads",
 	service = { BackgroundThreads.class, WikiComponent.class, EventHandler.class },
 	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		//EventConstants.EVENT_TOPIC + "=" + EngineEvent.Topic.SHUTDOWN,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on

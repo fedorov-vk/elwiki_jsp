@@ -61,8 +61,8 @@ import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEngineEventTopic;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.EngineEvent;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
@@ -137,8 +137,8 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultReferenceManager",
 	service = { ReferenceManager.class, WikiComponent.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETED,
+		EventConstants.EVENT_TOPIC + "=" + EngineEvent.Topic.ALL,
+		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.DELETED,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -948,15 +948,15 @@ public class DefaultReferenceManager extends BasePageFilter implements Reference
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO:
+		case EngineEvent.Topic.INIT_STAGE_TWO:
 			try {
 				initializeStageTwo();
 			} catch (WikiException e) {
 				log.error("Failed initialization of references for DefaultReferenceManager.", e);
 			}
 			break;
-		case WikiPageEventTopic.TOPIC_PAGE_DELETED:
-			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+		case PageEvent.Topic.DELETED:
+			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
             if( pageId != null ) {
                 pageRemoved( pageId );
             }

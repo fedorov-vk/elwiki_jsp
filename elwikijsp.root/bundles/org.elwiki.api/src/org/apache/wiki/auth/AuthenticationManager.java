@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.component.IModulePreferences;
-import org.elwiki.api.event.WikiLoginEventTopic;
+import org.elwiki.api.event.LoginEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
@@ -93,7 +93,7 @@ public interface AuthenticationManager extends IModulePreferences {
 	 * authenticated. To be considered "authenticated," the request must supply one of the following (in
 	 * order of preference): the container <code>userPrincipal</code>, container
 	 * <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method
-	 * fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_AUTHENTICATED} with two parameters: a
+	 * fires event {@link LoginEvent.Topic.AUTHENTICATED} with two parameters: a
 	 * Principals representing the login principal, and the ID of current Session. In addition, if the
 	 * authorizer is of type WebContainerAuthorizer, this method iterates through the container roles
 	 * returned by {@link WebContainerAuthorizer#getGroups()}, tests for membership in each one, and
@@ -101,10 +101,10 @@ public interface AuthenticationManager extends IModulePreferences {
 	 * <li>If, after checking for authentication, the Session is still Anonymous, this method next
 	 * checks to see if the user has "asserted" an identity by supplying an assertion cookie. If the
 	 * user is found to be asserted, this method fires event
-	 * {@link WikiLoginEventTopic#TOPIC_LOGIN_ASSERTED} with two parameters:
+	 * {@link LoginEvent.Topic.ASSERTED} with two parameters:
 	 * <code>WikiPrincipal(<em>cookievalue</em>)</code>, and the ID of current Session.</li>
 	 * <li>If, after checking for authenticated and asserted status, the Session is <em>still</em>
-	 * anonymous, this method fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_ANONYMOUS} with two
+	 * anonymous, this method fires event {@link LoginEvent.Topic.ANONYMOUS} with two
 	 * parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>, and the ID of current
 	 * Session</li>
 	 * </ul>

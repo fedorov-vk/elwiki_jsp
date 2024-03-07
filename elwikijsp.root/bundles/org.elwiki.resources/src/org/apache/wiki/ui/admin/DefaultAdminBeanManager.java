@@ -47,7 +47,7 @@ import org.apache.wiki.ui.admin0.AdminBean;
 import org.apache.wiki.ui.admin0.AdminBeanManager;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEngineEventTopic;
+import org.elwiki.api.event.EngineEvent;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
@@ -65,7 +65,7 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultAdminBeanManager",
 	service = { AdminBeanManager.class, WikiComponent.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
+		EventConstants.EVENT_TOPIC + "=" + EngineEvent.Topic.ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -257,14 +257,14 @@ public class DefaultAdminBeanManager implements AdminBeanManager, WikiComponent,
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO:
+		case EngineEvent.Topic.INIT_STAGE_TWO:
 			try {
 				initializeStageTwo();
 			} catch (WikiException e) {
 				log.error("Failed initialization of references for DefaultAdminBeanManager.", e);
 			}
 			break;
-		case WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN: {
+		case EngineEvent.Topic.SHUTDOWN: {
 			for (final AdminBean m_allBean : m_allBeans) {
 				try {
 					final ObjectName on = getObjectName(m_allBean);

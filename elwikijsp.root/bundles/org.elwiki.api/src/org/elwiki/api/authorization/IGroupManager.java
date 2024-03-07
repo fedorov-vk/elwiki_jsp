@@ -155,7 +155,7 @@ public interface IGroupManager {
 	 * Removes a named Group from the group database. If not found, throws a
 	 * <code>NoSuchPrincipalException</code>. After removal, this method will commit the delete to the
 	 * back-end group database. It will also fire a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_REMOVE} event with the
+	 * {@link SecurityEvent.Topic.GROUP_REMOVE} event with the
 	 * GroupManager instance as the source and the Group as target. If <code>index</code> is
 	 * <code>null</code>, this method throws an {@link IllegalArgumentException}.
 	 * 
@@ -174,12 +174,12 @@ public interface IGroupManager {
 	 * This method fires the following events:
 	 * <ul>
 	 * <li><strong>When creating a new Group</strong>, this method fires a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_ADD} with the GroupManager
+	 * {@link SecurityEvent.Topic.GROUP_ADD} with the GroupManager
 	 * instance as its source and the new Group as the target.</li>
 	 * <li><strong>When overwriting an existing Group</strong>, this method fires a new
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_REMOVE} with this GroupManager
+	 * {@link SecurityEvent.Topic.GROUP_REMOVE} with this GroupManager
 	 * instance as the source, and the new Group as the target. It then fires a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_ADD} event with the same source
+	 * {@link SecurityEvent.Topic.GROUP_ADD} event with the same source
 	 * and target.</li>
 	 * </ul>
 	 * <p>

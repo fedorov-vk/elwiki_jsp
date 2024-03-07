@@ -52,7 +52,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.event.WorkflowEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.osgi.service.component.annotations.Component;
@@ -74,7 +74,7 @@ import org.osgi.service.event.EventHandler;
 	service = { WorkflowManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON,
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiWorkflowEventTopic.TOPIC_WORKFLOW_ALL
+		EventConstants.EVENT_TOPIC + "=" + WorkflowEvent.Topic.ALL
 	})
 //@formatter:on
 public class DefaultWorkflowManager implements WorkflowManager, WikiComponent, EventHandler {
@@ -361,37 +361,37 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiComponent, E
     }
 
 	/**
-	 * Listens for {@link WikiWorkflowEventTopic} objects emitted by Workflows. In particular, this
-	 * method listens for {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_CREATED},
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_ABORTED},
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_COMPLETED} and
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_DQ_REMOVAL} events. If a workflow is created, it is
+	 * Listens for {@link WorkflowEvent} objects emitted by Workflows. In particular, this
+	 * method listens for {@link WorkflowEvent.Topic.CREATED},
+	 * {@link WorkflowEvent.Topic.ABORTED},
+	 * {@link WorkflowEvent.Topic.COMPLETED} and
+	 * {@link WorkflowEvent.Topic.DQ_REMOVAL} events. If a workflow is created, it is
 	 * automatically added to the cache. If one is aborted or completed, it is automatically removed. If
 	 * a removal from decision queue is issued, the current step from workflow, which is assumed to be a
 	 * {@link Decision}, is removed from the {@link DecisionQueue}.
 	 */
 	@Override
 	public void handleEvent(Event event) {
-		Workflow workflow = (Workflow) event.getProperty(WikiWorkflowEventTopic.PROPERTY_WORKFLOW);
-		Decision decision = (Decision) event.getProperty(WikiWorkflowEventTopic.PROPERTY_DECISION);
+		Workflow workflow = (Workflow) event.getProperty(WorkflowEvent.PROPERTY_WORKFLOW);
+		Decision decision = (Decision) event.getProperty(WorkflowEvent.PROPERTY_DECISION);
 
 		String topic = event.getTopic();
 		switch (topic) {
 		// Remove from manager
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_ABORTED:
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_COMPLETED:
+		case WorkflowEvent.Topic.ABORTED:
+		case WorkflowEvent.Topic.COMPLETED:
 			remove(workflow);
 			break;
 		// Add to manager
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED:
+		case WorkflowEvent.Topic.CREATED:
 			add(workflow);
 			break;
 		// Add to DecisionQueue
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_ADDITION:
+		case WorkflowEvent.Topic.DQ_ADDITION:
 			addToDecisionQueue(decision);
 			break;
 		// Remove from DecisionQueue
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL:
+		case WorkflowEvent.Topic.DQ_REMOVAL:
 			removeFromDecisionQueue(decision);
 			break;
 		}

@@ -45,7 +45,7 @@ import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.XmlUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
 import org.osgi.service.component.annotations.Component;
@@ -279,15 +279,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPreTranslateFiltering( final WikiContext context, String pageData ) throws FilterException {
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_TRANSLATE_BEGIN,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.PRE_TRANSLATE_BEGIN,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         for( final PageFilter f : m_pageFilters ) {
             pageData = f.preTranslate( context, pageData );
         }
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_TRANSLATE_END,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.PRE_TRANSLATE_END,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         return pageData;
     }
@@ -303,15 +303,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPostTranslateFiltering( final WikiContext context, String htmlData ) throws FilterException {
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_TRANSLATE_BEGIN,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.POST_TRANSLATE_BEGIN,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         for( final PageFilter f : m_pageFilters ) {
             htmlData = f.postTranslate( context, htmlData );
         }
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_TRANSLATE_END,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.POST_TRANSLATE_END,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         return htmlData;
     }
@@ -327,15 +327,15 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public String doPreSaveFiltering( final WikiContext context, String pageData ) throws FilterException {
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_SAVE_BEGIN,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.PRE_SAVE_BEGIN,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         for( final PageFilter f : m_pageFilters ) {
             pageData = f.preSave( context, pageData );
         }
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_SAVE_END,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.PRE_SAVE_END,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         return pageData;
     }
@@ -349,16 +349,16 @@ public class DefaultFilterManager extends BaseModuleManager implements FilterMan
      */
     @Override
     public void doPostSaveFiltering( final WikiContext context, final String pageData ) throws WikiException {
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.POST_SAVE_BEGIN,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
 
         for( final PageFilter f : m_pageFilters ) {
             // log.info("POSTSAVE: "+f.toString() );
             f.postSave( context, pageData );
         }
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_END,
-				Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, context)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.POST_SAVE_END,
+				Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, context)));
     }
 
     /**

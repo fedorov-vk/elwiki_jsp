@@ -1,13 +1,14 @@
 package org.elwiki.api.event;
 
-public interface WikiEventTopic {
+/* NOTE: For identifiers, the "Et" prefix is an acronym of "EVENT TOPIC". */
+public interface WikiEvent {
 
-	String TOPIC_BASE_ELWIKI = "org/elwiki/events";
+	interface Topic {
+		String DOMAIN = "org/elwiki/events";
 
-	/** All ElWiki events. */
-	String TOPIC_ALL = TOPIC_BASE_ELWIKI + "/*";
-	
-	/* ====================================================================== */
+		/** All ElWiki events. */
+		String ALL = DOMAIN + "/*";
+	}
 
 	/**
 	 * Indicates the HttpSession identifier, for identification of the corresponding wiki-session for

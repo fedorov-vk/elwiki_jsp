@@ -50,7 +50,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.WikiPage;
@@ -80,7 +80,7 @@ import net.sf.ehcache.Element;
 	name = "elwiki.DefaultRenderingManager",
 	service = { RenderingManager.class, WikiComponent.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN,
+		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.POST_SAVE_BEGIN,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -450,10 +450,10 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiPageEventTopic.TOPIC_PAGE_POST_SAVE_BEGIN:
+		case PageEvent.Topic.POST_SAVE_BEGIN:
 			if (m_useCache) {
 				/* Flushes the document cache in response to a POST_SAVE_BEGIN event. */
-				WikiContext context = (WikiContext) event.getProperty(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT);
+				WikiContext context = (WikiContext) event.getProperty(PageEvent.PROPERTY_WIKI_CONTEXT);
 				WikiPage wikiPage = context.getPage();
 				if (m_documentCache != null) {
 					final String pageName = wikiPage.getName();

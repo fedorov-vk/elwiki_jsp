@@ -54,7 +54,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -74,8 +74,8 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultSearchManager",
 	service = { SearchManager.class, WikiComponent.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_REINDEX,
+		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.DELETE_REQUEST,
+		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.REINDEX,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -320,8 +320,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST: {
-			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+		case PageEvent.Topic.DELETE_REQUEST: {
+			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 			try {
 				WikiPage p;
 				p = this.pageManager.getPageById(pageId);
@@ -333,8 +333,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 			}
 			break;
 		}
-		case WikiPageEventTopic.TOPIC_PAGE_REINDEX:{
-			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+		case PageEvent.Topic.REINDEX:{
+			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 			try {
 				WikiPage p = this.pageManager.getPageById(pageId);
 				if (p != null) {

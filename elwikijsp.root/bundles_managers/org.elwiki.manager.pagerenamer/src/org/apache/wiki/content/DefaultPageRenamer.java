@@ -40,7 +40,7 @@ import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -185,9 +185,9 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 			// :FVK: Engine.getSearchManager().reindexPage( att );
 		}
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_RENAMED,
-				Map.of(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME, renameFrom,
-						WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME, renameToClean)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.RENAMED,
+				Map.of(PageEvent.PROPERTY_OLD_PAGE_NAME, renameFrom,
+						PageEvent.PROPERTY_NEW_PAGE_NAME, renameToClean)));
 		
 		// Done, return the new name.
 		return renameToClean;

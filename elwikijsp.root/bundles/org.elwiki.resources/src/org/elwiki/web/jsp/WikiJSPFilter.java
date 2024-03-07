@@ -48,7 +48,7 @@ import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.component.IWikiPreferencesConstants;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -92,7 +92,7 @@ import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
-@Deprecated//:FVK: --!!!-- он шлет Event TOPIC_PAGE_REQUESTED 
+@Deprecated//:FVK: --!!!-- он шлет PageEvent.Topic.REQUESTED 
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
@@ -132,8 +132,8 @@ public class WikiJSPFilter extends WikiServletFilter {
 
             // fire PAGE_REQUESTED event
             final String pagename = URLConstructor.parsePageFromURL( ( HttpServletRequest )request, Charset.forName( response.getCharacterEncoding() ) );
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REQUESTED,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
+    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.REQUESTED,
+    				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
             super.doFilter( request, responseWrapper, chain );
 
             // The response is now complete. Lets replace the markers now.
@@ -160,8 +160,8 @@ public class WikiJSPFilter extends WikiServletFilter {
                 }
 
                 // fire PAGE_DELIVERED event
-        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELIVERED,
-        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
+        		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELIVERED,
+        				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
             } finally {
                 w.exitState();
             }

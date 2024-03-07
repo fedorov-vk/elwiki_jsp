@@ -29,7 +29,7 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
-import org.elwiki.api.event.WikiEngineEventTopic;
+import org.elwiki.api.event.EngineEvent;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.rss.IFeed;
@@ -71,7 +71,7 @@ import org.osgi.service.event.EventHandler;
 	name = "elwiki.DefaultRssGenerator",
 	service = { RssGenerator.class, WikiComponent.class, EventHandler.class  },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiEngineEventTopic.TOPIC_ENGINE_ALL,
+		EventConstants.EVENT_TOPIC + "=" + EngineEvent.Topic.ALL,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -470,7 +470,7 @@ public class DefaultRssGenerator implements RssGenerator, WikiComponent, EventHa
 		String topic = event.getTopic();
 		switch (topic) {
 		// Initialize.
-		case WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO:
+		case EngineEvent.Topic.INIT_STAGE_TWO:
 			try {
 				initializeStageTwo();
 			} catch (WikiException e) {

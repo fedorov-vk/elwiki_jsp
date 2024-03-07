@@ -61,10 +61,10 @@ public interface AccountManager extends IGroupManager {
 	 * </p>
 	 * <p>
 	 * When the user's profile is saved successfully, this method fires a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_SAVE} event with the Session as the source and
+	 * {@link SecurityEvent.Topic.PROFILE_SAVE} event with the Session as the source and
 	 * the UserProfile as target. For existing profiles, if the user's full name changes, this method
 	 * also fires a "name changed" event
-	 * ({@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_NAME_CHANGED}) with the Session as the source
+	 * ({@link SecurityEvent.Topic.PROFILE_NAME_CHANGED}) with the Session as the source
 	 * and an array containing the old and new UserProfiles, respectively. The <code>NAME_CHANGED</code>
 	 * event allows the GroupManager and PageManager can change group memberships and ACLs if needed.
 	 * </p>

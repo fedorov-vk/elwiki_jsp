@@ -38,8 +38,8 @@ import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.data.authorize.PrincipalComparator;
 import org.osgi.service.component.ComponentFactory;
 import org.osgi.service.component.annotations.Component;
@@ -235,8 +235,8 @@ public final class SessionMonitor implements ISessionMonitor, WikiComponent, Htt
 		this.remove(session);
 		log.debug("Removed Http Session: " + session.getId());
 		if (storedSession != null) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_SESSION_EXPIRED,
-					Map.of(WikiSecurityEventTopic.PROPERTY_SESSION, storedSession)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.SESSION_EXPIRED,
+					Map.of(SecurityEvent.PROPERTY_SESSION, storedSession)));
 		}
 	}
 
@@ -268,7 +268,7 @@ public final class SessionMonitor implements ISessionMonitor, WikiComponent, Htt
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
 		if (sessionId != null) {
 			properties.put(EventConstants.EVENT_FILTER,
-					"(" + WikiEventTopic.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
+					"(" + WikiEvent.PROPERTY_KEY_TARGET + "=" + sessionId + ")");
 		}
 
 		WikiSession wikiSession = (WikiSession) this.factoryWikiSession.newInstance(properties).getInstance();

@@ -41,7 +41,7 @@ import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.IWikiPreferencesConstants;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEngineEventTopic;
+import org.elwiki.api.event.EngineEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
@@ -282,7 +282,7 @@ public class WikiEngine implements Engine {
 		isUtf8Encoding = StandardCharsets.UTF_8.name()
 				.equalsIgnoreCase(globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class));
 
-		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
+		eventAdmin.sendEvent(new Event(EngineEvent.Topic.INIT_STAGE_ONE, Collections.emptyMap()));
 
 		Set<Object> components = new HashSet<>(this.components.values());
 		for (Object componentInstance : components) {
@@ -296,7 +296,7 @@ public class WikiEngine implements Engine {
 		}
 
 		log.debug("◄►initialization◄► STAGE TWO.");
-		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO, Collections.emptyMap()));
+		eventAdmin.sendEvent(new Event(EngineEvent.Topic.INIT_STAGE_TWO, Collections.emptyMap()));
 
 		//
 		// Initialize the important modules. Any exception thrown by the managers means that we will not

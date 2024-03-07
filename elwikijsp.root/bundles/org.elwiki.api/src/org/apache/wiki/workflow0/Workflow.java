@@ -20,7 +20,7 @@ package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.event.WorkflowEvent;
 import org.osgi.service.event.Event;
 
 import java.io.Serializable;
@@ -256,8 +256,8 @@ public class Workflow implements Serializable {
 		m_started = false;
 		m_state = WfState.CREATED;
 
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.CREATED,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 	}
 
 	/**
@@ -280,15 +280,15 @@ public class Workflow implements Serializable {
 
 		if (m_currentStep != null) {
 			if (m_currentStep instanceof AbstractDecision) {
-				ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
-						Map.of(WikiWorkflowEventTopic.PROPERTY_STEP, m_currentStep)));
+				ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_REMOVAL,
+						Map.of(WorkflowEvent.PROPERTY_STEP, m_currentStep)));
 			}
 			m_currentStep.setOutcome(Outcome.STEP_ABORT);
 			m_history.addLast(m_currentStep);
 		}
 		m_state = WfState.ABORTED;
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_ABORTED,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.ABORTED,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 
 		cleanup();
 	}
@@ -511,12 +511,12 @@ public class Workflow implements Serializable {
 		if (m_state != WfState.WAITING) {
 			throw new IllegalStateException("Workflow is not paused; cannot restart.");
 		}
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_STARTED,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.STARTED,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 
 		m_state = WfState.RUNNING;
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_RUNNING,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.RUNNING,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 
 		// Process current step
 		try {
@@ -576,13 +576,13 @@ public class Workflow implements Serializable {
 		if (m_started) {
 			throw new IllegalStateException("Workflow has already started.");
 		}
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_STARTED,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.STARTED,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 		m_started = true;
 		m_state = WfState.RUNNING;
 
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_RUNNING,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.RUNNING,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 
 		// Mark the first step as the current one & add to history
 		m_currentStep = m_firstStep;
@@ -607,8 +607,8 @@ public class Workflow implements Serializable {
 			throw new IllegalStateException("Workflow is not running; cannot pause.");
 		}
 		m_state = WfState.WAITING;
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_WAITING,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.WAITING,
+				Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 	}
 
 	/**
@@ -627,8 +627,8 @@ public class Workflow implements Serializable {
 	protected final synchronized void complete() {
 		if (!isCompleted()) {
 			m_state = WfState.COMPLETED;
-			ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_COMPLETED,
-					Map.of(WikiWorkflowEventTopic.PROPERTY_WORKFLOW, this)));
+			ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.COMPLETED,
+					Map.of(WorkflowEvent.PROPERTY_WORKFLOW, this)));
 
 			cleanup();
 		}

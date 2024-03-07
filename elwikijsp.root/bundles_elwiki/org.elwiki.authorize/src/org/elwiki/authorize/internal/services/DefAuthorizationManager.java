@@ -68,9 +68,9 @@ import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiLoginEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.LoginEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.Aprincipal;
@@ -146,7 +146,7 @@ import org.osgi.service.useradmin.Group;
 	name = "elwiki.DefaultAuthorizationManager",
 	service = {AuthorizationManager.class, WikiComponent.class, EventHandler.class},
 	//property = {
-		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + LoginEvent.Topic.ALL)
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -332,9 +332,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 		// A slight sanity check.
 		//
 		if (session == null || permission == null) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, null, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+					SecurityEvent.PROPERTY_USER, null, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 
@@ -345,9 +345,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 				null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -355,17 +355,17 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 		// granted by policy, return false.
 		boolean hasPolicyPermission = checkStaticPermission(session, permission);
 		if (!hasPolicyPermission) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 
 		// If this isn't a PagePermission, it's allowed
 		if (!(permission instanceof PagePermission)) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -375,9 +375,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 		String pageName = ((PagePermission) permission).getPage();
 		WikiPage page = pageManager.getPage(pageName);
 		if (page == null || page.getPageAcl().size() == 0) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -394,16 +394,16 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiCompon
 
 		for (Principal aclPrincipal : aclPrincipals) {
 			if (hasRoleOrPrincipal(session, aclPrincipal)) {
-				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-						WikiSecurityEventTopic.PROPERTY_USER, user, //
-						WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+				eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+						SecurityEvent.PROPERTY_USER, user, //
+						SecurityEvent.PROPERTY_PERMISSION, permission)));
 				return true;
 			}
 		}
 
-		eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-				WikiSecurityEventTopic.PROPERTY_USER, user, //
-				WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+		eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+				SecurityEvent.PROPERTY_USER, user, //
+				SecurityEvent.PROPERTY_PERMISSION, permission)));
 		return false;
 	}
 

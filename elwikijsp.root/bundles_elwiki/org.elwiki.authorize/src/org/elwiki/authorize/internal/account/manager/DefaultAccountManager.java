@@ -62,8 +62,8 @@ import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.IGroupManager;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.configuration.ScopedPreferenceStore;
 import org.elwiki.data.authorize.GroupPrincipal;
@@ -394,9 +394,9 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 			// Alert all listeners that the profile changed...
 			// ...this will cause credentials to be reloaded in the wiki session
 			String sesionId = sessionMonitor.getSessionId(session);
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_SAVE, Map.of( //
-					WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
-					WikiSecurityEventTopic.PROPERTY_PROFILE, profile)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.PROFILE_SAVE, Map.of( //
+					WikiEvent.PROPERTY_KEY_TARGET, sesionId, //
+					SecurityEvent.PROPERTY_PROFILE, profile)));
 		} else { // For existing accounts, just save the profile
 			// If login name changed, rename it first
 			if (nameChanged && oldProfile != null && !oldProfile.getLoginName().equals(profile.getLoginName())) {
@@ -410,15 +410,15 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 				// Fire an event if the login name or full name changed
 				final UserProfile[] profiles = new UserProfile[] { oldProfile, profile };
 				String sesionId = sessionMonitor.getSessionId(session);
-				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
-						WikiSecurityEventTopic.PROPERTY_PROFILES, profiles)));
+				eventAdmin.sendEvent(new Event(SecurityEvent.Topic.PROFILE_NAME_CHANGED, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, sesionId, //
+						SecurityEvent.PROPERTY_PROFILES, profiles)));
 			} else {
 				// Fire an event that says we have new a new profile (new principals)
 				String sesionId = sessionMonitor.getSessionId(session);
-				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_SAVE, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, sesionId, //
-						WikiSecurityEventTopic.PROPERTY_PROFILE, profile)));
+				eventAdmin.sendEvent(new Event(SecurityEvent.Topic.PROFILE_SAVE, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, sesionId, //
+						SecurityEvent.PROPERTY_PROFILE, profile)));
 			}
 		}
 	}
@@ -886,7 +886,7 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	// -- implementation GroupManager ----------------------------------(end)--
 
 	/**
-	 * Listens for {@link WikiSecurityEventTopic#TOPIC_SECUR_PROFILE_NAME_CHANGED}
+	 * Listens for {@link SecurityEvent.Topic.PROFILE_NAME_CHANGED}
 	 * events. If a user profile's name changes, each group is inspected. If an
 	 * entry contains a name that has changed, it is replaced with the new one. No
 	 * group events are emitted as a consequence of this method, because the group
@@ -899,8 +899,8 @@ public final class DefaultAccountManager extends UserSupport implements AccountM
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED: {
-			UserProfile[] profiles = (UserProfile[]) event.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+		case SecurityEvent.Topic.PROFILE_NAME_CHANGED: {
+			UserProfile[] profiles = (UserProfile[]) event.getProperty(SecurityEvent.PROPERTY_PROFILES);
 			Principal[] oldPrincipals = new Principal[] { //
 					new WikiPrincipal(profiles[0].getLoginName()), //
 					new WikiPrincipal(profiles[0].getFullname()), //

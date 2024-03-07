@@ -71,8 +71,8 @@ import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
-import org.elwiki.api.event.WikiPageEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.event.PageEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
@@ -352,8 +352,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
             final WikiPage p = m_provider.getPageInfo( pageName, version );
 
           //:FVK:this.referenceManager.updateReferences( p );
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REINDEX,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, p.getId())));
+    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.REINDEX,
+    				Map.of(PageEvent.PROPERTY_PAGE_ID, p.getId())));
             text = m_provider.getPageText( pageName, version );
         }
 
@@ -506,8 +506,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
 		}
 
         // how - prior to or after actual lock?
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_LOCK,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, page.getId())));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.LOCK,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, page.getId())));
         PageLock lock = m_pageLocks.get( page.getName() );
 
         if( lock == null ) {
@@ -539,8 +539,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
         m_pageLocks.remove( lock.getPageId() );
         log.debug( "Unlocked page " + lock.getPageId() );
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_UNLOCK,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, lock.getPageId())));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.UNLOCK,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, lock.getPageId())));
     }
 
     /**
@@ -795,8 +795,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
                 }*/
                 deletePage( p );
                 
-        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
-        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
+        		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETED,
+        				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
             }
         }
     }
@@ -808,8 +808,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
     @Override
 	public void deletePage(final WikiPage page) throws ProviderException {
         String pageId = page.getId();
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETE_REQUEST,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
 
 		List<String> attachmentPlace = new ArrayList<>();
 		for (PageAttachment att : page.getAttachments()) {
@@ -820,8 +820,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
 
 		if (m_provider.deletePage(page.getName())) {
 			attachmentManager.releaseAttachmentStore(attachmentPlace);
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
+    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETED,
+    				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
 		}
 	}
 
@@ -982,7 +982,7 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
 	}
 
 	/**
-     * Listens for {@link WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED}
+     * Listens for {@link SecurityEvent.Topic.PROFILE_NAME_CHANGED}
      * events. If a user profile's name changes, each page ACL is inspected. If an entry contains
      * a name that has changed, it is replaced with the new one. No events are emitted
      * as a consequence of this method, because the page contents are still the same; it is
@@ -992,8 +992,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED:
-			UserProfile[] profiles = (UserProfile[])event.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+		case SecurityEvent.Topic.PROFILE_NAME_CHANGED:
+			UserProfile[] profiles = (UserProfile[])event.getProperty(SecurityEvent.PROPERTY_PROFILES);
 			Principal[] oldPrincipals = new Principal[] { //
 					new WikiPrincipal(profiles[0].getLoginName()), //
 					new WikiPrincipal(profiles[0].getFullname()), //
