@@ -33,7 +33,6 @@ import org.elwiki_data.PageContent;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.exceptions.RepositoryModifiedException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
@@ -58,7 +57,6 @@ import org.eclipse.emf.ecore.EClass;
 //import org.elwiki.api.WikiProvider;
 //import org.elwiki.api.acl.AclManager;
 //import org.elwiki.api.exceptions.ProviderException;
-//import org.elwiki.api.exceptions.RepositoryModifiedException;
 //import org.elwiki.api.exceptions.WikiSecurityException;
 //import org.elwiki.api.log.DbCoreLog;
 //import org.elwiki.api.pageprovider.IWikiPageProvider;
@@ -522,7 +520,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	/*:FVK:*/static boolean flag = true;
 
 	//:FVK: @Override
-	public WikiPage getPageByName(String pageName) throws RepositoryModifiedException {
+	public WikiPage getPageByName(String pageName) throws ProviderException {
 		/*:FVK:*/
 		/*if (flag) {
 			List<String> exists = new ArrayList();
@@ -647,7 +645,7 @@ public class CdoWikiPageProvider implements PageProvider {
 	 * -- Устарело?
 	 */
 	@Deprecated
-	public WikiPage _getPage(String pageName1, int version) throws RepositoryModifiedException {
+	public WikiPage _getPage(String pageName1, int version) throws ProviderException {
 		if (pageName1 == null) {
 			return null;
 		}

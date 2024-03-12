@@ -21,7 +21,6 @@ package org.apache.wiki.render;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
-import java.util.Collection;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
@@ -35,7 +34,6 @@ import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
@@ -132,9 +130,6 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
 	private PageManager pageManager;
 
 	@WikiServiceReference
-	private ReferenceManager referenceManager;
-
-	@WikiServiceReference
 	private VariableManager variableManager;
 
     /**
@@ -223,12 +218,12 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
     @Override
     // FIXME: The cache management policy is not very good: deleted/changed pages should be detected better.
     public WikiDocument getRenderedDocument( final WikiContext context, final String pagedata ) {
-        final String pageid = context.getRealPage().getName() + VERSION_DELIMITER +
+        final String cacheKey = context.getRealPage().getId() + VERSION_DELIMITER +
                               //:FVK: context.getRealPage().getVersion() + VERSION_DELIMITER +
                               context.getVariable( WikiContext.VAR_EXECUTE_PLUGINS );
 
         if( useCache( context ) ) {
-            final Element element = m_documentCache.get( pageid );
+            final Element element = m_documentCache.get( cacheKey );
             if ( element != null ) {
                 final WikiDocument doc = ( WikiDocument )element.getObjectValue();
 
@@ -237,12 +232,12 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
                 //  FIXME: Figure out a faster method
                 if( pagedata.equals( doc.getPageData() ) ) {
                     if( log.isDebugEnabled() ) {
-                        log.debug( "Using cached HTML for page " + pageid );
+                        log.debug( "Using cached HTML for page " + cacheKey );
                     }
                     return doc;
                 }
             } else if( log.isDebugEnabled() ) {
-                log.debug( "Re-rendering and storing " + pageid );
+                log.debug( "Re-rendering and storing " + cacheKey );
             }
         }
 
@@ -252,7 +247,7 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
             final WikiDocument doc = parser.parse();
             doc.setPageData( pagedata );
             if( useCache( context ) ) {
-                m_documentCache.put( new Element( pageid, doc ) );
+                m_documentCache.put( new Element( cacheKey, doc ) );
             }
             return doc;
         } catch( final IOException ex ) {
@@ -456,27 +451,11 @@ public class DefaultRenderingManager implements RenderingManager, WikiComponent,
 				WikiContext context = (WikiContext) event.getProperty(PageEvent.PROPERTY_WIKI_CONTEXT);
 				WikiPage wikiPage = context.getPage();
 				if (m_documentCache != null) {
-					final String pageName = wikiPage.getName();
-					m_documentCache.remove(pageName);
-					final Collection<String> referringPages = this.referenceManager.findReferrers(pageName);
-					//
-					//  Flush also those pages that refer to this page (if an nonexistent page
-					//  appears, we need to flush the HTML that refers to the now-existent page)
-					//
-					if (referringPages != null) {
-						for (final String page : referringPages) {
-							if (log.isDebugEnabled()) {
-								log.debug("Flushing latest version of " + page);
-							}
-							// as there is a new version of the page expire both plugin and pluginless versions of the old page
-							m_documentCache.remove(page + VERSION_DELIMITER + PageProvider.LATEST_VERSION
-									+ VERSION_DELIMITER + Boolean.FALSE);
-							m_documentCache.remove(page + VERSION_DELIMITER + PageProvider.LATEST_VERSION
-									+ VERSION_DELIMITER + Boolean.TRUE);
-							m_documentCache.remove(
-									page + VERSION_DELIMITER + PageProvider.LATEST_VERSION + VERSION_DELIMITER + null);
-						}
-					}
+					String cacheKey = wikiPage.getId();
+					// :FVK: + VERSION_DELIMITER + context.getRealPage().getVersion()
+					context.getVariable(WikiContext.VAR_EXECUTE_PLUGINS);
+					m_documentCache.remove(cacheKey + VERSION_DELIMITER + Boolean.FALSE);
+					m_documentCache.remove(cacheKey + VERSION_DELIMITER + Boolean.TRUE);
 				}
 			}
 			break;

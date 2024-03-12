@@ -157,12 +157,12 @@
       <plugin id="org.elwiki.manager.page" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.pagerenamer" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.plugins" autoStart="true" startLevel="3" />
-      <plugin id="org.elwiki.manager.referencemanager" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.renderer" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.search" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.variables" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.wikiscope" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.workflow" autoStart="true" startLevel="3" />
+      <plugin id="org.elwiki.part.id2name" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.plugin.bugreporthandler" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.plugins.main" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.provider.page.cdo" autoStart="true" startLevel="3" />

@@ -26,7 +26,6 @@ import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;

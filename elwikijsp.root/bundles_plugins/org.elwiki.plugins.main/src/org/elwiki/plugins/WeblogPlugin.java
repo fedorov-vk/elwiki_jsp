@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,12 +43,12 @@ import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.part.Id2NameMapper;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.ParserStagePlugin;
 import org.elwiki.api.plugin.PluginElement;
@@ -144,7 +143,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 
 	private PageManager pageManager;
 
-	private ReferenceManager referenceManager;
+	private Id2NameMapper id2NameMapper;
 
 	private RenderingManager renderingManager;
 
@@ -186,7 +185,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 		this.authorizationManager = engine.getManager(AuthorizationManager.class);
 		this.pageManager = engine.getManager(PageManager.class);
 		this.renderingManager = engine.getManager(RenderingManager.class);
-		this.referenceManager = engine.getManager(ReferenceManager.class);
+		this.id2NameMapper = engine.getManager(Id2NameMapper.class);
 	}
 
 	/**
@@ -437,7 +436,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 	 * @return a list of pages with their FIRST revisions.
 	 */
 	protected List<WikiPage> findBlogEntries(String baseName, Date start, Date end) {
-		Set<String> allPages = this.referenceManager.findCreated();
+		String[] allPages = this.id2NameMapper.getAllPagesNames();
 		ArrayList<WikiPage> result = new ArrayList<>();
 
 		baseName = makeEntryPage(baseName);

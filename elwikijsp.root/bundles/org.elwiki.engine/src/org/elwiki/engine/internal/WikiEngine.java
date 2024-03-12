@@ -2,7 +2,6 @@ package org.elwiki.engine.internal;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -29,7 +28,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.ui.CommandResolver;
@@ -378,7 +376,8 @@ public class WikiEngine implements Engine {
 
 			// Hook the different manager routines into the system.
 			FilterManager filterManager = this.getManager(FilterManager.class);
-			filterManager.addPageFilter(this.getManager(ReferenceManager.class), -1001);
+			//:FVK: -- оставлено для примера:
+			//filterManager.addPageFilter(this.getManager(ReferenceManager.class), -1001);
 			filterManager.addPageFilter(this.getManager(SearchManager.class), -1002);
 		} catch (final RuntimeException e) {
 			// RuntimeExceptions may occur here, even if they shouldn't.

@@ -38,7 +38,6 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.PageProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.eclipse.core.runtime.IPath;
@@ -113,9 +112,6 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiComponen
 
 	@WikiServiceReference
 	private PageManager pageManager;
-
-	@WikiServiceReference
-	private ReferenceManager referenceManager;
 
 	@Activate
 	protected void startup(BundleContext bundleContext) {
@@ -362,8 +358,6 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiComponen
         }
 
         m_provider.deleteAttachment( att );
-     // :FVK: Engine.getSearchManager().pageRemoved( att );
-        this.referenceManager.clearPageEntries( att.getPageAttachment().getName() );
     }
 
     /** {@inheritDoc} */

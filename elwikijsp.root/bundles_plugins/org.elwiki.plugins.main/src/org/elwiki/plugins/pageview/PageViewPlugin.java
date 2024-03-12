@@ -49,7 +49,6 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.BackgroundThreads;
@@ -100,9 +99,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 
 	/** Name of the 'min' parameter. */
 	private static final String PARAM_MIN_COUNT = "min";
-
-	/** Name of the 'refer' parameter. */
-	private static final String PARAM_REFER = "refer";
 
 	/** Name of the 'sort' parameter. */
 	private static final String PARAM_SORT = "sort";
@@ -311,10 +307,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		 * @throws PluginException Malformed pattern parameter.
 		 */
 		public String execute(WikiContext context, Map<String, String> params) throws PluginException {
-			Engine engine = context.getEngine();
-			RenderingManager renderingManager = engine.getManager(RenderingManager.class);
-			ReferenceManager referenceManager = engine.getManager(ReferenceManager.class);
-
 			WikiPage page = context.getPage();
 			String result = STR_EMPTY;
 
@@ -330,7 +322,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 				String body = params.get(PluginManager.PARAM_BODY);
 				Pattern[] exclude = compileGlobs(PARAM_EXCLUDE, params.get(PARAM_EXCLUDE));
 				Pattern[] include = compileGlobs(PARAM_INCLUDE, params.get(PARAM_INCLUDE));
-				Pattern[] refer = compileGlobs(PARAM_REFER, params.get(PARAM_REFER));
 				PatternMatcher matcher = new Perl5Matcher(); //:FVK: = (null != exclude || null != include || null != refer) ? new Perl5Matcher() : null;
 				boolean increment = false;
 
@@ -344,29 +335,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 				// default increment counter?
 				if ((show == null || STR_NONE.equals(show)) && count == null) {
 					increment = true;
-				}
-
-				// filter on referring pages?
-				Collection<String> referrers = null;
-
-				if (refer != null) {
-					ReferenceManager refManager = referenceManager;
-					for (String name : refManager.findCreated()) {
-						boolean use = false;
-						for (int n = 0; !use && n < refer.length; n++) {
-							use = matcher.matches(name, refer[n]);
-						}
-
-						if (use) {
-							Collection<String> refs = referenceManager.findReferrers(name);
-							if (refs != null && !refs.isEmpty()) {
-								if (referrers == null) {
-									referrers = new HashSet<>();
-								}
-								referrers.addAll(refs);
-							}
-						}
-					}
 				}
 
 				synchronized (this) {
@@ -438,11 +406,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 							// check minimum/maximum count
 							int value = entry.getValue().getValue();
 							boolean use = min <= value && value <= max;
-
-							// did we specify a refer-to page?
-							if (use && referrers != null) {
-								use = referrers.contains(name);
-							}
 
 							// did we specify what pages to include?
 							if (use && include != null) {

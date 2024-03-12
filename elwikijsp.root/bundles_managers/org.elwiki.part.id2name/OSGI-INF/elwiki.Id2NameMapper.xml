@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="elwiki.Id2NameMapper">
+   <service scope="singleton">
+      <provide interface="org.elwiki.api.part.Id2NameMapper"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
+   </service>
+   <implementation class="org.elwiki.part.id2name.internal.services.Id2NameMapperImpl"/>
+</scr:component>

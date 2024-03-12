@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Id to page name mapper
+Bundle-SymbolicName: org.elwiki.part.id2name;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.elwiki.api,
+ org.eclipse.osgi.services
+Service-Component: OSGI-INF/elwiki.Id2NameMapper.xml
+Bundle-Vendor: FVK
+Automatic-Module-Name: org.elwiki.part.id2name
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17

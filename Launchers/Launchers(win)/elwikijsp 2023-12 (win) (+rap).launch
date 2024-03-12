@@ -177,12 +177,12 @@
         <setEntry value="org.elwiki.manager.page@3:default"/>
         <setEntry value="org.elwiki.manager.pagerenamer@3:default"/>
         <setEntry value="org.elwiki.manager.plugins@3:default"/>
-        <setEntry value="org.elwiki.manager.referencemanager@3:default"/>
         <setEntry value="org.elwiki.manager.renderer@3:default"/>
         <setEntry value="org.elwiki.manager.search@3:default"/>
         <setEntry value="org.elwiki.manager.variables@3:default"/>
         <setEntry value="org.elwiki.manager.wikiscope@3:default"/>
         <setEntry value="org.elwiki.manager.workflow@3:default"/>
+        <setEntry value="org.elwiki.part.id2name@3:default"/>
         <setEntry value="org.elwiki.plugin.bugreporthandler@3:default"/>
         <setEntry value="org.elwiki.plugins.main@default:default"/>
         <setEntry value="org.elwiki.preferences.ui@default:default"/>

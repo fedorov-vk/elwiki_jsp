@@ -69,7 +69,7 @@ public interface PageManager extends IModulePreferences {
 
     /**
      * Returns all pages in some random order.  If you need just the page names,
-     * please see {@link org.apache.wiki.references.ReferenceManager#findCreated() ReferenceManager#findCreated()}, which is probably a lot
+     * please see {@link Id2NameMapper#getAllPagesNames()}, which is probably a lot
      * faster.  This method may cause repository access.
      *
      * @return A Collection of WikiPage objects.

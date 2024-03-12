@@ -47,7 +47,6 @@ import org.apache.wiki.api.exceptions.RepositoryModifiedException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.UserProfile;
 import org.apache.wiki.pages0.PageLock;
@@ -153,9 +152,6 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
 
 	@WikiServiceReference
 	private Engine m_engine;
-
-	@WikiServiceReference
-	private ReferenceManager referenceManager;
 
 	@WikiServiceReference
 	private TasksManager tasksManager;
@@ -342,20 +338,7 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
         }
         String text;
 
-        try {
-            text = m_provider.getPageText( pageName, version );
-        } catch ( final RepositoryModifiedException e ) {
-            //  This only occurs with the latest version.
-            log.info( "Repository has been modified externally while fetching page " + pageName );
-
-            //  Empty the references and yay, it shall be recalculated
-            final WikiPage p = m_provider.getPageInfo( pageName, version );
-
-          //:FVK:this.referenceManager.updateReferences( p );
-    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.REINDEX,
-    				Map.of(PageEvent.PROPERTY_PAGE_ID, p.getId())));
-            text = m_provider.getPageText( pageName, version );
-        }
+		text = m_provider.getPageText(pageName, version);
 
         return text;
     }
@@ -602,20 +585,8 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
             throw new ProviderException( "Illegal page name '" + pageName + "'" );
         }
 
-        WikiPage page;
-
-        try {
-            page = m_provider.getPageInfo( pageName, version );
-        } catch( final RepositoryModifiedException e ) {
-            //  This only occurs with the latest version.
-            log.info( "Repository has been modified externally while fetching info for " + pageName );
-            page = m_provider.getPageInfo( pageName, version );
-            if( page != null ) {
-            	//:FVK:this.referenceManager.updateReferences( page );
-            } else {
-            	this.referenceManager.pageRemoved( Wiki.contents().page( pageName ) );
-            }
-        }
+		WikiPage page;
+		page = m_provider.getPageInfo(pageName, version);
 
         return page;
     }
@@ -768,33 +739,12 @@ public class DefaultPageManager implements PageManager, WikiComponent, EventHand
      * {@inheritDoc}
      * @see org.apache.wiki.pages0.PageManager#deletePage(java.lang.String)
      */
-    @Override
+    @Override // @Deprecated, и опасно удалять по имени. (повторение имени - не верный выбор страницы)
     public void deletePage( final String pageName ) throws ProviderException {
         final WikiPage p = getPage( pageName );
-        String pageId = p.getId();
 
         if( p != null ) {
-        	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
-            if( p instanceof PageAttachment ) {
-                Engine.getAttachmentManager().deleteAttachment( ( PageAttachment )p );
-            } else*/ 
-            {
-                final Collection< String > refTo = this.referenceManager.findRefersTo( pageName );
-                // May return null, if the page does not exist or has not been indexed yet.
-
-                /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                if( Engine.getAttachmentManager().hasAttachments( p ) ) {
-                    final List< PageAttachment > attachments = Engine.getAttachmentManager().listAttachments( p );
-                    for( final PageAttachment attachment : attachments ) {
-                        if( refTo != null ) {
-                            refTo.remove( attachment.getName() );
-                        }
-
-                        Engine.getAttachmentManager().deleteAttachment( attachment );
-                    }
-                }*/
-                deletePage( p );
-            }
+            deletePage( p );
         }
     }
 

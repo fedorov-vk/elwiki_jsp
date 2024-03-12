@@ -20,7 +20,6 @@ package org.elwiki.plugins;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.plugins.internal.AbstractReferralPlugin;
 import org.elwiki_data.UnknownPage;
@@ -31,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Plugin for displaying pages that are not linked to in other pages. Uses the ReferenceManager.
+ * Plugin for displaying pages that are not linked to in other pages. Uses the Id2NameMapper.
  * <p>
  * Parameters (from AbstractReferralPlugin):
  * <ul>

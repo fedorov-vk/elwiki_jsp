@@ -43,7 +43,6 @@ import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
@@ -55,6 +54,7 @@ import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.PageEvent;
+import org.elwiki.api.part.Id2NameMapper;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -75,7 +75,6 @@ import org.osgi.service.event.EventHandler;
 	service = { SearchManager.class, WikiComponent.class, EventHandler.class },
 	property = {
 		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.DELETE_REQUEST,
-		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.REINDEX,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
@@ -105,7 +104,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	private BackgroundThreads backgroundThreads;
 
 	@WikiServiceReference
-	private ReferenceManager referenceManager;
+	private Id2NameMapper id2NameMapper;
 
 	@WikiServiceReference
 	private WikiAjaxDispatcher wikiAjaxDispatcher;
@@ -203,19 +202,18 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
                     wikiName = wikiName.substring( 0, pos );
                 }
 
-                final String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
-                final String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
-                final Set< String > allPages = DefaultSearchManager.this.referenceManager.findCreated();
+                String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
+                String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
+                String[] allPagesNames = DefaultSearchManager.this.id2NameMapper.getAllPagesNames();
 
-                int counter = 0;
-                for( final Iterator< String > i = allPages.iterator(); i.hasNext() && counter < maxLength; ) {
-                    final String p = i.next();
-                    final String pp = p.toLowerCase();
-                    if( pp.startsWith( cleanWikiName) || pp.startsWith( oldStyleName ) ) {
-                        list.add( p );
-                        counter++;
-                    }
-                }
+				for (int counter = 0; counter < allPagesNames.length && counter < maxLength; counter++) {
+					final String p = allPagesNames[counter];
+					final String pp = p.toLowerCase();
+					if (pp.startsWith(cleanWikiName) || pp.startsWith(oldStyleName)) {
+						list.add(p);
+						counter++;
+					}
+				}
             }
 
             sw.stop();
@@ -333,6 +331,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 			}
 			break;
 		}
+		/* TODO: :FVK: - реализовать прослушивание сохранения страницы, и переиндексацию lucene.
 		case PageEvent.Topic.REINDEX:{
 			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 			try {
@@ -345,6 +344,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 			}
 			break;
 		}
+		*/
 		}
 	}
 

@@ -36,7 +36,6 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.auth.AuthorizationManager;
-import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.HttpUtil;
@@ -120,12 +119,6 @@ import org.elwiki.api.plugin.WikiPlugin;
  * "var" instead of "page".
  * </p>
  * 
- * <p>
- * Another caveat is that the plugin body content is not counted towards ReferenceManager links. So
- * any links do not appear on any reference lists. Depending on your position, this may be a good or
- * a bad thing.
- * </p>
- *
  * <h3>Calling Externally (this feature - was eliminated)</h3>
  *
  * <p>

@@ -28,7 +28,7 @@
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.apache.wiki.api.references.ReferenceManager" %>
+<%@ page import="org.elwiki.api.part.Id2NameMapper" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
 <%!
@@ -44,7 +44,7 @@
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.PAGE_RSS.getRequestContext() );
     if( !WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response ) ) return;
     
-    Set< String > allPages = WikiEngine.getReferenceManager().findCreated();
+    Set< String > allPages = WikiEngine.getId2NameMapper().getPagesNames();
     
     response.setContentType("text/plain; charset=UTF-8");
     for( String pageName : allPages ) {

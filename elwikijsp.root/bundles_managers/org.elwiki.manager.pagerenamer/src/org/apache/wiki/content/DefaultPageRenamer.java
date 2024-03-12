@@ -32,7 +32,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.pages0.PageManager;
@@ -82,9 +81,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 
 	@WikiServiceReference
 	private AttachmentManager attachmentManager;
-
-	@WikiServiceReference
-	private ReferenceManager referenceManager;
 
 	@WikiServiceReference
 	private SearchManager searchManager;
@@ -137,15 +133,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 
 		final Set<String> referrers = getReferencesToChange(fromPage, engine);
 
-		// Do the actual rename by changing from the frompage to the topage, including all of the
-		// attachments
-		// Remove references to attachments under old name
-		final List<PageAttachment> attachmentsOldName = attachmentManager.listAttachments(fromPage);
-		for (final PageAttachment att : attachmentsOldName) {
-			final WikiPage fromAttPage = pageManager.getPage(att.getName());
-			referenceManager.pageRemoved(fromAttPage);
-		}
-
 		pageManager.getProvider().movePage(renameFrom, renameToClean);
 		if (attachmentManager.attachmentsEnabled()) {
 			attachmentManager.getCurrentProvider().moveAttachmentsForPage(renameFrom, renameToClean);
@@ -164,10 +151,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 		pageManager.putPageText(toPage, pageManager.getPureText(toPage, context.getPageVersion()), "author",
 				"changenote"); // FIXME: здесь надо не текст, а просто имя поменть.
 
-		// Update the references
-		referenceManager.pageRemoved(fromPage);
-		//:FVK:referenceManager.updateReferences(toPage);
-
 		// Update referrers
 		if (changeReferrers) {
 			updateReferrers(context, fromPage, toPage, referrers);
@@ -181,7 +164,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 		for (final PageAttachment att : attachmentsNewName) {
 			final WikiPage toAttPage = pageManager.getPage(att.getName());
 			// add reference to attachment under new page name
-			//:FVK: referenceManager.updateReferences(toAttPage);
 			// :FVK: Engine.getSearchManager().reindexPage( att );
 		}
 
@@ -237,18 +219,18 @@ public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHand
 
 	private Set<String> getReferencesToChange(final WikiPage fromPage, final Engine engine) {
 		final Set<String> referrers = new TreeSet<>();
-		final Collection<String> r = referenceManager.findReferrers(fromPage.getName());
+		/*final Collection<String> r = reference Manager.findReferrers(fromPage.getName());
 		if (r != null) {
 			referrers.addAll(r);
-		}
+		}*/
 
 		try {
 			final List<PageAttachment> attachments = attachmentManager.listAttachments(fromPage);
 			for (final PageAttachment att : attachments) {
-				final Collection<String> c = referenceManager.findReferrers(att.getName());
+				/*final Collection<String> c = reference Manager.findReferrers(att.getName());
 				if (c != null) {
 					referrers.addAll(c);
-				}
+				}*/
 			}
 		} catch (final ProviderException e) {
 			// We will continue despite this error
