@@ -48,7 +48,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
-import org.elwiki.api.part.Id2NameMapper;
+import org.elwiki.api.part.Id2NamePage;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.ParserStagePlugin;
 import org.elwiki.api.plugin.PluginElement;
@@ -143,7 +143,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 
 	private PageManager pageManager;
 
-	private Id2NameMapper id2NameMapper;
+	private Id2NamePage id2NamePage;
 
 	private RenderingManager renderingManager;
 
@@ -185,7 +185,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 		this.authorizationManager = engine.getManager(AuthorizationManager.class);
 		this.pageManager = engine.getManager(PageManager.class);
 		this.renderingManager = engine.getManager(RenderingManager.class);
-		this.id2NameMapper = engine.getManager(Id2NameMapper.class);
+		this.id2NamePage = engine.getManager(Id2NamePage.class);
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class WeblogPlugin implements WikiPlugin, ParserStagePlugin, Initializabl
 	 * @return a list of pages with their FIRST revisions.
 	 */
 	protected List<WikiPage> findBlogEntries(String baseName, Date start, Date end) {
-		String[] allPages = this.id2NameMapper.getAllPagesNames();
+		String[] allPages = this.id2NamePage.getAllPageNames();
 		ArrayList<WikiPage> result = new ArrayList<>();
 
 		baseName = makeEntryPage(baseName);

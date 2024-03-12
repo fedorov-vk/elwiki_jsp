@@ -278,6 +278,4 @@ public interface Engine {
 	 */
 	String decodeName(String pagerequest) throws IOException;
     
-	WikiPage getPageById(String pageId) throws ProviderException;
-
 }

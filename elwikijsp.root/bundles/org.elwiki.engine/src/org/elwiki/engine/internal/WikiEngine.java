@@ -512,15 +512,6 @@ public class WikiEngine implements Engine {
 		return this.wikiConfiguration;
 	}
 
-	@Deprecated
-	@Override
-	public WikiPage getPageById(String pageId) throws ProviderException {
-		WikiPage wikiPage;
-		PageManager pageManager = this.getManager(PageManager.class);
-		wikiPage = pageManager.getPageById(pageId);
-
-		return wikiPage;
-	}
 	////////////////////////////////////////////////////////////////////////////
 	/// ? новое для ElWiki :FVK: /// static методы и др.
 

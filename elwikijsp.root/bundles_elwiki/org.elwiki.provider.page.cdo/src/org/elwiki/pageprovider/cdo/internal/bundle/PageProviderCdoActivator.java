@@ -71,8 +71,7 @@ public class PageProviderCdoActivator implements BundleActivator {
 	public static IStorageCdo getStorageCdo() {
 		if(storageCdo == null) {
 			storageCdo = getService(IStorageCdo.class);
-
-			if (!storageCdo.isStorageActive()) { //:FVK:? WORKAROUND.
+			if (!storageCdo.isStorageActive()) {
 				try {
 					storageCdo.activateStorage();
 				} catch (Exception e) {

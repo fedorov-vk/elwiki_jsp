@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,13 +47,11 @@ import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.search.lucene.LuceneSearchProvider;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.event.PageEvent;
-import org.elwiki.api.part.Id2NameMapper;
+import org.elwiki.api.part.Id2NamePage;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -104,7 +101,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	private BackgroundThreads backgroundThreads;
 
 	@WikiServiceReference
-	private Id2NameMapper id2NameMapper;
+	private Id2NamePage id2NamePage;
 
 	@WikiServiceReference
 	private WikiAjaxDispatcher wikiAjaxDispatcher;
@@ -204,7 +201,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 
                 String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
                 String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
-                String[] allPagesNames = DefaultSearchManager.this.id2NameMapper.getAllPagesNames();
+                String[] allPagesNames = DefaultSearchManager.this.id2NamePage.getAllPageNames();
 
 				for (int counter = 0; counter < allPagesNames.length && counter < maxLength; counter++) {
 					final String p = allPagesNames[counter];

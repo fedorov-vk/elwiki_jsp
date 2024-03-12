@@ -962,94 +962,97 @@ public class JSPWikiMarkupParser extends MarkupParser {
             return m_currentElement;
         }
 
-        try {
-            final LinkParser.Link link = m_linkParser.parse( linkText );
-            linkText = link.getText();
-            String linkRef = link.getReference();
+		try {
+			final LinkParser.Link link = m_linkParser.parse(linkText);
+			linkText = link.getText();
+			String linkRef = link.getReference();
 
-            //
-            //  Yes, we now have the components separated.
-            //  linktext = the text the link should have
-            //  linkref  = the url or @pageID, name of page attachment.
-            //
-            //  In many cases these are the same.  [linktext|linkref].
-            //
-            if( m_linkParsingOperations.isVariableLink( linkText ) ) {
-                final Content el = new VariableContent( linkText );
+			//
+			// Yes, we now have the components separated.
+			// linktext = the text the link should have
+			// linkref = the url or @pageID, name of page attachment.
+			//
+			// In many cases these are the same. [linktext|linkref].
+			//
+			if (m_linkParsingOperations.isVariableLink(linkText)) {
+				final Content el = new VariableContent(linkText);
 
-                addElement( el );
-            } else if( m_linkParsingOperations.isExternalLink( linkRef ) ) {
-                // It's an external link, out of this Wiki
+				addElement(el);
+			} else if (m_linkParsingOperations.isExternalLink(linkRef)) {
+				// It's an external link, out of this Wiki
 
-            	collectLink( m_externalLinkCollectors, linkRef );
+				collectLink(m_externalLinkCollectors, linkRef);
 
-                if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
-                    handleImageLink( linkRef, linkText, link.hasReference() );
-                } else {
-                    makeLink( LinkType.EXTERNAL, linkRef, linkText, null, link.getAttributes() );
-                    addElement( outlinkImage() );
-                }
-            } else if( link.isInterwikiLink() ) {
-                // It's an interwiki link; InterWiki links also get added to external link chain after the links have been resolved.
+				if (m_linkParsingOperations.isImageLink(linkRef, isImageInlining(), getInlineImagePatterns())) {
+					handleImageLink(linkRef, linkText, link.hasReference());
+				} else {
+					makeLink(LinkType.EXTERNAL, linkRef, linkText, null, link.getAttributes());
+					addElement(outlinkImage());
+				}
+			} else if (link.isInterwikiLink()) {
+				// It's an interwiki link; InterWiki links also get added to external link chain after the links
+				// have been resolved.
 
-                // FIXME: There is an interesting issue here:  We probably should
-                //        URLEncode the wikiPage, but we can't since some of the
-                //        Wikis use slashes (/), which won't survive URLEncoding.
-                //        Besides, we don't know which character set the other Wiki
-                //        is using, so you'll have to write the entire name as it appears
-                //        in the URL.  Bugger.
+				// FIXME: There is an interesting issue here: We probably should
+				// URLEncode the wikiPage, but we can't since some of the
+				// Wikis use slashes (/), which won't survive URLEncoding.
+				// Besides, we don't know which character set the other Wiki
+				// is using, so you'll have to write the entire name as it appears
+				// in the URL. Bugger.
 
-                final String extWiki = link.getExternalWiki();
-                final String wikiPage = link.getExternalWikiPage();
+				final String extWiki = link.getExternalWiki();
+				final String wikiPage = link.getExternalWikiPage();
 
-                if( m_wysiwygEditorMode ) {
-                    makeLink( LinkType.INTERWIKI, extWiki + ":" + wikiPage, linkText, null, link.getAttributes() );
-                } else {
-                    String urlReference = m_engine.getWikiConfiguration().getInterWikiURL( extWiki );
+				if (m_wysiwygEditorMode) {
+					makeLink(LinkType.INTERWIKI, extWiki + ":" + wikiPage, linkText, null, link.getAttributes());
+				} else {
+					String urlReference = m_engine.getWikiConfiguration().getInterWikiURL(extWiki);
 
-                    if( urlReference != null ) {
-                        urlReference = TextUtil.replaceString( urlReference, "%s", wikiPage );
-                        collectLink( m_externalLinkCollectors, urlReference );
+					if (urlReference != null) {
+						urlReference = TextUtil.replaceString(urlReference, "%s", wikiPage);
+						collectLink(m_externalLinkCollectors, urlReference);
 
-                        if( m_linkParsingOperations.isImageLink( urlReference, isImageInlining(), getInlineImagePatterns() ) ) {
-                            handleImageLink( urlReference, linkText, link.hasReference() );
-                        } else {
-                            makeLink( LinkType.INTERWIKI, urlReference, linkText, null, link.getAttributes() );
-                        }
+						if (m_linkParsingOperations.isImageLink(urlReference, isImageInlining(),
+								getInlineImagePatterns())) {
+							handleImageLink(urlReference, linkText, link.hasReference());
+						} else {
+							makeLink(LinkType.INTERWIKI, urlReference, linkText, null, link.getAttributes());
+						}
 
-                        if( m_linkParsingOperations.isExternalLink( urlReference ) ) {
-                            addElement( outlinkImage() );
-                        }
-                    } else {
-                        final Object[] args = { escapeHTMLEntities( extWiki ) };
+						if (m_linkParsingOperations.isExternalLink(urlReference)) {
+							addElement(outlinkImage());
+						}
+					} else {
+						final Object[] args = { escapeHTMLEntities(extWiki) };
 
-                        addElement( makeError( MessageFormat.format( rb.getString( "markupparser.error.nointerwikiref" ), args ) ) );
-                    }
-                }
-            } else if( linkRef.startsWith( "#" ) ) {
-                // It defines a local footnote
-                makeLink( LinkType.LOCAL, linkRef, linkText, null, link.getAttributes() );
-            } else if( TextUtil.isNumber( linkRef ) ) {
-                // It defines a reference to a local footnote
-                makeLink( LinkType.LOCALREF, linkRef, linkText, null, link.getAttributes() );
+						addElement(makeError(
+								MessageFormat.format(rb.getString("markupparser.error.nointerwikiref"), args)));
+					}
+				}
+			} else if (linkRef.startsWith("#")) {
+				// It defines a local footnote
+				makeLink(LinkType.LOCAL, linkRef, linkText, null, link.getAttributes());
+			} else if (TextUtil.isNumber(linkRef)) {
+				// It defines a reference to a local footnote
+				makeLink(LinkType.LOCALREF, linkRef, linkText, null, link.getAttributes());
 			} else if (linkRef.matches("@cmd\\..+")) {
 				// Internal wiki link (by wiki command).
 				// Working up link of ElWiki format.
 
-				//LinkType linkType = LinkType.EMPTY;
+				// LinkType linkType = LinkType.EMPTY;
 
 				String cmdName = linkRef.substring(5); // :FVK: Workaround - length of prefix '@cmd.'
 				String nameWikiContext = ContextEnum.getWikiContextName("cmd." + cmdName);
-				makeLink(LinkType.CMD, nameWikiContext, linkText, null, link.getAttributes());				
+				makeLink(LinkType.CMD, nameWikiContext, linkText, null, link.getAttributes());
 			} else if (linkRef.matches("^\s*?@.+")) {
 				// Internal wiki link (by pageId, which can be unknown).
 				// Working up link of ElWiki format.
 				LinkType linkType = LinkType.EMPTY;
 				String pageId = linkRef.trim().substring(1); // :FVK: Workaround: =1 is length of prefix '@'
-				WikiPage wikiPage = this.m_context.getPageById(pageId);
-				if (wikiPage != null) {
+				String pageName = this.m_context.getPageName(pageId);
+				if (pageName != null) {
 					if (!link.hasReference()) {
-						linkText = wikiPage.getName();
+						linkText = pageName;
 					}
 					linkRef = pageId;
 					linkType = LinkType.READ;
@@ -1063,61 +1066,61 @@ public class JSPWikiMarkupParser extends MarkupParser {
 				}
 				makeLink(linkType, linkRef, linkText, null, link.getAttributes());
 			} else {
-                final int hashMark;
+				final int hashMark;
 
-                // Internal wiki link, but is it an attachment link?
-                String attachment = attachmentManager.getAttachmentName( m_context, linkRef );
-                if( attachment != null ) {
-                	collectLink( m_attachmentLinkCollectors, attachment );
+				// Internal wiki link, but is it an attachment link?
+				String attachment = attachmentManager.getAttachmentName(m_context, linkRef);
+				if (attachment != null) {
+					collectLink(m_attachmentLinkCollectors, attachment);
 
-                    if( m_linkParsingOperations.isImageLink( linkRef, isImageInlining(), getInlineImagePatterns() ) ) {
-                        attachment = m_context.getURL( ContextEnum.ATTACHMENT_DOGET.getRequestContext(), attachment );
-                        attachment += "?pageId=" + m_context.getPageId();
-                        sb.append( handleImageLink( attachment, linkText, link.hasReference() ) );
-                    } else {
-                    	attachment += "?pageId=" + m_context.getPageId();
-                        makeLink( LinkType.ATTACHMENT, attachment, linkText, null, link.getAttributes() );
-                    }
-                } else if( ( hashMark = linkRef.indexOf( '#' ) ) != -1 ) {
-                    // It's an internal Wiki link, but to a named section
+					if (m_linkParsingOperations.isImageLink(linkRef, isImageInlining(), getInlineImagePatterns())) {
+						attachment = m_context.getURL(ContextEnum.ATTACHMENT_DOGET.getRequestContext(), attachment);
+						attachment += "?pageId=" + m_context.getPageId();
+						sb.append(handleImageLink(attachment, linkText, link.hasReference()));
+					} else {
+						attachment += "?pageId=" + m_context.getPageId();
+						makeLink(LinkType.ATTACHMENT, attachment, linkText, null, link.getAttributes());
+					}
+				} else if ((hashMark = linkRef.indexOf('#')) != -1) {
+					// It's an internal Wiki link, but to a named section
 
-                    final String namedSection = linkRef.substring( hashMark + 1 );
-                    linkRef = linkRef.substring( 0, hashMark );
+					final String namedSection = linkRef.substring(hashMark + 1);
+					linkRef = linkRef.substring(0, hashMark);
 
-                    linkRef = MarkupParser.cleanLink( linkRef );
+					linkRef = MarkupParser.cleanLink(linkRef);
 
-                    collectLink( m_localLinkCollectors, linkRef );
+					collectLink(m_localLinkCollectors, linkRef);
 
-                    final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
-                    if( matchedLink != null ) {
-                        String sectref = "section-" + this.m_engine.encodeName( matchedLink + "-" + wikifyLink( namedSection ) );
-                        sectref = sectref.replace( '%', '_' );
-                        makeLink( LinkType.READ, matchedLink, linkText, sectref, link.getAttributes() );
-                    } else {
-                        makeLink( LinkType.CREATE, linkRef, linkText, null, link.getAttributes() );
-                    }
-                } else {
-                    // It's an internal Wiki link
-                    linkRef = MarkupParser.cleanLink( linkRef );
+					final String matchedLink = m_linkParsingOperations.linkIfExists(linkRef);
+					if (matchedLink != null) {
+						String sectref = "section-"
+								+ this.m_engine.encodeName(matchedLink + "-" + wikifyLink(namedSection));
+						sectref = sectref.replace('%', '_');
+						makeLink(LinkType.READ, matchedLink, linkText, sectref, link.getAttributes());
+					} else {
+						makeLink(LinkType.CREATE, linkRef, linkText, null, link.getAttributes());
+					}
+				} else {
+					// It's an internal Wiki link
+					linkRef = MarkupParser.cleanLink(linkRef);
 
-                    collectLink( m_localLinkCollectors, linkRef );
+					collectLink(m_localLinkCollectors, linkRef);
 
-                    final String matchedLink = m_linkParsingOperations.linkIfExists( linkRef );
-                    if( matchedLink != null ) {
-                        makeLink( LinkType.READ, matchedLink, linkText, null, link.getAttributes() );
-                    } else {
-                        makeLink( LinkType.CREATE, linkRef, linkText, null, link.getAttributes() );
-                    }
-                }
-            }
-
-    } catch( final ParseException | ProviderException | IOException e ) {
-        log.info( "Parser failure: ", e );
-        final Object[] args = { e.getMessage() };
-        addElement( makeError( MessageFormat.format( rb.getString( "markupparser.error.parserfailure" ), args ) ) );
-    }
-        return m_currentElement;
-    }
+					final String matchedLink = m_linkParsingOperations.linkIfExists(linkRef);
+					if (matchedLink != null) {
+						makeLink(LinkType.READ, matchedLink, linkText, null, link.getAttributes());
+					} else {
+						makeLink(LinkType.CREATE, linkRef, linkText, null, link.getAttributes());
+					}
+				}
+			}
+		} catch (final ParseException | IOException e) {
+			log.info("Parser failure: ", e);
+			final Object[] args = { e.getMessage() };
+			addElement(makeError(MessageFormat.format(rb.getString("markupparser.error.parserfailure"), args)));
+		}
+		return m_currentElement;
+	}
 
 	/**
      *  Pushes back any string that has been read.  It will obviously

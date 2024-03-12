@@ -51,7 +51,7 @@ public class PluginActivator implements BundleActivator {
 		/*
 		Thread thread = new Thread(() -> {
 			PluginActivator.this.dataStore.doConnect();
-			System.out.println("--- Repository Activated. ---");
+			System.out.println("--- Repository Activated. ---"); //:FVK:
 		});
 		thread.start();
 		*/

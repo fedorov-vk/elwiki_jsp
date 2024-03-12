@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Plugin for displaying pages that are not linked to in other pages. Uses the Id2NameMapper.
+ * Plugin for displaying pages that are not linked to in other pages. Uses the Id2NamePage.
  * <p>
  * Parameters (from AbstractReferralPlugin):
  * <ul>

@@ -46,6 +46,7 @@ import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
 import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.part.Id2NamePage;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -296,10 +297,13 @@ public class WikiContextImpl implements WikiContext, Command {
 
 	/** {@inheritDoc} */
 	@Override
-	public WikiPage getPageById(String pageId) throws ProviderException {
-		WikiPage wikiPage = null;
-		wikiPage = this.m_engine.getPageById(pageId);
-		return wikiPage;
+	public String getPageName(String pageId) {
+		String pageName = null;
+		Id2NamePage id2NamePage = m_engine.getManager(Id2NamePage.class);
+		if (id2NamePage != null) {
+			pageName = id2NamePage.getName(pageId);
+		}
+		return pageName;
 	}
 
 	/**

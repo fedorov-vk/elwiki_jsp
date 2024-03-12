@@ -304,14 +304,13 @@ public interface WikiContext extends Cloneable, Command {
 	void popRealPage();
 
 	/**
-	 * Returns WikiPage by specified pageId.
+	 * Returns name of WikiPage by specified pageId.
 	 * 
 	 * @param pageId Page identifier for find page.
 	 * 
-	 * @return WikiPage page, paossibly <code>null</code>, if the page is not found for any reason.
-	 * @throws ProviderException TODO
+	 * @return Name of required WikiPage page, paossibly <code>null</code>, if the page is not found for any reason.
 	 */
-	WikiPage getPageById(String pageId) throws ProviderException;
+	String getPageName(String pageId);
 
 	/**
 	 * Returns the wiki configuration.

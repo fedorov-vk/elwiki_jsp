@@ -28,7 +28,7 @@
 <%@ page import="org.elwiki.permissions.*" %>
 <%@ page import="org.apache.wiki.pages0.PageManager" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.elwiki.api.part.Id2NameMapper" %>
+<%@ page import="org.elwiki.api.part.Id2NamePage" %>
 <%@ page import="org.apache.wiki.rss.*" %>
 <%@ page import="org.apache.wiki.util.*" %>
 <%!

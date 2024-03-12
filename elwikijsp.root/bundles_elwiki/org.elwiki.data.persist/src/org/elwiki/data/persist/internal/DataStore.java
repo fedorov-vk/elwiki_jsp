@@ -78,7 +78,11 @@ public class DataStore extends Repository implements IStorageCdo, WikiComponent,
 	/** {@inheritDoc} */
 	@Override
 	public void initialize() throws WikiException {
-		// nothing to do.	
+		try {
+			activateStorage();
+		} catch (Exception e) {
+			log.error("Failed activation of CDO storage.", e);
+		}
 	}
 
 	// -- OSGi service handling ------------------------(end)--
@@ -149,7 +153,7 @@ public class DataStore extends Repository implements IStorageCdo, WikiComponent,
 	public void activateStorage() throws Exception {
 		this.doConnect();
 		isActive = true;
-		System.out.println("--- Repository Activated. ---");
+		System.out.println("--- Repository Activated. ---"); //:FVK:
 	}
 
 	@Override
