@@ -20,7 +20,6 @@ package org.apache.wiki.pages;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.security.Permission;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,13 +29,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.Wiki;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
@@ -50,19 +47,16 @@ import org.apache.wiki.api.exceptions.RepositoryModifiedException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.tasks.TasksManager;
 import org.apache.wiki.auth.UserProfile;
-import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.pages0.PageLock;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.pages0.PageSorter;
 import org.apache.wiki.pages0.PageTimeComparator;
-import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
+import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.DecisionRequiredException;
 import org.apache.wiki.workflow0.Fact;
-import org.apache.wiki.workflow0.Decision;
 import org.apache.wiki.workflow0.IWorkflowBuilder;
 import org.apache.wiki.workflow0.Step;
 import org.apache.wiki.workflow0.Workflow;
@@ -71,14 +65,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.BackgroundThreads.Actor;
 import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.BackgroundThreads.Actor;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiPageEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.PageEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.pagemanager.internal.bundle.PageManagerActivator;
@@ -89,6 +82,8 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -108,10 +103,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultPageManager",
-	service = { PageManager.class, WikiManager.class, EventHandler.class },
+	service = { PageManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageManager implements PageManager, WikiManager, EventHandler {
+public class DefaultPageManager implements PageManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageManager.class);
 
@@ -133,6 +128,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	private PageSorter pageSorter = new PageSorter();
 
+	private BundleContext bundleContext;
+	
 	/**
 	 * Create instance of DefaultPageManager.
 	 */
@@ -150,11 +147,11 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
 
-	@WikiServiceReference
-	private Engine m_engine;
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
-	private ReferenceManager referenceManager;
+	private Engine m_engine;
 
 	@WikiServiceReference
 	private TasksManager tasksManager;
@@ -167,6 +164,11 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	@WikiServiceReference
 	private WorkflowManager workflowManager;
+
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -206,8 +208,9 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 		*/
 
 		try {
-			this.m_provider = getPageProvider("org.elwiki.provider.page.cdo"
-			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/);
+			String requiredId = getPreference(PageManager.Prefs.PAGE_MANAGER, String.class);			
+			this.m_provider = getPageProvider(requiredId);
+			/*TextUtil.getStringProperty(properties, PROP_PAGEPROVIDER, DEFAULT_PAGEPROVIDER)*/
 			m_provider.initialize(m_engine); // :FVK: опционально, там пока нет кода.
 		} catch (WikiException | IOException e) {
 			// TODO Auto-generated catch block
@@ -217,14 +220,27 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 	// -- OSGi service handling ------------------------(end)--
 
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+
+	/**
+	 * Attempts to locate and initialize an PageProvider to use with this manager. Throws a WikiException
+	 * if no entry is found, or if one fails to initialize.
+	 * 
+	 * @param requiredId required PageProvider ID for extension point.
+	 * @return a PageProvider according to required ID.
+	 * @throws WikiException
+	 */
 	private PageProvider getPageProvider(String requiredId) throws WikiException {
-		//
-		// Сканирование расширений провайдеров страниц.
-		//
 		String namespace = PageManagerActivator.PLIGIN_ID;
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
 
+		//
+		// Load an PageProvider from Equinox extension "org.elwiki.manager.page.pageProvider".
+		//
 		Class<? extends PageProvider> clazzPageProvider = null;
 		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_PAGEPROVIDER);
 		if (ep != null) {
@@ -239,9 +255,10 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 						try {
 							clazzPageProvider = clazz.asSubclass(PageProvider.class);
 						} catch (ClassCastException e) {
-							log.fatal("Page provider " + className + " is not extends PageProvider interface.", e);
-							throw new WikiException(
-									"Page provider " + className + " is not extends PageProvider interface.", e);
+							log.fatal("Page provider " + className + " is not extends interface "
+									+ PageProvider.class.getSimpleName(), e);
+							throw new WikiException("Page provider " + className + " is not extends interface "
+									+ PageProvider.class.getSimpleName(), e);
 						}
 					} catch (ClassNotFoundException e) {
 						log.fatal("Page provider " + className + " cannot be found.", e);
@@ -253,9 +270,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 		}
 
 		if (clazzPageProvider == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find a " + PROP_PAGEPROVIDER + " entry in the properties.",
-					PROP_PAGEPROVIDER);
+			throw new NoRequiredPropertyException("Unable to find PageManager with ID=" + requiredId,
+					PageManager.Prefs.PAGE_MANAGER);
 		}
 
 		PageProvider pageProvider = null;
@@ -322,20 +338,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         }
         String text;
 
-        try {
-            text = m_provider.getPageText( pageName, version );
-        } catch ( final RepositoryModifiedException e ) {
-            //  This only occurs with the latest version.
-            log.info( "Repository has been modified externally while fetching page " + pageName );
-
-            //  Empty the references and yay, it shall be recalculated
-            final WikiPage p = m_provider.getPageInfo( pageName, version );
-
-          //:FVK:this.referenceManager.updateReferences( p );
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REINDEX,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, p.getId())));
-            text = m_provider.getPageText( pageName, version );
-        }
+		text = m_provider.getPageText(pageName, version);
 
         return text;
     }
@@ -406,9 +409,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         }
 
         // Check if creation of empty pages is allowed; bail if not
-		boolean allowEmpty = wikiConfiguration.getBooleanProperty(
-				Engine.PROP_ALLOW_CREATION_OF_EMPTY_PAGES,
-				false);
+		boolean allowEmpty = globalPreferences.isAllowCreationOfEmptyPages(); 
 		if (!allowEmpty && !wikiPageExists(page) && text.trim().equals("")) {
 			return;
 		}
@@ -488,8 +489,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 		}
 
         // how - prior to or after actual lock?
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_LOCK,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, page.getId())));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.LOCK,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, page.getId())));
         PageLock lock = m_pageLocks.get( page.getName() );
 
         if( lock == null ) {
@@ -521,8 +522,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
         m_pageLocks.remove( lock.getPageId() );
         log.debug( "Unlocked page " + lock.getPageId() );
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_UNLOCK,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, lock.getPageId())));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.UNLOCK,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, lock.getPageId())));
     }
 
     /**
@@ -584,20 +585,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
             throw new ProviderException( "Illegal page name '" + pageName + "'" );
         }
 
-        WikiPage page;
-
-        try {
-            page = m_provider.getPageInfo( pageName, version );
-        } catch( final RepositoryModifiedException e ) {
-            //  This only occurs with the latest version.
-            log.info( "Repository has been modified externally while fetching info for " + pageName );
-            page = m_provider.getPageInfo( pageName, version );
-            if( page != null ) {
-            	//:FVK:this.referenceManager.updateReferences( page );
-            } else {
-            	this.referenceManager.pageRemoved( Wiki.contents().page( pageName ) );
-            }
-        }
+		WikiPage page;
+		page = m_provider.getPageInfo(pageName, version);
 
         return page;
     }
@@ -750,36 +739,12 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
      * {@inheritDoc}
      * @see org.apache.wiki.pages0.PageManager#deletePage(java.lang.String)
      */
-    @Override
+    @Override // @Deprecated, и опасно удалять по имени. (повторение имени - не верный выбор страницы)
     public void deletePage( final String pageName ) throws ProviderException {
         final WikiPage p = getPage( pageName );
-        String pageId = p.getId();
 
         if( p != null ) {
-        	/*:FVK: моя реализация - не объединяет в один тип присоединения и страницы.
-            if( p instanceof PageAttachment ) {
-                Engine.getAttachmentManager().deleteAttachment( ( PageAttachment )p );
-            } else*/ 
-            {
-                final Collection< String > refTo = this.referenceManager.findRefersTo( pageName );
-                // May return null, if the page does not exist or has not been indexed yet.
-
-                /*:FVK: - это излишне так как AttachmentManager, похоже, надо упразднить.
-                if( Engine.getAttachmentManager().hasAttachments( p ) ) {
-                    final List< PageAttachment > attachments = Engine.getAttachmentManager().listAttachments( p );
-                    for( final PageAttachment attachment : attachments ) {
-                        if( refTo != null ) {
-                            refTo.remove( attachment.getName() );
-                        }
-
-                        Engine.getAttachmentManager().deleteAttachment( attachment );
-                    }
-                }*/
-                deletePage( p );
-                
-        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
-        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
-            }
+            deletePage( p );
         }
     }
 
@@ -790,8 +755,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
     @Override
 	public void deletePage(final WikiPage page) throws ProviderException {
         String pageId = page.getId();
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
-				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETE_REQUEST,
+				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
 
 		List<String> attachmentPlace = new ArrayList<>();
 		for (PageAttachment att : page.getAttachments()) {
@@ -802,8 +767,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 
 		if (m_provider.deletePage(page.getName())) {
 			attachmentManager.releaseAttachmentStore(attachmentPlace);
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELETED,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pageId)));
+    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELETED,
+    				Map.of(PageEvent.PROPERTY_PAGE_ID, pageId)));
 		}
 	}
 
@@ -964,7 +929,7 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	}
 
 	/**
-     * Listens for {@link WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED}
+     * Listens for {@link SecurityEvent.Topic.PROFILE_NAME_CHANGED}
      * events. If a user profile's name changes, each page ACL is inspected. If an entry contains
      * a name that has changed, it is replaced with the new one. No events are emitted
      * as a consequence of this method, because the page contents are still the same; it is
@@ -974,8 +939,8 @@ public class DefaultPageManager implements PageManager, WikiManager, EventHandle
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiSecurityEventTopic.TOPIC_SECUR_PROFILE_NAME_CHANGED:
-			UserProfile[] profiles = (UserProfile[])event.getProperty(WikiSecurityEventTopic.PROPERTY_PROFILES);
+		case SecurityEvent.Topic.PROFILE_NAME_CHANGED:
+			UserProfile[] profiles = (UserProfile[])event.getProperty(SecurityEvent.PROPERTY_PROFILES);
 			Principal[] oldPrincipals = new Principal[] { //
 					new WikiPrincipal(profiles[0].getLoginName()), //
 					new WikiPrincipal(profiles[0].getFullname()), //

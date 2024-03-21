@@ -42,7 +42,7 @@ WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.WIKI
 if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
 Installer installer = new Installer( request, config );
-Session wikiSession = wikiContext.getWikiSession();
+WikiSession wikiSession = wikiContext.getWikiSession();
 
 // Parse the existing properties
 installer.parseProperties();

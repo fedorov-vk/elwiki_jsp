@@ -74,9 +74,8 @@
            <fmt:message key="actions.prefs" />
           </wiki:Link>
         <wiki:Permission permission="createGroups">
-          <wiki:Link context='<%=WikiContext.WIKI_PREFS%>' cssClass="btn btn-default btn-block">
+          <wiki:Link context='<%=WikiContext.WIKI_PREFS%>' ref="section-groups" cssClass="btn btn-default btn-block">
             <wiki:Param name='redirect' value='${redirect}'/>
-            <wiki:Param name='tab' value='groups'/>
             <span class="icon-group"></span> <fmt:message key="actions.groups" />
           </wiki:Link>
         </wiki:Permission>

@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
+import org.apache.wiki.api.IStorageCdo;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.common.util.EList;
-import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.data.persist.internal.PluginActivator;
 import org.elwiki.data.persist.json.converters.AttachmentContentConverter;
 import org.elwiki.data.persist.json.converters.DateConverter;
@@ -31,12 +31,12 @@ import com.google.gson.GsonBuilder;
 public class JsonSerialiser {
 
 	@SuppressWarnings("unused")
-	private IWikiConfiguration wikiConfiguration;
+	private GlobalPreferences globalPreferences;
 	private IPath workPath;
 
-	public JsonSerialiser(IWikiConfiguration wikiConfiguration) {
-		this.wikiConfiguration = wikiConfiguration;
-		this.workPath = wikiConfiguration.getWorkDir();
+	public JsonSerialiser(GlobalPreferences globalPreferences) {
+		this.globalPreferences = globalPreferences;
+		this.workPath = globalPreferences.getWorkDir();
 	}
 
 	public void SaveData() throws IOException {
@@ -54,9 +54,9 @@ public class JsonSerialiser {
 				.registerTypeAdapter(Date.class, new DateConverter())
 				.create(); //@formatter:on
 
-		PagesStore pagesStore = PluginActivator.getDefault().getDataStore().getPagesStore();
-		@SuppressWarnings("unused")
-		EList<WikiPage> pages = pagesStore.getWikipages();
+		IStorageCdo storageCdo = PluginActivator.getDefault().getService(IStorageCdo.class);
+		PagesStore pagesStore = storageCdo.getPagesStore();
+		//EList<WikiPage> pages = pagesStore.getWikipages();
 
 		try (Writer writer = new FileWriter(workPath.append(PersistConstants.FILE_NAME).toFile())) {
 			gson.toJson(pagesStore, PagesStore.class, writer);

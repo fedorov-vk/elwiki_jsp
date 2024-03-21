@@ -908,7 +908,7 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
         if( m_useCaptcha ) {
             try {
 				return ctx.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "Captcha.jsp",
-						"page= " +ctx.getConfiguration().encodeName( ctx.getPage().getName() ) );
+						"page= " +ctx.getEngine().encodeName( ctx.getPage().getName() ) );
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1031,9 +1031,9 @@ public class SpamFilter extends BasePageFilter implements ISpamFilter {
     @Override
 	public final String insertInputFields( final PageContext pageContext ) {
         final WikiContext ctx = ContextUtil.findContext( pageContext );
-        final IWikiConfiguration config = ctx.getConfiguration();
+        final Engine engine = ctx.getEngine();
         final StringBuilder sb = new StringBuilder();
-        if( config.getContentEncodingCs().equals( StandardCharsets.UTF_8 ) ) {
+        if( engine.getContentEncoding().equals( StandardCharsets.UTF_8 ) ) {
             sb.append( "<input name='encodingcheck' type='hidden' value='\u3041' />\n" );
         }
 

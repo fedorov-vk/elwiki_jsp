@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.BackgroundThreads.Actor;
 
 /**
@@ -96,7 +97,8 @@ public final class WatchDog {
             if( c_watcherActor == null ) {
 				BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 				c_watcherActor = new WatchDogActor();
-				String threadName = "WatchDog for '" + m_engine.getWikiConfiguration().getApplicationName() + "'";
+				String threadName = "WatchDog for '" + m_engine.getManager(GlobalPreferences.class).getApplicationName()
+						+ "'";
 				Thread watcherThread = backgroundThreads.createThread(threadName, CHECK_INTERVAL, c_watcherActor);
 				watcherThread.start();
             }
@@ -145,7 +147,8 @@ public final class WatchDog {
                 
 				BackgroundThreads backgroundThreads = (BackgroundThreads) m_engine.getManager(BackgroundThreads.class);
 				c_watcherActor = new WatchDogActor();
-				String threadName = "WatchDog for '" + m_engine.getWikiConfiguration().getApplicationName() + "'";
+				String threadName = "WatchDog for '" + m_engine.getManager(GlobalPreferences.class).getApplicationName()
+						+ "'";
 				Thread watcherThread = backgroundThreads.createThread(threadName, CHECK_INTERVAL, c_watcherActor);
 				watcherThread.start();
             }

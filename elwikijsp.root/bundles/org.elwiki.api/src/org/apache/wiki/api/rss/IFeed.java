@@ -4,6 +4,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.variables.VariableManager;
+import org.elwiki.api.GlobalPreferences;
 
 public interface IFeed {
 
@@ -82,7 +83,7 @@ public interface IFeed {
         }
 
         if (blogname == null) {
-            blogname = engine.getWikiConfiguration().getApplicationName() + ": " + context.getPage().getName();
+            blogname = engine.getManager(GlobalPreferences.class).getApplicationName() + ": " + context.getPage().getName();
         }
 
         return blogname;

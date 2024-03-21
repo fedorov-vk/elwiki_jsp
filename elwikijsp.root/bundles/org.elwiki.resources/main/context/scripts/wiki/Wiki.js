@@ -770,6 +770,23 @@ var Wiki = {
 
     },
 
+    htmlrpc: function(url, params, responseId, loading){
+        var update = document.getElementById(responseId);
+        if (update){ update.innerHTML = loading||'Loading...'; }
+
+        if( this.JsonUrl ){
+            new Request.HTML({
+                url: this.JsonUrl + url,
+                method:'post',  // defaults to 'POST'
+                update: update,
+                onError: function(error){
+                    //console.log(error);
+                    throw new Error("Wiki rpc error: " + error);
+                }
+            }).send( "params=" + params );
+        }
+    },
+
     /*
     Function: jsonrpc
         Generic json-rpc routines to talk to the backend jspwiki-engine.
@@ -790,7 +807,7 @@ var Wiki = {
         });
         (end)
     */
-    jsonrpc: function(method, params, callback){
+    jsonrpc: function(method, params, callback = null){
 
         if( this.JsonUrl ){
             let data = "";
@@ -812,15 +829,13 @@ var Wiki = {
                     'X-Request': 'JSON'
                 },
                 onSuccess: function( responseText ){
-
                     //console.log(responseText, JSON.parse( responseText ), responseText.charCodeAt(8),responseText.codePointAt(8), (encodeURIComponent(responseText)), encodeURIComponent("ä"), encodeURIComponent("Ã")  );
-                    callback(responseText == "" ? "" : JSON.parse(responseText));
+                    if (callback != null) { callback(responseText == "" ? "" : JSON.parse(responseText)); }
                     //callback( responseText );
-
                 },
                 onError: function(error){
                     //console.log(error);
-                    callback( null );
+                    if (callback != null) { callback( null ); }
                     throw new Error("Wiki rpc error: " + error);
                 }
 

@@ -21,7 +21,6 @@
 		<module>org.elwiki.manager.page</module>
 		<module>org.elwiki.manager.pagerenamer</module>
 		<module>org.elwiki.manager.plugins</module>
-		<module>org.elwiki.manager.referencemanager</module>
 		<module>org.elwiki.manager.renderer</module>
 		<module>org.elwiki.manager.search</module>
 		<module>org.elwiki.manager.variables</module>
@@ -29,5 +28,6 @@
 		<module>org.elwiki.manager.workflow</module>
 		<module>org.elwiki.urlconstructor</module>
 		<module>org.elwiki.mail</module>
+		<module>org.elwiki.part.id2name</module>
 	</modules>
 </project>

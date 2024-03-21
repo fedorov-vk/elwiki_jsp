@@ -94,7 +94,7 @@ public class ExternalDiffProvider implements DiffProvider {
             throw new NoRequiredPropertyException( "ExternalDiffProvider missing required property", PROP_DIFFCOMMAND );
         }
 
-        m_encoding = engine.getWikiConfiguration().getContentEncodingCs();
+        m_encoding = engine.getContentEncoding();
     }
 
 

@@ -37,7 +37,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     WikiContext wikiContext = Wiki.context().create( wiki, request, ContextEnum.GROUP_DELETE.getRequestContext() );
     if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
 
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     IGroupManager groupMgr = WikiEngine.getGroupManager();
     String name = request.getParameter( "group" );
 

@@ -28,7 +28,7 @@ import org.apache.wiki.tasks.auth.SaveUserProfileTask;
 import org.apache.wiki.tasks.pages.PreSaveWikiPageTask;
 import org.apache.wiki.tasks.pages.SaveWikiPageTask;
 import org.apache.wiki.workflow0.Step;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 
@@ -38,10 +38,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultTasksManager",
-	service = { TasksManager.class, WikiManager.class },
+	service = { TasksManager.class, WikiComponent.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultTasksManager implements TasksManager, WikiManager {
+public class DefaultTasksManager implements TasksManager, WikiComponent {
 
 	// -- OSGi service handling ----------------------(start)--
 

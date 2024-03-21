@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.ContextUtil;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.auth.AccountRegistry;
@@ -22,6 +22,7 @@ import org.apache.wiki.url0.URLConstructor;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util0.MailUtil;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
 
 public class LostpasswordCmdCode extends CmdCode {
 
@@ -38,7 +39,7 @@ public class LostpasswordCmdCode extends CmdCode {
 
 	    ResourceBundle rb = null; //:FVK: Preferences.getBundle( wikiContext, "CoreResources" );
 
-	    Session wikiSession = wikiContext.getWikiSession();
+	    WikiSession wikiSession = wikiContext.getWikiSession();
 	    String action = httpRequest.getParameter( "action" );
 
 	    boolean done = false;
@@ -77,7 +78,7 @@ public class LostpasswordCmdCode extends CmdCode {
                 profile = accountRegistry.findByEmail( name );
             }
 
-            String applicationName = wiki.getWikiConfiguration().getApplicationName();
+            String applicationName = wiki.getManager(GlobalPreferences.class).getApplicationName();
             String email = profile.getEmail();
             String randomPassword = TextUtil.generateRandomPassword();
 

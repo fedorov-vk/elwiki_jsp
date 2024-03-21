@@ -33,14 +33,13 @@ import javax.servlet.jsp.JspWriter;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.jdt.annotation.NonNull;
-import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -252,8 +251,8 @@ public class CalendarTag extends BaseWikiTag {
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
-		final IWikiConfiguration config = wikiContext.getConfiguration();
-		Session session = wikiContext.getWikiSession();
+		Engine engine = wikiContext.getEngine(); 
+		WikiSession session = wikiContext.getWikiSession();
 		Locale locale = session.getLocale();
 		final JspWriter out = pageContext.getOut();
 		final Calendar cal = Calendar.getInstance(locale);
@@ -289,7 +288,7 @@ public class CalendarTag extends BaseWikiTag {
 
 		out.write("<table class=\"calendar\">\n");
 		final HttpServletRequest httpServletRequest = wikiContext.getHttpRequest();
-		final String queryString = HttpUtil.safeGetQueryString(httpServletRequest, config.getContentEncodingCs());
+		final String queryString = HttpUtil.safeGetQueryString(httpServletRequest, engine.getContentEncoding());
 		//@formatter:off
         out.write("<tr>" +
         		getMonthNaviLink(prevCal, "&lt;&lt;", queryString) +

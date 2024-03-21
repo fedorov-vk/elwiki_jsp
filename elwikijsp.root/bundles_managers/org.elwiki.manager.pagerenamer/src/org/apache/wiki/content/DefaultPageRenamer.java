@@ -32,16 +32,14 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.content0.PageRenamer;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -62,14 +60,12 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultPageRenamer",
-	service = { PageRenamer.class, WikiManager.class, EventHandler.class },
+	service = { PageRenamer.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandler {
+public class DefaultPageRenamer implements PageRenamer, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPageRenamer.class);
-
-	private boolean m_camelCase = false;
 
 	// -- OSGi service handling --------------------( start )--
 
@@ -85,9 +81,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 	@WikiServiceReference
 	private AttachmentManager attachmentManager;
-
-	@WikiServiceReference
-	private ReferenceManager referenceManager;
 
 	@WikiServiceReference
 	private SearchManager searchManager;
@@ -140,15 +133,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 		final Set<String> referrers = getReferencesToChange(fromPage, engine);
 
-		// Do the actual rename by changing from the frompage to the topage, including all of the
-		// attachments
-		// Remove references to attachments under old name
-		final List<PageAttachment> attachmentsOldName = attachmentManager.listAttachments(fromPage);
-		for (final PageAttachment att : attachmentsOldName) {
-			final WikiPage fromAttPage = pageManager.getPage(att.getName());
-			referenceManager.pageRemoved(fromAttPage);
-		}
-
 		pageManager.getProvider().movePage(renameFrom, renameToClean);
 		if (attachmentManager.attachmentsEnabled()) {
 			attachmentManager.getCurrentProvider().moveAttachmentsForPage(renameFrom, renameToClean);
@@ -167,10 +151,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 		pageManager.putPageText(toPage, pageManager.getPureText(toPage, context.getPageVersion()), "author",
 				"changenote"); // FIXME: здесь надо не текст, а просто имя поменть.
 
-		// Update the references
-		referenceManager.pageRemoved(fromPage);
-		//:FVK:referenceManager.updateReferences(toPage);
-
 		// Update referrers
 		if (changeReferrers) {
 			updateReferrers(context, fromPage, toPage, referrers);
@@ -184,13 +164,12 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 		for (final PageAttachment att : attachmentsNewName) {
 			final WikiPage toAttPage = pageManager.getPage(att.getName());
 			// add reference to attachment under new page name
-			//:FVK: referenceManager.updateReferences(toAttPage);
 			// :FVK: Engine.getSearchManager().reindexPage( att );
 		}
 
-		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_RENAMED,
-				Map.of(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME, renameFrom,
-						WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME, renameToClean)));
+		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.RENAMED,
+				Map.of(PageEvent.PROPERTY_OLD_PAGE_NAME, renameFrom,
+						PageEvent.PROPERTY_NEW_PAGE_NAME, renameToClean)));
 		
 		// Done, return the new name.
 		return renameToClean;
@@ -223,11 +202,6 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 			final String sourceText = pageManager.getPureText(p, context.getPageVersion());
 			String newText = replaceReferrerString(context, sourceText, fromPage.getName(), toPage.getName());
 
-			m_camelCase = wikiConfiguration.getBooleanProperty(MarkupParser.PROP_CAMELCASELINKS, m_camelCase);
-			if (m_camelCase) {
-				newText = replaceCCReferrerString(context, newText, fromPage.getName(), toPage.getName());
-			}
-
 			if (!sourceText.equals(newText)) {
 				PageContent content = p.getLastContent();
 				content.setChangeNote(fromPage.getName() + " ==> " + toPage.getName()); // :FVK: workaround - previous change note is removed.
@@ -245,54 +219,24 @@ public class DefaultPageRenamer implements PageRenamer, WikiManager, EventHandle
 
 	private Set<String> getReferencesToChange(final WikiPage fromPage, final Engine engine) {
 		final Set<String> referrers = new TreeSet<>();
-		final Collection<String> r = referenceManager.findReferrers(fromPage.getName());
+		/*final Collection<String> r = reference Manager.findReferrers(fromPage.getName());
 		if (r != null) {
 			referrers.addAll(r);
-		}
+		}*/
 
 		try {
 			final List<PageAttachment> attachments = attachmentManager.listAttachments(fromPage);
 			for (final PageAttachment att : attachments) {
-				final Collection<String> c = referenceManager.findReferrers(att.getName());
+				/*final Collection<String> c = reference Manager.findReferrers(att.getName());
 				if (c != null) {
 					referrers.addAll(c);
-				}
+				}*/
 			}
 		} catch (final ProviderException e) {
 			// We will continue despite this error
 			log.error("Provider error while fetching attachments for rename", e);
 		}
 		return referrers;
-	}
-
-	/**
-	 * Replaces camelcase links.
-	 */
-	private String replaceCCReferrerString(final WikiContext context, final String sourceText, final String from,
-			final String to) {
-		final StringBuilder sb = new StringBuilder(sourceText.length() + 32);
-		final Pattern linkPattern = Pattern.compile("\\p{Lu}+\\p{Ll}+\\p{Lu}+[\\p{L}\\p{Digit}]*");
-		final Matcher matcher = linkPattern.matcher(sourceText);
-		int start = 0;
-
-		while (matcher.find(start)) {
-			final String match = matcher.group();
-			sb.append(sourceText.substring(start, matcher.start()));
-			final int lastOpenBrace = sourceText.lastIndexOf('[', matcher.start());
-			final int lastCloseBrace = sourceText.lastIndexOf(']', matcher.start());
-
-			if (match.equals(from) && lastCloseBrace >= lastOpenBrace) {
-				sb.append(to);
-			} else {
-				sb.append(match);
-			}
-
-			start = matcher.end();
-		}
-
-		sb.append(sourceText.substring(start));
-
-		return sb.toString();
 	}
 
 	private String replaceReferrerString(final WikiContext context, final String sourceText, final String from,

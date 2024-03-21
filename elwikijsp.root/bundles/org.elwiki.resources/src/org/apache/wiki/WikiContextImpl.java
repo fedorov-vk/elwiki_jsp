@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchPrincipalException;
 import org.apache.wiki.api.exceptions.ProviderException;
@@ -44,6 +44,9 @@ import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.ui.Installer;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.part.Id2NamePage;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 import org.elwiki.permissions.AllPermission;
@@ -65,7 +68,7 @@ import org.elwiki_data.WikiPage;
  * please see the Counter plugin.
  * </p>
  * <p>
- * When a WikiContext is created, it automatically associates a {@link WikiSession} object with
+ * When a WikiContext is created, it automatically associates a {@link WikiSessionImpl} object with
  * the user's HttpSession. The WikiSession contains information about the user's authentication
  * status, and is consulted by {@link #getCurrentUser()} object.
  * </p>
@@ -98,8 +101,9 @@ public class WikiContextImpl implements WikiContext, Command {
 	 */
 	protected HttpServletRequest m_request;
 
-	private Session m_session;
+	private WikiSession m_session;
 	final private IWikiConfiguration wikiConfiguration;
+	private @NonNull GlobalPreferences globalPrefs;
 
 	/** The page version in question. (or attachment version) */
 	private int m_version = 0;
@@ -172,6 +176,7 @@ public class WikiContextImpl implements WikiContext, Command {
 			throw new IllegalArgumentException("Parameter engine and command must not be null.");
 		}
 		this.wikiConfiguration = engine.getWikiConfiguration();
+		this.globalPrefs = engine.getManager(GlobalPreferences.class);
 
 		m_engine = engine;
 		m_request = request;
@@ -292,10 +297,13 @@ public class WikiContextImpl implements WikiContext, Command {
 
 	/** {@inheritDoc} */
 	@Override
-	public WikiPage getPageById(String pageId) throws ProviderException {
-		WikiPage wikiPage = null;
-		wikiPage = this.m_engine.getPageById(pageId);
-		return wikiPage;
+	public String getPageName(String pageId) {
+		String pageName = null;
+		Id2NamePage id2NamePage = m_engine.getManager(Id2NamePage.class);
+		if (id2NamePage != null) {
+			pageName = id2NamePage.getName(pageId);
+		}
+		return pageName;
 	}
 
 	/**
@@ -680,13 +688,13 @@ public class WikiContextImpl implements WikiContext, Command {
 	/**
 	 * Returns the Session associated with the context. This method is guaranteed to always return a
 	 * valid Session. If this context was constructed without an associated HttpServletRequest, it
-	 * will return {@link org.apache.wiki.WikiSession#guestSession(Engine)}.
+	 * will return {@link org.apache.api.wiki.WikiSessionImpl#guestSession(Engine)}.
 	 *
 	 * @return The Session associated with this context.
 	 */
 	@Override
-	public WikiSession getWikiSession() {
-		return (WikiSession) m_session;
+	public WikiSessionImpl getWikiSession() {
+		return (WikiSessionImpl) m_session;
 	}
 
 	/**
@@ -710,7 +718,7 @@ public class WikiContextImpl implements WikiContext, Command {
 			} catch (final NoSuchPrincipalException e) {
 				return DUMMY_PERMISSION;
 			}
-			return new AllPermission(wikiConfiguration.getApplicationName(), null);
+			return new AllPermission(globalPrefs.getApplicationName(), null);
 		}
 
 		// TODO: we should really break the contract so that this
@@ -749,7 +757,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	public boolean hasAdminPermissions() {
 		AuthorizationManager authorizationManager = this.m_engine.getManager(AuthorizationManager.class);
 		return authorizationManager.checkPermission(getWikiSession(),
-				new AllPermission(wikiConfiguration.getApplicationName(), null));
+				new AllPermission(globalPrefs.getApplicationName(), null));
 	}
 
 	/**
@@ -758,7 +766,7 @@ public class WikiContextImpl implements WikiContext, Command {
 	 * @param request the HTTP request
 	 */
 	protected void setDefaultShape(final HttpServletRequest request) {
-		final String defaultTemplate = wikiConfiguration.getTemplateDir();
+		final String defaultTemplate = m_engine.getManager(GlobalPreferences.class).getTemplateDir();
 
 		//:FVK: workaround - assign admin shape.
 		if (m_command != null) {

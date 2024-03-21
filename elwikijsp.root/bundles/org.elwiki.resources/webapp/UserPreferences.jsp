@@ -22,7 +22,7 @@
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.apache.wiki.api.core.ContextEnum" %>
 <%@ page import="org.apache.wiki.api.core.Engine" %>
-<%@ page import="org.apache.wiki.api.core.Session" %>
+<%@ page import="org.apache.wiki.api.core.WikiSession" %>
 <%@ page import="org.apache.wiki.Wiki" %>
 <%@ page import="org.apache.wiki.auth.AuthorizationManager" %>
 <%@ page import="org.apache.wiki.auth.AccountManager" %>
@@ -50,7 +50,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     
     // Extract the user profile and action attributes
     AccountManager userMgr = WikiEngine.getAccountManager();
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
 
 /* FIXME: Obsolete
     if( request.getParameter(EditorManager.PARA_EDITOR) != null )

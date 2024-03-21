@@ -30,7 +30,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.attachment.AttachmentManager;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoSuchVariableException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -41,8 +41,9 @@ import org.apache.wiki.api.variables.VariableManager;
 import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.preferences.Preferences;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -60,10 +61,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultVariableManager",
-	service = { VariableManager.class, WikiManager.class, EventHandler.class },
+	service = { VariableManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultVariableManager implements VariableManager, WikiManager, EventHandler {
+public class DefaultVariableManager implements VariableManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultVariableManager.class);
 
@@ -86,6 +87,9 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@WikiServiceReference
+	GlobalPreferences globalPrefs;
 
 	@WikiServiceReference
 	private PageManager pageManager;
@@ -329,7 +333,7 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
 
         public String getApplicationname()
         {
-            return wikiConfiguration.getApplicationName();
+            return globalPrefs.getApplicationName();
         }
 
         public String getElwikiversion()
@@ -338,7 +342,7 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
         }
 
         public String getEncoding() {
-            return m_context.getConfiguration().getContentEncodingCs().displayName();
+            return m_context.getEngine().getContentEncoding().displayName();
         }
 
         public String getTotalpages() {
@@ -377,9 +381,10 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
             return res.toString();
         }
 
+        @Deprecated //:FVK: not used anywhere.
         public String getInlinedimages() {
             final StringBuilder res = new StringBuilder();
-            for( final String ptrn : wikiConfiguration.getAllInlinedImagePatterns() ) {
+            for( final String ptrn : globalPrefs.getAllInlinedImagePatterns() ) {
                 if( res.length() > 0 ) {
                     res.append( ", " );
                 }
@@ -408,7 +413,7 @@ public class DefaultVariableManager implements VariableManager, WikiManager, Eve
         }
 
         public String getLoginstatus() {
-            final Session session = m_context.getWikiSession();
+            final WikiSession session = m_context.getWikiSession();
             ResourceBundle rcBundle = Preferences.getBundle( m_context );
             return rcBundle.getString( "varmgr." + session.getLoginStatus().getId());
         }

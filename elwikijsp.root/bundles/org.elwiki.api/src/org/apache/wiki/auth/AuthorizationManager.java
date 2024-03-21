@@ -26,11 +26,11 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.elwiki.api.authorization.Authorizer;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki.data.authorize.GroupPrincipal;
-
 
 /**
  * <p>Manages all access control and authorization; determines what authenticated users are allowed to do.</p>
@@ -42,7 +42,7 @@ import org.elwiki.data.authorize.GroupPrincipal;
  *   <em>e.g.,</em> reading, editing, renaming
  * </ul>
  * <p>Calling classes determine whether they are entitled to perform a particular action by constructing the appropriate permission first,
- * then passing it and the current {@link Session} to the {@link #checkPermission(Session, Permission)} method. If
+ * then passing it and the current {@link WikiSession} to the {@link #checkPermission(WikiSession, Permission)} method. If
  * the session's Subject possesses the permission, the action is allowed.</p>
  * <p>For WikiPermissions, the decision criteria is relatively simple: the caller either possesses the permission, as granted by the wiki
  * security policy -- or not.</p>
@@ -51,15 +51,17 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * security policy. In other words, the user must be named in the ACL (or belong to a group or role that is named in the ACL) <em>and</em>
  * be granted (at least) the same permission in the security policy. We do this to prevent a user from gaining more permissions than they
  * already have, based on the security policy.</p>
- * <p>See the implementation on {@link #checkPermission(Session, Permission)} method for more information on the authorization logic.</p>
+ * <p>See the implementation on {@link #checkPermission(WikiSession, Permission)} method for more information on the authorization logic.</p>
  *
  * @since 2.3
  * @see AuthenticationManager
  */
-public interface AuthorizationManager {
+public interface AuthorizationManager extends IModulePreferences {
 
-    /** The default external Authorizer is the {@link WebContainerAuthorizer} */
-    String DEFAULT_AUTHORIZER = "org.apache.wiki.auth.authorize.WebContainerAuthorizer";
+	interface Prefs {
+		/// Preferences names of Authorization Manager.
+		String AUTHORIZER_ID = "authorizer";
+	}
 
     /** Property that supplies the security policy file name, in WEB-INF. */
     String POLICY = "jspwiki.policy.file";
@@ -67,15 +69,12 @@ public interface AuthorizationManager {
     /** Name of the default security policy file, in WEB-INF. */
     String DEFAULT_POLICY = "jspwiki.policy";
 
-    /** The property name in preferences.ini for specifying the external {@link Authorizer}. */
-    String PROP_AUTHORIZER = "jspwiki.authorizer";
-
     /**
      * Returns <code>true</code> or <code>false</code>, depending on whether a Permission is allowed for the Subject associated with
      * a supplied Session. The access control algorithm works this way:
      * <ol>
      * <li>The {@link org.apache.wiki.api.core.Acl} for the page is obtained</li>
-     * <li>The Subject associated with the current {@link org.apache.wiki.api.core.Session} is obtained</li>
+     * <li>The Subject associated with the current {@link org.apache.wiki.api.core.WikiSession} is obtained</li>
      * <li>If the Subject's Principal set includes the Role Principal that is the administrator group, always allow the Permission</li>
      * <li>For all permissions, check to see if the Permission is allowed according to the default security policy. If it isn't, deny
      * the permission and halt further processing.</li>
@@ -100,7 +99,7 @@ public interface AuthorizationManager {
      * @param permission the Permission being checked
      * @return the result of the Permission check
      */
-    boolean checkPermission( Session session, Permission permission );
+    boolean checkPermission( WikiSession session, Permission permission );
 
     /**
      * <p>Determines if the Subject associated with a supplied Session contains a desired Role or GroupPrincipal. The algorithm
@@ -116,7 +115,7 @@ public interface AuthorizationManager {
      *                  the result of this method always returns <code>false</code>
      * @return <code>true</code> if the Subject supplied with the WikiContext posesses the Role or GroupPrincipal, <code>false</code> otherwise
      */
-    default boolean isUserInRole( final Session session, final Principal principal ) {
+    default boolean isUserInRole( final WikiSession session, final Principal principal ) {
         if ( session == null || principal == null || AuthenticationManager.isUserPrincipal( principal ) ) {
             return false;
         }
@@ -146,7 +145,7 @@ public interface AuthorizationManager {
      * <p>Determines if the Subject associated with a supplied Session contains a desired user Principal or built-in Role principal,
      * OR is a member a Group or external Role. The rules are as follows:</p>
      * <ol>
-     * <li>First, if desired Principal is a Role or GroupPrincipal, delegate to {@link #isUserInRole(Session, Principal)} and
+     * <li>First, if desired Principal is a Role or GroupPrincipal, delegate to {@link #isUserInRole(WikiSession, Principal)} and
      * return the result.</li>
      * <li>Otherwise, we're looking for a user Principal, so iterate through the Principal set and see if any share the same name as the
      * one we are looking for.</li>
@@ -160,7 +159,7 @@ public interface AuthorizationManager {
      * @return <code>true</code> if the Subject supplied with the WikiContext posesses the Role, GroupPrincipal or desired
      *         user Principal, <code>false</code> otherwise
      */
-    boolean hasRoleOrPrincipal( Session session, Principal principal );
+    boolean hasRoleOrPrincipal( WikiSession session, Principal principal );
 
 	/**
 	 * Checks whether the current user has access to the wiki context, by obtaining the required
@@ -179,7 +178,7 @@ public interface AuthorizationManager {
 
     /**
      * Checks whether the current user has access to the wiki context, by obtaining the required Permission ({@link WikiContext#requiredPermission()})
-     * and delegating the access check to {@link #checkPermission(Session, Permission)}. If the user is allowed, this method returns
+     * and delegating the access check to {@link #checkPermission(WikiSession, Permission)}. If the user is allowed, this method returns
      * <code>true</code>; <code>false</code> otherwise. If access is allowed, the wiki context will be added to the request as an attribute
      * with the key name {@link org.apache.wiki.api.core.WikiContext#ATTR_WIKI_CONTEXT}. Note that this method will automatically redirect the user to
      * a login or error page, as appropriate, if access fails. This is NOT guaranteed to be default behavior in the future.
@@ -198,7 +197,7 @@ public interface AuthorizationManager {
     /**
      * Checks whether the current user has access to the wiki context (and
      * optionally redirects if not), by obtaining the required Permission ({@link WikiContext#requiredPermission()})
-     * and delegating the access check to {@link #checkPermission(Session, Permission)}.
+     * and delegating the access check to {@link #checkPermission(WikiSession, Permission)}.
      * If the user is allowed, this method returns <code>true</code>;
      * <code>false</code> otherwise. Also, the wiki context will be added to the request as attribute
      * with the key name {@link org.apache.wiki.api.core.WikiContext#ATTR_WIKI_CONTEXT}.
@@ -214,7 +213,7 @@ public interface AuthorizationManager {
 
     /**
      * Checks to see if the local security policy allows a particular static Permission.
-     * Do not use this method for normal permission checks; use {@link #checkPermission(Session, Permission)} instead.
+     * Do not use this method for normal permission checks; use {@link #checkPermission(WikiSession, Permission)} instead.
      *
      * @param principals the Principals to check
      * @param permission the Permission
@@ -235,7 +234,7 @@ public interface AuthorizationManager {
      * @param permission the Permission the Subject must possess
      * @return <code>true</code> if the Subject possesses the permission, <code>false</code> otherwise
      */
-    boolean checkStaticPermission( Session session, Permission permission );
+    boolean checkStaticPermission( WikiSession session, Permission permission );
 
     /**
      * <p>Given a supplied string representing a Principal's name from an Acl, this method resolves the correct type of Principal (role,

@@ -20,7 +20,6 @@ package org.elwiki.data.authorize;
 
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * A lightweight, immutable Principal class. WikiPrincipals can be created with and optional
@@ -54,9 +53,6 @@ public final class WikiPrincipal extends Aprincipal implements Comparable<Princi
 
 	/** Generic WikiPrincipal of unspecified type. */
 	public static final String UNSPECIFIED = "unspecified";
-
-	/** Static instance of Comparator that allows Principals to be sorted. */
-	public static final Comparator<Principal> COMPARATOR = new PrincipalComparator();
 
 	private static final String[] VALID_TYPES;
 

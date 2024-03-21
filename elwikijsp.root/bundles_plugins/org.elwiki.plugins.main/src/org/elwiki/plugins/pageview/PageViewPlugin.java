@@ -49,13 +49,13 @@ import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.render0.RenderingManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.BackgroundThreads.Actor;
-import org.elwiki.api.event.WikiEngineEventTopic;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.event.EngineEvent;
+import org.elwiki.api.event.PageEvent;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
@@ -99,9 +99,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 
 	/** Name of the 'min' parameter. */
 	private static final String PARAM_MIN_COUNT = "min";
-
-	/** Name of the 'refer' parameter. */
-	private static final String PARAM_REFER = "refer";
 
 	/** Name of the 'sort' parameter. */
 	private static final String PARAM_SORT = "sort";
@@ -212,7 +209,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		 */
 		public synchronized void initialize(Engine engine) {
 			log.info("initializing PageView Manager");
-			m_workDir = engine.getWikiConfiguration().getWorkDir().toString();
+			m_workDir = engine.getManager(GlobalPreferences.class).getWorkDir().toString();
 
 			if (m_counters == null) {
 				// Load the counters into a collection
@@ -233,9 +230,9 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 
 			/* Register this for listen events from EventAdmin. */
 			String[] topics = new String[] { //
-					WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN, //
-					WikiPageEventTopic.TOPIC_PAGE_RENAMED, //
-					WikiPageEventTopic.TOPIC_PAGE_DELETED, //
+					EngineEvent.Topic.SHUTDOWN, //
+					PageEvent.Topic.RENAMED, //
+					PageEvent.Topic.DELETED, //
 			};
 			Dictionary<String, Object> properties = new Hashtable<String, Object>();
 			properties.put(EventConstants.EVENT_TOPIC, topics);
@@ -277,13 +274,13 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		public void handleEvent(Event event) {
 			String topic = event.getTopic();
 			switch (topic) {
-			case WikiEngineEventTopic.TOPIC_ENGINE_SHUTDOWN:
+			case EngineEvent.Topic.SHUTDOWN:
 				log.info("Detected wiki engine shutdown");
 				handleShutdown();
 				break;
-			case WikiPageEventTopic.TOPIC_PAGE_RENAMED:
-				String oldPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_OLD_PAGE_NAME);
-				String newPageName = (String) event.getProperty(WikiPageEventTopic.PROPERTY_NEW_PAGE_NAME);
+			case PageEvent.Topic.RENAMED:
+				String oldPageName = (String) event.getProperty(PageEvent.PROPERTY_OLD_PAGE_NAME);
+				String newPageName = (String) event.getProperty(PageEvent.PROPERTY_NEW_PAGE_NAME);
 				Counter oldCounter = m_counters.get(oldPageName);
 				if (oldCounter != null) {
 					m_storage.remove(oldPageName);
@@ -293,8 +290,8 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 					m_dirty = true;
 				}
 				break;
-			case WikiPageEventTopic.TOPIC_PAGE_DELETED:
-				String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+			case PageEvent.Topic.DELETED:
+				String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 				m_storage.remove(pageId);
 				m_counters.remove(pageId);
 				break;
@@ -310,10 +307,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 		 * @throws PluginException Malformed pattern parameter.
 		 */
 		public String execute(WikiContext context, Map<String, String> params) throws PluginException {
-			Engine engine = context.getEngine();
-			RenderingManager renderingManager = engine.getManager(RenderingManager.class);
-			ReferenceManager referenceManager = engine.getManager(ReferenceManager.class);
-
 			WikiPage page = context.getPage();
 			String result = STR_EMPTY;
 
@@ -329,7 +322,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 				String body = params.get(PluginManager.PARAM_BODY);
 				Pattern[] exclude = compileGlobs(PARAM_EXCLUDE, params.get(PARAM_EXCLUDE));
 				Pattern[] include = compileGlobs(PARAM_INCLUDE, params.get(PARAM_INCLUDE));
-				Pattern[] refer = compileGlobs(PARAM_REFER, params.get(PARAM_REFER));
 				PatternMatcher matcher = new Perl5Matcher(); //:FVK: = (null != exclude || null != include || null != refer) ? new Perl5Matcher() : null;
 				boolean increment = false;
 
@@ -343,29 +335,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 				// default increment counter?
 				if ((show == null || STR_NONE.equals(show)) && count == null) {
 					increment = true;
-				}
-
-				// filter on referring pages?
-				Collection<String> referrers = null;
-
-				if (refer != null) {
-					ReferenceManager refManager = referenceManager;
-					for (String name : refManager.findCreated()) {
-						boolean use = false;
-						for (int n = 0; !use && n < refer.length; n++) {
-							use = matcher.matches(name, refer[n]);
-						}
-
-						if (use) {
-							Collection<String> refs = referenceManager.findReferrers(name);
-							if (refs != null && !refs.isEmpty()) {
-								if (referrers == null) {
-									referrers = new HashSet<>();
-								}
-								referrers.addAll(refs);
-							}
-						}
-					}
 				}
 
 				synchronized (this) {
@@ -438,11 +407,6 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 							int value = entry.getValue().getValue();
 							boolean use = min <= value && value <= max;
 
-							// did we specify a refer-to page?
-							if (use && referrers != null) {
-								use = referrers.contains(name);
-							}
-
 							// did we specify what pages to include?
 							if (use && include != null) {
 								use = false;
@@ -460,7 +424,7 @@ public class PageViewPlugin extends AbstractReferralPlugin implements WikiPlugin
 							}
 
 							if (use) {
-								args[1] = renderingManager.beautifyTitle(name);
+								args[1] = name;
 								args[2] = entry.getValue();
 
 								fmt.format(args, buf, null);

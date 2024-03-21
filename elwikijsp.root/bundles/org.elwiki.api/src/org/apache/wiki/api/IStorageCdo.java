@@ -20,7 +20,6 @@ public interface IStorageCdo {
 
 	boolean isStorageActive();
 
-	@Deprecated
 	void activateStorage() throws Exception;
 
 	@Deprecated

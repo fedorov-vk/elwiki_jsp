@@ -52,7 +52,7 @@ import org.apache.wiki.preferences.Preferences;
 import org.apache.wiki.ui.TemplateManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -74,10 +74,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultTemplateManager",
-	service = {TemplateManager.class, WikiManager.class},
+	service = {TemplateManager.class, WikiComponent.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager, WikiManager {
+public class DefaultTemplateManager extends BaseModuleManager implements TemplateManager, WikiComponent {
 
 	private static final Logger log = Logger.getLogger(DefaultTemplateManager.class);
 

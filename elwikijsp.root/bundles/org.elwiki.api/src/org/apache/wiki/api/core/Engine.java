@@ -53,24 +53,15 @@ public interface Engine {
     /** This property defines the inline image pattern.  It's current value is {@value} */
     String PROP_INLINEIMAGEPTRN = "jspwiki.translatorReader.inlinePattern";
 
-    /** Do not use encoding in WikiJSPFilter, default is false for most servers.
-     Double negative, cause for most servers you don't need the property */
-    String PROP_NO_FILTER_ENCODING = "jspwiki.nofilterencoding";
-
     /** The name of the cookie that gets stored to the user browser. */
     String PREFS_COOKIE_NAME = "JSPWikiUserProfile";
 
-    /** Property name for the template that is used. */
-    String PROP_TEMPLATEDIR = "jspwiki.templateDir";
 
     /** Property name for setting the url generator instance */
     String PROP_URLCONSTRUCTOR = "jspwiki.urlConstructor";
 
     /** The name of the property containing the ACLManager implementing class. The value is {@value}. */
     String PROP_ACL_MANAGER_IMPL = "jspwiki.aclManager";
-
-    /** If this property is set to false, we don't allow the creation of empty pages */
-    String PROP_ALLOW_CREATION_OF_EMPTY_PAGES = "jspwiki.allowCreationOfEmptyPages";
 
     /**
      * Adapt Engine to a concrete type.
@@ -261,11 +252,30 @@ public interface Engine {
      *
      *  Returns the IANA name of the character set encoding we're supposed to be using right now.
      *
-     *  @since 1.5.3
-     *  @return The content encoding (either UTF-8 or ISO-8859-1).
+     *  @return The content encoding (either UTF-8, ISO-8859-1 or any specified in the preferences).
      */
     Charset getContentEncoding();
 
-	WikiPage getPageById(String pageId) throws ProviderException;
 
+	/**
+	 * Turns a WikiName into something that can be called through using an URL.
+	 *
+	 * @since 1.4.1
+	 * @param pagename A name. Can be actually any string.
+	 * @return A properly encoded name.
+	 * @throws Exception;
+	 * @see #decodeName(String)
+	 */
+	String encodeName(String pagename) throws IOException;
+
+	/**
+	 * Decodes a URL-encoded request back to regular life. This properly heeds the encoding as defined
+	 * in the settings file.
+	 *
+	 * @param pagerequest The URL-encoded string to decode
+	 * @return A decoded string.
+	 * @see #encodeName(String)
+	 */
+	String decodeName(String pagerequest) throws IOException;
+    
 }

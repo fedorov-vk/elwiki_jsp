@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.util.ClassUtil;
 import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.comparators.JavaNaturalComparator;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.configuration.IWikiConfiguration;
 
 import java.util.Arrays;

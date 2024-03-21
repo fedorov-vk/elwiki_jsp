@@ -27,7 +27,10 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.spi.LoginModule;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.elwiki.api.component.IModulePreferences;
+import org.elwiki.api.event.LoginEvent;
 import org.elwiki.data.authorize.GroupPrincipal;
 
 /**
@@ -39,22 +42,35 @@ import org.elwiki.data.authorize.GroupPrincipal;
  * login attempt during that time incurs a penalty of 2^login attempts milliseconds - that is, 10 login attempts incur a login penalty
  * of 1.024 seconds. The delay is currently capped to 20 seconds.
  */
-public interface AuthenticationManager {
-    
-    /** If this preferences.ini property is <code>true</code>, allow cookies to be used for authentication. */
-    String PROP_ALLOW_COOKIE_AUTH = "jspwiki.cookieAuthentication";
-    
-    /** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
-    String PROP_LOGIN_THROTTLING = "jspwiki.login.throttling";
+public interface AuthenticationManager extends IModulePreferences {
 
-    /** Prefix for LoginModule options key/value pairs. */
-    String PREFIX_LOGIN_MODULE_OPTIONS = "jspwiki.loginModule.options.";
+	interface Prefs {
+		/// Preferences names of Authentication Manager.
+		/** If this property is <code>true</code>, allow cookies to be used to assert identities. */
+		String ALLOW_COOKIE_ASSERTIONS = "cookieAssertions";
 
-    /** If this preferences.ini property is <code>true</code>, allow cookies to be used to assert identities. */
-    String PROP_ALLOW_COOKIE_ASSERTIONS = "jspwiki.cookieAssertions";
+		/** If this property is <code>true</code>, allow cookies to be used for authentication. */
+		String ALLOW_COOKIE_AUTH = "cookieAuthentication";
 
-    /** The {@link LoginModule} to use for custom authentication. */
-    String PROP_LOGIN_MODULE = "jspwiki.loginModule.class";
+		/** Whether logins should be throttled to limit brute-forcing attempts. Defaults to true. */
+		String LOGIN_THROTTLING = "login.throttling";
+
+		/** The {@link LoginModule} to use for custom authentication. */
+		String LOGIN_MODULE_ID = "loginModule.id";
+	}
+
+	/** Prefix for LoginModule options key/value pairs. */
+	@Deprecated
+	String PREFIX_LOGIN_MODULE_OPTIONS = "jspwiki.loginModule.options.";
+
+	/**
+	 * Looks up the LoginModule class, via extension point "org.elwiki.authorize.loginModule".
+	 *
+	 * @param loginModuleId
+	 * @return
+	 * @throws WikiException
+	 */
+	Class<? extends LoginModule> getLoginModule(String loginModuleId) throws WikiException;
 
     /**
      * Returns true if this Engine uses container-managed authentication. This method is used primarily for cosmetic purposes in the
@@ -77,7 +93,7 @@ public interface AuthenticationManager {
 	 * authenticated. To be considered "authenticated," the request must supply one of the following (in
 	 * order of preference): the container <code>userPrincipal</code>, container
 	 * <code>remoteUser</code>, or authentication cookie. If the user is authenticated, this method
-	 * fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_AUTHENTICATED} with two parameters: a
+	 * fires event {@link LoginEvent.Topic.AUTHENTICATED} with two parameters: a
 	 * Principals representing the login principal, and the ID of current Session. In addition, if the
 	 * authorizer is of type WebContainerAuthorizer, this method iterates through the container roles
 	 * returned by {@link WebContainerAuthorizer#getGroups()}, tests for membership in each one, and
@@ -85,10 +101,10 @@ public interface AuthenticationManager {
 	 * <li>If, after checking for authentication, the Session is still Anonymous, this method next
 	 * checks to see if the user has "asserted" an identity by supplying an assertion cookie. If the
 	 * user is found to be asserted, this method fires event
-	 * {@link WikiLoginEventTopic#TOPIC_LOGIN_ASSERTED} with two parameters:
+	 * {@link LoginEvent.Topic.ASSERTED} with two parameters:
 	 * <code>WikiPrincipal(<em>cookievalue</em>)</code>, and the ID of current Session.</li>
 	 * <li>If, after checking for authenticated and asserted status, the Session is <em>still</em>
-	 * anonymous, this method fires event {@link WikiLoginEventTopic#TOPIC_LOGIN_ANONYMOUS} with two
+	 * anonymous, this method fires event {@link LoginEvent.Topic.ANONYMOUS} with two
 	 * parameters: <code>WikiPrincipal(<em>remoteAddress</em>)</code>, and the ID of current
 	 * Session</li>
 	 * </ul>
@@ -107,7 +123,7 @@ public interface AuthenticationManager {
 	 * @return always returns <code>true</code> (because anonymous login, at least, will always succeed)
 	 * @throws WikiSecurityException if the user cannot be logged in for any reason
 	 */
-	boolean login(HttpServletRequest request, Session session) throws WikiSecurityException;
+	boolean login(HttpServletRequest request, WikiSession session) throws WikiSecurityException;
     
     /**
      * Attempts to perform a Session login for the given username/password combination using JSPWiki's custom authentication mode. In
@@ -125,7 +141,7 @@ public interface AuthenticationManager {
      * @return true, if the username/password is valid
      * @throws org.apache.wiki.auth.WikiSecurityException if the Authorizer or AccountManager cannot be obtained
      */
-    boolean loginAsserted( Session session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
+    boolean loginAsserted( WikiSession session, HttpServletRequest request, String username, String password ) throws WikiSecurityException;
 
     /**
      * Logs the user out by retrieving the Session associated with the HttpServletRequest and unbinding all of the Subject's Principals,
@@ -138,20 +154,20 @@ public interface AuthenticationManager {
 
     /**
      * Determines whether this Engine allows users to assert identities using cookies instead of passwords. This is determined by inspecting
-     * the Engine property {@link #PROP_ALLOW_COOKIE_ASSERTIONS}.
+     * the property {@link #ALLOW_COOKIE_ASSERTIONS}.
      *
      * @return <code>true</code> if cookies are allowed
      */
-    boolean allowsCookieAssertions();
+    boolean isAllowsCookieAssertions();
 
     /**
      * Determines whether this Engine allows users to authenticate using cookies instead of passwords. This is determined by inspecting
-     * the Engine property {@link #PROP_ALLOW_COOKIE_AUTH}.
+     * the property {@link #ALLOW_COOKIE_AUTH}.
      *
      *  @return <code>true</code> if cookies are allowed for authentication
      *  @since 2.5.62
      */
-    boolean allowsCookieAuthentication();
+    boolean isAllowsCookieAuthentication();
 
     /**
      * Determines whether the supplied Principal is a "role principal".

@@ -28,6 +28,7 @@ import org.apache.wiki.StringTransmutator;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.jdom2.Element;
 import org.jdom2.Text;
@@ -91,9 +92,6 @@ public abstract class MarkupParser {
 
     /** If set to "true", all external links are tagged with 'rel="nofollow"' */
     public static final String PROP_USERELNOFOLLOW = "jspwiki.translatorReader.useRelNofollow";
-
-    /** If true, consider CamelCase hyperlinks as well. */
-    public static final String PROP_CAMELCASELINKS = "jspwiki.translatorReader.camelCaseLinks";
 
     /** If true, all hyperlinks are translated as well, regardless whether they
      are surrounded by brackets. */
@@ -282,7 +280,7 @@ public abstract class MarkupParser {
 
         if( compiledpatterns == null ) {
             compiledpatterns = new ArrayList< >( 20 );
-            final Collection< String > ptrns = m_engine.getWikiConfiguration().getAllInlinedImagePatterns();
+            final Collection< String > ptrns = m_engine.getManager(GlobalPreferences.class).getAllInlinedImagePatterns();
 
             //  Make them into Regexp Patterns.  Unknown patterns are ignored.
             for( final String pattern : ptrns ) {

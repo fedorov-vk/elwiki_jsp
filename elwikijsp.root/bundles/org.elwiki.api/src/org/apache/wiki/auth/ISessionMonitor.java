@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 
 public interface ISessionMonitor {
 
@@ -18,7 +18,7 @@ public interface ISessionMonitor {
 	 *  @param session the user's HTTP session
 	 *  @return the WikiSession, if found
 	 */
-	Session findSession(HttpSession session);
+	WikiSession findSession(HttpSession session);
 	
 	/**
 	 * <p>
@@ -66,7 +66,7 @@ public interface ISessionMonitor {
 	 * <p>
 	 * Returns the current wiki users as a sorted array of Principal objects. The
 	 * principals are those returned by each WikiSession's
-	 * {@link Session#getUserPrincipal()}'s method.
+	 * {@link WikiSession#getUserPrincipal()}'s method.
 	 * </p>
 	 * <p>
 	 * To obtain the list of current WikiSessions, we iterate through our session
@@ -99,7 +99,7 @@ public interface ISessionMonitor {
 	 * @param request
 	 * @return
 	 */
-	Session getWikiSession(HttpServletRequest request);
+	WikiSession getWikiSession(HttpServletRequest request);
 
 	/**
 	 * Factory method that creates a new "guest" session containing a single
@@ -110,7 +110,7 @@ public interface ISessionMonitor {
 	 *
 	 * @return the guest wiki session
 	 */
-	Session createGuestSession(String sid);
+	WikiSession createGuestSession(String sid);
 
 	/**
 	 * Returns ID os specified wiki session.
@@ -118,6 +118,6 @@ public interface ISessionMonitor {
 	 * @param session wiki session.
 	 * @return ID of specified wiki session.
 	 */
-	String getSessionId(Session session);
+	String getSessionId(WikiSession session);
 
 }

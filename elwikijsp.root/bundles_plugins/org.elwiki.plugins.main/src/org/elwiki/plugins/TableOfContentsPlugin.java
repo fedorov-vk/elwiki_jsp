@@ -137,7 +137,7 @@ public class TableOfContentsPlugin implements WikiPlugin, HeadingListener, Initi
 		String titleSection = hd.m_titleSection.replace('%', '_');
 		String pageName = null;
 		try {
-			pageName = context.getConfiguration().encodeName(context.getPage().getName()).replace('%', '_');
+			pageName = context.getEngine().encodeName(context.getPage().getName()).replace('%', '_');
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -18,31 +18,16 @@
  */
 package org.elwiki.web.jsp;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.NDC;
-import org.apache.wiki.WatchDog;
-import org.apache.wiki.WikiContextImpl;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.ui.TemplateManager;
-import org.apache.wiki.url0.URLConstructor;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.elwiki.api.event.WikiPageEventTopic;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.configuration.IWikiPreferences;
-import org.osgi.framework.Constants;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ServiceScope;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
-import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
@@ -51,13 +36,26 @@ import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.NDC;
+import org.apache.wiki.WatchDog;
+import org.apache.wiki.WikiContextImpl;
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.ui.TemplateManager;
+import org.apache.wiki.url0.URLConstructor;
+import org.apache.wiki.util.TextUtil;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.component.IWikiPreferencesConstants;
+import org.elwiki.api.event.PageEvent;
+import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 
 /**
@@ -94,7 +92,7 @@ import java.util.Map;
 	name = "part11.WikiJSPFilter"
 )
 //@formatter:on
-@Deprecated//:FVK: --!!!-- он шлет Event TOPIC_PAGE_REQUESTED 
+@Deprecated//:FVK: --!!!-- он шлет PageEvent.Topic.REQUESTED, DELIVERED
 public class WikiJSPFilter extends WikiServletFilter {
 
     private static final Logger log = Logger.getLogger( WikiJSPFilter.class );
@@ -117,25 +115,25 @@ public class WikiJSPFilter extends WikiServletFilter {
     @Override
     public void init( final FilterConfig config ) throws ServletException {
         super.init( config );
-        IWikiConfiguration wikiConfig = m_engine.getWikiConfiguration();
-        m_wiki_encoding = wikiConfig.getStringProperty(IWikiPreferences.PROP_ENCODING,
-        		IWikiPreferences.DEFAULT_ENCODING);
-        useEncoding = !wikiConfig.getBooleanProperty(Engine.PROP_NO_FILTER_ENCODING,
-        		false);
+        
+		@NonNull
+		GlobalPreferences globalPrefs = m_engine.getManager(GlobalPreferences.class);
+		m_wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
+		useEncoding = !globalPrefs.getPreference(IWikiPreferencesConstants.PROP_NO_FILTER_ENCODING, Boolean.class);
     }
 
     @Override
     public void doFilter( final ServletRequest  request, final ServletResponse response, final FilterChain chain ) throws ServletException, IOException {
         final WatchDog w = WatchDog.getCurrentWatchDog( m_engine );
         try {
-            NDC.push( getWikiConfiguration().getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
+            NDC.push( getGlobalPreferences().getApplicationName()+":"+((HttpServletRequest)request).getRequestURI() );
             w.enterState("Filtering for URL "+((HttpServletRequest)request).getRequestURI(), 90 );
             final HttpServletResponseWrapper responseWrapper = new JSPWikiServletResponseWrapper( ( HttpServletResponse )response, m_wiki_encoding, useEncoding );
 
-            // fire PAGE_REQUESTED event
+            // fire PAGE REQUESTED event
             final String pagename = URLConstructor.parsePageFromURL( ( HttpServletRequest )request, Charset.forName( response.getCharacterEncoding() ) );
-    		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_REQUESTED,
-    				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
+    		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.REQUESTED,
+    				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
             super.doFilter( request, responseWrapper, chain );
 
             // The response is now complete. Lets replace the markers now.
@@ -161,9 +159,9 @@ public class WikiJSPFilter extends WikiServletFilter {
                     wikiContext.getWikiSession().clearMessages();
                 }
 
-                // fire PAGE_DELIVERED event
-        		this.eventAdmin.sendEvent(new Event(WikiPageEventTopic.TOPIC_PAGE_DELIVERED,
-        				Map.of(WikiPageEventTopic.PROPERTY_PAGE_ID, pagename)));
+                // fire PAGE DELIVERED event
+        		this.eventAdmin.sendEvent(new Event(PageEvent.Topic.DELIVERED,
+        				Map.of(PageEvent.PROPERTY_PAGE_ID, pagename)));
             } finally {
                 w.exitState();
             }

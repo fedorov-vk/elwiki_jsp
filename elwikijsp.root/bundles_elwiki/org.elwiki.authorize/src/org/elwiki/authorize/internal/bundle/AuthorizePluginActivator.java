@@ -11,9 +11,6 @@ public class AuthorizePluginActivator extends Plugin {
 
 	private static final Logger log = Logger.getLogger(AuthorizePluginActivator.class);
 
-	// The plug-in ID
-	public static final String PLIGIN_ID = "org.elwiki.authorize";
-
 	// The shared instance
 	private static AuthorizePluginActivator pluginInstance;
 
@@ -21,15 +18,6 @@ public class AuthorizePluginActivator extends Plugin {
 	public static String AUTHORIZATION_PACKAGE = "org.elwiki.authorize";
 
 	// == CODE ================================================================
-
-	/**
-	 * Returns the shared instance.
-	 *
-	 * @return the shared instance.
-	 */
-	public static AuthorizePluginActivator getDefault() {
-		return AuthorizePluginActivator.pluginInstance;
-	}
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
@@ -46,6 +34,19 @@ public class AuthorizePluginActivator extends Plugin {
 	public void stop(BundleContext bundleContext) throws Exception {
 		pluginInstance = null;
 		super.stop(bundleContext);
+	}
+
+	/**
+	 * Returns the shared instance.
+	 *
+	 * @return the shared instance.
+	 */
+	public static AuthorizePluginActivator getDefault() {
+		return AuthorizePluginActivator.pluginInstance;
+	}
+
+	public String getName() {
+		return getBundle().getSymbolicName();
 	}
 
 }

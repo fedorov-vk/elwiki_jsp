@@ -110,7 +110,7 @@
 <!-- Notify users which JAAS configs we need to find -->
 <p>ElWiki подключает свой собственный JAAS для определения процесса аутентификации и не полагается на конфигурацию JRE.
 По умолчанию ElWiki настраивает свой стек входа в систему JAAS на использование AccountRegistryLoginModule.
-Вы можете указать пользовательский модуль входа, установив  <code>jspwiki.loginModule.class</code> в <code>preferences.ini</code>.</p>
+Вы можете указать пользовательский модуль входа, установив опцию <code>loginModule.id</code> в настройках AuthenticationManager.</p>
 
 <wiki:Messages div="information" topic='<%=SecurityVerifier.INFO+"java.security.auth.login.config"%>' prefix="Good news: "/>
 <wiki:Messages div="warning" topic='<%=SecurityVerifier.WARNING+"java.security.auth.login.config"%>' prefix="We found some potential problems with your configuration: "/>
@@ -118,7 +118,7 @@
 
 <!-- Print JAAS configuration status -->
 <p>Конфигурация входа в систему JAAS настроена правильно,
- если свойство <code>jspwiki.loginModule.class</code> указывает класс, который можно найти в classpath.
+ если свойство <code>loginModule.id</code> указывает достижимый класс.
 Этот класс также должен быть реализацией LoginModule.
 Проверяется наличие обоих условий.</p>
 

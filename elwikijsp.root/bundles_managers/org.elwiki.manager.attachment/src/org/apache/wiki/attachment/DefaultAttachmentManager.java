@@ -38,17 +38,19 @@ import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.AttachmentProvider;
 import org.apache.wiki.api.providers.PageProvider;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.providers.BasicAttachmentProvider;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -69,10 +71,10 @@ import net.sf.ehcache.Element;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAttachmentManager",
-	service = { AttachmentManager.class, WikiManager.class, EventHandler.class },
+	service = { AttachmentManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAttachmentManager implements AttachmentManager, WikiManager, EventHandler {
+public class DefaultAttachmentManager implements AttachmentManager, WikiComponent, EventHandler {
 
 	/** List of attachment types which are forced to be downloaded */
 	@Deprecated
@@ -87,6 +89,8 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 	@Deprecated
 	private Cache m_dynamicAttachments;
 
+	private BundleContext bundleContext;
+	
 	/**
 	 * Creates instance of DefaultAttachmentManager.
 	 */
@@ -99,6 +103,9 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+	
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
 	private Engine m_engine;
@@ -106,15 +113,17 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 	@WikiServiceReference
 	private PageManager pageManager;
 
-	@WikiServiceReference
-	private ReferenceManager referenceManager;
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+		m_provider = new BasicAttachmentProvider();
+	}
 
 	/** {@inheritDoc} */
 	// FIXME: Perhaps this should fail somehow.
 	@Override
 	public void initialize() throws WikiException {
-		try {
-			m_provider = new BasicAttachmentProvider();
+		try {			
 			m_provider.initialize(m_engine);
 		} catch (NoRequiredPropertyException e1) {
 			log.error("Attachment provider did not find a property that it needed: " + e1.getMessage(), e1);
@@ -129,6 +138,12 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 
 	// -- OSGi service handling ------------------------(end)--
 
+
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+	
 	/** {@inheritDoc} */
     @Override
     public boolean attachmentsEnabled() {
@@ -343,8 +358,6 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
         }
 
         m_provider.deleteAttachment( att );
-     // :FVK: Engine.getSearchManager().pageRemoved( att );
-        this.referenceManager.clearPageEntries( att.getPageAttachment().getName() );
     }
 
     /** {@inheritDoc} */
@@ -369,7 +382,7 @@ public class DefaultAttachmentManager implements AttachmentManager, WikiManager,
 
 	@Override
 	public void releaseAttachmentStore(List<String> filesList) {
-		IPath attachmentDirectory = this.wikiConfiguration.getAttachmentPath();
+		IPath attachmentDirectory = this.globalPreferences.getAttachmentPath();
 		/* Remove attachment files. */
 		for (String fileName : filesList) {
 			try {

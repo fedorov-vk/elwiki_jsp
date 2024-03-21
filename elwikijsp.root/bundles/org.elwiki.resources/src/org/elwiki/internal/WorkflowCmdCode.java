@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextUtil;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.DecisionQueue;
@@ -32,7 +32,7 @@ public class WorkflowCmdCode extends CmdCode {
 		
 		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 		// Extract the wiki session
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 
 		// Get the current decisions
 		DecisionQueue dq = workflowManager.getDecisionQueue();

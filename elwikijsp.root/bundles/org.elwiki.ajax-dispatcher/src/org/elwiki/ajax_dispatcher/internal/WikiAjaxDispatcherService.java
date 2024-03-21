@@ -29,7 +29,7 @@ import org.apache.wiki.ajax.WikiAjaxServlet;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 import org.osgi.service.component.annotations.Activate;
@@ -48,10 +48,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.WikiAjaxDispatcher",
-	service = { WikiAjaxDispatcher.class, WikiManager.class, EventHandler.class },
+	service = { WikiAjaxDispatcher.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiManager, EventHandler {
+public class WikiAjaxDispatcherService implements WikiAjaxDispatcher, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiAjaxDispatcherService.class);
 

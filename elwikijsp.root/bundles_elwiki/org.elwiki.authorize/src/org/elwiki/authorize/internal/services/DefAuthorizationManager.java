@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.WikiException;
@@ -64,12 +64,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiLoginEventTopic;
-import org.elwiki.api.event.WikiSecurityEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.LoginEvent;
+import org.elwiki.api.event.SecurityEvent;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.Aprincipal;
@@ -143,24 +144,18 @@ import org.osgi.service.useradmin.Group;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthorizationManager",
-	service = {AuthorizationManager.class, WikiManager.class, EventHandler.class},
+	service = {AuthorizationManager.class, WikiComponent.class, EventHandler.class},
 	//property = {
-		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_LOGGING_ALL)
+		//:FVK: property = EventConstants.EVENT_TOPIC + "=" + LoginEvent.Topic.ALL)
 	//},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefAuthorizationManager implements AuthorizationManager, WikiManager, EventHandler {
+public class DefAuthorizationManager implements AuthorizationManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefAuthorizationManager.class);
 
 	/** The extension ID for access to implementation set of {@link Authorizer}. */
 	private static final String ID_EXTENSION_AUTHORIZER = "authorizer";
-
-	/** Extension's specific ID of default external Authorizer. Current value - {@value} */
-	protected static final String DEFAULT_AUTHORIZER = "DefaultAuthorizer";//:FVK: "WebContainerAuthorizer"; 
-
-	/** The property name in preferences.ini for specifying the external {@link Authorizer}. */
-	protected static final String PROP_AUTHORIZER = "jspwiki.authorizer";
 
 	/** Name of the default security policy file, as bundle resource. */
 	protected static final String DEFAULT_POLICY = "jspwiki.policy";
@@ -174,14 +169,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	/** Cache for storing PermissionCollections used to evaluate the local policy. */
 	private Map<String, PermissionCollection> cachedPermissions = new HashMap<>();
 
-	// == CODE ================================================================
-
-	/**
-	 * Constructs a new AuthorizationManager instance.
-	 */
-	public DefAuthorizationManager() {
-		//
-	}
+	private BundleContext bundleContext;
 
 	// -- OSGi service handling ----------------------(start)--
 
@@ -196,10 +184,18 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	private Engine m_engine;
 
 	@WikiServiceReference
+	GlobalPreferences globalPrefs;
+
+	@WikiServiceReference
 	private AccountManager accountManager;
 
 	@WikiServiceReference
 	PageManager pageManager;
+
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
 
 	/**
 	 * Initializes AuthorizationManager with an ApplicationSession and set of parameters.
@@ -211,18 +207,9 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	public void initialize() throws WikiException {
 		log.debug("Initialize.");
 
-		//
-		//  JAAS authorization continues.
-		//
-		String authorizerName = wikiConfiguration.getStringProperty(PROP_AUTHORIZER, DEFAULT_AUTHORIZER);
-		this.m_authorizer = getAuthorizerImplementation(authorizerName);
-		/*:FVK:
-		this.m_authorizer.initialize(this.m_engine);
-
-		// Make the AuthorizationManager listen for WikiEvents
-		// from AuthenticationManager (WikiSecurityEvents for changed user profiles)
-		m_engine.getAuthenticationManager().addWikiEventListener(this);
-		*/
+		// JAAS authorization continues.
+		String authorizerId = getPreference(AuthorizationManager.Prefs.AUTHORIZER_ID, String.class);
+		this.m_authorizer = getAuthorizerImplementation(authorizerId);
 	}
 
 	/**
@@ -262,20 +249,20 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	}
 
 	/**
-	 * Attempts to locate and initialize a Authorizer to use with this manager. Throws a WikiException
+	 * Attempts to locate and initialize an Authorizer to use with this manager. Throws a WikiException
 	 * if no entry is found, or if one fails to initialize.
 	 * 
-	 * @param defaultAuthorizerId default authorizer Id of extension point.
-	 * @return a Authorizer used to get page authorization information
+	 * @param requiredId required Authorizer ID for extension point.
+	 * @return a Authorizer according to required ID.
 	 * @throws WikiException
 	 */
-	private Authorizer getAuthorizerImplementation(String defaultAuthorizerId) throws WikiException {
+	private Authorizer getAuthorizerImplementation(String requiredId) throws WikiException {
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint ep;
 
 		//
-		// Load an Authorizer from Equinox extensions.
+		// Load an Authorizer from Equinox extension "org.elwiki.authorize.authorizer".
 		//
 		ep = registry.getExtensionPoint(namespace, ID_EXTENSION_AUTHORIZER);
 		if (ep != null) {
@@ -290,8 +277,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 						Class<? extends Authorizer> cl = clazz.asSubclass(Authorizer.class);
 						this.authorizerClasses.put(authorizerId, (Class<? extends Authorizer>) cl);
 					} catch (ClassCastException e) {
-						log.fatal("Authorizer " + className + " is not extends Authorizer interface.", e);
-						throw new WikiException("Authorizer " + className + " is not extends Authorizer interface.", e);
+						log.fatal("Authorizer " + className + " is not extends interface "
+								+ Authorizer.class.getSimpleName(), e);
+						throw new WikiException("Authorizer " + className + " is not extends interface "
+								+ Authorizer.class.getSimpleName(), e);
 					}
 				} catch (ClassNotFoundException e) {
 					log.fatal("Authorizer " + className + " cannot be found.", e);
@@ -300,10 +289,10 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 			}
 		}
 
-		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(defaultAuthorizerId);
+		Class<? extends Authorizer> clazzAuthorizer = this.authorizerClasses.get(requiredId);
 		if (clazzAuthorizer == null) {
-			// TODO: это сообщение не к месту (логика не адекватна).
-			throw new NoRequiredPropertyException("Unable to find an entry in the preferences.", PROP_AUTHORIZER);
+			throw new NoRequiredPropertyException("Unable to find Authorizer with ID=" + requiredId,
+					AuthorizationManager.Prefs.AUTHORIZER_ID);
 		}
 
 		Authorizer authorizer = null;
@@ -333,27 +322,32 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	// -- OSGi service handling ------------------------(end)--
 
 	@Override
-	public boolean checkPermission(Session session, Permission permission) {
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+
+	@Override
+	public boolean checkPermission(WikiSession session, Permission permission) {
 		//
-		//  A slight sanity check.
+		// A slight sanity check.
 		//
 		if (session == null || permission == null) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, null, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+					SecurityEvent.PROPERTY_USER, null, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 
 		Principal user = session.getLoginPrincipal();
 
 		// Always allow the action if user has AllPermission
-		Permission allPermission = new org.elwiki.permissions.AllPermission(this.wikiConfiguration.getApplicationName(),
+		Permission allPermission = new org.elwiki.permissions.AllPermission(this.globalPrefs.getApplicationName(),
 				null);
 		boolean hasAllPermission = checkStaticPermission(session, allPermission);
 		if (hasAllPermission) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -361,17 +355,17 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		// granted by policy, return false.
 		boolean hasPolicyPermission = checkStaticPermission(session, permission);
 		if (!hasPolicyPermission) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return false;
 		}
 
 		// If this isn't a PagePermission, it's allowed
 		if (!(permission instanceof PagePermission)) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
@@ -381,16 +375,16 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		String pageName = ((PagePermission) permission).getPage();
 		WikiPage page = pageManager.getPage(pageName);
 		if (page == null || page.getPageAcl().size() == 0) {
-			eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-					WikiSecurityEventTopic.PROPERTY_USER, user, //
-					WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+			eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+					SecurityEvent.PROPERTY_USER, user, //
+					SecurityEvent.PROPERTY_PERMISSION, permission)));
 			return true;
 		}
 
 		//
-		//  Next, iterate through the Principal objects assigned
-		//  this permission. If the context's subject possesses
-		//  any of these, the action is allowed.
+		// Next, iterate through the Principal objects assigned
+		// this permission. If the context's subject possesses
+		// any of these, the action is allowed.
 
 		List<Principal> aclPrincipals = findPrincipals(page, permission);
 
@@ -400,16 +394,16 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 
 		for (Principal aclPrincipal : aclPrincipals) {
 			if (hasRoleOrPrincipal(session, aclPrincipal)) {
-				eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_ALLOWED, Map.of( //
-						WikiSecurityEventTopic.PROPERTY_USER, user, //
-						WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+				eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_ALLOWED, Map.of( //
+						SecurityEvent.PROPERTY_USER, user, //
+						SecurityEvent.PROPERTY_PERMISSION, permission)));
 				return true;
 			}
 		}
 
-		eventAdmin.sendEvent(new Event(WikiSecurityEventTopic.TOPIC_SECUR_ACCESS_DENIED, Map.of( //
-				WikiSecurityEventTopic.PROPERTY_USER, user, //
-				WikiSecurityEventTopic.PROPERTY_PERMISSION, permission)));
+		eventAdmin.sendEvent(new Event(SecurityEvent.Topic.ACCESS_DENIED, Map.of( //
+				SecurityEvent.PROPERTY_USER, user, //
+				SecurityEvent.PROPERTY_PERMISSION, permission)));
 		return false;
 	}
 
@@ -423,7 +417,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	protected List<Principal> findPrincipals(WikiPage page, Permission permission) {
 		List<Principal> principals = new ArrayList<>();
 
-		for (PageAclEntry aclEntry : page.getPageAcl() ) {
+		for (PageAclEntry aclEntry : page.getPageAcl()) {
 			String permissionAction = aclEntry.getPermission();
 			PagePermission pagePermission = PermissionFactory.getPagePermission(page, permissionAction);
 			if (pagePermission.implies(permission)) {
@@ -441,7 +435,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	 * @see org.elwiki.core.auth.IAuthorizationManager#isUserInRole(org.elwiki.core.common.WikiSession, java.security.Principal)
 	 */
 	@Override
-	public boolean isUserInRole(Session session, Principal principal) {
+	public boolean isUserInRole(WikiSession session, Principal principal) {
 		if (session == null || principal == null || AuthenticationManager.isUserPrincipal(principal)) {
 			return false;
 		}
@@ -495,7 +489,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	 * @return <code>true</code> if the Subject supplied with the IWikiContext posesses the Role,
 	 *         GroupPrincipal or desired user Principal, <code>false</code> otherwise
 	 */
-	public boolean hasRoleOrPrincipal(Session session, Principal principal) {
+	public boolean hasRoleOrPrincipal(WikiSession session, Principal principal) {
 		// If either parameter is null, always deny
 		if (session == null || principal == null) {
 			return false;
@@ -529,14 +523,14 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 	 * @param permission the Permission the Subject must possess
 	 * @return <code>true</code> if the Subject possesses the permission, <code>false</code> otherwise
 	 */
-	public boolean checkStaticPermission(Session session, Permission permission) {
+	public boolean checkStaticPermission(WikiSession session, Permission permission) {
 		// Try the local policy - check each Role/Group and User Principal
 		return allowedByLocalPolicy(session.getRoles(), permission);
 	}
 
 	/**
 	 * Checks to see if the wiki security policy allows a particular static Permission. Do not use this
-	 * method for normal permission checks; use {@link #checkPermission(Session, Permission)} instead.
+	 * method for normal permission checks; use {@link #checkPermission(WikiSession, Permission)} instead.
 	 * 
 	 * @param principals the Principals to check. Only handles wiki's principals (Role, Group). User
 	 *                   principals can not has permission info - they can't be handled.
@@ -570,7 +564,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 						} catch (Exception e) {
 							/* If the class isn't there,
 							 * or if the constructor isn't corrected - we fail. */
-							e.printStackTrace();//:FVK:
+							e.printStackTrace();// :FVK:
 							continue;
 						}
 						permCollection.add(perm);
@@ -618,7 +612,8 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		Principal principal = null;
 
 		// Check built-in Roles first
-		String uid = this.accountManager.getGroupUid(groupName); //:FVK: workaround - get group by its name, for take group UID
+		String uid = this.accountManager.getGroupUid(groupName); // :FVK: workaround - get group by its name, for take
+																	// group UID
 		if (uid == null) {
 			return new UnresolvedPrincipal(groupName);
 		}
@@ -662,7 +657,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 		boolean isAllowed = checkPermission(wikiContext.getWikiSession(), wikiContext.requiredPermission());
 
 		if (!isAllowed) {
-			Session wikiSession = wikiContext.getWikiSession();
+			WikiSession wikiSession = wikiContext.getWikiSession();
 			Permission requiredPermission = wikiContext.requiredPermission();
 			Principal currentUser = wikiSession.getUserPrincipal();
 			ResourceBundle rb = Preferences.getBundle(wikiContext);
@@ -679,8 +674,7 @@ public class DefAuthorizationManager implements AuthorizationManager, WikiManage
 			}
 			String url = m_engine.getURL(ContextEnum.WIKI_MESSAGE.getRequestContext(), wikiContext.getPage().getId(),
 					null);
-			ServletContext sc = httpRequest.getServletContext().getContext(url);
-			RequestDispatcher rd = sc.getRequestDispatcher(url);
+			RequestDispatcher rd = httpRequest.getRequestDispatcher(url);
 			httpRequest.setAttribute(WikiContext.ATTR_FORWARD_REQUEST, url);
 			rd.forward(httpRequest, httpResponse);
 		}

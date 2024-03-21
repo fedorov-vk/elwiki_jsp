@@ -4,13 +4,6 @@
    <extension-point id="loginModule" name="Login Module" schema="schema/LoginModule.exsd"/>
    <extension-point id="authorizer" name="Authorizer" schema="schema/authorizer.exsd"/>
    <extension
-         point="org.elwiki.authorize.loginModule">
-      <loginModule
-            class="org.elwiki.authorize.login.AccountRegistryLoginModule"
-            id="org.elwiki.authorize.login.AccountRegistryLoginModule">
-      </loginModule>
-   </extension>
-   <extension
          point="org.elwiki.authorize.authorizer">
       <authorizer
             class="org.elwiki.authorize.internal.authorizer.DefaultAuthorizer"
@@ -37,6 +30,19 @@
                type="java.lang.Boolean">
          </adapter>
       </factory>
+   </extension>
+   <extension
+         point="org.elwiki.preferences.ui.preferencePages">
+      <page
+            class="org.elwiki.authorize.internal.services.AuthenticationManagerPreferencePage"
+            id="org.elwiki.authorize.page.authentication_manager"
+            name="Authentication">
+      </page>
+      <page
+            class="org.elwiki.authorize.internal.services.AuthorizationManagerPreferencePage"
+            id="org.elwiki.authorize.page.authorization_manager"
+            name="Authorizer">
+      </page>
    </extension>
 
 </plugin>

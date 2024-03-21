@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.workflow0.DecisionQueue;
@@ -49,9 +49,10 @@ import org.apache.wiki.workflow0.Workflow;
 import org.apache.wiki.workflow0.WorkflowManager;
 import org.apache.wiki.workflow0.Workflow.WfState;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.WorkflowEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.UnresolvedPrincipal;
 import org.osgi.service.component.annotations.Component;
@@ -70,13 +71,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultWorkflowManager",
-	service = { WorkflowManager.class, WikiManager.class, EventHandler.class },
+	service = { WorkflowManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON,
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiWorkflowEventTopic.TOPIC_WORKFLOW_ALL
+		EventConstants.EVENT_TOPIC + "=" + WorkflowEvent.Topic.ALL
 	})
 //@formatter:on
-public class DefaultWorkflowManager implements WorkflowManager, WikiManager, EventHandler {
+public class DefaultWorkflowManager implements WorkflowManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultWorkflowManager.class);
 
@@ -109,6 +110,9 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 	/** Stores configuration. */
 	@Reference
 	private IWikiConfiguration wikiConfiguration;
+
+	@Reference
+	private GlobalPreferences globalPreferences;
 
 	@WikiServiceReference
 	private Engine m_engine = null;
@@ -143,7 +147,7 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
 		optionReader.accept(WorkflowManager.WF_WP_SAVE_APPROVER);
 		optionReader.accept(WorkflowManager.WF_UP_CREATE_SAVE_APPROVER);
 		
-		String workDir = m_engine.getWikiConfiguration().getWorkDir().toString();
+		String workDir = globalPreferences.getWorkDir().toString();
 		unserializeFromDisk(new File(workDir, SERIALIZATION_FILE));
 	}
 
@@ -294,7 +298,7 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
      * {@inheritDoc}
      */
     @Override
-    public List< Workflow > getOwnerWorkflows( final Session session ) {
+    public List< Workflow > getOwnerWorkflows( final WikiSession session ) {
         final List< Workflow > workflows = new ArrayList<>();
         if ( session.isAuthenticated() ) {
             final Principal[] sessionPrincipals = session.getPrincipals();
@@ -357,42 +361,42 @@ public class DefaultWorkflowManager implements WorkflowManager, WikiManager, Eve
     }
 
 	/**
-	 * Listens for {@link WikiWorkflowEventTopic} objects emitted by Workflows. In particular, this
-	 * method listens for {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_CREATED},
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_ABORTED},
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_COMPLETED} and
-	 * {@link WikiWorkflowEventTopic#TOPIC_WORKFLOW_DQ_REMOVAL} events. If a workflow is created, it is
+	 * Listens for {@link WorkflowEvent} objects emitted by Workflows. In particular, this
+	 * method listens for {@link WorkflowEvent.Topic.CREATED},
+	 * {@link WorkflowEvent.Topic.ABORTED},
+	 * {@link WorkflowEvent.Topic.COMPLETED} and
+	 * {@link WorkflowEvent.Topic.DQ_REMOVAL} events. If a workflow is created, it is
 	 * automatically added to the cache. If one is aborted or completed, it is automatically removed. If
 	 * a removal from decision queue is issued, the current step from workflow, which is assumed to be a
 	 * {@link Decision}, is removed from the {@link DecisionQueue}.
 	 */
 	@Override
 	public void handleEvent(Event event) {
-		Workflow workflow = (Workflow) event.getProperty(WikiWorkflowEventTopic.PROPERTY_WORKFLOW);
-		Decision decision = (Decision) event.getProperty(WikiWorkflowEventTopic.PROPERTY_DECISION);
+		Workflow workflow = (Workflow) event.getProperty(WorkflowEvent.PROPERTY_WORKFLOW);
+		Decision decision = (Decision) event.getProperty(WorkflowEvent.PROPERTY_DECISION);
 
 		String topic = event.getTopic();
 		switch (topic) {
 		// Remove from manager
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_ABORTED:
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_COMPLETED:
+		case WorkflowEvent.Topic.ABORTED:
+		case WorkflowEvent.Topic.COMPLETED:
 			remove(workflow);
 			break;
 		// Add to manager
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_CREATED:
+		case WorkflowEvent.Topic.CREATED:
 			add(workflow);
 			break;
 		// Add to DecisionQueue
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_ADDITION:
+		case WorkflowEvent.Topic.DQ_ADDITION:
 			addToDecisionQueue(decision);
 			break;
 		// Remove from DecisionQueue
-		case WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL:
+		case WorkflowEvent.Topic.DQ_REMOVAL:
 			removeFromDecisionQueue(decision);
 			break;
 		}
 
-		serializeToDisk(new File(wikiConfiguration.getWorkDir().toString(), SERIALIZATION_FILE));
+		serializeToDisk(new File(globalPreferences.getWorkDir().toString(), SERIALIZATION_FILE));
 	}
 
 }

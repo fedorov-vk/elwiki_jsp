@@ -18,10 +18,10 @@
  */
 package org.apache.wiki.workflow0;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.event.WorkflowEvent;
 import org.osgi.service.event.Event;
 
 import java.io.Serializable;
@@ -88,7 +88,7 @@ public class DecisionQueue implements Serializable {
      * @param session the wiki session
      * @return the collection of Decisions, which may be empty
      */
-    public Collection<Decision> getActorDecisions( final Session session ) {
+    public Collection<Decision> getActorDecisions( final WikiSession session ) {
         final ArrayList< Decision > decisions = new ArrayList<>();
         if( session.isAuthenticated() ) {
             final Principal[] principals = session.getPrincipals();
@@ -125,8 +125,8 @@ public class DecisionQueue implements Serializable {
             remove( decision );
         }
 
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_DECIDE,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_DECIDE,
+				Map.of(WorkflowEvent.PROPERTY_DECISION, decision)));
     }
 
     /**
@@ -140,8 +140,8 @@ public class DecisionQueue implements Serializable {
         if( decision.isReassignable() ) {
             decision.reassign( owner );
 
-    		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REASSIGN,
-    				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, decision)));
+    		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_REASSIGN,
+    				Map.of(WorkflowEvent.PROPERTY_DECISION, decision)));
 
             return;
         }

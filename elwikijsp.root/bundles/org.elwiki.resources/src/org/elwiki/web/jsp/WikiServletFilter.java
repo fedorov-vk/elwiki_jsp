@@ -24,10 +24,11 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.WikiContextImpl;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.AuthenticationManager;
 import org.apache.wiki.auth.SessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.resources.ResourcesActivator;
 import org.osgi.framework.BundleContext;
@@ -79,6 +80,9 @@ public class WikiServletFilter implements Filter {
     private Engine m_engine;
 
     @Reference
+    private GlobalPreferences globalPreferences;
+
+    @Reference
     private IWikiConfiguration wikiConfiguration;
 
 	@Activate
@@ -88,6 +92,10 @@ public class WikiServletFilter implements Filter {
     
     public IWikiConfiguration getWikiConfiguration() {
 		return wikiConfiguration;
+	}
+
+    public GlobalPreferences getGlobalPreferences() {
+		return globalPreferences;
 	}
 
 	/**
@@ -164,7 +172,7 @@ public class WikiServletFilter implements Filter {
         HttpServletRequest httpRequest = ( HttpServletRequest )request;
         
         // Set the character encoding
-        httpRequest.setCharacterEncoding( getWikiConfiguration().getContentEncodingCs().displayName() );
+        httpRequest.setCharacterEncoding( engine.getContentEncoding().displayName() );
 
         if ( !isWrapped( request ) ) {
             // Prepare the Session
@@ -181,7 +189,7 @@ public class WikiServletFilter implements Filter {
         }
 
         try {
-            NDC.push( getWikiConfiguration().getApplicationName() + ":" + httpRequest.getRequestURL() );
+            NDC.push( getGlobalPreferences().getApplicationName() + ":" + httpRequest.getRequestURL() );
             chain.doFilter( httpRequest, response );
         } finally {
             NDC.pop();

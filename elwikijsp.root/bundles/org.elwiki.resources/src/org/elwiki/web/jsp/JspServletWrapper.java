@@ -78,7 +78,8 @@ public abstract class JspServletWrapper implements Servlet {
 			String bundleResourcePath = null;
 			try {
 				JspServlet newDelegate = new JspServlet(bundle, bundleResourcePath, getAlias());
-				newDelegate.init(config);
+				newDelegate.init(this.config);
+				newDelegate.init(this.config); //:FVK: TODO: workaround due to problem in the basic code.
 				delegate = newDelegate;
 			} catch (Exception e) { //TODO: add support exception logging.
 				throw new ServletException(e);

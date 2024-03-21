@@ -26,7 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.WikiSecurityException;
 //import org.elwiki.api.event.WikiEventListener;
 //import org.elwiki.api.event.WikiEventProvider;
@@ -62,8 +62,6 @@ public interface IGroupManager {
 
 	/** Key used for adding UI messages to a user's WikiSession. */
 	String MESSAGES_KEY = "group";
-
-	String PROP_GROUPDATABASE = "jspwiki.groupdatabase";
 
 	//@formatter:off
 	public static String[] RESTRICTED_GROUPNAMES = new String[] {
@@ -157,7 +155,7 @@ public interface IGroupManager {
 	 * Removes a named Group from the group database. If not found, throws a
 	 * <code>NoSuchPrincipalException</code>. After removal, this method will commit the delete to the
 	 * back-end group database. It will also fire a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_REMOVE} event with the
+	 * {@link SecurityEvent.Topic.GROUP_REMOVE} event with the
 	 * GroupManager instance as the source and the Group as target. If <code>index</code> is
 	 * <code>null</code>, this method throws an {@link IllegalArgumentException}.
 	 * 
@@ -176,12 +174,12 @@ public interface IGroupManager {
 	 * This method fires the following events:
 	 * <ul>
 	 * <li><strong>When creating a new Group</strong>, this method fires a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_ADD} with the GroupManager
+	 * {@link SecurityEvent.Topic.GROUP_ADD} with the GroupManager
 	 * instance as its source and the new Group as the target.</li>
 	 * <li><strong>When overwriting an existing Group</strong>, this method fires a new
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_REMOVE} with this GroupManager
+	 * {@link SecurityEvent.Topic.GROUP_REMOVE} with this GroupManager
 	 * instance as the source, and the new Group as the target. It then fires a
-	 * {@link WikiSecurityEventTopic#TOPIC_SECUR_GROUP_ADD} event with the same source
+	 * {@link SecurityEvent.Topic.GROUP_ADD} event with the same source
 	 * and target.</li>
 	 * </ul>
 	 * <p>
@@ -200,7 +198,7 @@ public interface IGroupManager {
 	 * @param group   the Group, which may not be <code>null</code>.
 	 * @throws WikiSecurityException if the Group cannot be saved by the back-end.
 	 */
-	void setGroup(Session session, IGroupWiki group) throws WikiSecurityException;
+	void setGroup(WikiSession session, IGroupWiki group) throws WikiSecurityException;
 
 	/**
 	 * Returns useradmin OSGi group by specified name.

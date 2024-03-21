@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="elwiki server" uid="elwiki" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="false" autoIncludeRequirements="true">
+<product name="elwiki server" uid="elwiki" version="1.0.0.qualifier" type="features" includeLaunchers="false" autoIncludeRequirements="true">
 
    <configIni use="default">
    </configIni>
@@ -11,7 +11,7 @@
       </programArgs>
       <vmArgsLin>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000
 
--Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/
+-Delwiki.h2.database.place=/home/vfedorov/dev/dev_wikijsp/GIT/elwiki_jsp_2023-12/database_repository/
 -Declipse.ignoreApp=true -Dosgi.noShutdown=true
 -Dorg.osgi.service.http.port=8088
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
@@ -21,7 +21,7 @@
       </vmArgsMac>
       <vmArgsWin>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:8000
 
--Delwiki.h2.database.place=D:/devj/dev_wikijsp/GIT/elwiki+jsp_2022-12/database_repository/
+-Delwiki.h2.database.place=D:/devj/dev_wikijsp/GIT/elwiki_jsp_2023-12/database_repository/
 -Declipse.ignoreApp=true -Dosgi.noShutdown=true
 -Dorg.osgi.service.http.port=8088
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
@@ -48,6 +48,7 @@
       <feature id="org.elwiki.plugins.feature" installMode="root"/>
       <feature id="org.elwiki.platform.feature" installMode="root"/>
       <feature id="jsp.bridge.feature" installMode="root"/>
+      <feature id="org.elwiki.lucene.feature" installMode="root"/>
    </features>
 
    <configurations>
@@ -56,31 +57,27 @@
       <plugin id="dwe.data" autoStart="true" startLevel="3" />
       <plugin id="jakarta.servlet-api" autoStart="true" startLevel="0" />
       <plugin id="javax.activation" autoStart="true" startLevel="0" />
-      <plugin id="javax.el-api" autoStart="true" startLevel="0" />
       <plugin id="javax.inject" autoStart="true" startLevel="0" />
       <plugin id="javax.mail" autoStart="true" startLevel="0" />
-      <plugin id="javax.servlet.jsp-api" autoStart="true" startLevel="0" />
       <plugin id="javax.xml" autoStart="true" startLevel="0" />
       <plugin id="jaxen" autoStart="true" startLevel="0" />
       <plugin id="lpg.runtime.java" autoStart="true" startLevel="0" />
       <plugin id="net.sf.ehcache" autoStart="true" startLevel="0" />
       <plugin id="net.sourceforge.akismet-java" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons-io" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.codec" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.commons-fileupload" autoStart="true" startLevel="0" />
-      <plugin id="org.apache.commons.commons-text" autoStart="true" startLevel="0" />
-      <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.lang3" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.logging" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.text" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.command" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.shell" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.scr" autoStart="true" startLevel="1" />
-      <plugin id="org.apache.jasper.glassfish" autoStart="true" startLevel="0" />
       <plugin id="org.apache.log4j" autoStart="true" startLevel="0" />
       <plugin id="org.apache.lucene.analysis-common" autoStart="true" startLevel="0" />
       <plugin id="org.apache.lucene.core" autoStart="true" startLevel="0" />
       <plugin id="org.apache.lucene.highlighter" autoStart="true" startLevel="0" />
-      <plugin id="org.apache.lucene.memory" autoStart="true" startLevel="0" />
       <plugin id="org.apache.lucene.queries" autoStart="true" startLevel="0" />
       <plugin id="org.apache.lucene.queryparser" autoStart="true" startLevel="0" />
       <plugin id="org.apache.xalan" autoStart="true" startLevel="0" />
@@ -125,7 +122,7 @@
       <plugin id="org.eclipse.jetty.io" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.jetty.security" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.jetty.server" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.jetty.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.servlet-api" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.jetty.util" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.jetty.util.ajax" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.jetty.xml" autoStart="true" startLevel="0" />
@@ -160,12 +157,12 @@
       <plugin id="org.elwiki.manager.page" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.pagerenamer" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.plugins" autoStart="true" startLevel="3" />
-      <plugin id="org.elwiki.manager.referencemanager" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.renderer" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.search" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.variables" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.wikiscope" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.manager.workflow" autoStart="true" startLevel="3" />
+      <plugin id="org.elwiki.part.id2name" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.plugin.bugreporthandler" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.plugins.main" autoStart="true" startLevel="3" />
       <plugin id="org.elwiki.provider.page.cdo" autoStart="true" startLevel="3" />
@@ -175,8 +172,9 @@
       <plugin id="org.elwiki.util" autoStart="true" startLevel="3" />
       <plugin id="org.freshcookies.security" autoStart="true" startLevel="0" />
       <plugin id="org.h2" autoStart="true" startLevel="0" />
-      <plugin id="org.jdom.2" autoStart="true" startLevel="0" />
+      <plugin id="org.jdom2" autoStart="true" startLevel="0" />
       <plugin id="org.jvnet.hudson.org.suigeneris.jrcs.diff" autoStart="true" startLevel="0" />
+      <plugin id="org.mortbay.jasper.apache-jsp" autoStart="true" startLevel="0" />
       <plugin id="org.osgi.service.cm" autoStart="true" startLevel="0" />
       <plugin id="org.osgi.service.component" autoStart="true" startLevel="0" />
       <plugin id="org.osgi.service.device" autoStart="true" startLevel="0" />

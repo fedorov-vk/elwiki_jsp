@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.localization.BundleLocalization;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
 import org.elwiki.configuration.IWikiConfiguration;
@@ -155,10 +155,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultPluginManager",
-	service = { PluginManager.class, WikiManager.class, EventHandler.class },
+	service = { PluginManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultPluginManager extends BaseModuleManager implements PluginManager, WikiManager, EventHandler {
+public class DefaultPluginManager extends BaseModuleManager implements PluginManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultPluginManager.class);
 

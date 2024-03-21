@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.apache.wiki.ajax.WikiAjaxDispatcher;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.auth.AccountRegistry;
@@ -18,7 +18,7 @@ import org.apache.wiki.auth.ISessionMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiScopeManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -32,10 +32,10 @@ import com.google.gson.reflect.TypeToken;
 //@formatter:off
 @Component(
 	name = "elwiki.WikiScopeManager",
-	service = { WikiScopeManager.class, WikiManager.class, EventHandler.class },
+	service = { WikiScopeManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, EventHandler {
+public class WikiScopeManagerImpl implements WikiScopeManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(WikiScopeManagerImpl.class);
 
@@ -51,7 +51,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	 * The selection status is: =2 - page is selected; =1 - only some children of page are selected for
 	 * scope.
 	 */
-	private Map<Session, Map<String, Integer>> scopePages = new WeakHashMap();
+	private Map<WikiSession, Map<String, Integer>> scopePages = new WeakHashMap();
 
 	/**
 	 * Creates instance of WikiScopeManager.
@@ -97,7 +97,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 	@Override
 	public String[] getScopeList(HttpServletRequest request) {
 		ISessionMonitor sessionMonitor = this.m_engine.getManager(ISessionMonitor.class);
-		Session session = sessionMonitor.getWikiSession(request);
+		WikiSession session = sessionMonitor.getWikiSession(request);
 		org.osgi.service.useradmin.User user = session.getUser();
 		if (user != null) {
 			Dictionary<String, Object> props = user.getProperties();
@@ -110,7 +110,7 @@ public class WikiScopeManagerImpl implements WikiScopeManager, WikiManager, Even
 
 	@Override
 	public void ReinitScope(WikiContext wikiContext, String scopeArea, String scopeName, String scopes) {
-		Session session = wikiContext.getWikiSession();
+		WikiSession session = wikiContext.getWikiSession();
 
 		if ("all".equals(scopeArea)) {
 			scopePages.put(session, null);

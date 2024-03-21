@@ -36,10 +36,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.AuthenticationManager;
+import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.ISessionMonitor;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.util.TimedCounterList;
@@ -51,9 +51,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.WikiServiceReference;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.WebAuthorizer;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiEventTopic;
-import org.elwiki.api.event.WikiLoginEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.WikiEvent;
+import org.elwiki.api.event.LoginEvent;
 import org.elwiki.authorize.internal.authorizer.WebContainerAuthorizer;
 import org.elwiki.authorize.internal.bundle.AuthorizePluginActivator;
 import org.elwiki.authorize.login.AccountRegistryLoginModule;
@@ -65,6 +65,8 @@ import org.elwiki.authorize.login.WebContainerLoginModule;
 import org.elwiki.authorize.login.WikiCallbackHandler;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
@@ -79,54 +81,49 @@ import org.osgi.service.useradmin.UserAdmin;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultAuthenticationManager",
-	service = { AuthenticationManager.class, WikiManager.class, EventHandler.class },
+	service = { AuthenticationManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultAuthenticationManager implements AuthenticationManager, WikiManager, EventHandler {
+public class DefaultAuthenticationManager implements AuthenticationManager, WikiComponent, EventHandler {
 
-    /** How many milliseconds the logins are stored before they're cleaned away. */
-    private static final long LASTLOGINS_CLEANUP_TIME = 10 * 60 * 1_000L; // Ten minutes
+	private static final Logger log = Logger.getLogger(DefaultAuthenticationManager.class);
 
-    private static final long MAX_LOGIN_DELAY = 20 * 1_000L; // 20 seconds
+	/** How many milliseconds the logins are stored before they're cleaned away. */
+	private static final long LASTLOGINS_CLEANUP_TIME = 10 * 60 * 1_000L; // Ten minutes
 
-    private static final Logger log = Logger.getLogger( DefaultAuthenticationManager.class );
+	private static final long MAX_LOGIN_DELAY = 20 * 1_000L; // 20 seconds
 
-    /** Class (of type LoginModule) to use for custom authentication. */
-    protected Class< ? extends LoginModule > m_loginModuleClass = AccountRegistryLoginModule.class;
+	/** Class (of type LoginModule) to use for custom authentication. */
+	protected Class<? extends LoginModule> m_loginModuleClass = AccountRegistryLoginModule.class;
 
-    /** Options passed to {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)};
-     * initialized by {@link #initialize(Engine, Properties)}. */
-    protected Map< String, String > m_loginModuleOptions = new HashMap<>();
+	/**
+	 * Options passed to {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)}; initialized
+	 * by {@link #initialize(Engine, Properties)}.
+	 */
+	protected Map<String, String> m_loginModuleOptions = new HashMap<>();
 
-    /** The default {@link LoginModule} class name to use for custom authentication. */
-    private static final String DEFAULT_LOGIN_MODULE = AccountRegistryLoginModule.class.getCanonicalName(); 
-    		//:FVK: "org.apache.wiki.auth.login.AccountRegistryLoginModule";
+	/** Keeps a list of the usernames who have attempted a login recently. */
+	private TimedCounterList<String> m_lastLoginAttempts = new TimedCounterList<>();
 
-    /** Static Boolean for lazily-initializing the "allows assertions" flag */
-    private boolean m_allowsCookieAssertions = true;
+	///////////////////////////////////////////////////////////////////////////
 
-    private boolean m_throttleLogins = true;
-
-    /** Static Boolean for lazily-initializing the "allows cookie authentication" flag */
-    private boolean m_allowsCookieAuthentication = false;
-
-    /** Keeps a list of the usernames who have attempted a login recently. */
-    private TimedCounterList< String > m_lastLoginAttempts = new TimedCounterList<>();
-
-    ///////////////////////////////////////////////////////////////////////////
-    
 	private static final String ID_EXTENSION_LOGIN_MODULE = "loginModule";
 
 	private final Map<String, Class<? extends LoginModule>> loginModuleClasses = new HashMap<>();
 
+	/** The default {@link LoginModule} class to use for custom authentication. */
+	private static final Class<? extends LoginModule> DEFAULT_LOGIN_MODULE_CLASS = AccountRegistryLoginModule.class;
+
 	/** Class (of type LoginModule) to use for custom authentication. */
-	protected Class<? extends LoginModule> loginModuleClass = AccountRegistryLoginModule.class;
+	protected Class<? extends LoginModule> loginModuleClass;
+
+	private BundleContext bundleContext;
 
 	// -- OSGi service handling ----------------------(start)--
 
 	@Reference
 	protected UserAdmin userAdminService;
-	
+
 	@Reference
 	protected EventAdmin eventAdmin;
 
@@ -135,7 +132,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	private IWikiConfiguration wikiConfiguration;
 
 	@WikiServiceReference
-    private Engine m_engine = null;
+	private Engine m_engine = null;
 
 	@WikiServiceReference
 	private AuthorizationManager authorizationManager;
@@ -143,63 +140,54 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	@WikiServiceReference
 	private ISessionMonitor sessionMonitor;
 
+	@Activate
+	protected void startup(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
+
 	/** {@inheritDoc} */
 	@Override
-    public void initialize() throws WikiException {
-        // Should we allow cookies for assertions? (default: yes)
-        m_allowsCookieAssertions = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_ASSERTIONS, true);
+	public void initialize() throws WikiException {
+		// Look up the LoginModule class
+		String loginModuleId = getPreference(AuthenticationManager.Prefs.LOGIN_MODULE_ID, String.class);
+		loginModuleClass = getLoginModule(loginModuleId);
+		if (loginModuleClass == null) {
+			loginModuleClass = DEFAULT_LOGIN_MODULE_CLASS;
+		}
 
-        // Should we allow cookies for authentication? (default: no)
-        m_allowsCookieAuthentication = wikiConfiguration.getBooleanProperty(PROP_ALLOW_COOKIE_AUTH, false);
+		// Initialize the LoginModule options
+		initLoginModuleOptions(wikiConfiguration.getWikiPreferences());
+	}
 
-        // Should we throttle logins? (default: yes)
-        m_throttleLogins = wikiConfiguration.getBooleanProperty(PROP_LOGIN_THROTTLING, true);
-
-        // Look up the LoginModule class
-        //final String loginModuleClassName = TextUtil.getStringProperty( props, PROP_LOGIN_MODULE, DEFAULT_LOGIN_MODULE );
-        final String loginModuleClassName = DEFAULT_LOGIN_MODULE; //:FVK:
-        /*:FVK:
-        try {
-            m_loginModuleClass = ( Class< ? extends LoginModule > )Class.forName( loginModuleClassName );
-        } catch( final ClassNotFoundException e ) {
-            log.error( e.getMessage(), e );
-            throw new WikiException( "Could not instantiate LoginModule class.", e );
-        }
-        */
-		this.loginModuleClass = getLoginModule(loginModuleClassName);
-
-        // Initialize the LoginModule options
-        initLoginModuleOptions(wikiConfiguration.getWikiPreferences());
-    }
-
-    /**
-     * Initializes the options Map supplied to the configured LoginModule every time it is invoked. The properties and values extracted from
-     * <code>preferences.ini</code> are of the form <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where
-     * <var>param</var> is the key name, and <var>value</var> is the value.
-     *
-     * @param props the properties used to initialize JSPWiki
-     * @throws IllegalArgumentException if any of the keys are duplicated
-     */
-    private void initLoginModuleOptions( IPreferenceStore props ) {
-    	/*:FVK:
-        for( final Object key : props.keySet() ) {
-            final String propName = key.toString();
-            if( propName.startsWith( PREFIX_LOGIN_MODULE_OPTIONS ) ) {
-                // Extract the option name and value
-                final String optionKey = propName.substring( PREFIX_LOGIN_MODULE_OPTIONS.length() ).trim();
-                if( optionKey.length() > 0 ) {
-                    final String optionValue = props.getProperty( propName );
-
-                    // Make sure the key is unique before stashing the key/value pair
-                    if ( m_loginModuleOptions.containsKey( optionKey ) ) {
-                        throw new IllegalArgumentException( "JAAS LoginModule key " + propName + " cannot be specified twice!" );
-                    }
-                    m_loginModuleOptions.put( optionKey, optionValue );
-                }
-            }
-        }
-        */
-    }
+	/**
+	 * Initializes the options Map supplied to the configured LoginModule every time it is invoked. The
+	 * properties and values extracted from <code>preferences.ini</code> are of the form
+	 * <code>jspwiki.loginModule.options.<var>param</var> = <var>value</var>, where <var>param</var> is
+	 * the key name, and <var>value</var> is the value.
+	 *
+	 * @param props the properties used to initialize JSPWiki
+	 * @throws IllegalArgumentException if any of the keys are duplicated
+	 */
+	private void initLoginModuleOptions(IPreferenceStore props) {
+		/*:FVK:
+		for( final Object key : props.keySet() ) {
+		    final String propName = key.toString();
+		    if( propName.startsWith( PREFIX_LOGIN_MODULE_OPTIONS ) ) {
+		        // Extract the option name and value
+		        final String optionKey = propName.substring( PREFIX_LOGIN_MODULE_OPTIONS.length() ).trim();
+		        if( optionKey.length() > 0 ) {
+		            final String optionValue = props.getProperty( propName );
+		
+		            // Make sure the key is unique before stashing the key/value pair
+		            if ( m_loginModuleOptions.containsKey( optionKey ) ) {
+		                throw new IllegalArgumentException( "JAAS LoginModule key " + propName + " cannot be specified twice!" );
+		            }
+		            m_loginModuleOptions.put( optionKey, optionValue );
+		        }
+		    }
+		}
+		*/
+	}
 
 	// -- OSGi service handling ------------------------(end)--
 
@@ -210,9 +198,10 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 	 * @return
 	 * @throws WikiException
 	 */
-	private Class<? extends LoginModule> getLoginModule(String loginModuleId) throws WikiException {
+	@Override
+	public Class<? extends LoginModule> getLoginModule(String loginModuleId) throws WikiException {
 		//
-		// Загрузка из расширений модулей регистрации пользователя.
+		// Load an Authorizer from Equinox extension "org.elwiki.authorize.loginModule". 
 		//
 		String namespace = AuthorizePluginActivator.getDefault().getBundle().getSymbolicName();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -244,37 +233,58 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 		return this.loginModuleClasses.get(loginModuleId);
 	}
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isContainerAuthenticated() {
-        try {
-            final Authorizer authorizer = this.authorizationManager.getAuthorizer();
-            if ( authorizer instanceof WebContainerAuthorizer ) {
-                 return ( ( WebContainerAuthorizer )authorizer ).isContainerAuthorized();
-            }
-        } catch ( final WikiException e ) {
-            // It's probably ok to fail silently...
-        }
-        return false;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	@Override
+	public BundleContext getBundleContext() {
+		return this.bundleContext;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isAllowsCookieAssertions() {
+		return getPreference(AuthenticationManager.Prefs.ALLOW_COOKIE_ASSERTIONS, Boolean.class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isAllowsCookieAuthentication() {
+		return getPreference(AuthenticationManager.Prefs.ALLOW_COOKIE_AUTH, Boolean.class);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isContainerAuthenticated() {
+		try {
+			final Authorizer authorizer = this.authorizationManager.getAuthorizer();
+			if (authorizer instanceof WebContainerAuthorizer) {
+				return ((WebContainerAuthorizer) authorizer).isContainerAuthorized();
+			}
+		} catch (final WikiException e) {
+			// It's probably ok to fail silently...
+		}
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean login(final HttpServletRequest request) throws WikiSecurityException {
-    	final Session session = sessionMonitor.getWikiSession(request);
-    	return login(request, session);
-    }
+		final WikiSession session = sessionMonitor.getWikiSession(request);
+		return login(request, session);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-	public boolean login(final HttpServletRequest request, Session session) throws WikiSecurityException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean login(final HttpServletRequest request, WikiSession session) throws WikiSecurityException {
 		CallbackHandler handler = null;
 		final Map<String, String> options = Collections.emptyMap();
 
@@ -286,16 +296,16 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 			// Execute the container login module, then (if that fails) the cookie auth module
 			Set<Principal> principals = this.doJAASLogin(WebContainerLoginModule.class, handler, options);
-			if (principals.size() == 0 && this.allowsCookieAuthentication()) {
+			if (principals.size() == 0 && this.isAllowsCookieAuthentication()) {
 				principals = this.doJAASLogin(CookieAuthenticationLoginModule.class, handler, options);
 			}
 
 			// If the container logged the user in successfully,
 			// tell the Session (and add all of the Principals)
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.AUTHENTICATED, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 
 				// Add all appropriate Authorizer roles
 				injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), request);
@@ -305,13 +315,13 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		}
 
 		// If user still not authenticated, check if assertion cookie was supplied
-		if (!session.isAuthenticated() && this.allowsCookieAssertions()) {
+		if (!session.isAuthenticated() && this.isAllowsCookieAssertions()) {
 			// Execute the cookie assertion login module
 			final Set<Principal> principals = this.doJAASLogin(CookieAssertionLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ASSERTED, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.ASSERTED, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -320,9 +330,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		if (session.isAnonymous()) {
 			final Set<Principal> principals = this.doJAASLogin(AnonymousLoginModule.class, handler, options);
 			if (principals.size() > 0) {
-				eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_ANONYMOUS, Map.of( //
-						WikiEventTopic.PROPERTY_KEY_TARGET, request.getSession().getId(), //
-						WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+				eventAdmin.sendEvent(new Event(LoginEvent.Topic.ANONYMOUS, Map.of( //
+						WikiEvent.PROPERTY_KEY_TARGET, request.getSession().getId(), //
+						WikiEvent.PROPERTY_PRINCIPALS, principals)));
 				return true;
 			}
 		}
@@ -331,67 +341,69 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		return false;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean loginAsserted( final Session session, final HttpServletRequest request, final String username, final String password ) throws WikiSecurityException {
-        if ( session == null ) {
-            log.error( "No wiki session provided, cannot log in." );
-            return false;
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean loginAsserted(final WikiSession session, final HttpServletRequest request, final String username,
+			final String password) throws WikiSecurityException {
+		if (session == null) {
+			log.error("No wiki session provided, cannot log in.");
+			return false;
+		}
 
-        // Protect against brute-force password guessing if configured to do so
-        if ( m_throttleLogins ) {
-            delayLogin( username );
-        }
+		// Protect against brute-force password guessing if configured to do so
+		if (getPreference(AuthenticationManager.Prefs.LOGIN_THROTTLING, Boolean.class)) {
+			delayLogin(username);
+		}
 
 		final CallbackHandler handler = new WikiCallbackHandler(m_engine, null, username, password);
 
-        // Execute the user's specified login module
-        final Set< Principal > principals = this.doJAASLogin( m_loginModuleClass, handler, m_loginModuleOptions );
-        if( principals.size() > 0 ) {
+		// Execute the user's specified login module
+		final Set<Principal> principals = this.doJAASLogin(m_loginModuleClass, handler, m_loginModuleOptions);
+		if (principals.size() > 0) {
 			String httpSessionId = (request != null) ? request.getSession().getId() : "";
-			eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGIN_AUTHENTICATED,
-					Map.of(WikiEventTopic.PROPERTY_KEY_TARGET, httpSessionId,
-							WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+			eventAdmin.sendEvent(
+					new Event(LoginEvent.Topic.AUTHENTICATED, Map.of(WikiEvent.PROPERTY_KEY_TARGET,
+							httpSessionId, WikiEvent.PROPERTY_PRINCIPALS, principals)));
 
-            // Add all appropriate Authorizer roles
-            injectAuthorizerRoles( session, this.authorizationManager.getAuthorizer(), null );
+			// Add all appropriate Authorizer roles
+			injectAuthorizerRoles(session, this.authorizationManager.getAuthorizer(), null);
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     *  This method builds a database of login names that are being attempted, and will try to delay if there are too many requests coming
-     *  in for the same username.
-     *  <p>
-     *  The current algorithm uses 2^loginattempts as the delay in milliseconds, i.e. at 10 login attempts it'll add 1.024 seconds to the login.
-     *
-     *  @param username The username that is being logged in
-     */
-    private void delayLogin( final String username ) {
-        try {
-            m_lastLoginAttempts.cleanup( LASTLOGINS_CLEANUP_TIME );
-            final int count = m_lastLoginAttempts.count( username );
+	/**
+	 * This method builds a database of login names that are being attempted, and will try to delay if
+	 * there are too many requests coming in for the same username.
+	 * <p>
+	 * The current algorithm uses 2^loginattempts as the delay in milliseconds, i.e. at 10 login
+	 * attempts it'll add 1.024 seconds to the login.
+	 *
+	 * @param username The username that is being logged in
+	 */
+	private void delayLogin(final String username) {
+		try {
+			m_lastLoginAttempts.cleanup(LASTLOGINS_CLEANUP_TIME);
+			final int count = m_lastLoginAttempts.count(username);
 
-            final long delay = Math.min( 1 << count, MAX_LOGIN_DELAY );
-            log.debug( "Sleeping for " + delay + " ms to allow login." );
-            Thread.sleep( delay );
+			final long delay = Math.min(1 << count, MAX_LOGIN_DELAY);
+			log.debug("Sleeping for " + delay + " ms to allow login.");
+			Thread.sleep(delay);
 
-            m_lastLoginAttempts.add( username );
-        } catch( final InterruptedException e ) {
-            // FALLTHROUGH is fine
-        }
-    }
+			m_lastLoginAttempts.add(username);
+		} catch (final InterruptedException e) {
+			// FALLTHROUGH is fine
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void logout(final HttpServletRequest request) {
 		if (request == null) {
 			log.error("No HTTP reqest provided; cannot log out.");
@@ -400,8 +412,8 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 
 		HttpSession httpSession = request.getSession();
 		String httpSessionId = (httpSession != null) ? httpSession.getId() : null;
-		eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_LOGOUT, Map.of( //
-				WikiEventTopic.PROPERTY_KEY_TARGET, httpSessionId)));
+		eventAdmin.sendEvent(new Event(LoginEvent.Topic.LOGOUT, Map.of( //
+				WikiEvent.PROPERTY_KEY_TARGET, httpSessionId)));
 
 		// We need to flush the HTTP session too
 		if (httpSession != null) {
@@ -409,55 +421,42 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		}
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean allowsCookieAssertions() {
-        return m_allowsCookieAssertions;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean allowsCookieAuthentication() {
-        return m_allowsCookieAuthentication;
-    }
-
-    /**
-     * Instantiates and executes a single JAAS {@link LoginModule}, and returns a Set of Principals that results from a successful login.
-     * The LoginModule is instantiated, then its {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)} method is called. The
-     * parameters passed to <code>initialize</code> is a dummy Subject, an empty shared-state Map, and an options Map the caller supplies.
-     *
-     * @param clazz the LoginModule class to instantiate
-     * @param handler the callback handler to supply to the LoginModule
-     * @param options a Map of key/value strings for initializing the LoginModule
-     * @return the set of Principals returned by the JAAS method {@link Subject#getPrincipals()}
-     * @throws WikiSecurityException if the LoginModule could not be instantiated for any reason
-     */
+	/**
+	 * Instantiates and executes a single JAAS {@link LoginModule}, and returns a Set of Principals that
+	 * results from a successful login. The LoginModule is instantiated, then its
+	 * {@link LoginModule#initialize(Subject, CallbackHandler, Map, Map)} method is called. The
+	 * parameters passed to <code>initialize</code> is a dummy Subject, an empty shared-state Map, and
+	 * an options Map the caller supplies.
+	 *
+	 * @param clazz   the LoginModule class to instantiate
+	 * @param handler the callback handler to supply to the LoginModule
+	 * @param options a Map of key/value strings for initializing the LoginModule
+	 * @return the set of Principals returned by the JAAS method {@link Subject#getPrincipals()}
+	 * @throws WikiSecurityException if the LoginModule could not be instantiated for any reason
+	 */
 	protected Set<Principal> doJAASLogin(final Class<? extends LoginModule> clazz, final CallbackHandler handler,
 			final Map<String, String> options) throws WikiSecurityException {
-        // Instantiate the login module
-    	//@NonNull //:FVK: workaround - commented.
-        final LoginModule loginModule;
-        try {
-       		loginModule = clazz.getDeclaredConstructor().newInstance();
-        } catch( final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e ) {
-            throw new WikiSecurityException( e.getMessage(), e );
-        }
-        
+		// Instantiate the login module
+		// @NonNull //:FVK: workaround - commented.
+		final LoginModule loginModule;
+		try {
+			loginModule = clazz.getDeclaredConstructor().newInstance();
+		} catch (final InstantiationException | IllegalAccessException | NoSuchMethodException
+				| InvocationTargetException e) {
+			throw new WikiSecurityException(e.getMessage(), e);
+		}
+
 		if (loginModule == null) { // :FVK: workaround - вместо @NonNull
 			return Collections.emptySet();
 		}
 
-        // Initialize the LoginModule
-        final Subject subject = new Subject();
-        loginModule.initialize( subject, handler, Collections.emptyMap(), options );
+		// Initialize the LoginModule
+		final Subject subject = new Subject();
+		loginModule.initialize(subject, handler, Collections.emptyMap(), options);
 
-        // Try to log in:
-        boolean loginSucceeded = false;
-        boolean commitSucceeded = false;
+		// Try to log in:
+		boolean loginSucceeded = false;
+		boolean commitSucceeded = false;
 		try {
 			loginSucceeded = loginModule.login();
 			if (loginSucceeded) {
@@ -467,27 +466,28 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 			// Login or commit failed! No principal for you!
 		}
 
-        // If we successfully logged in & committed, return all the principals
-        if( loginSucceeded && commitSucceeded ) {
-            return subject.getPrincipals();
-        }
+		// If we successfully logged in & committed, return all the principals
+		if (loginSucceeded && commitSucceeded) {
+			return subject.getPrincipals();
+		}
 
-        return Collections.emptySet();
-    }
+		return Collections.emptySet();
+	}
 
-    /**
-     * After successful login, this method is called to inject authorized role Principals into the Session. To determine which roles
-     * should be injected, the configured Authorizer is queried for the roles it knows about by calling  {@link Authorizer#getRoles()}.
-     * Then, each role returned by the authorizer is tested by calling {@link Authorizer#isUserInRole(Session, Principal)}. If this
-     * check fails, and the Authorizer is of type IWebAuthorizer, the role is checked again by calling
-     * {@link WebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test are injected into the Subject by
-     * firing appropriate authentication events.
-     *
-     * @param session the user's current Session
-     * @param authorizer the Engine's configured Authorizer
-     * @param request the user's HTTP session, which may be <code>null</code>
-     */
-	private void injectAuthorizerRoles(Session session, Authorizer authorizer, HttpServletRequest request) {
+	/**
+	 * After successful login, this method is called to inject authorized role Principals into the
+	 * Session. To determine which roles should be injected, the configured Authorizer is queried for
+	 * the roles it knows about by calling {@link Authorizer#getRoles()}. Then, each role returned by
+	 * the authorizer is tested by calling {@link Authorizer#isUserInRole(WikiSession, Principal)}. If this
+	 * check fails, and the Authorizer is of type IWebAuthorizer, the role is checked again by calling
+	 * {@link WebAuthorizer#isUserInRole(HttpServletRequest, Principal)}). Any roles that pass the test
+	 * are injected into the Subject by firing appropriate authentication events.
+	 *
+	 * @param session    the user's current Session
+	 * @param authorizer the Engine's configured Authorizer
+	 * @param request    the user's HTTP session, which may be <code>null</code>
+	 */
+	private void injectAuthorizerRoles(WikiSession session, Authorizer authorizer, HttpServletRequest request) {
 		Set<Principal> principals = new HashSet<>();
 		// Test each role the authorizer knows about
 		for (final Principal role : authorizer.getRoles()) {
@@ -511,9 +511,9 @@ public class DefaultAuthenticationManager implements AuthenticationManager, Wiki
 		}
 		if (request != null) {
 			String wikiSessionId = request.getSession().getId();
-			eventAdmin.sendEvent(new Event(WikiLoginEventTopic.TOPIC_PRINCIPALS_ADD, Map.of( //
-					WikiEventTopic.PROPERTY_KEY_TARGET, wikiSessionId, //
-					WikiEventTopic.PROPERTY_PRINCIPALS, principals)));
+			eventAdmin.sendEvent(new Event(LoginEvent.Topic.PRINCIPALS_ADD, Map.of( //
+					WikiEvent.PROPERTY_KEY_TARGET, wikiSessionId, //
+					WikiEvent.PROPERTY_PRINCIPALS, principals)));
 		}
 	}
 

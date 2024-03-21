@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.i18n.InternationalizationManager;
 import org.eclipse.osgi.service.localization.BundleLocalization;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
@@ -40,10 +40,10 @@ import org.osgi.service.component.annotations.ServiceScope;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultInternationalizationManager",
-	service = { InternationalizationManager.class, WikiManager.class },
+	service = { InternationalizationManager.class, WikiComponent.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultInternationalizationManager implements InternationalizationManager, WikiManager {
+public class DefaultInternationalizationManager implements InternationalizationManager, WikiComponent {
 
 	@Reference
 	private BundleLocalization bundleLocalization;

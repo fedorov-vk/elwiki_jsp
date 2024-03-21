@@ -28,6 +28,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.elwiki.api.authorization.IGroupWiki;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki_data.AttachmentContent;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.PageContent;
@@ -35,12 +36,17 @@ import org.elwiki_data.PageReference;
 import org.elwiki_data.UnknownPage;
 import org.elwiki_data.WikiPage;
 
-public interface PageManager {
+public interface PageManager extends IModulePreferences {
+
+	interface Prefs {
+		String PAGE_MANAGER = "pageManager";
+	}
 
 	/** Defines type of page motion. */
 	enum PageMotionType { AFTER, BEFORE, BOTTOM };
 
     /** The property value for setting the current page provider.  Value is {@value}. */
+	@Deprecated
     String PROP_PAGEPROVIDER = "jspwiki.pageProvider";
 
     /** The property value for setting the amount of time before the page locks expire. Value is {@value}. */
@@ -63,7 +69,7 @@ public interface PageManager {
 
     /**
      * Returns all pages in some random order.  If you need just the page names,
-     * please see {@link org.apache.wiki.references.ReferenceManager#findCreated() ReferenceManager#findCreated()}, which is probably a lot
+     * please see {@link Id2NamePage#getAllPageNames()}, which is probably a lot
      * faster.  This method may cause repository access.
      *
      * @return A Collection of WikiPage objects.

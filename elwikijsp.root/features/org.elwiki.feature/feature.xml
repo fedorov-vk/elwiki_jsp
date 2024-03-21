@@ -115,13 +115,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.elwiki.manager.referencemanager"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.elwiki.manager.renderer"
          download-size="0"
          install-size="0"
@@ -151,6 +144,20 @@
 
    <plugin
          id="org.elwiki.manager.workflow"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elwiki.part.id2name"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elwiki.preferences.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

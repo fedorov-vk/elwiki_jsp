@@ -4,7 +4,7 @@ import java.security.Principal;
 import java.util.Properties;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.eclipse.core.runtime.Assert;
@@ -12,9 +12,14 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elwiki.api.authorization.Authorizer;
 
 public class DefaultAuthorizer implements Authorizer {
-	
+
 	private @NonNull AccountManager accountManager;
 
+	/**
+	 * Creates instance of DefaultAuthorizer
+	 * 
+	 * @param engine
+	 */
 	public DefaultAuthorizer(Engine engine) {
 		this.accountManager = engine.getManager(AccountManager.class);
 	}
@@ -28,7 +33,7 @@ public class DefaultAuthorizer implements Authorizer {
 	@Override
 	public Principal findRole(String role) {
 		Principal principal = this.accountManager.findRole(role);
-		//--OLDCODE-- gp = new GroupPrincipal("Admin", uid);
+		// --OLDCODE-- gp = new GroupPrincipal("Admin", uid);
 
 		return principal;
 	}
@@ -39,7 +44,7 @@ public class DefaultAuthorizer implements Authorizer {
 	}
 
 	@Override
-	public boolean isUserInRole(Session session, Principal role) {
+	public boolean isUserInRole(WikiSession session, Principal role) {
 		Assert.isTrue(false, "code is not implemented.");
 		// TODO Auto-generated method stub
 		return false;

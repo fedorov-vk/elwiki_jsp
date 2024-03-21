@@ -32,7 +32,7 @@ import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.util.TextUtil;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -47,10 +47,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultDifferenceManager",
-	service = { DifferenceManager.class, WikiManager.class, EventHandler.class },
+	service = { DifferenceManager.class, WikiComponent.class, EventHandler.class },
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultDifferenceManager implements DifferenceManager, WikiManager, EventHandler {
+public class DefaultDifferenceManager implements DifferenceManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultDifferenceManager.class);
 

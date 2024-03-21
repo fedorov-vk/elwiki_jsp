@@ -18,17 +18,25 @@
  */
 package org.elwiki.services;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.EngineEvent;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -38,19 +46,22 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.BackgroundThreads",
-	service = { BackgroundThreads.class, WikiManager.class, EventHandler.class },
+	service = { BackgroundThreads.class, WikiComponent.class, EventHandler.class },
 	property = {
-		//EventConstants.EVENT_TOPIC + "=" + ElWikiEventsConstants.TOPIC_INIT_ALL,
+		EventConstants.EVENT_TOPIC + "=" + EngineEvent.Topic.SHUTDOWN,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, EventHandler {
+public class BackgroundThreadsImpl implements BackgroundThreads, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(BackgroundThreadsImpl.class);
 
 	private static final long POLLING_INTERVAL = 1_000L;
 
-	private volatile boolean m_killMe = false;
+	/** List of created threads. */
+	private final List<WeakReference<BackgrounThread>> listThreads = new ArrayList<>();
+
+	Lock listThreadsLock = new ReentrantLock();
 
 	// -- OSGi service handling --------------------( start )--
 
@@ -62,7 +73,18 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 	 */
 	@Deactivate
 	protected void shutdown() {
-		m_killMe = true;
+		listThreadsLock.lock();
+		try {
+			for (WeakReference<BackgrounThread> ref : listThreads) {
+				BackgrounThread thread = ref.get();
+				if (thread != null) {
+					thread.shutdown();
+				}
+			}
+			listThreads.clear();
+		} finally {
+			listThreadsLock.unlock();
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -75,9 +97,17 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 
 	@Override
 	public Thread createThread(String name, int sleepInterval, Actor actor) {
-		Thread thread = new BackgrounThread(sleepInterval, actor);
+		BackgrounThread thread = new BackgrounThread(sleepInterval, actor);
 		thread.setName(name);
 		thread.setDaemon(false);
+
+		listThreadsLock.lock();
+		try {
+			listThreads.add(new WeakReference<>(thread));
+		} finally {
+			listThreadsLock.unlock();
+		}
+
 		return thread;
 	}
 
@@ -85,6 +115,7 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 
 		private final int m_interval;
 		private final Actor actor;
+		private volatile boolean m_killMe = false;
 
 		/**
 		 * @param sleepInterval the interval between invocations of task action.
@@ -93,6 +124,11 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 		BackgrounThread(int sleepInterval, Actor actor) {
 			this.m_interval = sleepInterval;
 			this.actor = actor;
+		}
+
+		void shutdown() {
+			log.warn("Detected wiki engine shutdown: killing " + getName() + ".");
+			m_killMe = true;
 		}
 
 		/**
@@ -121,7 +157,8 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 					// log.debug( "Running background task: " + name + "." );
 					actor.backgroundTask();
 
-					// Sleep for the interval we're supposed to, but wake up every POLLING_INTERVAL to see if thread should die
+					// Sleep for the interval we're supposed to, but wake up every POLLING_INTERVAL to see if thread
+					// should die
 					boolean interrupted = false;
 					try {
 						for (int i = 0; i < m_interval; i++) {
@@ -151,10 +188,13 @@ public class BackgroundThreadsImpl implements BackgroundThreads, WikiManager, Ev
 
 	@Override
 	public void handleEvent(Event event) {
-		/*String topic = event.getTopic();
+		String topic = event.getTopic();
 		switch (topic) {
+		case EngineEvent.Topic.SHUTDOWN: {
+			shutdown();
+		}
 			break;
-		}*/
+		}
 	}
 
 }

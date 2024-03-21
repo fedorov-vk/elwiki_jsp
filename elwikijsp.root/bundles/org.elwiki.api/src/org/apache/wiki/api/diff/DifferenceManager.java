@@ -21,7 +21,6 @@ package org.apache.wiki.api.diff;
 
 import org.apache.wiki.api.core.WikiContext;
 
-
 /**
  * Load, initialize and delegate to the DiffProvider that will actually do the work.
  */

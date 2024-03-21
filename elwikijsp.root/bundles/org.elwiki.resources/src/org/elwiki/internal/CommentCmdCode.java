@@ -13,7 +13,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.WikiContext.TimeFormat;
 import org.apache.wiki.api.exceptions.RedirectException;
@@ -63,7 +63,7 @@ public class CommentCmdCode extends CmdCode {
 
 		String pagereq = wikiContext.getName();
 
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 		String storedUser = wikiSession.getUserPrincipal().getName();
 		if (wikiSession.isAnonymous()) {
 			storedUser = TextUtil.replaceEntities(httpRequest.getParameter("author"));

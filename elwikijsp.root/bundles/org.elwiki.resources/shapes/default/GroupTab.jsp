@@ -29,7 +29,6 @@
 <%@ page import="org.elwiki.api.authorization.*" %>
 <%@ page import="org.elwiki.permissions.GroupPermission" %>
 <%@ page import="org.apache.wiki.preferences.Preferences" %>
-<%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -143,7 +142,7 @@
      <%
       	IGroupWiki group = (IGroupWiki)pageContext.getAttribute("group");
       	String grouName = group.getName();
-      	Session wikiSession = wikiContext.getWikiSession();
+      	WikiSession wikiSession = wikiContext.getWikiSession();
       	if( authorizationManager.checkPermission(wikiSession, new GroupPermission( grouName, "edit" )) ) {
       %>
           <a class="btn btn-xs btn-primary"

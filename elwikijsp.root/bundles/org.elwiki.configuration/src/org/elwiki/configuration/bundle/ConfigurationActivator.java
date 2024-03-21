@@ -8,7 +8,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ConfigurationActivator implements BundleActivator {
 
-	public static String PLIGIN_ID = "org.elwiki.configuration";
+	public static final String PLIGIN_ID = "org.elwiki.configuration";
 
 	// The shared instance
 	private static ConfigurationActivator instance;

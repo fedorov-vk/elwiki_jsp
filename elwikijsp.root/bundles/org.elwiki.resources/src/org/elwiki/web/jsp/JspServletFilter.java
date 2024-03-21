@@ -22,11 +22,11 @@ import org.apache.wiki.Wiki;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.util.TextUtil;
 import org.apache.wiki.util.ThreadUtil;
 import org.eclipse.core.runtime.Platform;
-import org.elwiki.configuration.IWikiConfiguration;
-import org.elwiki.configuration.IWikiPreferences;
+import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
+import org.elwiki.api.component.IWikiPreferencesConstants;
 import org.elwiki.internal.CmdCode;
 import org.elwiki.web.support.ErrorHandlingServlet;
 import org.osgi.framework.Constants;
@@ -65,10 +65,6 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	private static final String PATH_ADMIN_VIEW = "/shapes/admin/Admin.jsp";
 	private static final String PATH_SECURITY_VIEW = "/shapes/security/SecurityConfig.jsp";
 
-	/** Stores configuration. */
-	@Reference
-	private IWikiConfiguration wikiConfiguration;
-
 	@Reference
 	private Engine engine;
 
@@ -84,10 +80,11 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		servletContext = config.getServletContext();
-		m_wiki_encoding = wikiConfiguration.getStringProperty(IWikiPreferences.PROP_ENCODING,
-        		IWikiPreferences.DEFAULT_ENCODING);
-		useEncoding = !wikiConfiguration.getBooleanProperty(Engine.PROP_NO_FILTER_ENCODING,
-				false);
+
+		@NonNull
+		GlobalPreferences globalPrefs = engine.getManager(GlobalPreferences.class);
+		m_wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
+		useEncoding = !globalPrefs.getPreference(IWikiPreferencesConstants.PROP_NO_FILTER_ENCODING, Boolean.class);
 	}
 
 	@Override
@@ -96,43 +93,45 @@ public class JspServletFilter extends HttpFilter implements Filter {
 	}
 
 	/**
-	 * Get WikiContext according given URI. If URI is not determined as known - then returns
-	 * default, ContextEnum.PAGE_VIEW.
+	 * Get WikiContext according given URI. If URI is not determined as known - then returns default,
+	 * ContextEnum.PAGE_VIEW.
 	 * 
 	 * @param adaptableUri
 	 * @return Wiki context.
 	 */
 	private ContextEnum getContextEnum(String adaptableUri) {
-		//Pattern p = Pattern.compile("^[/]?([.\\\\w]+?)");
+		// Pattern p = Pattern.compile("^[/]?([.\\\\w]+?)");
 		Pattern p = Pattern.compile("^[/]?([.\\w]++)\\W?.*?$");
 		Matcher m = p.matcher(adaptableUri);
-		if (m.find())
-	    {
-			 String command = m.group(1);
-			 return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(command)) //
-					 .findFirst().orElse(ContextEnum.PAGE_VIEW);
-	    }
+		if (m.find()) {
+			String command = m.group(1);
+			return Arrays.stream(ContextEnum.values()).filter(item -> item.getUri().equals(command)) //
+					.findFirst().orElse(ContextEnum.PAGE_VIEW);
+		}
 
 		// We are here - is any error happen? :FVK:
 		return ContextEnum.PAGE_VIEW;
 	}
-	
+
 	@Override
 	protected void doFilter(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
 			throws IOException, ServletException {
 		try {
 			httpRequest.setAttribute(ErrorHandlingServlet.ATTR_ELWIKI_ERROR_EXCEPTION, null);
-			
+
 			// :FVK: из кода JSPwiki, класс WikiJSPFilter: ... : final WatchDog w =
 			// WatchDog.getCurrentWatchDog( m_engine );
 			boolean isAjaxPage = false;
 
 			String isForward = (String) httpRequest.getAttribute(WikiContext.ATTR_FORWARD_REQUEST);
 			String uri = (isForward == null) ? httpRequest.getRequestURI()
-					: new URI(httpRequest.getRequestURL().toString()).getPath();
+					// :FVK: (например, при запросе редактирования группы, при недостаточных правах)
+					// следующий код вызывал зацикливание: (зачем это было?)
+					// : new URI(httpRequest.getRequestURL().toString()).getPath();
+					: isForward;
 
-			log.debug("◄►doFilter◄► " + uri);
-			if(uri.equals("/")) {
+			log.debug("◄►doFilter◄► " + uri + "\n");
+			if (uri.equals("/")) {
 				// :FVK: workaround - executing the page's view command for an empty query.
 				uri = "/" + ContextEnum.PAGE_VIEW.getUri();
 			}
@@ -140,12 +139,12 @@ public class JspServletFilter extends HttpFilter implements Filter {
 			if (uri.startsWith("/cmd.")) {
 				// catch URI "/cmd.*"
 				log.debug("Request URI starts with '/cmd.'");
-			} else if (uri.matches(".+?AJAX.+?$")) {//:FVK: - workaround, using the specified part of the name.
+			} else if (uri.matches(".+?AJAX.+?$")) {// :FVK: - workaround, using the specified part of the name.
 				// catch URI "/*AJAX*"
 				log.debug("Request URI is matched '.+?AJAX.+?$'.");
 				isAjaxPage = true;
 			} else {
-				// skip all other URI. 
+				// skip all other URI.
 				log.debug("Request URI isn't matched anything.");
 				super.doFilter(httpRequest, httpResponse, chain);
 				return;

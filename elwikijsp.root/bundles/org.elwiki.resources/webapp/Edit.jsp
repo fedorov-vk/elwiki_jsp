@@ -65,7 +65,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     }
     String pagereq = wikiContext.getName();
 
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     String user = wikiSession.getUserPrincipal().getName();
     String action  = request.getParameter("action");
     String ok      = request.getParameter("ok");

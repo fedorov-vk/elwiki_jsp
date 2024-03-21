@@ -27,7 +27,7 @@ import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
 import org.apache.wiki.filters.internal.FiltersActivator;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.event.PageEvent;
 import org.osgi.service.event.Event;
 
 /**
@@ -55,8 +55,8 @@ public class PageEventFilter extends BasePageFilter {
 	@Override
 	public String preTranslate(final WikiContext wikiContext, final String content) {
 		FiltersActivator.getEventAdmin().sendEvent( //
-				new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_TRANSLATE,
-						Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, wikiContext)));
+				new Event(PageEvent.Topic.PRE_TRANSLATE,
+						Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, wikiContext)));
 
 		return content;
 	}
@@ -69,8 +69,8 @@ public class PageEventFilter extends BasePageFilter {
 	@Override
 	public String postTranslate(final WikiContext wikiContext, final String htmlContent) {
 		FiltersActivator.getEventAdmin().sendEvent( //
-				new Event(WikiPageEventTopic.TOPIC_PAGE_POST_TRANSLATE,
-						Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, wikiContext)));
+				new Event(PageEvent.Topic.POST_TRANSLATE,
+						Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, wikiContext)));
 
 		return htmlContent;
 	}
@@ -81,8 +81,8 @@ public class PageEventFilter extends BasePageFilter {
 	@Override
 	public String preSave(final WikiContext wikiContext, final String content) {
 		FiltersActivator.getEventAdmin().sendEvent( //
-				new Event(WikiPageEventTopic.TOPIC_PAGE_PRE_SAVE,
-						Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, wikiContext)));
+				new Event(PageEvent.Topic.PRE_SAVE,
+						Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, wikiContext)));
 
 		return content;
 	}
@@ -97,8 +97,8 @@ public class PageEventFilter extends BasePageFilter {
 	@Override
 	public void postSave(final WikiContext wikiContext, final String content) throws WikiException {
 		FiltersActivator.getEventAdmin().sendEvent( //
-				new Event(WikiPageEventTopic.TOPIC_PAGE_POST_SAVE,
-						Map.of(WikiPageEventTopic.PROPERTY_WIKI_CONTEXT, wikiContext)));
+				new Event(PageEvent.Topic.POST_SAVE,
+						Map.of(PageEvent.PROPERTY_WIKI_CONTEXT, wikiContext)));
 	}
 
 }

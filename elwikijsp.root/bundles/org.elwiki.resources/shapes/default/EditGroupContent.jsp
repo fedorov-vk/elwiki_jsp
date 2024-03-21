@@ -23,7 +23,6 @@
 <%@ page import="org.apache.log4j.*" %>
 <%@ page import="org.apache.wiki.api.core.*" %>
 <%@ page import="org.elwiki.api.authorization.IGroupWiki" %>
-<%@ page import="org.apache.wiki.util.comparators.PrincipalComparator" %>
 <%@ taglib uri="http://jspwiki.apache.org/tags" prefix="wiki" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core_1_1" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>

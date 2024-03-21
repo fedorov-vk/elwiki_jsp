@@ -140,5 +140,3 @@ public interface AttachmentProvider extends WikiProvider {
     void moveAttachmentsForPage( String oldParent, String newParent ) throws ProviderException;
 
 }
-
-

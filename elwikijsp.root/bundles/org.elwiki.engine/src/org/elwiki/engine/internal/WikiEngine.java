@@ -1,8 +1,13 @@
 package org.elwiki.engine.internal;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,10 +25,9 @@ import org.apache.log4j.Logger;
 import org.apache.wiki.InternalWikiException;
 import org.apache.wiki.api.Release;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.rss.RssGenerator;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.ui.CommandResolver;
@@ -31,9 +35,11 @@ import org.apache.wiki.filters0.FilterManager;
 import org.apache.wiki.pages0.PageManager;
 import org.apache.wiki.url0.URLConstructor;
 import org.eclipse.jdt.annotation.NonNull;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiEngineEventTopic;
+import org.elwiki.api.component.IWikiPreferencesConstants;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.EngineEvent;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.framework.BundleContext;
@@ -68,7 +74,7 @@ public class WikiEngine implements Engine {
 
 	private BundleContext bundleContext;
 
-	/** Custimized ServiceTracker of {@link Session} component. */
+	/** Custimized ServiceTracker of {@link WikiSession} component. */
 	private ServiceTracker<?, ?> sessionServiceTracker;
 
 	@Reference
@@ -85,29 +91,35 @@ public class WikiEngine implements Engine {
 
 		ServiceReference<?>[] refs = null;
 		try {
-			refs = bundleContext.getAllServiceReferences(WikiManager.class.getName(), null);
+			refs = bundleContext.getAllServiceReferences(WikiComponent.class.getName(), null);
 		} catch (InvalidSyntaxException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		int counterOfRegistered = 0;
+		int counterOfFounded = 0;
 		for (ServiceReference<?> ref : refs) {
+			counterOfFounded++;
 			@SuppressWarnings("unchecked")
-			WikiManager service = bundleContext.getService((ServiceReference<WikiManager>) ref);
+			WikiComponent service = bundleContext.getService((ServiceReference<WikiComponent>) ref);
 			Class<?> clazz = service.getClass();
-			// log.debug(" ~~ clazz: " + clazz.getSimpleName());
-			counterOfRegistered++;
-			Class<?>[] interfaces = clazz.getInterfaces();
-			for (Class<?> iface : interfaces) {
-				managers.put(iface, service);
+			
+			Class<?>[] ifaces = clazz.getInterfaces();
+			boolean isWikiComponent = Arrays.stream(ifaces).anyMatch(WikiComponent.class::equals);
+			if (isWikiComponent) {
+				Class<?> ifaceComponent = ifaces[0]; // workaround!
+				components.put(ifaceComponent, service);
+				// log.debug(" ~~ clazz: " + clazz.getSimpleName() + " instance of " + ifaceComponent.getSimpleName());
+				counterOfRegistered++;
 			}
 		}
-		log.debug(" ~~ Registered (" + counterOfRegistered + ") ElWiki managers.");
+		log.debug(" ~~ Registered (" + counterOfRegistered
+				+ ") ElWiki components. From founded: " + counterOfFounded);
 
 		/* Processing the @WikiServiceReference annotation for ElWiki components fields.
 		 */
-		for (Object serviceInstance : managers.values()) {
+		for (Object serviceInstance : components.values()) {
 			initialiseAnnotatedFileds(serviceInstance);
 		}
 
@@ -136,7 +148,7 @@ public class WikiEngine implements Engine {
 			if (field.isAnnotationPresent(WikiServiceReference.class)) {
 				try {
 					Class<?> typeField = field.getType();
-					Object targetService = managers.get(typeField);
+					Object targetService = components.get(typeField);
 					field.setAccessible(true);
 					field.set(serviceInstance, targetService);
 				} catch (Exception e) {
@@ -156,12 +168,12 @@ public class WikiEngine implements Engine {
 		Filter filter = null;
 		try {
 			filter = bundleContext.createFilter(
-					"(&(" + org.osgi.framework.Constants.OBJECTCLASS + "=" + Session.class.getName() + "))");
+					"(&(" + org.osgi.framework.Constants.OBJECTCLASS + "=" + WikiSession.class.getName() + "))");
 		} catch (InvalidSyntaxException e) {
 			// should never happen.
 		}
-		ServiceTrackerCustomizer<Session, ServiceReference<Session>> stCustomizer = createStCustomizer();
-		this.sessionServiceTracker = new ServiceTracker<Session, ServiceReference<Session>>(bundleContext, filter,
+		ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>> stCustomizer = createStCustomizer();
+		this.sessionServiceTracker = new ServiceTracker<WikiSession, ServiceReference<WikiSession>>(bundleContext, filter,
 				stCustomizer);
 		this.sessionServiceTracker.open(true);
 	}
@@ -171,25 +183,25 @@ public class WikiEngine implements Engine {
 	 * 
 	 * @return ServiceTracker for tracking component of Session type.
 	 */
-	private ServiceTrackerCustomizer<Session, ServiceReference<Session>> createStCustomizer() {
-		return new ServiceTrackerCustomizer<Session, ServiceReference<Session>>() {
+	private ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>> createStCustomizer() {
+		return new ServiceTrackerCustomizer<WikiSession, ServiceReference<WikiSession>>() {
 
 			@Override
-			public ServiceReference<Session> addingService(ServiceReference<Session> serviceRef) {
+			public ServiceReference<WikiSession> addingService(ServiceReference<WikiSession> serviceRef) {
 				//for(String key:reference.getPropertyKeys()) {}
 				log.debug("~~ ~~ adding service: " + serviceRef);
-				Session serviceInstance = bundleContext.getService((ServiceReference<Session>) serviceRef);
+				WikiSession serviceInstance = bundleContext.getService((ServiceReference<WikiSession>) serviceRef);
 				initialiseAnnotatedFileds(serviceInstance);
 				return null;
 			}
 
 			@Override
-			public void modifiedService(ServiceReference<Session> reference, ServiceReference<Session> service) {
+			public void modifiedService(ServiceReference<WikiSession> reference, ServiceReference<WikiSession> service) {
 				log.debug("~~ ~~ modified service");
 			}
 
 			@Override
-			public void removedService(ServiceReference<Session> reference, ServiceReference<Session> service) {
+			public void removedService(ServiceReference<WikiSession> reference, ServiceReference<WikiSession> service) {
 				log.debug("~~ ~~ removed service");
 			}
 		};
@@ -223,12 +235,15 @@ public class WikiEngine implements Engine {
 	private Map<String, Object> m_attributes = new ConcurrentHashMap<>();
 
 	/** Stores WikiEngine's associated managers- <interface, instance>. */
-	protected Map<Class<?>, Object> managers = new ConcurrentHashMap<>() {
+	protected Map<Class<?>, Object> components = new ConcurrentHashMap<>() {
 		private static final long serialVersionUID = 8475550897265370262L;
 		{
 			put(Engine.class, WikiEngine.this);
 		}
 	};
+
+	/** If true, uses UTF8 encoding for all data */
+	private boolean isUtf8Encoding;
 
 	// =========================================================================
 
@@ -259,21 +274,27 @@ public class WikiEngine implements Engine {
 		}
 
 		log.debug("◄►initialization◄► STAGE ONE.");
-		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_ONE, Collections.emptyMap()));
+		
+		//workaround - added flag "isUtf8Encoding".
+		GlobalPreferences globalPrefs = getManager(GlobalPreferences.class);
+		isUtf8Encoding = StandardCharsets.UTF_8.name()
+				.equalsIgnoreCase(globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class));
 
-		Set<Object> managers = new HashSet<>(this.managers.values());
-		for (Object managerInstance : managers) {
-			if (managerInstance instanceof WikiManager wikiManager) {
+		eventAdmin.sendEvent(new Event(EngineEvent.Topic.INIT_STAGE_ONE, Collections.emptyMap()));
+
+		Set<Object> components = new HashSet<>(this.components.values());
+		for (Object componentInstance : components) {
+			if (componentInstance instanceof WikiComponent wikiComponent) {
 				try {
-					wikiManager.initialize();
+					wikiComponent.initialize();
 				} catch (Exception e) {
-					log.error("Failed intialization of " + managerInstance.getClass().getSimpleName(), e);
+					log.error("Failed intialization of " + componentInstance.getClass().getSimpleName(), e);
 				}
 			}
 		}
 
 		log.debug("◄►initialization◄► STAGE TWO.");
-		eventAdmin.sendEvent(new Event(WikiEngineEventTopic.TOPIC_ENGINE_INIT_STAGE_TWO, Collections.emptyMap()));
+		eventAdmin.sendEvent(new Event(EngineEvent.Topic.INIT_STAGE_TWO, Collections.emptyMap()));
 
 		//
 		// Initialize the important modules. Any exception thrown by the managers means that we will not
@@ -355,7 +376,8 @@ public class WikiEngine implements Engine {
 
 			// Hook the different manager routines into the system.
 			FilterManager filterManager = this.getManager(FilterManager.class);
-			filterManager.addPageFilter(this.getManager(ReferenceManager.class), -1001);
+			//:FVK: -- оставлено для примера:
+			//filterManager.addPageFilter(this.getManager(ReferenceManager.class), -1001);
 			filterManager.addPageFilter(this.getManager(SearchManager.class), -1002);
 		} catch (final RuntimeException e) {
 			// RuntimeExceptions may occur here, even if they shouldn't.
@@ -374,6 +396,7 @@ public class WikiEngine implements Engine {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean isConfigured() {
 		return m_isConfigured;
 	}
@@ -433,9 +456,31 @@ public class WikiEngine implements Engine {
 	/** {@inheritDoc} */
 	@Override
 	public Charset getContentEncoding() {
-		return StandardCharsets.UTF_8; // :FVK: WORKAROUND.
+		GlobalPreferences globalPrefs = getManager(GlobalPreferences.class);
+		String wiki_encoding = globalPrefs.getPreference(IWikiPreferencesConstants.PROP_ENCODING, String.class);
+		return Charset.forName(wiki_encoding);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String encodeName(String pagename) throws IOException {
+		try {
+			return URLEncoder.encode(pagename, isUtf8Encoding ? "UTF-8" : "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String decodeName(String pagerequest) throws IOException {
+		try {
+			return URLDecoder.decode(pagerequest, isUtf8Encoding ? "UTF-8" : "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			throw new IOException("ISO-8859-1 not a supported encoding!?!  Your platform is borked.");
+		}
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getRootPath() {
@@ -467,15 +512,6 @@ public class WikiEngine implements Engine {
 		return this.wikiConfiguration;
 	}
 
-	@Deprecated
-	@Override
-	public WikiPage getPageById(String pageId) throws ProviderException {
-		WikiPage wikiPage;
-		PageManager pageManager = this.getManager(PageManager.class);
-		wikiPage = pageManager.getPageById(pageId);
-
-		return wikiPage;
-	}
 	////////////////////////////////////////////////////////////////////////////
 	/// ? новое для ElWiki :FVK: /// static методы и др.
 
@@ -484,7 +520,7 @@ public class WikiEngine implements Engine {
 	@SuppressWarnings("unchecked")
 	@NonNull
 	public <T> @NonNull T getManager(Class<T> manager) {
-		T result = (T) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+		T result = (T) components.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).findFirst().orElse(null);
 		return result;
 	}
@@ -493,7 +529,7 @@ public class WikiEngine implements Engine {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getManagers(Class<T> manager) {
-		return (List<T>) managers.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
+		return (List<T>) components.entrySet().stream().filter(e -> manager.isAssignableFrom(e.getKey()))
 				.map(Map.Entry::getValue).collect(Collectors.toList());
 	}
 

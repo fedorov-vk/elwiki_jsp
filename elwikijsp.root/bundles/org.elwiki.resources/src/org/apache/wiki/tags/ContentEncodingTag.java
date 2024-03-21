@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspTagException;
 
+import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.ProviderException;
-import org.elwiki.configuration.IWikiConfiguration;
 
 /**
  * Returns the IANA encoding name of the configured character set.
@@ -39,8 +39,8 @@ public class ContentEncodingTag extends BaseWikiTag {
 	 */
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final IWikiConfiguration config = getWikiContext().getConfiguration();
-		pageContext.getOut().print(config.getContentEncodingCs());
+		Engine engine = getWikiContext().getEngine();
+		pageContext.getOut().print(engine.getContentEncoding());
 		return SKIP_BODY;
 	}
 

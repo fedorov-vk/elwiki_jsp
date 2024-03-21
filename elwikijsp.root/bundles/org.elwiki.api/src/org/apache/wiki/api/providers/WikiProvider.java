@@ -22,8 +22,6 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 
 import java.io.IOException;
-import java.util.Properties;
-
 
 /**
  *  A generic Wiki provider for all sorts of things that the Wiki can store.

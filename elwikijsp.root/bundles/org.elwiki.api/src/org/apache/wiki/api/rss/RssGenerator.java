@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.component.IModulePreferences;
 import org.elwiki_data.WikiPage;
 
 /**
@@ -38,8 +39,16 @@ import org.elwiki_data.WikiPage;
  *
  *  @since  1.7.5.
  */
-public interface RssGenerator {
+public interface RssGenerator extends IModulePreferences {
 
+	interface Prefs {
+		String RSS_GENERATE = "rss.generate";
+		String RSS_FILENAME = "rss.fileName";
+		String RSS_INTERVAL = "rss.interval";
+		String RSS_CHANNEL_DESCRIPTION = "rss.channelDescription";
+		String RSS_CHANNEL_LANGUAGE = "rss.channelLanguage";
+	}
+	
     /** Parameter value to represent RSS 1.0 feeds.  Value is <tt>{@value}</tt>. */
     String RSS10 = "rss10";
 
@@ -63,6 +72,7 @@ public interface RssGenerator {
      *
      *  @since 1.7.6.
      */
+    @Deprecated
     String PROP_CHANNEL_DESCRIPTION = "jspwiki.rss.channelDescription";
 
     /**
@@ -70,31 +80,11 @@ public interface RssGenerator {
      *
      *  @since 1.7.6.
      */
+    @Deprecated
     String PROP_CHANNEL_LANGUAGE = "jspwiki.rss.channelLanguage";
 
     /** Defines the property name for the RSS channel title.  Value is <tt>{@value}</tt>. */
     String PROP_CHANNEL_TITLE = "jspwiki.rss.channelTitle";
-
-    /**
-     *  Defines the property name for the RSS generator main switch.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_GENERATE_RSS = "jspwiki.rss.generate";
-
-    /**
-     *  Defines the property name for the RSS file that the wiki should generate.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_RSSFILE = "jspwiki.rss.fileName";
-
-    /**
-     *  Defines the property name for the RSS generation interval in seconds.
-     *
-     *  @since 1.7.6.
-     */
-    String PROP_INTERVAL = "jspwiki.rss.interval";
 
     /** Defines the property name for the RSS author.  Value is <tt>{@value}</tt>. */
     String PROP_RSS_AUTHOR = "jspwiki.rss.author";

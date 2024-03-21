@@ -8,12 +8,10 @@ Automatic-Module-Name: org.elwiki.manager.search
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/elwiki.DefaultSearchManager.xml
 Import-Package: java.io;resolution:=optional,
- java.lang.reflect;resolution:=optional,
  java.util;resolution:=optional,
  java.util.concurrent;resolution:=optional,
  org.apache.lucene.analysis,
  org.apache.lucene.analysis.classic,
- org.apache.lucene.analysis.standard,
  org.apache.lucene.document,
  org.apache.lucene.index,
  org.apache.lucene.queryparser.classic,
@@ -26,14 +24,12 @@ Import-Package: java.io;resolution:=optional,
  org.elwiki.permissions,
  org.elwiki_data,
  org.osgi.framework;version="1.10.0"
-Require-Bundle: org.eclipse.osgi.services;bundle-version="3.11.100",
+Require-Bundle: org.eclipse.jetty.servlet-api;bundle-version="4.0.6",
+ org.eclipse.osgi.services;bundle-version="3.11.100",
  org.apache.log4j;bundle-version="1.2.15",
  org.apache.commons.lang3;bundle-version="3.1.0",
- jakarta.servlet-api;bundle-version="4.0.0",
  org.elwiki.api,
- org.elwiki.util,
- org.apache.lucene.memory;bundle-version="9.4.2",
- org.apache.lucene.queries;bundle-version="9.4.2"
+ org.elwiki.util
 Export-Package: org.apache.wiki.search
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

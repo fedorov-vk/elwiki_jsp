@@ -35,7 +35,7 @@ import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.ui.progress.ProgressItem;
 import org.apache.wiki.api.ui.progress.ProgressManager;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
+import org.elwiki.api.component.WikiComponent;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ServiceScope;
 import org.osgi.service.event.Event;
@@ -52,10 +52,10 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultProgressManager",
-	service = { ProgressManager.class, WikiManager.class, EventHandler.class},
+	service = { ProgressManager.class, WikiComponent.class, EventHandler.class},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultProgressManager implements ProgressManager, WikiManager, EventHandler {
+public class DefaultProgressManager implements ProgressManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultProgressManager.class);
 

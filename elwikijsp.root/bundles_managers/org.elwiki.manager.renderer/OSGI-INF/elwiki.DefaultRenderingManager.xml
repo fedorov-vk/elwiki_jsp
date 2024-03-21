@@ -3,7 +3,7 @@
    <property name="event.topics" value="org/elwiki/events/page/POST_SAVE_BEGIN"/>
    <service scope="singleton">
       <provide interface="org.apache.wiki.render0.RenderingManager"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <reference cardinality="1..1" field="wikiConfiguration" interface="org.elwiki.configuration.IWikiConfiguration" name="wikiConfiguration"/>

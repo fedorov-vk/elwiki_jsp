@@ -45,6 +45,7 @@ import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.HttpUtil;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.data.authorize.WikiPrincipal;
 
@@ -169,7 +170,8 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	 */
 	private static File getCookieFile(final Engine engine, final String uid) {
 		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
-		String workDir = wikiConfig.getWorkDir().toString();
+		GlobalPreferences globalPreferences = engine.getManager(GlobalPreferences.class); 
+		String workDir = globalPreferences.getWorkDir().toString();
 		File cookieDir = new File(workDir, COOKIE_DIR);
 
 		if (!cookieDir.exists()) {
@@ -233,7 +235,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 		UUID uid = UUID.randomUUID();
 		IWikiConfiguration wikiConfig = engine.getWikiConfiguration();
 		int days = wikiConfig.getIntegerProperty(PROP_LOGIN_EXPIRY_DAYS, DEFAULT_EXPIRY_DAYS);
-		Cookie userId = new Cookie(LOGIN_COOKIE_NAME, uid.toString());
+		Cookie userId = getLoginCookie(uid.toString());
 		userId.setMaxAge(days * 24 * 60 * 60);
 		response.addCookie(userId);
 
@@ -264,7 +266,7 @@ public class CookieAuthenticationLoginModule extends AbstractLoginModule {
 	 *            Servlet response
 	 */
 	public static void clearLoginCookie(Engine engine, HttpServletRequest request, HttpServletResponse response) {
-		Cookie userId = new Cookie(LOGIN_COOKIE_NAME, "");
+		Cookie userId = getLoginCookie("");
 		userId.setMaxAge(0);
 		response.addCookie(userId);
 

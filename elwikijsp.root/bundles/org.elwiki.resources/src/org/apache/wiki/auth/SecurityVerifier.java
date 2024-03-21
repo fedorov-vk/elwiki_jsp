@@ -35,10 +35,9 @@ import javax.security.auth.spi.LoginModule;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.authorization.Authorizer;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.authorization.WebAuthorizer;
@@ -47,7 +46,6 @@ import org.elwiki.permissions.AllPermission;
 import org.elwiki.permissions.GroupPermission;
 import org.elwiki.permissions.PermissionFactory;
 import org.elwiki.permissions.WikiPermission;
-
 import org.freshcookies.security.policy.PolicyReader;
 
 /**
@@ -67,7 +65,7 @@ public final class SecurityVerifier {
 
 	private Principal[] m_policyPrincipals = new Principal[0];
 
-	private Session m_session;
+	private WikiSession m_session;
 
 	/** Message prefix for errors. */
 	public static final String ERROR = "Error.";
@@ -138,7 +136,7 @@ public final class SecurityVerifier {
 	 * @param engine  the wiki engine
 	 * @param session the wiki session (typically, that of an administrator)
 	 */
-	public SecurityVerifier(Engine engine, Session session) {
+	public SecurityVerifier(Engine engine, WikiSession session) {
 		m_engine = engine;
 		m_session = session;
 		m_session.clearMessages();
@@ -191,7 +189,7 @@ public final class SecurityVerifier {
 		*/
 
 		// Principal[] roles = principals.toArray(new Principal[principals.size()]); //:FVK: m_policyPrincipals;
-		String wiki = m_engine.getWikiConfiguration().getApplicationName();
+		String wiki = m_engine.getManager(GlobalPreferences.class).getApplicationName();
 
 		String[] pages = new String[] { "Main", "Index", "GroupTest", "GroupAdmin" };
 		String[] pageActions = new String[] { "view", "edit", "modify", "rename", "delete" };
@@ -545,17 +543,16 @@ public final class SecurityVerifier {
 	}
 
 	/**
-	 * Verfies the JAAS configuration. The configuration is valid if value of the
-	 * <code>preferences.ini<code> property
-	 * {@value org.apache.wiki.auth.AuthenticationManager#PROP_LOGIN_MODULE} resolves to a valid class
-	 * on the classpath.
+	 * Verfies the JAAS configuration. The configuration is valid if value of the LoginModuleClass
+	 * option from AuthenticationManager resolves to a valid class on the classpath.
 	 */
 	protected void verifyJaas() {
+		AuthenticationManager authenticationManager = m_engine.getManager(AuthenticationManager.class);
+		String jaasClassId = authenticationManager.getPreference(AuthenticationManager.Prefs.LOGIN_MODULE_ID, String.class);
+
 		// Verify that the specified JAAS moduie corresponds to a class we can load successfully.
-		String jaasClass = m_engine.getWikiConfiguration().getStringProperty(AuthenticationManager.PROP_LOGIN_MODULE,
-				null);
-		if (jaasClass == null || jaasClass.length() == 0) {
-			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.PROP_LOGIN_MODULE
+		if (jaasClassId == null || jaasClassId.length() == 0) {
+			m_session.addMessage(ERROR_JAAS, "The value of the '" + AuthenticationManager.Prefs.LOGIN_MODULE_ID
 					+ "' property was null or blank. This is a fatal error. This value should be set to a valid LoginModule implementation "
 					+ "on the classpath.");
 			return;
@@ -564,21 +561,21 @@ public final class SecurityVerifier {
 		// See if we can find the LoginModule on the classpath
 		Class<?> c = null;
 		try {
-			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManager.PROP_LOGIN_MODULE
-					+ "' specified the class '" + jaasClass + ".'");
-			c = Class.forName(jaasClass);
+			m_session.addMessage(INFO_JAAS, "The property '" + AuthenticationManager.Prefs.LOGIN_MODULE_ID
+					+ "' specified the of login module ID '" + jaasClassId + ".'");
+			c = authenticationManager.getLoginModule(jaasClassId);
 
 			// Is the specified class actually a LoginModule?
 			if (LoginModule.class.isAssignableFrom(c)) {
-				m_session.addMessage(INFO_JAAS, "We found the the class '" + jaasClass
+				m_session.addMessage(INFO_JAAS, "We found the the class '" + jaasClassId
 						+ "' on the classpath, and it is a LoginModule implementation. Good!");
 			} else {
-				m_session.addMessage(ERROR_JAAS, "We found the the class '" + jaasClass
+				m_session.addMessage(ERROR_JAAS, "We found the the class '" + jaasClassId
 						+ "' on the classpath, but it does not seem to be LoginModule implementation! This is fatal error.");
 			}
-		} catch (ClassNotFoundException e) {
+		} catch (WikiException e) {
 			m_session.addMessage(ERROR_JAAS,
-					"We could not find the the class '" + jaasClass + "' on the " + "classpath. This is fatal error.");
+					"We could not find the the class '" + jaasClassId + "' on the " + "classpath. This is fatal error.");
 		}
 	}
 

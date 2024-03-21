@@ -18,13 +18,13 @@
  */
 package org.apache.wiki.api.tasks;
 
-import org.apache.wiki.api.core.WikiContext;
-import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.workflow0.Step;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.api.core.WikiContext;
+import org.apache.wiki.workflow0.Step;
 
 /**
  * Manager responsible of creation of the different JSPWiki {@link Step}s.

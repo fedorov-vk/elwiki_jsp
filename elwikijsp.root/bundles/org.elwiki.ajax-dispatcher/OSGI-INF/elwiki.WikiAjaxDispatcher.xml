@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" activate="startup" name="elwiki.WikiAjaxDispatcher">
    <service scope="singleton">
       <provide interface="org.apache.wiki.ajax.WikiAjaxDispatcher"/>
-      <provide interface="org.elwiki.api.component.WikiManager"/>
+      <provide interface="org.elwiki.api.component.WikiComponent"/>
       <provide interface="org.osgi.service.event.EventHandler"/>
    </service>
    <implementation class="org.elwiki.ajax_dispatcher.internal.WikiAjaxDispatcherService"/>

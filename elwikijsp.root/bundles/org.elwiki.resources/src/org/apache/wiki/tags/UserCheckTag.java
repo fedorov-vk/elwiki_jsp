@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspTagException;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.auth.AuthenticationManager;
@@ -101,11 +101,11 @@ public class UserCheckTag extends BaseWikiTag {
 	@Override
 	public int doWikiStartTag() throws ProviderException, IOException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
-		Session session = wikiContext.getWikiSession();
+		WikiSession session = wikiContext.getWikiSession();
 		AuthenticationManager authMgr = wikiContext.getEngine().getManager(AuthenticationManager.class);
 		
 		boolean containerAuth = authMgr.isContainerAuthenticated();
-		boolean cookieAssertions = authMgr.allowsCookieAssertions();
+		boolean cookieAssertions = authMgr.isAllowsCookieAssertions();
 
 		int result = SKIP_BODY;
 		if (m_status != null) {

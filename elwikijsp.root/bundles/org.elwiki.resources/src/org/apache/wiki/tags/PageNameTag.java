@@ -42,16 +42,14 @@ public class PageNameTag extends BaseWikiTag {
     @Override
     public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
-        final Engine engine = wikiContext.getEngine();
         final WikiPage page = wikiContext.getPage();
-        RenderingManager renderingManager = wikiContext.getEngine().getManager(RenderingManager.class);
 
         if( page != null ) {
             if( page instanceof PageAttachment ) {
             	//:FVK: было -- pageContext.getOut().print( TextUtil.replaceEntities( ((PageAttachment)page).getFileName() ) );
             	// TODO: реализовать ...
             } else {
-                pageContext.getOut().print( renderingManager.beautifyTitle( wikiContext.getName() ) );
+                pageContext.getOut().print(wikiContext.getName());
             }
         }
 

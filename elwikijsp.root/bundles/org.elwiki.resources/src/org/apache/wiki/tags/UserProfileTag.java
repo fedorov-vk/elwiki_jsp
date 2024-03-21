@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.auth.AccountManager;
@@ -148,7 +148,7 @@ public class UserProfileTag extends BaseWikiTag {
 				//
 				//  Default back to the declared user name
 				//
-				final Session wikiSession = sessionMonitor.getWikiSession((HttpServletRequest) pageContext.getRequest());
+				final WikiSession wikiSession = sessionMonitor.getWikiSession((HttpServletRequest) pageContext.getRequest());
 				final Principal user = wikiSession.getUserPrincipal();
 
 				if (user != null) {
@@ -178,7 +178,7 @@ public class UserProfileTag extends BaseWikiTag {
 	/**
 	 * Returns a sorted list of the {@link org.elwiki.api.authorization.IGroupWiki}
 	 * objects a user possesses in his or her Session. The result is computed by
-	 * consulting {@link org.apache.wiki.api.core.Session#getRoles()} and extracting
+	 * consulting {@link org.apache.wiki.api.core.WikiSession#getRoles()} and extracting
 	 * those that are of type Group.
 	 * 
 	 * @return the list of groups, sorted by name
@@ -214,7 +214,7 @@ public class UserProfileTag extends BaseWikiTag {
 	/**
 	 * Returns a sorted list of the {@link org.elwiki.data.authorize.GroupPrincipal} objects a
 	 * user possesses in his or her Session. The result is computed by consulting
-	 * {@link org.apache.wiki.api.core.Session#getRoles()} and extracting those that
+	 * {@link org.apache.wiki.api.core.WikiSession#getRoles()} and extracting those that
 	 * are of type Role.
 	 * 
 	 * @return the list of roles, sorted by name

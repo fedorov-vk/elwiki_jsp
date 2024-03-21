@@ -18,7 +18,7 @@
  */
 package org.apache.wiki.tags;
 
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.util.TextUtil;
 
@@ -82,7 +82,7 @@ public class MessagesTag extends BaseWikiTag {
 
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
-		final Session session = getWikiContext().getWikiSession();
+		final WikiSession session = getWikiContext().getWikiSession();
 		if (CLEAR.equals(m_action)) {
 			if (m_topic == null) {
 				session.clearMessages();

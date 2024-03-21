@@ -72,6 +72,7 @@ import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
 import org.elwiki.api.BackgroundThreads;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki.permissions.PagePermission;
 
@@ -154,7 +155,7 @@ public class LuceneSearchProvider implements SearchProvider {
         searchExecutor = Executors.newCachedThreadPool();
         IWikiConfiguration wikiConfig = this.m_engine.getWikiConfiguration();
 
-		IPath workDir = engine.getWikiConfiguration().getWorkDir();
+		IPath workDir = engine.getManager(GlobalPreferences.class).getWorkDir();
 		m_luceneDirectory = workDir.append(LUCENE_DIR).toString();
 
 		final int initialDelay = wikiConfig.getIntegerProperty( PROP_LUCENE_INITIALDELAY , LuceneUpdater.INITIAL_DELAY );

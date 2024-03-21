@@ -1,4 +1,4 @@
-/* 
+/*
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -24,19 +24,23 @@ import java.text.Collator;
 import java.util.Comparator;
 
 /**
- * Comparator class for sorting objects of type Principal. Used for sorting arrays or
- * collections of Principals.
+ * Comparator class for sorting objects of type Principal. Used for sorting arrays or collections of
+ * Principals.
  */
 public class PrincipalComparator implements Comparator<Principal>, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static final PrincipalComparator INSTANCE = new PrincipalComparator();
+
+	private PrincipalComparator() {
+		super();
+	}
+
 	/**
 	 * Compares two Principal objects.
 	 * 
-	 * @param o1
-	 *            the first Principal
-	 * @param o2
-	 *            the second Principal
+	 * @param o1 the first Principal
+	 * @param o2 the second Principal
 	 * @return the result of the comparison
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */

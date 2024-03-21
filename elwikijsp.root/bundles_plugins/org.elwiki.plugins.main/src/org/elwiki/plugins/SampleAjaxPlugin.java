@@ -34,7 +34,7 @@ import java.util.Map;
  * A simple AJAX Plugin, renders a "Press Me" link, waits 5 seconds, and then prints "You called"
  * with the actionName and parameters.
  * <p>
- * The code uses javascript Wiki.ajaxHtmlCall() with the parameters:
+ * The code uses javascript Wiki.htmlrpc() with the parameters:
  * <ul>
  * <li>URL e.g. "/SERVLET_MAPPING/actionName". SERVLET_MAPPING should be the name of the plugin,
  * e.g. SampleAjaxPlugin
@@ -51,10 +51,10 @@ public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 	private static final String SERVLET_MAPPING = "SampleAjaxPlugin";
 
 	@Override
-	public String execute(final WikiContext context, final Map<String, String> params) throws PluginException {
-		final String id = Integer.toString(this.hashCode());
-		final String html = String.format(//
-				"<div onclick='Wiki.ajaxHtmlCall(\"/%s/ajaxAction\",[12,45],\"result%s\",\"Loading...\")'" //
+	public String execute(WikiContext context, Map<String, String> params) throws PluginException {
+		String id = Integer.toString(this.hashCode());
+		String html = String.format(//
+				"<div onclick='Wiki.htmlrpc(\"/%s/ajaxAction\",[12,45],\"result%s\",\"Loading...\")'" //
 						+ " style='color: blue; cursor: pointer'>Press Me</div>\n" //
 						+ "<div id='result%s'></div>",
 				SERVLET_MAPPING, id, id);
@@ -67,11 +67,12 @@ public class SampleAjaxPlugin implements WikiPlugin, WikiAjaxServlet {
 	}
 
 	@Override
-	public void service(final HttpServletRequest request, final HttpServletResponse response, final String actionName,
-			final List<String> params) throws ServletException, IOException {
+	public void service(HttpServletRequest request,
+			HttpServletResponse response, String actionName,
+			List<String> params) throws ServletException, IOException {
 		try {
 			Thread.sleep(5000); // Wait 5 seconds
-		} catch (final Exception e) {
+		} catch (Exception e) {
 		}
 		response.getWriter().print("You called! actionName=" + actionName + " params=" + params);
 	}

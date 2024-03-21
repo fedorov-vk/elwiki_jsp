@@ -37,20 +37,16 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.pages0.PageManager;
-import org.apache.wiki.parser0.LinkParsingOperations;
-import org.apache.wiki.parser0.MarkupParser;
-import org.apache.wiki.util.TextUtil;
-import org.elwiki.configuration.IWikiConfiguration;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki_data.PageAttachment;
 import org.elwiki_data.WikiPage;
 
 /**
  * Provides a generic link tag for all kinds of linking purposes.
  * <p>
- * If parameter <i>path</i> is defined, constructs a URL pointing to the
- * specified path of URL (command, file), under the baseURL known by the Engine.
- * Any ParamTag name-value pairs contained in the body are added to this URL to
- * provide support for arbitrary JSP calls.
+ * If parameter <i>path</i> is defined, constructs a URL pointing to the specified path of URL
+ * (command, file), under the baseURL known by the Engine. Any ParamTag name-value pairs contained
+ * in the body are added to this URL to provide support for arbitrary JSP calls.
  * <p>
  */
 public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
@@ -95,7 +91,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	public void setDatamodal(String arg) {
 		m_datamodal = arg;
 	}
-	
+
 	public void setPath(final String path) {
 		m_path = path;
 	}
@@ -166,24 +162,27 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 	}
 
 	/**
-	 * This method figures out what kind of an URL should be output. It mirrors
-	 * heavily on JSPWikiMarkupParser.handleHyperlinks();
+	 * This method figures out what kind of an URL should be output. It mirrors heavily on
+	 * JSPWikiMarkupParser.handleHyperlinks();
 	 *
 	 * @return the URL
 	 * @throws ProviderException
 	 */
 	private String figureOutURL() throws ProviderException {
 		WikiContext wikiContext = getWikiContext();
-		IWikiConfiguration wikiConfig = wikiContext.getConfiguration();
 		Engine engine = wikiContext.getEngine();
+		GlobalPreferences globalPreferences = engine.getManager(GlobalPreferences.class);
 		PageManager pageManager = engine.getManager(PageManager.class);
 		String url = null;
 
 		String params = (m_version != null) ? "version=" + getVersion() : null;
 		params = addParamsForRecipient(params, m_containedParams);
+		if (m_ref != null) {
+			params += "#" + m_ref;
+		}
 
 		if (m_templatefile != null) {
-			String template = wikiConfig.getTemplateDir();
+			String template = globalPreferences.getTemplateDir();
 			url = engine.getURL(ContextEnum.PAGE_NONE.getRequestContext(), "shapes/" + template + "/" + m_templatefile,
 					params);
 		} else if (m_path != null) {
@@ -273,7 +272,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 		}
 		*/
 
-		//!!! NEW CODE -- 
+		// !!! NEW CODE --
 		return engine.getURL(m_context, pageId, parms);
 	}
 
@@ -302,7 +301,7 @@ public class LinkTag extends BaseWikiLinkTag implements ParamHandler, BodyTag {
 			appender.accept("accesskey=", m_accesskey);
 			appender.accept("tabindex=", m_tabindex);
 
-			//TODO: пересмотреть код - страница не наследует Attach
+			// TODO: пересмотреть код - страница не наследует Attach
 			PageManager pageManager = getWikiContext().getEngine().getManager(PageManager.class);
 			AttachmentManager attachmentManager = getWikiContext().getEngine().getManager(AttachmentManager.class);
 			if (m_pageName != null && pageManager.getPage(m_pageName) instanceof PageAttachment) {

@@ -38,7 +38,7 @@ Engine wiki = Wiki.engine().find( getServletConfig() );
     if(!WikiEngine.getAuthorizationManager().hasAccess( wikiContext, response )) return;
     
     // Extract the current user, group name, members
-    Session wikiSession = wikiContext.getWikiSession();
+    WikiSession wikiSession = wikiContext.getWikiSession();
     IGroupManager groupMgr = WikiEngine.getGroupManager();
     WrapGroup group = null;
     try {

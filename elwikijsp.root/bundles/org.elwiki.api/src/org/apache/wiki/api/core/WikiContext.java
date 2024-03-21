@@ -41,7 +41,7 @@ import org.elwiki_data.WikiPage;
  * Counter plugin.
  * </p>
  * <p>
- * When a WikiContext is created, it automatically associates a {@link Session} object with the
+ * When a WikiContext is created, it automatically associates a {@link WikiSession} object with the
  * user's HttpSession. The Session contains information about the user's authentication status, and
  * is consulted by {@link #getCurrentUser()} object.
  * </p>
@@ -304,14 +304,13 @@ public interface WikiContext extends Cloneable, Command {
 	void popRealPage();
 
 	/**
-	 * Returns WikiPage by specified pageId.
+	 * Returns name of WikiPage by specified pageId.
 	 * 
 	 * @param pageId Page identifier for find page.
 	 * 
-	 * @return WikiPage page, paossibly <code>null</code>, if the page is not found for any reason.
-	 * @throws ProviderException TODO
+	 * @return Name of required WikiPage page, paossibly <code>null</code>, if the page is not found for any reason.
 	 */
-	WikiPage getPageById(String pageId) throws ProviderException;
+	String getPageName(String pageId);
 
 	/**
 	 * Returns the wiki configuration.
@@ -405,7 +404,7 @@ public interface WikiContext extends Cloneable, Command {
 	 *
 	 * @return The Session associate with this context.
 	 */
-	Session getWikiSession();
+	WikiSession getWikiSession();
 
 	/**
 	 * Convenience method that gets the current user. Delegates the lookup to the Session associated

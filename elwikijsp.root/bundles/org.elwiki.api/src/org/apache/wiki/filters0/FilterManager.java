@@ -18,14 +18,14 @@
  */
 package org.apache.wiki.filters0;
 
+import java.util.List;
+
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.FilterException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.ISpamFilter;
 import org.apache.wiki.api.filters.PageFilter;
 import org.apache.wiki.api.modules.ModuleManager;
-
-import java.util.List;
 
 public interface FilterManager extends ModuleManager {
 

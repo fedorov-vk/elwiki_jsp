@@ -18,9 +18,7 @@
  */
 package org.elwiki.plugins;
 
-import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +29,6 @@ import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.WikiSecurityException;
 import org.apache.wiki.url0.URLConstructor;
-import org.apache.wiki.util.comparators.PrincipalComparator;
 import org.elwiki.api.authorization.IGroupWiki;
 import org.elwiki.api.plugin.WikiPlugin;
 
@@ -46,8 +43,6 @@ import org.elwiki.api.plugin.WikiPlugin;
  * </p>
  */
 public class GroupsPlugin implements WikiPlugin {
-
-	private static final Comparator<Principal> COMPARATOR = new PrincipalComparator();
 
 	/**
 	 * {@inheritDoc}

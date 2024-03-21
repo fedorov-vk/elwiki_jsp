@@ -8,7 +8,7 @@ import org.apache.wiki.api.core.Command;
 import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.core.ContextEnum;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.api.core.Session;
+import org.apache.wiki.api.core.WikiSession;
 import org.apache.wiki.auth.AccountManager;
 import org.apache.wiki.auth.AuthorizationManager;
 import org.apache.wiki.auth.WikiSecurityException;
@@ -33,7 +33,7 @@ public class DeleteGroupCmdCode extends CmdCode {
 		authorizationManager.checkAccess(wikiContext, httpRequest, httpResponse);
 
 		// Extract the current user, group name, members and action attributes
-		Session wikiSession = wikiContext.getWikiSession();
+		WikiSession wikiSession = wikiContext.getWikiSession();
 		IGroupWiki group = null;
 		/*:FVK: TODO:... передача редактируемой группы. */
 		try {

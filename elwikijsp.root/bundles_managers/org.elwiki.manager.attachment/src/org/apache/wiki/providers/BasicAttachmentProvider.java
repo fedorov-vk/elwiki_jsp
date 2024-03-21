@@ -25,6 +25,7 @@ import org.elwiki_data.Elwiki_dataFactory;
 import org.elwiki_data.PageAttachment;
 import org.apache.wiki.api.core.Engine;
 import org.elwiki_data.WikiPage;
+import org.osgi.framework.BundleContext;
 
 import net.sf.ehcache.Element;
 
@@ -40,6 +41,7 @@ import org.apache.wiki.util.FileUtil;
 import org.apache.wiki.util.TextUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.configuration.IWikiConfiguration;
 
 import java.io.File;
@@ -97,6 +99,8 @@ public class BasicAttachmentProvider implements AttachmentProvider {
 	
 	private IWikiConfiguration wikiConfiguration;
 	
+	private GlobalPreferences globalPreferences;
+	
     private Engine m_engine;
     
     /** The name of the property file. */
@@ -117,6 +121,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     public void initialize( final Engine engine ) throws NoRequiredPropertyException, IOException {
         m_engine = engine;
         wikiConfiguration = m_engine.getWikiConfiguration();
+        globalPreferences = m_engine.getManager(GlobalPreferences.class);
     }
 
     /**
@@ -137,7 +142,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
     @Deprecated
     private File findAttachmentDir( final AttachmentContent att ) throws ProviderException {
     	//:FVK: workaround. (here shoul added algotithm with hierarhy of directories, for controling maximuum count of files in the one directory.)
-    	File f = this.wikiConfiguration.getAttachmentPath().toFile();
+    	File f = this.globalPreferences.getAttachmentPath().toFile();
     	/*:FVK:
         File f = new File( findPageDir( att.getParentName() ), mangleName( att.getFileName() + ATTDIR_EXTENSION ) );
 
@@ -192,7 +197,7 @@ public class BasicAttachmentProvider implements AttachmentProvider {
      */
     @Override
     public FileInputStream getAttachmentData( final AttachmentContent att ) throws IOException, ProviderException {
-        IPath attachmentDirectory = this.wikiConfiguration.getAttachmentPath();
+        IPath attachmentDirectory = this.globalPreferences.getAttachmentPath();
         try {
             File f = attachmentDirectory.append(att.getPlace()).toFile();
             return new FileInputStream( f );

@@ -47,7 +47,6 @@ public class ParentPageNameTag extends BaseWikiTag {
 	@Override
 	public final int doWikiStartTag() throws IOException, ProviderException, JspTagException {
 		WikiContext wikiContext = getWikiContext();
-		final Engine engine = wikiContext.getEngine();
 		final WikiPage page = wikiContext.getPage();
 
 		if (page != null) {
@@ -66,9 +65,7 @@ public class ParentPageNameTag extends BaseWikiTag {
 					name = name.substring(0, commentstart);
 				}
 
-				@NonNull
-				RenderingManager renderingManager = engine.getManager(RenderingManager.class);
-				pageContext.getOut().print(renderingManager.beautifyTitle(name));
+				pageContext.getOut().print(name);
 			}
 		}
 

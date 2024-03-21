@@ -20,7 +20,7 @@ package org.apache.wiki.workflow0;
 
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.internal.ApiActivator;
-import org.elwiki.api.event.WikiWorkflowEventTopic;
+import org.elwiki.api.event.WorkflowEvent;
 import org.osgi.service.event.Event;
 
 import java.io.Serializable;
@@ -107,8 +107,8 @@ abstract class AbstractDecision extends AbstractStep implements Decision {
 	@Override
 	public void decide(Outcome outcome) throws WikiException {
 		super.setOutcome(outcome);
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_REMOVAL,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_REMOVAL,
+				Map.of(WorkflowEvent.PROPERTY_DECISION, this)));
 	}
 
 	/**
@@ -129,8 +129,8 @@ abstract class AbstractDecision extends AbstractStep implements Decision {
 		}
 
 		// Put decision in the DecisionQueue
-		ApiActivator.getEventAdmin().sendEvent(new Event(WikiWorkflowEventTopic.TOPIC_WORKFLOW_DQ_ADDITION,
-				Map.of(WikiWorkflowEventTopic.PROPERTY_DECISION, this)));
+		ApiActivator.getEventAdmin().sendEvent(new Event(WorkflowEvent.Topic.DQ_ADDITION,
+				Map.of(WorkflowEvent.PROPERTY_DECISION, this)));
 
 		// Indicate we are waiting for user input
 		return Outcome.STEP_CONTINUE;

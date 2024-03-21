@@ -28,6 +28,7 @@ import org.apache.wiki.api.core.WikiContext;
 import org.apache.wiki.api.exceptions.PluginException;
 import org.apache.wiki.ui.TemplateManager;
 import org.apache.wiki.util.TextUtil;
+import org.elwiki.api.GlobalPreferences;
 import org.elwiki.api.plugin.InitializablePlugin;
 import org.elwiki.api.plugin.PluginManager;
 import org.elwiki.api.plugin.WikiPlugin;
@@ -60,11 +61,13 @@ public class NotePlugin implements WikiPlugin, InitializablePlugin {
 	public static final String DEFAULT_NOTE_IMAGE = "note.png";
 
 	private IWikiConfiguration wikiConfiguration;
+	private GlobalPreferences globalPreferences;
 
 	private TemplateManager templateManager;
 
 	@Override
 	public void initialize(Engine engine) throws PluginException {
+		this.globalPreferences = engine.getManager(GlobalPreferences.class);
 		this.wikiConfiguration = engine.getWikiConfiguration();
 		this.templateManager = engine.getManager(TemplateManager.class);
 	}
@@ -90,7 +93,7 @@ public class NotePlugin implements WikiPlugin, InitializablePlugin {
 		String commentImage = wikiConfiguration.getStringProperty(PROP_NOTE_IMAGE, DEFAULT_NOTE_IMAGE);
 		commentImage = "images/" + commentImage;
 
-		String templateDir = this.wikiConfiguration.getTemplateDir();
+		String templateDir = this.globalPreferences.getTemplateDir();
 		String resource = this.templateManager.findResource(ctx, templateDir, commentImage);
 
 		// JSPWIKI-876 Fixed error with Note Plugin. Only one preceding "/" is needed.

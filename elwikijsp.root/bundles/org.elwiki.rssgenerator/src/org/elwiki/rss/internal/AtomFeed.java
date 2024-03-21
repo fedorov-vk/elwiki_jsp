@@ -159,7 +159,7 @@ public class AtomFeed extends Feed {
         String rssFeedURL = "";
 		try {
 			rssFeedURL = engine.getURL( ContextEnum.PAGE_NONE.getRequestContext(), "rss.jsp",
-			                                         "page=" + config.encodeName( m_wikiContext.getPage().getName() ) +
+			                                         "page=" + engine.encodeName( m_wikiContext.getPage().getName() ) +
 			                                         "&mode=" + m_mode +
 			                                         "&type=atom" );
 		} catch (IOException e1) {

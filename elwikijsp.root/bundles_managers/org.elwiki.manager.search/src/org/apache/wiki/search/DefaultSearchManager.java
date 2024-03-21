@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,18 +42,16 @@ import org.apache.wiki.api.exceptions.NoRequiredPropertyException;
 import org.apache.wiki.api.exceptions.ProviderException;
 import org.apache.wiki.api.exceptions.WikiException;
 import org.apache.wiki.api.filters.BasePageFilter;
-import org.apache.wiki.api.references.ReferenceManager;
 import org.apache.wiki.api.search.SearchManager;
 import org.apache.wiki.api.search.SearchProvider;
 import org.apache.wiki.api.search.SearchResult;
 import org.apache.wiki.parser0.MarkupParser;
 import org.apache.wiki.search.lucene.LuceneSearchProvider;
-import org.apache.wiki.util.TextUtil;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.elwiki.api.BackgroundThreads;
 import org.elwiki.api.WikiServiceReference;
-import org.elwiki.api.component.WikiManager;
-import org.elwiki.api.event.WikiPageEventTopic;
+import org.elwiki.api.component.WikiComponent;
+import org.elwiki.api.event.PageEvent;
+import org.elwiki.api.part.Id2NamePage;
 import org.elwiki.configuration.IWikiConfiguration;
 import org.elwiki_data.WikiPage;
 import org.osgi.service.component.annotations.Component;
@@ -72,14 +69,13 @@ import org.osgi.service.event.EventHandler;
 //@formatter:off
 @Component(
 	name = "elwiki.DefaultSearchManager",
-	service = { SearchManager.class, WikiManager.class, EventHandler.class },
+	service = { SearchManager.class, WikiComponent.class, EventHandler.class },
 	property = {
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST,
-		EventConstants.EVENT_TOPIC + "=" + WikiPageEventTopic.TOPIC_PAGE_REINDEX,
+		EventConstants.EVENT_TOPIC + "=" + PageEvent.Topic.DELETE_REQUEST,
 	},
 	scope = ServiceScope.SINGLETON)
 //@formatter:on
-public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiManager, EventHandler {
+public class DefaultSearchManager extends BasePageFilter implements SearchManager, WikiComponent, EventHandler {
 
 	private static final Logger log = Logger.getLogger(DefaultSearchManager.class);
 
@@ -105,7 +101,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	private BackgroundThreads backgroundThreads;
 
 	@WikiServiceReference
-	private ReferenceManager referenceManager;
+	private Id2NamePage id2NamePage;
 
 	@WikiServiceReference
 	private WikiAjaxDispatcher wikiAjaxDispatcher;
@@ -203,19 +199,18 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
                     wikiName = wikiName.substring( 0, pos );
                 }
 
-                final String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
-                final String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
-                final Set< String > allPages = DefaultSearchManager.this.referenceManager.findCreated();
+                String cleanWikiName = MarkupParser.cleanLink(wikiName).toLowerCase() + filename;
+                String oldStyleName = MarkupParser.wikifyLink(wikiName).toLowerCase() + filename;
+                String[] allPagesNames = DefaultSearchManager.this.id2NamePage.getAllPageNames();
 
-                int counter = 0;
-                for( final Iterator< String > i = allPages.iterator(); i.hasNext() && counter < maxLength; ) {
-                    final String p = i.next();
-                    final String pp = p.toLowerCase();
-                    if( pp.startsWith( cleanWikiName) || pp.startsWith( oldStyleName ) ) {
-                        list.add( p );
-                        counter++;
-                    }
-                }
+				for (int counter = 0; counter < allPagesNames.length && counter < maxLength; counter++) {
+					final String p = allPagesNames[counter];
+					final String pp = p.toLowerCase();
+					if (pp.startsWith(cleanWikiName) || pp.startsWith(oldStyleName)) {
+						list.add(p);
+						counter++;
+					}
+				}
             }
 
             sw.stop();
@@ -320,8 +315,8 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 	public void handleEvent(Event event) {
 		String topic = event.getTopic();
 		switch (topic) {
-		case WikiPageEventTopic.TOPIC_PAGE_DELETE_REQUEST: {
-			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+		case PageEvent.Topic.DELETE_REQUEST: {
+			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 			try {
 				WikiPage p;
 				p = this.pageManager.getPageById(pageId);
@@ -333,8 +328,9 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 			}
 			break;
 		}
-		case WikiPageEventTopic.TOPIC_PAGE_REINDEX:{
-			String pageId = (String) event.getProperty(WikiPageEventTopic.PROPERTY_PAGE_ID);
+		/* TODO: :FVK: - реализовать прослушивание сохранения страницы, и переиндексацию lucene.
+		case PageEvent.Topic.REINDEX:{
+			String pageId = (String) event.getProperty(PageEvent.PROPERTY_PAGE_ID);
 			try {
 				WikiPage p = this.pageManager.getPageById(pageId);
 				if (p != null) {
@@ -345,6 +341,7 @@ public class DefaultSearchManager extends BasePageFilter implements SearchManage
 			}
 			break;
 		}
+		*/
 		}
 	}
 

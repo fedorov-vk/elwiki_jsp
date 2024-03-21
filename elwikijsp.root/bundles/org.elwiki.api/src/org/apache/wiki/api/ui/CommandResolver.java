@@ -18,12 +18,13 @@
  */
 package org.apache.wiki.api.ui;
 
-import org.apache.wiki.api.core.Command;
-import org.elwiki_data.WikiPage;
-import org.apache.wiki.api.exceptions.ProviderException;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+
+import org.apache.wiki.api.core.Command;
+import org.apache.wiki.api.exceptions.ProviderException;
+import org.elwiki_data.WikiPage;
 
 /**
  * <p>Resolves special pages, JSPs and Commands on behalf of a Engine. CommandResolver will automatically resolve page names
